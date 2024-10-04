@@ -78,14 +78,16 @@ const ProfilePage = () => {
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {/* Cours Consultés */}
         <div>
-          <Card aria-label="Cours consultés">
+          <Card aria-labelledby="course-title">
             <div className="card-header">
-              <h3>Cours Consultés</h3>
+              <h3 id="course-title">Cours Consultés</h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.courses.map((course, index) => (
                 <div key={index}>
-                  <p className="font-bold">{course.title}</p>
+                  <p className="font-bold" id={`course-title-${index}`}>
+                    {course.title}
+                  </p>
                   <Progress
                     aria-label={`Progression du cours ${course.title}`}
                     color="primary"
@@ -106,9 +108,9 @@ const ProfilePage = () => {
 
         {/* Évaluations faites */}
         <div>
-          <Card aria-label="Évaluations">
+          <Card aria-labelledby="evaluations-title">
             <div className="card-header">
-              <h3>Évaluations</h3>
+              <h3 id="evaluations-title">Évaluations</h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.evaluations.map((evaluation, index) => (
@@ -130,9 +132,9 @@ const ProfilePage = () => {
 
         {/* Articles Consultés */}
         <div>
-          <Card aria-label="Articles consultés">
+          <Card aria-labelledby="articles-title">
             <div className="card-header">
-              <h3>Articles Consultés</h3>
+              <h3 id="articles-title">Articles Consultés</h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.articles.map((article, index) => (

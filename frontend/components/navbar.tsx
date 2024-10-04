@@ -1,3 +1,4 @@
+/* eslint-disable react/jsx-sort-props */
 "use client";
 import React, { useState, useEffect } from "react";
 import {
@@ -20,6 +21,7 @@ import {
   faUser,
   faBook,
   faNewspaper,
+  faCrown, // Import de l'icône couronne
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
@@ -31,8 +33,17 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, HeartFilledIcon, AutismLogo } from "@/components/icons";
 
+// Définir le type pour l'utilisateur
+type User = {
+  id: string;
+  pseudo: string;
+  email: string;
+  avatar?: string; // Facultatif
+  isAdmin: boolean; // Ajout du booléen isAdmin
+};
+
 export const Navbar = () => {
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState<User | null>(null); // Utilisation du type User
   const [searchQuery, setSearchQuery] = useState(""); // Ajout de l'état searchQuery
   const router = useRouter(); // Utiliser le routeur ici
 
@@ -41,7 +52,16 @@ export const Navbar = () => {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Charger l'utilisateur depuis le localStorage
+      const parsedUser = JSON.parse(storedUser);
+
+      // On se fie directement à isAdmin pour savoir si l'utilisateur est admin
+      const userWithAdminStatus = {
+        ...parsedUser,
+        isAdmin: parsedUser.isAdmin, // Utilisation de isAdmin depuis localStorage
+      };
+
+      // Vérification du contenu de l'utilisateur
+      setUser(userWithAdminStatus); // Charger l'utilisateur avec isAdmin
     }
   }, []);
 
@@ -51,7 +71,12 @@ export const Navbar = () => {
       const storedUser = localStorage.getItem("user");
 
       if (storedUser) {
-        setUser(JSON.parse(storedUser));
+        const parsedUser = JSON.parse(storedUser);
+
+        setUser({
+          ...parsedUser,
+          isAdmin: parsedUser.isAdmin, // Reprise de l'état isAdmin
+        });
       } else {
         setUser(null);
       }
@@ -86,7 +111,7 @@ export const Navbar = () => {
         setUser(null); // Supprimer l'utilisateur de l'état local
 
         // Déclencher un événement personnalisé
-        const event = new CustomEvent('userUpdate');
+        const event = new CustomEvent("userUpdate");
 
         window.dispatchEvent(event);
 
@@ -169,6 +194,24 @@ export const Navbar = () => {
           </Button>
         </NavbarItem>
 
+        {/* Affichage du lien admin si l'utilisateur est admin */}
+        {user?.isAdmin && (
+          <NavbarItem className="hidden md:flex">
+            <Button
+              aria-label="Dashboard Admin"
+              as={Link}
+              className="text-sm font-normal text-gray-600 bg-gray-200 hover:bg-gray-300"
+              href="/admin/dashboard"
+            >
+              <FontAwesomeIcon
+                className="mr-2 text-yellow-500"
+                icon={faCrown}
+              />
+              Dashboard Admin
+            </Button>
+          </NavbarItem>
+        )}
+
         {!user ? (
           <Avatar
             isBordered
@@ -216,6 +259,17 @@ export const Navbar = () => {
                 <FontAwesomeIcon icon={faBook} />
                 <span className="ml-2">Cours suivis</span>
               </DropdownItem>
+              {user?.isAdmin ? (
+                <DropdownItem
+                  className="text-gray-600 hover:text-green-500"
+                  key="admin"
+                  textValue="Dashboard Admin"
+                  onClick={() => router.replace("/admin/dashboard")}
+                >
+                  <FontAwesomeIcon icon={faCrown} />
+                  <span className="ml-2">Dashboard Admin</span>
+                </DropdownItem>
+              ) : null}
               <DropdownItem
                 key="articles"
                 className="text-gray-600 hover:text-green-500"

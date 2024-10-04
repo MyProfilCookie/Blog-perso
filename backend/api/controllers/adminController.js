@@ -1,7 +1,7 @@
 const User = require('../models/User');
 const Course = require('../models/Lesson');
 const Article = require('../models/Article');
-const Message = require('../models/Message');
+const Message = require('../models/message');
 
 // Gestion des utilisateurs
 exports.getAllUsers = async (req, res) => {

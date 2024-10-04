@@ -44,31 +44,44 @@ exports.login = async (req, res) => {
   }
 
   try {
+    // Recherche de l'utilisateur par email
     const user = await User.findOne({ email });
     if (!user) {
       return res.status(400).json({ message: 'Utilisateur non trouvé.' });
     }
 
-    const isMatch = await bcrypt.compare(password, user.password); // Comparaison des mots de passe
+    // Comparaison des mots de passe
+    const isMatch = await bcrypt.compare(password, user.password);
     if (!isMatch) {
       return res.status(400).json({ message: 'Mot de passe incorrect.' });
     }
 
+    // Génération du token JWT
     const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
+    // Ajout du rôle à la réponse
+    const isAdmin = user.role === 'admin'; // Vérifie si le rôle de l'utilisateur est "admin"
+
+    // Envoi de la réponse avec les infos utilisateur, y compris le rôle et isAdmin
     res.status(200).json({
       message: 'Connexion réussie',
-      user: { id: user._id, pseudo: user.pseudo, email: user.email },
+      user: { 
+        id: user._id, 
+        pseudo: user.pseudo, 
+        email: user.email, 
+        role: user.role, // Ajout du rôle à la réponse
+        isAdmin, // Ajout de isAdmin à la réponse
+      },
       token,
     });
   } catch (err) {
     console.error('Erreur lors de la connexion :', err);
     res.status(500).json({ message: 'Erreur lors de la connexion.' });
   }
-  
 };
+
 
 exports.getUsers = async (req, res) => {
   try {
