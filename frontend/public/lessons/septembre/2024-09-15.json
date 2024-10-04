@@ -1,0 +1,281 @@
+{
+    "date": "2024-09-15",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les animaux nocturnes",
+                "description": "Aujourd'hui, nous allons découvrir les animaux qui sortent la nuit, comme les hiboux et les chauves-souris, et comprendre pourquoi ils sont actifs la nuit.",
+                "objectives": [
+                    "Comprendre pourquoi certains animaux sont actifs la nuit.",
+                    "Découvrir l'habitat des animaux nocturnes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images d'animaux nocturnes comme les hiboux et les chauves-souris.",
+                        "Explique pourquoi ces animaux sortent la nuit (ex. : éviter la chaleur, se cacher des prédateurs)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessine un animal nocturne",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un hibou ou une chauve-souris.",
+                            "Explique pourquoi ces animaux sortent la nuit et non le jour."
+                        ]
+                    },
+                    {
+                        "title": "Associe les animaux à leur habitat",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images d'animaux nocturnes et fais-les associer à leur habitat (ex. : la chauve-souris dans une grotte)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Résume pourquoi certains animaux sont actifs la nuit.",
+                        "Complimente l'enfant pour sa participation et ses observations."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les soustractions simples",
+                "description": "Nous allons apprendre à soustraire de petits nombres, comme 7 - 3, en utilisant des objets pour nous aider.",
+                "objectives": [
+                    "Apprendre à soustraire de petits nombres.",
+                    "Utiliser des objets pour visualiser les soustractions."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique la soustraction en montrant un exemple avec des objets (ex. : 5 jouets moins 2 jouets)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Soustraire des objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Utilise des jouets pour faire des soustractions simples (ex. : enlève 3 jouets d'un groupe de 7)."
+                        ]
+                    },
+                    {
+                        "title": "Résoudre des soustractions écrites",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris 5 soustractions simples et demande à l'enfant de les résoudre (ex. : 8 - 2 = ?)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler à l'enfant comment soustraire.",
+                        "Complimente pour les efforts réalisés lors des exercices."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les adjectifs",
+                "description": "Nous allons apprendre à utiliser les adjectifs pour décrire des objets ou des animaux, comme 'grand', 'petit', 'rouge', 'rapide'.",
+                "objectives": [
+                    "Apprendre à utiliser des adjectifs pour décrire.",
+                    "Associer les adjectifs à des images et des objets."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples d'objets et d'animaux, et donne des adjectifs pour les décrire (ex. : un chat noir, une voiture rapide)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Décrire des objets avec des adjectifs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de choisir un objet et de le décrire avec des adjectifs (ex. : petit, rond, rouge)."
+                        ]
+                    },
+                    {
+                        "title": "Associer des adjectifs à des images",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images et demande à l'enfant d'associer l'adjectif correspondant (ex. : un chat 'noir')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son utilisation des adjectifs.",
+                        "Fais récapituler les adjectifs utilisés pendant la leçon."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre un paysage de montagne",
+                "description": "Aujourd'hui, nous allons peindre un paysage de montagne en utilisant des couleurs pour les montagnes, le ciel, et les arbres.",
+                "objectives": [
+                    "Apprendre à dessiner et peindre un paysage de montagne.",
+                    "Utiliser des couleurs pour différencier les éléments du paysage."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples de paysages de montagne et explique comment dessiner les montagnes, le ciel et les arbres."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner et peindre un paysage",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un paysage de montagne.",
+                            "Ajoute des couleurs pour peindre les montagnes, le ciel, et les arbres."
+                        ]
+                    },
+                    {
+                        "title": "Ajouter des détails",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Ajoute des détails au paysage, comme des nuages ou des animaux."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa créativité et son utilisation des couleurs.",
+                        "Affiche le dessin pour valoriser le travail accompli."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les parties du corps en anglais",
+                "description": "Nous allons apprendre à nommer les parties du corps en anglais, comme 'head', 'arms', 'legs'.",
+                "objectives": [
+                    "Connaître les noms des parties du corps en anglais.",
+                    "Utiliser des chansons pour apprendre les parties du corps."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une affiche avec les parties du corps en anglais (ex. : 'head', 'shoulders', 'knees')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer et nommer les parties du corps",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer différentes parties de son corps et de les nommer en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Chanter 'Head, Shoulders, Knees and Toes'",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Chante une chanson comme 'Head, Shoulders, Knees and Toes' pour revoir les parties du corps en anglais."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa prononciation et son apprentissage des parties du corps.",
+                        "Fais répéter une dernière fois pour consolider l'apprentissage."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les monuments historiques",
+                "description": "Nous allons découvrir des monuments célèbres comme les pyramides d'Égypte, la Tour Eiffel et la Grande Muraille de Chine.",
+                "objectives": [
+                    "Découvrir des monuments historiques importants.",
+                    "Associer chaque monument à son pays d'origine."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images de monuments historiques célèbres et explique leur importance (ex. : les pyramides d'Égypte, la Tour Eiffel)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un monument historique",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un monument historique de son choix."
+                        ]
+                    },
+                    {
+                        "title": "Associer les monuments à leur pays",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre une carte et demande à l'enfant d'associer chaque monument à son pays d'origine."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son dessin et sa capacité à associer les monuments.",
+                        "Fais récapituler les monuments appris durant la leçon."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les volcans",
+                "description": "Nous allons apprendre ce qu'est un volcan, comment il fonctionne, et découvrir des volcans célèbres comme le Vésuve.",
+                "objectives": [
+                    "Comprendre comment fonctionne un volcan.",
+                    "Découvrir des volcans célèbres et leurs localisations."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images de volcans célèbres et explique comment se produit une éruption volcanique."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un volcan en éruption",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un volcan en éruption."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer une éruption volcanique",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Explique ce qui se passe pendant une éruption volcanique (ex. : la lave, les cendres)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son dessin et sa compréhension des volcans.",
+                        "Fais récapituler les volcans célèbres et leur fonctionnement."
+                    ]
+                }
+            }
+        }
+    ]
+}

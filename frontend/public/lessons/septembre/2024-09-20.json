@@ -1,0 +1,272 @@
+{
+    "date": "2024-09-20",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les étoiles et constellations",
+                "description": "Aujourd'hui, nous allons apprendre à reconnaître les étoiles et les constellations dans le ciel, comme la Grande Ourse.",
+                "objectives": [
+                    "Comprendre pourquoi nous voyons les étoiles la nuit.",
+                    "Apprendre à reconnaître des constellations comme la Grande Ourse."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du ciel avec les constellations.",
+                        "Explique pourquoi nous voyons les étoiles seulement la nuit."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner une constellation",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner une constellation simple comme la Grande Ourse."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer pourquoi nous voyons les étoiles la nuit",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer pourquoi les étoiles ne sont visibles que la nuit."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir reconnu une constellation et bien expliqué la visibilité des étoiles."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les additions avancées",
+                "description": "Aujourd'hui, nous allons revoir les additions mais avec des nombres plus grands.",
+                "objectives": [
+                    "Apprendre à additionner des nombres plus grands.",
+                    "Améliorer la rapidité de calcul mental."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique comment ajouter des nombres plus grands (ex. : 25 + 17)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Additionner des nombres",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'additionner des nombres comme 25 + 17."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des additions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 5 additions avec des nombres plus grands et de les résoudre."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour ses progrès en addition."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les phrases négatives",
+                "description": "Nous allons apprendre à écrire des phrases négatives en français, comme 'Je ne veux pas'.",
+                "objectives": [
+                    "Apprendre à former des phrases négatives.",
+                    "Comprendre la différence entre les phrases affirmatives et négatives."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique comment transformer une phrase affirmative en phrase négative (ex. : 'Je veux' → 'Je ne veux pas')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases négatives",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 phrases négatives simples."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer la transformation",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer à voix haute comment transformer une phrase affirmative en phrase négative."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les phrases négatives et félicite l'enfant pour son travail."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre un animal",
+                "description": "Aujourd'hui, nous allons choisir un animal et le peindre en utilisant des couleurs pour le rendre réaliste.",
+                "objectives": [
+                    "Apprendre à peindre en respectant les couleurs naturelles.",
+                    "Ajouter des détails pour rendre le dessin plus réaliste."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images d'animaux et explique comment utiliser les bonnes couleurs pour les peindre de manière réaliste."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Peindre un animal",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de choisir un animal et de le peindre en utilisant des couleurs réalistes."
+                        ]
+                    },
+                    {
+                        "title": "Ajouter des détails au dessin",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'ajouter des détails comme de l'herbe, des arbres, ou un ciel pour compléter le dessin."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son travail artistique et encourage-le à montrer son dessin."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les nombres en anglais",
+                "description": "Aujourd'hui, nous allons apprendre à compter de 1 à 20 en anglais.",
+                "objectives": [
+                    "Apprendre à dire et écrire les nombres en anglais de 1 à 20."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Répète les nombres en anglais de 1 à 20 à voix haute."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compter jusqu'à 20 en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de compter de 1 à 20 en anglais à voix haute."
+                        ]
+                    },
+                    {
+                        "title": "Écrire les nombres",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire les nombres de 1 à 20 en anglais."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir appris à dire et écrire les nombres en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les explorateurs célèbres",
+                "description": "Nous allons découvrir des explorateurs célèbres comme Christophe Colomb et Marco Polo, et leurs découvertes.",
+                "objectives": [
+                    "Apprendre qui étaient Christophe Colomb et Marco Polo.",
+                    "Associer chaque explorateur à ses découvertes."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente des images de Christophe Colomb, Marco Polo et leurs découvertes (ex. : l'Amérique pour Colomb)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les explorateurs à leurs découvertes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque explorateur à ses découvertes (ex. : Marco Polo → Route de la soie)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner un bateau de l'époque",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un bateau de l'époque des explorations, comme les caravelles de Christophe Colomb."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les explorateurs célèbres et leurs découvertes.",
+                        "Complimente l'enfant pour avoir bien compris leurs rôles."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les îles célèbres",
+                "description": "Aujourd'hui, nous allons découvrir des îles célèbres comme Hawaï, Madagascar, et l'Islande.",
+                "objectives": [
+                    "Apprendre à localiser des îles célèbres.",
+                    "Associer chaque île à son pays ou son océan."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte avec des îles célèbres comme Hawaï, Madagascar, et l'Islande."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les îles sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer où se trouvent ces îles sur une carte."
+                        ]
+                    },
+                    {
+                        "title": "Associer les îles à leur pays ou océan",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque île à son pays ou océan (ex. : Hawaï → Océan Pacifique)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir appris à localiser des îles célèbres."
+                    ]
+                }
+            }
+        }
+    ]
+}

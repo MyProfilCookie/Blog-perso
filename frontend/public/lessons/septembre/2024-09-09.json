@@ -1,0 +1,303 @@
+{
+    "date": "2024-09-09",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les plantes et comment elles poussent",
+                "description": "Aujourd'hui, nous allons découvrir comment les plantes grandissent à partir de graines. Nous allons planter une graine et comprendre l'importance de l'eau, de la lumière, et de la terre pour sa croissance.",
+                "objectives": [
+                    "Comprendre les éléments nécessaires à la croissance d'une plante : la graine, l'eau, la lumière et la terre.",
+                    "Observer et dessiner les différentes étapes de la croissance d'une plante."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation visuelle des plantes avec des images ou une vidéo.",
+                        "Discussion sur les éléments essentiels à la croissance d'une plante (graine, eau, lumière, terre)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Planter une graine",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Une graine (haricot)",
+                            "Petit pot",
+                            "Terre",
+                            "Arrosoir"
+                        ],
+                        "steps": [
+                            "Remplir le pot avec de la terre.",
+                            "Planter la graine dans la terre.",
+                            "Arroser légèrement avec de l'eau.",
+                            "Placer le pot près de la fenêtre pour que la plante reçoive de la lumière."
+                        ],
+                        "explanations": [
+                            "La graine a besoin d'eau pour commencer à pousser.",
+                            "La lumière du soleil aide la plante à grandir."
+                        ]
+                    },
+                    {
+                        "title": "Observation quotidienne et dessin",
+                        "duration": "10 minutes par jour",
+                        "steps": [
+                            "Observer chaque jour la graine et noter les changements.",
+                            "Dessiner les étapes de la croissance : la graine, la tige, les feuilles."
+                        ]
+                    }
+                ],
+                "explanation": {
+                    "duration": "5-10 minutes",
+                    "concepts": [
+                        "La terre : Contient des nutriments pour la plante.",
+                        "L'eau : Hydrate la plante et la fait pousser.",
+                        "La lumière : Aide la plante à produire sa nourriture grâce à la photosynthèse."
+                    ]
+                },
+                "final_activity": {
+                    "title": "Jeu interactif",
+                    "duration": "10-15 minutes",
+                    "description": "Reconstituer les étapes de la croissance d'une plante à partir d'un puzzle."
+                },
+                "conclusion": {
+                    "steps": [
+                        "Récapituler ce que l'enfant a appris en utilisant ses dessins.",
+                        "Complimente chaque étape pour renforcer la confiance."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Compter jusqu'à 20",
+                "description": "Apprends à compter jusqu'à 20 en utilisant des objets du quotidien.",
+                "objectives": [
+                    "Apprendre à compter jusqu'à 20.",
+                    "Associer des objets du quotidien aux nombres."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des nombres de 1 à 20 avec des cartes.",
+                        "Montre comment compter avec des objets."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compter les jouets",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "20 jouets ou fruits"
+                        ],
+                        "steps": [
+                            "Compter un jouet à la fois jusqu'à 20.",
+                            "Répéter l'activité avec différents objets."
+                        ]
+                    },
+                    {
+                        "title": "Écrire les nombres",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris les nombres de 1 à 20 sur une feuille de papier."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les nombres appris en comptant à voix haute."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les jours de la semaine",
+                "description": "Apprends les jours de la semaine, comment les prononcer et les écrire.",
+                "objectives": [
+                    "Apprendre les noms des jours de la semaine.",
+                    "Savoir les écrire dans le bon ordre."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des jours de la semaine avec des images.",
+                        "Répète les jours à voix haute."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire les jours",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris les jours de la semaine dans le bon ordre."
+                        ]
+                    },
+                    {
+                        "title": "Association des jours avec des activités",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe une activité quotidienne à chaque jour (exemple : 'Lundi, je vais à l'école')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récite les jours de la semaine dans l'ordre."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Fabriquer un masque d'animaux",
+                "description": "Aujourd'hui, nous allons créer un masque d'animal en papier et le décorer avec des couleurs.",
+                "objectives": [
+                    "Créer un masque en papier.",
+                    "Décorer le masque avec des couleurs et des détails."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de masques d'animaux.",
+                        "Choisir un animal à créer."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Découper et colorier",
+                        "duration": "15-20 minutes",
+                        "steps": [
+                            "Découpe le masque en forme d'animal.",
+                            "Colorie le masque et ajoute des détails comme des oreilles ou des moustaches."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Présente le masque et parle de l'animal choisi."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les couleurs en anglais",
+                "description": "Apprends les couleurs en anglais en regardant des objets colorés autour de toi.",
+                "objectives": [
+                    "Apprendre les noms des couleurs en anglais.",
+                    "Associer des objets aux couleurs."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des objets colorés et dis les couleurs en anglais (red, blue, green...)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer et dire",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des objets dans la pièce et dis leurs couleurs en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Colorier",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Colorie un dessin en utilisant les bonnes couleurs et dis-les en anglais."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Répète les couleurs apprises à voix haute."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les châteaux forts",
+                "description": "Découvre comment les châteaux forts étaient construits au Moyen Âge et à quoi ils servaient.",
+                "objectives": [
+                    "Comprendre l'importance des châteaux forts au Moyen Âge.",
+                    "Dessiner un château fort avec ses éléments."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des châteaux forts avec des images.",
+                        "Parle de la vie dans un château fort."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un château fort",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine un château fort avec ses murailles, ses tours, et son pont-levis."
+                        ]
+                    },
+                    {
+                        "title": "Explication des fonctions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Explique pourquoi les gens construisaient des châteaux forts."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule l'importance des châteaux forts."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les continents",
+                "description": "Découvre les différents continents du monde et apprends à les nommer.",
+                "objectives": [
+                    "Apprendre les noms des continents.",
+                    "Associer un animal à chaque continent."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des continents avec une carte du monde.",
+                        "Montre où se trouvent les continents."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les continents",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les continents sur une carte."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal à chaque continent (exemple : éléphant pour l'Afrique)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Répète les noms des continents et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

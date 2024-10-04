@@ -1,0 +1,244 @@
+{
+    "geography_exercises": [
+        {
+            "id": 1,
+            "title": "Les continents du monde",
+            "content": "Le monde est divisé en sept continents. Apprenez à identifier chacun d'eux et à connaître leur emplacement.",
+            "questions": [
+                {
+                    "question": "Combien de continents y a-t-il dans le monde ?",
+                    "answer": "7"
+                }
+            ],
+            "image": "/assets/geography/continents.jpg"
+        },
+        {
+            "id": 2,
+            "title": "Les océans du monde",
+            "content": "Le monde est aussi couvert par cinq océans majeurs. Apprenez à identifier les océans.",
+            "questions": [
+                {
+                    "question": "Quel est le plus grand océan de la Terre ?",
+                    "answer": "L'océan Pacifique"
+                }
+            ],
+            "image": "/assets/geography/oceans.jpg"
+        },
+        {
+            "id": 3,
+            "title": "Les pays d'Europe",
+            "content": "L'Europe est un continent composé de nombreux pays. Apprenez à reconnaître leurs noms et leur emplacement.",
+            "questions": [
+                {
+                    "question": "Quel pays a Paris pour capitale ?",
+                    "answer": "La France"
+                }
+            ],
+            "image": "/assets/geography/europe.jpg"
+        },
+        {
+            "id": 4,
+            "title": "Les montagnes célèbres",
+            "content": "Découvrez les montagnes les plus célèbres du monde, comme l'Himalaya ou les Andes.",
+            "questions": [
+                {
+                    "question": "Quel est le plus haut sommet du monde ?",
+                    "answer": "L'Everest"
+                }
+            ],
+            "image": "/assets/geography/mountains.jpg"
+        },
+        {
+            "id": 5,
+            "title": "Les fleuves du monde",
+            "content": "Apprenez à connaître les fleuves importants du monde et leur rôle.",
+            "questions": [
+                {
+                    "question": "Quel est le plus long fleuve du monde ?",
+                    "answer": "Le Nil"
+                }
+            ],
+            "image": "/assets/geography/rivers.jpg"
+        },
+        {
+            "id": 6,
+            "title": "Les capitales du monde",
+            "content": "Apprenez les noms des capitales des pays à travers le monde.",
+            "questions": [
+                {
+                    "question": "Quelle est la capitale du Japon ?",
+                    "answer": "Tokyo"
+                }
+            ],
+            "image": "/assets/geography/capitals.jpg"
+        },
+        {
+            "id": 7,
+            "title": "Les déserts du monde",
+            "content": "Les déserts couvrent une grande partie de la surface terrestre. Découvrez les plus célèbres d'entre eux.",
+            "questions": [
+                {
+                    "question": "Quel est le plus grand désert chaud du monde ?",
+                    "answer": "Le Sahara"
+                }
+            ],
+            "image": "/assets/geography/deserts.jpg"
+        },
+        {
+            "id": 8,
+            "title": "Les forêts tropicales",
+            "content": "Les forêts tropicales sont des écosystèmes riches en biodiversité. Apprenez où elles se trouvent.",
+            "questions": [
+                {
+                    "question": "Quelle forêt tropicale est souvent appelée 'les poumons de la Terre' ?",
+                    "answer": "La forêt amazonienne"
+                }
+            ],
+            "image": "/assets/geography/rainforest.jpg"
+        },
+        {
+            "id": 9,
+            "title": "Les volcans",
+            "content": "Les volcans sont des montagnes qui entrent en éruption. Apprenez-en plus sur ces phénomènes naturels.",
+            "questions": [
+                {
+                    "question": "Quel volcan est entré en éruption en 79 après J.-C. et a détruit Pompéi ?",
+                    "answer": "Le Vésuve"
+                }
+            ],
+            "image": "/assets/geography/volcanoes.jpg"
+        },
+        {
+            "id": 10,
+            "title": "Les climats du monde",
+            "content": "Le monde est divisé en différents climats. Apprenez à les reconnaître et à comprendre leurs effets.",
+            "questions": [
+                {
+                    "question": "Quel climat caractérise le désert du Sahara ?",
+                    "answer": "Climat aride"
+                }
+            ],
+            "image": "/assets/geography/climates.jpg"
+        },
+        {
+            "id": 11,
+            "title": "Les pôles Nord et Sud",
+            "content": "Les pôles Nord et Sud sont des régions froides et éloignées. Découvrez leurs caractéristiques.",
+            "questions": [
+                {
+                    "question": "Quel animal est typique du pôle Nord ?",
+                    "answer": "L'ours polaire"
+                }
+            ],
+            "image": "/assets/geography/poles.jpg"
+        },
+        {
+            "id": 12,
+            "title": "Les reliefs",
+            "content": "Apprenez à différencier les différents types de reliefs : montagnes, collines, plaines.",
+            "questions": [
+                {
+                    "question": "Quelle est la différence entre une colline et une montagne ?",
+                    "answer": "La montagne est plus élevée."
+                }
+            ],
+            "image": "/assets/geography/reliefs.jpg"
+        },
+        {
+            "id": 13,
+            "title": "Les forêts de conifères",
+            "content": "Les forêts de conifères couvrent de vastes régions du monde. Apprenez à les reconnaître.",
+            "questions": [
+                {
+                    "question": "Quel type d'arbre trouve-t-on dans les forêts de conifères ?",
+                    "answer": "Le pin"
+                }
+            ],
+            "image": "/assets/geography/coniferous.jpg"
+        },
+        {
+            "id": 14,
+            "title": "Les îles",
+            "content": "Les îles sont des terres entourées d'eau. Apprenez à connaître les plus grandes îles du monde.",
+            "questions": [
+                {
+                    "question": "Quel est le plus grand pays insulaire du monde ?",
+                    "answer": "L'Australie"
+                }
+            ],
+            "image": "/assets/geography/islands.jpg"
+        },
+        {
+            "id": 15,
+            "title": "Les grands lacs",
+            "content": "Les grands lacs fournissent de l'eau douce essentielle. Apprenez-en plus sur les plus célèbres.",
+            "questions": [
+                {
+                    "question": "Quel est le plus grand lac d'eau douce au monde ?",
+                    "answer": "Le lac Supérieur"
+                }
+            ],
+            "image": "/assets/geography/lakes.jpg"
+        },
+        {
+            "id": 16,
+            "title": "Les savanes",
+            "content": "Les savanes sont des prairies tropicales. Apprenez à connaître ces écosystèmes.",
+            "questions": [
+                {
+                    "question": "Quel animal est typique des savanes africaines ?",
+                    "answer": "Le lion"
+                }
+            ],
+            "image": "/assets/geography/savannas.jpg"
+        },
+        {
+            "id": 17,
+            "title": "Les zones urbaines",
+            "content": "Apprenez à connaître les caractéristiques des grandes villes dans le monde.",
+            "questions": [
+                {
+                    "question": "Quelle est la ville la plus peuplée du monde ?",
+                    "answer": "Tokyo"
+                }
+            ],
+            "image": "/assets/geography/cities.jpg"
+        },
+        {
+            "id": 18,
+            "title": "Les terres agricoles",
+            "content": "Apprenez à connaître l'importance des terres agricoles dans la production alimentaire mondiale.",
+            "questions": [
+                {
+                    "question": "Quel type de culture est le plus répandu dans le monde ?",
+                    "answer": "Le blé"
+                }
+            ],
+            "image": "/assets/geography/farming.jpg"
+        },
+        {
+            "id": 19,
+            "title": "Les frontières",
+            "content": "Les frontières séparent les pays et les régions. Apprenez à connaître quelques-unes des plus importantes.",
+            "questions": [
+                {
+                    "question": "Quelle est la frontière la plus longue du monde ?",
+                    "answer": "La frontière entre les États-Unis et le Canada"
+                }
+            ],
+            "image": "/assets/geography/borders.jpg"
+        },
+        {
+            "id": 20,
+            "title": "Les ressources naturelles",
+            "content": "Les ressources naturelles sont essentielles pour la survie humaine. Apprenez à les reconnaître.",
+            "questions": [
+                {
+                    "question": "Quel est un exemple de ressource naturelle renouvelable ?",
+                    "answer": "L'énergie solaire"
+                }
+            ],
+            "image": "/assets/geography/resources.jpg"
+        }
+    ]
+}

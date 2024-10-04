@@ -1,0 +1,282 @@
+{
+    "date": "2024-09-17",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les énergies renouvelables",
+                "description": "Nous allons apprendre ce que sont les énergies renouvelables, comme le soleil, le vent, et l'eau, et comprendre comment elles sont utilisées pour produire de l'énergie.",
+                "objectives": [
+                    "Comprendre ce qu'est une énergie renouvelable.",
+                    "Apprendre à distinguer les énergies renouvelables des énergies non renouvelables."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images de panneaux solaires, d'éoliennes, et de barrages hydrauliques.",
+                        "Explique comment ces sources d'énergie fonctionnent pour produire de l'électricité."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un panneau solaire et une éolienne",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un panneau solaire et une éolienne.",
+                            "Ajoute des explications simples sur le fonctionnement de ces dispositifs."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer les avantages des énergies renouvelables",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer pourquoi ces énergies sont meilleures pour la planète (moins de pollution, renouvellement infini, etc.)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les points forts des énergies renouvelables et leur importance pour l'environnement.",
+                        "Complimente l'enfant pour ses efforts."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Apprendre à lire l'heure",
+                "description": "Nous allons apprendre à lire l'heure sur une horloge, en commençant par les heures pleines.",
+                "objectives": [
+                    "Comprendre la lecture d'une horloge.",
+                    "Savoir lire les heures pleines."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une horloge et explique les différentes parties (les aiguilles des heures et des minutes).",
+                        "Explique comment lire une heure pleine (ex. : quand la grande aiguille est sur le 12 et la petite sur un nombre)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer sur une horloge où se trouve l'heure",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer l'heure sur une horloge (ex. : 3h, 5h, etc.)."
+                        ]
+                    },
+                    {
+                        "title": "Écrire et dessiner l'heure",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 5 heures différentes et de les dessiner sur une horloge (ex. : 4h, 7h, etc.)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler à l'enfant les étapes pour lire l'heure.",
+                        "Complimente ses efforts."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les pronoms personnels",
+                "description": "Aujourd'hui, nous allons apprendre les pronoms personnels en français, comme 'je', 'tu', 'il', et comment les utiliser dans des phrases.",
+                "objectives": [
+                    "Apprendre à utiliser les pronoms personnels dans des phrases simples.",
+                    "Comprendre à qui ou à quoi chaque pronom fait référence."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce que sont les pronoms personnels avec des exemples (ex. : 'je' pour parler de soi)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases avec des pronoms personnels",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 phrases en utilisant des pronoms personnels (ex. : 'Je mange une pomme')."
+                        ]
+                    },
+                    {
+                        "title": "Lire à voix haute",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Fais lire les phrases à voix haute et explique à quoi correspondent les pronoms ('je' pour parler de soi, 'il' pour un garçon, etc.)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa compréhension des pronoms.",
+                        "Récapitule leur utilisation dans les phrases simples."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Dessiner un animal fantastique",
+                "description": "Aujourd'hui, nous allons imaginer et dessiner un animal qui n'existe pas dans la réalité, en mélangeant différentes caractéristiques d'animaux.",
+                "objectives": [
+                    "Développer l'imagination en créant un animal unique.",
+                    "Exprimer sa créativité à travers un dessin coloré et original."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples d'animaux fantastiques issus de contes ou d'histoires imaginaires."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Créer un animal imaginaire",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'imaginer et de dessiner un animal qui mélange différentes caractéristiques (ex. : tête de lion, ailes d'aigle, corps de serpent)."
+                        ]
+                    },
+                    {
+                        "title": "Ajouter des couleurs et des détails",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Laisse l'enfant colorier son animal et ajouter des détails (ex. : des cornes, des écailles, etc.)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa créativité.",
+                        "Affiche son dessin pour valoriser son travail."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les couleurs en anglais",
+                "description": "Aujourd'hui, nous allons apprendre les noms des couleurs en anglais, comme 'red', 'blue', 'green'.",
+                "objectives": [
+                    "Apprendre les noms des couleurs en anglais.",
+                    "Associer des objets à leurs couleurs en anglais."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des objets de différentes couleurs et nomme-les en anglais (ex. : un ballon rouge → 'red')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les couleurs aux objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer des objets de différentes couleurs et de dire leurs noms en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Colorier un dessin",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de colorier un dessin et de dire les couleurs utilisées en anglais (ex. : 'blue' pour le ciel)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les noms des couleurs apprises.",
+                        "Complimente l'enfant pour ses efforts en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les civilisations anciennes",
+                "description": "Nous allons découvrir les civilisations anciennes, comme l'Égypte et la Grèce, et comprendre comment elles vivaient.",
+                "objectives": [
+                    "Découvrir les caractéristiques des civilisations anciennes.",
+                    "Comprendre pourquoi ces civilisations étaient si importantes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images de pyramides, de temples grecs, et d'autres monuments célèbres.",
+                        "Explique comment ces civilisations vivaient et pourquoi elles étaient importantes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un monument ancien",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un monument célèbre (ex. : une pyramide égyptienne ou un temple grec)."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer l'importance des civilisations",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer pourquoi ces civilisations étaient importantes (ex. : inventions, culture, etc.)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler à l'enfant ce qu'il a appris sur ces civilisations.",
+                        "Complimente ses efforts et son imagination."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les rivières et fleuves",
+                "description": "Aujourd'hui, nous allons découvrir les grandes rivières et fleuves du monde, comme le Nil, l'Amazone, et le Mississippi.",
+                "objectives": [
+                    "Savoir localiser les grandes rivières sur une carte.",
+                    "Associer les rivières à leurs pays ou continents."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du monde et indique les grandes rivières comme le Nil, l'Amazone, et le Mississippi."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Localiser les grandes rivières sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer les grandes rivières sur une carte."
+                        ]
+                    },
+                    {
+                        "title": "Associer chaque rivière à un pays ou un continent",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque grande rivière à son pays ou son continent (ex. : Nil → Afrique)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa compréhension des rivières.",
+                        "Récapitule les grandes rivières vues pendant la leçon."
+                    ]
+                }
+            }
+        }
+    ]
+}

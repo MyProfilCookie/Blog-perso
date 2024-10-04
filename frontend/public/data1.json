@@ -1,0 +1,224 @@
+{
+    "stories": [
+        {
+            "id": 1,
+            "title": "L'aventure de Mélissa dans la forêt",
+            "content": "Mélissa aimait se promener dans la forêt près de chez elle. Un jour, elle a aidé un petit oiseau coincé entre des branches. L'oiseau l'a menée à un champ de fleurs magnifiques où Mélissa a passé l'après-midi à jouer avec des papillons.",
+            "image": "melissa_foret.png",
+            "themes": [
+                "nature",
+                "amitié",
+                "aventure"
+            ]
+        },
+        {
+            "id": 2,
+            "title": "Le mystère de la vieille maison",
+            "content": "Clara a découvert que la vieille maison au bout de sa rue n'était pas hantée, mais abritait un chat noir nommé Minuit. Ils sont devenus les meilleurs amis et Clara n'avait plus peur de la maison.",
+            "image": "clara_maison.png",
+            "themes": [
+                "mystère",
+                "amitié",
+                "courage"
+            ]
+        },
+        {
+            "id": 3,
+            "title": "L'atelier de peinture de Lucas",
+            "content": "Lucas, passionné de peinture, a organisé une exposition de ses œuvres. Ses amis et sa famille ont adoré ses peintures, et Lucas a ressenti une grande fierté.",
+            "image": "lucas_peinture.png",
+            "themes": [
+                "art",
+                "expression de soi",
+                "fierté"
+            ]
+        },
+        {
+            "id": 4,
+            "title": "Le voyage en montgolfière de Sarah",
+            "content": "Sarah a réalisé son rêve de voler en montgolfière. Elle a admiré la vue du ciel, les champs colorés et les animaux sauvages. Ce voyage a éveillé en elle un amour pour l'aventure.",
+            "image": "sarah_montgolfiere.png",
+            "themes": [
+                "aventure",
+                "nature",
+                "rêve réalisé"
+            ]
+        },
+        {
+            "id": 5,
+            "title": "Le secret du jardin de Lina",
+            "content": "Lina a découvert un jardin secret dans la maison de sa grand-mère. Elle y a trouvé un journal intime racontant les aventures de sa grand-mère dans ce même jardin. Lina a décidé de prendre soin du jardin pour préserver ces souvenirs.",
+            "image": "lina_jardin.png",
+            "themes": [
+                "famille",
+                "nature",
+                "découverte"
+            ]
+        },
+        {
+            "id": 6,
+            "title": "Le trésor de la plage",
+            "content": "Lors d'une promenade sur la plage, Camille a trouvé une bouteille avec un message à l'intérieur. Le message indiquait l'emplacement d'un trésor enfoui dans le sable. Après avoir creusé, Camille a découvert un coffre rempli de coquillages rares.",
+            "image": "camille_plage.png",
+            "themes": [
+                "aventures",
+                "mystère",
+                "découverte"
+            ]
+        },
+        {
+            "id": 7,
+            "title": "La grande course de vélo",
+            "content": "Antoine adorait faire du vélo. Un jour, il a participé à une grande course organisée dans son quartier. Bien qu'il n'ait pas gagné, il a rencontré de nouveaux amis et a appris que le plaisir de participer est plus important que de gagner.",
+            "image": "antoine_course.png",
+            "themes": [
+                "sport",
+                "amitié",
+                "persévérance"
+            ]
+        },
+        {
+            "id": 8,
+            "title": "L'île aux animaux",
+            "content": "Sophie a toujours rêvé de visiter une île remplie d'animaux. Lors de vacances avec sa famille, elle a découvert une petite île où vivaient des lapins, des oiseaux exotiques et des chats sauvages. Sophie a passé toute la journée à explorer l'île et à observer les animaux.",
+            "image": "sophie_ile.png",
+            "themes": [
+                "nature",
+                "animaux",
+                "exploration"
+            ]
+        },
+        {
+            "id": 9,
+            "title": "Le mystère des étoiles filantes",
+            "content": "Lucas et Emma ont remarqué que les étoiles filantes dans le ciel semblaient former des motifs. Ils ont décidé de les observer chaque nuit et ont découvert que les étoiles dessinaient une carte. En suivant la carte, ils ont trouvé un endroit secret dans la forêt où se trouvait un petit lac caché.",
+            "image": "lucas_emma_etoiles.png",
+            "themes": [
+                "aventure",
+                "mystère",
+                "astronomie"
+            ]
+        },
+        {
+            "id": 10,
+            "title": "Le robot de Nathan",
+            "content": "Nathan aimait construire des choses. Un jour, il a décidé de créer un robot à partir de pièces détachées. Après plusieurs essais, son robot a commencé à bouger et à parler. Le robot est devenu le meilleur ami de Nathan, et ils ont vécu de nombreuses aventures ensemble.",
+            "image": "nathan_robot.png",
+            "themes": [
+                "technologie",
+                "amitié",
+                "créativité"
+            ]
+        },
+        {
+            "id": 11,
+            "title": "Le festival des cerfs-volants",
+            "content": "Au printemps, Emma a participé à un festival de cerfs-volants. Elle a fabriqué son propre cerf-volant en forme de papillon et a gagné le prix du cerf-volant le plus coloré. Voir son cerf-volant s'élever dans le ciel a rempli Emma de bonheur.",
+            "image": "emma_cerfvolant.png",
+            "themes": [
+                "nature",
+                "créativité",
+                "joie"
+            ]
+        },
+        {
+            "id": 12,
+            "title": "L'énigme du vieux phare",
+            "content": "Le vieux phare de la ville était entouré de mystères. Clara et ses amis ont découvert un ancien journal indiquant l'existence d'une salle cachée sous le phare. Après avoir résolu plusieurs énigmes, ils ont trouvé la salle où étaient gardés des trésors maritimes oubliés.",
+            "image": "clara_phare.png",
+            "themes": [
+                "mystère",
+                "aventure",
+                "découverte"
+            ]
+        },
+        {
+            "id": 13,
+            "title": "Le jardin enchanté",
+            "content": "Mélodie a découvert un jardin caché derrière sa maison où les fleurs brillaient la nuit et les arbres parlaient. Elle passait ses soirées dans ce jardin magique, apprenant les secrets de la nature et jouant avec les créatures enchantées qui y vivaient.",
+            "image": "melodie_jardin.png",
+            "themes": [
+                "magie",
+                "nature",
+                "découverte"
+            ]
+        },
+        {
+            "id": 14,
+            "title": "Le château dans les nuages",
+            "content": "Lors d'une randonnée, Max et ses amis ont découvert un chemin qui menait à un château dans les nuages. Le château était gardé par des oiseaux géants et abritait une bibliothèque remplie de livres anciens. Max et ses amis ont passé la journée à explorer le château et à lire des histoires sur les créatures fantastiques.",
+            "image": "max_chateau.png",
+            "themes": [
+                "aventure",
+                "fantaisie",
+                "découverte"
+            ]
+        },
+        {
+            "id": 15,
+            "title": "Le voyage de Clara en ballon",
+            "content": "Clara a toujours rêvé de voler en ballon. Pour son anniversaire, ses parents lui ont offert un voyage en ballon au-dessus de la campagne. Depuis les airs, Clara a vu des champs, des rivières et des animaux sauvages. Elle a ressenti une sensation de liberté qu'elle n'avait jamais connue auparavant.",
+            "image": "clara_ballon.png",
+            "themes": [
+                "aventure",
+                "nature",
+                "liberté"
+            ]
+        },
+        {
+            "id": 16,
+            "title": "Le mystère des pierres brillantes",
+            "content": "Mélissa et Lucas ont découvert des pierres brillantes en se promenant près d'un ruisseau. En les collectant, ils ont réalisé que les pierres formaient un chemin. Suivant ce chemin, ils sont arrivés à une grotte cachée où ils ont découvert un ancien trésor oublié.",
+            "image": "melissa_lucas_pierres.png",
+            "themes": [
+                "mystère",
+                "aventure",
+                "découverte"
+            ]
+        },
+        {
+            "id": 17,
+            "title": "L'atelier secret de Léon",
+            "content": "Léon, un inventeur passionné, avait un atelier secret où il construisait des machines extraordinaires. Un jour, il a inventé une machine capable de faire pousser des plantes en quelques secondes. Léon a utilisé cette machine pour transformer un terrain désert en un magnifique jardin.",
+            "image": "leon_atelier.png",
+            "themes": [
+                "invention",
+                "nature",
+                "créativité"
+            ]
+        },
+        {
+            "id": 18,
+            "title": "La ville sous-marine",
+            "content": "Lors de vacances à la mer, Sarah a découvert une ville sous-marine en nageant avec des dauphins. La ville était habitée par des créatures marines intelligentes qui l'ont guidée à travers les merveilles de leur monde sous-marin. Sarah a appris à communiquer avec les dauphins et a passé une journée inoubliable dans cet endroit magique.",
+            "image": "sarah_ville_sousmarine.png",
+            "themes": [
+                "mer",
+                "aventure",
+                "exploration"
+            ]
+        },
+        {
+            "id": 19,
+            "title": "Le voyage dans l'espace",
+            "content": "Léo rêvait de devenir astronaute. Un jour, il a construit une petite fusée avec l'aide de son père. Ensemble, ils ont fait un voyage imaginaire dans l'espace, visitant des planètes colorées et rencontrant des extraterrestres amicaux. Léo s'est promis de réaliser ce rêve un jour.",
+            "image": "leo_espace.png",
+            "themes": [
+                "espace",
+                "rêve",
+                "exploration"
+            ]
+        },
+        {
+            "id": 20,
+            "title": "Le livre des secrets",
+            "content": "Dans la bibliothèque de son grand-père, Emma a trouvé un livre ancien intitulé 'Le livre des secrets'. Le livre contenait des cartes mystérieuses, des recettes magiques, et des histoires d'aventures oubliées. Emma a décidé de suivre les indications du livre pour découvrir les secrets cachés du monde.",
+            "image": "emma_livre_secrets.png",
+            "themes": [
+                "mystère",
+                "aventure",
+                "découverte"
+            ]
+        }
+    ]
+}

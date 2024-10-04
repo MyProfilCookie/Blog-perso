@@ -1,0 +1,241 @@
+{
+    "date": "2024-09-30",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les phénomènes météorologiques",
+                "description": "Aujourd'hui, nous allons revoir les phénomènes météorologiques comme la pluie, la neige, et les orages, et comprendre comment ils se forment.",
+                "objectives": [
+                    "Comprendre comment les phénomènes météorologiques se forment.",
+                    "Apprendre à identifier les signes de différents phénomènes comme la pluie et les orages."
+                ],
+                "introduction": {
+                    "duration": "10 minutes",
+                    "description": "Présentation des phénomènes météorologiques à travers des images ou des vidéos montrant la pluie, la neige, et les orages."
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un nuage qui produit de la pluie",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Dessine un nuage avec de la pluie qui tombe.",
+                            "Étape 2 : Ajoute des détails comme des éclairs pour représenter un orage si l'enfant souhaite."
+                        ]
+                    },
+                    {
+                        "title": "Explication des orages",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer comment les orages se forment, en utilisant des termes simples comme 'éclairs' et 'tonnerre'.",
+                            "Discutez ensemble de la sécurité pendant un orage."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Jeu interactif",
+                    "duration": "10 minutes",
+                    "description": "Associer différents phénomènes météorologiques (pluie, neige, orage) avec les saisons ou les régions du monde."
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les comparaisons de nombres",
+                "description": "Nous allons apprendre à comparer des nombres en utilisant les symboles '>' et '<'.",
+                "objectives": [
+                    "Apprendre à comparer des nombres de manière simple et visuelle.",
+                    "Utiliser les symboles '>' et '<' pour indiquer des comparaisons."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des symboles '>' et '<', et comment les utiliser pour comparer des nombres."
+                },
+                "activities": [
+                    {
+                        "title": "Comparer deux nombres",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Choisis deux nombres et écris le bon symbole entre eux ('>' ou '<').",
+                            "Étape 2 : Répète cet exercice avec 5 paires de nombres."
+                        ]
+                    },
+                    {
+                        "title": "Comparaison avec des objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de comparer des groupes d'objets (comme des jouets) et d'indiquer lequel est le plus grand en utilisant les symboles '>' et '<'."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Jeu de comparaison",
+                    "duration": "10 minutes",
+                    "description": "Utilise des cartes avec des nombres ou des objets pour faire des comparaisons rapides en utilisant les symboles '>' et '<'."
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les phrases négatives",
+                "description": "Nous allons revoir comment transformer une phrase affirmative en phrase négative, comme 'Je mange' devient 'Je ne mange pas'.",
+                "objectives": [
+                    "Apprendre à écrire et reconnaître des phrases négatives.",
+                    "Comprendre comment transformer une phrase affirmative en phrase négative."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation de la structure des phrases négatives, avec des exemples simples."
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases négatives",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Demande à l'enfant d'écrire 3 phrases négatives à partir de phrases affirmatives données.",
+                            "Étape 2 : Discutez de la différence entre une phrase affirmative et négative."
+                        ]
+                    },
+                    {
+                        "title": "Lecture à voix haute",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de lire à voix haute les phrases négatives qu'il a écrites.",
+                            "Explique comment utiliser ces phrases dans une conversation quotidienne."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer un objet en papier mâché",
+                "description": "Aujourd'hui, nous allons fabriquer un objet en utilisant la technique du papier mâché.",
+                "objectives": [
+                    "Développer la créativité en fabriquant un objet à partir de papier mâché.",
+                    "Apprendre à utiliser une technique artistique pour créer des formes en 3D."
+                ],
+                "introduction": {
+                    "duration": "10 minutes",
+                    "description": "Présentation de la technique du papier mâché et des exemples d'objets simples à réaliser."
+                },
+                "activities": [
+                    {
+                        "title": "Créer un objet en papier mâché",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Étape 1 : Choisis un objet simple (comme un bol ou un animal) et commence à le créer en utilisant des couches de papier mâché.",
+                            "Étape 2 : Laisse sécher l'objet après avoir fini de le façonner."
+                        ]
+                    },
+                    {
+                        "title": "Peindre l'objet",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Après séchage, choisis des couleurs et peins l'objet en ajoutant des détails pour le rendre plus réaliste."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les phrases interrogatives en anglais",
+                "description": "Aujourd'hui, nous allons apprendre à poser des questions simples en anglais, comme 'What is your name?' et 'How old are you?'.",
+                "objectives": [
+                    "Apprendre à poser des questions simples en anglais.",
+                    "Utiliser les phrases interrogatives dans des conversations basiques."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation de quelques phrases interrogatives simples en anglais, avec des exemples concrets."
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des questions simples",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Écris 3 questions simples en anglais, comme 'What is your name?' ou 'How old are you?'.",
+                            "Étape 2 : Discute de la manière de répondre à ces questions."
+                        ]
+                    },
+                    {
+                        "title": "Lecture et réponses",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de lire les questions et d'y répondre à voix haute en anglais."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les révolutions historiques",
+                "description": "Nous allons découvrir des révolutions importantes comme la Révolution française et la révolution industrielle.",
+                "objectives": [
+                    "Comprendre pourquoi la Révolution française et la révolution industrielle ont eu lieu.",
+                    "Apprendre à associer ces révolutions à des changements majeurs dans la société."
+                ],
+                "introduction": {
+                    "duration": "10 minutes",
+                    "description": "Présentation des causes et des conséquences des révolutions historiques, avec un accent particulier sur la Révolution française."
+                },
+                "activities": [
+                    {
+                        "title": "Expliquer la Révolution française",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Explique pourquoi la Révolution française a eu lieu et comment elle a changé la société.",
+                            "Étape 2 : Associe des événements comme la prise de la Bastille à la Révolution française."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner la révolution industrielle",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine une scène qui représente la révolution industrielle, comme une usine ou une locomotive à vapeur."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les rivières du monde",
+                "description": "Nous allons revoir les grandes rivières du monde, comme le Nil, l'Amazone, et le Danube.",
+                "objectives": [
+                    "Apprendre à localiser les grandes rivières sur une carte du monde.",
+                    "Comprendre l'importance des rivières pour les régions qu'elles traversent."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des grandes rivières du monde avec une carte pour montrer leur emplacement."
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les rivières sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Utilise une carte pour montrer où se trouvent les rivières comme le Nil et l'Amazone.",
+                            "Étape 2 : Dis à haute voix le nom de chaque rivière et le continent qu'elle traverse."
+                        ]
+                    },
+                    {
+                        "title": "Associer chaque rivière à un continent",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Associe chaque rivière à un pays ou un continent, et explique son importance pour les habitants de cette région."
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,250 @@
+{
+    "date": "2024-09-28",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "L'eau dans la nature",
+                "description": "Nous allons découvrir le cycle de l'eau dans la nature, de la pluie aux rivières et océans, et comprendre son rôle pour les plantes, les animaux, et les humains.",
+                "objectives": [
+                    "Comprendre le cycle de l'eau dans la nature.",
+                    "Observer comment l'eau se déplace et est utilisée par les êtres vivants."
+                ],
+                "introduction": {
+                    "duration": "10 minutes",
+                    "description": "Présentation du cycle de l'eau à l'aide d'images ou de vidéos montrant les étapes de la condensation, la pluie, les rivières et les océans."
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner le cycle de l'eau",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Étape 1 : Sur une feuille de papier, dessine un nuage et fais pleuvoir sur des montagnes.",
+                            "Étape 2 : Dessine l'eau qui coule des montagnes sous forme de rivières jusqu'à l'océan.",
+                            "Étape 3 : Ajoute des flèches pour montrer comment l'eau s'évapore et retourne dans l'atmosphère."
+                        ]
+                    },
+                    {
+                        "title": "Discussion sur l'importance de l'eau",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer pourquoi l'eau est essentielle pour les plantes, les animaux et les humains.",
+                            "Utilise des exemples concrets comme l'arrosage des plantes et la boisson pour les animaux."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Jeu interactif",
+                    "duration": "15 minutes",
+                    "description": "Associe des images d'animaux et de plantes à leurs besoins en eau dans un jeu interactif pour renforcer la compréhension."
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les suites de nombres",
+                "description": "Nous allons apprendre à compléter des suites de nombres régulières et à créer nos propres suites.",
+                "objectives": [
+                    "Apprendre à identifier des suites régulières et à compléter des suites de nombres.",
+                    "Créer ses propres suites et les faire compléter par quelqu'un d'autre."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des suites de nombres régulières (ex. : 2, 4, 6, 8...) et discussion sur comment elles progressent."
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des suites de nombres",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Complète 5 suites de nombres, comme 3, 6, 9, _.",
+                            "Étape 2 : Discute des patterns que tu observes dans les suites et pourquoi elles fonctionnent ainsi."
+                        ]
+                    },
+                    {
+                        "title": "Créer ta propre suite",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Crée ta propre suite de nombres.",
+                            "Étape 2 : Demande à quelqu'un de la compléter et discute des réponses ensemble."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Jeu de devinettes",
+                    "duration": "10 minutes",
+                    "description": "Joue à un jeu où tu dois deviner le prochain nombre d'une suite que quelqu'un d'autre a inventée."
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les adjectifs qualificatifs",
+                "description": "Nous allons apprendre à utiliser les adjectifs pour décrire des objets, des personnes ou des animaux.",
+                "objectives": [
+                    "Comprendre l'utilisation des adjectifs pour décrire des objets et des êtres vivants.",
+                    "Apprendre à intégrer des adjectifs dans des phrases."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des adjectifs et discussion sur comment ils apportent des détails sur les objets et les personnes."
+                },
+                "activities": [
+                    {
+                        "title": "Choisir des adjectifs pour décrire",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Choisis un objet ou une personne dans la pièce.",
+                            "Étape 2 : Écris trois adjectifs qui décrivent cet objet ou cette personne (ex. : grand, rouge, rapide)."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des adjectifs",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Écris 3 phrases en utilisant des adjectifs pour décrire des objets ou des animaux.",
+                            "Étape 2 : Lis les phrases à voix haute et discute pourquoi ces adjectifs sont appropriés."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Jeu de description",
+                    "duration": "10 minutes",
+                    "description": "Joue à un jeu où tu dois décrire un objet ou une personne avec des adjectifs sans dire son nom. L'autre personne doit deviner de quoi il s'agit."
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer une sculpture en pâte à modeler",
+                "description": "Nous allons créer une sculpture simple en pâte à modeler pour explorer les formes en trois dimensions.",
+                "objectives": [
+                    "Développer la créativité en utilisant de la pâte à modeler pour créer des objets ou des animaux.",
+                    "Apprendre à ajouter des détails pour rendre les créations plus réalistes."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des techniques de base pour travailler avec de la pâte à modeler. Montre des exemples simples d'animaux ou d'objets."
+                },
+                "activities": [
+                    {
+                        "title": "Fabriquer un animal en pâte à modeler",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Étape 1 : Choisis un animal ou un objet que tu veux créer.",
+                            "Étape 2 : Utilise la pâte à modeler pour sculpter l'animal ou l'objet en utilisant des formes simples.",
+                            "Étape 3 : Ajoute des détails comme les yeux, la bouche, ou les pattes pour rendre l'animal plus réaliste."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Exposition d'objets",
+                    "duration": "10 minutes",
+                    "description": "Expose ta sculpture à ta famille et explique comment tu l'as fabriquée et quels détails tu as ajoutés pour la rendre réaliste."
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les parties de la maison en anglais",
+                "description": "Nous allons continuer à apprendre les noms des pièces de la maison en anglais.",
+                "objectives": [
+                    "Apprendre à dire et à écrire les noms des pièces de la maison en anglais.",
+                    "Comprendre comment utiliser ces mots dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des noms des pièces de la maison en anglais à l'aide d'images (ex. : kitchen, bathroom, living room)."
+                },
+                "activities": [
+                    {
+                        "title": "Écrire les noms des pièces",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Écris les noms des pièces de ta maison en anglais.",
+                            "Étape 2 : Montre les pièces dans ta maison et dis leurs noms en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Créer une phrase avec chaque pièce",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Pour chaque pièce, écris une phrase simple en anglais (ex. : I eat in the kitchen).",
+                            "Étape 2 : Lis tes phrases à voix haute et corrige les erreurs ensemble."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les explorateurs célèbres",
+                "description": "Nous allons découvrir les explorateurs qui ont voyagé autour du monde et leurs découvertes.",
+                "objectives": [
+                    "Associer les explorateurs célèbres à leurs découvertes.",
+                    "Comprendre l'importance de leurs explorations pour le monde moderne."
+                ],
+                "introduction": {
+                    "duration": "10 minutes",
+                    "description": "Présentation des explorateurs célèbres, comme Christophe Colomb, Magellan, et Marco Polo, et discussion sur leurs voyages."
+                },
+                "activities": [
+                    {
+                        "title": "Associer les explorateurs à leurs découvertes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Utilise des images pour associer chaque explorateur à ses découvertes (ex. : Colomb à l'Amérique, Magellan au premier tour du monde).",
+                            "Étape 2 : Discutez de l'importance de ces découvertes pour l'exploration du monde."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner un bateau d'exploration",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Dessine un bateau de l'époque des explorations, comme celui de Christophe Colomb.",
+                            "Étape 2 : Ajoute des détails sur le bateau, comme les voiles et le drapeau, pour le rendre plus réaliste."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les îles célèbres",
+                "description": "Nous allons découvrir des îles célèbres dans le monde et leurs particularités.",
+                "objectives": [
+                    "Apprendre à identifier des îles célèbres sur une carte.",
+                    "Associer des animaux ou des plantes uniques à chaque île."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des îles célèbres, comme Hawaï, Madagascar, et les Galápagos, et discussion sur leurs particularités."
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les îles sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Utilise une carte pour montrer les grandes îles du monde.",
+                            "Étape 2 : Dis le nom de chaque île et associe-la à un pays ou un océan."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux îles",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Associe des animaux ou des plantes uniques à chaque île (ex. : lémuriens à Madagascar, tortues aux Galápagos).",
+                            "Étape 2 : Explique pourquoi ces îles sont importantes pour la biodiversité."
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

@@ -1,0 +1,266 @@
+{
+    "french_exercises": [
+        {
+            "id": 1,
+            "title": "Les lettres de l'alphabet",
+            "content": "Les lettres de l'alphabet sont la base de toute langue écrite. Elles nous permettent de former des mots, des phrases et des textes. Apprendre l'alphabet est essentiel pour développer des compétences en lecture et en écriture. Cet exercice vous aidera à reconnaître et à nommer les lettres dans l'ordre. Vous commencerez par identifier la première lettre de l'alphabet. Une fois que vous maîtriserez cela, vous pourrez réciter tout l'alphabet et reconnaître chaque lettre facilement.",
+            "questions": [
+                {
+                    "question": "Quelle est la première lettre de l'alphabet?",
+                    "answer": "A"
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "title": "Associer des mots à des images",
+            "content": "Cet exercice est conçu pour renforcer la compréhension des mots et leur association avec des objets réels. En associant des images à des mots, vous apprenez à relier des concepts abstraits à des représentations visuelles. Cette méthode est particulièrement utile pour enrichir le vocabulaire et améliorer la compréhension des mots du quotidien. Par exemple, associer le mot 'pomme' à l'image d'une pomme renforce la reconnaissance visuelle et linguistique.",
+            "questions": [
+                {
+                    "question": "Quel mot correspond à l'image d'une pomme?",
+                    "options": [
+                        "Chat",
+                        "Pomme",
+                        "Chien"
+                    ],
+                    "image": "pomme.png",
+                    "answer": "Pomme"
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "title": "Compléter un mot",
+            "content": "Apprendre à compléter des mots aide à comprendre leur structure et à reconnaître les lettres qui manquent. Cet exercice vous permet de pratiquer l'orthographe et de renforcer votre capacité à identifier les lettres dans un mot. En complétant des mots partiels, vous développerez une meilleure compréhension des modèles de lettres et de la manière dont ils se combinent pour former des mots.",
+            "questions": [
+                {
+                    "question": "Complétez le mot : Ch__t",
+                    "options": [
+                        "o",
+                        "a",
+                        "i"
+                    ],
+                    "answer": "a"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "title": "Former des mots",
+            "content": "La formation de mots à partir de lettres données est une compétence essentielle pour développer des capacités de lecture et d'écriture. Cela vous permet de reconnaître comment les lettres se combinent pour créer des mots. Cet exercice vous aidera à renforcer vos compétences en orthographe et à comprendre les règles qui gouvernent la construction des mots en français.",
+            "questions": [
+                {
+                    "question": "Formez un mot avec les lettres : P, A, P, L, E",
+                    "answer": "POMME"
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "title": "Reconnaître les couleurs",
+            "content": "Les couleurs sont une partie essentielle du monde qui nous entoure, et apprendre à les identifier est une compétence importante pour les jeunes enfants. Cet exercice vous apprendra à associer les noms des couleurs à leur représentation visuelle. Savoir reconnaître et nommer les couleurs est crucial dans le développement du langage et de la perception visuelle.",
+            "questions": [
+                {
+                    "question": "Quelle couleur est représentée par cette image?",
+                    "options": [
+                        "Rouge",
+                        "Vert",
+                        "Bleu"
+                    ],
+                    "image": "rouge.png",
+                    "answer": "Rouge"
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "title": "Les jours de la semaine",
+            "content": "Les jours de la semaine sont une partie importante de la gestion du temps et de la routine quotidienne. Apprendre les jours dans l'ordre est fondamental pour organiser son emploi du temps et comprendre les événements qui se produisent chaque jour. Cet exercice vous aidera à mémoriser l'ordre des jours et à les reconnaître facilement.",
+            "questions": [
+                {
+                    "question": "Quel est le premier jour de la semaine?",
+                    "options": [
+                        "Lundi",
+                        "Mardi",
+                        "Dimanche"
+                    ],
+                    "answer": "Lundi"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "title": "Les chiffres en mots",
+            "content": "Les chiffres peuvent être représentés de deux manières : sous forme numérique et sous forme de mots. Savoir associer les deux est essentiel pour comprendre les mathématiques et la langue. Cet exercice vous permettra de faire correspondre les chiffres à leur version écrite, ce qui est utile à la fois pour l'orthographe et pour les mathématiques de base.",
+            "questions": [
+                {
+                    "question": "Quel mot correspond au chiffre 3?",
+                    "options": [
+                        "Deux",
+                        "Trois",
+                        "Quatre"
+                    ],
+                    "answer": "Trois"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "title": "Les sons des lettres",
+            "content": "Chaque lettre produit un son distinct dans les mots. Apprendre à reconnaître ces sons est essentiel pour la lecture et la prononciation correcte des mots. Cet exercice vous aidera à comprendre quel son produit une lettre dans un mot donné, améliorant ainsi vos compétences en phonétique.",
+            "questions": [
+                {
+                    "question": "Quel son produit la lettre 'S' dans le mot 'Soleil'?",
+                    "answer": "ssss"
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "title": "Faire des phrases simples",
+            "content": "Formuler des phrases simples est une compétence clé pour construire des idées et communiquer clairement. Cet exercice vous aidera à apprendre la structure de base des phrases en utilisant des mots simples. C'est un bon moyen de renforcer vos compétences en grammaire et en expression écrite.",
+            "questions": [
+                {
+                    "question": "Utilisez les mots 'Le', 'chat', 'mange' pour former une phrase.",
+                    "answer": "Le chat mange."
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "title": "Identifier le verbe dans une phrase",
+            "content": "Le verbe est un élément essentiel dans une phrase, car il exprime l'action ou l'état du sujet. Savoir identifier le verbe vous aide à comprendre la structure de la phrase et son sens. Cet exercice vous apprendra à repérer les verbes dans des phrases simples.",
+            "questions": [
+                {
+                    "question": "Quel est le verbe dans la phrase : 'Le chien court.'?",
+                    "answer": "court"
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "title": "Les contraires",
+            "content": "Comprendre les contraires est essentiel pour enrichir le vocabulaire et développer la capacité à exprimer des idées opposées. Cet exercice vous aidera à reconnaître et à utiliser des mots qui signifient l'opposé d'autres mots.",
+            "questions": [
+                {
+                    "question": "Quel est le contraire de 'grand'?",
+                    "options": [
+                        "Petit",
+                        "Lourd",
+                        "Vieux"
+                    ],
+                    "answer": "Petit"
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "title": "Les pluriels",
+            "content": "Le pluriel est une forme grammaticale qui désigne plus d'un objet ou personne. Apprendre à transformer un mot du singulier au pluriel est une compétence essentielle en grammaire. Cet exercice vous permettra de pratiquer la formation du pluriel des noms.",
+            "questions": [
+                {
+                    "question": "Mettez le mot 'chat' au pluriel.",
+                    "answer": "chats"
+                }
+            ]
+        },
+        {
+            "id": 13,
+            "title": "Les adjectifs",
+            "content": "Les adjectifs décrivent des noms et ajoutent des informations importantes sur les objets ou les personnes. Ils permettent de mieux comprendre les caractéristiques des objets. Dans cet exercice, vous allez associer des adjectifs à des noms, ce qui enrichira vos compétences linguistiques.",
+            "questions": [
+                {
+                    "question": "Quel adjectif décrit le mot 'fleur'?",
+                    "options": [
+                        "Belle",
+                        "Grand",
+                        "Lourd"
+                    ],
+                    "answer": "Belle"
+                }
+            ]
+        },
+        {
+            "id": 14,
+            "title": "Compléter une phrase",
+            "content": "Compléter une phrase avec le mot correct est une excellente façon de pratiquer la grammaire et la syntaxe. Cela vous aide à comprendre comment les mots s'accordent pour former des phrases logiques.",
+            "questions": [
+                {
+                    "question": "Complétez : Le soleil est très ______ aujourd'hui.",
+                    "options": [
+                        "chaud",
+                        "froid",
+                        "lent"
+                    ],
+                    "answer": "chaud"
+                }
+            ]
+        },
+        {
+            "id": 15,
+            "title": "Les pronoms",
+            "content": "Les pronoms sont des mots qui remplacent les noms dans une phrase pour éviter les répétitions. Apprendre à les utiliser est essentiel pour la construction de phrases fluides. Cet exercice vous aidera à identifier les pronoms dans des phrases simples.",
+            "questions": [
+                {
+                    "question": "Quel est le pronom dans la phrase : 'Elle court vite.'?",
+                    "answer": "Elle"
+                }
+            ]
+        },
+        {
+            "id": 16,
+            "title": "Les prépositions",
+            "content": "Les prépositions sont des mots courts qui indiquent la relation entre les autres mots dans une phrase. Cet exercice vous aidera à identifier et utiliser les prépositions dans des phrases simples.",
+            "questions": [
+                {
+                    "question": "Quelle est la préposition dans la phrase : 'Le livre est sur la table.'?",
+                    "answer": "sur"
+                }
+            ]
+        },
+        {
+            "id": 17,
+            "title": "Les noms communs",
+            "content": "Les noms communs désignent des objets, des personnes ou des lieux généraux. Cet exercice vous apprendra à reconnaître les noms communs dans des phrases simples, une compétence importante pour maîtriser le vocabulaire de base.",
+            "questions": [
+                {
+                    "question": "Quel est le nom commun dans la phrase : 'Le chat dort.'?",
+                    "answer": "chat"
+                }
+            ]
+        },
+        {
+            "id": 18,
+            "title": "Les syllabes",
+            "content": "Diviser un mot en syllabes est essentiel pour la lecture et l'orthographe. Les syllabes sont les blocs de construction de la prononciation des mots. Cet exercice vous permettra de séparer des mots en syllabes et de mieux comprendre leur structure.",
+            "questions": [
+                {
+                    "question": "Séparez le mot 'voiture' en syllabes.",
+                    "answer": "voi-ture"
+                }
+            ]
+        },
+        {
+            "id": 19,
+            "title": "Les articles définis",
+            "content": "Les articles définis sont utilisés pour désigner des objets ou des personnes spécifiques. Apprendre à identifier et à utiliser les articles définis est essentiel pour parler et écrire correctement.",
+            "questions": [
+                {
+                    "question": "Quel est l'article défini dans la phrase : 'La pomme est rouge.'?",
+                    "answer": "La"
+                }
+            ]
+        },
+        {
+            "id": 20,
+            "title": "Trouver l'intrus",
+            "content": "Cet exercice consiste à identifier l'objet ou le mot qui ne correspond pas aux autres dans un groupe donné. Cela renforce la capacité de catégorisation et d'analyse, qui sont importantes pour le développement cognitif.",
+            "questions": [
+                {
+                    "question": "Quel mot est l'intrus : 'chien, chat, voiture'?",
+                    "answer": "voiture"
+                }
+            ]
+        }
+    ]
+}

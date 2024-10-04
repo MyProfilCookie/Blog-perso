@@ -1,0 +1,273 @@
+{
+    "date": "2024-09-24",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "L'alimentation des animaux",
+                "description": "Aujourd'hui, nous allons découvrir comment les animaux se nourrissent, en fonction de leur habitat et de leur régime alimentaire.",
+                "objectives": [
+                    "Comprendre comment les animaux se nourrissent.",
+                    "Apprendre à associer les animaux à leur nourriture."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique que les animaux mangent des choses différentes selon leur habitat et leur régime alimentaire (herbivore, carnivore, omnivore).",
+                        "Montre des images d'animaux et de leur nourriture."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les animaux à leur nourriture",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer des animaux à leur nourriture (ex. : lion - viande, lapin - herbe)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner un animal en train de manger",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un animal en train de manger sa nourriture préférée."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Demande à l'enfant de récapituler ce qu'il a appris et félicite-le pour son travail."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Le calcul mental",
+                "description": "Nous allons pratiquer des additions et des soustractions simples mentalement, sans utiliser de papier ou d'objets.",
+                "objectives": [
+                    "Améliorer la capacité de calcul mental.",
+                    "Savoir résoudre des opérations simples dans sa tête."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est le calcul mental et pourquoi c'est important.",
+                        "Donne des exemples d'additions et soustractions à faire mentalement."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Résoudre des additions mentalement",
+                        "duration": "5 minutes",
+                        "steps": [
+                            "Demande à l'enfant de résoudre 5 additions mentalement et de dire la réponse à voix haute."
+                        ]
+                    },
+                    {
+                        "title": "Faire des soustractions mentales",
+                        "duration": "5 minutes",
+                        "steps": [
+                            "Demande à l'enfant de faire 3 soustractions dans sa tête et de dire la réponse."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour ses progrès en calcul mental."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les articles définis et indéfinis",
+                "description": "Nous allons revoir l'usage des articles définis (le, la, les) et indéfinis (un, une, des).",
+                "objectives": [
+                    "Apprendre à utiliser correctement les articles définis et indéfinis.",
+                    "Savoir les associer aux objets."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique la différence entre les articles définis et indéfinis, avec des exemples simples."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases avec des articles",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 phrases en utilisant des articles définis et indéfinis."
+                        ]
+                    },
+                    {
+                        "title": "Associer les articles aux objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer des objets avec leurs articles correspondants (ex. : un livre, la table)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour avoir bien utilisé les articles."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre avec des éponges",
+                "description": "Aujourd'hui, nous allons utiliser des éponges pour peindre des formes ou des paysages et explorer différentes textures.",
+                "objectives": [
+                    "Apprendre à peindre avec des éponges.",
+                    "Explorer la créativité à travers différentes textures."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre comment utiliser une éponge pour peindre des formes ou des motifs."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Peindre un paysage avec des éponges",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'utiliser une éponge pour peindre un ciel ou un paysage."
+                        ]
+                    },
+                    {
+                        "title": "Créer des motifs avec des éponges",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Ajoute des couleurs en utilisant des éponges pour créer des motifs uniques sur le paysage."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour son travail créatif et prends une photo de son œuvre."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les prépositions en anglais",
+                "description": "Nous allons apprendre des prépositions en anglais, comme 'on', 'under', 'in'.",
+                "objectives": [
+                    "Apprendre à utiliser des prépositions en anglais.",
+                    "Savoir les associer à des objets du quotidien."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est une préposition en montrant des exemples simples ('on the table', 'under the chair')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Utiliser des prépositions en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des objets et demande à l'enfant de dire où ils se trouvent en utilisant les prépositions en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des prépositions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 phrases simples en utilisant des prépositions."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir bien utilisé les prépositions en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les révolutions",
+                "description": "Nous allons découvrir des révolutions célèbres, comme la Révolution française et la révolution industrielle.",
+                "objectives": [
+                    "Comprendre l'importance des révolutions dans l'histoire.",
+                    "Associer chaque révolution à ses conséquences."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est une révolution en prenant des exemples simples."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner une scène de la Révolution française",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner une scène de la Révolution française, comme la prise de la Bastille."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer la révolution industrielle",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer pourquoi la révolution industrielle a changé le monde."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour avoir appris sur l'importance des révolutions dans l'histoire."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les régions du monde",
+                "description": "Nous allons apprendre à reconnaître les grandes régions géographiques du monde, comme l'Europe, l'Asie, et l'Afrique.",
+                "objectives": [
+                    "Apprendre à localiser les grandes régions du monde.",
+                    "Savoir associer les régions à des pays ou continents."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du monde et explique les grandes régions géographiques."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les régions sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer les grandes régions sur une carte et de les nommer."
+                        ]
+                    },
+                    {
+                        "title": "Associer des régions à des pays",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque région à un pays ou un continent."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir bien localisé les régions du monde."
+                    ]
+                }
+            }
+        }
+    ]
+}

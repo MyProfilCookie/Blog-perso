@@ -1,0 +1,244 @@
+{
+    "math_exercises": [
+        {
+            "id": 1,
+            "title": "Compter des objets",
+            "content": "Compter est l'une des premières compétences mathématiques que l'on apprend. Cela consiste à identifier chaque objet dans un groupe pour déterminer leur nombre total. Dans cet exercice, nous allons nous entraîner à compter des pommes. C'est une activité amusante qui aide à renforcer la reconnaissance des chiffres et la notion de quantité. Regardez attentivement l'image et comptez chaque pomme. Cette pratique vous aidera à développer une compréhension solide des chiffres.",
+            "questions": [
+                {
+                    "question": "Il y a 5 pommes dans le panier. Combien de pommes y a-t-il?",
+                    "answer": "5"
+                }
+            ],
+            "image": "/assets/math/pommes.jpg"
+        },
+        {
+            "id": 2,
+            "title": "Addition simple",
+            "content": "L'addition est une opération fondamentale en mathématiques qui nous permet de trouver la somme de deux ou plusieurs nombres. Par exemple, si vous avez 3 pommes et que vous en ajoutez 2, vous aurez un total de 5 pommes. Cet exercice utilise des exemples simples pour vous aider à comprendre comment l'addition fonctionne. Apprendre à additionner des petits nombres est la base pour des opérations plus complexes comme l'addition de grands nombres.",
+            "questions": [
+                {
+                    "question": "3 + 2 = ?",
+                    "answer": "5"
+                }
+            ],
+            "image": "/assets/math/addition.jpg"
+        },
+        {
+            "id": 3,
+            "title": "Soustraction simple",
+            "content": "La soustraction est l'opération inverse de l'addition. Elle consiste à retirer un certain nombre d'objets d'un groupe. Par exemple, si vous avez 5 pommes et que vous en mangez 2, il vous reste 3 pommes. Cet exercice vous aidera à comprendre comment soustraire des quantités pour trouver la différence entre deux nombres. La soustraction est utilisée dans de nombreuses situations de la vie quotidienne, comme lorsque vous dépensez de l'argent ou partagez des objets.",
+            "questions": [
+                {
+                    "question": "5 - 2 = ?",
+                    "answer": "3"
+                }
+            ],
+            "image": "/assets/math/soustraction.jpg"
+        },
+        {
+            "id": 4,
+            "title": "Comparer des nombres",
+            "content": "Comparer des nombres signifie déterminer lequel est plus grand ou plus petit. C'est une étape importante pour comprendre l'ordre et la taille des nombres. Lorsque nous comparons deux quantités, nous utilisons les symboles '>' pour indiquer 'plus grand que' et '<' pour 'moins que'. Dans cet exercice, vous allez apprendre à identifier le plus grand nombre parmi les deux options données. Cela vous aidera à renforcer votre compréhension des nombres.",
+            "questions": [
+                {
+                    "question": "Quel est le plus grand nombre: 4 ou 7?",
+                    "answer": "7"
+                }
+            ],
+            "image": "/assets/math/comparer.jpg"
+        },
+        {
+            "id": 5,
+            "title": "Multiplication de base",
+            "content": "La multiplication est une façon rapide d'ajouter plusieurs fois le même nombre. Par exemple, 2 x 3 signifie additionner 2 à lui-même 3 fois : 2 + 2 + 2 = 6. Dans cet exercice, vous allez apprendre comment multiplier de petits nombres pour trouver le produit. La multiplication est une opération essentielle qui nous permet de résoudre des problèmes de la vie quotidienne, comme le calcul du total d'objets disposés en groupes égaux.",
+            "questions": [
+                {
+                    "question": "2 x 3 = ?",
+                    "answer": "6"
+                }
+            ],
+            "image": "/assets/math/multiplication.jpg"
+        },
+        {
+            "id": 6,
+            "title": "Division simple",
+            "content": "La division consiste à partager une quantité en parts égales. Par exemple, si vous avez 6 bonbons et que vous les partagez entre 2 amis, chaque ami recevra 3 bonbons. La division est représentée par le symbole '÷' et est utilisée pour répartir des objets ou des quantités de manière équitable. Cet exercice vous aidera à comprendre le concept de la division en utilisant des exemples simples.",
+            "questions": [
+                {
+                    "question": "6 ÷ 2 = ?",
+                    "answer": "3"
+                }
+            ],
+            "image": "/assets/math/division.jpg"
+        },
+        {
+            "id": 7,
+            "title": "Compléter la suite",
+            "content": "Les suites numériques sont des séquences de nombres qui suivent un certain modèle. Compléter une suite consiste à identifier le schéma et à déterminer le nombre qui vient ensuite. Par exemple, dans la suite 1, 2, 3, 4, ... le nombre suivant est 5. Apprendre à compléter des suites aide à développer la compréhension des schémas et des motifs dans les nombres.",
+            "questions": [
+                {
+                    "question": "1, 2, 3, 4, ... ?",
+                    "answer": "5"
+                }
+            ],
+            "image": "/assets/math/suite.jpg"
+        },
+        {
+            "id": 8,
+            "title": "Addition de plusieurs nombres",
+            "content": "Parfois, nous devons additionner plus de deux nombres pour trouver la somme totale. Par exemple, pour additionner 1, 2, et 3, nous faisons 1 + 2 + 3 = 6. Cet exercice vous aidera à pratiquer l'addition de plusieurs chiffres et à renforcer vos compétences en calcul. C'est une étape importante pour résoudre des problèmes mathématiques plus complexes.",
+            "questions": [
+                {
+                    "question": "1 + 2 + 3 = ?",
+                    "answer": "6"
+                }
+            ],
+            "image": "/assets/math/addition-multiple.jpg"
+        },
+        {
+            "id": 9,
+            "title": "Problème de soustraction",
+            "content": "Les problèmes de soustraction sont des situations où l'on retire une certaine quantité pour trouver ce qui reste. Par exemple, si vous avez 8 ballons et que 3 éclatent, il vous reste 5 ballons. La soustraction est utile dans de nombreuses situations, comme lorsque vous dépensez de l'argent ou lorsque vous partagez des objets. Cet exercice vous aidera à comprendre comment résoudre des problèmes impliquant la soustraction.",
+            "questions": [
+                {
+                    "question": "Il y a 8 ballons. 3 ballons éclatent. Combien de ballons reste-t-il?",
+                    "answer": "5"
+                }
+            ],
+            "image": "/assets/math/ballons.jpg"
+        },
+        {
+            "id": 10,
+            "title": "Compter les formes",
+            "content": "La reconnaissance des formes géométriques et le comptage de celles-ci dans des images sont des éléments clés de la géométrie. En comptant les formes, comme les triangles ou les carrés, vous apprenez à distinguer les différentes figures et à comprendre leurs propriétés. Cet exercice vous aidera à développer votre sens de l'observation et à améliorer vos compétences en géométrie.",
+            "questions": [
+                {
+                    "question": "Combien de triangles voyez-vous dans l'image?",
+                    "answer": "4"
+                }
+            ],
+            "image": "/assets/math/triangles.jpg"
+        },
+        {
+            "id": 11,
+            "title": "Addition avec des images",
+            "content": "L'addition peut être rendue plus facile et plus amusante en utilisant des images. En voyant des objets visuels comme des pommes et des poires, vous pouvez compter et additionner les quantités. Cette méthode rend l'apprentissage des mathématiques plus concret et facile à comprendre, surtout pour les jeunes enfants qui apprennent à additionner pour la première fois.",
+            "questions": [
+                {
+                    "question": "Il y a 3 pommes et 4 poires. Combien de fruits y a-t-il en tout?",
+                    "answer": "7"
+                }
+            ],
+            "image": "/assets/math/pommes_poires.jpg"
+        },
+        {
+            "id": 12,
+            "title": "Comparaison des quantités",
+            "content": "Comparer des quantités nous aide à comprendre le concept de 'plus' et 'moins'. C'est utile pour déterminer lequel de deux ensembles a une quantité supérieure ou inférieure. Dans cet exercice, vous apprendrez à comparer deux groupes d'objets pour identifier celui qui en a le plus ou le moins. Cela renforce votre capacité à évaluer des quantités.",
+            "questions": [
+                {
+                    "question": "Il y a 5 bonbons dans un sac et 8 bonbons dans un autre sac. Quel sac a le plus de bonbons?",
+                    "answer": "Le deuxième sac"
+                }
+            ],
+            "image": "/assets/math/sacs_bonbons.jpg"
+        },
+        {
+            "id": 13,
+            "title": "Remplir les blancs",
+            "content": "Trouver les valeurs manquantes dans une équation aide à renforcer votre compréhension des opérations mathématiques. Dans cet exercice, vous devrez identifier quel nombre doit être ajouté pour compléter l'égalité. Cette pratique est essentielle pour développer des compétences en résolution de problèmes.",
+            "questions": [
+                {
+                    "question": "7 + __ = 10",
+                    "answer": "3"
+                }
+            ],
+            "image": "/assets/math/blancs.jpg"
+        },
+        {
+            "id": 14,
+            "title": "Division avec des images",
+            "content": "La division peut être plus facile à comprendre lorsqu'on utilise des images. En partageant des objets entre des amis, vous apprenez comment diviser une quantité en parts égales. Par exemple, si vous avez 10 oranges et que vous les partagez entre 2 amis, vous pouvez visualiser que chaque ami reçoit une quantité égale.",
+            "questions": [
+                {
+                    "question": "Il y a 10 oranges. Si on les partage entre 2 amis, combien d'oranges chacun aura-t-il?",
+                    "answer": "5"
+                }
+            ],
+            "image": "/assets/math/oranges.jpg"
+        },
+        {
+            "id": 15,
+            "title": "Résoudre une équation simple",
+            "content": "Les équations sont des expressions mathématiques qui contiennent une inconnue. Pour les résoudre, vous devez trouver la valeur qui rend l'équation vraie. Dans cet exercice, vous apprendrez à résoudre des équations simples pour déterminer la valeur de l'inconnue.",
+            "questions": [
+                {
+                    "question": "X + 4 = 7. Quelle est la valeur de X?",
+                    "answer": "3"
+                }
+            ],
+            "image": "/assets/math/equation.jpg"
+        },
+        {
+            "id": 16,
+            "title": "Comprendre les fractions",
+            "content": "Les fractions sont utilisées pour représenter une partie d'un tout. Elles indiquent comment un ensemble peut être divisé en parties égales. Dans cet exercice, vous apprendrez à représenter des fractions à l'aide d'une situation concrète, comme couper une pizza en parts égales.",
+            "questions": [
+                {
+                    "question": "Si une pizza est coupée en 4 parts égales et que 2 parts sont mangées, quelle fraction de la pizza a été mangée?",
+                    "answer": "2/4 ou 1/2"
+                }
+            ],
+            "image": "/assets/math/pizza.jpg"
+        },
+        {
+            "id": 17,
+            "title": "Multiplication par 10",
+            "content": "Multiplier par 10 est simple : il suffit d'ajouter un zéro à la fin du nombre. C'est une méthode rapide pour augmenter une quantité. Apprendre à multiplier par 10 vous aidera à comprendre comment les chiffres changent lorsqu'ils sont multipliés.",
+            "questions": [
+                {
+                    "question": "5 x 10 = ?",
+                    "answer": "50"
+                }
+            ],
+            "image": "/assets/math/multiplication.jpg"
+        },
+        {
+            "id": 18,
+            "title": "Problème de mot avec addition",
+            "content": "Les problèmes de mots sont des situations réelles où l'on utilise l'addition pour trouver la réponse. Dans cet exercice, vous apprendrez à additionner des quantités en résolvant des problèmes impliquant des situations de la vie quotidienne.",
+            "questions": [
+                {
+                    "question": "Marie a 3 pommes et Julie en a 4. Combien de pommes ont-elles ensemble?",
+                    "answer": "7"
+                }
+            ],
+            "image": "/assets/math/pommes.jpg"
+        },
+        {
+            "id": 19,
+            "title": "Identifier les formes",
+            "content": "La géométrie consiste à reconnaître et nommer les différentes formes. Chaque forme a des caractéristiques uniques, comme un triangle qui a trois côtés. Dans cet exercice, vous allez apprendre à identifier les formes géométriques dans une image.",
+            "questions": [
+                {
+                    "question": "Quelle est cette forme avec trois côtés égaux?",
+                    "answer": "Triangle"
+                }
+            ],
+            "image": "/assets/math/triangle.jpg"
+        },
+        {
+            "id": 20,
+            "title": "Compter en arrière",
+            "content": "Compter en arrière consiste à énumérer les nombres dans l'ordre décroissant. Cela aide à renforcer la compréhension de l'ordre des nombres et à pratiquer les séquences. Cet exercice vous aidera à développer vos compétences en comptage inverse.",
+            "questions": [
+                {
+                    "question": "10, 9, 8, 7, ... ?",
+                    "answer": "6"
+                }
+            ],
+            "image": "/assets/math/compter_arriere.jpg"
+        }
+    ]
+}

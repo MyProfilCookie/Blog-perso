@@ -1,0 +1,272 @@
+{
+    "date": "2024-09-22",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les volcans",
+                "description": "Aujourd'hui, nous allons revoir les volcans et apprendre pourquoi ils entrent en éruption.",
+                "objectives": [
+                    "Comprendre ce qu'est un volcan et pourquoi il entre en éruption.",
+                    "Apprendre à identifier les différentes parties d'un volcan."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une image ou une vidéo d'un volcan en éruption.",
+                        "Explique brièvement ce qui cause une éruption volcanique."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un volcan en éruption",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un volcan en éruption en ajoutant des détails comme la lave, la fumée, et les cendres."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer le processus d'une éruption",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer, avec ses mots, ce qui se passe pendant une éruption volcanique."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour ses efforts et récapitule ensemble les principales caractéristiques d'un volcan."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les fractions simples",
+                "description": "Nous allons découvrir les fractions simples comme 1/2 et 1/4, et les représenter visuellement.",
+                "objectives": [
+                    "Comprendre les fractions simples et savoir les représenter visuellement.",
+                    "Apprendre à diviser des objets en parties égales."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre un objet divisé en deux et explique ce qu'est une fraction (ex. : la moitié = 1/2)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Diviser des objets en fractions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de diviser un objet (comme une pomme) en deux parties égales pour représenter 1/2."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des fractions simples",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 fractions simples et de les résoudre (ex. : 1/2 d'un gâteau)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour sa compréhension des fractions et encourage-le à utiliser des objets du quotidien pour s'exercer."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les homophones",
+                "description": "Nous allons découvrir les homophones comme 'son' et 'sont', et apprendre à les différencier.",
+                "objectives": [
+                    "Comprendre la différence entre des homophones et les utiliser correctement dans des phrases.",
+                    "Améliorer l'orthographe des homophones courants."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce que sont les homophones avec des exemples ('son' et 'sont')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases avec des homophones",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 phrases avec 'son' et 'sont' en les utilisant correctement."
+                        ]
+                    },
+                    {
+                        "title": "Lecture et explication",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de lire ses phrases à voix haute et d'expliquer pourquoi il a choisi 'son' ou 'sont'."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa compréhension des homophones et encourage-le à continuer à pratiquer."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Dessiner un paysage de plage",
+                "description": "Aujourd'hui, nous allons dessiner une plage avec des palmiers, des vagues, et du sable.",
+                "objectives": [
+                    "Apprendre à dessiner un paysage de plage en utilisant différentes formes et couleurs.",
+                    "Ajouter des détails pour rendre le dessin plus réaliste."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une image d'une plage et explique les éléments clés qui la composent (palmiers, vagues, sable)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un paysage de plage",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un paysage de plage en utilisant des couleurs pour les différents éléments."
+                        ]
+                    },
+                    {
+                        "title": "Ajouter des détails",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Ajoute des détails comme des coquillages, des parasols, ou des serviettes de plage pour enrichir le dessin."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour son dessin et discute ensemble des éléments ajoutés."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les parties de la maison en anglais",
+                "description": "Aujourd'hui, nous allons apprendre les noms des pièces de la maison en anglais, comme 'kitchen', 'bedroom', 'living room'.",
+                "objectives": [
+                    "Apprendre les noms des pièces de la maison en anglais.",
+                    "Savoir associer chaque pièce à son utilité."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une image d'une maison avec ses pièces et nomme-les en anglais."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les pièces de la maison",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre différentes pièces de la maison et demande à l'enfant de les nommer en anglais (ex. : 'kitchen' pour cuisine)."
+                        ]
+                    },
+                    {
+                        "title": "Écrire les noms des pièces en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire les noms des pièces en anglais et de les associer à une image."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir appris les noms des pièces de la maison en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les grandes découvertes",
+                "description": "Nous allons découvrir les grandes découvertes scientifiques et géographiques qui ont marqué l'histoire.",
+                "objectives": [
+                    "Comprendre les grandes découvertes qui ont changé l'histoire.",
+                    "Associer chaque découverte à son explorateur ou inventeur."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est une grande découverte et donne quelques exemples (ex. : la découverte de l'Amérique par Christophe Colomb)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les découvertes à leurs inventeurs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque découverte à son inventeur ou explorateur (ex. : la découverte de la pénicilline → Alexander Fleming)."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer l'importance des découvertes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer pourquoi ces découvertes étaient importantes pour l'histoire."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir compris l'importance des grandes découvertes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les continents",
+                "description": "Aujourd'hui, nous allons revoir les continents et leur position sur la carte du monde.",
+                "objectives": [
+                    "Savoir nommer les continents et les localiser sur une carte.",
+                    "Associer des pays à leur continent."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du monde avec les continents et nomme-les un par un."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les continents sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer les continents sur une carte et de les nommer."
+                        ]
+                    },
+                    {
+                        "title": "Associer des pays aux continents",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Associe chaque continent à quelques pays (ex. : Europe → France, Allemagne)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir bien identifié les continents et leurs pays."
+                    ]
+                }
+            }
+        }
+    ]
+}

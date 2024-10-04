@@ -1,0 +1,251 @@
+{
+    "date": "2024-09-12",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Le cycle de l'eau",
+                "description": "Aujourd'hui, nous allons apprendre comment l'eau voyage dans la nature, en passant par la pluie, les rivières, et la mer.",
+                "objectives": [
+                    "Comprendre les différentes étapes du cycle de l'eau.",
+                    "Apprendre l'importance de l'eau dans la nature."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présente une image ou une vidéo du cycle de l'eau.",
+                        "Explique les étapes simples du cycle : évaporation, condensation, précipitation, ruissellement."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner le cycle de l'eau",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine les différentes étapes du cycle de l'eau.",
+                            "Utilise des couleurs pour montrer les différentes parties (bleu pour l'eau, blanc pour les nuages, etc.)."
+                        ]
+                    },
+                    {
+                        "title": "Discussion sur la pluie",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Explique ce qu'est la pluie et d'où elle vient.",
+                            "Demande à l'enfant de décrire à quoi ressemble la pluie et pourquoi elle est importante."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les étapes du cycle de l'eau.",
+                        "Complimente l'enfant pour sa compréhension et ses dessins."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Comparer des nombres",
+                "description": "Nous allons apprendre à comparer des nombres (ex. : 5 est plus grand que 3) et utiliser les symboles > et <.",
+                "objectives": [
+                    "Apprendre à comparer des nombres en utilisant des symboles.",
+                    "Comprendre la notion de plus grand et plus petit."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Utilise des objets pour montrer des comparaisons simples (ex. : 5 pommes et 3 pommes).",
+                        "Explique les symboles > (plus grand) et < (plus petit)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Comparer des nombres avec des objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Utilise des jouets pour comparer des quantités (ex. : 4 jouets > 2 jouets).",
+                            "Écris des comparaisons simples comme 5 > 3 et 2 < 4."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler à l'enfant les concepts de plus grand et plus petit.",
+                        "Complimente l'enfant pour sa compréhension des comparaisons."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les animaux domestiques",
+                "description": "Nous allons apprendre à nommer et à décrire les animaux domestiques, comme le chien, le chat, et le lapin.",
+                "objectives": [
+                    "Apprendre le vocabulaire des animaux domestiques.",
+                    "Décrire les caractéristiques simples de chaque animal."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images d'animaux domestiques (ex. : chien, chat, lapin).",
+                        "Demande à l'enfant de nommer ces animaux et de décrire ce qu'ils voient."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire une phrase pour chaque animal",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris une phrase pour décrire chaque animal (ex. : Le chat a des poils doux.).",
+                            "Associe une image à chaque nom d'animal."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les animaux domestiques et leurs descriptions.",
+                        "Complimente l'enfant pour ses efforts en écriture et en vocabulaire."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre un paysage de campagne",
+                "description": "Aujourd'hui, nous allons peindre un paysage de campagne avec des collines, des arbres et des animaux.",
+                "objectives": [
+                    "Développer la créativité en dessinant et en peignant un paysage.",
+                    "Apprendre à représenter des éléments naturels comme les arbres, les collines et les animaux."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples simples de paysages de campagne (collines, arbres, etc.).",
+                        "Explique comment ajouter des détails comme des maisons, des animaux ou des rivières."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner et peindre un paysage",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Dessine un paysage de campagne simple (colline, arbres, etc.).",
+                            "Colorie ou peins le paysage en utilisant des couleurs appropriées."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Expose le paysage pour valoriser la créativité de l'enfant.",
+                        "Complimente l'enfant pour ses efforts artistiques."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les couleurs avancées en anglais",
+                "description": "Nous allons apprendre des couleurs plus spécifiques en anglais, comme purple (violet), pink (rose), et orange.",
+                "objectives": [
+                    "Apprendre des couleurs avancées en anglais.",
+                    "Associer des objets à des couleurs spécifiques en anglais."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des objets de couleurs avancées (ex. : violet, rose, orange).",
+                        "Dis le nom de chaque couleur en anglais et fais répéter l'enfant."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Colorier avec des couleurs avancées",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Colorie un dessin en utilisant des couleurs avancées.",
+                            "Dis chaque couleur en anglais à voix haute pendant le coloriage."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler les couleurs en anglais.",
+                        "Complimente l'enfant pour ses progrès en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les villages anciens",
+                "description": "Nous allons découvrir comment les premiers villages étaient construits et comment les gens vivaient en groupe.",
+                "objectives": [
+                    "Comprendre la construction des premiers villages.",
+                    "Apprendre comment les gens vivaient dans ces villages."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Utilise des images ou des maquettes pour montrer à quoi ressemblaient les anciens villages.",
+                        "Explique comment les maisons étaient construites et comment les gens vivaient ensemble."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un village ancien",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine un village ancien avec ses maisons et ses rues.",
+                            "Ajoute des détails comme des puits ou des places publiques."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule la vie dans les anciens villages.",
+                        "Complimente l'enfant pour sa compréhension de l'histoire."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les rivières célèbres",
+                "description": "Nous allons découvrir les rivières célèbres, comme le Nil, le Mississippi, et le Danube, et comprendre où elles se trouvent.",
+                "objectives": [
+                    "Apprendre les noms des rivières célèbres et leur emplacement.",
+                    "Associer chaque rivière à une ville ou un pays."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du monde avec les grandes rivières.",
+                        "Explique pourquoi ces rivières sont importantes pour les villes ou pays voisins."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les rivières sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les rivières célèbres sur une carte du monde (ex. : le Nil en Égypte, le Mississippi aux États-Unis).",
+                            "Associe une ville ou un pays à chaque rivière."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les rivières apprises et leur emplacement sur la carte.",
+                        "Complimente l'enfant pour sa compréhension géographique."
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,273 @@
+{
+    "date": "2024-09-25",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les phénomènes météorologiques",
+                "description": "Aujourd'hui, nous allons découvrir la pluie, la neige, les orages, et comment ils se forment.",
+                "objectives": [
+                    "Comprendre les différents phénomènes météorologiques.",
+                    "Apprendre comment se forment la pluie, la neige et les orages."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est un phénomène météorologique avec des exemples simples (pluie, neige, orage).",
+                        "Montre des images ou une vidéo de ces phénomènes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un nuage avec de la pluie ou de la neige",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un nuage qui produit de la pluie ou de la neige."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer la formation d'un orage",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer, avec des mots simples, comment se forme un orage après avoir vu des images ou une vidéo."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour avoir appris sur les phénomènes météorologiques."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les multiplications simples",
+                "description": "Nous allons apprendre à multiplier de petits nombres, comme 2 x 3 et 4 x 5.",
+                "objectives": [
+                    "Apprendre les bases de la multiplication.",
+                    "Savoir résoudre des multiplications simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est une multiplication en prenant des exemples simples.",
+                        "Utilise des objets pour montrer comment faire une multiplication (ex. : 2 groupes de 3 pommes)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Résoudre des multiplications simples",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de résoudre 5 multiplications simples (ex. : 2 x 3, 4 x 5) et d'écrire la réponse."
+                        ]
+                    },
+                    {
+                        "title": "Faire une table de multiplication",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de faire une table de multiplication pour le chiffre 2 (2 x 1, 2 x 2, etc.)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour avoir bien compris les multiplications simples."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les homophones",
+                "description": "Nous allons apprendre à différencier des homophones comme 'et/est' et 'son/sont'.",
+                "objectives": [
+                    "Comprendre la différence entre les homophones 'et/est' et 'son/sont'.",
+                    "Savoir les utiliser correctement dans des phrases."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est un homophone et donne des exemples simples."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases avec des homophones",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 phrases avec 'et/est' et 3 phrases avec 'son/sont'."
+                        ]
+                    },
+                    {
+                        "title": "Lire à voix haute et expliquer",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de lire ses phrases à voix haute et d'expliquer la différence entre les homophones."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour avoir bien différencié les homophones."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Dessiner un animal fantastique",
+                "description": "Aujourd'hui, nous allons imaginer et dessiner un animal qui n'existe pas dans la réalité.",
+                "objectives": [
+                    "Stimuler la créativité en imaginant un animal fantastique.",
+                    "Apprendre à dessiner en mélangeant des caractéristiques d'animaux réels."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est un animal fantastique et montre des exemples (ex. : licorne, dragon)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Créer un animal imaginaire",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de créer un animal en mélangeant différentes parties d'animaux réels (ex. : tête de lion, corps d'oiseau)."
+                        ]
+                    },
+                    {
+                        "title": "Ajouter des couleurs et des détails",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'ajouter des couleurs pour rendre son animal unique."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour son imagination et son dessin."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les lieux de la ville en anglais",
+                "description": "Nous allons apprendre les noms des lieux importants dans une ville, comme 'school', 'hospital', et 'park'.",
+                "objectives": [
+                    "Apprendre les noms des lieux en anglais.",
+                    "Savoir les utiliser dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images de lieux de la ville (ex. : école, hôpital) et dis leurs noms en anglais."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer et nommer des lieux en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images de lieux de la ville et demande à l'enfant de dire leurs noms en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Écrire une phrase simple avec un lieu de la ville",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire une phrase simple avec un lieu de la ville en anglais (ex. : 'I go to the park')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour avoir bien appris les noms des lieux en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les monuments historiques",
+                "description": "Nous allons revoir les monuments historiques célèbres, comme les pyramides, la Tour Eiffel, et le Colisée.",
+                "objectives": [
+                    "Découvrir les monuments historiques célèbres et leur importance.",
+                    "Apprendre à les associer à leurs pays respectifs."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images de monuments historiques célèbres et parle de leur histoire."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les monuments à leur pays",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque monument à son pays d'origine (ex. : la Tour Eiffel - France)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner un monument célèbre",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un monument historique de son choix."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour avoir bien appris à reconnaître les monuments historiques."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les zones climatiques",
+                "description": "Nous allons découvrir les différentes zones climatiques du monde, comme les zones tropicales, désertiques, et polaires.",
+                "objectives": [
+                    "Comprendre les différentes zones climatiques du monde.",
+                    "Apprendre à associer les zones climatiques à leurs régions géographiques."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est une zone climatique avec des exemples (ex. : climat tropical, désertique, polaire)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les zones climatiques sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer les différentes zones climatiques sur une carte du monde."
+                        ]
+                    },
+                    {
+                        "title": "Associer un type de climat à chaque région",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque région avec son climat (ex. : désertique - Sahara)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour avoir bien compris les zones climatiques."
+                    ]
+                }
+            }
+        }
+    ]
+}

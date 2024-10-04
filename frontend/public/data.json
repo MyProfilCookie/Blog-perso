@@ -1,0 +1,95 @@
+{
+    "levels": [
+        {
+            "level": 1,
+            "title": "Niveau 1: Mots Simples",
+            "description": "Ce niveau est destiné aux enfants qui commencent à lire. Les mots sont simples et les phrases sont courtes.",
+            "content": [
+                {
+                    "id": 1,
+                    "word": "Chat",
+                    "sentence": "Le chat dort.",
+                    "image": "chat.png"
+                },
+                {
+                    "id": 2,
+                    "word": "Chien",
+                    "sentence": "Le chien aboie.",
+                    "image": "chien.png"
+                },
+                {
+                    "id": 3,
+                    "word": "Pomme",
+                    "sentence": "La pomme est rouge.",
+                    "image": "pomme.png"
+                }
+            ]
+        },
+        {
+            "level": 2,
+            "title": "Niveau 2: Phrases Courtes",
+            "description": "Ce niveau est pour les enfants qui commencent à assembler des mots en phrases courtes.",
+            "content": [
+                {
+                    "id": 1,
+                    "sentence": "Le chat joue avec une balle.",
+                    "image": "chat_balle.png"
+                },
+                {
+                    "id": 2,
+                    "sentence": "Le chien court dans le parc.",
+                    "image": "chien_parc.png"
+                },
+                {
+                    "id": 3,
+                    "sentence": "Le soleil brille dans le ciel.",
+                    "image": "soleil.png"
+                }
+            ]
+        },
+        {
+            "level": 3,
+            "title": "Niveau 3: Histoires Courtes",
+            "description": "Ce niveau introduit de courtes histoires avec plusieurs phrases.",
+            "content": [
+                {
+                    "id": 1,
+                    "story": "Un chat trouve une petite balle rouge dans le jardin. Il la pousse avec sa patte, puis la fait rouler. Le chat est très heureux.",
+                    "image": "chat_heureux.png"
+                },
+                {
+                    "id": 2,
+                    "story": "Un chien voit un oiseau voler. Le chien essaie de sauter pour l'attraper, mais l'oiseau vole trop haut. Le chien s'assoit et regarde l'oiseau partir.",
+                    "image": "chien_oiseau.png"
+                },
+                {
+                    "id": 3,
+                    "story": "Une fille mange une pomme sous un arbre. Le vent souffle doucement et fait tomber une feuille. La fille ramasse la feuille et la garde.",
+                    "image": "fille_feuille.png"
+                }
+            ]
+        },
+        {
+            "level": 4,
+            "title": "Niveau 4: Histoires Complexes",
+            "description": "Ce niveau propose des histoires plus longues avec des détails supplémentaires.",
+            "content": [
+                {
+                    "id": 1,
+                    "story": "Dans une petite maison, un chat vivait avec une vieille dame. Chaque matin, la vieille dame donnait du lait au chat. Un jour, le chat a vu un papillon à travers la fenêtre. Il a sauté de la fenêtre et a suivi le papillon dans le jardin. Le papillon a volé au-dessus des fleurs, et le chat a essayé de l'attraper, mais le papillon était trop rapide. Le chat est rentré à la maison et a bu son lait, heureux de son aventure.",
+                    "image": "chat_papillon.png"
+                },
+                {
+                    "id": 2,
+                    "story": "Un chien appelé Max aimait jouer avec les enfants du quartier. Chaque après-midi, les enfants jetaient une balle à Max. Un jour, la balle est tombée dans un trou. Max a essayé de récupérer la balle, mais elle était trop loin. Les enfants ont aidé Max à creuser et finalement, ils ont trouvé un trésor caché ! Max était très excité et aboya joyeusement.",
+                    "image": "max_tresor.png"
+                },
+                {
+                    "id": 3,
+                    "story": "Léo, un petit garçon, aimait grimper aux arbres. Un jour, il est monté très haut dans un grand arbre et a vu un nid avec trois œufs. Léo a observé les œufs jusqu'à ce qu'ils commencent à éclore. Trois petits oiseaux sont nés, et Léo était émerveillé. Il a observé les oiseaux grandir chaque jour jusqu'à ce qu'ils soient prêts à voler.",
+                    "image": "leo_oiseaux.png"
+                }
+            ]
+        }
+    ]
+}

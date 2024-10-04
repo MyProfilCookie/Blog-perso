@@ -1,0 +1,244 @@
+{
+    "date": "2024-09-10",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les arbres et leurs parties",
+                "description": "Aujourd'hui, nous allons découvrir les différentes parties d'un arbre : les racines, le tronc, les branches, et les feuilles. Nous allons voir comment chaque partie aide l'arbre à vivre et grandir.",
+                "objectives": [
+                    "Comprendre les fonctions des différentes parties d'un arbre.",
+                    "Apprendre à identifier les racines, le tronc, les branches, et les feuilles."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Utilise des images ou une vidéo pour montrer un arbre et ses parties.",
+                        "Discussion simple : 'Qu'est-ce qu'un arbre ?', 'À quoi servent les racines et les feuilles ?'"
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un arbre",
+                        "duration": "15-20 minutes",
+                        "steps": [
+                            "Dessine un arbre en identifiant ses différentes parties : racines, tronc, branches, feuilles.",
+                            "Explique à quoi servent les racines pour puiser l'eau et les feuilles pour produire de l'énergie grâce à la lumière."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les fonctions des racines, du tronc, des branches, et des feuilles.",
+                        "Complimente l'enfant pour son dessin et encourage-la à observer des arbres dans la nature."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Apprendre à faire des additions simples",
+                "description": "Après avoir appris à compter jusqu'à 20, nous allons maintenant apprendre à additionner deux nombres simples, comme 5 + 3.",
+                "objectives": [
+                    "Comprendre le concept d'addition.",
+                    "Savoir faire des additions simples avec des objets du quotidien."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique avec des exemples concrets : 'Si tu as 3 pommes et que je te donne 2 autres pommes, combien en as-tu au total ?'",
+                        "Utilise des objets comme des jouets pour illustrer l'addition."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Addition avec des jouets",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Utilise des jouets pour faire des petites additions (ex. : 3 jouets + 2 jouets).",
+                            "Résous des petites additions écrites (ex. : 5 + 3)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule comment faire des additions simples.",
+                        "Complimente l'enfant pour ses progrès en addition."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les mois de l'année",
+                "description": "Après les jours de la semaine, nous allons apprendre les mois de l'année. Nous allons aussi voir quels mois sont associés à chaque saison.",
+                "objectives": [
+                    "Apprendre les noms des mois de l'année.",
+                    "Associer les mois aux saisons correspondantes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Répète les mois de l'année dans le bon ordre en les montrant sur un calendrier.",
+                        "Associe chaque mois à sa saison."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire les mois",
+                        "duration": "10-15 minutes",
+                        "steps": [
+                            "Écris les noms des mois sur une feuille de papier et associe-les aux saisons.",
+                            "Fais répéter les mois en suivant l'ordre de l'année."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais réviser les mois de l'année et les saisons associées.",
+                        "Complimente l'enfant pour sa mémorisation des mois."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer un arbre en papier",
+                "description": "Aujourd'hui, nous allons fabriquer un arbre en papier en utilisant des matériaux comme des ciseaux, de la colle, et des feuilles de couleur.",
+                "objectives": [
+                    "Développer la créativité en fabriquant un arbre en papier.",
+                    "Apprendre à découper et assembler des formes simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre un exemple d'arbre en papier déjà fait.",
+                        "Explique les étapes pour créer un arbre à partir de papier découpé."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Fabrication d'un arbre en papier",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Découpe un tronc d'arbre et des feuilles en papier.",
+                            "Assemble et colle les différentes parties pour créer un arbre.",
+                            "Colore et décore l'arbre avec des crayons ou des feutres."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa création et son sens artistique.",
+                        "Expose l'arbre dans un endroit visible pour encourager sa créativité."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les parties du corps en anglais",
+                "description": "Après avoir appris les couleurs en anglais, nous allons aujourd'hui apprendre les noms des parties du corps en anglais, comme head, arms, legs.",
+                "objectives": [
+                    "Apprendre les noms des principales parties du corps en anglais.",
+                    "Renforcer l'apprentissage avec une chanson."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images des parties du corps et nomme-les en anglais.",
+                        "Demande à l'enfant de répéter chaque mot après toi."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Chanson 'Head, Shoulders, Knees and Toes'",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Chante 'Head, Shoulders, Knees and Toes' tout en montrant les parties du corps.",
+                            "Fais participer l'enfant à chanter et à montrer les parties du corps."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Demande à l'enfant de montrer et nommer quelques parties du corps en anglais.",
+                        "Complimente l'enfant pour ses efforts en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les inventions importantes",
+                "description": "Aujourd'hui, nous allons découvrir certaines des inventions les plus importantes, comme la roue et l'écriture, et comprendre comment elles ont changé la vie des gens.",
+                "objectives": [
+                    "Comprendre l'importance des inventions comme la roue et l'écriture.",
+                    "Apprendre comment ces inventions ont transformé la société."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images de la roue et de l'écriture.",
+                        "Explique comment ces inventions ont changé la vie des gens."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner une invention",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine une invention importante comme la roue.",
+                            "Explique en quelques mots pourquoi cette invention est si utile."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les inventions importantes étudiées et leur rôle dans l'histoire.",
+                        "Complimente l'enfant pour sa compréhension des inventions."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les océans",
+                "description": "Après avoir vu les continents, nous allons aujourd'hui apprendre les noms des océans du monde et comprendre où ils se trouvent.",
+                "objectives": [
+                    "Apprendre les noms des océans du monde.",
+                    "Comprendre leur emplacement géographique sur la carte."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du monde avec les océans en couleur.",
+                        "Nommes les océans un par un."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les océans à des animaux",
+                        "duration": "10-15 minutes",
+                        "steps": [
+                            "Associe un animal marin à chaque océan (ex. : baleine pour l'océan Atlantique).",
+                            "Montre sur une carte où se trouvent ces océans."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais répéter les noms des océans et leur emplacement.",
+                        "Complimente l'enfant pour sa connaissance des océans."
+                    ]
+                }
+            }
+        }
+    ]
+}

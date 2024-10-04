@@ -1,0 +1,282 @@
+{
+    "date": "2024-09-18",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les animaux et leur habitat",
+                "description": "Nous allons découvrir différents habitats naturels (forêt, savane, océan) et les animaux qui y vivent.",
+                "objectives": [
+                    "Apprendre à associer les animaux à leurs habitats.",
+                    "Comprendre l'importance de chaque habitat pour la survie des animaux."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images de différents habitats comme la forêt, la savane, et l'océan.",
+                        "Explique comment chaque habitat est adapté aux animaux qui y vivent."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer un animal à son habitat naturel",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer un animal à son habitat naturel (ex. : le lion à la savane, le poisson à l'océan)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner un habitat et ses animaux",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un habitat et les animaux qui y vivent (ex. : forêt avec des oiseaux, des ours, etc.)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler à l'enfant ce qu'il a appris sur les habitats.",
+                        "Complimente l'enfant pour ses efforts."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les formes géométriques",
+                "description": "Aujourd'hui, nous allons revoir les formes géométriques simples (carré, cercle, triangle) et apprendre à les reconnaître.",
+                "objectives": [
+                    "Apprendre à reconnaître et nommer les formes géométriques.",
+                    "Observer les formes géométriques dans les objets du quotidien."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples de formes géométriques simples (carré, cercle, triangle).",
+                        "Explique comment reconnaître chaque forme."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner des formes géométriques",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un carré, un cercle et un triangle."
+                        ]
+                    },
+                    {
+                        "title": "Chercher des objets avec des formes géométriques",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de chercher des objets dans la maison qui ont des formes géométriques (ex. : une assiette ronde pour le cercle)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir trouvé des formes géométriques.",
+                        "Récapitule les formes apprises."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les phrases interrogatives",
+                "description": "Aujourd'hui, nous allons apprendre à poser des questions simples en français, comme 'Où est...?'.",
+                "objectives": [
+                    "Apprendre à poser des questions simples en français.",
+                    "Utiliser les mots interrogatifs comme 'où' et 'qui'."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique comment poser des questions avec 'où' et 'qui'.",
+                        "Donne des exemples simples (ex. : 'Où est la maison ?')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 questions simples en utilisant 'où' et 'qui'."
+                        ]
+                    },
+                    {
+                        "title": "Lire et répondre aux questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Fais lire à l'enfant ses questions à voix haute et réponds-y avec lui."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour ses progrès.",
+                        "Récapitule comment poser des questions simples en français."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre un coucher de soleil",
+                "description": "Nous allons apprendre à peindre un coucher de soleil en utilisant des couleurs chaudes (rouge, orange, jaune).",
+                "objectives": [
+                    "Apprendre à utiliser les couleurs chaudes pour créer un effet visuel de coucher de soleil.",
+                    "Développer la créativité en ajoutant des éléments de paysage."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples de couchers de soleil avec des couleurs chaudes.",
+                        "Explique comment utiliser les couleurs pour créer l'effet de coucher de soleil."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Peindre un coucher de soleil",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de peindre un coucher de soleil en utilisant des couleurs comme le rouge, l'orange et le jaune."
+                        ]
+                    },
+                    {
+                        "title": "Ajouter des éléments de paysage",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'ajouter des montagnes, des arbres ou des nuages pour compléter le paysage."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son travail artistique.",
+                        "Affiche le tableau pour le valoriser."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les jours de la semaine en anglais",
+                "description": "Aujourd'hui, nous allons apprendre à dire les jours de la semaine en anglais, comme 'Monday', 'Tuesday', etc.",
+                "objectives": [
+                    "Apprendre à nommer les jours de la semaine en anglais.",
+                    "Savoir les écrire dans le bon ordre."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Répète les jours de la semaine en anglais avec des exemples simples."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Répéter les jours de la semaine en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de répéter les jours de la semaine en anglais à voix haute."
+                        ]
+                    },
+                    {
+                        "title": "Écrire les jours dans le bon ordre",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire les jours de la semaine en anglais dans le bon ordre."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour ses efforts.",
+                        "Récapitule les jours de la semaine en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les rois et reines célèbres",
+                "description": "Nous allons découvrir l'histoire de quelques rois et reines célèbres, comme Louis XIV et la reine Élisabeth I.",
+                "objectives": [
+                    "Apprendre à connaître quelques rois et reines célèbres.",
+                    "Comprendre leur importance historique."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des portraits de rois et reines célèbres et explique qui ils étaient."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer un roi ou une reine à son pays",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque roi ou reine à son pays (ex. : Louis XIV à la France)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner un roi ou une reine",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un roi ou une reine avec sa couronne."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son travail.",
+                        "Récapitule l'importance historique des rois et reines vus pendant la leçon."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les montagnes célèbres",
+                "description": "Nous allons découvrir les montagnes célèbres comme l'Himalaya, les Alpes, et le Kilimandjaro.",
+                "objectives": [
+                    "Apprendre à reconnaître les grandes chaînes de montagnes du monde.",
+                    "Savoir associer les montagnes à leurs pays ou continents."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images des grandes chaînes de montagnes comme l'Himalaya, les Alpes, et le Kilimandjaro."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les grandes montagnes sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer où se trouvent les grandes montagnes sur une carte."
+                        ]
+                    },
+                    {
+                        "title": "Associer les montagnes à leurs pays",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque montagne à son pays ou continent (ex. : Kilimandjaro → Afrique)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa compréhension des montagnes.",
+                        "Récapitule les grandes montagnes vues pendant la leçon."
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,243 @@
+{
+    "date": "2024-09-13",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les plantes et leurs besoins",
+                "description": "Apprendre ce dont les plantes ont besoin pour vivre : eau, lumière, air.",
+                "objectives": [
+                    "Comprendre les besoins essentiels des plantes.",
+                    "Identifier l'importance de l'eau, de la lumière et de l'air pour les plantes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images de plantes différentes et demande ce dont elles ont besoin pour vivre.",
+                        "Explique les trois éléments essentiels : l'eau, la lumière et l'air."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Exercice sur les besoins des plantes",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Pose des questions simples sur les besoins des plantes (ex. : Pourquoi les plantes ont-elles besoin d'eau ?).",
+                            "Fais un exercice interactif où l'enfant associe chaque besoin (eau, lumière, air) à son importance."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais un résumé des besoins des plantes.",
+                        "Complimente l'enfant pour ses réponses et son engagement."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les formes géométriques",
+                "description": "Reconnaître et nommer les formes géométriques : carré, cercle, triangle.",
+                "objectives": [
+                    "Apprendre à reconnaître et nommer des formes géométriques simples.",
+                    "Associer des objets du quotidien à des formes géométriques."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples de formes géométriques : carré, cercle, triangle.",
+                        "Demande à l'enfant s'il peut trouver des objets dans la pièce qui ont ces formes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner et nommer des formes géométriques",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Dessine chaque forme (carré, cercle, triangle) et demande à l'enfant de la nommer.",
+                            "Fais chercher des objets dans la pièce qui ont ces formes."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Demande à l'enfant de récapituler les formes et de montrer des objets qui ont ces formes.",
+                        "Complimente pour les efforts en reconnaissance des formes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les animaux sauvages",
+                "description": "Apprendre les noms et les descriptions des animaux sauvages.",
+                "objectives": [
+                    "Connaître les noms des animaux sauvages.",
+                    "Décrire les habitats des animaux sauvages."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images d'animaux sauvages comme le lion, l'éléphant et le tigre.",
+                        "Demande à l'enfant de nommer ces animaux et de dire où ils vivent."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire une phrase pour chaque animal",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire une phrase simple pour décrire chaque animal sauvage (ex. : Le lion vit dans la savane.).",
+                            "Associe chaque animal à son habitat sur une carte du monde."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais répéter à l'enfant les noms des animaux et leurs habitats.",
+                        "Complimente l'enfant pour sa progression en vocabulaire."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre un coucher de soleil",
+                "description": "Peindre un paysage avec un coucher de soleil en utilisant des couleurs chaudes.",
+                "objectives": [
+                    "Apprendre à représenter un paysage avec un coucher de soleil.",
+                    "Utiliser des couleurs chaudes pour illustrer le coucher de soleil."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples de paysages avec des couchers de soleil.",
+                        "Explique comment les couleurs chaudes comme l'orange, le rouge et le jaune sont utilisées pour représenter le ciel."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner et peindre un coucher de soleil",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner un paysage simple et d'ajouter un coucher de soleil.",
+                            "Utilise des couleurs chaudes pour peindre le ciel et le soleil."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour ses efforts artistiques.",
+                        "Expose le dessin pour montrer le travail accompli."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les animaux en anglais",
+                "description": "Apprendre à nommer les animaux en anglais.",
+                "objectives": [
+                    "Apprendre les noms des animaux en anglais.",
+                    "Associer des images d'animaux aux noms en anglais."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images d'animaux (chat, chien, lion, etc.) et dis leurs noms en anglais.",
+                        "Fais répéter à l'enfant les noms des animaux."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des images aux noms en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images d'animaux et demande à l'enfant de dire le nom de chaque animal en anglais.",
+                            "Associe chaque image à son nom en anglais (ex. : dog, cat, lion)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais répéter à l'enfant les noms des animaux en anglais.",
+                        "Complimente pour les efforts en langue étrangère."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les civilisations anciennes",
+                "description": "Découvrir les civilisations comme l'Égypte et la Grèce anciennes.",
+                "objectives": [
+                    "Découvrir les grandes civilisations de l'Antiquité.",
+                    "Apprendre l'importance des pyramides et des temples dans ces civilisations."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images des pyramides égyptiennes et des temples grecs.",
+                        "Explique pourquoi ces bâtiments étaient importants dans l'Antiquité."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner une pyramide égyptienne",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner une pyramide simple.",
+                            "Explique pourquoi les pyramides étaient importantes pour les anciens Égyptiens."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler ce que l'enfant a appris sur l'Égypte et la Grèce anciennes.",
+                        "Complimente l'enfant pour ses efforts en histoire."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les rivières et les fleuves",
+                "description": "Découvrir les grandes rivières et fleuves du monde.",
+                "objectives": [
+                    "Apprendre les noms des grandes rivières et fleuves du monde.",
+                    "Associer chaque fleuve à son pays ou à sa région."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du monde avec les grandes rivières et fleuves.",
+                        "Explique pourquoi ces rivières sont importantes pour les pays qu'elles traversent."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les rivières et fleuves sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer les grandes rivières (Nil, Amazone, Mississippi) sur une carte du monde.",
+                            "Associe chaque fleuve à un pays ou à une région."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais répéter à l'enfant les noms des rivières et fleuves importants.",
+                        "Complimente pour la compréhension géographique."
+                    ]
+                }
+            }
+        }
+    ]
+}

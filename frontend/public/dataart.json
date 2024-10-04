@@ -1,0 +1,124 @@
+{
+    "art_exercises": [
+        {
+            "id": 1,
+            "title": "Peindre avec les doigts",
+            "content": "La peinture avec les doigts est une activité tactile qui permet aux enfants de s'exprimer librement. Ils peuvent explorer différentes couleurs et textures tout en développant leur motricité fine. Utilisez vos doigts pour peindre des formes, des motifs ou même des scènes complètes sur une feuille de papier. Mélangez les couleurs pour voir les nouvelles teintes qui apparaissent et laissez libre cours à votre imagination.",
+            "questions": [
+                {
+                    "question": "Quelles couleurs obtenez-vous en mélangeant le bleu et le jaune?",
+                    "answer": "Vert"
+                }
+            ],
+            "image": "/assets/art/peindre-doigts.jpg"
+        },
+        {
+            "id": 2,
+            "title": "Collage de papiers colorés",
+            "content": "Le collage de papiers colorés permet de développer la créativité tout en pratiquant la découpe et l'assemblage de formes. Découpez des formes simples (cercles, carrés, triangles) dans du papier de différentes couleurs, puis collez-les sur une feuille pour créer un collage. Vous pouvez tenter de représenter un paysage, une scène ou un personnage en utilisant uniquement ces formes.",
+            "questions": [
+                {
+                    "question": "Quelle forme avez-vous utilisée pour représenter un arbre?",
+                    "answer": "Un rectangle pour le tronc et un cercle pour le feuillage"
+                }
+            ],
+            "image": "/assets/art/collage-papier.jpg"
+        },
+        {
+            "id": 3,
+            "title": "Modelage avec de la pâte à modeler",
+            "content": "Le modelage est une activité qui permet de créer des objets en trois dimensions. Utilisez de la pâte à modeler pour former des animaux, des formes géométriques ou des personnages. Vous pouvez aussi expérimenter en créant des textures sur vos sculptures avec différents outils.",
+            "questions": [
+                {
+                    "question": "Quelle forme géométrique pouvez-vous réaliser avec de la pâte à modeler?",
+                    "answer": "Un cube"
+                }
+            ],
+            "image": "/assets/art/pate-modeler.jpg"
+        },
+        {
+            "id": 4,
+            "title": "Dessiner avec des craies",
+            "content": "Les craies permettent de réaliser des dessins sur de grandes surfaces, comme des tableaux ou des feuilles de papier grand format. Utilisez des craies de différentes couleurs pour créer des paysages, des formes abstraites ou des animaux. Vous pouvez aussi mélanger les couleurs pour obtenir des effets de dégradé.",
+            "questions": [
+                {
+                    "question": "Quelle technique permet de créer des ombres avec des craies?",
+                    "answer": "Le frottement léger pour estomper la couleur"
+                }
+            ],
+            "image": "/assets/art/dessin-craies.jpg"
+        },
+        {
+            "id": 5,
+            "title": "Peinture à l'éponge",
+            "content": "La peinture à l'éponge est une technique amusante pour créer des textures intéressantes. Trempez une éponge dans de la peinture et appliquez-la sur une feuille en tapotant pour créer un motif. Essayez de former des paysages ou des motifs abstraits en variant les couleurs et les formes d'éponges.",
+            "questions": [
+                {
+                    "question": "Quel effet obtenez-vous en utilisant une éponge pour appliquer la peinture?",
+                    "answer": "Une texture douce et irrégulière"
+                }
+            ],
+            "image": "/assets/art/peinture-eponge.jpg"
+        },
+        {
+            "id": 6,
+            "title": "Peinture sur galets",
+            "content": "Ramassez des galets lors de vos promenades et peignez-les avec des motifs, des visages ou des formes colorées. Cette activité combine la nature et l'art, et les galets peints peuvent ensuite être utilisés comme objets décoratifs ou même comme cadeaux.",
+            "questions": [
+                {
+                    "question": "Que pouvez-vous peindre sur un galet?",
+                    "answer": "Des visages, des motifs ou des animaux"
+                }
+            ],
+            "image": "/assets/art/peinture-galets.jpg"
+        },
+        {
+            "id": 7,
+            "title": "Collage de photos",
+            "content": "Créez un collage en découpant des images dans de vieux magazines ou en imprimant des photos. Assemblez-les sur une feuille pour raconter une histoire ou représenter un thème particulier, comme la nature ou les animaux.",
+            "questions": [
+                {
+                    "question": "Quel thème avez-vous choisi pour votre collage?",
+                    "answer": "Animaux"
+                }
+            ],
+            "image": "/assets/art/collage-photos.jpg"
+        },
+        {
+            "id": 8,
+            "title": "Création de masques",
+            "content": "Utilisez du carton, des plumes, des paillettes et des feutres pour créer des masques amusants ou effrayants. Une fois votre masque terminé, découpez des trous pour les yeux et attachez un élastique pour le porter.",
+            "questions": [
+                {
+                    "question": "Quel type de masque avez-vous créé?",
+                    "answer": "Masque d'animal"
+                }
+            ],
+            "image": "/assets/art/masques.jpg"
+        },
+        {
+            "id": 9,
+            "title": "Peinture à l'aquarelle",
+            "content": "L'aquarelle permet de créer des effets de transparence et de fluidité. Utilisez de l'eau pour diluer les couleurs et peignez des scènes de nature, des fleurs ou des paysages. Essayez de mélanger les couleurs pour créer des teintes uniques.",
+            "questions": [
+                {
+                    "question": "Quel est l'effet principal de la peinture à l'aquarelle?",
+                    "answer": "La transparence des couleurs"
+                }
+            ],
+            "image": "/assets/art/aquarelle.jpg"
+        },
+        {
+            "id": 10,
+            "title": "Impression de feuilles",
+            "content": "Ramassez des feuilles d'arbres et trempez-les dans de la peinture. Appuyez-les ensuite sur une feuille de papier pour créer des impressions naturelles, révélant ainsi les motifs des nervures.",
+            "questions": [
+                {
+                    "question": "Que pouvez-vous observer dans l'impression d'une feuille?",
+                    "answer": "Les nervures de la feuille"
+                }
+            ],
+            "image": "/assets/art/impression-feuilles.jpg"
+        }
+    ]
+}

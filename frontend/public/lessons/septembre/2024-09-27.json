@@ -1,0 +1,249 @@
+{
+    "date": "2024-09-27",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les arbres et leurs cycles",
+                "description": "Nous allons découvrir la vie des arbres, comment ils changent au fil des saisons, et leur importance dans l'écosystème.",
+                "objectives": [
+                    "Comprendre le cycle de vie des arbres au fil des saisons.",
+                    "Observer les différences entre un arbre en été et en automne.",
+                    "Apprendre à reconnaître les différents stades de croissance d'un arbre."
+                ],
+                "introduction": {
+                    "duration": "10 minutes",
+                    "description": "Présentation des cycles de vie d'un arbre avec des images ou une vidéo montrant les arbres au printemps, en été, en automne, et en hiver. Discussion simple sur ce qui change dans un arbre au fil des saisons."
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un arbre en automne et un autre en été",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Étape 1 : Prends deux feuilles de papier.",
+                            "Étape 2 : Sur la première feuille, dessine un arbre en automne, avec des feuilles de couleur orange et marron tombant de l'arbre.",
+                            "Étape 3 : Sur la deuxième feuille, dessine un arbre en été, avec des feuilles vertes et un ciel ensoleillé.",
+                            "Étape 4 : Ajoute des détails comme des animaux ou des fleurs pour rendre les dessins plus vivants."
+                        ]
+                    },
+                    {
+                        "title": "Explication des changements de saison",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer à voix haute pourquoi les feuilles tombent en automne et pourquoi elles sont vertes en été.",
+                            "Utilise des images d'arbres réels pour comparer avec les dessins réalisés."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Observation interactive",
+                    "duration": "15 minutes",
+                    "description": "Associe des images d'arbres aux différentes saisons dans un jeu interactif, en expliquant pourquoi certains arbres changent plus que d'autres selon les saisons."
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les divisions simples",
+                "description": "Nous allons apprendre à diviser des nombres en parts égales et comprendre le concept de partage équitable.",
+                "objectives": [
+                    "Comprendre le concept de division comme une manière de partager équitablement des objets.",
+                    "Apprendre à diviser de petits nombres en groupes égaux."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Introduction aux divisions simples avec des objets physiques comme des jouets ou des fruits. Expliquez que la division signifie partager en parts égales."
+                },
+                "activities": [
+                    {
+                        "title": "Diviser des jouets en groupes égaux",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Prends 12 jouets ou objets similaires.",
+                            "Étape 2 : Divise ces 12 jouets en 4 groupes égaux. Chaque groupe devrait avoir 3 jouets.",
+                            "Étape 3 : Répétez l'exercice avec d'autres nombres (ex. : 15 jouets divisés par 5).",
+                            "Étape 4 : Discutez ensemble pourquoi chaque groupe a le même nombre de jouets et ce que cela signifie."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des divisions simples",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Sur une feuille de papier, écris 5 divisions simples, comme 10 ÷ 2, 20 ÷ 4, et résous-les.",
+                            "Étape 2 : Explique chaque division à voix haute et vérifie les réponses avec des objets physiques."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Jeu de partage",
+                    "duration": "10 minutes",
+                    "description": "Utilise un jeu de partage où l'enfant doit diviser des quantités de jouets ou d'objets entre plusieurs 'amis' imaginaires pour s'assurer que chacun reçoit le même nombre."
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les pronoms personnels",
+                "description": "Nous allons revoir les pronoms personnels et les utiliser pour créer des phrases simples.",
+                "objectives": [
+                    "Reconnaître les pronoms personnels 'je', 'tu', 'il', 'elle'.",
+                    "Apprendre à utiliser les pronoms personnels dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présenter les pronoms personnels et leur fonction dans une phrase. Utiliser des exemples simples comme 'Je mange une pomme' ou 'Tu joues avec un ballon'."
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases avec des pronoms",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Écris 3 phrases en utilisant les pronoms 'je', 'tu', 'il' ou 'elle'.",
+                            "Étape 2 : Lis chaque phrase à voix haute et explique à qui se réfère le pronom dans chaque phrase.",
+                            "Étape 3 : Corrige ensemble les éventuelles erreurs et explique pourquoi certains pronoms sont utilisés dans certaines phrases."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Jeu de rôle",
+                    "duration": "10 minutes",
+                    "description": "Utilise un jeu de rôle où l'enfant doit parler en utilisant les pronoms corrects. Par exemple, 'Je suis un professeur', 'Il est un élève', 'Elle joue avec son chien'."
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre une scène de forêt",
+                "description": "Aujourd'hui, nous allons peindre une scène de forêt en utilisant des couleurs et des techniques simples.",
+                "objectives": [
+                    "Apprendre à représenter des éléments naturels avec des couleurs appropriées.",
+                    "Comprendre comment utiliser des techniques de peinture pour créer des effets réalistes."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Montre des exemples de scènes de forêt, discute des couleurs utilisées pour représenter les arbres, le ciel et les animaux."
+                },
+                "activities": [
+                    {
+                        "title": "Peindre une forêt",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Étape 1 : Sur une feuille de papier, peins des arbres en utilisant différentes nuances de vert et de brun.",
+                            "Étape 2 : Ajoute des détails comme des animaux (oiseaux, écureuils) pour rendre la scène plus vivante.",
+                            "Étape 3 : Utilise des pinceaux ou des éponges pour créer des textures différentes sur les arbres et les feuilles."
+                        ]
+                    },
+                    {
+                        "title": "Compléter la scène",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Ajoute des éléments comme un ciel bleu, des fleurs ou un chemin pour compléter ta scène de forêt."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les mois de l'année en anglais",
+                "description": "Nous allons apprendre à dire et écrire les mois de l'année en anglais.",
+                "objectives": [
+                    "Savoir dire les mois de l'année en anglais.",
+                    "Apprendre à écrire les mois dans le bon ordre."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présente les mois de l'année en anglais à l'aide d'un tableau ou de cartes visuelles."
+                },
+                "activities": [
+                    {
+                        "title": "Répéter les mois en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Répète les mois de l'année en anglais à voix haute, en commençant par 'January' et en terminant par 'December'.",
+                            "Étape 2 : Utilise des cartes pour montrer chaque mois et demande à l'enfant de les dire à haute voix."
+                        ]
+                    },
+                    {
+                        "title": "Écrire les mois dans le bon ordre",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Sur une feuille de papier, écris les mois de l'année dans le bon ordre.",
+                            "Étape 2 : Vérifie ensemble les réponses et corrige les erreurs."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les philosophes et savants",
+                "description": "Nous allons découvrir les travaux de philosophes et savants célèbres, comme Aristote, Newton, et Einstein.",
+                "objectives": [
+                    "Apprendre à associer des philosophes et savants à leurs découvertes ou travaux.",
+                    "Comprendre l'importance de leurs contributions à la science et à la philosophie."
+                ],
+                "introduction": {
+                    "duration": "10 minutes",
+                    "description": "Présentation visuelle des philosophes et savants célèbres avec des images et des exemples de leurs travaux."
+                },
+                "activities": [
+                    {
+                        "title": "Associer les philosophes à leurs travaux",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Utilise des images pour associer chaque philosophe ou savant à sa découverte ou invention (ex. : Newton à la gravité, Einstein à la relativité).",
+                            "Étape 2 : Discutez de l'importance de leurs travaux pour le monde moderne."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner un objet lié à leurs découvertes",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Dessine un objet ou un symbole qui représente les travaux de ces savants (ex. : une pomme pour Newton, une équation pour Einstein).",
+                            "Étape 2 : Explique à voix haute ce que tu as dessiné et pourquoi."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les climats du monde",
+                "description": "Nous allons découvrir les différents climats du monde et comment ils influencent la vie sur Terre.",
+                "objectives": [
+                    "Comprendre les caractéristiques des différents climats.",
+                    "Savoir associer chaque climat à une région du monde."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des principaux climats : tropical, désertique, polaire, tempéré, avec des exemples de régions."
+                },
+                "activities": [
+                    {
+                        "title": "Associer les climats aux régions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Utilise une carte pour associer chaque région à son climat.",
+                            "Étape 2 : Explique pourquoi ces régions ont des climats spécifiques (ex. : désert pour le Sahara, climat tropical pour l'Amazonie)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner un paysage climatique",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Choisis un climat (polaire, désertique, tropical) et dessine un paysage typique de cette région.",
+                            "Étape 2 : Ajoute des détails qui montrent les conditions climatiques (ex. : neige pour un climat polaire, sable pour un désert)."
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

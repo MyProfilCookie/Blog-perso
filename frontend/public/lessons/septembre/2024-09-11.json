@@ -1,0 +1,243 @@
+{
+    "date": "2024-09-11",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les animaux de la ferme",
+                "description": "Aujourd'hui, nous allons découvrir les animaux de la ferme comme les vaches, les poules et les cochons. Nous allons voir où ils vivent et à quoi ils servent.",
+                "objectives": [
+                    "Apprendre à reconnaître les animaux de la ferme.",
+                    "Comprendre le rôle de chaque animal dans une ferme."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Utilise des images ou des figurines pour présenter les animaux de la ferme.",
+                        "Discussion simple : 'Qu'est-ce qu'une ferme ? Quels animaux y vivent ?'"
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un animal de la ferme",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine un animal de la ferme et écris son nom.",
+                            "Explique à quoi sert chaque animal (ex. : la vache donne du lait, la poule pond des œufs)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler les animaux de la ferme et leur utilité.",
+                        "Complimente l'enfant pour ses efforts en dessin et en identification des animaux."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Introduction à la soustraction",
+                "description": "Après avoir appris les additions, nous allons maintenant apprendre à soustraire de petits nombres (ex. : 5 - 2).",
+                "objectives": [
+                    "Comprendre le concept de soustraction.",
+                    "Apprendre à faire des soustractions simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique le concept de soustraction avec des objets : 'Si tu as 5 pommes et que tu en manges 2, combien en reste-t-il ?'",
+                        "Utilise des jouets pour illustrer la soustraction."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Soustraction avec des jouets",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Utilise des jouets ou des fruits pour faire des soustractions simples.",
+                            "Résous des petites soustractions écrites."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule comment faire une soustraction.",
+                        "Complimente l'enfant pour sa compréhension des soustractions."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les saisons de l'année",
+                "description": "Nous allons apprendre les quatre saisons et associer chaque saison à des événements ou des activités que tu fais.",
+                "objectives": [
+                    "Apprendre les quatre saisons de l'année.",
+                    "Associer chaque saison à des événements ou des activités."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Utilise un calendrier et des images pour montrer les saisons.",
+                        "Associe chaque saison à une période de l'année et à une activité (ex. : l'hiver est la saison de la neige)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les saisons aux mois",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Répète les saisons dans le bon ordre.",
+                            "Associe chaque mois à sa saison (ex. : janvier pour l'hiver, juillet pour l'été)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler les saisons et les mois de l'année.",
+                        "Complimente l'enfant pour sa compréhension des saisons."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Dessiner des animaux de la ferme",
+                "description": "Aujourd'hui, nous allons dessiner des animaux de la ferme, en utilisant des formes simples pour chaque animal.",
+                "objectives": [
+                    "Développer la créativité en dessinant des animaux de la ferme.",
+                    "Apprendre à dessiner en utilisant des formes simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples simples de dessins d'animaux de la ferme (ex. : vache, poule, cochon).",
+                        "Explique les étapes pour dessiner chaque animal en utilisant des formes géométriques simples."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner et colorier un animal de la ferme",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Dessine un ou plusieurs animaux de la ferme.",
+                            "Colorie les animaux et ajoute des détails comme un pré ou une étable."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Expose les dessins des animaux pour valoriser la créativité de l'enfant.",
+                        "Complimente l'enfant pour ses efforts artistiques."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les nombres en anglais",
+                "description": "Nous allons aujourd'hui apprendre à compter jusqu'à 10 en anglais, en utilisant des objets pour nous aider.",
+                "objectives": [
+                    "Apprendre à compter jusqu'à 10 en anglais.",
+                    "Associer les nombres en anglais à des objets du quotidien."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des objets et compte-les en anglais (one, two, three...).",
+                        "Fais répéter l'enfant après toi pour chaque nombre."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compter et écrire les nombres en anglais",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Compter des objets en anglais.",
+                            "Écris les nombres en anglais sur une feuille et associe-les à des images."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler les nombres appris en anglais.",
+                        "Complimente l'enfant pour ses progrès en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les premiers outils",
+                "description": "Aujourd'hui, nous allons découvrir comment les premiers hommes ont inventé des outils comme la pierre taillée, et pourquoi ils étaient importants.",
+                "objectives": [
+                    "Apprendre l'importance des premiers outils inventés par l'homme.",
+                    "Comprendre pourquoi ces outils étaient utiles pour les premiers hommes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Utilise des images pour montrer les premiers outils comme la pierre taillée.",
+                        "Explique pourquoi ces outils étaient importants pour la survie des premiers hommes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un outil préhistorique",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine un des premiers outils utilisés par les hommes (ex. : une pierre taillée).",
+                            "Explique à quoi servait cet outil."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les outils découverts et leur utilité.",
+                        "Complimente l'enfant pour sa compréhension de l'histoire des outils."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les montagnes du monde",
+                "description": "Après avoir appris les océans, nous allons découvrir les montagnes célèbres du monde, comme l'Everest et les Alpes.",
+                "objectives": [
+                    "Apprendre les noms des montagnes célèbres.",
+                    "Comprendre où se trouvent ces montagnes dans le monde."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du monde et indique les chaînes de montagnes célèbres.",
+                        "Explique pourquoi ces montagnes sont connues."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les montagnes aux activités",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe des activités comme le ski ou la randonnée aux montagnes.",
+                            "Montre les montagnes célèbres sur une carte."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les montagnes étudiées et les activités associées.",
+                        "Complimente l'enfant pour sa compréhension de la géographie des montagnes."
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,243 @@
+{
+    "date": "2024-09-14",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les différents types de sol",
+                "description": "Découvrir les types de sol et leur importance pour les plantes.",
+                "objectives": [
+                    "Comprendre les différents types de sol.",
+                    "Découvrir comment les sols affectent la croissance des plantes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des échantillons de différents types de sol : sableux, argileux, limoneux.",
+                        "Explique pourquoi les plantes ont besoin de certains types de sol pour bien pousser."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Exercice sur les types de sol",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de toucher et d'observer les différences entre les types de sol.",
+                            "Pose des questions simples pour vérifier la compréhension (ex. : Pourquoi le sol limoneux est-il bon pour les plantes ?)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Résume les points clés sur les types de sol et leur importance pour les plantes.",
+                        "Complimente l'enfant pour son observation et sa participation."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les additions avec des objets",
+                "description": "Apprendre à additionner en utilisant des objets.",
+                "objectives": [
+                    "Apprendre à additionner de petits nombres en utilisant des objets.",
+                    "Reconnaître l'importance de l'addition dans la vie quotidienne."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples d'objets (jouets, fruits) et demande combien il y en a.",
+                        "Explique comment additionner deux groupes d'objets pour trouver le total."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Additionner des objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'additionner des objets (ex. : 3 pommes + 2 pommes) et de donner le résultat.",
+                            "Fais des additions simples écrites."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa capacité à additionner.",
+                        "Demande à l'enfant de montrer ce qu'il a appris."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les couleurs en français",
+                "description": "Découvrir les couleurs et apprendre à les utiliser dans des phrases.",
+                "objectives": [
+                    "Apprendre les noms des couleurs en français.",
+                    "Utiliser les couleurs dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des objets de différentes couleurs et demande à l'enfant de nommer chaque couleur.",
+                        "Explique comment utiliser les couleurs dans des phrases (ex. : Le ballon est rouge)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases avec des couleurs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire des phrases en utilisant les couleurs (ex. : Le chat est noir).",
+                            "Associe des objets à leurs couleurs sur des images."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour l'utilisation correcte des couleurs.",
+                        "Fais récapituler les couleurs apprises."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Collage avec des feuilles",
+                "description": "Faire un collage en utilisant des feuilles d'automne.",
+                "objectives": [
+                    "Apprendre à utiliser des matériaux naturels pour créer des œuvres d'art.",
+                    "Développer la créativité à travers le collage."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples de collages faits avec des feuilles d'automne.",
+                        "Explique comment ramasser des feuilles et les utiliser pour créer une œuvre."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Créer un collage avec des feuilles",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Ramasse des feuilles d'automne et demande à l'enfant de les utiliser pour faire un collage.",
+                            "Ajoute des détails pour rendre le collage plus vivant (ex. : dessiner des arbres, des animaux)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa créativité.",
+                        "Affiche le collage pour montrer le travail accompli."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les jours de la semaine en anglais",
+                "description": "Apprendre les jours de la semaine en anglais.",
+                "objectives": [
+                    "Connaître les jours de la semaine en anglais.",
+                    "Apprendre à les écrire et à les prononcer correctement."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une liste des jours de la semaine en anglais.",
+                        "Fais répéter chaque jour et vérifie la prononciation."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Répéter et écrire les jours en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de répéter les jours de la semaine en anglais.",
+                            "Fais écrire les jours de la semaine dans le bon ordre."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais un dernier exercice de répétition pour vérifier l'apprentissage.",
+                        "Complimente l'enfant pour ses efforts en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les rois et reines célèbres",
+                "description": "Apprendre les histoires de rois et reines célèbres.",
+                "objectives": [
+                    "Découvrir des personnages historiques importants comme des rois et reines.",
+                    "Comprendre leur rôle dans l'histoire."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images de rois et reines célèbres, comme Louis XIV et Élisabeth Ire.",
+                        "Explique pourquoi ils sont importants dans l'histoire."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Raconter l'histoire d'un roi ou d'une reine",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de raconter ce qu'il a appris sur un roi ou une reine célèbre.",
+                            "Associe chaque personnage à un monument historique (ex. : Versailles pour Louis XIV)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour sa compréhension de l'histoire.",
+                        "Demande à l'enfant de récapituler ce qu'il a appris sur les rois et reines."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les déserts du monde",
+                "description": "Apprendre à reconnaître les déserts et leurs caractéristiques.",
+                "objectives": [
+                    "Connaître les principaux déserts du monde.",
+                    "Comprendre les particularités climatiques des déserts."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images de déserts célèbres comme le Sahara et le désert de Gobi.",
+                        "Explique les caractéristiques des déserts : climat sec, températures extrêmes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les déserts sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer les principaux déserts sur une carte.",
+                            "Explique les particularités climatiques du désert (ex. : le manque d'eau)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Fais récapituler à l'enfant les noms des déserts et leurs caractéristiques.",
+                        "Complimente pour la compréhension géographique."
+                    ]
+                }
+            }
+        }
+    ]
+}

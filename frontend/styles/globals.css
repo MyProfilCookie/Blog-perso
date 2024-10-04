@@ -1,0 +1,23 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@font-face {
+    font-family: 'MyCustomFont';
+    src: url('/_next/static/media/UcC73FwrK3iLTeHuS_nVMrMxCp50SjIa1ZL7W0Q5nw-s.p.7b3669ea.woff2') format('woff2');
+    font-weight: 400;
+    font-style: normal;
+  }
+  body {
+    font-family: 'MyCustomFont', sans-serif;
+}
+.emoji-green {
+  color: #10b981; /* Couleur vert Tailwind */
+}
+
+.emoji-yellow {
+  color: #f59e0b; /* Couleur jaune Tailwind */
+}
+
+.emoji-red {
+  color: #ef4444; /* Couleur rouge Tailwind */
+}

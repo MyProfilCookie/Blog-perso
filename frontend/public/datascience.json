@@ -1,0 +1,244 @@
+{
+    "science_exercises": [
+        {
+            "id": 1,
+            "title": "Qu'est-ce que le jour et la nuit?",
+            "content": "Le jour et la nuit sont causés par la rotation de la Terre sur elle-même. La partie de la Terre tournée vers le Soleil est éclairée, créant le jour, tandis que l'autre côté est dans l'ombre, créant la nuit. Ce phénomène se produit en 24 heures et est crucial pour les rythmes naturels de la vie sur Terre.",
+            "questions": [
+                {
+                    "question": "Pourquoi avons-nous un jour et une nuit?",
+                    "answer": "À cause de la rotation de la Terre sur elle-même, qui expose chaque côté à la lumière du Soleil."
+                }
+            ],
+            "image": "/assets/science/jour-nuit.webp"
+        },
+        {
+            "id": 2,
+            "title": "Qu'est-ce qu'une étoile?",
+            "content": "Une étoile est une gigantesque boule de gaz chaud qui brille en raison de réactions nucléaires internes. Ces réactions libèrent de l'énergie sous forme de lumière et de chaleur. Le Soleil est une étoile, et c'est la plus proche de la Terre, mais il en existe des milliards d'autres dans l'univers.",
+            "questions": [
+                {
+                    "question": "Pourquoi une étoile brille-t-elle?",
+                    "answer": "À cause des réactions nucléaires internes qui libèrent de l'énergie."
+                }
+            ],
+            "image": "/assets/science/etoile.webp"
+        },
+        {
+            "id": 3,
+            "title": "Qu'est-ce qu'une planète?",
+            "content": "Une planète est un grand objet céleste qui tourne autour d'une étoile. Dans notre système solaire, les planètes comme la Terre, Mars et Jupiter tournent autour du Soleil. Les planètes peuvent être rocheuses ou gazeuses, et chacune suit une orbite fixe.",
+            "questions": [
+                {
+                    "question": "Qu'est-ce qu'une planète?",
+                    "answer": "Une planète est un objet qui tourne autour d'une étoile, comme la Terre autour du Soleil."
+                }
+            ],
+            "image": "/assets/science/planete.webp"
+        },
+        {
+            "id": 4,
+            "title": "Pourquoi la Terre est spéciale?",
+            "content": "La Terre est unique car elle possède de l'eau liquide, une atmosphère riche en oxygène et un environnement favorable à la vie. Elle est située à une distance idéale du Soleil pour maintenir des températures modérées, ce qui permet à une grande variété d'espèces de prospérer.",
+            "questions": [
+                {
+                    "question": "Pourquoi la Terre est-elle spéciale?",
+                    "answer": "Parce qu'elle possède les conditions nécessaires à la vie."
+                }
+            ],
+            "image": "/assets/science/terre-speciale.webp"
+        },
+        {
+            "id": 5,
+            "title": "Pourquoi la Lune change de forme?",
+            "content": "La Lune ne change pas réellement de forme, mais nous voyons différentes parties de sa surface éclairée par le Soleil. Ce cycle est appelé phases lunaires et dure environ 29,5 jours. Les principales phases sont la pleine lune, le croissant, et la nouvelle lune.",
+            "questions": [
+                {
+                    "question": "Pourquoi la Lune semble-t-elle changer de forme?",
+                    "answer": "À cause des phases lunaires qui montrent différentes parties de la Lune éclairée par le Soleil."
+                }
+            ],
+            "image": "/assets/science/lune-phases.webp"
+        },
+        {
+            "id": 6,
+            "title": "Qu'est-ce qu'une fusée?",
+            "content": "Une fusée est un engin conçu pour transporter des objets ou des personnes dans l'espace. Elle fonctionne grâce à des moteurs puissants qui brûlent du carburant pour produire une poussée suffisante pour échapper à la gravité terrestre. Les fusées sont utilisées pour lancer des satellites, des sondes spatiales et des astronautes dans l'espace.",
+            "questions": [
+                {
+                    "question": "Pourquoi utilise-t-on des fusées?",
+                    "answer": "Pour envoyer des satellites et des astronautes dans l'espace."
+                }
+            ],
+            "image": "/assets/science/fusee.webp"
+        },
+        {
+            "id": 7,
+            "title": "Qu'est-ce qu'un astronaute?",
+            "content": "Un astronaute est une personne formée pour voyager et travailler dans l'espace. Ils portent des combinaisons spéciales pour survivre dans le vide spatial et mènent des recherches scientifiques à bord de stations spatiales ou d'autres missions.",
+            "questions": [
+                {
+                    "question": "Que fait un astronaute?",
+                    "answer": "Il voyage dans l'espace et mène des recherches scientifiques."
+                }
+            ],
+            "image": "/assets/science/astronaute.webp"
+        },
+        {
+            "id": 8,
+            "title": "Pourquoi le ciel est-il bleu?",
+            "content": "Le ciel est bleu car la lumière du Soleil est dispersée par les molécules d'air dans l'atmosphère. La lumière bleue, ayant une longueur d'onde plus courte, est dispersée plus que les autres couleurs, ce qui donne au ciel sa couleur bleue pendant la journée.",
+            "questions": [
+                {
+                    "question": "Pourquoi le ciel est-il bleu?",
+                    "answer": "Parce que la lumière bleue est plus dispersée dans l'atmosphère que les autres couleurs."
+                }
+            ],
+            "image": "/assets/science/ciel-bleu.webp"
+        },
+        {
+            "id": 9,
+            "title": "Qu'est-ce qu'une constellation?",
+            "content": "Une constellation est un groupe d'étoiles formant une forme particulière dans le ciel. Les humains ont donné des noms à ces formes depuis des millénaires. Par exemple, la Grande Ourse est une constellation bien connue visible dans l'hémisphère nord.",
+            "questions": [
+                {
+                    "question": "Qu'est-ce qu'une constellation?",
+                    "answer": "Un groupe d'étoiles qui forme une forme identifiable dans le ciel."
+                }
+            ],
+            "image": "/assets/science/constellation.webp"
+        },
+        {
+            "id": 10,
+            "title": "Qu'est-ce que le Soleil?",
+            "content": "Le Soleil est une étoile située au centre de notre système solaire. Il fournit la lumière et la chaleur qui rendent possible la vie sur Terre. Grâce à l'énergie qu'il émet, les plantes peuvent produire de la nourriture par photosynthèse, et il régule les températures sur Terre.",
+            "questions": [
+                {
+                    "question": "Pourquoi le Soleil est-il crucial pour la vie?",
+                    "answer": "Il fournit la lumière et la chaleur nécessaires à la vie sur Terre."
+                }
+            ],
+            "image": "/assets/science/soleil.webp"
+        },
+        {
+            "id": 11,
+            "title": "Pourquoi les saisons changent-elles?",
+            "content": "Les saisons changent en raison de l'inclinaison de l'axe de la Terre. Lorsque la Terre tourne autour du Soleil, différentes parties de la planète reçoivent plus ou moins de lumière solaire, créant des variations de température qui donnent naissance aux saisons.",
+            "questions": [
+                {
+                    "question": "Qu'est-ce qui cause les saisons?",
+                    "answer": "L'inclinaison de l'axe de la Terre et sa rotation autour du Soleil."
+                }
+            ],
+            "image": "/assets/science/saisons.webp"
+        },
+        {
+            "id": 12,
+            "title": "Qu'est-ce qu'une galaxie?",
+            "content": "Une galaxie est un vaste regroupement d'étoiles, de planètes, de gaz et de poussière maintenus ensemble par la gravité. Notre galaxie, la Voie Lactée, contient des milliards d'étoiles. Il existe des milliards de galaxies dans l'univers.",
+            "questions": [
+                {
+                    "question": "Qu'est-ce qu'une galaxie?",
+                    "answer": "Un immense regroupement d'étoiles, de planètes et de gaz maintenu par la gravité."
+                }
+            ],
+            "image": "/assets/science/galaxie.webp"
+        },
+        {
+            "id": 13,
+            "title": "Qu'est-ce qu'un satellite?",
+            "content": "Un satellite est un objet qui tourne autour d'une planète. La Lune est un satellite naturel de la Terre. Il existe aussi des satellites artificiels lancés par les humains pour observer la Terre ou faciliter les communications.",
+            "questions": [
+                {
+                    "question": "Quelle est la différence entre un satellite naturel et artificiel?",
+                    "answer": "Un satellite naturel comme la Lune est un corps céleste, tandis qu'un satellite artificiel est créé par les humains."
+                }
+            ],
+            "image": "/assets/science/satellite.webp"
+        },
+        {
+            "id": 14,
+            "title": "Pourquoi avons-nous besoin d'air pour respirer?",
+            "content": "L'air contient de l'oxygène, un gaz essentiel à la vie. Les êtres vivants, comme les humains, respirent cet oxygène pour produire l'énergie nécessaire à leurs activités quotidiennes. Sans oxygène, nous ne pourrions pas survivre.",
+            "questions": [
+                {
+                    "question": "Pourquoi avons-nous besoin d'air?",
+                    "answer": "Parce que l'air contient de l'oxygène, nécessaire pour produire de l'énergie dans notre corps."
+                }
+            ],
+            "image": "/assets/science/respiration.webp"
+        },
+        {
+            "id": 15,
+            "title": "Pourquoi les objets tombent-ils?",
+            "content": "Les objets tombent à cause de la gravité, une force qui attire tout vers la Terre. Lorsque nous lançons un objet en l'air, la gravité le ramène au sol. Cette force agit partout sur Terre et est responsable de nombreux phénomènes naturels.",
+            "questions": [
+                {
+                    "question": "Pourquoi les objets tombent-ils au sol?",
+                    "answer": "À cause de la gravité, une force qui attire tout vers le centre de la Terre."
+                }
+            ],
+            "image": "/assets/science/gravite.webp"
+        },
+        {
+            "id": 16,
+            "title": "Pourquoi le ciel devient-il rouge au coucher du soleil?",
+            "content": "Le ciel devient rouge au coucher du Soleil parce que la lumière traverse une plus grande partie de l'atmosphère. La lumière bleue est dispersée, ce qui laisse passer davantage de lumière rouge et orange, ce qui donne au ciel sa couleur rougeâtre au coucher du Soleil.",
+            "questions": [
+                {
+                    "question": "Pourquoi le ciel est-il rouge au coucher du Soleil?",
+                    "answer": "Parce que la lumière rouge, moins dispersée, devient plus visible quand le Soleil est bas à l'horizon."
+                }
+            ],
+            "image": "/assets/science/coucher-soleil.webp"
+        },
+        {
+            "id": 17,
+            "title": "Qu'est-ce qu'un volcan?",
+            "content": "Un volcan est une montagne qui libère de la lave, des gaz et des cendres lors d'une éruption. La lave provient de l'intérieur de la Terre, où les températures sont extrêmement élevées. Les éruptions volcaniques peuvent changer le paysage et influencer le climat local.",
+            "questions": [
+                {
+                    "question": "Pourquoi un volcan entre-t-il en éruption?",
+                    "answer": "Parce que la pression des gaz et de la lave dans le magma augmente à l'intérieur de la Terre, forçant la lave à sortir à la surface."
+                }
+            ],
+            "image": "/assets/science/volcan.webp"
+        },
+        {
+            "id": 18,
+            "title": "Qu'est-ce que l'univers?",
+            "content": "L'univers est tout ce qui existe, y compris les étoiles, les planètes, les galaxies et tout l'espace entre elles. Il est en constante expansion, et les scientifiques pensent qu'il a commencé avec une explosion appelée Big Bang. L'univers est incroyablement vaste et contient des milliards de galaxies.",
+            "questions": [
+                {
+                    "question": "Qu'est-ce que l'univers?",
+                    "answer": "L'univers est l'ensemble de tout ce qui existe, y compris les étoiles, les galaxies et l'espace entre elles."
+                }
+            ],
+            "image": "/assets/science/univers.webp"
+        },
+        {
+            "id": 19,
+            "title": "Pourquoi la Terre tourne-t-elle?",
+            "content": "La Terre tourne sur elle-même en raison de la force gravitationnelle qui l'a formée à l'origine. Cette rotation est la raison pour laquelle nous avons des jours et des nuits. Cette rotation continue de manière stable depuis la formation de la Terre il y a plus de 4 milliards d'années.",
+            "questions": [
+                {
+                    "question": "Pourquoi la Terre tourne-t-elle?",
+                    "answer": "Elle tourne en raison de la force gravitationnelle qui l'a formée, et cette rotation continue depuis des milliards d'années."
+                }
+            ],
+            "image": "/assets/science/rotation-terre.webp"
+        },
+        {
+            "id": 20,
+            "title": "Qu'est-ce que la Voie Lactée?",
+            "content": "La Voie Lactée est la galaxie dans laquelle se trouve notre système solaire. Elle contient des milliards d'étoiles, dont notre Soleil. En regardant le ciel par une nuit claire, nous pouvons voir une bande lumineuse qui est en réalité la lumière de nombreuses étoiles lointaines dans la Voie Lactée.",
+            "questions": [
+                {
+                    "question": "Qu'est-ce que la Voie Lactée?",
+                    "answer": "C'est la galaxie dans laquelle se trouve notre système solaire et des milliards d'étoiles."
+                }
+            ],
+            "image": "/assets/science/voie-lactee.webp"
+        }
+    ]
+}

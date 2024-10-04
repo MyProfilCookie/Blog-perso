@@ -1,0 +1,318 @@
+{
+    "english_exercises": [
+        {
+            "id": 1,
+            "title": "Apprendre l'alphabet",
+            "content": "L'alphabet est la base de la lecture et de l'écriture en anglais. Pratiquez chaque lettre en associant les sons et les formes.",
+            "questions": [
+                {
+                    "question": "Quelle est la première lettre de l'alphabet en anglais ?",
+                    "answer": "A"
+                }
+            ],
+            "image": "/assets/english/alphabet.jpg"
+        },
+        {
+            "id": 2,
+            "title": "Associer des mots à des images",
+            "content": "Regardez les images et choisissez le mot qui correspond à chacune.",
+            "questions": [
+                {
+                    "question": "Quel mot correspond à l'image d'une pomme (apple) ?",
+                    "options": [
+                        "Dog",
+                        "Apple",
+                        "Car"
+                    ],
+                    "answer": "Apple"
+                }
+            ],
+            "image": "/assets/english/apple.jpg"
+        },
+        {
+            "id": 3,
+            "title": "Compléter un mot",
+            "content": "Remplissez les blancs dans le mot pour le compléter.",
+            "questions": [
+                {
+                    "question": "Complétez le mot : C__t (Chat en anglais)",
+                    "options": [
+                        "a",
+                        "o",
+                        "e"
+                    ],
+                    "answer": "a"
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "title": "Former des phrases simples",
+            "content": "Apprenez à créer des phrases simples en anglais en utilisant des mots basiques.",
+            "questions": [
+                {
+                    "question": "Utilisez les mots 'The', 'cat', 'is', 'sleeping' pour former une phrase.",
+                    "answer": "The cat is sleeping."
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "title": "Les couleurs en anglais",
+            "content": "Associez les noms des couleurs en anglais avec les images correspondantes.",
+            "questions": [
+                {
+                    "question": "Quelle couleur est représentée par cette image (rouge) ?",
+                    "options": [
+                        "Red",
+                        "Blue",
+                        "Green"
+                    ],
+                    "answer": "Red"
+                }
+            ],
+            "image": "/assets/english/red.jpg"
+        },
+        {
+            "id": 6,
+            "title": "Les jours de la semaine",
+            "content": "Apprenez les jours de la semaine en anglais.",
+            "questions": [
+                {
+                    "question": "Quel est le premier jour de la semaine en anglais ?",
+                    "options": [
+                        "Monday",
+                        "Wednesday",
+                        "Friday"
+                    ],
+                    "answer": "Monday"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "title": "Les chiffres en anglais",
+            "content": "Apprenez à compter en anglais en associant les chiffres à leur nom.",
+            "questions": [
+                {
+                    "question": "Quel mot correspond au chiffre 5 ?",
+                    "options": [
+                        "Five",
+                        "Six",
+                        "Seven"
+                    ],
+                    "answer": "Five"
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "title": "Les animaux en anglais",
+            "content": "Associez les images des animaux avec leur nom en anglais.",
+            "questions": [
+                {
+                    "question": "Quel est le mot anglais pour 'chien' ?",
+                    "options": [
+                        "Cat",
+                        "Dog",
+                        "Bird"
+                    ],
+                    "answer": "Dog"
+                }
+            ],
+            "image": "/assets/english/dog.jpg"
+        },
+        {
+            "id": 9,
+            "title": "Les prépositions en anglais",
+            "content": "Apprenez à utiliser les prépositions en anglais.",
+            "questions": [
+                {
+                    "question": "Quelle préposition complète cette phrase : 'The book is ___ the table' ?",
+                    "options": [
+                        "on",
+                        "in",
+                        "under"
+                    ],
+                    "answer": "on"
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "title": "Les formes en anglais",
+            "content": "Identifiez et nommez les formes géométriques en anglais.",
+            "questions": [
+                {
+                    "question": "Quel est le mot anglais pour 'cercle' ?",
+                    "options": [
+                        "Square",
+                        "Circle",
+                        "Triangle"
+                    ],
+                    "answer": "Circle"
+                }
+            ]
+        },
+        {
+            "id": 11,
+            "title": "Les contraires en anglais",
+            "content": "Trouvez le contraire des mots donnés.",
+            "questions": [
+                {
+                    "question": "Quel est le contraire de 'big' ?",
+                    "options": [
+                        "Small",
+                        "Tall",
+                        "Hot"
+                    ],
+                    "answer": "Small"
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "title": "Les animaux de la ferme",
+            "content": "Associez les animaux de la ferme à leurs noms en anglais.",
+            "questions": [
+                {
+                    "question": "Quel est le mot anglais pour 'vache' ?",
+                    "options": [
+                        "Cow",
+                        "Horse",
+                        "Sheep"
+                    ],
+                    "answer": "Cow"
+                }
+            ]
+        },
+        {
+            "id": 13,
+            "title": "Les professions en anglais",
+            "content": "Apprenez les noms des professions courantes en anglais.",
+            "questions": [
+                {
+                    "question": "Quel mot correspond à la profession 'enseignant' en anglais ?",
+                    "options": [
+                        "Teacher",
+                        "Doctor",
+                        "Engineer"
+                    ],
+                    "answer": "Teacher"
+                }
+            ]
+        },
+        {
+            "id": 14,
+            "title": "Les parties du corps",
+            "content": "Associez les parties du corps à leurs noms en anglais.",
+            "questions": [
+                {
+                    "question": "Quel mot désigne 'tête' en anglais ?",
+                    "options": [
+                        "Head",
+                        "Arm",
+                        "Leg"
+                    ],
+                    "answer": "Head"
+                }
+            ]
+        },
+        {
+            "id": 15,
+            "title": "Les fruits et légumes",
+            "content": "Apprenez les noms des fruits et légumes en anglais.",
+            "questions": [
+                {
+                    "question": "Quel est le mot anglais pour 'banane' ?",
+                    "options": [
+                        "Banana",
+                        "Apple",
+                        "Grapes"
+                    ],
+                    "answer": "Banana"
+                }
+            ]
+        },
+        {
+            "id": 16,
+            "title": "Les verbes d'action",
+            "content": "Apprenez des verbes d'action courants en anglais.",
+            "questions": [
+                {
+                    "question": "Quel verbe en anglais signifie 'courir' ?",
+                    "options": [
+                        "Run",
+                        "Walk",
+                        "Jump"
+                    ],
+                    "answer": "Run"
+                }
+            ]
+        },
+        {
+            "id": 17,
+            "title": "Les vêtements",
+            "content": "Apprenez les noms des vêtements en anglais.",
+            "questions": [
+                {
+                    "question": "Quel est le mot anglais pour 'pantalon' ?",
+                    "options": [
+                        "Shirt",
+                        "Pants",
+                        "Shoes"
+                    ],
+                    "answer": "Pants"
+                }
+            ]
+        },
+        {
+            "id": 18,
+            "title": "Les meubles",
+            "content": "Apprenez les noms des meubles en anglais.",
+            "questions": [
+                {
+                    "question": "Quel mot désigne 'chaise' en anglais ?",
+                    "options": [
+                        "Table",
+                        "Chair",
+                        "Couch"
+                    ],
+                    "answer": "Chair"
+                }
+            ]
+        },
+        {
+            "id": 19,
+            "title": "Les saisons",
+            "content": "Apprenez les noms des saisons en anglais.",
+            "questions": [
+                {
+                    "question": "Quel est le mot anglais pour 'hiver' ?",
+                    "options": [
+                        "Winter",
+                        "Summer",
+                        "Autumn"
+                    ],
+                    "answer": "Winter"
+                }
+            ]
+        },
+        {
+            "id": 20,
+            "title": "Les fêtes en anglais",
+            "content": "Apprenez les noms des principales fêtes en anglais.",
+            "questions": [
+                {
+                    "question": "Quel est le nom anglais pour 'Noël' ?",
+                    "options": [
+                        "Easter",
+                        "Halloween",
+                        "Christmas"
+                    ],
+                    "answer": "Christmas"
+                }
+            ]
+        }
+    ]
+}

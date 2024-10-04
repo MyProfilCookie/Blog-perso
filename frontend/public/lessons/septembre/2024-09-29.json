@@ -1,0 +1,246 @@
+{
+    "date": "2024-09-29",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les animaux en voie de disparition",
+                "description": "Nous allons découvrir pourquoi certains animaux sont en danger d'extinction et ce que nous pouvons faire pour les protéger.",
+                "objectives": [
+                    "Comprendre les causes de l'extinction des animaux.",
+                    "Apprendre comment protéger les animaux en danger."
+                ],
+                "introduction": {
+                    "duration": "10 minutes",
+                    "description": "Présentation des espèces animales en voie de disparition, comme le panda géant, le rhinocéros, et l'éléphant. Utilisation d'images pour montrer les animaux."
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un animal en voie de disparition",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Étape 1 : Choisis un animal en voie de disparition parmi ceux présentés.",
+                            "Étape 2 : Dessine cet animal en prêtant attention à ses caractéristiques (grandeur, couleur, etc.)."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer pourquoi cet animal est en danger",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer pourquoi cet animal est en danger (braconnage, destruction de l'habitat, changement climatique).",
+                            "Discute de façons de protéger les animaux, comme réduire la pollution ou protéger les forêts."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Jeu interactif",
+                    "duration": "15 minutes",
+                    "description": "Jeu de classification où l'enfant doit associer les menaces spécifiques (déforestation, chasse) aux animaux en danger."
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les fractions simples",
+                "description": "Aujourd'hui, nous allons revoir les fractions simples comme 1/2, 1/3, et 1/4, et comment les représenter visuellement.",
+                "objectives": [
+                    "Apprendre à comprendre et utiliser les fractions simples.",
+                    "Représenter des fractions visuellement avec des objets du quotidien."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des fractions simples avec des exemples concrets (diviser un gâteau en 2, un sandwich en 4)."
+                },
+                "activities": [
+                    {
+                        "title": "Représentation des fractions",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Utilise des objets comme des fruits ou des jouets pour diviser en parties égales (ex. : divise une pomme en deux pour montrer 1/2).",
+                            "Étape 2 : Demande à l'enfant de représenter visuellement les fractions 1/2, 1/3 et 1/4 avec ces objets."
+                        ]
+                    },
+                    {
+                        "title": "Écrire et résoudre des fractions simples",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Écris 3 fractions simples (ex. : 1/2, 1/4, 1/3) et demande à l'enfant de les résoudre en dessinant ou en utilisant des objets.",
+                            "Étape 2 : Explique les réponses et discute des erreurs s'il y en a."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Création de fractions",
+                    "duration": "10 minutes",
+                    "description": "Demande à l'enfant de créer ses propres fractions à partir d'objets et de les expliquer à un autre membre de la famille."
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les expressions courantes",
+                "description": "Nous allons apprendre des expressions courantes utilisées en conversation, comme 'bonjour', 'au revoir', 'merci'.",
+                "objectives": [
+                    "Comprendre l'importance des expressions dans la communication quotidienne.",
+                    "Utiliser ces expressions dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des expressions 'bonjour', 'au revoir', 'merci', 's'il vous plaît' et leur usage dans la vie quotidienne."
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases simples",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Écris 3 phrases simples en utilisant les expressions apprises.",
+                            "Étape 2 : Demande à l'enfant de lire ces phrases à voix haute et de les utiliser dans un dialogue."
+                        ]
+                    },
+                    {
+                        "title": "Répétition des expressions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de répéter les expressions à voix haute et d'expliquer dans quelles situations elles peuvent être utilisées."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Dessiner un paysage d'hiver",
+                "description": "Aujourd'hui, nous allons dessiner un paysage d'hiver avec de la neige, des arbres, et un ciel gris.",
+                "objectives": [
+                    "Développer la créativité en dessinant un paysage hivernal.",
+                    "Apprendre à utiliser des tons froids pour représenter l'hiver."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des paysages d'hiver avec des images montrant de la neige, des arbres et des montagnes."
+                },
+                "activities": [
+                    {
+                        "title": "Créer un paysage d'hiver",
+                        "duration": "20 minutes",
+                        "steps": [
+                            "Étape 1 : Dessine un paysage d'hiver avec des sapins enneigés, des montagnes et un ciel gris.",
+                            "Étape 2 : Utilise des tons froids comme le bleu, le blanc et le gris pour donner une ambiance hivernale à ton dessin."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Ajout de détails",
+                    "duration": "10 minutes",
+                    "description": "Ajoute des détails à ton dessin, comme des flocons de neige ou des animaux d'hiver, pour le rendre plus vivant."
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les nombres en anglais",
+                "description": "Aujourd'hui, nous allons revoir comment compter jusqu'à 30 en anglais.",
+                "objectives": [
+                    "Apprendre à compter jusqu'à 30 en anglais.",
+                    "Utiliser les nombres dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des nombres en anglais de 1 à 30, avec des flashcards ou des images pour faciliter l'apprentissage."
+                },
+                "activities": [
+                    {
+                        "title": "Compter à voix haute",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Compte de 1 à 30 en anglais à voix haute.",
+                            "Étape 2 : Demande à l'enfant de répéter après toi pour s'entraîner à la prononciation."
+                        ]
+                    },
+                    {
+                        "title": "Écrire les nombres",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire les nombres de 1 à 30 en anglais sur une feuille de papier, puis de les lire à voix haute."
+                        ]
+                    }
+                ],
+                "final_activity": {
+                    "title": "Jeu de mémoire",
+                    "duration": "10 minutes",
+                    "description": "Joue à un jeu de mémoire où l'enfant doit associer les nombres écrits en anglais avec leurs équivalents numériques."
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les inventions modernes",
+                "description": "Nous allons découvrir des inventions modernes comme la voiture, l'avion, et l'ordinateur.",
+                "objectives": [
+                    "Associer chaque invention à son inventeur ou son époque.",
+                    "Comprendre comment ces inventions ont changé la vie des gens."
+                ],
+                "introduction": {
+                    "duration": "10 minutes",
+                    "description": "Présentation des inventions modernes, comme l'avion, l'ordinateur et la voiture, et discussion sur leurs inventeurs."
+                },
+                "activities": [
+                    {
+                        "title": "Associer les inventions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Associe chaque invention à son inventeur ou à l'époque où elle a été créée.",
+                            "Étape 2 : Discute de l'impact de ces inventions sur la vie quotidienne."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner une invention moderne",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Dessine une invention moderne, comme un avion ou un ordinateur.",
+                            "Étape 2 : Ajoute des détails pour montrer comment l'invention fonctionne."
+                        ]
+                    }
+                ]
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les déserts du monde",
+                "description": "Nous allons revoir les déserts célèbres comme le Sahara, le désert de Gobi, et le désert d'Atacama.",
+                "objectives": [
+                    "Montrer les grands déserts sur une carte du monde.",
+                    "Comprendre pourquoi les déserts sont des endroits secs et difficiles à habiter."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "description": "Présentation des grands déserts du monde et des particularités de chacun, comme leur taille et leur climat."
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les déserts sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Étape 1 : Utilise une carte pour montrer les grands déserts comme le Sahara et le désert de Gobi.",
+                            "Étape 2 : Dis le nom de chaque désert et montre où il se trouve."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer les conditions dans les déserts",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Étape 1 : Explique pourquoi les déserts sont si secs et difficiles à habiter.",
+                            "Étape 2 : Associe des animaux adaptés aux conditions du désert (ex. : chameau, fennec)."
+                        ]
+                    }
+                ]
+            }
+        }
+    ]
+}

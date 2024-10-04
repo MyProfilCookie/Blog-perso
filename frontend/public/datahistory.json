@@ -1,0 +1,244 @@
+{
+    "history_exercises": [
+        {
+            "id": 1,
+            "title": "Les grandes découvertes",
+            "content": "Les grandes découvertes, comme celle de Christophe Colomb en Amérique, ont changé la vision du monde.",
+            "questions": [
+                {
+                    "question": "Qui a découvert l'Amérique en 1492 ?",
+                    "answer": "Christophe Colomb"
+                }
+            ],
+            "image": "/assets/history/columbus.jpg"
+        },
+        {
+            "id": 2,
+            "title": "L'Empire romain",
+            "content": "L'Empire romain a dominé une grande partie de l'Europe pendant des siècles. Apprenez à connaître son histoire.",
+            "questions": [
+                {
+                    "question": "Quel était le centre de l'Empire romain ?",
+                    "answer": "Rome"
+                }
+            ],
+            "image": "/assets/history/rome.jpg"
+        },
+        {
+            "id": 3,
+            "title": "La Révolution française",
+            "content": "La Révolution française de 1789 a marqué la fin de la monarchie en France et l'avènement de la République.",
+            "questions": [
+                {
+                    "question": "En quelle année a eu lieu la Révolution française ?",
+                    "answer": "1789"
+                }
+            ],
+            "image": "/assets/history/french_revolution.jpg"
+        },
+        {
+            "id": 4,
+            "title": "L'Égypte antique",
+            "content": "L'Égypte antique est connue pour ses pyramides et ses pharaons. Apprenez-en plus sur cette civilisation fascinante.",
+            "questions": [
+                {
+                    "question": "Quel est le nom de la plus grande pyramide d'Égypte ?",
+                    "answer": "La pyramide de Khéops"
+                }
+            ],
+            "image": "/assets/history/egypt.jpg"
+        },
+        {
+            "id": 5,
+            "title": "La Seconde Guerre mondiale",
+            "content": "La Seconde Guerre mondiale a eu lieu de 1939 à 1945 et a changé la face du monde.",
+            "questions": [
+                {
+                    "question": "En quelle année la Seconde Guerre mondiale a-t-elle commencé ?",
+                    "answer": "1939"
+                }
+            ],
+            "image": "/assets/history/ww2.jpg"
+        },
+        {
+            "id": 6,
+            "title": "Les Lumières",
+            "content": "Le mouvement des Lumières a introduit des idées de liberté et de démocratie au 18ème siècle.",
+            "questions": [
+                {
+                    "question": "Quel philosophe français est associé aux Lumières ?",
+                    "answer": "Voltaire"
+                }
+            ],
+            "image": "/assets/history/enlightenment.jpg"
+        },
+        {
+            "id": 7,
+            "title": "L'indépendance des États-Unis",
+            "content": "Les États-Unis ont déclaré leur indépendance du Royaume-Uni en 1776.",
+            "questions": [
+                {
+                    "question": "En quelle année les États-Unis ont-ils déclaré leur indépendance ?",
+                    "answer": "1776"
+                }
+            ],
+            "image": "/assets/history/us_independence.jpg"
+        },
+        {
+            "id": 8,
+            "title": "La guerre de Cent Ans",
+            "content": "La guerre de Cent Ans était un long conflit entre la France et l'Angleterre au Moyen Âge.",
+            "questions": [
+                {
+                    "question": "Combien de temps a duré la guerre de Cent Ans ?",
+                    "answer": "116 ans"
+                }
+            ],
+            "image": "/assets/history/100_years_war.jpg"
+        },
+        {
+            "id": 9,
+            "title": "La chute de l'Empire romain",
+            "content": "L'Empire romain s'est effondré en 476 après des siècles de domination.",
+            "questions": [
+                {
+                    "question": "En quelle année l'Empire romain d'Occident est-il tombé ?",
+                    "answer": "476"
+                }
+            ],
+            "image": "/assets/history/roman_fall.jpg"
+        },
+        {
+            "id": 10,
+            "title": "Les croisades",
+            "content": "Les croisades étaient des expéditions militaires pour reprendre Jérusalem.",
+            "questions": [
+                {
+                    "question": "Quel était l'objectif principal des croisades ?",
+                    "answer": "Reprendre Jérusalem"
+                }
+            ],
+            "image": "/assets/history/crusades.jpg"
+        },
+        {
+            "id": 11,
+            "title": "La Guerre froide",
+            "content": "La Guerre froide a opposé les États-Unis et l'URSS après la Seconde Guerre mondiale.",
+            "questions": [
+                {
+                    "question": "Quels étaient les deux blocs opposés pendant la Guerre froide ?",
+                    "answer": "Les États-Unis et l'URSS"
+                }
+            ],
+            "image": "/assets/history/cold_war.jpg"
+        },
+        {
+            "id": 12,
+            "title": "Les premiers hommes",
+            "content": "Découvrez l'évolution des premiers hommes, depuis l'Homo habilis jusqu'à l'Homo sapiens.",
+            "questions": [
+                {
+                    "question": "Quel est le nom scientifique de l'homme moderne ?",
+                    "answer": "Homo sapiens"
+                }
+            ],
+            "image": "/assets/history/prehistoric.jpg"
+        },
+        {
+            "id": 13,
+            "title": "La guerre d'Indépendance indienne",
+            "content": "Le mouvement pour l'indépendance de l'Inde a été dirigé par des leaders comme Gandhi.",
+            "questions": [
+                {
+                    "question": "Qui était le leader du mouvement indépendantiste indien ?",
+                    "answer": "Mahatma Gandhi"
+                }
+            ],
+            "image": "/assets/history/gandhi.jpg"
+        },
+        {
+            "id": 14,
+            "title": "La chute du mur de Berlin",
+            "content": "La chute du mur de Berlin en 1989 a marqué la fin de la division entre l'Est et l'Ouest.",
+            "questions": [
+                {
+                    "question": "En quelle année le mur de Berlin est-il tombé ?",
+                    "answer": "1989"
+                }
+            ],
+            "image": "/assets/history/berlin_wall.jpg"
+        },
+        {
+            "id": 15,
+            "title": "Les pharaons d'Égypte",
+            "content": "Les pharaons étaient les rois de l'Égypte ancienne. Apprenez-en plus sur leurs règnes.",
+            "questions": [
+                {
+                    "question": "Quel célèbre pharaon a construit la Grande Pyramide ?",
+                    "answer": "Khéops"
+                }
+            ],
+            "image": "/assets/history/pharaohs.jpg"
+        },
+        {
+            "id": 16,
+            "title": "La Renaissance",
+            "content": "La Renaissance a été une période de renouveau culturel en Europe aux 15e et 16e siècles.",
+            "questions": [
+                {
+                    "question": "Quel artiste est célèbre pour avoir peint La Joconde ?",
+                    "answer": "Léonard de Vinci"
+                }
+            ],
+            "image": "/assets/history/renaissance.jpg"
+        },
+        {
+            "id": 17,
+            "title": "La bataille de Waterloo",
+            "content": "La bataille de Waterloo a marqué la défaite finale de Napoléon en 1815.",
+            "questions": [
+                {
+                    "question": "En quelle année Napoléon a-t-il été vaincu à Waterloo ?",
+                    "answer": "1815"
+                }
+            ],
+            "image": "/assets/history/waterloo.jpg"
+        },
+        {
+            "id": 18,
+            "title": "La Première Guerre mondiale",
+            "content": "La Première Guerre mondiale s'est déroulée de 1914 à 1918 et a marqué un tournant majeur dans l'histoire.",
+            "questions": [
+                {
+                    "question": "En quelle année la Première Guerre mondiale a-t-elle commencé ?",
+                    "answer": "1914"
+                }
+            ],
+            "image": "/assets/history/ww1.jpg"
+        },
+        {
+            "id": 19,
+            "title": "Le Traité de Versailles",
+            "content": "Le Traité de Versailles a mis fin à la Première Guerre mondiale en 1919.",
+            "questions": [
+                {
+                    "question": "En quelle année a été signé le Traité de Versailles ?",
+                    "answer": "1919"
+                }
+            ],
+            "image": "/assets/history/versailles.jpg"
+        },
+        {
+            "id": 20,
+            "title": "La Révolution industrielle",
+            "content": "La Révolution industrielle a transformé les méthodes de production et la société au 19e siècle.",
+            "questions": [
+                {
+                    "question": "En quel siècle a commencé la Révolution industrielle ?",
+                    "answer": "19e siècle"
+                }
+            ],
+            "image": "/assets/history/industrial_revolution.jpg"
+        }
+    ]
+}

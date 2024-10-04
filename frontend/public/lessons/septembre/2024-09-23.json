@@ -1,0 +1,272 @@
+{
+    "date": "2024-09-23",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les matériaux naturels et fabriqués",
+                "description": "Nous allons découvrir la différence entre les matériaux naturels (bois, pierre) et ceux fabriqués par l'homme (plastique, métal).",
+                "objectives": [
+                    "Comprendre la différence entre les matériaux naturels et fabriqués.",
+                    "Apprendre à classer les objets selon leur origine."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples de matériaux naturels et fabriqués.",
+                        "Explique en quoi ils sont différents et pourquoi certains sont créés par l'homme."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Classer des objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Cherche des objets dans la maison et classe-les comme 'naturels' ou 'fabriqués'."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner des objets en bois et en plastique",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Dessine des objets faits de bois et d'autres en plastique, en les coloriant pour les différencier."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Révisez ensemble les différences et félicite l'enfant pour avoir bien identifié les matériaux."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les solides géométriques",
+                "description": "Nous allons apprendre à reconnaître et nommer des formes en trois dimensions, comme le cube, la sphère, et le cylindre.",
+                "objectives": [
+                    "Apprendre à reconnaître et nommer les solides géométriques.",
+                    "Savoir associer des objets du quotidien à ces formes."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples de solides géométriques en utilisant des objets du quotidien (ex. : une balle pour une sphère)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Trouver des solides géométriques dans la maison",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Cherche des objets qui ressemblent à des solides géométriques (ex. : un verre pour un cylindre, un dé pour un cube)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner des solides géométriques",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Dessine 3 solides géométriques et écris leur nom à côté (cube, sphère, cylindre)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir bien reconnu les formes et encourager l'application dans la vie quotidienne."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les syllabes",
+                "description": "Aujourd'hui, nous allons apprendre à diviser les mots en syllabes et à lire des syllabes simples.",
+                "objectives": [
+                    "Comprendre comment diviser un mot en syllabes.",
+                    "Améliorer la lecture en découpant les mots en syllabes."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est une syllabe en montrant des exemples simples (ex. : 'pomme' se divise en 'pom-me')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Diviser des mots en syllabes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de diviser des mots simples en syllabes (ex. : 'maison' devient 'mai-son')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire et diviser des mots",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris 5 mots simples et demande à l'enfant de les diviser en syllabes."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour sa compréhension et encourage à pratiquer la lecture des syllabes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Fabriquer un masque",
+                "description": "Aujourd'hui, nous allons fabriquer un masque en papier et le décorer avec des couleurs et des formes.",
+                "objectives": [
+                    "Apprendre à fabriquer un masque en papier.",
+                    "Savoir le décorer avec des détails créatifs."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre un exemple de masque en papier et explique comment le fabriquer."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Fabriquer et décorer un masque",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Découpe un masque dans du papier et ajoute des décorations avec des feutres ou des crayons."
+                        ]
+                    },
+                    {
+                        "title": "Ajouter des détails créatifs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Ajoute des détails comme des oreilles ou des moustaches pour personnaliser le masque."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour sa créativité et prends une photo du masque fini pour lui montrer sa progression."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les salutations en anglais",
+                "description": "Nous allons apprendre à dire 'bonjour', 'au revoir', et d'autres salutations simples en anglais.",
+                "objectives": [
+                    "Apprendre des salutations simples en anglais.",
+                    "Savoir utiliser ces salutations dans des phrases courtes."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des images de personnes se saluant et apprends à dire 'hello' et 'goodbye'."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Répéter des salutations en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de répéter les salutations en anglais (hello, goodbye, how are you?)."
+                        ]
+                    },
+                    {
+                        "title": "Écrire une phrase courte en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire une phrase courte en anglais en utilisant une salutation (ex. : 'Hello, my name is...')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour sa pratique des salutations en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les batailles importantes",
+                "description": "Nous allons découvrir des batailles historiques célèbres, comme la bataille de Waterloo et la guerre de Cent Ans.",
+                "objectives": [
+                    "Comprendre l'importance des batailles historiques.",
+                    "Associer chaque bataille à son contexte historique."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est une bataille importante avec des exemples comme la bataille de Waterloo."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des batailles à des événements historiques",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque bataille à son contexte historique (ex. : la bataille de Waterloo à Napoléon)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner une scène de bataille",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner une scène d'une bataille historique."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir bien appris l'importance des batailles dans l'histoire."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les forêts",
+                "description": "Aujourd'hui, nous allons découvrir différents types de forêts et comprendre où elles se trouvent dans le monde.",
+                "objectives": [
+                    "Apprendre à localiser les grandes forêts du monde.",
+                    "Savoir associer des animaux à leur habitat forestier."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte avec les grandes forêts du monde et nomme-les."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les forêts sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer les forêts sur une carte et de les nommer."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux forêts",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Associe des animaux comme l'ours ou le loup à leur habitat forestier."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour avoir bien localisé les forêts et appris sur les animaux qui y vivent."
+                    ]
+                }
+            }
+        }
+    ]
+}

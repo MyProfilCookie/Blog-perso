@@ -1,0 +1,272 @@
+{
+    "date": "2024-09-21",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les planètes du système solaire",
+                "description": "Aujourd'hui, nous allons découvrir les planètes de notre système solaire, comme la Terre, Mars, et Jupiter.",
+                "objectives": [
+                    "Comprendre les caractéristiques des planètes du système solaire.",
+                    "Apprendre les noms des planètes et leurs différences."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une image du système solaire avec toutes les planètes.",
+                        "Explique brièvement comment chaque planète est différente en taille, composition et distance par rapport au soleil."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner les planètes du système solaire",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner les planètes de notre système solaire et d'écrire leurs noms à côté de chaque dessin."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer les différences entre les planètes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer pourquoi chaque planète est différente (ex. : Mars est rouge, Jupiter est la plus grosse planète)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son dessin et encourage-le à montrer ses connaissances des planètes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les divisions simples",
+                "description": "Nous allons apprendre à faire des divisions simples, comme 10 divisé par 2.",
+                "objectives": [
+                    "Apprendre à diviser des objets en groupes égaux.",
+                    "Comprendre le concept de division avec des objets."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce que signifie diviser un nombre (ex. : diviser 10 jouets en 2 groupes égaux)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Diviser des objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de diviser 20 jouets en 4 groupes égaux."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des divisions simples",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 5 divisions simples et de les résoudre."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Félicite l'enfant pour sa compréhension de la division."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les articles définis et indéfinis",
+                "description": "Nous allons apprendre à utiliser les articles définis (le, la) et indéfinis (un, une) pour parler des objets.",
+                "objectives": [
+                    "Apprendre la différence entre les articles définis et indéfinis.",
+                    "Utiliser correctement les articles dans des phrases."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce que sont les articles définis et indéfinis, avec des exemples (ex. : 'le chat', 'un chien')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases avec des articles",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 phrases en utilisant des articles définis et indéfinis."
+                        ]
+                    },
+                    {
+                        "title": "Associer des objets à leurs articles",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images d'objets et demande à l'enfant d'associer l'image à son article (ex. : 'un ballon', 'la maison')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour l'utilisation correcte des articles."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer un mandala",
+                "description": "Aujourd'hui, nous allons dessiner un mandala et le colorier en utilisant des motifs répétitifs.",
+                "objectives": [
+                    "Apprendre à créer un mandala en utilisant des formes géométriques.",
+                    "Utiliser des motifs répétitifs pour rendre le dessin harmonieux."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre des exemples de mandalas et explique comment ils sont créés avec des motifs répétitifs."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un mandala",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de créer un mandala simple en dessinant des formes géométriques."
+                        ]
+                    },
+                    {
+                        "title": "Colorier le mandala",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de colorier son mandala en utilisant des couleurs variées."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son mandala et encourage-le à montrer son dessin."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les phrases simples en anglais",
+                "description": "Aujourd'hui, nous allons apprendre à former des phrases simples en anglais, comme 'I am a student'.",
+                "objectives": [
+                    "Apprendre à former des phrases simples en anglais.",
+                    "Utiliser les structures basiques de phrases en anglais."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique comment former des phrases simples en anglais (ex. : 'I am a student')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire des phrases simples",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire 3 phrases simples en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Lire les phrases à voix haute",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de lire ses phrases à voix haute."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir bien formé ses phrases en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les premières villes",
+                "description": "Nous allons découvrir comment les premières villes ont été construites et comment les gens y vivaient.",
+                "objectives": [
+                    "Comprendre comment les premières villes ont été construites.",
+                    "Apprendre comment les gens vivaient dans les premières villes."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique ce qu'est une ville et montre des images des premières villes, comme Ur et Babylone."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner une première ville",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner une première ville avec ses maisons et ses rues."
+                        ]
+                    },
+                    {
+                        "title": "Expliquer la vie dans les premières villes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'expliquer comment les gens vivaient dans ces villes."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son dessin et encourage-le à partager ses idées sur la vie dans les premières villes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les rivières et fleuves",
+                "description": "Nous allons continuer à découvrir les rivières célèbres du monde, comme le Nil et l'Amazone.",
+                "objectives": [
+                    "Apprendre à localiser les grandes rivières sur une carte.",
+                    "Associer les rivières à leur pays ou continent."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du monde avec les grandes rivières comme le Nil, l'Amazone et le Mississippi."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les rivières sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer où se trouvent les grandes rivières sur une carte."
+                        ]
+                    },
+                    {
+                        "title": "Associer les rivières à leur pays",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque rivière à son pays ou continent (ex. : le Nil → Afrique)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir bien identifié les rivières et leurs pays."
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,276 @@
+{
+    "date": "2024-09-19",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les saisons et leur influence",
+                "description": "Aujourd'hui, nous allons découvrir comment les saisons influencent la nature, les animaux et les plantes.",
+                "objectives": [
+                    "Comprendre les changements que chaque saison apporte à la nature.",
+                    "Associer des phénomènes naturels à chaque saison."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images des 4 saisons (printemps, été, automne, hiver).",
+                        "Explique ce qui change dans la nature et pour les animaux à chaque saison (ex. : les feuilles tombent en automne)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner les 4 saisons",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner les 4 saisons en montrant les changements (ex. : fleurs en printemps, neige en hiver)."
+                        ]
+                    },
+                    {
+                        "title": "Associer des événements naturels aux saisons",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer des événements comme les feuilles qui tombent, la neige ou les fleurs qui poussent à la bonne saison."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule ce que l'enfant a appris sur les saisons et comment elles influencent la nature.",
+                        "Complimente l'enfant pour son travail."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les comparaisons de nombres",
+                "description": "Nous allons apprendre à comparer des nombres en utilisant 'plus que' et 'moins que'.",
+                "objectives": [
+                    "Apprendre à comparer des nombres.",
+                    "Utiliser les symboles '>' et '<' pour les comparaisons."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre comment comparer deux nombres avec les symboles '>' (plus grand que) et '<' (plus petit que)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Comparer deux nombres",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de comparer deux nombres et dire lequel est le plus grand ou le plus petit."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des comparaisons avec des symboles",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire des comparaisons en utilisant '>' et '<' (ex. : 7 > 5)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule comment comparer les nombres.",
+                        "Complimente l'enfant pour avoir compris les comparaisons."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les métiers",
+                "description": "Aujourd'hui, nous allons apprendre à nommer et décrire différents métiers, comme médecin, enseignant, ou pompier.",
+                "objectives": [
+                    "Découvrir différents métiers et ce qu'ils impliquent.",
+                    "Associer des métiers à des descriptions simples."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente des images de différents métiers (médecin, enseignant, pompier) et explique ce qu'ils font."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire une phrase pour chaque métier",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire une phrase simple pour décrire chaque métier (ex. : 'Le médecin soigne les malades')."
+                        ]
+                    },
+                    {
+                        "title": "Associer une image à un métier",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer une image d'une personne à son métier."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir bien associé les métiers à leur description.",
+                        "Récapitule les métiers étudiés."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer un collage avec des feuilles",
+                "description": "Aujourd'hui, nous allons créer un collage en utilisant des feuilles d'arbres ramassées.",
+                "objectives": [
+                    "Encourager la créativité en utilisant des éléments naturels.",
+                    "Apprendre à faire un collage avec des feuilles."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Explique comment ramasser des feuilles d'arbres et les utiliser pour faire un collage artistique."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Ramasser des feuilles et faire un collage",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Demande à l'enfant de ramasser des feuilles et de les coller sur une feuille de papier pour créer un collage artistique."
+                        ]
+                    },
+                    {
+                        "title": "Ajouter des couleurs et des dessins",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'ajouter des couleurs ou des dessins pour rendre son collage plus vivant."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son collage et encourage-le à le montrer."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les couleurs avancées en anglais",
+                "description": "Après avoir vu les couleurs de base, nous allons apprendre des couleurs avancées comme 'purple', 'pink', 'orange'.",
+                "objectives": [
+                    "Apprendre des couleurs avancées en anglais.",
+                    "Associer des objets aux bonnes couleurs."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Répète les couleurs avancées en anglais en montrant des exemples (purple, pink, orange)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Colorier un dessin avec des couleurs avancées",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de colorier un dessin avec les couleurs avancées et de les dire en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Associer des objets aux couleurs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de trouver des objets dans la pièce et de dire leur couleur en anglais."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour avoir appris de nouvelles couleurs.",
+                        "Récapitule les couleurs avancées vues en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les inventions importantes",
+                "description": "Nous allons découvrir certaines inventions importantes comme l'imprimerie, le téléphone, et la voiture.",
+                "objectives": [
+                    "Découvrir des inventions importantes et comprendre leur impact.",
+                    "Associer des inventions à leurs inventeurs."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente quelques inventions importantes (imprimerie, téléphone, voiture) et explique à quoi elles servent."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner une invention importante",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de dessiner une invention importante et d'expliquer son utilité."
+                        ]
+                    },
+                    {
+                        "title": "Associer une invention à son inventeur",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer chaque invention à son inventeur (ex. : imprimerie → Gutenberg)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Complimente l'enfant pour son travail et récapitule les inventions vues pendant la leçon."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les océans",
+                "description": "Aujourd'hui, nous allons découvrir les océans du monde, comme l'océan Atlantique et l'océan Pacifique.",
+                "objectives": [
+                    "Apprendre à reconnaître et nommer les océans du monde.",
+                    "Comprendre où ils se situent sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Montre une carte du monde et localise les principaux océans (Atlantique, Pacifique, Indien, Arctique)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les océans sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de montrer où se trouvent les océans sur une carte."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux marins aux océans",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'associer un animal marin à chaque océan (ex. : baleine pour l'Atlantique)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "steps": [
+                        "Récapitule les océans étudiés et les animaux marins associés."
+                    ]
+                }
+            }
+        }
+    ]
+}
