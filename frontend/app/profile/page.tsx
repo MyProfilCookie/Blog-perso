@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { Card, Button, Progress } from "@nextui-org/react";
 import {
@@ -47,7 +48,7 @@ const fetchUserData = () => {
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any>(null);
-  const [lastLogin, setLastLogin] = useState("");
+  const [createdAt, setCreatedAt] = useState("");
   const [currentTime, setCurrentTime] = useState("");
   const router = useRouter();
 
@@ -57,7 +58,13 @@ const ProfilePage = () => {
 
     if (fetchedUser) {
       setUser(fetchedUser);
-      setLastLogin(fetchedUser.lastLogin || "Non disponible");
+
+      // Formater la date de création si elle existe
+      const formattedCreatedAt = fetchedUser.createdAt
+        ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
+        : "Non disponible";
+
+      setCreatedAt(formattedCreatedAt);
     } else {
       router.push("/users/login"); // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
     }
@@ -78,9 +85,12 @@ const ProfilePage = () => {
 
   return (
     <div className="container mx-auto mt-6">
-      <h1 className="mb-4 text-4xl font-bold">Bonjour, {user.pseudo} 👋</h1>
+      <h1 className="mb-4 text-4xl font-bold">
+        Bonjour à toi {user.pseudo} 👋
+      </h1>
       <p className="mb-6 text-gray-600">
-        Heure actuelle : {currentTime} | Dernière connexion : {lastLogin}
+        Il est : {currentTime} | la date de création de ton compte est :{" "}
+        {createdAt}
       </p>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">

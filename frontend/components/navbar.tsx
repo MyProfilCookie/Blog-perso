@@ -31,7 +31,7 @@ import { useRouter } from "next/navigation"; // Utiliser useRouter pour les redi
 import SearchBar from "@/components/search";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, HeartFilledIcon, AutismLogo } from "@/components/icons";
+import { GithubIcon, AutismLogo } from "@/components/icons";
 
 // Définir le type pour l'utilisateur
 type User = {
@@ -155,13 +155,22 @@ export const Navbar = () => {
               </NextLink>
             </NavbarItem>
           ))}
+
+          {/* Afficher l'onglet "Maeva" uniquement si l'utilisateur est admin */}
+          {user?.isAdmin && (
+            <NavbarItem key="maeva">
+              <NextLink
+                className="text-gray-700 hover:text-green-500"
+                href="/maeva"
+              >
+                Maeva
+              </NextLink>
+            </NavbarItem>
+          )}
         </ul>
       </NavbarContent>
 
-      <NavbarContent
-        className="hidden sm:flex basis-1/5 sm:basis-full"
-        justify="end"
-      >
+      <NavbarContent className=" sm:flex basis-1/5 sm:basis-full" justify="end">
         <NavbarItem className="hidden gap-2 sm:flex">
           <Link
             isExternal
@@ -181,7 +190,7 @@ export const Navbar = () => {
           />
         </NavbarItem>
 
-        <NavbarItem className="hidden md:flex">
+        {/* <NavbarItem className="hidden md:flex">
           <Button
             isExternal
             aria-label="Sponsor"
@@ -192,7 +201,7 @@ export const Navbar = () => {
             <HeartFilledIcon className="text-red-400" />
             Sponsor
           </Button>
-        </NavbarItem>
+        </NavbarItem> */}
 
         {/* Affichage du lien admin si l'utilisateur est admin */}
         {user?.isAdmin && (

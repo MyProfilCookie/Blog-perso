@@ -2,7 +2,14 @@ const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 
 exports.isAdmin = async (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
+  const authHeader = req.headers.authorization;
+
+  // Vérifie si l'en-tête Authorization est présent
+  if (!authHeader || !authHeader.startsWith('Bearer ')) {
+    return res.status(403).json({ message: 'Accès refusé, en-tête d\'autorisation manquant ou malformé.' });
+  }
+
+  const token = authHeader.split(' ')[1];
 
   if (!token) {
     return res.status(403).json({ message: 'Accès refusé, token manquant.' });
@@ -16,10 +23,10 @@ exports.isAdmin = async (req, res, next) => {
       return res.status(403).json({ message: 'Accès refusé, vous devez être administrateur.' });
     }
 
-    req.user = user; // Ajoute les infos de l'utilisateur à la requête
-    next();
+    req.user = user; // Ajoute les infos de l'utilisateur à la requête pour un usage ultérieur
+    next(); // Passe au middleware suivant ou à la route finale
   } catch (error) {
-    return res.status(401).json({ message: 'Token invalide.' });
+    return res.status(401).json({ message: 'Token invalide ou expiré.' });
   }
 };
 

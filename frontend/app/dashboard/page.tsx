@@ -1,4 +1,5 @@
 "use client";
+
 import React, { useState, useEffect } from "react";
 import { Card, Button, Progress } from "@nextui-org/react";
 import {
@@ -33,66 +34,76 @@ const mockData = {
   ],
 };
 
-// Fonction de récupération des données utilisateur stockées
+// Fonction de récupération des données utilisateur stockées dans le localStorage
 const fetchUserData = () => {
-  const storedUser = localStorage.getItem("user");
+  if (typeof window !== "undefined") {
+    const storedUser = localStorage.getItem("user");
 
-  return storedUser ? JSON.parse(storedUser) : null;
+    return storedUser ? JSON.parse(storedUser) : null;
+  }
+
+  return null;
 };
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any>(null);
-  const [lastLogin, setLastLogin] = useState("");
-  const [currentTime, setCurrentTime] = useState("");
+  const [createdAt, setCreatedAt] = useState<string>("");
+  const [currentTime, setCurrentTime] = useState<string>("");
   const router = useRouter();
 
   useEffect(() => {
+    // Récupérer les données utilisateur à partir du localStorage
     const fetchedUser = fetchUserData();
 
     if (fetchedUser) {
       setUser(fetchedUser);
-      setLastLogin(fetchedUser.lastLogin || "Non disponible");
+
+      // Formater la date de création si elle existe
+      const formattedCreatedAt = fetchedUser.createdAt
+        ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
+        : "Non disponible";
+
+      setCreatedAt(formattedCreatedAt);
     } else {
-      router.push("/users/login");
+      router.push("/users/login"); // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
     }
 
+    // Mettre à jour l'heure actuelle chaque seconde
     const updateCurrentTime = () => {
       setCurrentTime(dayjs().format("HH:mm:ss"));
     };
     const interval = setInterval(updateCurrentTime, 1000);
 
+    // Nettoyage de l'intervalle pour éviter les fuites de mémoire
     return () => clearInterval(interval);
   }, [router]);
 
   if (!user) {
-    return null; // Attendre que l'utilisateur soit chargé
+    return <div>Chargement...</div>; // Attendre que l'utilisateur soit chargé
   }
 
   return (
     <div className="container mx-auto mt-6">
-      <h1 className="mb-4 text-4xl font-bold">Bonjour, {user.pseudo} 👋</h1>
+      <h1 className="mb-4 text-4xl font-bold">
+        Bonjour à toi, {user.pseudo} 👋
+      </h1>
       <p className="mb-6 text-gray-600">
-        Heure actuelle : {currentTime} | Dernière connexion : {lastLogin}
+        Heure actuelle : {currentTime} | Date de création du compte :{" "}
+        {createdAt}
       </p>
 
       <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
         {/* Cours Consultés */}
         <div>
-          <Card aria-labelledby="course-title">
+          <Card>
             <div className="card-header">
-              <h3 id="course-title">Cours Consultés</h3>
+              <h3>Cours Consultés</h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.courses.map((course, index) => (
                 <div key={index}>
-                  <p className="font-bold" id={`course-title-${index}`}>
-                    {course.title}
-                  </p>
-                  <Progress
-                    aria-label={`Progression du cours ${course.title}`}
-                    color="primary"
-                    value={course.progress}
-                  />
+                  <p className="font-bold">{course.title}</p>
+                  <Progress color="primary" value={course.progress} />
                   <p>Dernière consultation : {course.lastViewed}</p>
                   <Button
                     aria-label={`Reprendre ${course.title}`}
@@ -108,9 +119,9 @@ const ProfilePage = () => {
 
         {/* Évaluations faites */}
         <div>
-          <Card aria-labelledby="evaluations-title">
+          <Card>
             <div className="card-header">
-              <h3 id="evaluations-title">Évaluations</h3>
+              <h3>Évaluations</h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.evaluations.map((evaluation, index) => (
@@ -132,19 +143,15 @@ const ProfilePage = () => {
 
         {/* Articles Consultés */}
         <div>
-          <Card aria-labelledby="articles-title">
+          <Card>
             <div className="card-header">
-              <h3 id="articles-title">Articles Consultés</h3>
+              <h3>Articles Consultés</h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.articles.map((article, index) => (
                 <div key={index}>
                   <p className="font-bold">{article.title}</p>
-                  <Progress
-                    aria-label={`Progression de l'article ${article.title}`}
-                    color="success"
-                    value={article.progress}
-                  />
+                  <Progress color="success" value={article.progress} />
                   <p>Dernière consultation : {article.lastViewed}</p>
                   <Button
                     aria-label={`Reprendre ${article.title}`}

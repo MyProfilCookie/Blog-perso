@@ -64,6 +64,9 @@ exports.login = async (req, res) => {
     // Ajout du rôle à la réponse
     const isAdmin = user.role === 'admin'; // Vérifie si le rôle de l'utilisateur est "admin"
 
+    //Date de création du compte
+    const createdAt = user.createdAt; 
+
     // Envoi de la réponse avec les infos utilisateur, y compris le rôle et isAdmin
     res.status(200).json({
       message: 'Connexion réussie',
@@ -73,6 +76,7 @@ exports.login = async (req, res) => {
         email: user.email, 
         role: user.role, // Ajout du rôle à la réponse
         isAdmin, // Ajout de isAdmin à la réponse
+        createdAt, // Ajout de la date de création du compte à la réponse
       },
       token,
     });

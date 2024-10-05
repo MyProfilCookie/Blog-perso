@@ -6,7 +6,7 @@
 "use client";
 
 import { Link } from "@nextui-org/link";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Card,
   CardBody,
@@ -23,8 +23,21 @@ import { title, subtitle } from "@/components/primitives";
 import { GithubIcon } from "@/components/icons";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import HeaderAutisme from "@/components/headerAutisme";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faCrown, faUser } from "@fortawesome/free-solid-svg-icons"; // Import des icônes
+
 
 export default function Home() {
+  const [user, setUser] = useState<any>(null);
+
+  // Charger l'utilisateur depuis localStorage (ou API) au montage
+  useEffect(() => {
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    }
+  }, []);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [currentTeamIndex, setCurrentTeamIndex] = useState(0);
   const [imageIndices, setImageIndices] = useState(Array(8).fill(0));
@@ -133,16 +146,31 @@ export default function Home() {
         initial={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className={title({ color: "violet" })}>Bienvenue sur AutiStudy</h1>
+        <h1 className={title({ color: "violet" })}>
+          Bienvenue sur AutiStudy
+        </h1>
         <h2 className={subtitle({ class: "mt-4" })}>
+          Bonjour à toi {user?.pseudo}
+
+          {user?.isAdmin ? (
+            <FontAwesomeIcon
+              className="ml-2 text-yellow-500"
+              icon={faCrown}
+            />
+          ) : (
+            <FontAwesomeIcon className="ml-2 text-blue-500" icon={faUser} />
+          )}
+        </h2>
+        <h2 className={subtitle({ class: "mt-4" })}>il est grand temps de faire de la paix avec l'autisme</h2>
+        <h3 className={subtitle({ class: "mt-4" })}>
           Une plateforme dédiée à l'éducation des enfants autistes, offrant des
           ressources et un accompagnement personnalisés.
-        </h2>
+        </h3>
       </motion.div>
-      <HeaderAutisme 
-      heading=""
-      subheading="Ressources et accompagnement"
-      description="Découvrez des informations essentielles pour accompagner les enfants et adultes autistes dans leur quotidien.
+      <HeaderAutisme
+        heading=""
+        subheading="Ressources et accompagnement"
+        description="Découvrez des informations essentielles pour accompagner les enfants et adultes autistes dans leur quotidien.
       "
       />
 
@@ -377,7 +405,7 @@ export default function Home() {
           </Button>
         </div>
       </motion.div>
-      
+
       {/*  New Section: L'accompagnement de l'enfant et de l'adulte autiste */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
