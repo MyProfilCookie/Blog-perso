@@ -6,11 +6,11 @@ import { useRouter } from "next/navigation";
 import { Input, Button, Checkbox } from "@nextui-org/react";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-
-import { AutismLogo } from "@/components/icons";
 import "sweetalert2/dist/sweetalert2.min.css";
 
-export default function Connexion() {
+import { AutismLogo } from "@/components/icons"; // Assurez-vous que le chemin est correct pour votre logo
+
+export default function Inscription() {
   const [pseudo, setPseudo] = useState("");
   const [nom, setNom] = useState("");
   const [prenom, setPrenom] = useState("");
@@ -22,6 +22,7 @@ export default function Connexion() {
   const [passwordStrength, setPasswordStrength] = useState("");
   const router = useRouter();
 
+  // Validation du mot de passe
   const validatePassword = (value: string) => {
     const lengthValid = value.length >= 8;
     const specialCharValid = /[!@#$%^&*]/.test(value);
@@ -35,8 +36,9 @@ export default function Connexion() {
     }
   };
 
-  const handleLogin = async () => {
-    // Vérification que tous les champs obligatoires sont bien remplis
+  // Fonction de gestion de l'inscription
+  const handleSignup = async () => {
+    // Vérification que tous les champs obligatoires sont remplis
     if (!pseudo || !nom || !prenom || !age || !email || !password) {
       Swal.fire({
         icon: "error",
@@ -84,6 +86,7 @@ export default function Connexion() {
     setLoading(true);
 
     try {
+      // Envoi des données au backend
       const response = await fetch(
         `${process.env.NEXT_PUBLIC_API_URL}/users/signup`,
         {
@@ -98,6 +101,7 @@ export default function Connexion() {
             age,
             email,
             password,
+            newsletter, // Inclure la préférence pour la newsletter
           }),
         },
       );
@@ -110,7 +114,7 @@ export default function Connexion() {
         Swal.fire({
           icon: "error",
           title: "Erreur",
-          text: data.message || "Erreur lors de la connexion",
+          text: data.message || "Erreur lors de l'inscription",
           confirmButtonText: "Ok",
           customClass: {
             confirmButton: "bg-blue-500 text-white",
@@ -123,13 +127,22 @@ export default function Connexion() {
       // Stocker les informations de l'utilisateur dans le localStorage
       localStorage.setItem(
         "user",
-        JSON.stringify({ prenom, avatar: data.avatarUrl }),
+        JSON.stringify({
+          pseudo: data.user.pseudo,
+          email: data.user.email,
+          avatar: data.user.avatar || "assets/default-avatar.webp",
+        }),
       );
 
-      // Popup de bienvenue avec le prénom de l'utilisateur
+      // Déclencher un événement personnalisé pour mettre à jour la navbar
+      const event = new CustomEvent("userUpdate");
+
+      window.dispatchEvent(event);
+
+      // Afficher une alerte de succès et rediriger vers le tableau de bord
       Swal.fire({
         icon: "success",
-        title: `Bienvenue ${prenom} !`,
+        title: `Bienvenue ${data.user.pseudo} !`,
         text: "Vous êtes maintenant inscrit(e) sur AutiStudy.",
         confirmButtonText: "Ok",
         customClass: {
@@ -167,7 +180,7 @@ export default function Connexion() {
       >
         <AutismLogo className="mx-auto mb-2" size={60} />
         <h1 className="text-4xl font-bold text-center text-blue-600">
-          Bienvenue sur AutiStudy
+          Inscription sur AutiStudy
         </h1>
       </motion.div>
 
@@ -177,7 +190,7 @@ export default function Connexion() {
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 1, delay: 0.4 }}
       >
-        Connectez-vous pour accéder à des ressources adaptées et un suivi
+        Inscrivez-vous pour accéder à des ressources adaptées et un suivi
         personnalisé.
       </motion.p>
 
@@ -229,7 +242,10 @@ export default function Connexion() {
         />
         {password && (
           <p
-            className={`text-sm ${passwordStrength.includes("faible") ? "text-red-500" : "text-green-500"}`}
+            className={`text-sm ${passwordStrength.includes("faible")
+                ? "text-red-500"
+                : "text-green-500"
+              }`}
           >
             {passwordStrength}
           </p>
@@ -243,10 +259,10 @@ export default function Connexion() {
 
         {loading ? (
           <Button disabled className="bg-blue-500">
-            Connexion...
+            Inscription...
           </Button>
         ) : (
-          <Button className="bg-blue-500" onPress={handleLogin}>
+          <Button className="bg-blue-500" onPress={handleSignup}>
             S'inscrire
           </Button>
         )}

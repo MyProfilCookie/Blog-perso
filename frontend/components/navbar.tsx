@@ -21,12 +21,12 @@ import {
   faUser,
   faBook,
   faNewspaper,
-  faCrown, // Import de l'icône couronne
+  faCrown,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation"; // Utiliser useRouter pour les redirections
+import { useRouter } from "next/navigation";
 
 // import SearchBar from "@/components/search";
 import { siteConfig } from "@/config/site";
@@ -38,14 +38,13 @@ type User = {
   id: string;
   pseudo: string;
   email: string;
-  avatar?: string; // Facultatif
-  isAdmin: boolean; // Ajout du booléen isAdmin
+  avatar?: string;
+  isAdmin: boolean;
 };
 
 export const Navbar = () => {
-  const [user, setUser] = useState<User | null>(null); // Utilisation du type User
-  // const [searchQuery, setSearchQuery] = useState(""); // Ajout de l'état searchQuery
-  const router = useRouter(); // Utiliser le routeur ici
+  const [user, setUser] = useState<User | null>(null);
+  const router = useRouter();
 
   // Charger l'utilisateur depuis le localStorage lors du montage
   useEffect(() => {
@@ -54,14 +53,10 @@ export const Navbar = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
 
-      // On se fie directement à isAdmin pour savoir si l'utilisateur est admin
-      const userWithAdminStatus = {
+      setUser({
         ...parsedUser,
-        isAdmin: parsedUser.isAdmin, // Utilisation de isAdmin depuis localStorage
-      };
-
-      // Vérification du contenu de l'utilisateur
-      setUser(userWithAdminStatus); // Charger l'utilisateur avec isAdmin
+        isAdmin: parsedUser.isAdmin,
+      });
     }
   }, []);
 
@@ -75,24 +70,22 @@ export const Navbar = () => {
 
         setUser({
           ...parsedUser,
-          isAdmin: parsedUser.isAdmin, // Reprise de l'état isAdmin
+          isAdmin: parsedUser.isAdmin,
         });
       } else {
         setUser(null);
       }
     };
 
-    // Ajouter un écouteur pour l'événement "userUpdate"
     window.addEventListener("userUpdate", handleUserUpdate);
 
-    // Nettoyer l'écouteur lors du démontage du composant
     return () => {
       window.removeEventListener("userUpdate", handleUserUpdate);
     };
   }, []);
 
   const handleLoginRedirect = () => {
-    router.replace("/users/login"); // Rediriger vers la page de login
+    router.replace("/users/login");
   };
 
   const handleLogout = () => {
@@ -107,10 +100,9 @@ export const Navbar = () => {
       cancelButtonText: "Annuler",
     }).then((result) => {
       if (result.isConfirmed) {
-        localStorage.removeItem("user"); // Supprimer l'utilisateur du localStorage
-        setUser(null); // Supprimer l'utilisateur de l'état local
+        localStorage.removeItem("user");
+        setUser(null);
 
-        // Déclencher un événement personnalisé
         const event = new CustomEvent("userUpdate");
 
         window.dispatchEvent(event);
@@ -124,7 +116,7 @@ export const Navbar = () => {
             confirmButton: "bg-green-400 text-white",
           },
         }).then(() => {
-          router.replace("/"); // Rediriger vers la page d'accueil après la déconnexion
+          router.replace("/");
         });
       }
     });
@@ -156,7 +148,6 @@ export const Navbar = () => {
             </NavbarItem>
           ))}
 
-          {/* Afficher l'onglet "Maeva" uniquement si l'utilisateur est admin */}
           {user?.isAdmin && (
             <NavbarItem key="maeva">
               <NextLink
@@ -183,27 +174,6 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
 
-        {/* <NavbarItem className="hidden lg:flex">
-          <SearchBar
-            searchQuery={searchQuery} // Correction de la gestion de searchQuery
-            setSearchQuery={setSearchQuery}
-          />
-        </NavbarItem> */}
-
-        {/* <NavbarItem className="hidden md:flex">
-          <Button
-            isExternal
-            aria-label="Sponsor"
-            as={Link}
-            className="text-sm font-normal text-gray-600 bg-gray-200 hover:bg-gray-300"
-            href={siteConfig.links.sponsor}
-          >
-            <HeartFilledIcon className="text-red-400" />
-            Sponsor
-          </Button>
-        </NavbarItem> */}
-
-        {/* Affichage du lien admin si l'utilisateur est admin */}
         {user?.isAdmin && (
           <NavbarItem className="hidden md:flex">
             <Button
@@ -240,8 +210,8 @@ export const Navbar = () => {
                 <Avatar
                   isBordered
                   color="danger"
-                  alt="Avatar de l'utilisateur"
-                  aria-label={`Avatar de ${user?.pseudo || "Utilisateur"}`}
+                  alt={`Avatar de ${user?.pseudo}`}
+                  aria-label={`Avatar de ${user?.pseudo}`}
                   size="sm"
                   src={user?.avatar || "assets/default-avatar.webp"}
                 />
@@ -267,7 +237,7 @@ export const Navbar = () => {
                 <FontAwesomeIcon icon={faBook} />
                 <span className="ml-2">Cours suivis</span>
               </DropdownItem>
-              {user?.isAdmin ? (
+              {user?.isAdmin && (
                 <DropdownItem
                   className="text-gray-600 hover:text-green-500"
                   key="admin"
@@ -277,7 +247,7 @@ export const Navbar = () => {
                   <FontAwesomeIcon icon={faCrown} />
                   <span className="ml-2">Dashboard Admin</span>
                 </DropdownItem>
-              ) : null}
+              )}
               <DropdownItem
                 key="articles"
                 className="text-gray-600 hover:text-green-500"
