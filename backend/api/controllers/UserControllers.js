@@ -52,15 +52,17 @@ exports.signup = async (req, res) => {
 };
 
 exports.login = async (req, res) => {
-  const { email, password } = req.body;
+  const { email, pseudo, password } = req.body;
 
-  if (!email || !password) {
-    return res.status(400).json({ message: 'Email et mot de passe sont requis.' });
+  // Vérifier si l'email ou le pseudo, et le mot de passe sont fournis
+  if ((!email && !pseudo) || !password) {
+    return res.status(400).json({ message: 'Email ou pseudo et mot de passe sont requis.' });
   }
 
   try {
-    // Recherche de l'utilisateur par email
-    const user = await User.findOne({ email });
+    // Recherche de l'utilisateur par email ou pseudo
+    const user = await User.findOne(email ? { email } : { pseudo });
+    
     if (!user) {
       return res.status(400).json({ message: 'Utilisateur non trouvé.' });
     }
@@ -78,20 +80,18 @@ exports.login = async (req, res) => {
 
     // Ajout du rôle à la réponse
     const isAdmin = user.role === 'admin'; // Vérifie si le rôle de l'utilisateur est "admin"
+    const createdAt = user.createdAt; // Date de création du compte
 
-    //Date de création du compte
-    const createdAt = user.createdAt; 
-
-    // Envoi de la réponse avec les infos utilisateur, y compris le rôle et isAdmin
+    // Envoi de la réponse avec les infos utilisateur
     res.status(200).json({
       message: 'Connexion réussie',
       user: { 
         id: user._id, 
         pseudo: user.pseudo, 
         email: user.email, 
-        role: user.role, // Ajout du rôle à la réponse
-        isAdmin, // Ajout de isAdmin à la réponse
-        createdAt, // Ajout de la date de création du compte à la réponse
+        role: user.role,
+        isAdmin,
+        createdAt,
       },
       token,
     });
@@ -100,6 +100,7 @@ exports.login = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la connexion.' });
   }
 };
+
 
 
 exports.getUsers = async (req, res) => {

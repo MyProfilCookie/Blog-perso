@@ -1,4 +1,3 @@
-/* eslint-disable prettier/prettier */
 "use client";
 
 import * as React from "react";
@@ -145,6 +144,7 @@ export default function Connexion() {
           pseudo: data.user.pseudo,
           email: data.user.email,
           avatar: data.user.avatar || "/assets/default-avatar.webp", // Utiliser l'avatar s'il existe, sinon un avatar par défaut
+          role: data.user.role || "user", // Assurez-vous que l'API renvoie bien le rôle de l'utilisateur
         }),
       );
 
@@ -153,7 +153,7 @@ export default function Connexion() {
 
       window.dispatchEvent(userUpdateEvent);
 
-      // Afficher le succès et rediriger vers le profil
+      // Afficher le succès et rediriger vers le tableau de bord correspondant
       Swal.fire({
         icon: "success",
         title: "Connexion réussie",
@@ -163,7 +163,12 @@ export default function Connexion() {
           confirmButton: "bg-green-500 text-white",
         },
       }).then(() => {
-        router.push("/profile");
+        // Redirection en fonction du rôle de l'utilisateur
+        if (data.user.role === "admin") {
+          router.push("/admin/dashboard");
+        } else {
+          router.push("/dashboard");
+        }
       });
     } catch (error) {
       setLoading(false);
@@ -269,3 +274,4 @@ export default function Connexion() {
     </motion.div>
   );
 }
+

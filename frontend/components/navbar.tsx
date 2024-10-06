@@ -18,17 +18,16 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt,
-  faUser,
   faBook,
   faNewspaper,
   faCrown,
+  faTachometerAlt, // Icône pour Dashboard User
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
-// import SearchBar from "@/components/search";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, AutismLogo } from "@/components/icons";
@@ -39,7 +38,7 @@ type User = {
   pseudo: string;
   email: string;
   avatar?: string;
-  isAdmin: boolean;
+  role: string; // Utilisation de "role" pour déterminer si l'utilisateur est admin ou non
 };
 
 export const Navbar = () => {
@@ -53,9 +52,11 @@ export const Navbar = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
 
+      console.log("User récupéré:", parsedUser); // Log pour vérifier les données utilisateur
+
       setUser({
         ...parsedUser,
-        isAdmin: parsedUser.isAdmin,
+        role: parsedUser.role, // On se base sur "role" pour déterminer si admin
       });
     }
   }, []);
@@ -68,9 +69,11 @@ export const Navbar = () => {
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
 
+        console.log("User mis à jour:", parsedUser); // Log pour vérifier les données mises à jour
+
         setUser({
           ...parsedUser,
-          isAdmin: parsedUser.isAdmin,
+          role: parsedUser.role, // On se base sur "role" pour déterminer si admin
         });
       } else {
         setUser(null);
@@ -148,7 +151,7 @@ export const Navbar = () => {
             </NavbarItem>
           ))}
 
-          {user?.isAdmin && (
+          {user?.role === "admin" && (
             <NavbarItem key="maeva">
               <NextLink
                 className="text-gray-700 hover:text-green-500"
@@ -174,19 +177,27 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
 
-        {user?.isAdmin && (
+        {/* Afficher un lien Dashboard dynamique si l'utilisateur est connecté */}
+        {user && (
           <NavbarItem className="hidden md:flex">
             <Button
-              aria-label="Dashboard Admin"
+              aria-label={
+                user.role === "admin" ? "Dashboard Admin" : "Dashboard"
+              }
               as={Link}
               className="text-sm font-normal text-gray-600 bg-gray-200 hover:bg-gray-300"
-              href="/admin/dashboard"
+              href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
+              onPress={() =>
+                router.push(
+                  user.role === "admin" ? "/admin/dashboard" : "/dashboard",
+                )
+              } // Remplacement de onClick par onPress
             >
               <FontAwesomeIcon
-                className="mr-2 text-yellow-500"
-                icon={faCrown}
+                className="mr-2"
+                icon={user.role === "admin" ? faCrown : faTachometerAlt}
               />
-              Dashboard Admin
+              {user.role === "admin" ? "Dashboard Admin" : "Dashboard"}
             </Button>
           </NavbarItem>
         )}
@@ -197,10 +208,10 @@ export const Navbar = () => {
             showFallback
             aria-label="Connectez-vous pour accéder à votre profil"
             className="cursor-pointer text-tiny text-default-500"
-            color="success"
+            color="danger"
             name="Joe"
             size="sm"
-            src="/default-avatar.webp"
+            src="/assets/default-avatar.webp"
             onClick={handleLoginRedirect}
           />
         ) : (
@@ -209,7 +220,7 @@ export const Navbar = () => {
               <Button aria-label="Menu utilisateur" className="bg-transparent">
                 <Avatar
                   isBordered
-                  color="danger"
+                  color="success"
                   alt={`Avatar de ${user?.pseudo}`}
                   aria-label={`Avatar de ${user?.pseudo}`}
                   size="sm"
@@ -220,15 +231,6 @@ export const Navbar = () => {
             </DropdownTrigger>
             <DropdownMenu aria-label="Menu des utilisateurs">
               <DropdownItem
-                key="profile"
-                className="text-gray-600 hover:text-green-500"
-                textValue="Profil"
-                onClick={() => router.replace("/profile")}
-              >
-                <FontAwesomeIcon icon={faUser} />
-                <span className="ml-2">Profil</span>
-              </DropdownItem>
-              <DropdownItem
                 key="courses"
                 className="text-gray-600 hover:text-green-500"
                 textValue="Cours"
@@ -237,17 +239,7 @@ export const Navbar = () => {
                 <FontAwesomeIcon icon={faBook} />
                 <span className="ml-2">Cours suivis</span>
               </DropdownItem>
-              {user?.isAdmin && (
-                <DropdownItem
-                  className="text-gray-600 hover:text-green-500"
-                  key="admin"
-                  textValue="Dashboard Admin"
-                  onClick={() => router.replace("/admin/dashboard")}
-                >
-                  <FontAwesomeIcon icon={faCrown} />
-                  <span className="ml-2">Dashboard Admin</span>
-                </DropdownItem>
-              )}
+
               <DropdownItem
                 key="articles"
                 className="text-gray-600 hover:text-green-500"
