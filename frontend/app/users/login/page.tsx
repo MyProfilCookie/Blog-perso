@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 "use client";
 
 import * as React from "react";
@@ -138,7 +139,14 @@ export default function Connexion() {
       }
 
       // Stocker l'utilisateur dans le localStorage
-      localStorage.setItem("user", JSON.stringify(data.user));
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          pseudo: data.user.pseudo,
+          email: data.user.email,
+          avatar: data.user.avatar || "/assets/default-avatar.webp", // Utiliser l'avatar s'il existe, sinon un avatar par défaut
+        }),
+      );
 
       // Déclencher un événement personnalisé pour rafraîchir la navbar
       const userUpdateEvent = new CustomEvent("userUpdate");
@@ -225,11 +233,10 @@ export default function Connexion() {
         />
         {password && (
           <p
-            className={`text-sm ${
-              passwordStrength.includes("faible")
-                ? "text-red-500"
-                : "text-green-500"
-            }`}
+            className={`text-sm ${passwordStrength.includes("faible")
+              ? "text-red-500"
+              : "text-green-500"
+              }`}
           >
             {passwordStrength}
           </p>
