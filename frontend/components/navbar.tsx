@@ -28,7 +28,7 @@ import NextLink from "next/link";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation"; // Utiliser useRouter pour les redirections
 
-import SearchBar from "@/components/search";
+// import SearchBar from "@/components/search";
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { GithubIcon, AutismLogo } from "@/components/icons";
@@ -44,7 +44,7 @@ type User = {
 
 export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null); // Utilisation du type User
-  const [searchQuery, setSearchQuery] = useState(""); // Ajout de l'état searchQuery
+  // const [searchQuery, setSearchQuery] = useState(""); // Ajout de l'état searchQuery
   const router = useRouter(); // Utiliser le routeur ici
 
   // Charger l'utilisateur depuis le localStorage lors du montage
@@ -183,12 +183,12 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
 
-        <NavbarItem className="hidden lg:flex">
+        {/* <NavbarItem className="hidden lg:flex">
           <SearchBar
             searchQuery={searchQuery} // Correction de la gestion de searchQuery
             setSearchQuery={setSearchQuery}
           />
-        </NavbarItem>
+        </NavbarItem> */}
 
         {/* <NavbarItem className="hidden md:flex">
           <Button
@@ -236,15 +236,14 @@ export const Navbar = () => {
         ) : (
           <Dropdown>
             <DropdownTrigger>
-              <Button
-                aria-label="Menu utilisateur"
-                className="text-blue-700 bg-blue-50 hover:bg-blue-100"
-              >
+              <Button aria-label="Menu utilisateur" className="bg-transparent">
                 <Avatar
+                  isBordered
+                  color="danger"
                   alt="Avatar de l'utilisateur"
                   aria-label={`Avatar de ${user?.pseudo || "Utilisateur"}`}
                   size="sm"
-                  src={user?.avatar || "/default-avatar.webp"}
+                  src={user?.avatar || "assets/default-avatar.webp"}
                 />
                 <span className="ml-2">{user?.pseudo || "Utilisateur"}</span>
               </Button>

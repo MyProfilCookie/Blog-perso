@@ -13,6 +13,9 @@ router.get('/users', isAdmin, adminController.getAllUsers);
 // Route pour promouvoir un utilisateur en admin (Accès réservé aux admins)
 router.post('/users/promote/:userId', isAdmin, adminController.promoteUser);
 
+// Route pour rétrograder un admin en user
+router.post('/users/demote/:id', isAdmin, adminController.demoteUser);
+
 // Route pour supprimer un utilisateur avec un identifiant spécifique (Accès réservé aux admins)
 router.delete('/users/:id', isAdmin, adminController.deleteUser);
 

@@ -1,17 +1,30 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
-import { Button, Table, Input, Textarea } from "@nextui-org/react";
+import {
+  Button,
+  Input,
+  Textarea,
+  TableRow,
+  TableCell,
+  TableColumn,
+  TableHeader,
+  Table,
+  TableBody,
+  Select,
+  SelectItem,
+} from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faCrown,
-  faTrash,
   faEdit,
+  faTrash,
   faPlus,
+  faCrown,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
+import { motion } from "framer-motion";
 
 // Fonction pour vérifier si l'utilisateur est admin
 const fetchUserData = () => {
@@ -22,42 +35,18 @@ const fetchUserData = () => {
 
 const AdminDashboard = () => {
   const [user, setUser] = useState<any>(null);
-
-  interface User {
-    _id: string;
-    pseudo: string;
-    email: string;
-    role: string;
-  }
-  const [users, setUsers] = useState<User[]>([]);
-
-  interface Course {
-    _id: string;
-    title: string;
-    content: string;
-  }
-
-  const [courses, setCourses] = useState<Course[]>([]);
-
-  interface Article {
-    _id: string;
-    title: string;
-    content: string;
-  }
-
-  const [articles, setArticles] = useState<Article[]>([]);
-
-  interface Message {
-    _id: string;
-    user: { pseudo: string };
-    content: string;
-    date: string;
-  }
-
-  const [messages, setMessages] = useState<Message[]>([]);
-  const [newCourse, setNewCourse] = useState({ title: "", content: "" });
-  const [newArticle, setNewArticle] = useState({ title: "", content: "" });
+  const [lessons, setLessons] = useState<any[]>([]);
+  const [newLesson, setNewLesson] = useState({
+    title: "",
+    content: "",
+    date: "",
+  });
   const [currentTime, setCurrentTime] = useState("");
+  const [users, setUsers] = useState<any[]>([]);
+  const [articles, setArticles] = useState<any[]>([]);
+  const [messages, setMessages] = useState<any[]>([]);
+  const [newArticle, setNewArticle] = useState({ title: "", content: "" });
+  const [banReason, setBanReason] = useState("Violation des règles");
   const router = useRouter();
 
   useEffect(() => {
@@ -65,221 +54,373 @@ const AdminDashboard = () => {
 
     if (fetchedUser && fetchedUser.role === "admin") {
       setUser(fetchedUser);
+      fetchLessons();
       fetchUsers();
-      fetchCourses();
       fetchArticles();
       fetchMessages();
     } else {
       router.push("/"); // Redirige si l'utilisateur n'est pas admin
     }
 
-    const updateCurrentTime = () => {
+    const interval = setInterval(() => {
       setCurrentTime(dayjs().format("HH:mm:ss"));
-    };
-    const interval = setInterval(updateCurrentTime, 1000);
+    }, 1000);
 
     return () => clearInterval(interval);
   }, [router]);
 
+  // Fonction pour récupérer toutes les leçons
+  const fetchLessons = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/lessons`,
+      );
+
+      setLessons(response.data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des leçons :", error);
+    }
+  };
+
+  // Fonction pour récupérer tous les utilisateurs
   const fetchUsers = async () => {
-    const response = await axios.get("/api/users");
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/users`,
+      );
 
-    setUsers(response.data);
+      setUsers(response.data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des utilisateurs :", error);
+    }
   };
 
-  const fetchCourses = async () => {
-    const response = await axios.get("/api/courses");
-
-    setCourses(response.data);
-  };
-
+  // Fonction pour récupérer les articles
   const fetchArticles = async () => {
-    const response = await axios.get("/api/articles");
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/articles`,
+      );
 
-    setArticles(response.data);
+      setArticles(response.data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des articles :", error);
+    }
   };
 
+  // Fonction pour récupérer les messages
   const fetchMessages = async () => {
-    const response = await axios.get("/api/messages");
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/messages`,
+      );
 
-    setMessages(response.data);
+      setMessages(response.data);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des messages :", error);
+    }
   };
 
-  const deleteUser = async (id: any, reason: string) => {
+  // Fonction pour ajouter une leçon
+  const addLesson = async () => {
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/lessons`, newLesson);
+      setNewLesson({ title: "", content: "", date: "" });
+      fetchLessons(); // Recharger les leçons après l'ajout
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de la leçon :", error);
+    }
+  };
+
+  // Fonction pour mettre à jour une leçon
+  const updateLesson = async (id: string, updatedData: any) => {
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/lessons/${id}`,
+        updatedData,
+      );
+      fetchLessons(); // Recharger les leçons après la mise à jour
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de la leçon :", error);
+    }
+  };
+
+  // Fonction pour supprimer une leçon
+  const deleteLesson = async (id: string) => {
     Swal.fire({
       title: "Êtes-vous sûr ?",
-      text: "Motif : " + reason,
+      text: "Vous allez supprimer cette leçon.",
       icon: "warning",
       showCancelButton: true,
       confirmButtonText: "Oui, supprimer !",
       cancelButtonText: "Annuler",
     }).then(async (result) => {
       if (result.isConfirmed) {
-        await axios.delete(`/api/users/${id}`);
-        fetchUsers();
+        try {
+          await axios.delete(
+            `${process.env.NEXT_PUBLIC_API_URL}/lessons/${id}`,
+          );
+          fetchLessons(); // Recharger les leçons après suppression
+        } catch (error) {
+          console.error("Erreur lors de la suppression de la leçon :", error);
+        }
       }
     });
   };
 
-  const promoteToAdmin = async (id: any) => {
-    await axios.post(`/api/users/promote/${id}`);
-    fetchUsers();
+  // Fonction pour supprimer un utilisateur avec motif
+  const deleteUser = async (id: any, email: string) => {
+    if (email === "virginie.ayivor@yahoo.fr") {
+      Swal.fire({
+        title: "Action interdite",
+        text: "Vous ne pouvez pas supprimer cet utilisateur.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+      return;
+    }
+
+    Swal.fire({
+      title: "Êtes-vous sûr ?",
+      text: `Motif : ${banReason}`,
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Oui, supprimer !",
+      cancelButtonText: "Annuler",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/ban`, {
+            userId: id,
+            reason: banReason,
+          });
+          fetchUsers(); // Recharger la liste des utilisateurs après suppression
+        } catch (error) {
+          console.error(
+            "Erreur lors de la suppression de l'utilisateur :",
+            error,
+          );
+        }
+      }
+    });
   };
 
-  const deleteCourse = async (id: any) => {
-    await axios.delete(`/api/courses/${id}`);
-    fetchCourses();
+  const promoteToAdminOrUser = async (id: any, role: string) => {
+    try {
+      if (role === "admin") {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/demote/${id}`,
+        );
+      } else {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/promote/${id}`,
+        );
+      }
+      fetchUsers(); // Recharger la liste des utilisateurs après modification
+    } catch (error) {
+      console.error("Erreur lors de la modification du rôle :", error);
+    }
   };
 
-  const updateCourse = async (id: any, updatedData: Course) => {
-    await axios.put(`/api/courses/${id}`, updatedData);
-    fetchCourses();
-  };
-
-  const addCourse = async () => {
-    await axios.post("/api/courses", newCourse);
-    setNewCourse({ title: "", content: "" });
-    fetchCourses();
-  };
-
-  const deleteArticle = async (id: any) => {
-    await axios.delete(`/api/articles/${id}`);
-    fetchArticles();
-  };
-
-  const updateArticle = async (id: any, updatedData: Article) => {
-    await axios.put(`/api/articles/${id}`, updatedData);
-    fetchArticles();
-  };
-
+  // Fonction pour ajouter un article
   const addArticle = async () => {
-    await axios.post("/api/articles", newArticle);
-    setNewArticle({ title: "", content: "" });
-    fetchArticles();
+    try {
+      await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/articles`,
+        newArticle,
+      );
+      setNewArticle({ title: "", content: "" });
+      fetchArticles();
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de l'article :", error);
+    }
+  };
+
+  // Fonction pour mettre à jour un article
+  const updateArticle = async (id: string, updatedData: any) => {
+    try {
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/articles/${id}`,
+        updatedData,
+      );
+      fetchArticles();
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour de l'article :", error);
+    }
+  };
+
+  // Fonction pour supprimer un article
+  const deleteArticle = async (id: string) => {
+    try {
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/articles/${id}`);
+      fetchArticles();
+    } catch (error) {
+      console.error("Erreur lors de la suppression de l'article :", error);
+    }
   };
 
   if (!user) return null;
 
   return (
     <div className="container mx-auto mt-6">
-      <h1 className="mb-4 text-4xl font-bold">
-        Dashboard Admin {user.pseudo}{" "}
-      </h1>
+      <h1 className="mb-4 text-4xl font-bold">Dashboard Admin {user.pseudo}</h1>
       <p className="mb-6 text-gray-600">Heure actuelle : {currentTime}</p>
       <h2 className="text-2xl font-semibold">
-        Bonjour, {user.prenom} <FontAwesomeIcon icon={faCrown} />
+        Bonjour, {user?.prenom || user.pseudo}{" "}
+        <FontAwesomeIcon icon={faCrown} />
       </h2>
 
       {/* Gestion des utilisateurs */}
       <div className="mt-8">
         <h3 className="mb-4 text-xl font-semibold">Gestion des utilisateurs</h3>
-        <Table aria-label="Liste des utilisateurs" shadow="none">
-          <thead>
-            <tr>
-              <th>Pseudo</th>
-              <th>Email</th>
-              <th>Rôle</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table aria-label="Liste des utilisateurs">
+          <TableHeader>
+            <TableColumn>Pseudo</TableColumn>
+            <TableColumn>Email</TableColumn>
+            <TableColumn>Rôle</TableColumn>
+            <TableColumn>Actions</TableColumn>
+          </TableHeader>
+          <TableBody>
             {users.map((user) => (
-              <tr key={user._id}>
-                <td>{user.pseudo}</td>
-                <td>{user.email}</td>
-                <td>{user.role}</td>
-                <td>
-                  <Button
-                    color="success"
-                    onClick={() => promoteToAdmin(user._id)}
+              <TableRow key={user._id}>
+                <TableCell>{user.pseudo}</TableCell>
+                <TableCell>{user.email}</TableCell>
+                <TableCell>{user.role}</TableCell>
+                <TableCell>
+                  {user.email !== "virginie.ayivor@yahoo.fr" && (
+                    <Button
+                      color={user.role === "admin" ? "warning" : "success"}
+                      onClick={() => promoteToAdminOrUser(user._id, user.role)}
+                    >
+                      {user.role === "admin"
+                        ? "Rétrograder en User"
+                        : "Promouvoir Admin"}
+                    </Button>
+                  )}
+                  <Select
+                    aria-label="Motif de bannissement"
+                    value={banReason}
+                    onChange={(e) => setBanReason(e.target.value)}
                   >
-                    Promouvoir Admin
-                  </Button>
+                    <SelectItem key="violation" value="Violation des règles">
+                      Violation des règles
+                    </SelectItem>
+                    <SelectItem key="spam" value="Spam">
+                      Spam
+                    </SelectItem>
+                    <SelectItem key="harcelement" value="Harcèlement">
+                      Harcèlement
+                    </SelectItem>
+                    <SelectItem key="autre" value="Autre">
+                      Autre
+                    </SelectItem>
+                  </Select>
+
                   <Button
                     color="danger"
-                    onClick={() => deleteUser(user._id, "Violation des règles")}
+                    disabled={user.email === "virginie.ayivor@yahoo.fr"}
+                    onClick={() => deleteUser(user._id, user.email)}
                   >
                     <FontAwesomeIcon icon={faTrash} /> Supprimer
                   </Button>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
       </div>
 
-      {/* Gestion des cours */}
+      {/* Gestion des leçons */}
+      <h3 className="mb-4 text-xl font-semibold">Gestion des leçons</h3>
+      <div className="grid grid-cols-3 gap-4 justify-center">
+        {lessons.map((lesson) => (
+          <div
+            key={lesson._id}
+            className="col-span-1 border rounded-lg shadow-md p-4 bg-white"
+          >
+            <div className="card-header mb-2">
+              <p className="font-bold text-lg">{lesson.title}</p>
+              <p className="text-sm text-gray-500">ID : {lesson._id}</p>{" "}
+              {/* Affichage de l'ID */}
+            </div>
+            <div className="card-body mb-2">
+              <p>{lesson.content}</p>
+              <p className="text-sm text-gray-500">
+                Date: {dayjs(lesson.date).format("DD/MM/YYYY")}{" "}
+                {/* Formatage de la date */}
+              </p>
+            </div>
+            <div className="card-footer mt-4 flex justify-between">
+              <Button
+                color="primary"
+                onClick={() => updateLesson(lesson._id, lesson)}
+              >
+                <FontAwesomeIcon icon={faEdit} /> Modifier
+              </Button>
+              <Button color="danger" onClick={() => deleteLesson(lesson._id)}>
+                <FontAwesomeIcon icon={faTrash} /> Supprimer
+              </Button>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Ajouter une nouvelle leçon */}
       <div className="mt-8">
-        <h3 className="mb-4 text-xl font-semibold">Gestion des cours</h3>
-        <Table aria-label="Liste des cours" shadow="none">
-          <thead>
-            <tr>
-              <th>Titre</th>
-              <th>Contenu</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {courses.map((course) => (
-              <tr key={course._id}>
-                <td>{course.title}</td>
-                <td>{course.content}</td>
-                <td>
-                  <Button
-                    color="primary"
-                    onClick={() => updateCourse(course._id, course)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} /> Modifier
-                  </Button>
-                  <Button
-                    color="danger"
-                    onClick={() => deleteCourse(course._id)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} /> Supprimer
-                  </Button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </Table>
-        <div className="mt-4">
-          <Input
-            label="Titre du cours"
-            value={newCourse.title}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, title: e.target.value })
-            }
-          />
-          <Textarea
-            label="Contenu du cours"
-            value={newCourse.content}
-            onChange={(e) =>
-              setNewCourse({ ...newCourse, content: e.target.value })
-            }
-          />
-          <Button onClick={addCourse}>
-            <FontAwesomeIcon icon={faPlus} /> Ajouter un cours
-          </Button>
-        </div>
+        <h3 className="mb-4 text-xl font-semibold">
+          Ajouter une nouvelle leçon
+        </h3>
+        <Input
+          key="title"
+          className="mb-4"
+          label="Titre de la leçon"
+          value={newLesson.title}
+          onChange={(e) =>
+            setNewLesson({ ...newLesson, title: e.target.value })
+          }
+        />
+        <Textarea
+          key="content"
+          className="mb-4"
+          label="Contenu de la leçon"
+          value={newLesson.content}
+          onChange={(e) =>
+            setNewLesson({ ...newLesson, content: e.target.value })
+          }
+        />
+        <Input
+          key="date"
+          className="mb-4"
+          label="Date de la leçon"
+          type="date"
+          value={newLesson.date}
+          onChange={(e) => setNewLesson({ ...newLesson, date: e.target.value })}
+        />
+        <Button className="mt-4" onClick={addLesson}>
+          <FontAwesomeIcon icon={faPlus} /> Ajouter une leçon
+        </Button>
       </div>
 
       {/* Gestion des articles */}
-      <div className="mt-8">
+      <motion.div
+        animate={{ opacity: 1 }}
+        className="mt-8"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.6, delay: 3 }}
+      >
         <h3 className="mb-4 text-xl font-semibold">Gestion des articles</h3>
-        <Table aria-label="Liste des articles" shadow="none">
-          <thead>
-            <tr>
-              <th>Titre</th>
-              <th>Contenu</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table aria-label="Liste des articles">
+          <TableHeader>
+            <TableColumn>Titre</TableColumn>
+            <TableColumn>Contenu</TableColumn>
+            <TableColumn>Actions</TableColumn>
+          </TableHeader>
+          <TableBody>
             {articles.map((article) => (
-              <tr key={article._id}>
-                <td>{article.title}</td>
-                <td>{article.content}</td>
-                <td>
+              <TableRow key={article._id}>
+                <TableCell>{article.title}</TableCell>
+                <TableCell>{article.content}</TableCell>
+                <TableCell>
                   <Button
                     color="primary"
                     onClick={() => updateArticle(article._id, article)}
@@ -292,56 +433,83 @@ const AdminDashboard = () => {
                   >
                     <FontAwesomeIcon icon={faTrash} /> Supprimer
                   </Button>
-                </td>
-              </tr>
+                </TableCell>
+              </TableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
-        <div className="mt-4">
-          <Input
-            label="Titre de l'article"
-            value={newArticle.title}
-            onChange={(e) =>
-              setNewArticle({ ...newArticle, title: e.target.value })
-            }
-          />
-          <Textarea
-            label="Contenu de l'article"
-            value={newArticle.content}
-            onChange={(e) =>
-              setNewArticle({ ...newArticle, content: e.target.value })
-            }
-          />
-          <Button onClick={addArticle}>
-            <FontAwesomeIcon icon={faPlus} /> Ajouter un article
-          </Button>
-        </div>
-      </div>
+      </motion.div>
+
+      {/* Ajouter un nouvel article */}
+      <motion.div
+        animate={{ opacity: 1 }}
+        className="mt-4"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.6, delay: 3 }}
+      >
+        <Input
+          key="title"
+          className="mb-4"
+          label="Titre de l'article"
+          value={newArticle.title}
+          onChange={(e) =>
+            setNewArticle({ ...newArticle, title: e.target.value })
+          }
+        />
+        <Textarea
+          key="content"
+          className="mb-4"
+          label="Contenu de l'article"
+          value={newArticle.content}
+          onChange={(e) =>
+            setNewArticle({ ...newArticle, content: e.target.value })
+          }
+        />
+        <Button onClick={addArticle}>
+          <FontAwesomeIcon icon={faPlus} /> Ajouter un article
+        </Button>
+      </motion.div>
 
       {/* Visualisation des messages */}
-      <div className="mt-8">
+      <motion.div
+        animate={{ opacity: 1 }}
+        className="mt-8"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.6, delay: 3 }}
+      >
         <h3 className="mb-4 text-xl font-semibold">
           Messages des utilisateurs
         </h3>
-        <Table aria-label="Liste des messages" shadow="none">
-          <thead>
-            <tr>
-              <th>Utilisateur</th>
-              <th>Message</th>
-              <th>Date</th>
-            </tr>
-          </thead>
-          <tbody>
+        <Table aria-label="Liste des messages" className="mb-4">
+          <TableHeader>
+            <TableColumn>Utilisateur</TableColumn>
+            <TableColumn>Message</TableColumn>
+            <TableColumn>Date</TableColumn>
+          </TableHeader>
+          <TableBody>
             {messages.map((message) => (
-              <tr key={message._id}>
-                <td>{message.user.pseudo}</td>
-                <td>{message.content}</td>
-                <td>{message.date}</td>
-              </tr>
+              <TableRow key={message._id}>
+                <TableCell>{message.user.pseudo}</TableCell>
+                <TableCell>{message.content}</TableCell>
+                <TableCell>{message.date}</TableCell>
+              </TableRow>
             ))}
-          </tbody>
+          </TableBody>
         </Table>
-      </div>
+      </motion.div>
+
+      {/* Footer */}
+      <motion.footer
+        animate={{ opacity: 1 }}
+        className="mt-16 text-center"
+        initial={{ opacity: 0 }}
+        style={{ paddingBottom: "2rem", zIndex: 10 }}
+        transition={{ duration: 0.6, delay: 3 }}
+      >
+        <p className="text-sm text-gray-500">
+          © 2024 AutiStudy - Tous droits réservés. Créé par la famille Ayivor.
+        </p>
+      </motion.footer>
     </div>
   );
 };

@@ -31,6 +31,20 @@ exports.promoteUser = async (req, res) => {
   }
 };
 
+// Dans le contrôleur `adminController.js`
+exports.demoteUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const updatedUser = await User.findByIdAndUpdate(userId, { role: "user" }, { new: true });
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(500).json({ message: "Erreur lors de la rétrogradation de l'utilisateur" });
+  }
+};
+
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);

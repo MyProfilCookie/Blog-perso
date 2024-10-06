@@ -1,6 +1,7 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Ban = require('../models/ban');
 
 exports.signup = async (req, res) => {
   const { pseudo, nom, prenom, age, email, password } = req.body;
@@ -131,5 +132,37 @@ exports.makeAdmin = async (req, res) => {
   } catch (error) {
     console.error("Erreur lors de la promotion en administrateur :", error);
     res.status(500).json({ message: "Erreur lors de la promotion en administrateur" });
+  }
+};
+
+exports.banUser = async (req, res) => {
+  const { userId, reason } = req.body;
+
+  if (!reason || !userId) {
+    return res.status(400).json({ message: 'Le motif et l\'utilisateur sont requis.' });
+  }
+
+  try {
+    // Vérifier si l'utilisateur existe
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: 'Utilisateur non trouvé.' });
+    }
+
+    // Vérifier si l'utilisateur est Virginie
+    if (user.email === 'virginie.ayivor@yahoo.fr') {
+      return res.status(403).json({ message: 'Impossible de bannir cet utilisateur.' });
+    }
+
+    // Créer un nouveau bannissement
+    const ban = new Ban({ userId, reason });
+    await ban.save();
+    
+    // Optionnel : vous pouvez aussi désactiver ou supprimer l'utilisateur de la base de données.
+    await User.findByIdAndDelete(userId);
+
+    res.status(200).json({ message: 'Utilisateur banni avec succès.' });
+  } catch (error) {
+    res.status(500).json({ message: error.message });
   }
 };
