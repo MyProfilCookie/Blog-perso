@@ -6,12 +6,16 @@ const Ban = require('../models/ban');
 exports.signup = async (req, res) => {
   const { pseudo, nom, prenom, age, email, password } = req.body;
 
+  // Validation des champs obligatoires
   if (!pseudo || !nom || !prenom || !age || !email || !password) {
     return res.status(400).json({ message: 'Tous les champs obligatoires doivent être remplis.' });
   }
 
   try {
-    const hashedPassword = await bcrypt.hash(password, 10); // Hashage du mot de passe
+    // Hashage du mot de passe
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // Création de l'utilisateur avec un avatar par défaut
     const user = new User({
       pseudo,
       nom,
@@ -19,17 +23,26 @@ exports.signup = async (req, res) => {
       age,
       email,
       password: hashedPassword, // Stocker le mot de passe hashé
+      image: '/assets/default-avatar.webp' // Ajout d'un avatar par défaut
     });
 
+    // Sauvegarde de l'utilisateur dans la base de données
     await user.save();
 
+    // Génération du token JWT
     const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
+    // Réponse envoyée après la sauvegarde de l'utilisateur
     res.status(201).json({
       message: 'Utilisateur inscrit avec succès',
-      user: { id: user._id, pseudo: user.pseudo, email: user.email },
+      user: { 
+        id: user._id, 
+        pseudo: user.pseudo, 
+        email: user.email,
+        avatar: user.image // Renvoi de l'avatar (par défaut ou personnalisé)
+      },
       token,
     });
   } catch (err) {
@@ -37,6 +50,7 @@ exports.signup = async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de l\'inscription' });
   }
 };
+
 exports.login = async (req, res) => {
   const { email, password } = req.body;
 

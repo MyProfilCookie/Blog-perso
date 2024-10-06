@@ -82,7 +82,7 @@ const userSchema = new Schema(
     isAdmin: { type: Boolean, default: false },
     image: {
       type: String,
-      default: '/uploads/default_profile.jpg', // Image par défaut si non fournie
+      default: '/assets/default-avatar.webp', // Image par défaut si non fournie
       trim: true,
       minlength: 5,
       maxlength: 200,

@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
@@ -243,8 +244,8 @@ export default function Inscription() {
         {password && (
           <p
             className={`text-sm ${passwordStrength.includes("faible")
-                ? "text-red-500"
-                : "text-green-500"
+              ? "text-red-500"
+              : "text-green-500"
               }`}
           >
             {passwordStrength}
