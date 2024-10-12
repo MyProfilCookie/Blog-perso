@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 "use client";
 
 import * as React from "react";
@@ -274,4 +275,3 @@ export default function Connexion() {
     </motion.div>
   );
 }
-

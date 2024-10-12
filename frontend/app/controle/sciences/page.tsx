@@ -1,7 +1,11 @@
+/* eslint-disable prettier/prettier */
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Image, Spacer } from "@nextui-org/react";
 import { motion } from "framer-motion";
+
+import BackButton from "@/components/back";
+import LoadingAnimation from "@/components/loading";
 
 interface Exercise {
   id: number;
@@ -89,7 +93,7 @@ const SciencePage: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingAnimation />;
   }
 
   if (error) {
@@ -98,6 +102,7 @@ const SciencePage: React.FC = () => {
 
   return (
     <section className="flex flex-col items-center justify-center w-full gap-4 py-8 md:py-10">
+      <BackButton />
       <div className="w-full px-4 text-center">
         <Image
           alt="Header Image"
@@ -162,9 +167,8 @@ const SciencePage: React.FC = () => {
                   </button>
                   {results[exercise.id] !== undefined && (
                     <p
-                      className={`mt-2 ${
-                        results[exercise.id] ? "text-green-500" : "text-red-500"
-                      }`}
+                      className={`mt-2 ${results[exercise.id] ? "text-green-500" : "text-red-500"
+                        }`}
                     >
                       {results[exercise.id]
                         ? "Bonne réponse !"

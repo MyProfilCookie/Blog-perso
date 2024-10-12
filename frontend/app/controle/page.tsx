@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
 import { title } from "@/components/primitives";
+import BackButton from "@/components/back";
 
 const courseThemes = [
   {
@@ -97,6 +98,7 @@ const BlogPage = () => {
 
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+      <BackButton />
       <h1 className={title()}>Les contrôles</h1>
       <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
         {courseThemes.map((theme) => (

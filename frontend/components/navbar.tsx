@@ -1,4 +1,3 @@
-/* eslint-disable react/jsx-sort-props */
 "use client";
 import React, { useState, useEffect } from "react";
 import {
@@ -14,6 +13,7 @@ import {
   DropdownTrigger,
   DropdownMenu,
   DropdownItem,
+  Badge,
 } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -21,7 +21,8 @@ import {
   faBook,
   faNewspaper,
   faCrown,
-  faTachometerAlt, // Icône pour Dashboard User
+  faTachometerAlt,
+  faShoppingCart,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
@@ -38,11 +39,12 @@ type User = {
   pseudo: string;
   email: string;
   avatar?: string;
-  role: string; // Utilisation de "role" pour déterminer si l'utilisateur est admin ou non
+  role: string;
 };
 
 export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
+  const [cartItemsCount, setCartItemsCount] = useState<number>(0); // État pour le panier
   const router = useRouter();
 
   // Charger l'utilisateur depuis le localStorage lors du montage
@@ -52,11 +54,9 @@ export const Navbar = () => {
     if (storedUser) {
       const parsedUser = JSON.parse(storedUser);
 
-      console.log("User récupéré:", parsedUser); // Log pour vérifier les données utilisateur
-
       setUser({
         ...parsedUser,
-        role: parsedUser.role, // On se base sur "role" pour déterminer si admin
+        role: parsedUser.role,
       });
     }
   }, []);
@@ -69,11 +69,9 @@ export const Navbar = () => {
       if (storedUser) {
         const parsedUser = JSON.parse(storedUser);
 
-        console.log("User mis à jour:", parsedUser); // Log pour vérifier les données mises à jour
-
         setUser({
           ...parsedUser,
-          role: parsedUser.role, // On se base sur "role" pour déterminer si admin
+          role: parsedUser.role,
         });
       } else {
         setUser(null);
@@ -125,12 +123,19 @@ export const Navbar = () => {
     });
   };
 
+  // Fonction pour ajouter un article au panier
+  const handleAddToCart = (article: any) => {
+    setCartItemsCount(cartItemsCount + 1); // Incrémente le nombre d'articles dans le panier
+    console.log(`Article ajouté au panier: ${article.title}`);
+  };
+
   return (
     <NextUINavbar
       maxWidth="xl"
       position="sticky"
       style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
     >
+      {/* Section gauche (logo et navigation principale) */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex items-center justify-start gap-1" href="/">
@@ -141,7 +146,7 @@ export const Navbar = () => {
 
         <ul className="justify-start hidden gap-4 ml-2 lg:flex">
           {siteConfig.navItems.map((item) => (
-            <NavbarItem key={String(item.href)}>
+            <NavbarItem key={item.label}>
               <NextLink
                 className="text-gray-700 hover:text-green-500"
                 href={String(item.href)}
@@ -150,6 +155,26 @@ export const Navbar = () => {
               </NextLink>
             </NavbarItem>
           ))}
+
+          {/* Ajout de la page Shop avec l'icône du panier et la bulle */}
+          <NavbarItem key="shop" className="relative">
+            <NextLink
+              className="text-gray-700 hover:text-green-500 flex items-center relative"
+              href="/shop"
+            >
+              <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
+              Shop
+              {/* Afficher le Badge uniquement si cartItemsCount > 0 */}
+              {cartItemsCount > 0 && (
+                <Badge
+                  className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2"
+                  color="danger"
+                >
+                  {cartItemsCount}
+                </Badge>
+              )}
+            </NextLink>
+          </NavbarItem>
 
           {user?.role === "admin" && (
             <NavbarItem key="maeva">
@@ -164,7 +189,8 @@ export const Navbar = () => {
         </ul>
       </NavbarContent>
 
-      <NavbarContent className=" sm:flex basis-1/5 sm:basis-full" justify="end">
+      {/* Section droite (actions utilisateur et autres) */}
+      <NavbarContent className="sm:flex basis-1/5 sm:basis-full" justify="end">
         <NavbarItem className="hidden gap-2 sm:flex">
           <Link
             isExternal
@@ -191,7 +217,7 @@ export const Navbar = () => {
                 router.push(
                   user.role === "admin" ? "/admin/dashboard" : "/dashboard",
                 )
-              } // Remplacement de onClick par onPress
+              }
             >
               <FontAwesomeIcon
                 className="mr-2"
@@ -202,6 +228,7 @@ export const Navbar = () => {
           </NavbarItem>
         )}
 
+        {/* Avatar et menu utilisateur */}
         {!user ? (
           <Avatar
             isBordered
@@ -220,11 +247,11 @@ export const Navbar = () => {
               <Button aria-label="Menu utilisateur" className="bg-transparent">
                 <Avatar
                   isBordered
-                  color="success"
                   alt={`Avatar de ${user?.pseudo}`}
                   aria-label={`Avatar de ${user?.pseudo}`}
+                  color="success"
                   size="sm"
-                  src={user?.avatar || "assets/default-avatar.webp"}
+                  src={user?.avatar || "/assets/default-avatar.webp"}
                 />
                 <span className="ml-2">{user?.pseudo || "Utilisateur"}</span>
               </Button>

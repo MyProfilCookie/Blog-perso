@@ -1,22 +1,39 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable react/no-unescaped-entities */
 "use client";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardBody, Image, Spacer } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 
+import BackButton from "@/components/back";
+import LoadingAnimation from "@/components/loading";
+
+// Interface pour les exercices de français
 interface Exercise {
-  content: ReactNode;
   id: number;
   title: string;
-  description: string;
+  content: string;
   question: string;
   options?: string[]; // Options pour les questions à choix multiples
   image?: string;
   answer: string;
 }
 
+// Couleurs de fond pour les cartes d'exercices
+const lessonBackgroundColors = [
+  "#f0f8ff", // AliceBlue
+  "#e6f7ff", // LightSkyBlue
+  "#f0fff0", // HoneyDew
+  "#fffaf0", // FloralWhite
+  "#ffebcd", // BlanchedAlmond
+  "#f5f5dc", // Beige
+  "#fafad2", // LightGoldenRodYellow
+  "#e0ffff", // LightCyan
+  "#ffefd5", // PapayaWhip
+  "#ffe4e1", // MistyRose
+];
+
 const FrenchPage: React.FC = () => {
-  const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[] | null>(null);
   const [loading, setLoading] = useState(true);
   const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({});
@@ -25,7 +42,7 @@ const FrenchPage: React.FC = () => {
   const [emoji, setEmoji] = useState<string>("");
 
   useEffect(() => {
-    // Fetch the data from the datafrench.json file
+    // Récupérer les données depuis le fichier JSON
     fetch("/datafrench.json")
       .then((response) => {
         if (!response.ok) {
@@ -53,7 +70,7 @@ const FrenchPage: React.FC = () => {
   const handleSubmit = (id: number, correctAnswer: string) => {
     const userAnswer = userAnswers[id];
 
-    if (!userAnswer) return; // Prevent submission if the input is empty
+    if (!userAnswer) return; // Empêcher la soumission si aucune réponse n'est donnée
 
     const isCorrect =
       userAnswer.toString().trim().toLowerCase() ===
@@ -63,7 +80,7 @@ const FrenchPage: React.FC = () => {
   };
 
   const calculateFinalScore = () => {
-    if (!exercises) return; // Prevent calculating if exercises are not loaded
+    if (!exercises) return; // Empêcher le calcul si les exercices ne sont pas chargés
     const total = exercises.length;
     const correct = Object.values(results).filter(Boolean).length;
     const score = (correct / total) * 100;
@@ -82,7 +99,7 @@ const FrenchPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingAnimation />;
   }
 
   if (!exercises) {
@@ -91,6 +108,7 @@ const FrenchPage: React.FC = () => {
 
   return (
     <section className="flex flex-col items-center justify-center w-full gap-4 py-8 md:py-10">
+      <BackButton />
       <div className="w-full px-4 text-center">
         <Image
           alt="Header Image"
@@ -105,31 +123,43 @@ const FrenchPage: React.FC = () => {
         </h1>
       </div>
 
-      {/* Grid of French Exercises */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="grid w-full grid-cols-1 gap-4 px-4 mt-8 sm:grid-cols-2 lg:grid-cols-3"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
       >
-        {exercises.map((exercise) => (
-          <Card key={exercise.id} className="w-full py-4">
+        {exercises.map((exercise, index) => (
+          <Card
+            key={exercise.id}
+            className="w-full py-4"
+            style={{
+              backgroundColor:
+                lessonBackgroundColors[index % lessonBackgroundColors.length],
+              borderRadius: "12px",
+            }}
+          >
             <CardBody className="flex flex-col items-center">
-              <h3 className="font-bold text-large">{exercise.title}</h3>
+              <h3 className="font-bold text-blue-800 text-large">
+                {exercise.title}
+              </h3>
               <p className="mb-4 text-center">{exercise.content}</p>
               <p>{exercise.question}</p>
+
+              {/* Afficher l'image de l'exercice si disponible */}
               {exercise.image && (
-                <img
+                <Image
                   alt={exercise.title}
                   className="object-contain w-48 h-48 mt-2"
                   src={`/assets/french/${exercise.image}`}
                 />
               )}
-              {/* For exercises with options */}
+
+              {/* Pour les questions à choix multiples */}
               {exercise.options ? (
                 <select
                   className="px-2 py-1 mt-2 border rounded"
-                  disabled={results[exercise.id] !== undefined} // Disable if answer is submitted
+                  disabled={results[exercise.id] !== undefined} // Désactiver si réponse envoyée
                   value={userAnswers[exercise.id] || ""}
                   onChange={(e) => handleChange(e, exercise.id)}
                 >
@@ -143,7 +173,7 @@ const FrenchPage: React.FC = () => {
               ) : (
                 <input
                   className="px-2 py-1 mt-2 border rounded"
-                  disabled={results[exercise.id] !== undefined} // Disable input if the answer has been submitted
+                  disabled={results[exercise.id] !== undefined} // Désactiver si réponse envoyée
                   placeholder="Votre réponse"
                   type="text"
                   value={userAnswers[exercise.id] || ""}
@@ -153,16 +183,15 @@ const FrenchPage: React.FC = () => {
 
               <button
                 className="px-4 py-2 mt-2 text-white bg-blue-500 rounded hover:bg-blue-700"
-                disabled={results[exercise.id] !== undefined} // Disable button if the answer has been submitted
+                disabled={results[exercise.id] !== undefined} // Désactiver bouton si réponse envoyée
                 onClick={() => handleSubmit(exercise.id, exercise.answer)}
               >
                 Soumettre
               </button>
               {results[exercise.id] !== undefined && (
                 <p
-                  className={`mt-2 ${
-                    results[exercise.id] ? "text-green-500" : "text-red-500"
-                  }`}
+                  className={`mt-2 ${results[exercise.id] ? "text-green-500" : "text-red-500"
+                    }`}
                 >
                   {results[exercise.id]
                     ? "Bonne réponse !"
@@ -174,7 +203,6 @@ const FrenchPage: React.FC = () => {
         ))}
       </motion.div>
 
-      {/* Score Section */}
       {finalScore !== null && (
         <div className="mt-8 text-center">
           <h2 className="text-2xl font-bold">
@@ -183,7 +211,6 @@ const FrenchPage: React.FC = () => {
         </div>
       )}
 
-      {/* Calculate Score Button */}
       <div className="mt-4">
         <button
           className="px-4 py-2 text-white bg-green-500 rounded-full hover:bg-green-700"
@@ -193,25 +220,6 @@ const FrenchPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Links and Snippet Section */}
-      <div className="flex flex-col items-start w-full gap-4 px-4 mt-8 md:flex-row md:justify-around md:items-center">
-        <div className="flex gap-3">
-          <button
-            className="px-4 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-700"
-            onClick={() => router.push("/controle")}
-          >
-            Retour aux Cours
-          </button>
-          <button
-            className="px-4 py-2 text-blue-500 border border-blue-500 rounded-full hover:bg-blue-500 hover:text-white"
-            onClick={() => router.push("/articles")}
-          >
-            Articles
-          </button>
-        </div>
-      </div>
-
-      {/* Footer Section */}
       <footer className="w-full mt-8 text-center">
         <p className="text-sm text-gray-500">
           © 2024 AutiStudy - Tous droits réservés. Créé par la famille Ayivor.

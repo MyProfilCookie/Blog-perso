@@ -1,17 +1,36 @@
+/* eslint-disable prettier/prettier */
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Image, Spacer } from "@nextui-org/react";
 import { motion } from "framer-motion";
 
+import BackButton from "@/components/back";
+import LoadingAnimation from "@/components/loading";
+
+// Interface pour les exercices d'histoire
 interface Exercise {
   id: number;
   title: string;
   content: string;
   question: string;
-  options?: string[];
+  options?: string[]; // Options pour les questions à choix multiples
   image?: string;
   answer: string;
 }
+
+// Couleurs de fond pour les cartes d'exercices
+const lessonBackgroundColors = [
+  "#f0f8ff", // AliceBlue
+  "#e6f7ff", // LightSkyBlue
+  "#f0fff0", // HoneyDew
+  "#fffaf0", // FloralWhite
+  "#ffebcd", // BlanchedAlmond
+  "#f5f5dc", // Beige
+  "#fafad2", // LightGoldenRodYellow
+  "#e0ffff", // LightCyan
+  "#ffefd5", // PapayaWhip
+  "#ffe4e1", // MistyRose
+];
 
 const HistoryPage: React.FC = () => {
   const [exercises, setExercises] = useState<Exercise[] | null>(null);
@@ -22,6 +41,7 @@ const HistoryPage: React.FC = () => {
   const [emoji, setEmoji] = useState<string>("");
 
   useEffect(() => {
+    // Récupérer les données depuis le fichier JSON
     fetch("/datahistory.json")
       .then((response) => {
         if (!response.ok) {
@@ -78,7 +98,7 @@ const HistoryPage: React.FC = () => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingAnimation />;
   }
 
   if (!exercises) {
@@ -87,6 +107,7 @@ const HistoryPage: React.FC = () => {
 
   return (
     <section className="flex flex-col items-center justify-center w-full gap-4 py-8 md:py-10">
+      <BackButton />
       <div className="w-full px-4 text-center">
         <Image
           alt="Header Image"
@@ -107,19 +128,30 @@ const HistoryPage: React.FC = () => {
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
       >
-        {exercises.map((exercise) => (
-          <Card key={exercise.id} className="w-full py-4">
+        {exercises.map((exercise, index) => (
+          <Card
+            key={exercise.id}
+            className="w-full py-4"
+            style={{
+              backgroundColor:
+                lessonBackgroundColors[index % lessonBackgroundColors.length],
+              borderRadius: "12px",
+            }}
+          >
             <CardBody className="flex flex-col items-center">
-              <h3 className="font-bold text-large">{exercise.title}</h3>
+              <h3 className="font-bold text-blue-800 text-large">
+                {exercise.title}
+              </h3>
               <p className="mb-4 text-center">{exercise.content}</p>
               <p>{exercise.question}</p>
               {exercise.image && (
-                <img
+                <Image
                   alt={exercise.title}
                   className="object-contain w-48 h-48 mt-2"
                   src={`/assets/history/${exercise.image}`}
                 />
               )}
+
               {exercise.options ? (
                 <select
                   className="px-2 py-1 mt-2 border rounded"
@@ -154,9 +186,8 @@ const HistoryPage: React.FC = () => {
               </button>
               {results[exercise.id] !== undefined && (
                 <p
-                  className={`mt-2 ${
-                    results[exercise.id] ? "text-green-500" : "text-red-500"
-                  }`}
+                  className={`mt-2 ${results[exercise.id] ? "text-green-500" : "text-red-500"
+                    }`}
                 >
                   {results[exercise.id]
                     ? "Bonne réponse !"

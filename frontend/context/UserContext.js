@@ -1,6 +1,8 @@
 import React, { createContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Importer le routeur ici
 
+import LoadingAnimation from "@/components/loading";
+
 // Créer le contexte utilisateur
 export const UserContext = createContext(null);
 
@@ -37,7 +39,8 @@ export const UserProvider = ({ children }) => {
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    // eslint-disable-next-line react/jsx-no-undef
+    return <LoadingAnimation />;
   }
 
   return (

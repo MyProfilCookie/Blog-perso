@@ -4,6 +4,8 @@ import { useEffect, useState } from "react";
 import { Card, CardBody, Radio, RadioGroup, Textarea } from "@nextui-org/react";
 import { motion } from "framer-motion";
 
+import BackButton from "@/components/back";
+
 // Définir les types
 type Lesson = {
   subject: string;
@@ -127,6 +129,7 @@ export default function LessonOfTheDay() {
 
   return (
     <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10">
+      <BackButton />
       <div className="w-full text-center">
         <motion.div
           animate={{ opacity: 1, y: 0 }}

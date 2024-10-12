@@ -1,22 +1,40 @@
+/* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import React, { ReactNode, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardBody, Image, Spacer } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { useRouter } from "next/navigation";
 
+import BackButton from "@/components/back";
+import LoadingAnimation from "@/components/loading";
+
+// Interface pour les exercices d'art
 interface Exercise {
-  content: ReactNode;
   id: number;
   title: string;
-  description?: string;
-  question: string;
+  content: string;
   image?: string;
-  answer: number | string;
+  questions: {
+    question: string;
+    answer: string;
+  }[];
 }
 
+// Les mêmes couleurs de fond utilisées dans la page de sciences
+const lessonBackgroundColors = [
+  "#f0f8ff", // AliceBlue
+  "#e6f7ff", // LightSkyBlue
+  "#f0fff0", // HoneyDew
+  "#fffaf0", // FloralWhite
+  "#ffebcd", // BlanchedAlmond
+  "#f5f5dc", // Beige
+  "#fafad2", // LightGoldenRodYellow
+  "#e0ffff", // LightCyan
+  "#ffefd5", // PapayaWhip
+  "#ffe4e1", // MistyRose
+];
+
 const ArtPage: React.FC = () => {
-  const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -26,7 +44,6 @@ const ArtPage: React.FC = () => {
   const [emoji, setEmoji] = useState<string>("");
 
   useEffect(() => {
-    // Fetch the data from the dataart.json file
     fetch("/dataart.json")
       .then((response) => {
         if (!response.ok) {
@@ -53,10 +70,9 @@ const ArtPage: React.FC = () => {
     setUserAnswers({ ...userAnswers, [id]: e.target.value });
   };
 
-  const handleSubmit = (id: number, correctAnswer: string | number) => {
+  const handleSubmit = (id: number, correctAnswer: string) => {
     const userAnswer = userAnswers[id];
-    const isCorrect =
-      userAnswer?.toString().trim() === correctAnswer.toString().trim();
+    const isCorrect = userAnswer?.toString().trim() === correctAnswer.trim();
 
     setResults({ ...results, [id]: isCorrect });
   };
@@ -69,18 +85,18 @@ const ArtPage: React.FC = () => {
     setFinalScore(score);
 
     if (score === 100) {
-      setEmoji("🌟"); // Étoile pour un score parfait
+      setEmoji("🌟");
     } else if (score >= 80) {
-      setEmoji("😊"); // Sourire pour un bon score
+      setEmoji("😊");
     } else if (score >= 50) {
-      setEmoji("😐"); // Neutre pour un score moyen
+      setEmoji("😐");
     } else {
-      setEmoji("😢"); // Triste pour un mauvais score
+      setEmoji("😢");
     }
   };
 
   if (loading) {
-    return <div>Loading...</div>;
+    return <LoadingAnimation />;
   }
 
   if (error) {
@@ -89,6 +105,7 @@ const ArtPage: React.FC = () => {
 
   return (
     <section className="flex flex-col items-center justify-center w-full gap-4 py-8 md:py-10">
+      <BackButton />
       <div className="w-full px-4 text-center">
         <Image
           alt="Header Image"
@@ -101,56 +118,70 @@ const ArtPage: React.FC = () => {
         <h1 className="text-3xl font-bold text-blue-600">Exercices d'Art</h1>
       </div>
 
-      {/* Grid of Art Exercises */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="grid w-full grid-cols-1 gap-4 px-4 mt-8 sm:grid-cols-2 lg:grid-cols-3"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
       >
-        {exercises.map((exercise) => (
-          <Card key={exercise.id} className="w-full py-4">
+        {exercises.map((exercise, index) => (
+          <Card
+            key={exercise.id}
+            className="w-full py-4"
+            style={{
+              backgroundColor:
+                lessonBackgroundColors[index % lessonBackgroundColors.length],
+              borderRadius: "12px",
+            }}
+          >
             <CardBody className="flex flex-col items-center">
-              <h3 className="font-bold text-large">{exercise.title}</h3>
-              <p>{exercise.content}</p>
-              <p>{exercise.question}</p>
+              <h3 className="font-bold text-blue-800 text-large">
+                {exercise.title}
+              </h3>
+              <p className="text-gray-700">{exercise.content}</p>
+
               {exercise.image && (
-                <img
+                <Image
                   alt={exercise.title}
                   className="object-contain w-48 h-48 mt-2"
                   src={`/assets/art/${exercise.image}`}
                 />
               )}
-              <input
-                className="px-2 py-1 mt-2 border rounded"
-                placeholder="Votre réponse"
-                type="text"
-                value={userAnswers[exercise.id] || ""}
-                onChange={(e) => handleChange(e, exercise.id)}
-              />
-              <button
-                className="px-4 py-2 mt-2 text-white bg-blue-500 rounded hover:bg-blue-700"
-                onClick={() => handleSubmit(exercise.id, exercise.answer)}
-              >
-                Soumettre
-              </button>
-              {results[exercise.id] !== undefined && (
-                <p
-                  className={`mt-2 ${
-                    results[exercise.id] ? "text-green-500" : "text-red-500"
-                  }`}
-                >
-                  {results[exercise.id]
-                    ? "Bonne réponse !"
-                    : "Mauvaise réponse, réessayez."}
-                </p>
-              )}
+
+              {exercise.questions.map((q, questionIndex) => (
+                <div key={questionIndex} className="w-full mt-2">
+                  <p>{q.question}</p>
+                  <input
+                    className="px-2 py-2 mt-2 text-gray-800 placeholder-blue-500 bg-blue-100 border rounded"
+                    placeholder="Votre réponse"
+                    type="text"
+                    value={userAnswers[exercise.id] || ""}
+                    onChange={(e) => handleChange(e, exercise.id)}
+                  />
+
+                  <button
+                    className="px-4 py-2 mt-2 text-white bg-blue-500 rounded hover:bg-blue-700"
+                    onClick={() => handleSubmit(exercise.id, q.answer)}
+                  >
+                    Soumettre
+                  </button>
+                  {results[exercise.id] !== undefined && (
+                    <p
+                      className={`mt-2 ${results[exercise.id] ? "text-green-500" : "text-red-500"
+                        }`}
+                    >
+                      {results[exercise.id]
+                        ? "Bonne réponse !"
+                        : "Mauvaise réponse, réessayez."}
+                    </p>
+                  )}
+                </div>
+              ))}
             </CardBody>
           </Card>
         ))}
       </motion.div>
 
-      {/* Score Section */}
       {finalScore !== null && (
         <div className="mt-8 text-center">
           <h2 className="text-2xl font-bold">
@@ -159,7 +190,6 @@ const ArtPage: React.FC = () => {
         </div>
       )}
 
-      {/* Calculate Score Button */}
       <div className="mt-4">
         <button
           className="px-4 py-2 text-white bg-green-500 rounded-full hover:bg-green-700"
@@ -169,28 +199,9 @@ const ArtPage: React.FC = () => {
         </button>
       </div>
 
-      {/* Links and Snippet Section */}
-      <div className="flex flex-col items-start w-full gap-4 px-4 mt-8 md:flex-row md:justify-around md:items-center">
-        <div className="flex gap-3">
-          <button
-            className="px-4 py-2 text-white bg-blue-500 rounded-full hover:bg-blue-700"
-            onClick={() => router.push("/controle")}
-          >
-            Retour aux Cours
-          </button>
-          <button
-            className="px-4 py-2 text-blue-500 border border-blue-500 rounded-full hover:bg-blue-500 hover:text-white"
-            onClick={() => router.push("/articles")}
-          >
-            Articles
-          </button>
-        </div>
-      </div>
-
-      {/* Footer Section */}
       <footer className="w-full mt-8 text-center">
-        <p style={{ fontSize: "1em", color: "#888" }}>
-          © 2024 Cours pour Enfants Autistes
+        <p className="text-sm text-gray-500">
+          © 2024 AutiStudy - Tous droits réservés. Créé par la famille Ayivor.
         </p>
       </footer>
     </section>

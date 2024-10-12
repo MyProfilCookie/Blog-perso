@@ -1,7 +1,7 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
-const port = process.env.PORT || 3001; // Ajout d'une valeur par défaut pour le port
+const port = process.env.PORT || 3001;
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const compression = require("compression");
@@ -17,8 +17,10 @@ const monthlyCourseRoutes = require("./api/routes/monthly_courses.routes"); // R
 const messageRoutes = require("./api/routes/message.routes"); // Routes messages
 const lessonsRoutes = require("./api/routes/lessons.routes"); // Routes leçons
 const articleRoutes = require("./api/routes/article.routes"); // Routes articles
+const productRoutes = require("./api/routes/products.routes"); // Routes produits
+const Produit = require("./api/models/products"); // Modèle produit
 
-
+// Connexion à la base de données
 // Connexion à la base de données
 connect(process.env.DB)
   .then(() => {
@@ -28,6 +30,7 @@ connect(process.env.DB)
     console.error("Erreur de connexion à la base de données :", err.message);
     process.exit(1); // Arrêter le serveur si la base de données ne se connecte pas
   });
+
 
 // Middleware
 app.use(express.json());
@@ -60,7 +63,7 @@ app.get("/logo", (req, res) => {
 // Route pour récupérer le profil utilisateur
 app.get("/users/profile", async (req, res) => {
   try {
-    const token = req.headers.authorization.split(" ")[1]; // Récupérer le token depuis l'entête
+    const token = req.headers.authorization.split(" ")[1];
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
     const user = await User.findById(decoded.id);
 
@@ -92,6 +95,8 @@ app.use("/courses", monthlyCourseRoutes);
 app.use("/messages", messageRoutes);
 app.use("/lessons", lessonsRoutes);
 app.use("/articles", articleRoutes);
+app.use("/products", productRoutes);
+
 // Gestion des erreurs 404
 app.use((req, res, next) => {
   const error = createError(404, "Ressource non trouvée");
