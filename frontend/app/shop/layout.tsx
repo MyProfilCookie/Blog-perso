@@ -126,7 +126,8 @@ export default function ShopPage() {
                 <FontAwesomeIcon icon={faShoppingCart} style={{ marginRight: '8px' }} />
                 {cartItems.length > 0 && (
                     <Badge
-                        color="danger" content={cartItems.length}
+                        color="danger"
+                        content={cartItems.length}
                         style={{
                             position: 'absolute',
                             top: '-6px',
@@ -136,6 +137,7 @@ export default function ShopPage() {
                             border: "none"
                         }}
                     >
+                        {/* {cartItems.length} */}
                     </Badge>
                 )}
             </Button>
