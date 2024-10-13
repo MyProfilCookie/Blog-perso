@@ -1,9 +1,11 @@
+/* eslint-disable react/self-closing-comp */
 /* eslint-disable prettier/prettier */
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Modal, Badge, Button } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2"; // Import de la bibliothèque pour les alertes
 
 import ArticlesPage from "./page";
 
@@ -19,9 +21,69 @@ export default function ShopPage() {
     const [cartItems, setCartItems] = useState<Article[]>([]);
     const [isCartOpen, setIsCartOpen] = useState(false);
 
-    // Fonction pour ajouter des articles au panier
+    // Charger le panier depuis localStorage à l'initialisation
+    useEffect(() => {
+        const storedCart = localStorage.getItem("cartItems");
+
+        if (storedCart) {
+            try {
+                const parsedCart = JSON.parse(storedCart);
+
+                if (Array.isArray(parsedCart)) {
+                    setCartItems(parsedCart);
+                }
+            } catch (error) {
+                console.error("Erreur de parsing du panier depuis le localStorage :", error);
+            }
+        }
+    }, []);
+
+    // Sauvegarder le panier dans localStorage à chaque mise à jour du panier
+    useEffect(() => {
+        if (cartItems.length > 0) {
+            localStorage.setItem("cartItems", JSON.stringify(cartItems));
+        }
+    }, [cartItems]);
+
+    // Fonction pour ajouter des articles au panier avec gestion des doublons
     const handleAddToCart = (article: Article) => {
-        setCartItems((prevItems) => [...prevItems, article]);
+        const itemExists = cartItems.find((item) => item.title === article.title);
+
+        if (itemExists) {
+            // Demander une confirmation si l'article existe déjà
+            Swal.fire({
+                title: "Article déjà présent",
+                text: "Cet article est déjà dans votre panier. Voulez-vous vraiment l'ajouter à nouveau ?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Oui, ajouter encore",
+                cancelButtonText: "Annuler",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setCartItems((prevItems) => [...prevItems, article]);
+                    Swal.fire("Ajouté", "L'article a été ajouté à nouveau.", "success");
+                }
+            });
+        } else {
+            // Ajouter l'article et afficher un message de succès
+            Swal.fire({
+                title: "Ajouter cet article?",
+                text: `Voulez-vous ajouter "${article.title}" à votre panier ?`,
+                icon: "question",
+                showCancelButton: true,
+                confirmButtonColor: "#3085d6",
+                cancelButtonColor: "#d33",
+                confirmButtonText: "Oui, ajouter",
+                cancelButtonText: "Annuler",
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    setCartItems((prevItems) => [...prevItems, article]);
+                    Swal.fire("Ajouté", "L'article a été ajouté à votre panier.", "success");
+                }
+            });
+        }
     };
 
     // Fonction pour ouvrir ou fermer le panier (popup)
@@ -43,7 +105,7 @@ export default function ShopPage() {
                 className="relative"
                 color="primary"
                 style={{
-                    padding: '12px 24px',
+                    padding: '24px 24px',
                     borderRadius: '30px', // Bouton arrondi
                     backgroundColor: '#2D3748', // Couleur sombre avec bon contraste
                     color: '#FFF', // Texte blanc pour contraste
@@ -64,27 +126,19 @@ export default function ShopPage() {
                 <FontAwesomeIcon icon={faShoppingCart} style={{ marginRight: '8px' }} />
                 {cartItems.length > 0 && (
                     <Badge
+                        color="danger" content={cartItems.length}
                         style={{
-                            backgroundColor: '#F56565', // Rouge avec contraste élevé
-                            color: '#FFFFFF', // Texte blanc pour bonne lisibilité
-                            fontSize: '14px', // Taille du texte dans le badge
-                            padding: '10px', // Correction du padding
-                            textAlign: 'center',
-                            borderRadius: '50%',
-                            border: '2px solid white',
-                            top: '10px', // Ajustement de la position du badge
-                            right: '8px', // Ajustement de la position du badge
                             position: 'absolute',
-                            boxShadow: '0px 2px 4px rgba(0,0,0,0.25)', // Ombre plus douce
-                            zIndex: -50,
+                            top: '-6px',
+                            right: '-6px',
+                            transform: 'translate(50%, -50%)',
+                            fontSize: '12px',
+                            border: "none"
                         }}
                     >
-                        {cartItems.length}
                     </Badge>
                 )}
             </Button>
-
-
 
             {/* Page des articles */}
             <ArticlesPage onAddToCart={handleAddToCart} />
@@ -116,9 +170,10 @@ export default function ShopPage() {
                     </Button>
                 </div>
             </Modal>
-        </div>
+        </div >
     );
 }
+
 
 
 

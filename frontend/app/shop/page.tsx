@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 "use client";
-import { Card, CardBody, Button, Modal, ModalBody, ModalHeader } from "@nextui-org/react";
+import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
@@ -32,7 +32,7 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
 
                 setArticles(data); // Mettre à jour l'état avec les articles récupérés
             } catch (error) {
-                console.error("Erreur lors de la récupération des articles:", error);
+
             } finally {
                 setLoading(false); // Fin du chargement
             }
