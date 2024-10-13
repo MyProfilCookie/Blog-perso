@@ -137,7 +137,7 @@ export default function ShopPage() {
                             border: "none"
                         }}
                     >
-                        {/* {cartItems.length} */}
+                        {cartItems.length}
                     </Badge>
                 )}
             </Button>
