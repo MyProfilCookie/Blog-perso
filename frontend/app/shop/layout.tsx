@@ -38,23 +38,25 @@ export default function ShopPage() {
                 </h1>
             </div>
 
-            {/* Bouton flottant discret avec FontAwesome et badge */}
+            {/* Bouton flottant avec FontAwesome et badge */}
             <Button
-                className="fixed"
+                className="relative"
+                color="primary"
                 style={{
-                    padding: '10px 15px',
-                    borderRadius: '50px',
-                    backgroundColor: '#6B46C1',
+                    padding: '12px 24px',
+                    borderRadius: '30px', // Bouton arrondi
+                    backgroundColor: '#2D3748', // Couleur sombre avec bon contraste
+                    color: '#FFF', // Texte blanc pour contraste
                     fontWeight: 'bold',
-                    fontSize: '15px',
+                    fontSize: '16px', // Taille de texte légèrement augmentée
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
                     position: 'fixed',
-                    right: '20px', // Positionné à droite
-                    bottom: '20px', // Positionné en bas
+                    right: '30px',
+                    bottom: '20px',
                     zIndex: 50,
-                    boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.1)',
+                    boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)', // Amélioration de l'ombre
                     transition: 'box-shadow 0.3s ease',
                 }}
                 onPress={toggleCart}
@@ -63,23 +65,26 @@ export default function ShopPage() {
                 {cartItems.length > 0 && (
                     <Badge
                         style={{
-                            backgroundColor: '#E53E3E',
-                            color: '#FFF',
-                            fontSize: '12px',
-                            borderRadius: '50%',
-                            width: '22px',
-                            height: '22px',
+                            backgroundColor: '#F56565', // Rouge avec contraste élevé
+                            color: '#FFFFFF', // Texte blanc pour bonne lisibilité
+                            fontSize: '14px', // Taille du texte dans le badge
+                            padding: '10px', // Correction du padding
                             textAlign: 'center',
-                            position: 'absolute',
-                            top: '-8px',
-                            right: '-8px',
+                            borderRadius: '50%',
                             border: '2px solid white',
+                            top: '10px', // Ajustement de la position du badge
+                            right: '8px', // Ajustement de la position du badge
+                            position: 'absolute',
+                            boxShadow: '0px 2px 4px rgba(0,0,0,0.25)', // Ombre plus douce
+                            zIndex: -50,
                         }}
                     >
                         {cartItems.length}
                     </Badge>
                 )}
             </Button>
+
+
 
             {/* Page des articles */}
             <ArticlesPage onAddToCart={handleAddToCart} />
@@ -114,6 +119,7 @@ export default function ShopPage() {
         </div>
     );
 }
+
 
 
 
