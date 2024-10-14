@@ -33,7 +33,7 @@ export default function ShopPage() {
                     setCartItems(parsedCart);
                 }
             } catch (error) {
-                console.error("Erreur de parsing du panier depuis le localStorage :", error);
+
             }
         }
     }, []);
@@ -137,7 +137,7 @@ export default function ShopPage() {
                             border: "none"
                         }}
                     >
-                        {/* Ajout d'un élément enfant vide */}
+                        {/* Ajout d'un élément enfant vide pour eviter un bug de positionnement du badge */}
                         <span></span>
                     </Badge>
                 )}
