@@ -20,6 +20,8 @@ import {
   faTrash,
   faPlus,
   faCrown,
+  faReply,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -44,7 +46,7 @@ const AdminDashboard = () => {
   });
   const [currentTime, setCurrentTime] = useState("");
   const [users, setUsers] = useState<any[]>([]);
-  const [articles, setArticles] = useState<any[]>([]);
+  const [, setArticles] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [newArticle, setNewArticle] = useState({ title: "", content: "" });
   const [banReason, setBanReason] = useState("Violation des règles");
@@ -82,7 +84,8 @@ const AdminDashboard = () => {
 
       setLessons(response.data);
     } catch (error) {
-      console.error("Erreur lors de la récupération des leçons :", error);
+      // afficher un message d'erreur
+      alert(`Erreur lors de la récupération des leçons : ${error}`);
     }
   };
 
@@ -95,7 +98,7 @@ const AdminDashboard = () => {
 
       setUsers(response.data);
     } catch (error) {
-      console.error("Erreur lors de la récupération des utilisateurs :", error);
+      alert(`Erreur lors de la récupération des utilisateurs : ${error}`);
     }
   };
 
@@ -108,7 +111,7 @@ const AdminDashboard = () => {
 
       setArticles(response.data);
     } catch (error) {
-      console.error("Erreur lors de la récupération des articles :", error);
+      alert(`Erreur lors de la récupération des articles : ${error}`);
     }
   };
 
@@ -121,7 +124,7 @@ const AdminDashboard = () => {
 
       setMessages(response.data);
     } catch (error) {
-      console.error("Erreur lors de la récupération des messages :", error);
+      alert(`Erreur lors de la récupération des messages : ${error}`);
     }
   };
 
@@ -132,7 +135,7 @@ const AdminDashboard = () => {
       setNewLesson({ title: "", content: "", date: "" });
       fetchLessons(); // Recharger les leçons après l'ajout
     } catch (error) {
-      console.error("Erreur lors de l'ajout de la leçon :", error);
+      alert(`Erreur lors de l'ajout de la leçon : ${error}`);
     }
   };
 
@@ -145,7 +148,7 @@ const AdminDashboard = () => {
       );
       fetchLessons(); // Recharger les leçons après la mise à jour
     } catch (error) {
-      console.error("Erreur lors de la mise à jour de la leçon :", error);
+      alert(`Erreur lors de la mise à jour de la leçon : ${error}`);
     }
   };
 
@@ -166,7 +169,7 @@ const AdminDashboard = () => {
           );
           fetchLessons(); // Recharger les leçons après suppression
         } catch (error) {
-          console.error("Erreur lors de la suppression de la leçon :", error);
+          alert(`Erreur lors de la suppression de la leçon : ${error}`);
         }
       }
     });
@@ -201,10 +204,7 @@ const AdminDashboard = () => {
           });
           fetchUsers(); // Recharger la liste des utilisateurs après suppression
         } catch (error) {
-          console.error(
-            "Erreur lors de la suppression de l'utilisateur :",
-            error,
-          );
+          alert(`Erreur lors de la suppression de l'utilisateur : ${error}`);
         }
       }
     });
@@ -223,7 +223,7 @@ const AdminDashboard = () => {
       }
       fetchUsers(); // Recharger la liste des utilisateurs après modification
     } catch (error) {
-      console.error("Erreur lors de la modification du rôle :", error);
+      alert(`Erreur lors de la modification du rôle : ${error}`);
     }
   };
 
@@ -237,7 +237,7 @@ const AdminDashboard = () => {
       setNewArticle({ title: "", content: "" });
       fetchArticles();
     } catch (error) {
-      console.error("Erreur lors de l'ajout de l'article :", error);
+      alert(`Erreur lors de l'ajout de l'article : ${error}`);
     }
   };
 
@@ -250,7 +250,100 @@ const AdminDashboard = () => {
       );
       fetchArticles();
     } catch (error) {
-      console.error("Erreur lors de la mise à jour de l'article :", error);
+      alert(`Erreur lors de la mise à jour de l'article : ${error}`);
+    }
+  };
+
+  const markMessageAsRead = async (messageId: any) => {
+    try {
+      // Envoyer une requête pour marquer le message comme lu (ici on utilise une requête PUT)
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/messages/${messageId}/read`,
+        {},
+      );
+
+      if (response.status === 200) {
+        Swal.fire("Succès", "Le message a été marqué comme lu.", "success");
+        // Optionnel : rafraîchir la liste des messages après la mise à jour
+        fetchMessages();
+      } else {
+        Swal.fire(
+          "Erreur",
+          "Impossible de marquer le message comme lu.",
+          "error",
+        );
+      }
+    } catch (error) {
+      alert(`Erreur lors de la mise à jour du message : ${error}`);
+      Swal.fire("Erreur", "Une erreur est survenue.", "error");
+    }
+  };
+  // Cette fonction a été renommée pour éviter les conflits d'identifiants
+  const initiateReplyToMessage = async (messageId: string) => {
+    try {
+      // Afficher une boîte de dialogue pour saisir une réponse
+      const { value: reply } = await Swal.fire({
+        title: "Répondre au message",
+        input: "textarea",
+        inputLabel: "Votre réponse",
+        inputPlaceholder: "Écrivez votre réponse ici...",
+        showCancelButton: true,
+      });
+
+      if (reply) {
+        // Envoyer une requête pour enregistrer la réponse
+        const response = await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/messages/${messageId}/reply`,
+          { reply },
+        );
+
+        if (response.status === 200) {
+          Swal.fire("Succès", "Votre réponse a été envoyée.", "success");
+          // Optionnel : rafraîchir la liste des messages ou des réponses
+          fetchMessages(); // Si vous souhaitez mettre à jour les messages après la réponse
+        } else {
+          Swal.fire("Erreur", "Impossible d'envoyer la réponse.", "error");
+        }
+      }
+    } catch (error) {
+      alert(`Erreur lors de la réponse au message : ${error}`);
+      Swal.fire("Erreur", "Une erreur est survenue.", "error");
+    }
+  };
+
+  const deleteMessage = async (messageId: string) => {
+    try {
+      // Confirmation avant de supprimer le message
+      const confirmation = await Swal.fire({
+        title: "Êtes-vous sûr ?",
+        text: "Cette action supprimera définitivement le message.",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Oui, supprimer !",
+        cancelButtonText: "Annuler",
+      });
+
+      if (confirmation.isConfirmed) {
+        // Suppression du message via l'API
+        const response = await axios.delete(
+          `${process.env.NEXT_PUBLIC_API_URL}/messages/${messageId}`,
+        );
+
+        if (response.status === 200) {
+          Swal.fire("Supprimé !", "Le message a été supprimé.", "success");
+          // Optionnel : rafraîchir la liste des messages après la suppression
+          fetchMessages(); // Appel à cette fonction si vous voulez mettre à jour la liste des messages
+        } else {
+          Swal.fire("Erreur", "Impossible de supprimer le message.", "error");
+        }
+      }
+    } catch (error) {
+      alert(`Erreur lors de la suppression du message : ${error}`);
+      Swal.fire(
+        "Erreur",
+        "Une erreur est survenue lors de la suppression.",
+        "error",
+      );
     }
   };
 
@@ -260,7 +353,7 @@ const AdminDashboard = () => {
       await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/articles/${id}`);
       fetchArticles();
     } catch (error) {
-      console.error("Erreur lors de la suppression de l'article :", error);
+      alert(`Erreur lors de la suppression de l'article : ${error}`);
     }
   };
 
@@ -506,16 +599,46 @@ const AdminDashboard = () => {
         </h3>
         <Table aria-label="Liste des messages" className="mb-4">
           <TableHeader>
-            <TableColumn>Utilisateur</TableColumn>
+            <TableColumn>Pseudo</TableColumn>
             <TableColumn>Message</TableColumn>
             <TableColumn>Date</TableColumn>
+            <TableColumn>Supprimer</TableColumn>
+            <TableColumn>Répondre</TableColumn>
+            <TableColumn>Lu</TableColumn>
           </TableHeader>
+
           <TableBody>
-            {messages.map((message) => (
-              <TableRow key={message._id}>
-                <TableCell>{message.user.pseudo}</TableCell>
-                <TableCell>{message.content}</TableCell>
-                <TableCell>{message.date}</TableCell>
+            {messages.map((message, index) => (
+              <TableRow key={message._id || index}>
+                <TableCell>{message.pseudo}</TableCell>
+                <TableCell>{message.message}</TableCell>
+                <TableCell>
+                  {dayjs(message.date).format("DD/MM/YYYY HH:mm")}
+                </TableCell>
+                <TableCell>
+                  <Button
+                    color="danger"
+                    onClick={() => deleteMessage(message._id)}
+                  >
+                    <FontAwesomeIcon icon={faTrash} /> Supprimer
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    color="primary"
+                    onClick={() => initiateReplyToMessage(message._id)}
+                  >
+                    <FontAwesomeIcon icon={faReply} /> Répondre
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button
+                    color="success"
+                    onClick={() => markMessageAsRead(message._id)}
+                  >
+                    <FontAwesomeIcon icon={faCheck} /> Lu
+                  </Button>
+                </TableCell>
               </TableRow>
             ))}
           </TableBody>

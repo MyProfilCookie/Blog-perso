@@ -126,7 +126,7 @@ export const Navbar = () => {
   // Fonction pour ajouter un article au panier
   const handleAddToCart = (article: any) => {
     setCartItemsCount(cartItemsCount + 1); // Incrémente le nombre d'articles dans le panier
-    console.log(`Article ajouté au panier: ${article.title}`);
+    alert(`Article ajouté au panier: ${article.title}`);
   };
 
   return (

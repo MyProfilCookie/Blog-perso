@@ -10,9 +10,9 @@ exports.getAllMessages = (req, res) => {
 
 // Créer un nouveau message
 exports.createMessage = (req, res) => {
-  const { nom, email, message } = req.body;
+  const { nom, email, message, pseudo } = req.body;
 
-  if (!nom || !email || !message) {
+  if (!nom || !email || !message || !pseudo) {
     return res.status(400).json({ error: 'Tous les champs sont requis.' });
   }
 
@@ -22,6 +22,7 @@ exports.createMessage = (req, res) => {
     email,
     message,
     date: new Date(),
+    pseudo,
   };
 
   messages.push(newMessage);
