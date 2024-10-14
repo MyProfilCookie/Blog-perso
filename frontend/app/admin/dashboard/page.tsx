@@ -26,6 +26,7 @@ import Swal from "sweetalert2";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 
+import articlesData from "@/public/dataarticles.json";
 // Fonction pour vérifier si l'utilisateur est admin
 const fetchUserData = () => {
   const storedUser = localStorage.getItem("user");
@@ -47,6 +48,9 @@ const AdminDashboard = () => {
   const [messages, setMessages] = useState<any[]>([]);
   const [newArticle, setNewArticle] = useState({ title: "", content: "" });
   const [banReason, setBanReason] = useState("Violation des règles");
+  const [showContent, setShowContent] = useState<{ [key: string]: boolean }>(
+    {},
+  );
   const router = useRouter();
 
   useEffect(() => {
@@ -177,6 +181,7 @@ const AdminDashboard = () => {
         icon: "error",
         confirmButtonText: "OK",
       });
+
       return;
     }
 
@@ -404,40 +409,59 @@ const AdminDashboard = () => {
       {/* Gestion des articles */}
       <motion.div
         animate={{ opacity: 1 }}
-        className="mt-8"
+        className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
         initial={{ opacity: 0 }}
         transition={{ duration: 0.6, delay: 3 }}
       >
-        <h3 className="mb-4 text-xl font-semibold">Gestion des articles</h3>
-        <Table aria-label="Liste des articles">
-          <TableHeader>
-            <TableColumn>Titre</TableColumn>
-            <TableColumn>Contenu</TableColumn>
-            <TableColumn>Actions</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {articles.map((article) => (
-              <TableRow key={article._id}>
-                <TableCell>{article.title}</TableCell>
-                <TableCell>{article.content}</TableCell>
-                <TableCell>
-                  <Button
-                    color="primary"
-                    onClick={() => updateArticle(article._id, article)}
-                  >
-                    <FontAwesomeIcon icon={faEdit} /> Modifier
-                  </Button>
-                  <Button
-                    color="danger"
-                    onClick={() => deleteArticle(article._id)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} /> Supprimer
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <h3 className="mb-4 text-xl font-semibold col-span-full">
+          Gestion des articles
+        </h3>
+        {articlesData.articles.map((article) => (
+          <div
+            key={article.id}
+            className="col-span-1 border rounded-lg shadow-md p-4 bg-white"
+          >
+            <div className="card-header mb-2">
+              <img
+                alt={article.title}
+                className="w-50 h-50"
+                src={article.image}
+              />{" "}
+              <p className="font-bold text-lg">{article.title}</p>
+            </div>
+            <div className="card-body mb-2">
+              {/* Afficher le contenu de l'article avec un bouton pour voir le contenu complet */}
+              <Button
+                className="mb-4 mx-auto"
+                onClick={() =>
+                  setShowContent((prev) => ({
+                    ...prev,
+                    [article.id]: !prev[article.id],
+                  }))
+                }
+              >
+                {showContent[article.id]
+                  ? "Masquer le contenu"
+                  : "Voir le contenu"}
+              </Button>
+              {showContent[article.id] && <p>{article.content}</p>}
+            </div>
+            <div className="card-footer mt-4 flex justify-between">
+              <Button
+                color="primary"
+                onClick={() => updateArticle(article.id.toString(), article)}
+              >
+                <FontAwesomeIcon icon={faEdit} /> Modifier
+              </Button>
+              <Button
+                color="danger"
+                onClick={() => deleteArticle(article.id.toString())}
+              >
+                <FontAwesomeIcon icon={faTrash} /> Supprimer
+              </Button>
+            </div>
+          </div>
+        ))}
       </motion.div>
 
       {/* Ajouter un nouvel article */}
