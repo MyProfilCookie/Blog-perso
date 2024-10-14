@@ -130,14 +130,15 @@ export default function ShopPage() {
                         content={cartItems.length}
                         style={{
                             position: 'absolute',
-                            top: '-6px',
+                            top: '-10px',
                             right: '-6px',
                             transform: 'translate(50%, -50%)',
-                            fontSize: '12px',
+                            fontSize: '14px',
                             border: "none"
                         }}
                     >
-                        {cartItems.length}
+                        {/* Ajout d'un élément enfant vide */}
+                        <span></span>
                     </Badge>
                 )}
             </Button>
