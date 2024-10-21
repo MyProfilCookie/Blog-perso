@@ -16,7 +16,8 @@ type Article = {
     price: number;
     link: string;
     imageUrl: string;
-    quantity?: number; // Rendez quantity optionnel
+    quantity?: number;
+    weight?: number; // Rendez weight optionnel
 };
 
 export default function ShopPage() {
@@ -49,6 +50,7 @@ export default function ShopPage() {
 
                 if (Array.isArray(parsedCart)) {
                     setCartItems(parsedCart);
+                    calculateTotalWeight(parsedCart); // Calculer le poids total du panier
                 }
             } catch (error: any) {
                 alert(`Erreur lors de l'analyse du panier : ${error.message}`);
@@ -60,12 +62,18 @@ export default function ShopPage() {
     useEffect(() => {
         if (cartItems.length > 0) {
             localStorage.setItem("cartItems", JSON.stringify(cartItems));
+            calculateTotalWeight(cartItems); // Calculer le poids total du panier
         }
     }, [cartItems]);
 
     // Fonction pour calculer le total des articles dans le panier
     const calculateTotal = () => {
         return cartItems.reduce((total, item) => total + item.price * (item.quantity ?? 1), 0).toFixed(2);
+    };
+
+    // Fonction pour calculer le poids total du panier
+    const calculateTotalWeight = (cartItems: Article[]) => {
+        return cartItems.reduce((total, item) => total + (item.weight ?? 0) * (item.quantity ?? 1), 0);
     };
 
     // Fonction pour rediriger directement vers la page de paiement
@@ -268,6 +276,9 @@ export default function ShopPage() {
                                         </li>
                                     ))}
                                 </ul>
+                                <div className="mt-4 font-bold text-lg">
+                                    Poids total : {calculateTotalWeight(cartItems).toFixed(2)} kg
+                                </div>
                                 <div className="mt-4 font-bold text-lg">
                                     Sous-total : {calculateTotal()} €
                                 </div>
