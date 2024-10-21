@@ -124,6 +124,7 @@ export const Navbar = () => {
   };
 
   // Fonction pour ajouter un article au panier
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   const handleAddToCart = (article: any) => {
     setCartItemsCount(cartItemsCount + 1); // Incrémente le nombre d'articles dans le panier
     alert(`Article ajouté au panier: ${article.title}`);

@@ -33,6 +33,7 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
             return;
         }
 
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         const { error, paymentMethod } = await stripe.createPaymentMethod({
             type: 'card',
             card: cardElement,
@@ -85,6 +86,7 @@ export default function PaymentPage() {
     const [deliveryCost, setDeliveryCost] = useState(0);
     const [deliveryMethod, setDeliveryMethod] = useState("Mondial Relay");
     const [estimatedDeliveryDate, setEstimatedDeliveryDate] = useState("");
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const router = useRouter();
 
     // Options de transporteurs
