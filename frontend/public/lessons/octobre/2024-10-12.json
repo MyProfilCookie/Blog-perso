@@ -1,0 +1,284 @@
+{
+    "date": "2024-10-12",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les plantes et la photosynthèse",
+                "description": "Aujourd'hui, nous allons découvrir comment les plantes fabriquent leur nourriture grâce à la photosynthèse.",
+                "objectives": [
+                    "Comprendre le processus de la photosynthèse.",
+                    "Savoir pourquoi les plantes ont besoin de la lumière, de l'eau et du dioxyde de carbone."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation du processus de la photosynthèse avec des images expliquant le rôle des feuilles, de la lumière, de l'eau et du dioxyde de carbone.",
+                        "Discussion sur l'importance de la lumière pour la croissance des plantes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Observation de plantes au soleil et à l'ombre",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Deux plantes (une placée au soleil et l'autre à l'ombre)."
+                        ],
+                        "steps": [
+                            "Observe la différence entre une plante qui reçoit beaucoup de lumière et une qui en reçoit peu."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner la photosynthèse",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Dessine une plante avec des flèches montrant comment la lumière, l'eau et le dioxyde de carbone sont utilisés pour produire de la nourriture et de l'oxygène."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler ce qu'est la photosynthèse et pourquoi elle est importante pour les plantes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les multiplications simples",
+                "description": "Apprends à multiplier des petits nombres et à comprendre la multiplication.",
+                "objectives": [
+                    "Comprendre le concept de multiplication.",
+                    "Savoir effectuer des multiplications simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des tables de multiplication avec des exemples simples (ex : 2 x 3 = 6).",
+                        "Explique que la multiplication est une addition répétée."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Utiliser des objets pour multiplier",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Petits objets (billes, cubes, etc.)."
+                        ],
+                        "steps": [
+                            "Utilise des objets pour montrer les multiplications (ex : 3 groupes de 4 objets = 12)."
+                        ]
+                    },
+                    {
+                        "title": "Exercices de multiplication",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Résous des exercices simples de multiplication en utilisant les tables de 2, 3 et 4."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les tables de multiplication et leur importance."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les adjectifs",
+                "description": "Apprends à utiliser les adjectifs pour décrire des objets et des personnes.",
+                "objectives": [
+                    "Comprendre ce qu'est un adjectif.",
+                    "Savoir utiliser des adjectifs dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des adjectifs avec des exemples (ex : grand, petit, rapide, lent).",
+                        "Explique comment les adjectifs apportent plus de détails sur un nom."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des objets aux adjectifs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Choisis des objets et demande à l'enfant de les décrire en utilisant des adjectifs (ex : 'La balle est rouge')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des adjectifs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases simples en utilisant des adjectifs pour décrire des objets ou des personnes."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler l'importance des adjectifs dans les phrases."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer un collage avec des feuilles",
+                "description": "Aujourd'hui, nous allons créer un collage en utilisant des feuilles d'arbres ramassées à l'extérieur.",
+                "objectives": [
+                    "Apprendre à utiliser des matériaux naturels pour réaliser un collage.",
+                    "Décorer un tableau en utilisant les formes et les couleurs des feuilles."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de collages faits avec des feuilles et explique comment créer des motifs avec des feuilles d'arbres."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Réaliser un collage avec des feuilles",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Feuilles d'arbres, colle, papier."
+                        ],
+                        "steps": [
+                            "Colle les feuilles sur une feuille de papier pour créer un motif ou une scène, puis ajoute des détails avec des crayons ou des feutres."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ton collage et explique les choix de couleurs et formes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les animaux en anglais",
+                "description": "Apprends les noms des animaux en anglais et comment les utiliser dans des phrases simples.",
+                "objectives": [
+                    "Apprendre les noms des animaux en anglais.",
+                    "Savoir utiliser les noms d'animaux dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des noms des animaux avec des images (ex : 'cat', 'dog', 'elephant')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les noms d'animaux avec leurs images",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images d'animaux et demande à l'enfant de dire leur nom en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Décris un animal en anglais et demande à l'enfant de deviner lequel c'est (ex : 'It is big and has a long trunk' pour l'éléphant)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les noms d'animaux appris en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les explorateurs célèbres",
+                "description": "Découvre les explorateurs célèbres et leurs voyages de découverte à travers le monde.",
+                "objectives": [
+                    "Comprendre l'importance des explorations dans l'histoire.",
+                    "Apprendre les noms des explorateurs et leurs découvertes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des explorateurs célèbres (ex : Christophe Colomb, Vasco de Gama) et des cartes de leurs voyages.",
+                        "Discussion sur l'impact de leurs découvertes sur le monde."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner les voyages d'explorateurs",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine une carte du monde et trace le parcours d'un explorateur célèbre."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions sur les explorateurs et leurs découvertes (ex : 'Qui a découvert l'Amérique ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les grands explorateurs et leurs découvertes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les fleuves et rivières du monde",
+                "description": "Découvre les principaux fleuves et rivières du monde et apprends à les localiser sur une carte.",
+                "objectives": [
+                    "Apprendre les noms des principaux fleuves et rivières.",
+                    "Savoir localiser ces fleuves et rivières sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des principaux fleuves et rivières avec une carte (ex : le Nil, l'Amazone, le Mississippi)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les fleuves sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principaux fleuves et rivières sur une carte et explique où ils se trouvent."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux fleuves",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe des animaux emblématiques à chaque fleuve (ex : crocodile du Nil)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les fleuves et rivières importants et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

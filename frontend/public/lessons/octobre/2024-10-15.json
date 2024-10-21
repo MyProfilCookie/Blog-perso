@@ -1,0 +1,280 @@
+{
+    "date": "2024-10-15",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les différentes sources d'énergie",
+                "description": "Aujourd'hui, nous allons découvrir les différentes sources d'énergie, leur importance, et comment elles sont utilisées.",
+                "objectives": [
+                    "Comprendre les principales sources d'énergie (énergie solaire, éolienne, fossile, etc.).",
+                    "Apprendre comment l'énergie est utilisée dans la vie quotidienne."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des différentes sources d'énergie avec des exemples (ex : le soleil pour l'énergie solaire, le vent pour l'énergie éolienne).",
+                        "Discussion sur l'importance de ces énergies et comment elles sont utilisées pour produire de l'électricité."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les sources d'énergie avec leur utilisation",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images ou cartes représentant différentes sources d'énergie."
+                        ],
+                        "steps": [
+                            "Associe chaque source d'énergie à son utilisation (ex : énergie éolienne pour faire fonctionner une éolienne)."
+                        ]
+                    },
+                    {
+                        "title": "Créer un dessin montrant l'utilisation de l'énergie",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Dessine une scène montrant comment l'énergie est utilisée dans la vie quotidienne (ex : panneaux solaires sur une maison, éoliennes dans un champ)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les différentes sources d'énergie et leur importance dans notre vie quotidienne."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les additions et soustractions avec des nombres décimaux",
+                "description": "Apprends à additionner et soustraire des nombres décimaux en utilisant des exemples concrets.",
+                "objectives": [
+                    "Comprendre comment ajouter et soustraire des nombres décimaux.",
+                    "Savoir poser des additions et soustractions avec des nombres décimaux."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des additions et soustractions de nombres décimaux avec des exemples concrets (ex : calculer le prix total d'objets en euros).",
+                        "Explique comment aligner les nombres décimaux avant d'effectuer l'addition ou la soustraction."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Calculer des additions avec des nombres décimaux",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Résous des exercices d'additions en utilisant des nombres décimaux (ex : 12,50 € + 3,75 €)."
+                        ]
+                    },
+                    {
+                        "title": "Résoudre des soustractions avec des nombres décimaux",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Résous des soustractions simples avec des nombres décimaux (ex : 15,00 € - 7,25 €)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler comment additionner et soustraire des nombres décimaux."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les phrases interrogatives",
+                "description": "Apprends à former des phrases interrogatives pour poser des questions.",
+                "objectives": [
+                    "Comprendre comment construire une phrase interrogative.",
+                    "Savoir poser des questions avec les mots interrogatifs (qui, quoi, où, quand, pourquoi, comment)."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des mots interrogatifs et de leur utilisation dans les phrases (ex : 'Qui est-ce ?', 'Où vas-tu ?').",
+                        "Explique comment inverser le sujet et le verbe pour poser une question (ex : 'Vas-tu à l'école ?')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des phrases interrogatives",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne des phrases incomplètes et demande à l'enfant de les compléter avec le bon mot interrogatif (ex : '___ est ton livre ?')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases interrogatives en utilisant les mots interrogatifs étudiés."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler comment poser des questions avec les mots interrogatifs."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre un paysage de coucher de soleil",
+                "description": "Aujourd'hui, nous allons peindre un paysage représentant un coucher de soleil en utilisant des couleurs chaudes.",
+                "objectives": [
+                    "Apprendre à utiliser des couleurs chaudes pour représenter un coucher de soleil.",
+                    "Créer un paysage en utilisant différentes nuances d'orange, de rouge et de jaune."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de couchers de soleil et discute des couleurs chaudes que l'on peut utiliser pour représenter ce moment de la journée."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Peindre un paysage de coucher de soleil",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Peinture (orange, rouge, jaune), pinceaux, feuille."
+                        ],
+                        "steps": [
+                            "Peins un paysage avec un ciel de coucher de soleil, en utilisant des dégradés de couleurs chaudes."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ton paysage et parle des couleurs que tu as choisies pour représenter le coucher de soleil."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les prépositions en anglais",
+                "description": "Apprends à utiliser les prépositions de lieu en anglais pour décrire où se trouvent des objets.",
+                "objectives": [
+                    "Apprendre à utiliser les prépositions en anglais (on, under, in, next to).",
+                    "Savoir décrire la position d'objets en utilisant des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des prépositions de lieu avec des exemples visuels (ex : 'The book is on the table')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des objets aux prépositions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images d'objets dans différentes positions et demande à l'enfant de les décrire en utilisant les prépositions de lieu."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de description",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Place des objets dans la pièce et demande à l'enfant de décrire leur position en anglais (ex : 'The ball is under the chair')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les prépositions de lieu apprises et leur utilisation dans des phrases simples."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les révolutions industrielles",
+                "description": "Découvre les grandes révolutions industrielles et leur impact sur le monde moderne.",
+                "objectives": [
+                    "Comprendre les principales avancées des révolutions industrielles.",
+                    "Apprendre comment elles ont transformé le travail, la production, et les sociétés."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des grandes révolutions industrielles (première, deuxième, et troisième révolutions) avec des exemples d'inventions majeures (ex : la machine à vapeur, l'électricité, l'informatique)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les inventions aux révolutions industrielles",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe des inventions aux révolutions industrielles dont elles sont issues (ex : machine à vapeur = première révolution industrielle)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions sur les révolutions industrielles (ex : 'Qu'a permis la machine à vapeur ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les grandes avancées des révolutions industrielles et leur impact sur le monde."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les montagnes du monde",
+                "description": "Découvre les principales chaînes de montagnes dans le monde et apprends à les localiser sur une carte.",
+                "objectives": [
+                    "Apprendre les noms des principales chaînes de montagnes.",
+                    "Savoir localiser ces montagnes sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des chaînes de montagnes avec une carte (ex : les Alpes, l'Himalaya, les Andes)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les montagnes sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les chaînes de montagnes sur une carte et explique où elles se trouvent."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux montagnes",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal célèbre à chaque montagne (ex : le yack pour l'Himalaya, le condor pour les Andes)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les montagnes et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

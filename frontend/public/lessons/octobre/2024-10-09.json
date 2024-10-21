@@ -1,0 +1,287 @@
+{
+    "date": "2024-10-09",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Le cycle de vie des papillons",
+                "description": "Aujourd'hui, nous allons découvrir le cycle de vie des papillons, depuis l'œuf jusqu'à l'adulte.",
+                "objectives": [
+                    "Comprendre les différentes étapes du cycle de vie d'un papillon.",
+                    "Apprendre comment un papillon se transforme à chaque étape."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des quatre étapes du cycle de vie : œuf, chenille, chrysalide et papillon.",
+                        "Discussion sur la métamorphose et l'importance de chaque étape."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Reconstituer le cycle de vie du papillon",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images des différentes étapes du cycle de vie."
+                        ],
+                        "steps": [
+                            "Demande à l'enfant de placer les images dans le bon ordre pour reconstituer le cycle de vie complet du papillon."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner chaque étape du cycle",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Dessine chaque étape du cycle de vie et décris ce qui se passe à chaque étape."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les étapes du cycle de vie et ce qui change pour le papillon à chaque étape."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les nombres pairs et impairs",
+                "description": "Apprends à identifier les nombres pairs et impairs et à les classer.",
+                "objectives": [
+                    "Comprendre la différence entre un nombre pair et un nombre impair.",
+                    "Apprendre à classer des nombres comme pairs ou impairs."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de la différence entre un nombre pair (divisible par 2) et un nombre impair.",
+                        "Donne des exemples simples de nombres pairs et impairs."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Classer les nombres",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Cartes de nombres."
+                        ],
+                        "steps": [
+                            "Demande à l'enfant de classer les nombres sur les cartes en deux groupes : pairs et impairs."
+                        ]
+                    },
+                    {
+                        "title": "Exercices de pair et impair",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Complète des exercices où l'enfant doit identifier si un nombre est pair ou impair."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler comment reconnaître les nombres pairs et impairs."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les phrases affirmatives et négatives",
+                "description": "Apprends à transformer une phrase affirmative en une phrase négative.",
+                "objectives": [
+                    "Comprendre la différence entre une phrase affirmative et une phrase négative.",
+                    "Savoir transformer une phrase affirmative en une phrase négative."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de phrases affirmatives et négatives avec des exemples (ex : 'Je mange une pomme' devient 'Je ne mange pas de pomme').",
+                        "Explique l'utilisation de 'ne' et 'pas' pour former une phrase négative."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Transformer des phrases",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne des phrases affirmatives à l'enfant et demande-lui de les transformer en phrases négatives."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases affirmatives et négatives",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases affirmatives et demande à l'enfant d'écrire leur version négative."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler comment transformer une phrase affirmative en négative."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer un papillon en papier",
+                "description": "Aujourd'hui, nous allons créer un papillon en papier et le décorer avec des couleurs vives.",
+                "objectives": [
+                    "Apprendre à découper et assembler un papillon en papier.",
+                    "Décorer le papillon avec des motifs et des couleurs variées."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de papillons en papier et discute des couleurs et motifs que l'on peut utiliser."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Fabriquer un papillon en papier",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier coloré",
+                            "Colle",
+                            "Ciseaux",
+                            "Crayons ou feutres."
+                        ],
+                        "steps": [
+                            "Découpe un papillon dans du papier coloré, puis décore-le avec des motifs en utilisant des crayons et des feutres."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ton papillon et explique les choix de couleurs et motifs."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les chiffres en anglais (1 à 10)",
+                "description": "Apprends à compter de 1 à 10 en anglais.",
+                "objectives": [
+                    "Apprendre les chiffres de 1 à 10 en anglais.",
+                    "Savoir prononcer et écrire les chiffres correctement."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des chiffres de 1 à 10 avec leur prononciation et leur orthographe en anglais."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compter en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de compter de 1 à 10 en anglais à voix haute."
+                        ]
+                    },
+                    {
+                        "title": "Écrire les chiffres en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris les chiffres de 1 à 10 en anglais et demande à l'enfant de les recopier."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Répéter les chiffres appris et les prononcer correctement."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les pyramides d'Égypte",
+                "description": "Découvre comment les pyramides ont été construites et leur importance dans l'Égypte ancienne.",
+                "objectives": [
+                    "Comprendre pourquoi les pyramides ont été construites.",
+                    "Apprendre à reconnaître les principales pyramides d'Égypte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des pyramides d'Égypte avec des images et des explications sur leur construction.",
+                        "Discussion sur la fonction des pyramides dans la culture égyptienne (tombeaux des pharaons)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner une pyramide",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine une pyramide et inclut des détails comme les blocs de pierre et les entrées secrètes."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions sur les pyramides (ex : 'Pourquoi les Égyptiens construisaient-ils des pyramides ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler l'importance des pyramides dans l'Égypte ancienne."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les océans et les continents",
+                "description": "Découvre les océans et les continents du monde et apprends à les localiser sur une carte.",
+                "objectives": [
+                    "Apprendre les noms des océans et des continents.",
+                    "Savoir localiser les océans et continents sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des océans et continents avec une carte du monde."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les océans et continents",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les océans et continents sur une carte et explique où ils se trouvent."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux continents",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal à chaque continent (ex : éléphant pour l'Afrique)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les océans et continents et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

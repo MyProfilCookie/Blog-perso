@@ -18,7 +18,7 @@ const messageRoutes = require("./api/routes/message.routes"); // Routes messages
 const lessonsRoutes = require("./api/routes/lessons.routes"); // Routes leçons
 const articleRoutes = require("./api/routes/article.routes"); // Routes articles
 const productRoutes = require("./api/routes/products.routes"); // Routes produits
-const Produit = require("./api/models/products"); // Modèle produit
+const paymentRoutes = require("./api/routes/payment.routes"); // Routes paiement
 
 // Connexion à la base de données
 // Connexion à la base de données
@@ -77,6 +77,7 @@ app.get("/users/profile", async (req, res) => {
   }
 });
 
+
 // Route principale d'accueil avec le logo
 app.get("/", (req, res) => {
   res.send(`
@@ -96,7 +97,7 @@ app.use("/messages", messageRoutes);
 app.use("/lessons", lessonsRoutes);
 app.use("/articles", articleRoutes);
 app.use("/products", productRoutes);
-
+app.use("/payments", paymentRoutes);
 // Gestion des erreurs 404
 app.use((req, res, next) => {
   const error = createError(404, "Ressource non trouvée");

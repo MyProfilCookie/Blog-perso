@@ -1,0 +1,286 @@
+{
+    "date": "2024-10-13",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Le cycle de l'eau",
+                "description": "Aujourd'hui, nous allons découvrir comment l'eau se déplace dans la nature à travers le cycle de l'eau.",
+                "objectives": [
+                    "Comprendre le cycle de l'eau et ses différentes étapes.",
+                    "Apprendre comment l'eau change d'état au cours du cycle."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation du cycle de l'eau avec des images expliquant l'évaporation, la condensation et les précipitations.",
+                        "Discussion sur l'importance du cycle de l'eau dans la nature."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner le cycle de l'eau",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Feuille, crayons de couleur."
+                        ],
+                        "steps": [
+                            "Dessine le cycle de l'eau, montrant l'évaporation de l'eau, la formation des nuages, puis la pluie qui retourne à la mer ou aux rivières."
+                        ]
+                    },
+                    {
+                        "title": "Observation d'une expérience d'évaporation",
+                        "duration": "10 minutes",
+                        "materials": [
+                            "Bol d'eau, source de chaleur (ex : soleil ou lampe)."
+                        ],
+                        "steps": [
+                            "Place un bol d'eau près d'une source de chaleur et observe comment l'eau s'évapore au fil du temps."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les étapes du cycle de l'eau et leur rôle dans la nature."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les divisions simples",
+                "description": "Apprends à diviser des nombres simples et à comprendre le concept de la division.",
+                "objectives": [
+                    "Comprendre la division comme une répartition en parts égales.",
+                    "Savoir effectuer des divisions simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de la division avec des exemples simples (ex : 12 ÷ 3 = 4).",
+                        "Explique comment la division consiste à répartir un nombre en parts égales."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Utiliser des objets pour diviser",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Petits objets (billes, cubes)."
+                        ],
+                        "steps": [
+                            "Utilise des objets pour montrer des divisions simples (ex : diviser 15 billes en 3 groupes égaux)."
+                        ]
+                    },
+                    {
+                        "title": "Résoudre des exercices de division",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Résous des exercices simples de division avec des nombres faciles."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler le concept de division et son utilité dans les calculs."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les pronoms personnels",
+                "description": "Apprends à utiliser les pronoms personnels dans des phrases pour remplacer des noms.",
+                "objectives": [
+                    "Comprendre ce qu'est un pronom personnel.",
+                    "Savoir utiliser des pronoms personnels dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des pronoms personnels (je, tu, il, elle, nous, vous, ils, elles) avec des exemples.",
+                        "Explique comment les pronoms remplacent des noms dans des phrases."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des phrases avec des pronoms personnels",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne des phrases incomplètes et demande à l'enfant de les compléter avec le bon pronom personnel (ex : '___ joue au ballon')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des pronoms",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases en remplaçant les noms par des pronoms personnels."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler l'importance des pronoms personnels dans la construction des phrases."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer une mosaïque en papier",
+                "description": "Aujourd'hui, nous allons créer une mosaïque en utilisant des morceaux de papier coloré.",
+                "objectives": [
+                    "Apprendre à créer une mosaïque avec des morceaux de papier.",
+                    "Utiliser des formes et des couleurs pour créer un motif harmonieux."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de mosaïques et discute des formes et couleurs utilisées pour créer un motif."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Créer une mosaïque",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier coloré, colle, ciseaux."
+                        ],
+                        "steps": [
+                            "Découpe des morceaux de papier en formes géométriques et colle-les sur une feuille pour créer une mosaïque colorée."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ta mosaïque et explique les choix de couleurs et de formes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les vêtements en anglais",
+                "description": "Apprends les noms des vêtements en anglais et comment les utiliser dans des phrases simples.",
+                "objectives": [
+                    "Apprendre les noms des vêtements en anglais.",
+                    "Savoir utiliser ces mots dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des vêtements en anglais avec des images (ex : 'shirt', 'pants', 'shoes')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les vêtements avec leurs noms anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images de vêtements et demande à l'enfant de dire le nom en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Décris un vêtement en anglais et demande à l'enfant de deviner de quel vêtement il s'agit (ex : 'You wear it on your feet' pour les chaussures)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les noms des vêtements appris en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les monuments célèbres du monde",
+                "description": "Découvre les monuments célèbres à travers le monde et leur histoire.",
+                "objectives": [
+                    "Apprendre à connaître des monuments célèbres et leur histoire.",
+                    "Comprendre pourquoi ces monuments sont importants dans leur culture."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de monuments célèbres (ex : Tour Eiffel, Grande Muraille de Chine, Pyramides de Gizeh) avec des images et des explications."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un monument célèbre",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine un monument célèbre et ajoute des détails sur sa construction et son importance."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions simples sur les monuments célèbres (ex : 'Où se trouve la Tour Eiffel ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les monuments étudiés et leur importance historique."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les forêts du monde",
+                "description": "Découvre les grandes forêts du monde et leur rôle dans la biodiversité.",
+                "objectives": [
+                    "Apprendre les noms des principales forêts du monde.",
+                    "Comprendre l'importance des forêts pour l'environnement et la biodiversité."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des grandes forêts du monde (ex : Amazonie, Taïga, Forêt noire) avec une carte."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les forêts sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principales forêts sur une carte et discute de leur rôle dans la régulation du climat et la biodiversité."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux forêts",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe des animaux emblématiques à chaque forêt (ex : jaguar pour l'Amazonie, ours pour la Taïga)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les forêts étudiées et leur rôle dans la préservation de la biodiversité."
+                    ]
+                }
+            }
+        }
+    ]
+}

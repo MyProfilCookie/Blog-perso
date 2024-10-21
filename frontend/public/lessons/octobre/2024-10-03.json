@@ -1,0 +1,292 @@
+{
+    "date": "2024-10-03",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Le cycle de l'eau",
+                "description": "Aujourd'hui, nous allons découvrir comment l'eau circule dans la nature à travers le cycle de l'eau.",
+                "objectives": [
+                    "Comprendre les étapes du cycle de l'eau.",
+                    "Apprendre comment l'eau se transforme et se déplace dans la nature."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation visuelle du cycle de l'eau (évaporation, condensation, précipitation).",
+                        "Discussion sur la transformation de l'eau (liquide, vapeur, pluie)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Reconstituer le cycle de l'eau",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images des différentes étapes du cycle",
+                            "Cartes"
+                        ],
+                        "steps": [
+                            "Associe chaque image à l'étape correspondante du cycle de l'eau."
+                        ]
+                    },
+                    {
+                        "title": "Expérience simple avec l'eau",
+                        "duration": "10 minutes",
+                        "materials": [
+                            "Bol d'eau",
+                            "Film plastique",
+                            "Soleil ou lampe"
+                        ],
+                        "steps": [
+                            "Place un bol d'eau au soleil et couvre-le avec un film plastique pour observer l'évaporation."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les étapes du cycle de l'eau."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les nombres pairs et impairs",
+                "description": "Apprends à distinguer les nombres pairs des nombres impairs.",
+                "objectives": [
+                    "Apprendre à reconnaître les nombres pairs et impairs.",
+                    "Comprendre les règles simples pour identifier ces nombres."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des nombres pairs et impairs avec des exemples (ex : 2, 4, 6 sont pairs ; 1, 3, 5 sont impairs).",
+                        "Explique comment reconnaître ces nombres (un nombre est pair s'il se divise par 2 sans reste)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Classer les nombres",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Cartes de nombres"
+                        ],
+                        "steps": [
+                            "Classer des cartes de nombres dans deux colonnes : pair et impair."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de tri",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne un nombre à voix haute et demande si c'est un nombre pair ou impair."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les règles pour reconnaître un nombre pair ou impair."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les verbes d'action",
+                "description": "Apprends à identifier et utiliser les verbes d'action dans des phrases simples.",
+                "objectives": [
+                    "Comprendre ce qu'est un verbe d'action.",
+                    "Savoir utiliser des verbes d'action dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des verbes d'action avec des exemples (ex : courir, sauter, manger).",
+                        "Explique comment les verbes décrivent des actions."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des verbes aux actions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Choisis une image et associe-lui un verbe d'action (ex : un enfant qui court)."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des verbes d'action",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases simples avec des verbes d'action (ex : 'Je saute')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler ce qu'est un verbe d'action."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer une scène sous-marine",
+                "description": "Aujourd'hui, nous allons créer une scène sous-marine en utilisant des couleurs et du papier.",
+                "objectives": [
+                    "Créer une scène sous-marine avec des éléments marins.",
+                    "Apprendre à utiliser différentes couleurs pour représenter l'eau et les animaux marins."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de scènes sous-marines et discute des couleurs et des animaux marins (bleu pour l'eau, poissons, algues)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Découper et coller",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier coloré",
+                            "Colle",
+                            "Ciseaux"
+                        ],
+                        "steps": [
+                            "Découpe des poissons et des algues dans du papier coloré et colle-les sur une feuille pour créer une scène sous-marine."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente la scène et parle des animaux marins et des couleurs choisies."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les couleurs et les objets en anglais",
+                "description": "Apprends à associer des objets avec leurs couleurs en anglais.",
+                "objectives": [
+                    "Apprendre les couleurs en anglais.",
+                    "Associer des objets du quotidien aux couleurs."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des couleurs avec des objets (ex : 'This is a red apple')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des objets aux couleurs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre un objet et dis sa couleur en anglais (ex : 'The ball is blue')."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de reconnaissance des couleurs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de nommer la couleur d'un objet que tu lui montres en anglais."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Répète les couleurs apprises."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "La découverte de l'Amérique",
+                "description": "Apprends comment Christophe Colomb a découvert l'Amérique.",
+                "objectives": [
+                    "Comprendre qui était Christophe Colomb.",
+                    "Apprendre comment et pourquoi il a découvert l'Amérique."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de Christophe Colomb et de son voyage avec des images.",
+                        "Discussion sur l'importance de sa découverte."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner le voyage de Christophe Colomb",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine un bateau et trace son parcours sur une carte jusqu'à l'Amérique."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions simples sur le voyage de Christophe Colomb (ex : 'Qui a découvert l'Amérique ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler l'importance de la découverte de l'Amérique."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les fleuves et rivières",
+                "description": "Découvre les principaux fleuves et rivières du monde.",
+                "objectives": [
+                    "Apprendre les noms des grands fleuves et rivières.",
+                    "Savoir localiser ces fleuves et rivières sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des principaux fleuves et rivières avec une carte (ex : la Seine, le Nil, l'Amazone)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les fleuves et rivières",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les fleuves et rivières sur une carte et explique où ils se trouvent."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux fleuves",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal à chaque fleuve ou rivière (ex : crocodile pour le Nil)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapitule les noms des fleuves et des rivières et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

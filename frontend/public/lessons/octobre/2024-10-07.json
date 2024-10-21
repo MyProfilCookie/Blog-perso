@@ -1,0 +1,286 @@
+{
+    "date": "2024-10-07",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Le corps humain : les cinq sens",
+                "description": "Aujourd'hui, nous allons découvrir les cinq sens et comment ils aident le corps humain à interagir avec son environnement.",
+                "objectives": [
+                    "Comprendre les cinq sens et leur rôle.",
+                    "Apprendre à associer chaque sens à une partie du corps."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des cinq sens (la vue, l'ouïe, l'odorat, le goût et le toucher) avec des images.",
+                        "Discussion sur les parties du corps qui correspondent à chaque sens (yeux, oreilles, nez, bouche, peau)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les sens à des objets",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images d'objets qui correspondent à chaque sens (ex : pomme pour le goût, radio pour l'ouïe)."
+                        ],
+                        "steps": [
+                            "Associe chaque objet à un sens (ex : 'Je vois une fleur avec mes yeux')."
+                        ]
+                    },
+                    {
+                        "title": "Jeu des cinq sens",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant de deviner à quel sens un objet ou une sensation est associé (ex : 'Lequel de tes sens te permet d'entendre la musique ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les cinq sens et leur fonction."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Comparer des nombres",
+                "description": "Apprends à comparer des nombres en utilisant les signes supérieur, inférieur et égal.",
+                "objectives": [
+                    "Comprendre comment comparer des nombres.",
+                    "Savoir utiliser les signes >, < et =."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des signes de comparaison (> plus grand que, < plus petit que, = égal à) avec des exemples visuels.",
+                        "Explique comment comparer deux nombres."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Comparer des nombres",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Cartes de nombres."
+                        ],
+                        "steps": [
+                            "Montre deux cartes de nombres et demande à l'enfant de comparer les nombres en utilisant >, < ou =."
+                        ]
+                    },
+                    {
+                        "title": "Exercices de comparaison",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Résous des exercices simples de comparaison en écrivant les signes appropriés."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les signes de comparaison et leur utilisation."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les noms communs et propres",
+                "description": "Apprends la différence entre les noms communs et les noms propres.",
+                "objectives": [
+                    "Comprendre la différence entre un nom commun et un nom propre.",
+                    "Savoir utiliser des noms communs et des noms propres dans des phrases."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des noms communs (ex : chat, école) et des noms propres (ex : Marie, Paris).",
+                        "Explique comment reconnaître un nom propre (commence par une majuscule) et un nom commun."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Classer les noms",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne une liste de mots et demande à l'enfant de les classer en noms communs ou noms propres."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases en utilisant à la fois des noms communs et des noms propres."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler la différence entre les noms communs et les noms propres."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Dessiner un autoportrait",
+                "description": "Aujourd'hui, nous allons apprendre à dessiner un autoportrait en utilisant un miroir pour observer notre visage.",
+                "objectives": [
+                    "Apprendre à dessiner un autoportrait.",
+                    "Observer les détails de son visage pour les représenter correctement."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples d'autoportraits et discute des éléments à observer (yeux, nez, bouche, cheveux)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un autoportrait",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Miroir",
+                            "Feuille",
+                            "Crayons."
+                        ],
+                        "steps": [
+                            "Regarde-toi dans le miroir et dessine ton visage en te concentrant sur les détails (forme des yeux, cheveux, etc.)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ton autoportrait et parle des détails que tu as choisis de dessiner."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les parties du corps en anglais",
+                "description": "Apprends les noms des parties du corps en anglais et comment les utiliser dans des phrases.",
+                "objectives": [
+                    "Apprendre les noms des parties du corps en anglais.",
+                    "Savoir utiliser les noms des parties du corps dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des parties du corps avec des images (ex : head, hands, feet)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les parties du corps aux mots anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre une image d'une partie du corps et demande à l'enfant de dire le nom en anglais (ex : 'This is my hand')."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Décris une partie du corps et demande à l'enfant de deviner de quoi il s'agit (ex : 'You use it to see' pour les yeux)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les parties du corps apprises en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "La Renaissance",
+                "description": "Découvre ce qu'est la Renaissance et les grands artistes et inventeurs de cette époque.",
+                "objectives": [
+                    "Comprendre l'importance de la Renaissance.",
+                    "Apprendre les noms des grands artistes et inventeurs de la Renaissance."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de la Renaissance avec des images et des œuvres d'art célèbres (ex : Léonard de Vinci, Michel-Ange).",
+                        "Discussion sur les avancées en art, en science et en architecture pendant cette période."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les artistes à leurs œuvres",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe chaque artiste ou inventeur à ses œuvres ou inventions célèbres (ex : Léonard de Vinci et la Joconde)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions sur les artistes et inventeurs de la Renaissance (ex : 'Qui a peint la Joconde ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les grands noms et œuvres de la Renaissance."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les océans et les mers",
+                "description": "Découvre les principaux océans et mers du monde et apprends où ils se situent.",
+                "objectives": [
+                    "Apprendre les noms des océans et des mers.",
+                    "Savoir localiser les océans et les mers sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des océans et mers avec une carte (ex : l'océan Atlantique, la mer Méditerranée)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les océans et les mers",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principaux océans et mers sur une carte et explique où ils se trouvent."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux marins aux océans",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal marin à chaque océan ou mer (ex : la baleine pour l'océan Pacifique)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les océans et mers et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

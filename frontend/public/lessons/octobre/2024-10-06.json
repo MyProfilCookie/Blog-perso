@@ -1,0 +1,286 @@
+{
+    "date": "2024-10-06",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les plantes carnivores",
+                "description": "Aujourd'hui, nous allons découvrir les plantes carnivores, comment elles attrapent leurs proies et pourquoi elles le font.",
+                "objectives": [
+                    "Comprendre ce qu'est une plante carnivore.",
+                    "Apprendre comment et pourquoi elles attrapent leurs proies."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de différentes plantes carnivores avec des images (ex : la Dionée attrape-mouche, le Nepenthes).",
+                        "Discussion sur les raisons pour lesquelles ces plantes mangent des insectes (ex : manque de nutriments dans le sol)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Observer des plantes carnivores",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images ou vidéos de plantes carnivores attrapant des insectes"
+                        ],
+                        "steps": [
+                            "Montre une vidéo ou des images de plantes carnivores attrapant des insectes et explique le processus."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de rôle",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Fais semblant d'être une plante carnivore et explique comment tu attrapes ta proie (ex : 'Je ferme mes feuilles quand une mouche se pose sur moi')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler pourquoi les plantes carnivores mangent des insectes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les fractions simples",
+                "description": "Apprends ce qu'est une fraction et comment l'utiliser pour représenter des parties d'un tout.",
+                "objectives": [
+                    "Comprendre ce qu'est une fraction.",
+                    "Savoir représenter des fractions simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des fractions avec des exemples (ex : un demi, un quart).",
+                        "Explique comment les fractions représentent des parties d'un tout."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Représenter des fractions",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Pizzas en papier découpées en fractions (ex : moitiés, quarts)."
+                        ],
+                        "steps": [
+                            "Utilise des découpages de pizza pour montrer comment chaque part représente une fraction."
+                        ]
+                    },
+                    {
+                        "title": "Exercices simples",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des fractions simples (ex : 1/2, 1/4) et demande à l'enfant de colorier la bonne partie d'une forme."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les fractions apprises pendant la leçon."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les adjectifs de couleur",
+                "description": "Apprends à utiliser les adjectifs de couleur pour décrire des objets et des personnes.",
+                "objectives": [
+                    "Comprendre comment utiliser les adjectifs de couleur.",
+                    "Savoir accorder les adjectifs de couleur avec les noms qu'ils décrivent."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des adjectifs de couleur avec des exemples (ex : une pomme rouge, des chaussures bleues).",
+                        "Explique comment accorder les adjectifs de couleur en genre et en nombre."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des objets aux adjectifs de couleur",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Choisis des objets et associe-les à des adjectifs de couleur (ex : 'Le ballon est rouge')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des adjectifs de couleur",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases simples en utilisant des adjectifs de couleur pour décrire des objets."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler l'accord des adjectifs de couleur."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre un paysage de forêt",
+                "description": "Aujourd'hui, nous allons peindre un paysage de forêt en utilisant différentes nuances de vert.",
+                "objectives": [
+                    "Apprendre à utiliser différentes nuances de vert.",
+                    "Créer un paysage en représentant une forêt."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de paysages de forêt et discute des différentes nuances de vert utilisées."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Peindre un paysage de forêt",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Peinture verte (différentes nuances)",
+                            "Feuille",
+                            "Pinceaux"
+                        ],
+                        "steps": [
+                            "Peins un paysage de forêt en utilisant différentes nuances de vert pour les arbres, les buissons et les herbes."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente le paysage et discute des nuances de vert utilisées."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les vêtements en anglais",
+                "description": "Apprends les noms des vêtements en anglais et comment les décrire.",
+                "objectives": [
+                    "Apprendre les noms des vêtements en anglais.",
+                    "Savoir utiliser des adjectifs pour décrire les vêtements."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des vêtements en anglais avec des images (ex : shirt, pants, shoes, etc.)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les vêtements et les descriptions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre une image d'un vêtement et demande à l'enfant de dire son nom et de le décrire en anglais (ex : 'The shirt is blue')."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Décris un vêtement et demande à l'enfant de deviner de quel vêtement il s'agit (ex : 'You wear it on your feet' pour les chaussures)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les noms des vêtements et les descriptions apprises."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les grandes explorations",
+                "description": "Découvre les grandes explorations des siècles passés et comment elles ont changé le monde.",
+                "objectives": [
+                    "Comprendre pourquoi les explorateurs sont partis découvrir de nouvelles terres.",
+                    "Apprendre les noms des principaux explorateurs et leurs découvertes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des explorateurs célèbres (ex : Christophe Colomb, Magellan) et leurs découvertes avec des cartes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les explorateurs à leurs découvertes",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe chaque explorateur à ses découvertes (ex : Christophe Colomb et l'Amérique)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions sur les explorateurs et leurs voyages (ex : 'Qui a fait le tour du monde ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les grandes découvertes des explorateurs."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les volcans du monde",
+                "description": "Découvre les principaux volcans du monde et apprends comment ils se forment.",
+                "objectives": [
+                    "Apprendre les noms des principaux volcans.",
+                    "Comprendre comment se forment les volcans."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des volcans célèbres avec des images et des cartes (ex : le Vésuve, le Mont Fuji).",
+                        "Explique comment se forme un volcan et pourquoi il entre en éruption."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les volcans",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principaux volcans sur une carte et explique où ils se trouvent."
+                        ]
+                    },
+                    {
+                        "title": "Explication des éruptions",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Utilise une maquette ou une vidéo pour montrer comment une éruption volcanique se produit."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les volcans et les processus volcaniques appris."
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,289 @@
+{
+    "date": "2024-10-02",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les différents types d'animaux",
+                "description": "Aujourd'hui, nous allons apprendre à distinguer les mammifères, les oiseaux, les reptiles, et les poissons.",
+                "objectives": [
+                    "Apprendre les différentes catégories d'animaux.",
+                    "Comprendre les caractéristiques de chaque type d'animal."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des catégories d'animaux avec des images.",
+                        "Discussion sur les caractéristiques de chaque type (mammifères ont des poils, les oiseaux des plumes, etc.)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les animaux à leurs catégories",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Cartes d'animaux",
+                            "Cartes des catégories"
+                        ],
+                        "steps": [
+                            "Associe chaque animal à sa catégorie (ex : le lion est un mammifère, le serpent est un reptile)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de classification",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Fais semblant d'être un animal et demande à l'enfant de te classer dans la bonne catégorie."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les différentes catégories et les animaux correspondants."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Addition et soustraction simples",
+                "description": "Apprends à additionner et soustraire des petits nombres à l'aide d'objets.",
+                "objectives": [
+                    "Savoir faire des additions simples (jusqu'à 10).",
+                    "Savoir faire des soustractions simples (jusqu'à 10)."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des additions et soustractions avec des exemples visuels.",
+                        "Montre comment compter avec des objets pour additionner et soustraire."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Additionner avec des jouets",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "10 jouets ou cubes"
+                        ],
+                        "steps": [
+                            "Additionne les jouets pour montrer comment les nombres se combinent (ex : 3 + 2 = 5).",
+                            "Répéter l'activité avec des soustractions (ex : 5 - 2 = 3)."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des additions et soustractions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des additions et des soustractions simples sur une feuille."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapitule les additions et soustractions faites pendant la leçon."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les adjectifs",
+                "description": "Apprends ce qu'est un adjectif et comment l'utiliser pour décrire des objets et des personnes.",
+                "objectives": [
+                    "Comprendre la fonction d'un adjectif.",
+                    "Savoir utiliser des adjectifs pour décrire."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des adjectifs avec des exemples (grand, petit, bleu, rouge).",
+                        "Explique comment les adjectifs ajoutent des détails aux noms."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Décrire des objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Choisis un objet et décris-le avec des adjectifs (ex : 'Le ballon est rouge et rond')."
+                        ]
+                    },
+                    {
+                        "title": "Associer des adjectifs aux noms",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Associe des adjectifs à des noms sur une feuille (ex : 'La pomme est verte')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler ce qu'est un adjectif et comment il est utilisé."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre un paysage d'automne",
+                "description": "Aujourd'hui, nous allons peindre un paysage d'automne en utilisant les couleurs typiques de la saison.",
+                "objectives": [
+                    "Créer un paysage en utilisant des couleurs d'automne.",
+                    "Apprendre à mélanger des couleurs pour obtenir des nuances d'automne."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de paysages d'automne et discute des couleurs utilisées (rouge, orange, jaune, marron)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Peindre un paysage",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Peinture",
+                            "Feuille",
+                            "Pinceaux"
+                        ],
+                        "steps": [
+                            "Peins un paysage avec des arbres et des feuilles aux couleurs d'automne."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente le paysage et parle des couleurs utilisées."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les animaux et leurs sons en anglais",
+                "description": "Apprends les noms des animaux et les sons qu'ils font en anglais.",
+                "objectives": [
+                    "Apprendre les noms des animaux en anglais.",
+                    "Associer les animaux avec les sons qu'ils produisent."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images d'animaux et dis leurs noms et les sons en anglais (ex : 'The cow says moo')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer et dire",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images d'animaux et dis leurs noms et leurs sons en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de rôle",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Fais semblant d'être un animal et demande à l'enfant de deviner le nom de l'animal et le son qu'il fait en anglais."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Répète les noms des animaux et leurs sons."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les grandes inventions",
+                "description": "Découvre les grandes inventions de l'histoire, comme l'imprimerie, l'électricité, et le téléphone.",
+                "objectives": [
+                    "Apprendre les grandes inventions qui ont changé le monde.",
+                    "Comprendre l'importance de ces inventions."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des grandes inventions avec des images.",
+                        "Discussion sur l'impact de chaque invention (ex : comment l'électricité a changé la vie)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les inventions et leurs inventeurs",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe une invention à son inventeur (ex : Thomas Edison et l'ampoule électrique)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Fais des devinettes sur les inventions : 'Qui a inventé la lumière électrique ?'"
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les grandes inventions et leurs inventeurs."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les montagnes du monde",
+                "description": "Apprends les noms des principales chaînes de montagnes du monde.",
+                "objectives": [
+                    "Apprendre les noms des grandes chaînes de montagnes.",
+                    "Savoir localiser ces montagnes sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des montagnes avec une carte.",
+                        "Discussion sur les caractéristiques des montagnes (altitude, climat)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les montagnes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principales chaînes de montagnes sur une carte (ex : les Alpes, l'Himalaya)."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux montagnes",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal à chaque montagne (ex : le yack pour l'Himalaya)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapitule les noms des montagnes et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

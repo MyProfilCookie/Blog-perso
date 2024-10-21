@@ -1,0 +1,280 @@
+{
+    "date": "2024-10-18",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les saisons et le cycle de la Terre",
+                "description": "Aujourd'hui, nous allons découvrir les saisons et comprendre pourquoi elles changent au fil de l'année.",
+                "objectives": [
+                    "Comprendre le cycle des saisons.",
+                    "Apprendre à identifier les caractéristiques de chaque saison."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des saisons (printemps, été, automne, hiver) avec des images illustrant leurs caractéristiques.",
+                        "Discussion sur la rotation de la Terre et l'inclinaison de son axe qui provoquent les changements de saison."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des caractéristiques aux saisons",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images de la nature ou des activités correspondant à chaque saison."
+                        ],
+                        "steps": [
+                            "Associe chaque image à la saison correcte (ex : feuilles qui tombent pour l'automne, neige pour l'hiver)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner une saison",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Choisis ta saison préférée et dessine une scène qui montre ses caractéristiques principales."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les quatre saisons et les changements qui se produisent dans la nature à chaque période de l'année."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les fractions équivalentes",
+                "description": "Apprends à reconnaître et à trouver des fractions équivalentes en utilisant des exemples simples.",
+                "objectives": [
+                    "Comprendre ce que sont des fractions équivalentes.",
+                    "Apprendre à simplifier ou multiplier des fractions pour trouver leur équivalent."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des fractions équivalentes avec des exemples visuels (ex : 1/2 est équivalent à 2/4).",
+                        "Explique comment simplifier une fraction ou comment en trouver une équivalente en multipliant le numérateur et le dénominateur par le même nombre."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Trouver des fractions équivalentes",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Résous des exercices pour trouver des fractions équivalentes (ex : 3/6 = 1/2)."
+                        ]
+                    },
+                    {
+                        "title": "Simplifier des fractions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Simplifie des fractions en les réduisant à leur plus petite valeur (ex : 4/8 = 1/2)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler le concept des fractions équivalentes et leur importance dans les mathématiques."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les adjectifs qualificatifs",
+                "description": "Apprends à utiliser les adjectifs qualificatifs pour décrire des objets, des personnes et des lieux.",
+                "objectives": [
+                    "Comprendre le rôle des adjectifs qualificatifs dans une phrase.",
+                    "Apprendre à accorder les adjectifs en genre et en nombre avec le nom qu'ils décrivent."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des adjectifs qualificatifs avec des exemples (ex : 'grande maison', 'petit chien').",
+                        "Explique comment les adjectifs s'accordent en genre et en nombre avec le nom qu'ils qualifient."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des phrases avec des adjectifs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne des phrases incomplètes et demande à l'enfant de les compléter avec l'adjectif approprié (ex : 'un __ chat')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des adjectifs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases en utilisant des adjectifs pour décrire des objets, des personnes ou des lieux."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler l'importance des adjectifs qualificatifs et leur accord avec le nom dans une phrase."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Fabriquer une couronne d'automne",
+                "description": "Aujourd'hui, nous allons fabriquer une couronne décorative en utilisant des feuilles et d'autres éléments naturels d'automne.",
+                "objectives": [
+                    "Apprendre à utiliser des matériaux naturels pour créer une décoration.",
+                    "Décorer une couronne en utilisant des feuilles, des glands, et d'autres éléments d'automne."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de couronnes d'automne et discute des matériaux naturels que l'on peut utiliser (feuilles, glands, branches)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Créer une couronne d'automne",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Feuilles, glands, branches, colle, ruban."
+                        ],
+                        "steps": [
+                            "Crée une couronne en utilisant les matériaux naturels collectés et colle-les ensemble pour former une décoration."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ta couronne et explique les matériaux utilisés pour la décorer."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les nombres en anglais (11 à 20)",
+                "description": "Apprends à compter de 11 à 20 en anglais.",
+                "objectives": [
+                    "Apprendre les nombres de 11 à 20 en anglais.",
+                    "Savoir les utiliser dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des nombres de 11 à 20 avec leur prononciation en anglais (ex : eleven, twelve, thirteen)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire les nombres en anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire les nombres de 11 à 20 en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions comme 'What number comes after thirteen?' pour vérifier la compréhension."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les nombres de 11 à 20 en anglais et leur prononciation."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les rois et reines célèbres",
+                "description": "Découvre les rois et reines les plus célèbres de l'histoire et leurs contributions à leur époque.",
+                "objectives": [
+                    "Comprendre l'importance de certains rois et reines dans l'histoire.",
+                    "Apprendre leurs réalisations et leurs impacts sur leur époque."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de rois et reines célèbres (ex : Louis XIV, Cléopâtre, Élisabeth I) avec des images et des explications sur leur règne."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les rois et reines à leurs réalisations",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe chaque roi ou reine à une réalisation importante de leur règne (ex : Louis XIV et Versailles)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions simples sur les rois et reines célèbres (ex : 'Qui a été la reine d'Angleterre au XVIe siècle ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les contributions importantes des rois et reines étudiés."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les déserts du monde",
+                "description": "Découvre les principaux déserts du monde et leurs caractéristiques.",
+                "objectives": [
+                    "Apprendre les noms des principaux déserts.",
+                    "Savoir localiser ces déserts sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des déserts célèbres avec une carte (ex : le Sahara, le désert de Gobi, le désert d'Atacama)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les déserts sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principaux déserts sur une carte et discute de leurs caractéristiques (climat, animaux, etc.)."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux déserts",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal à chaque désert (ex : dromadaire pour le Sahara)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les principaux déserts et les animaux qui y vivent."
+                    ]
+                }
+            }
+        }
+    ]
+}

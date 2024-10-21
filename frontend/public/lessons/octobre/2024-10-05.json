@@ -1,0 +1,288 @@
+{
+    "date": "2024-10-05",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les états de la matière",
+                "description": "Aujourd'hui, nous allons découvrir les trois états de la matière : solide, liquide, et gazeux.",
+                "objectives": [
+                    "Comprendre les trois états de la matière.",
+                    "Apprendre à identifier des exemples de chaque état."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des trois états de la matière avec des exemples (ex : glace, eau, vapeur).",
+                        "Discussion sur la façon dont la matière change d'état (ex : la chaleur fait fondre la glace)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Classer les objets par état",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images ou objets représentant les trois états de la matière"
+                        ],
+                        "steps": [
+                            "Classer les objets selon leur état (solide, liquide ou gazeux)."
+                        ]
+                    },
+                    {
+                        "title": "Expérience simple avec l'eau",
+                        "duration": "10 minutes",
+                        "materials": [
+                            "Eau",
+                            "Glace",
+                            "Casserole",
+                            "Chauffage"
+                        ],
+                        "steps": [
+                            "Fais fondre de la glace pour montrer la transformation de l'eau solide en liquide, puis fais chauffer l'eau pour observer l'évaporation."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les trois états de la matière et donner des exemples."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les tables de multiplication",
+                "description": "Apprends à utiliser et mémoriser les tables de multiplication de 2 et 3.",
+                "objectives": [
+                    "Mémoriser les tables de multiplication de 2 et 3.",
+                    "Savoir les appliquer dans des exercices simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des tables de multiplication de 2 et 3 avec des exemples.",
+                        "Explique comment utiliser la multiplication pour additionner rapidement des groupes égaux."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Répétition des tables",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Répète les tables de 2 et 3 à haute voix en s'aidant d'images ou d'objets pour visualiser les groupes."
+                        ]
+                    },
+                    {
+                        "title": "Exercices simples",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Résous des exercices simples en utilisant les tables de multiplication (ex : 2 x 3 = 6, 3 x 4 = 12)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les tables de 2 et 3 et leur importance."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les pronoms personnels",
+                "description": "Apprends à utiliser les pronoms personnels pour remplacer les noms dans les phrases.",
+                "objectives": [
+                    "Comprendre ce qu'est un pronom personnel.",
+                    "Savoir utiliser les pronoms personnels dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des pronoms personnels (je, tu, il/elle, nous, vous, ils/elles) avec des exemples.",
+                        "Explique comment les pronoms remplacent des noms dans les phrases."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Remplacer les noms par des pronoms",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne des phrases simples où l'enfant doit remplacer un nom par un pronom (ex : 'Marie mange une pomme' devient 'Elle mange une pomme')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des pronoms",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases en utilisant les pronoms personnels."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les pronoms personnels et leur utilisation."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer une sculpture en pâte à modeler",
+                "description": "Aujourd'hui, nous allons créer une petite sculpture d'animal en pâte à modeler.",
+                "objectives": [
+                    "Apprendre à modeler un animal en pâte à modeler.",
+                    "Utiliser différentes couleurs pour décorer la sculpture."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de petites sculptures d'animaux et discute des techniques de modelage."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Modeler un animal",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Pâte à modeler",
+                            "Outils de modelage"
+                        ],
+                        "steps": [
+                            "Crée un animal en pâte à modeler en utilisant les différentes couleurs pour ajouter des détails (yeux, oreilles, etc.)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ta sculpture et discute des choix de couleurs et de formes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les fruits en anglais",
+                "description": "Apprends à nommer les fruits en anglais et à les associer à leurs couleurs.",
+                "objectives": [
+                    "Apprendre les noms des fruits en anglais.",
+                    "Savoir associer les fruits à leurs couleurs."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des fruits avec des images et leurs noms en anglais (apple, banana, orange, etc.)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les fruits et leurs couleurs",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre une image de fruit et demande à l'enfant de dire son nom et sa couleur en anglais (ex : 'The apple is red')."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Décris un fruit et demande à l'enfant de deviner de quel fruit il s'agit (ex : 'It's yellow and long' pour la banane)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Répète les fruits et leurs couleurs apprises."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "La Première Guerre mondiale",
+                "description": "Découvre les événements majeurs de la Première Guerre mondiale et son impact sur le monde.",
+                "objectives": [
+                    "Comprendre les causes et les conséquences de la Première Guerre mondiale.",
+                    "Apprendre les faits marquants de cette période."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des événements majeurs de la Première Guerre mondiale avec des images et des cartes.",
+                        "Discussion sur l'impact de la guerre sur les pays participants."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les pays à la guerre",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe les pays participants à la Première Guerre mondiale avec leur rôle dans le conflit (ex : la France, l'Allemagne, le Royaume-Uni)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions sur les événements de la guerre (ex : 'Quand a commencé la Première Guerre mondiale ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les faits marquants de la Première Guerre mondiale."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les déserts du monde",
+                "description": "Découvre les principaux déserts du monde et apprends où ils se trouvent.",
+                "objectives": [
+                    "Apprendre les noms des principaux déserts du monde.",
+                    "Savoir localiser ces déserts sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des principaux déserts du monde avec une carte (ex : le Sahara, le désert de Gobi, le désert d'Atacama)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les déserts",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principaux déserts sur une carte et discute de leurs caractéristiques (climat, animaux, etc.)."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux déserts",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal à chaque désert (ex : le dromadaire pour le Sahara)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapitule les noms des déserts et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

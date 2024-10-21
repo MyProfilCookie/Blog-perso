@@ -1,29 +1,47 @@
-/* eslint-disable react/self-closing-comp */
 /* eslint-disable prettier/prettier */
 "use client";
 import { useState, useEffect } from "react";
-import { Modal, Badge, Button } from "@nextui-org/react";
+import { Popover, PopoverTrigger, PopoverContent, Badge, Button } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
-import Swal from "sweetalert2"; // Import de la bibliothèque pour les alertes
+import { faShoppingCart, faTrash, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import Swal from "sweetalert2";
+import { useRouter } from "next/navigation"; // Nouvelle API pour le "app directory"
 
-import ArticlesPage from "./page";
+import ArticlesPage from "./page"; // Page des articles
 
+// Modifiez la définition du type Article dans ce fichier
 type Article = {
     title: string;
     description: string;
-    price: string;
+    price: number;
     link: string;
     imageUrl: string;
+    quantity?: number; // Rendez quantity optionnel
 };
 
 export default function ShopPage() {
     const [cartItems, setCartItems] = useState<Article[]>([]);
-    const [isCartOpen, setIsCartOpen] = useState(false);
+    const [isLoggedIn, setIsLoggedIn] = useState(false); // Pour gérer l'authentification
+    const router = useRouter(); // Nouvelle API de navigation
 
-    // Charger le panier depuis localStorage à l'initialisation
+    // Fonction pour vérifier si l'utilisateur est connecté
+    const checkUserLoggedIn = () => {
+        const userToken = localStorage.getItem("userToken");
+
+        alert("Token actuel :" + userToken);
+
+        if (userToken) {
+            setIsLoggedIn(true);
+        } else {
+            setIsLoggedIn(false);
+        }
+    };
+
+    // Charger le panier depuis localStorage à l'initialisation et vérifier la connexion
     useEffect(() => {
         const storedCart = localStorage.getItem("cartItems");
+
+        checkUserLoggedIn(); // Vérifier si l'utilisateur est connecté
 
         if (storedCart) {
             try {
@@ -32,8 +50,8 @@ export default function ShopPage() {
                 if (Array.isArray(parsedCart)) {
                     setCartItems(parsedCart);
                 }
-            } catch (error) {
-
+            } catch (error: any) {
+                alert(`Erreur lors de l'analyse du panier : ${error.message}`);
             }
         }
     }, []);
@@ -45,50 +63,109 @@ export default function ShopPage() {
         }
     }, [cartItems]);
 
-    // Fonction pour ajouter des articles au panier avec gestion des doublons
-    const handleAddToCart = (article: Article) => {
-        const itemExists = cartItems.find((item) => item.title === article.title);
+    // Fonction pour calculer le total des articles dans le panier
+    const calculateTotal = () => {
+        return cartItems.reduce((total, item) => total + item.price * (item.quantity ?? 1), 0).toFixed(2);
+    };
 
-        if (itemExists) {
-            // Demander une confirmation si l'article existe déjà
+    // Fonction pour rediriger directement vers la page de paiement
+    const handleCheckout = () => {
+        // Forcer la vérification de connexion ici avant de procéder
+        checkUserLoggedIn();
+
+        if (!isLoggedIn) {
             Swal.fire({
-                title: "Article déjà présent",
-                text: "Cet article est déjà dans votre panier. Voulez-vous vraiment l'ajouter à nouveau ?",
+                title: "Connexion requise",
+                text: "Vous devez être connecté pour procéder au paiement.",
+                icon: "warning",
+            }).then(() => {
+                router.push("/login"); // Rediriger vers la page de connexion si non connecté
+            });
+        } else {
+            router.push("/payment"); // Rediriger directement vers la page de paiement si connecté
+        }
+    };
+
+    // Fonction pour ajouter un article au panier
+    const addToCart = (article: Article) => {
+        const articleWithQuantity = { ...article, quantity: article.quantity || 1 };
+        const existingArticle = cartItems.find((cartItem) => cartItem.title === article.title);
+
+        if (existingArticle) {
+            Swal.fire({
+                title: "Article déjà dans le panier",
+                text: "Cet article est déjà dans votre panier. Voulez-vous l'ajouter à nouveau ?",
                 icon: "warning",
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
-                confirmButtonText: "Oui, ajouter encore",
-                cancelButtonText: "Annuler",
+                confirmButtonText: "Oui, ajouter",
+                cancelButtonText: "Non, annuler",
             }).then((result) => {
-                if (result.isConfirmed) {
-                    setCartItems((prevItems) => [...prevItems, article]);
-                    Swal.fire("Ajouté", "L'article a été ajouté à nouveau.", "success");
+                if (result.isConfirmed && (existingArticle.quantity ?? 0) < 10) {
+                    setCartItems((prevItems) =>
+                        prevItems.map((item) =>
+                            item.title === article.title
+                                ? { ...item, quantity: (item.quantity ?? 0) + 1 }
+                                : item
+                        )
+                    );
+                    Swal.fire({
+                        icon: "success",
+                        title: "Article ajouté",
+                        text: `"${article.title}" a été ajouté au panier avec succès.`,
+                        confirmButtonText: "Ok",
+                    });
                 }
             });
         } else {
-            // Ajouter l'article et afficher un message de succès
             Swal.fire({
-                title: "Ajouter cet article?",
-                text: `Voulez-vous ajouter "${article.title}" à votre panier ?`,
+                title: "Ajouter au panier",
+                text: `Êtes-vous sûr de vouloir ajouter "${article.title}" au panier ?`,
                 icon: "question",
                 showCancelButton: true,
-                confirmButtonColor: "#3085d6",
-                cancelButtonColor: "#d33",
                 confirmButtonText: "Oui, ajouter",
                 cancelButtonText: "Annuler",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    setCartItems((prevItems) => [...prevItems, article]);
-                    Swal.fire("Ajouté", "L'article a été ajouté à votre panier.", "success");
+                    setCartItems((prevItems) => [
+                        ...prevItems,
+                        { ...articleWithQuantity },
+                    ]);
+                    Swal.fire({
+                        icon: "success",
+                        title: "Article ajouté",
+                        text: `"${article.title}" a été ajouté au panier avec succès.`,
+                        confirmButtonText: "Ok",
+                    });
                 }
             });
         }
     };
 
-    // Fonction pour ouvrir ou fermer le panier (popup)
-    const toggleCart = () => {
-        setIsCartOpen((prev) => !prev);
+    // Fonction pour augmenter la quantité
+    const increaseQuantity = (title: string) => {
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.title === title && (item.quantity ?? 0) < 10
+                    ? { ...item, quantity: (item.quantity ?? 0) + 1 }
+                    : item
+            )
+        );
+    };
+
+    // Fonction pour diminuer la quantité
+    const decreaseQuantity = (title: string) => {
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.title === title && item.quantity && item.quantity > 1
+                    ? { ...item, quantity: item.quantity - 1 }
+                    : item
+            )
+        );
+    };
+
+    // Fonction pour supprimer un article
+    const removeItem = (title: string) => {
+        setCartItems((prevItems) => prevItems.filter((item) => item.title !== title));
     };
 
     return (
@@ -100,83 +177,118 @@ export default function ShopPage() {
                 </h1>
             </div>
 
-            {/* Bouton flottant avec FontAwesome et badge */}
-            <Button
-                className="relative"
-                color="primary"
-                style={{
-                    padding: '24px 24px',
-                    borderRadius: '30px', // Bouton arrondi
-                    backgroundColor: '#2D3748', // Couleur sombre avec bon contraste
-                    color: '#FFF', // Texte blanc pour contraste
-                    fontWeight: 'bold',
-                    fontSize: '16px', // Taille de texte légèrement augmentée
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    position: 'fixed',
-                    right: '30px',
-                    bottom: '20px',
-                    zIndex: 50,
-                    boxShadow: '0px 8px 15px rgba(0, 0, 0, 0.2)', // Amélioration de l'ombre
-                    transition: 'box-shadow 0.3s ease',
-                }}
-                onPress={toggleCart}
-            >
-                <FontAwesomeIcon icon={faShoppingCart} style={{ marginRight: '8px' }} />
-                {cartItems.length > 0 && (
-                    <Badge
-                        color="danger"
-                        content={cartItems.length}
+            {/* Popover pour afficher le panier */}
+            <Popover>
+                <PopoverTrigger>
+                    <Button
+                        className="relative"
+                        color="primary"
                         style={{
-                            position: 'absolute',
-                            top: '-10px',
-                            right: '-6px',
-                            transform: 'translate(50%, -50%)',
-                            fontSize: '14px',
-                            border: "none"
+                            padding: "24px 24px",
+                            borderRadius: "30px",
+                            backgroundColor: "#2D3748",
+                            color: "#FFF",
+                            fontWeight: "bold",
+                            fontSize: "16px",
+                            display: "flex",
+                            alignItems: "center",
+                            justifyContent: "center",
+                            position: "fixed",
+                            right: "30px",
+                            bottom: "20px",
+                            zIndex: 50,
+                            boxShadow: "0px 8px 15px rgba(0, 0, 0, 0.2)",
+                            transition: "box-shadow 0.3s ease",
                         }}
                     >
-                        {/* Ajout d'un élément enfant vide pour eviter un bug de positionnement du badge */}
-                        <span></span>
-                    </Badge>
-                )}
-            </Button>
+                        <FontAwesomeIcon icon={faShoppingCart} style={{ marginRight: "8px" }} />
+                        {cartItems.length > 0 && (
+                            <Badge
+                                color="danger"
+                                content={cartItems.length}
+                                style={{
+                                    position: "absolute",
+                                    top: "-10px",
+                                    right: "-6px",
+                                    transform: "translate(50%, -50%)",
+                                    fontSize: "14px",
+                                    border: "none",
+                                }}
+                            >
+                                <span />
+                            </Badge>
+                        )}
+                    </Button>
+                </PopoverTrigger>
+
+                {/* Contenu du Popover */}
+                <PopoverContent>
+                    <div style={{ padding: "10px", width: "340px" }}>
+                        <h3 className="text-lg font-semibold">Votre Panier</h3>
+                        {cartItems.length === 0 ? (
+                            <p className="text-gray-600">Votre panier est vide.</p>
+                        ) : (
+                            <div>
+                                <ul className="divide-y divide-gray-200">
+                                    {cartItems.map((item, index) => (
+                                        <li key={index} className="py-2">
+                                            <div className="flex justify-between items-center">
+                                                <span className="font-medium">
+                                                    {item.title} ({item.quantity})
+                                                </span>
+                                                <span className="text-gray-500">
+                                                    {(item.price * (item.quantity ?? 1)).toFixed(2)} €
+                                                </span>
+                                            </div>
+                                            <div className="flex justify-between items-center mt-2">
+                                                <Button
+                                                    color="secondary"
+                                                    disabled={item.quantity === 1}
+                                                    size="sm"
+                                                    onPress={() => decreaseQuantity(item.title)}
+                                                >
+                                                    <FontAwesomeIcon icon={faMinus} />
+                                                </Button>
+                                                <Button
+                                                    color="secondary"
+                                                    disabled={item.quantity === 10}
+                                                    size="sm"
+                                                    onPress={() => increaseQuantity(item.title)}
+                                                >
+                                                    <FontAwesomeIcon icon={faPlus} />
+                                                </Button>
+                                                <Button
+                                                    color="danger"
+                                                    size="sm"
+                                                    onPress={() => removeItem(item.title)}
+                                                >
+                                                    <FontAwesomeIcon icon={faTrash} />
+                                                </Button>
+                                            </div>
+                                        </li>
+                                    ))}
+                                </ul>
+                                <div className="mt-4 font-bold text-lg">
+                                    Sous-total : {calculateTotal()} €
+                                </div>
+                                <Button
+                                    className="w-full mt-4"
+                                    color="primary"
+                                    onClick={handleCheckout}
+                                >
+                                    Passer au paiement
+                                </Button>
+                            </div>
+                        )}
+                    </div>
+                </PopoverContent>
+            </Popover>
 
             {/* Page des articles */}
-            <ArticlesPage onAddToCart={handleAddToCart} />
-
-            {/* Popup du panier */}
-            <Modal closeButton isOpen={isCartOpen} onClose={toggleCart}>
-                <div className="modal-header">
-                    <h3 className="text-lg font-semibold">Votre Panier</h3>
-                </div>
-                <div className="modal-body">
-                    {cartItems.length === 0 ? (
-                        <p className="text-gray-600">Votre panier est vide.</p>
-                    ) : (
-                        <ul className="divide-y divide-gray-200">
-                            {cartItems.map((item, index) => (
-                                <li key={index} className="py-2">
-                                    <div className="flex justify-between">
-                                        <span className="font-medium">{item.title}</span>
-                                        <span className="text-gray-500">{item.price}</span>
-                                    </div>
-                                </li>
-                            ))}
-                        </ul>
-                    )}
-                </div>
-                <div className="modal-footer">
-                    <Button color="primary" variant="flat" onClick={toggleCart}>
-                        Fermer
-                    </Button>
-                </div>
-            </Modal>
-        </div >
+            <ArticlesPage onAddToCart={addToCart} />
+        </div>
     );
 }
-
 
 
 

@@ -1,0 +1,282 @@
+{
+    "date": "2024-10-17",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les animaux et leur habitat",
+                "description": "Aujourd'hui, nous allons découvrir différents animaux et les lieux où ils vivent.",
+                "objectives": [
+                    "Comprendre les habitats naturels des animaux.",
+                    "Apprendre à associer les animaux à leur habitat."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des différents habitats (forêt, désert, océan, montagne) et des animaux qui y vivent.",
+                        "Discussion sur les caractéristiques de chaque habitat qui permettent aux animaux de survivre."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des animaux à leur habitat",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images d'animaux et d'habitats."
+                        ],
+                        "steps": [
+                            "Associe chaque animal à son habitat (ex : ours polaire pour l'Arctique, lion pour la savane)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner un animal dans son habitat",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Choisis un animal et dessine-le dans son habitat naturel."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les habitats et les animaux associés."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les multiplications à deux chiffres",
+                "description": "Apprends à multiplier des nombres à deux chiffres en utilisant des méthodes simples.",
+                "objectives": [
+                    "Comprendre comment poser et résoudre une multiplication à deux chiffres.",
+                    "Apprendre à décomposer les étapes d'une multiplication plus complexe."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de la méthode de multiplication avec deux chiffres (ex : 23 x 15), en décomposant chaque étape.",
+                        "Explique comment additionner les résultats intermédiaires."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Poser des multiplications à deux chiffres",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Résous des exercices où tu dois poser et calculer des multiplications à deux chiffres (ex : 42 x 18)."
+                        ]
+                    },
+                    {
+                        "title": "Vérifier les résultats avec des objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Utilise des objets pour vérifier visuellement les résultats de tes multiplications."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler la méthode pour multiplier des nombres à deux chiffres."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les homophones grammaticaux",
+                "description": "Apprends à distinguer les homophones grammaticaux (et/est, a/à, son/sont).",
+                "objectives": [
+                    "Comprendre la différence entre les homophones grammaticaux.",
+                    "Savoir utiliser les homophones dans des phrases correctes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des homophones les plus courants avec des exemples (ex : 'et' pour lister, 'est' pour le verbe être).",
+                        "Explique comment identifier quel homophone utiliser selon le contexte."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des phrases avec des homophones",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Complète des phrases en choisissant le bon homophone (ex : 'Il a/à un livre')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des homophones",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases en utilisant correctement les homophones grammaticaux étudiés."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les règles pour utiliser les homophones grammaticaux."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer un masque de super-héros",
+                "description": "Aujourd'hui, nous allons fabriquer un masque de super-héros en papier et le décorer.",
+                "objectives": [
+                    "Apprendre à créer un masque en utilisant du papier.",
+                    "Décorer le masque avec des couleurs et des motifs spécifiques."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de masques de super-héros et discute des motifs et couleurs que l'on peut utiliser."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Fabriquer et décorer un masque",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier, ciseaux, colle, crayons de couleur, élastique."
+                        ],
+                        "steps": [
+                            "Découpe un masque en forme de visage et décore-le avec des couleurs vives, puis attache un élastique pour le porter."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ton masque et explique les choix de couleurs et de motifs."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les jours de la semaine en anglais",
+                "description": "Apprends à dire et écrire les jours de la semaine en anglais.",
+                "objectives": [
+                    "Apprendre les noms des jours de la semaine en anglais.",
+                    "Savoir utiliser les jours dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des jours de la semaine avec leur prononciation en anglais (ex : Monday, Tuesday)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire les jours de la semaine",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Demande à l'enfant d'écrire les jours de la semaine dans le bon ordre."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions comme 'Quel jour vient après Monday ?' pour vérifier la compréhension."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les jours de la semaine en anglais et leur prononciation."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "La révolution américaine",
+                "description": "Découvre les événements clés de la révolution américaine et leur impact sur l'histoire moderne.",
+                "objectives": [
+                    "Comprendre les causes de la révolution américaine.",
+                    "Apprendre les événements importants de cette période."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des causes principales de la révolution américaine (ex : taxes, liberté).",
+                        "Discussion sur les personnages importants comme George Washington et Benjamin Franklin."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les événements de la révolution",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe des événements importants avec leurs dates (ex : déclaration d'indépendance en 1776)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions simples sur les événements de la révolution américaine (ex : 'Qui était le premier président des États-Unis ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les principaux événements de la révolution américaine."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les fleuves et rivières du monde",
+                "description": "Découvre les principaux fleuves et rivières du monde et leur rôle dans l'écosystème.",
+                "objectives": [
+                    "Apprendre les noms des principaux fleuves et rivières.",
+                    "Comprendre leur importance pour l'écosystème et l'agriculture."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des fleuves et rivières avec une carte (ex : Nil, Amazone, Mississippi).",
+                        "Discussion sur l'importance des fleuves pour l'agriculture, le transport et la biodiversité."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les fleuves sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principaux fleuves et rivières sur une carte et explique leur rôle dans l'économie et l'écosystème."
+                        ]
+                    },
+                    {
+                        "title": "Associer des fleuves aux continents",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe chaque fleuve à son continent d'origine (ex : Nil en Afrique, Amazone en Amérique du Sud)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les fleuves et leur importance dans l'écosystème mondial."
+                    ]
+                }
+            }
+        }
+    ]
+}

@@ -1,0 +1,287 @@
+{
+    "date": "2024-10-10",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les états de la matière",
+                "description": "Aujourd'hui, nous allons découvrir les trois états de la matière : solide, liquide et gazeux.",
+                "objectives": [
+                    "Comprendre les trois états de la matière.",
+                    "Apprendre à identifier des exemples de chaque état."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des états de la matière avec des exemples (ex : la glace, l'eau, la vapeur).",
+                        "Discussion sur les changements d'état (fusion, évaporation, condensation)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Classer les objets par état",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images ou objets représentant les trois états de la matière."
+                        ],
+                        "steps": [
+                            "Classe les objets selon leur état (solide, liquide ou gazeux)."
+                        ]
+                    },
+                    {
+                        "title": "Expérience sur la fusion et l'évaporation",
+                        "duration": "10 minutes",
+                        "materials": [
+                            "Glace, eau chaude, bol, cuillère."
+                        ],
+                        "steps": [
+                            "Observe la glace fondre dans un bol et discute de la transformation de l'eau en vapeur lorsqu'elle est chauffée."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les trois états de la matière et leurs exemples."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les additions avec retenue",
+                "description": "Apprends à faire des additions avec retenue en utilisant des objets pour visualiser le calcul.",
+                "objectives": [
+                    "Comprendre comment faire des additions avec retenue.",
+                    "Apprendre à poser des additions avec retenue."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des additions avec retenue à l'aide d'exemples visuels.",
+                        "Explique comment additionner des chiffres qui dépassent 10 dans une colonne."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Additionner avec des objets",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Petits objets (billes, cubes, etc.)."
+                        ],
+                        "steps": [
+                            "Utilise des objets pour faire des additions simples avec retenue (ex : 17 + 6 = 23 en montrant que tu dois retenir 1)."
+                        ]
+                    },
+                    {
+                        "title": "Poser des additions avec retenue",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose une addition avec retenue sur une feuille et résous-la."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler la méthode pour faire des additions avec retenue."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les verbes au présent",
+                "description": "Apprends à conjuguer des verbes réguliers au présent de l'indicatif.",
+                "objectives": [
+                    "Comprendre comment conjuguer les verbes réguliers au présent.",
+                    "Savoir utiliser ces conjugaisons dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de la conjugaison des verbes réguliers en -er, -ir et -re au présent (ex : 'manger', 'finir', 'vendre').",
+                        "Explique comment reconnaître et conjuguer ces verbes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Conjuguer des verbes au présent",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne des verbes à conjuguer au présent et demande à l'enfant de les écrire correctement (ex : 'Je mange', 'Nous finissons')."
+                        ]
+                    },
+                    {
+                        "title": "Compléter des phrases",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Complète des phrases en conjuguant les verbes entre parenthèses au présent."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler comment conjuguer des verbes réguliers au présent."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Peindre un paysage d'hiver",
+                "description": "Aujourd'hui, nous allons peindre un paysage d'hiver en utilisant des couleurs froides comme le bleu et le blanc.",
+                "objectives": [
+                    "Apprendre à utiliser les couleurs froides pour représenter un paysage d'hiver.",
+                    "Créer un paysage en utilisant différentes nuances de bleu et blanc."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de paysages d'hiver et discute des couleurs froides que l'on utilise (bleu, blanc, gris)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Peindre un paysage d'hiver",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Peinture (bleue, blanche, grise), pinceaux, feuille."
+                        ],
+                        "steps": [
+                            "Peins un paysage d'hiver avec des arbres enneigés, des montagnes et des nuages en utilisant différentes nuances de bleu et blanc."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ton paysage et parle des couleurs que tu as choisies."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les objets de la maison en anglais",
+                "description": "Apprends les noms des objets de la maison en anglais et comment les utiliser dans des phrases simples.",
+                "objectives": [
+                    "Apprendre les noms des objets de la maison en anglais.",
+                    "Savoir utiliser ces mots dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des objets de la maison en anglais avec des images (ex : 'table', 'chair', 'lamp')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les objets aux mots anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre une image d'un objet de la maison et demande à l'enfant de dire son nom en anglais (ex : 'This is a table')."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Décris un objet de la maison et demande à l'enfant de deviner de quoi il s'agit (ex : 'You sit on it' pour une chaise)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les objets de la maison appris en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les grandes découvertes",
+                "description": "Découvre les explorateurs célèbres et leurs découvertes importantes à travers le monde.",
+                "objectives": [
+                    "Comprendre l'importance des grandes découvertes pour l'histoire mondiale.",
+                    "Apprendre les noms des explorateurs célèbres et leurs découvertes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des grands explorateurs (ex : Christophe Colomb, Vasco de Gama, Magellan) et leurs découvertes.",
+                        "Discussion sur l'impact de ces découvertes sur le monde."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les explorateurs à leurs découvertes",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe chaque explorateur à sa découverte (ex : Christophe Colomb et l'Amérique)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions simples sur les grandes découvertes (ex : 'Qui a découvert l'Amérique ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les explorateurs célèbres et leurs découvertes."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les montagnes du monde",
+                "description": "Découvre les principales chaînes de montagnes dans le monde et apprends à les localiser sur une carte.",
+                "objectives": [
+                    "Apprendre les noms des principales chaînes de montagnes.",
+                    "Savoir localiser ces montagnes sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des chaînes de montagnes avec une carte (ex : les Alpes, l'Himalaya, les Andes)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les montagnes sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les chaînes de montagnes sur une carte et explique où elles se trouvent."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux montagnes",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal célèbre à chaque montagne (ex : le yack pour l'Himalaya)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les montagnes et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

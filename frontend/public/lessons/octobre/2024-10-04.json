@@ -1,0 +1,292 @@
+{
+    "date": "2024-10-04",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les saisons et le changement de temps",
+                "description": "Aujourd'hui, nous allons découvrir les quatre saisons et comprendre pourquoi le temps change au cours de l'année.",
+                "objectives": [
+                    "Apprendre les quatre saisons.",
+                    "Comprendre comment le temps change en fonction des saisons."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des saisons avec des images.",
+                        "Discussion sur les caractéristiques de chaque saison (température, durée des journées, changements dans la nature)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les saisons à leurs caractéristiques",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Images des saisons",
+                            "Cartes avec des caractéristiques (froid, chaud, feuilles tombent, fleurs poussent)"
+                        ],
+                        "steps": [
+                            "Associe chaque image de saison à ses caractéristiques (ex : l'hiver est froid, l'été est chaud)."
+                        ]
+                    },
+                    {
+                        "title": "Création d'un calendrier des saisons",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Feuilles de papier",
+                            "Crayons de couleur"
+                        ],
+                        "steps": [
+                            "Dessine un calendrier où tu illustres chaque saison avec des couleurs et des images appropriées."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les caractéristiques des quatre saisons."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les additions avec retenue",
+                "description": "Apprends à faire des additions avec retenue en utilisant des objets pour visualiser le calcul.",
+                "objectives": [
+                    "Comprendre comment faire des additions avec retenue.",
+                    "Apprendre à poser une addition avec retenue."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des additions avec retenue à l'aide d'exemples visuels.",
+                        "Explique comment ajouter des chiffres qui dépassent 10 dans une colonne."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Additionner avec des objets",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Petits objets (billes, cubes)",
+                            "Feuille et crayon"
+                        ],
+                        "steps": [
+                            "Utilise des objets pour faire des additions simples avec retenue (ex : 17 + 5, en montrant que tu dois retenir 1)."
+                        ]
+                    },
+                    {
+                        "title": "Poser une addition",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose une addition avec retenue sur une feuille et résous-la."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler la méthode pour faire des additions avec retenue."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les phrases interrogatives",
+                "description": "Apprends à poser des questions en utilisant les phrases interrogatives.",
+                "objectives": [
+                    "Comprendre ce qu'est une phrase interrogative.",
+                    "Savoir poser des questions simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des phrases interrogatives avec des exemples (ex : 'Comment t'appelles-tu ?').",
+                        "Discussion sur les mots interrogatifs (qui, que, où, comment)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les mots interrogatifs aux questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Associe chaque mot interrogatif à une question (ex : 'Où' avec 'Où habites-tu ?')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases interrogatives en utilisant différents mots interrogatifs."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les phrases interrogatives vues pendant la leçon."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Fabriquer des feuilles d'automne en papier",
+                "description": "Aujourd'hui, nous allons créer des feuilles d'automne en papier pour décorer la classe.",
+                "objectives": [
+                    "Créer des feuilles en papier.",
+                    "Décorer les feuilles avec des couleurs d'automne."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de feuilles d'automne et discute des couleurs utilisées (rouge, orange, jaune)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Découper et colorier des feuilles",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier",
+                            "Crayons de couleur",
+                            "Ciseaux"
+                        ],
+                        "steps": [
+                            "Découpe des formes de feuilles dans du papier, puis colorie-les avec des couleurs d'automne."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Accroche les feuilles dans la classe pour la décoration et parle des couleurs utilisées."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les animaux et leurs habitats en anglais",
+                "description": "Apprends les noms des animaux en anglais et associe-les à leurs habitats.",
+                "objectives": [
+                    "Apprendre les noms d'animaux en anglais.",
+                    "Savoir associer chaque animal à son habitat."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des noms d'animaux en anglais avec des images (ex : 'Lion' pour la savane, 'Fish' pour l'océan)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les animaux aux habitats",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Associe chaque animal à son habitat (ex : 'The lion lives in the savannah')."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de rôle",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Fais semblant d'être un animal et demande à l'enfant de deviner l'animal et l'habitat en anglais."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les animaux et leurs habitats appris."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "La révolution industrielle",
+                "description": "Découvre ce qu'est la révolution industrielle et comment elle a transformé la société.",
+                "objectives": [
+                    "Comprendre ce qu'est la révolution industrielle.",
+                    "Apprendre comment elle a changé la société."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de la révolution industrielle avec des images de machines et d'usines.",
+                        "Discussion sur les changements dans le travail et la vie quotidienne à cette époque."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les inventions à la révolution industrielle",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe les grandes inventions comme la machine à vapeur à cette période."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions sur les inventions de la révolution industrielle (ex : 'Qu'est-ce que la machine à vapeur ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les inventions importantes de la révolution industrielle."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les pays d'Europe",
+                "description": "Découvre les principaux pays d'Europe et apprends à les situer sur une carte.",
+                "objectives": [
+                    "Apprendre les noms des principaux pays d'Europe.",
+                    "Savoir localiser ces pays sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des pays d'Europe avec une carte et discussion sur leurs caractéristiques (langues, cultures)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les pays d'Europe",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principaux pays d'Europe sur une carte (ex : la France, l'Allemagne, l'Italie)."
+                        ]
+                    },
+                    {
+                        "title": "Associer des monuments aux pays",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un monument célèbre à chaque pays (ex : la Tour Eiffel pour la France)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les noms des pays d'Europe et les monuments associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

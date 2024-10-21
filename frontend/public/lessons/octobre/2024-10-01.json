@@ -1,0 +1,289 @@
+{
+    "date": "2024-10-01",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les animaux et où ils vivent",
+                "description": "Aujourd'hui, nous allons apprendre quels animaux vivent dans quels habitats (forêt, désert, océan, etc.) et comprendre pourquoi ils sont adaptés à ces environnements.",
+                "objectives": [
+                    "Apprendre les différents habitats des animaux.",
+                    "Comprendre comment les animaux sont adaptés à leur environnement."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation visuelle de différents habitats et des animaux qui y vivent.",
+                        "Discussion sur les caractéristiques de chaque habitat (eau, température, végétation)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les animaux à leurs habitats",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Cartes d'animaux",
+                            "Cartes d'habitats"
+                        ],
+                        "steps": [
+                            "Associe chaque animal à son habitat (ex : le poisson à l'océan)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de rôle",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Fais semblant d'être un animal et explique comment il vit dans son habitat (ex : 'Je suis un renard et je vis dans la forêt')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les habitats et les animaux."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Apprendre les formes géométriques",
+                "description": "Apprends à reconnaître et nommer les formes géométriques comme le cercle, le carré et le triangle.",
+                "objectives": [
+                    "Apprendre les noms des formes géométriques de base.",
+                    "Reconnaître les formes dans les objets du quotidien."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des formes géométriques avec des objets ou des images.",
+                        "Discussion sur les objets du quotidien qui ont ces formes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les formes aux objets",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Objets du quotidien (roue, boîte, livre)"
+                        ],
+                        "steps": [
+                            "Associe chaque forme à un objet (ex : 'Le livre est un rectangle')."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner les formes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Dessine un cercle, un carré et un triangle sur une feuille."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les formes et nommer des exemples."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les mois de l'année",
+                "description": "Apprends les mois de l'année, comment les prononcer et les écrire.",
+                "objectives": [
+                    "Apprendre les noms des mois de l'année.",
+                    "Savoir les écrire dans le bon ordre."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des mois de l'année avec des images ou des cartes.",
+                        "Répète les mois à voix haute."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire les mois",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris les mois de l'année dans le bon ordre."
+                        ]
+                    },
+                    {
+                        "title": "Association des mois avec des événements",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un événement à chaque mois (ex : 'En décembre, c'est Noël')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récite les mois dans l'ordre."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Création d'une couronne d'automne",
+                "description": "Aujourd'hui, nous allons créer une couronne en utilisant des feuilles et des matériaux naturels pour célébrer l'automne.",
+                "objectives": [
+                    "Créer une couronne avec des matériaux naturels.",
+                    "Décorer la couronne avec des couleurs d'automne."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de couronnes d'automne et discute des couleurs typiques de la saison (rouge, orange, jaune)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Ramasser et décorer",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Feuilles",
+                            "Brindilles",
+                            "Colle",
+                            "Carton"
+                        ],
+                        "steps": [
+                            "Ramasse des feuilles et des brindilles, puis colle-les sur du carton pour former une couronne."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente la couronne et parle des matériaux utilisés."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les animaux en anglais",
+                "description": "Apprends les noms des animaux en anglais en regardant des images d'animaux.",
+                "objectives": [
+                    "Apprendre les noms des animaux en anglais.",
+                    "Associer des animaux aux sons qu'ils produisent."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des images d'animaux et dis leurs noms en anglais (cat, dog, cow, etc.)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer et dire",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images d'animaux et dis leurs noms en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Imiter les sons",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Imite les sons des animaux et associe-les à leurs noms."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Répète les noms des animaux appris."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les pharaons et l'Égypte ancienne",
+                "description": "Découvre l'Égypte ancienne et ses pharaons, comment ils régnaient et vivaient.",
+                "objectives": [
+                    "Apprendre qui étaient les pharaons.",
+                    "Comprendre leur rôle dans l'Égypte ancienne."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de l'Égypte ancienne avec des images de pyramides et de pharaons.",
+                        "Parle de la vie quotidienne sous le règne des pharaons."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un pharaon",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine un pharaon avec sa couronne et ses attributs."
+                        ]
+                    },
+                    {
+                        "title": "Explication des hiéroglyphes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Apprends à écrire ton nom en hiéroglyphes."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler l'importance des pharaons et leurs monuments."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les océans du monde",
+                "description": "Découvre les différents océans du monde et apprends où ils se trouvent.",
+                "objectives": [
+                    "Apprendre les noms des océans.",
+                    "Savoir localiser les océans sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des océans avec une carte du monde.",
+                        "Montre où se trouvent les océans."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les océans",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les océans sur une carte."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux marins aux océans",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal marin à chaque océan (exemple : baleine pour l'océan Pacifique)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapitule les océans et les animaux marins associés."
+                    ]
+                }
+            }
+        }
+    ]
+}

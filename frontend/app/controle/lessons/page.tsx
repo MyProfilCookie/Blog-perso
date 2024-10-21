@@ -15,7 +15,6 @@ type Lesson = {
     objectives: string[];
     introduction: {
       duration: string;
-      description: string;
       steps?: string[];
     };
     activities: Array<{
@@ -23,11 +22,6 @@ type Lesson = {
       duration: string;
       steps: string[];
     }>;
-    final_activity?: {
-      title: string;
-      duration: string;
-      description: string;
-    };
     conclusion: {
       steps: string[];
     };
@@ -202,7 +196,11 @@ export default function LessonOfTheDay() {
                   <h5 className="text-lg font-semibold text-violet-600">
                     Introduction ({lesson.lesson.introduction.duration})
                   </h5>
-                  <p>{lesson.lesson.introduction.description}</p>
+                  <ul className="mt-2 text-gray-700 list-disc list-inside">
+                    {lesson.lesson.introduction.steps?.map((step, i) => (
+                      <li key={i}>{step}</li>
+                    ))}
+                  </ul>
                 </div>
 
                 <div className="mt-4">

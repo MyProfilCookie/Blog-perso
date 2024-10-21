@@ -10,7 +10,7 @@ import Loading from "@/components/loading";
 type Article = {
     title: string;
     description: string;
-    price: string;
+    price: number;
     link: string;
     imageUrl: string;
 };

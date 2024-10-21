@@ -1,0 +1,286 @@
+{
+    "date": "2024-10-14",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Le système solaire",
+                "description": "Aujourd'hui, nous allons découvrir les planètes du système solaire et leur position par rapport au Soleil.",
+                "objectives": [
+                    "Comprendre la composition du système solaire.",
+                    "Apprendre le nom et l'ordre des planètes dans le système solaire."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des planètes avec une image du système solaire montrant leur position par rapport au Soleil.",
+                        "Discussion sur la différence entre les planètes rocheuses et gazeuses."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Reconstituer le système solaire",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Cartes des planètes, papier, crayons de couleur."
+                        ],
+                        "steps": [
+                            "Dessine ou place les cartes des planètes dans le bon ordre autour du Soleil."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes sur les planètes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions sur les caractéristiques des planètes (ex : 'Quelle planète est la plus proche du Soleil ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les noms des planètes et leur position dans le système solaire."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les fractions",
+                "description": "Apprends à comprendre et manipuler les fractions simples.",
+                "objectives": [
+                    "Comprendre le concept de fraction comme une partie d'un tout.",
+                    "Apprendre à lire et écrire des fractions simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des fractions avec des exemples visuels (ex : diviser une pizza en parts égales).",
+                        "Explique ce qu'est une fraction (ex : 1/2, 1/4)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Utiliser des objets pour représenter des fractions",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Pizzas en papier, crayons."
+                        ],
+                        "steps": [
+                            "Divise des objets en fractions pour montrer des exemples concrets (ex : 1/2, 1/3)."
+                        ]
+                    },
+                    {
+                        "title": "Résoudre des exercices de fractions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Résous des exercices simples de fractions, comme colorier une partie d'une forme géométrique."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler le concept de fraction et comment les lire et les écrire."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les accords dans le groupe nominal",
+                "description": "Apprends à faire les accords en genre et en nombre dans un groupe nominal.",
+                "objectives": [
+                    "Comprendre comment accorder un adjectif avec le nom auquel il se rapporte.",
+                    "Savoir accorder les noms et les adjectifs en genre et en nombre."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des règles d'accord du groupe nominal avec des exemples (ex : 'une grande maison', 'les petits chats').",
+                        "Explique comment les adjectifs doivent s'accorder en fonction du genre et du nombre du nom."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des groupes nominaux",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne des groupes nominaux incomplets et demande à l'enfant de les compléter en accordant les adjectifs (ex : 'un __ chat')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des groupes nominaux",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases en accordant correctement les noms et les adjectifs."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les règles d'accord dans le groupe nominal."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Fabriquer une maquette du système solaire",
+                "description": "Aujourd'hui, nous allons créer une maquette du système solaire en utilisant des boules en papier mâché.",
+                "objectives": [
+                    "Apprendre à représenter les planètes du système solaire en trois dimensions.",
+                    "Utiliser des matériaux créatifs pour construire un modèle visuel du système solaire."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de maquettes du système solaire et discute des couleurs et tailles relatives des planètes."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Fabriquer les planètes",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier mâché, peinture, pinceaux."
+                        ],
+                        "steps": [
+                            "Forme des boules pour représenter les planètes et peins-les selon leurs couleurs caractéristiques."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ta maquette du système solaire et explique les choix de couleurs et tailles pour chaque planète."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les membres de la famille en anglais",
+                "description": "Apprends les noms des membres de la famille en anglais et comment les utiliser dans des phrases simples.",
+                "objectives": [
+                    "Apprendre les noms des membres de la famille en anglais.",
+                    "Savoir utiliser ces mots dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des membres de la famille en anglais avec des images (ex : 'father', 'mother', 'sister')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les membres de la famille avec leurs noms anglais",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images de membres de la famille et demande à l'enfant de dire leur nom en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Décris un membre de la famille en anglais et demande à l'enfant de deviner de quel membre il s'agit (ex : 'She is your father's mother' pour 'grandmother')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les noms des membres de la famille appris en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les grandes civilisations antiques",
+                "description": "Découvre les grandes civilisations antiques et leurs réalisations importantes.",
+                "objectives": [
+                    "Apprendre à connaître les grandes civilisations de l'Antiquité (Égypte, Grèce, Rome).",
+                    "Comprendre l'importance des civilisations anciennes pour le développement de la culture moderne."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des grandes civilisations antiques (ex : les pyramides en Égypte, les philosophes en Grèce)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les réalisations aux civilisations",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe des inventions ou réalisations importantes à leur civilisation d'origine (ex : pyramides = Égypte, aqueducs = Rome)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions simples sur les civilisations antiques (ex : 'Quelle civilisation a construit les pyramides ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les grandes réalisations des civilisations antiques."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les volcans dans le monde",
+                "description": "Découvre les principaux volcans du monde et apprends comment ils se forment.",
+                "objectives": [
+                    "Apprendre les noms des principaux volcans dans le monde.",
+                    "Comprendre comment se forme un volcan et pourquoi il entre en éruption."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des volcans célèbres avec des images et des explications sur leur formation (ex : le Vésuve, le Kilimandjaro)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les volcans sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre où se trouvent les volcans sur une carte et discute de leur activité (actif, endormi, éteint)."
+                        ]
+                    },
+                    {
+                        "title": "Créer une maquette de volcan",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier mâché, peinture, bicarbonate de soude, vinaigre."
+                        ],
+                        "steps": [
+                            "Crée une maquette de volcan en papier mâché, puis fais une petite éruption en mélangeant du bicarbonate et du vinaigre."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler comment se forment les volcans et pourquoi ils entrent en éruption."
+                    ]
+                }
+            }
+        }
+    ]
+}

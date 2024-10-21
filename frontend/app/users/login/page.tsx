@@ -138,7 +138,7 @@ export default function Connexion() {
         return;
       }
 
-      // Stocker l'utilisateur dans le localStorage
+      // Stocker l'utilisateur et le token dans le localStorage
       localStorage.setItem(
         "user",
         JSON.stringify({
@@ -146,8 +146,11 @@ export default function Connexion() {
           email: data.user.email,
           avatar: data.user.avatar || "/assets/default-avatar.webp", // Utiliser l'avatar s'il existe, sinon un avatar par défaut
           role: data.user.role || "user", // Assurez-vous que l'API renvoie bien le rôle de l'utilisateur
-        }),
+        })
       );
+
+      // Stocker le token d'authentification dans le localStorage
+      localStorage.setItem("userToken", data.token);  // <-- Ajouter cette ligne
 
       // Déclencher un événement personnalisé pour rafraîchir la navbar
       const userUpdateEvent = new CustomEvent("userUpdate");
@@ -275,3 +278,4 @@ export default function Connexion() {
     </motion.div>
   );
 }
+

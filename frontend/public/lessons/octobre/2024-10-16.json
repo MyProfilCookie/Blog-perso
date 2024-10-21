@@ -1,0 +1,280 @@
+{
+    "date": "2024-10-16",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "La chaîne alimentaire",
+                "description": "Aujourd'hui, nous allons découvrir comment les animaux et les plantes sont interconnectés dans une chaîne alimentaire.",
+                "objectives": [
+                    "Comprendre le concept de chaîne alimentaire.",
+                    "Apprendre à identifier les différents niveaux d'une chaîne alimentaire (producteurs, consommateurs, décomposeurs)."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de la chaîne alimentaire avec des exemples d'animaux et de plantes.",
+                        "Discussion sur le rôle des producteurs, consommateurs et décomposeurs dans un écosystème."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Construire une chaîne alimentaire",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Cartes ou images d'animaux et de plantes."
+                        ],
+                        "steps": [
+                            "Associe les cartes pour former une chaîne alimentaire correcte (ex : plante -> lapin -> renard)."
+                        ]
+                    },
+                    {
+                        "title": "Dessiner une chaîne alimentaire",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Choisis une chaîne alimentaire et dessine-la avec les différents niveaux."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les différents niveaux de la chaîne alimentaire et leur importance."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les nombres décimaux",
+                "description": "Apprends à manipuler et à comprendre les nombres décimaux.",
+                "objectives": [
+                    "Comprendre la notion de nombre décimal.",
+                    "Savoir lire, écrire et ordonner des nombres décimaux."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des nombres décimaux avec des exemples (ex : 3,5 ; 4,75).",
+                        "Explique comment les nombres décimaux sont utilisés pour représenter des parties d'un tout."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Écrire et ordonner des nombres décimaux",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Résous des exercices où tu dois écrire et ordonner des nombres décimaux (ex : 2,5 est plus grand que 2,3)."
+                        ]
+                    },
+                    {
+                        "title": "Additionner et soustraire des nombres décimaux",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Résous des opérations simples d'addition et de soustraction avec des nombres décimaux."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler la notion de nombres décimaux et leur utilité dans les calculs."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les phrases négatives",
+                "description": "Apprends à transformer des phrases affirmatives en phrases négatives.",
+                "objectives": [
+                    "Comprendre la construction des phrases négatives.",
+                    "Savoir utiliser les mots de négation comme 'ne...pas', 'ne...plus', etc."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des mots de négation et de leur rôle dans la phrase (ex : 'Je ne mange pas').",
+                        "Explique comment les mots de négation entourent le verbe."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des phrases avec la négation",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Transforme des phrases affirmatives en phrases négatives (ex : 'Il mange une pomme' devient 'Il ne mange pas de pomme')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases négatives",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases en utilisant correctement les mots de négation."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler la structure des phrases négatives et leur importance dans la langue."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Créer une sculpture en papier mâché",
+                "description": "Aujourd'hui, nous allons fabriquer une petite sculpture en papier mâché et la décorer.",
+                "objectives": [
+                    "Apprendre à utiliser du papier mâché pour créer une forme.",
+                    "Décorer une sculpture en papier mâché avec des couleurs."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de sculptures en papier mâché et discute des formes simples que l'on peut réaliser."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Créer une sculpture en papier mâché",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier mâché, colle, peinture, pinceaux."
+                        ],
+                        "steps": [
+                            "Forme une sculpture en papier mâché (ex : un animal ou un objet) et laisse sécher avant de la peindre."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ta sculpture et explique pourquoi tu as choisi cette forme et ces couleurs."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les animaux en anglais",
+                "description": "Apprends les noms des animaux en anglais et comment les utiliser dans des phrases simples.",
+                "objectives": [
+                    "Apprendre les noms des animaux en anglais.",
+                    "Savoir utiliser ces mots dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des animaux en anglais avec des images (ex : 'dog', 'cat', 'bird')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des images d'animaux avec leurs noms",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Associe les images d'animaux avec leurs noms en anglais."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Décris un animal en anglais et demande à l'enfant de deviner de quel animal il s'agit (ex : 'It is a big animal with a long trunk' pour un éléphant)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les noms des animaux en anglais et leur prononciation."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les grandes inventions",
+                "description": "Découvre les grandes inventions qui ont marqué l'histoire et comment elles ont changé le monde.",
+                "objectives": [
+                    "Comprendre l'importance des inventions dans l'histoire.",
+                    "Apprendre à associer les inventeurs à leurs inventions."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de grandes inventions (ex : l'ampoule, le téléphone, l'ordinateur) et de leurs inventeurs."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les inventions à leurs inventeurs",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe chaque invention à son inventeur (ex : Thomas Edison pour l'ampoule)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions simples sur les inventions célèbres (ex : 'Qui a inventé l'avion ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les inventions importantes et leur impact sur la société."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les climats du monde",
+                "description": "Découvre les différents types de climats dans le monde et leurs caractéristiques.",
+                "objectives": [
+                    "Apprendre à identifier les principaux types de climats.",
+                    "Comprendre l'influence des climats sur les écosystèmes et les modes de vie."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des climats principaux avec une carte (ex : climat tropical, désertique, polaire)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les climats sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principaux climats sur une carte et explique comment ils influencent la végétation et les modes de vie."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux climats",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal emblématique à chaque climat (ex : chameau pour le désert, pingouin pour le climat polaire)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les climats étudiés et leur influence sur la vie des animaux et des humains."
+                    ]
+                }
+            }
+        }
+    ]
+}

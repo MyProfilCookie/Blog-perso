@@ -1,0 +1,284 @@
+{
+    "date": "2024-10-11",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "L'eau et ses états",
+                "description": "Aujourd'hui, nous allons découvrir les différents états de l'eau et comment elle change de forme.",
+                "objectives": [
+                    "Comprendre les trois états de l'eau : solide, liquide et gazeux.",
+                    "Apprendre comment l'eau passe d'un état à un autre."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des états de l'eau avec des exemples (ex : glace, eau liquide, vapeur).",
+                        "Discussion sur les changements d'état de l'eau (fusion, évaporation, condensation)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Observer les changements d'état",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Glace, eau chaude, récipient."
+                        ],
+                        "steps": [
+                            "Place un morceau de glace dans un bol et observe sa transformation en eau liquide, puis fais chauffer de l'eau pour observer la vapeur."
+                        ]
+                    },
+                    {
+                        "title": "Classer les états de l'eau",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Classe différents exemples d'eau dans ses états solides, liquides et gazeux (ex : neige, pluie, nuage)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les trois états de l'eau et leur transformation."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les soustractions simples",
+                "description": "Apprends à faire des soustractions simples en utilisant des objets pour visualiser le calcul.",
+                "objectives": [
+                    "Comprendre comment faire des soustractions simples.",
+                    "Apprendre à poser et résoudre des soustractions."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de la soustraction avec des exemples visuels (ex : 5 - 2 = 3).",
+                        "Explique comment soustraire un petit nombre d'un plus grand."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Soustraire avec des objets",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Petits objets (cailloux, cubes)."
+                        ],
+                        "steps": [
+                            "Utilise des objets pour faire des soustractions simples (ex : 8 - 3 = 5)."
+                        ]
+                    },
+                    {
+                        "title": "Poser des soustractions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose une soustraction sur une feuille et résous-la."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler la méthode pour faire des soustractions simples."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les articles définis et indéfinis",
+                "description": "Apprends à utiliser les articles définis (le, la, les) et indéfinis (un, une, des) dans des phrases simples.",
+                "objectives": [
+                    "Comprendre la différence entre un article défini et un article indéfini.",
+                    "Savoir utiliser ces articles dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des articles définis (le, la, les) et des articles indéfinis (un, une, des).",
+                        "Explique comment les utiliser selon le contexte."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des phrases avec des articles",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne des phrases incomplètes et demande à l'enfant de les compléter avec l'article approprié (ex : '___ chat', '___ pomme')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec des articles",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases en utilisant des articles définis et indéfinis."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler l'utilisation des articles définis et indéfinis."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Fabriquer une étoile en papier",
+                "description": "Aujourd'hui, nous allons fabriquer une étoile en papier et la décorer avec des couleurs et des paillettes.",
+                "objectives": [
+                    "Apprendre à découper et assembler une étoile en papier.",
+                    "Décorer l'étoile avec des couleurs et des paillettes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples d'étoiles en papier et discute des motifs et couleurs que l'on peut utiliser."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Fabriquer une étoile en papier",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier coloré, colle, ciseaux, crayons ou feutres, paillettes."
+                        ],
+                        "steps": [
+                            "Découpe une étoile dans du papier coloré, puis décore-la avec des paillettes et des motifs en utilisant des crayons et feutres."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ton étoile et explique les choix de couleurs et décorations."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les couleurs en anglais",
+                "description": "Apprends à nommer les couleurs en anglais et à les utiliser dans des phrases simples.",
+                "objectives": [
+                    "Apprendre les noms des couleurs en anglais.",
+                    "Savoir utiliser ces mots dans des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des couleurs en anglais avec des objets colorés (ex : 'red', 'blue', 'green')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les couleurs aux objets",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des objets colorés et demande à l'enfant de nommer les couleurs en anglais (ex : 'The ball is red')."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Décris un objet et sa couleur en anglais, puis demande à l'enfant de deviner de quoi il s'agit (ex : 'It's yellow and round' pour un citron)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les couleurs apprises en anglais."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "La Révolution française",
+                "description": "Découvre les événements clés de la Révolution française et leur impact sur la société.",
+                "objectives": [
+                    "Comprendre les causes et les conséquences de la Révolution française.",
+                    "Apprendre les événements importants de cette période."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des événements clés de la Révolution française avec des images et des explications.",
+                        "Discussion sur l'importance de la prise de la Bastille et la Déclaration des droits de l'homme."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les événements de la Révolution",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe chaque événement important à une date ou une image (ex : Prise de la Bastille - 14 juillet 1789)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de questions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions simples sur la Révolution française (ex : 'Qu'est-ce que la prise de la Bastille ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les événements importants de la Révolution française."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les déserts du monde",
+                "description": "Découvre les principaux déserts du monde et leurs caractéristiques.",
+                "objectives": [
+                    "Apprendre les noms des principaux déserts.",
+                    "Savoir localiser ces déserts sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des déserts célèbres avec une carte (ex : le Sahara, le désert de Gobi, le désert d'Atacama)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les déserts sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principaux déserts sur une carte et discute de leurs caractéristiques (climat, animaux, etc.)."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux déserts",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal à chaque désert (ex : dromadaire pour le Sahara)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les principaux déserts et les animaux qui y vivent."
+                    ]
+                }
+            }
+        }
+    ]
+}

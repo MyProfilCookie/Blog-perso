@@ -1,0 +1,287 @@
+{
+    "date": "2024-10-08",
+    "lessons": [
+        {
+            "subject": "Sciences",
+            "lesson": {
+                "title": "Les animaux nocturnes",
+                "description": "Aujourd'hui, nous allons découvrir les animaux qui sont actifs la nuit et leurs adaptations pour survivre dans l'obscurité.",
+                "objectives": [
+                    "Comprendre ce qu'est un animal nocturne.",
+                    "Apprendre les caractéristiques et les adaptations des animaux nocturnes."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation d'images d'animaux nocturnes (hiboux, chauves-souris, etc.).",
+                        "Discussion sur les raisons pour lesquelles ces animaux sont actifs la nuit."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer les animaux nocturnes à leurs caractéristiques",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Cartes d'animaux nocturnes avec leurs adaptations (grands yeux, vol silencieux, etc.)."
+                        ],
+                        "steps": [
+                            "Associe chaque animal nocturne à une caractéristique spécifique (ex : le hibou a de grands yeux pour voir la nuit)."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de rôle",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Fais semblant d'être un animal nocturne et explique comment tu te déplaces et trouves ta nourriture la nuit."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les adaptations des animaux nocturnes et leur importance."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Mathématiques",
+            "lesson": {
+                "title": "Les suites de nombres",
+                "description": "Apprends à compléter des suites de nombres en suivant une logique simple.",
+                "objectives": [
+                    "Comprendre comment identifier une suite logique de nombres.",
+                    "Apprendre à compléter des suites en suivant un modèle."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation de suites de nombres simples (ex : 2, 4, 6, __).",
+                        "Explique comment identifier la logique derrière la suite (ex : ajouter 2 à chaque nombre)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des suites de nombres",
+                        "duration": "15 minutes",
+                        "materials": [
+                            "Feuilles avec des suites incomplètes."
+                        ],
+                        "steps": [
+                            "Complète différentes suites de nombres en trouvant le modèle logique (ex : 1, 3, 5, __)."
+                        ]
+                    },
+                    {
+                        "title": "Créer tes propres suites",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Crée des suites de nombres et demande à un partenaire de les compléter."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler l'importance de suivre une logique dans les suites de nombres."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Français",
+            "lesson": {
+                "title": "Les verbes être et avoir",
+                "description": "Apprends à utiliser les verbes 'être' et 'avoir' dans des phrases simples.",
+                "objectives": [
+                    "Comprendre l'usage des verbes 'être' et 'avoir'.",
+                    "Savoir conjuguer et utiliser ces verbes dans des phrases."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des conjugaisons des verbes 'être' et 'avoir' au présent.",
+                        "Explique comment les utiliser dans des phrases (ex : 'Je suis', 'Tu as')."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Compléter des phrases",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Donne des phrases incomplètes et demande à l'enfant de les compléter avec 'être' ou 'avoir' (ex : 'Je ___ un chat')."
+                        ]
+                    },
+                    {
+                        "title": "Écrire des phrases avec 'être' et 'avoir'",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Écris des phrases simples en utilisant les verbes 'être' et 'avoir'."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les conjugaisons des verbes 'être' et 'avoir'."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Arts Plastiques",
+            "lesson": {
+                "title": "Fabriquer une lanterne",
+                "description": "Aujourd'hui, nous allons fabriquer une lanterne en papier pour décorer la maison.",
+                "objectives": [
+                    "Apprendre à créer une lanterne en papier.",
+                    "Décorer la lanterne avec des motifs et des couleurs."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Montre des exemples de lanternes et discute des motifs et couleurs qu'on peut y ajouter."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Découper et assembler une lanterne",
+                        "duration": "15-20 minutes",
+                        "materials": [
+                            "Papier coloré",
+                            "Colle",
+                            "Ciseaux",
+                            "Crayons ou feutres"
+                        ],
+                        "steps": [
+                            "Découpe et assemble une lanterne en papier, puis décore-la avec des motifs et des couleurs de ton choix."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Présente ta lanterne et explique les motifs que tu as choisis."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Langues",
+            "lesson": {
+                "title": "Les prépositions de lieu en anglais",
+                "description": "Apprends à utiliser les prépositions de lieu en anglais pour décrire où se trouvent des objets.",
+                "objectives": [
+                    "Comprendre et utiliser les prépositions de lieu en anglais.",
+                    "Savoir décrire la position d'objets en utilisant des phrases simples."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des prépositions de lieu en anglais (on, under, in, next to) avec des exemples visuels."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Associer des objets avec leurs positions",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre des images d'objets dans différentes positions et demande à l'enfant de décrire la position en anglais (ex : 'The book is on the table')."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de description",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Cache des objets dans la pièce et demande à l'enfant de décrire leur position en utilisant les prépositions de lieu."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les prépositions de lieu apprises."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Histoire",
+            "lesson": {
+                "title": "Les châteaux médiévaux",
+                "description": "Découvre comment les châteaux étaient construits au Moyen Âge et à quoi ils servaient.",
+                "objectives": [
+                    "Comprendre l'importance des châteaux médiévaux.",
+                    "Apprendre à reconnaître les éléments d'un château fort."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des châteaux médiévaux avec des images.",
+                        "Discussion sur la fonction des châteaux (protection, résidence)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Dessiner un château médiéval",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Dessine un château fort en incluant des éléments comme les tours, les remparts et le pont-levis."
+                        ]
+                    },
+                    {
+                        "title": "Jeu de devinettes",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Pose des questions sur les éléments du château (ex : 'Qu'est-ce qui protège le château ?')."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les fonctions des châteaux médiévaux."
+                    ]
+                }
+            }
+        },
+        {
+            "subject": "Géographie",
+            "lesson": {
+                "title": "Les îles du monde",
+                "description": "Découvre les principales îles du monde et apprends où elles se trouvent.",
+                "objectives": [
+                    "Apprendre les noms des principales îles du monde.",
+                    "Savoir localiser ces îles sur une carte."
+                ],
+                "introduction": {
+                    "duration": "5-10 minutes",
+                    "steps": [
+                        "Présentation des principales îles avec une carte (ex : Madagascar, Hawaï, les Îles Galápagos)."
+                    ]
+                },
+                "activities": [
+                    {
+                        "title": "Montrer les îles sur une carte",
+                        "duration": "10 minutes",
+                        "steps": [
+                            "Montre les principales îles du monde sur une carte et discute de leurs caractéristiques."
+                        ]
+                    },
+                    {
+                        "title": "Associer des animaux aux îles",
+                        "duration": "15 minutes",
+                        "steps": [
+                            "Associe un animal célèbre à chaque île (ex : tortues géantes pour les Galápagos)."
+                        ]
+                    }
+                ],
+                "conclusion": {
+                    "duration": "5 minutes",
+                    "steps": [
+                        "Récapituler les principales îles et les animaux associés."
+                    ]
+                }
+            }
+        }
+    ]
+}
