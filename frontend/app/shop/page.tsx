@@ -32,7 +32,8 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
 
                 setArticles(data); // Mettre à jour l'état avec les articles récupérés
             } catch (error) {
-
+                // eslint-disable-next-line no-console
+                console.error("Erreur lors du chargement des articles", error);
             } finally {
                 setLoading(false); // Fin du chargement
             }
@@ -46,9 +47,9 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
     }
 
     return (
-        <section className="flex flex-col justify-between min-h-screen py-8">
+        <section className="flex flex-col justify-between min-h-screen py-8 dark:bg-gray-900">
             <div className="flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-4 text-center">
-                <h2 className="mt-4 text-lg text-gray-600">
+                <h2 className="mt-4 text-lg text-gray-600 dark:text-gray-300">
                     Voici une sélection d&apos;articles pour améliorer le quotidien des
                     personnes autistes.
                 </h2>
@@ -62,7 +63,7 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
                             initial={{ opacity: 0, y: 20 }}
                             transition={{ duration: 0.5 }}
                         >
-                            <Card className="py-4 max-w-[400px] w-full mx-auto shadow-lg">
+                            <Card className="py-4 max-w-[400px] w-full mx-auto shadow-lg dark:bg-gray-800 dark:text-white">
                                 <img
                                     alt={article.title}
                                     className="w-full h-48 object-cover object-center"
@@ -70,8 +71,8 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
                                 />
                                 <CardBody className="flex flex-col items-center">
                                     <h3 className="mb-2 text-xl font-bold">{article.title}</h3>
-                                    <p className="text-gray-700">{article.description}</p>
-                                    <p className="mt-4 text-lg font-semibold">{article.price}</p>
+                                    <p className="text-gray-700 dark:text-gray-300">{article.description}</p>
+                                    <p className="mt-4 text-lg font-semibold">{article.price} €</p>
                                     <NextLink passHref href={article.link}>
                                         <Button className="mt-4" color="primary">
                                             Voir cet article
@@ -92,7 +93,7 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
             </div>
 
             {/* Footer */}
-            <footer className="w-full py-4 text-center">
+            <footer className="w-full py-4 text-center dark:text-gray-300">
                 <p style={{ fontSize: "1em", color: "#888" }}>
                     © 2024 AutiStudy - Tous droits réservés.
                 </p>
@@ -100,4 +101,5 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
         </section>
     );
 }
+
 

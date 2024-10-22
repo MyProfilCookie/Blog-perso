@@ -216,20 +216,20 @@ export default function ShopPage() {
                 </PopoverTrigger>
 
                 <PopoverContent>
-                    <div style={{ padding: "10px", width: "340px" }}>
+                    <div className="dark:bg-gray-800 dark:text-white" style={{ padding: "10px", width: "340px", backgroundColor: "#fff", color: "#000", borderRadius: "10px" }}>
                         <h3 className="text-lg font-semibold">Votre Panier</h3>
                         {cartItems.length === 0 ? (
-                            <p className="text-gray-600">Votre panier est vide.</p>
+                            <p className="text-gray-600 dark:text-gray-300">Votre panier est vide.</p>
                         ) : (
                             <div>
-                                <ul className="divide-y divide-gray-200">
+                                <ul className="divide-y divide-gray-200 dark:divide-gray-700">
                                     {cartItems.map((item, index) => (
                                         <li key={index} className="py-2">
                                             <div className="flex justify-between items-center">
                                                 <span className="font-medium">
                                                     {item.title} ({item.quantity})
                                                 </span>
-                                                <span className="text-gray-500">
+                                                <span className="text-gray-500 dark:text-gray-800">
                                                     {(item.price * (item.quantity ?? 1)).toFixed(2)} €
                                                 </span>
                                             </div>
@@ -285,6 +285,7 @@ export default function ShopPage() {
         </div>
     );
 }
+
 
 
 

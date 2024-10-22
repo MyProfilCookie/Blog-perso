@@ -63,14 +63,14 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
     return (
         <form onSubmit={handleSubmit}>
             <div className="mb-4">
-                <label className="flex items-center text-lg font-bold text-green-600" htmlFor="card-element">
-                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block" icon={faCreditCard} />
+                <label className="flex items-center text-lg font-bold text-green-600 dark:text-green-400" htmlFor="card-element">
+                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400" icon={faCreditCard} />
                     <span>Carte bancaire</span>
                 </label>
-                <CardElement className="p-4 border rounded-lg border-green-200 shadow-lg" id="card-element" />
+                <CardElement className="p-4 border rounded-lg border-green-200 shadow-lg dark:border-gray-600" id="card-element" />
             </div>
             <Button
-                className="w-full mt-4 bg-green-500 text-white hover:bg-green-600 rounded-full shadow-lg text-lg"
+                className="w-full mt-4 bg-green-500 text-white hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800 rounded-full shadow-lg text-lg"
                 disabled={!stripe}
                 type="submit"
             >
@@ -146,39 +146,40 @@ export default function PaymentPage() {
     };
 
     return (
-        <div className="container mx-auto my-12">
+        <div className="container mx-auto my-12 dark:bg-gray-900">
             <motion.h1
                 animate={{ opacity: 1, y: 0 }}
-                className="text-4xl font-bold text-center mb-8 text-blue-800"
+                className="text-4xl font-bold text-center mb-8 text-blue-800 dark:text-blue-200"
                 initial={{ opacity: 0, y: -50 }}
                 transition={{ duration: 0.8 }}
             >
                 <Logo className="w-32 mx-auto" />
-                <p className="text-3xl font-semibold mb-4 text-green-600">Bonjour MyProfilCookie,</p>
-                <p className="text-lg mb-4 text-gray-500">Voici votre panier, merci pour votre confiance !</p>
+                <p className="text-3xl font-semibold mb-4 text-green-600 dark:text-green-400">Bonjour MyProfilCookie,</p>
+                <p className="text-lg mb-4 text-gray-500 dark:text-gray-300">Voici votre panier, merci pour votre confiance !</p>
             </motion.h1>
 
             <motion.div
                 animate={{ opacity: 1, scale: 1 }}
-                className="border rounded-lg p-8 shadow-lg bg-white"
+                className="border rounded-lg p-8 shadow-lg bg-white dark:bg-gray-800"
                 initial={{ opacity: 0, scale: 0.8 }}
                 style={{ maxWidth: '500px', margin: '0 auto', borderColor: '#c0e4cc' }}
                 transition={{ duration: 0.8 }}
             >
-                <h2 className="text-2xl font-semibold mb-4 text-green-600">Total à payer : {totalToPay} €</h2>
-                <hr className="mb-4 border-dashed border-gray-300" />
-                <p className="text-lg mb-4 font-semibold text-blue-500">Total du panier : {total} €</p>
-                <p className="text-lg mb-4 font-semibold text-blue-500">Nombre d&apos;articles : {cartItems.length}</p>
-                <p className="text-lg mb-4 font-semibold text-blue-500">Coût de livraison : {deliveryCost} €</p>
-                <hr className="mb-4 border-dashed border-gray-300" />
-                <p className="text-lg mb-4 text-gray-500">Estimation de la réception : {estimatedDeliveryDate}</p>
-                <hr className="mb-4 border-dashed border-gray-300" />
+                <h2 className="text-2xl font-semibold mb-4 text-green-600 dark:text-green-400">Total à payer : {totalToPay} €</h2>
+                <hr className="mb-4 border-dashed border-gray-300 dark:border-gray-500" />
+                <p className="text-lg mb-4 font-semibold text-blue-500 dark:text-blue-300">Total du panier : {total} €</p>
+                <p className="text-lg mb-4 font-semibold text-blue-500 dark:text-blue-300">Nombre d&apos;articles : {cartItems.length}</p>
+                <p className="text-lg mb-4 font-semibold text-blue-500 dark:text-blue-300">Coût de livraison : {deliveryCost} €</p>
+                <hr className="mb-4 border-dashed border-gray-300 dark:border-gray-500" />
+                <p className="text-lg mb-4 text-gray-500 dark:text-gray-300">Estimation de la réception : {estimatedDeliveryDate}</p>
+                <hr className="mb-4 border-dashed border-gray-300 dark:border-gray-500" />
 
                 {/* Adresse */}
                 <div className="mb-4 flex items-center">
-                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block" icon={faHome} />
+                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400" icon={faHome} />
                     <Input
                         fullWidth
+                        className="dark:bg-gray-700 dark:text-white"
                         label="Adresse de livraison"
                         placeholder="Entrez votre adresse"
                         value={address}
@@ -188,9 +189,10 @@ export default function PaymentPage() {
 
                 {/* Numéro de téléphone */}
                 <div className="mb-4 flex items-center">
-                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block" icon={faPhone} />
+                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400" icon={faPhone} />
                     <Input
                         fullWidth
+                        className="dark:bg-gray-700 dark:text-white"
                         label="Numéro de téléphone"
                         placeholder="Entrez votre numéro de téléphone"
                         value={phone}
@@ -200,12 +202,12 @@ export default function PaymentPage() {
 
                 {/* Transporteur */}
                 <div className="mb-6 flex items-center">
-                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block" icon={faTruck} />
+                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400" icon={faTruck} />
                     <label className="mb-2 font-semibold hidden md:inline-block" htmlFor="transporteur">
                         Choisir un transporteur
                     </label>
                     <select
-                        className="w-full p-3 border rounded-md md:ml-2 bg-green-50"
+                        className="w-full p-3 border rounded-md md:ml-2 bg-green-50 dark:bg-gray-700 dark:text-white"
                         id="transporteur"
                         value={deliveryMethod}
                         onChange={handleTransporterChange}
@@ -226,6 +228,7 @@ export default function PaymentPage() {
         </div>
     );
 }
+
 
 
 
