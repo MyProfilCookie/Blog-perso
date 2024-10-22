@@ -1,4 +1,5 @@
 /* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 "use client";
 import { useState, useEffect } from "react";
 import { Popover, PopoverTrigger, PopoverContent, Badge, Button } from "@nextui-org/react";
@@ -17,7 +18,7 @@ type Article = {
     link: string;
     imageUrl: string;
     quantity?: number;
-    weight?: number; // Rendez weight optionnel
+    weight?: number; // Poids optionnel pour chaque article
 };
 
 export default function ShopPage() {
@@ -28,8 +29,6 @@ export default function ShopPage() {
     // Fonction pour vérifier si l'utilisateur est connecté
     const checkUserLoggedIn = () => {
         const userToken = localStorage.getItem("userToken");
-
-        alert("Token actuel :" + userToken);
 
         if (userToken) {
             setIsLoggedIn(true);
@@ -42,7 +41,7 @@ export default function ShopPage() {
     useEffect(() => {
         const storedCart = localStorage.getItem("cartItems");
 
-        checkUserLoggedIn(); // Vérifier si l'utilisateur est connecté
+        checkUserLoggedIn();
 
         if (storedCart) {
             try {
@@ -50,7 +49,6 @@ export default function ShopPage() {
 
                 if (Array.isArray(parsedCart)) {
                     setCartItems(parsedCart);
-                    calculateTotalWeight(parsedCart); // Calculer le poids total du panier
                 }
             } catch (error: any) {
                 alert(`Erreur lors de l'analyse du panier : ${error.message}`);
@@ -62,39 +60,45 @@ export default function ShopPage() {
     useEffect(() => {
         if (cartItems.length > 0) {
             localStorage.setItem("cartItems", JSON.stringify(cartItems));
-            calculateTotalWeight(cartItems); // Calculer le poids total du panier
         }
     }, [cartItems]);
 
-    // Fonction pour calculer le total des articles dans le panier
+    // Calculer le sous-total du panier
     const calculateTotal = () => {
         return cartItems.reduce((total, item) => total + item.price * (item.quantity ?? 1), 0).toFixed(2);
     };
 
-    // Fonction pour calculer le poids total du panier
-    const calculateTotalWeight = (cartItems: Article[]) => {
-        return cartItems.reduce((total, item) => total + (item.weight ?? 0) * (item.quantity ?? 1), 0);
+    // Calculer le poids total du panier
+    const calculateTotalWeight = () => {
+        return cartItems.reduce((total, item) => total + (item.weight ?? 0) * (item.quantity ?? 1), 0).toFixed(2);
     };
 
-    // Fonction pour rediriger directement vers la page de paiement
-    const handleCheckout = () => {
-        // Forcer la vérification de connexion ici avant de procéder
-        checkUserLoggedIn();
+    // Calculer le nombre total d'articles dans le panier
+    const calculateTotalItems = () => {
+        return cartItems.reduce((total, item) => total + (item.quantity ?? 1), 0);
+    };
 
+    // Fonction pour rediriger vers la page de paiement
+    const handleCheckout = () => {
         if (!isLoggedIn) {
             Swal.fire({
                 title: "Connexion requise",
                 text: "Vous devez être connecté pour procéder au paiement.",
                 icon: "warning",
             }).then(() => {
-                router.push("/login"); // Rediriger vers la page de connexion si non connecté
+                router.push("/login");
             });
         } else {
-            router.push("/payment"); // Rediriger directement vers la page de paiement si connecté
+            const totalPrice = calculateTotal();
+            const totalWeight = calculateTotalWeight();
+
+            localStorage.setItem("totalPrice", totalPrice); // Enregistrer le sous-total
+            localStorage.setItem("parcelWeight", totalWeight); // Enregistrer le poids total
+            router.push("/payment");
         }
     };
 
-    // Fonction pour ajouter un article au panier
+    // Gestion de l'ajout au panier, suppression, etc.
     const addToCart = (article: Article) => {
         const articleWithQuantity = { ...article, quantity: article.quantity || 1 };
         const existingArticle = cartItems.find((cartItem) => cartItem.title === article.title);
@@ -134,10 +138,7 @@ export default function ShopPage() {
                 cancelButtonText: "Annuler",
             }).then((result) => {
                 if (result.isConfirmed) {
-                    setCartItems((prevItems) => [
-                        ...prevItems,
-                        { ...articleWithQuantity },
-                    ]);
+                    setCartItems((prevItems) => [...prevItems, { ...articleWithQuantity }]);
                     Swal.fire({
                         icon: "success",
                         title: "Article ajouté",
@@ -178,13 +179,6 @@ export default function ShopPage() {
 
     return (
         <div>
-            {/* Titre de la boutique */}
-            <div className="flex justify-between items-center p-4 bg-white shadow-md">
-                <h1 className="text-5xl font-bold text-violet-800 text-center w-full">
-                    Boutique les articles pour le quotidien
-                </h1>
-            </div>
-
             {/* Popover pour afficher le panier */}
             <Popover>
                 <PopoverTrigger>
@@ -196,11 +190,6 @@ export default function ShopPage() {
                             borderRadius: "30px",
                             backgroundColor: "#2D3748",
                             color: "#FFF",
-                            fontWeight: "bold",
-                            fontSize: "16px",
-                            display: "flex",
-                            alignItems: "center",
-                            justifyContent: "center",
                             position: "fixed",
                             right: "30px",
                             bottom: "20px",
@@ -210,26 +199,22 @@ export default function ShopPage() {
                         }}
                     >
                         <FontAwesomeIcon icon={faShoppingCart} style={{ marginRight: "8px" }} />
-                        {cartItems.length > 0 && (
+                        {calculateTotalItems() > 0 && (
                             <Badge
                                 color="danger"
-                                content={cartItems.length}
                                 style={{
                                     position: "absolute",
                                     top: "-10px",
                                     right: "-6px",
                                     transform: "translate(50%, -50%)",
-                                    fontSize: "14px",
-                                    border: "none",
                                 }}
                             >
-                                <span />
+                                {calculateTotalItems()}
                             </Badge>
                         )}
                     </Button>
                 </PopoverTrigger>
 
-                {/* Contenu du Popover */}
                 <PopoverContent>
                     <div style={{ padding: "10px", width: "340px" }}>
                         <h3 className="text-lg font-semibold">Votre Panier</h3>
@@ -277,7 +262,7 @@ export default function ShopPage() {
                                     ))}
                                 </ul>
                                 <div className="mt-4 font-bold text-lg">
-                                    Poids total : {calculateTotalWeight(cartItems).toFixed(2)} kg
+                                    Poids total : {calculateTotalWeight()} kg
                                 </div>
                                 <div className="mt-4 font-bold text-lg">
                                     Sous-total : {calculateTotal()} €
@@ -300,6 +285,11 @@ export default function ShopPage() {
         </div>
     );
 }
+
+
+
+
+
 
 
 
