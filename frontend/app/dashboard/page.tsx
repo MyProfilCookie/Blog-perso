@@ -14,6 +14,8 @@ import {
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 
+import Loading from "@/components/loading";
+
 // Exemple de données pour les cours, évaluations et articles
 const mockData = {
   courses: [
@@ -57,8 +59,6 @@ const ProfilePage = () => {
 
     if (fetchedUser) {
       setUser(fetchedUser);
-
-      // Formater la date de création si elle existe
       const formattedCreatedAt = fetchedUser.createdAt
         ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
         : "Non disponible";
@@ -69,17 +69,16 @@ const ProfilePage = () => {
     }
 
     // Mettre à jour l'heure actuelle chaque seconde
-    const updateCurrentTime = () => {
+    const interval = setInterval(() => {
       setCurrentTime(dayjs().format("HH:mm:ss"));
-    };
-    const interval = setInterval(updateCurrentTime, 1000);
+    }, 1000);
 
     // Nettoyage de l'intervalle pour éviter les fuites de mémoire
     return () => clearInterval(interval);
   }, [router]);
 
   if (!user) {
-    return <div>Chargement...</div>; // Attendre que l'utilisateur soit chargé
+    return <Loading />; // Attendre que l'utilisateur soit chargé
   }
 
   return (
@@ -103,7 +102,11 @@ const ProfilePage = () => {
               {mockData.courses.map((course, index) => (
                 <div key={index}>
                   <p className="font-bold">{course.title}</p>
-                  <Progress color="primary" value={course.progress} />
+                  <Progress
+                    aria-label={`Progression du cours ${course.title}`}
+                    color="primary"
+                    value={course.progress}
+                  />
                   <p>Dernière consultation : {course.lastViewed}</p>
                   <Button
                     aria-label={`Reprendre ${course.title}`}
@@ -151,7 +154,11 @@ const ProfilePage = () => {
               {mockData.articles.map((article, index) => (
                 <div key={index}>
                   <p className="font-bold">{article.title}</p>
-                  <Progress color="success" value={article.progress} />
+                  <Progress
+                    aria-label={`Progression de l'article ${article.title}`}
+                    color="success"
+                    value={article.progress}
+                  />
                   <p>Dernière consultation : {article.lastViewed}</p>
                   <Button
                     aria-label={`Reprendre ${article.title}`}
