@@ -1,5 +1,6 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable prettier/prettier */
 "use client";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -18,7 +19,13 @@ import { Logo } from "@/components/icons";
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
 // Composant pour gérer le paiement avec Stripe
-const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
+const CheckoutForm = ({
+    totalAmount,
+    onPaymentSuccess,
+}: {
+    totalAmount: number;
+    onPaymentSuccess: () => void;
+}) => {
     const stripe = useStripe();
     const elements = useElements();
     const router = useRouter();
@@ -37,7 +44,7 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
         }
 
         const { error, paymentMethod } = await stripe.createPaymentMethod({
-            type: 'card',
+            type: "card",
             card: cardElement,
         });
 
@@ -55,6 +62,7 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                 icon: "success",
                 confirmButtonText: "Super !",
             }).then(() => {
+                onPaymentSuccess();
                 router.push("/confirmation");
             });
         }
@@ -69,11 +77,7 @@ const CheckoutForm = ({ totalAmount }: { totalAmount: number }) => {
                 </label>
                 <CardElement className="p-4 border rounded-lg border-green-200 shadow-lg dark:border-gray-600" id="card-element" />
             </div>
-            <Button
-                className="w-full mt-4 bg-green-500 text-white hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800 rounded-full shadow-lg text-lg"
-                disabled={!stripe}
-                type="submit"
-            >
+            <Button className="w-full mt-4 bg-green-500 text-white hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800 rounded-full shadow-lg text-lg" disabled={!stripe} type="submit">
                 Payer {totalAmount} €
             </Button>
         </form>
@@ -87,24 +91,31 @@ export default function PaymentPage() {
     const [deliveryMethod, setDeliveryMethod] = useState("Mondial Relay");
     const [estimatedDeliveryDate, setEstimatedDeliveryDate] = useState("");
     const [totalToPay, setTotalToPay] = useState(0);
-    const [address, setAddress] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [email, setEmail] = useState("");
+    const [address, setAddress] = useState({ street: "", city: "", postalCode: "", country: "" });
     const [phone, setPhone] = useState("");
 
     const deliveryOptions = [
         { label: "Mondial Relay", cost: 2 },
-        { label: "La Poste", cost: 4 },
+        { label: "Colissimo", cost: 4 },
         { label: "Chronopost", cost: 5 },
     ];
 
     const calculateDeliveryCost = (weight: number, method: string) => {
         let baseCost = 0;
 
-        if (weight <= 2) {
-            baseCost = method === "La Poste" ? 4 : method === "Chronopost" ? 5 : 2;
+        if (method === "Mondial Relay" && weight > 10) {
+            baseCost = 10;
+        } else if (weight <= 2) {
+            baseCost = method === "Colissimo" ? 4 : method === "Chronopost" ? 5 : 2;
         } else if (weight > 2 && weight <= 5) {
-            baseCost = method === "La Poste" ? 6 : method === "Chronopost" ? 7 : 4;
+            baseCost = method === "Colissimo" ? 6 : method === "Chronopost" ? 7 : 4;
         } else if (weight > 5 && weight <= 10) {
-            baseCost = method === "La Poste" ? 8 : method === "Chronopost" ? 9 : 6;
+            baseCost = method === "Colissimo" ? 8 : method === "Chronopost" ? 9 : 6;
+        } else {
+            baseCost = method === "Colissimo" ? 12 : method === "Chronopost" ? 13 : 8;
         }
 
         return baseCost;
@@ -121,28 +132,50 @@ export default function PaymentPage() {
             const totalAmount = parseFloat(storedTotalPrice);
 
             setTotal(parseFloat(totalAmount.toFixed(2)));
-
             const deliveryCost = calculateDeliveryCost(totalWeight, deliveryMethod);
 
             setDeliveryCost(deliveryCost);
-
             const totalToPay = totalAmount + deliveryCost;
 
             setTotalToPay(parseFloat(totalToPay.toFixed(2)));
-
             const today = new Date();
 
             today.setDate(today.getDate() + 4);
             setEstimatedDeliveryDate(today.toLocaleDateString("fr-FR"));
-
             setCartItems(JSON.parse(storedCartItems));
         }
     }, [deliveryMethod]);
 
-    const handleTransporterChange = (event: any) => {
-        const selectedMethod = event.target.value;
+    // Fonction pour enregistrer la commande
+    const saveOrder = async () => {
+        try {
+            const response = await fetch("http://localhost:3001/orders", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({
+                    firstName,
+                    lastName,
+                    email,
+                    phone,
+                    deliveryAddress: address,
+                    items: cartItems,
+                    totalAmount: totalToPay,
+                    deliveryMethod,
+                    deliveryCost,
+                    paymentMethod: "card",
+                    paymentStatus: "Paid",
+                }),
+            });
 
-        setDeliveryMethod(selectedMethod);
+            if (!response.ok) {
+                throw new Error("Erreur lors de l'enregistrement de la commande");
+            }
+            const data = await response.json();
+
+            console.log("Commande enregistrée avec succès :", data.message);
+        } catch (error) {
+            console.error("Erreur lors de l'enregistrement de la commande:", error);
+        }
     };
 
     return (
@@ -162,7 +195,7 @@ export default function PaymentPage() {
                 animate={{ opacity: 1, scale: 1 }}
                 className="border rounded-lg p-8 shadow-lg bg-white dark:bg-gray-800"
                 initial={{ opacity: 0, scale: 0.8 }}
-                style={{ maxWidth: '500px', margin: '0 auto', borderColor: '#c0e4cc' }}
+                style={{ maxWidth: "500px", margin: "0 auto", borderColor: "#c0e4cc" }}
                 transition={{ duration: 0.8 }}
             >
                 <h2 className="text-2xl font-semibold mb-4 text-green-600 dark:text-green-400">Total à payer : {totalToPay} €</h2>
@@ -174,22 +207,80 @@ export default function PaymentPage() {
                 <p className="text-lg mb-4 text-gray-500 dark:text-gray-300">Estimation de la réception : {estimatedDeliveryDate}</p>
                 <hr className="mb-4 border-dashed border-gray-300 dark:border-gray-500" />
 
+                {/* Nom et prénom */}
+                <div className="mb-4 flex items-center">
+                    <Input
+                        fullWidth
+                        className="dark:bg-gray-700 dark:text-white"
+                        label="Prénom"
+                        placeholder="Entrez votre prénom"
+                        value={firstName}
+                        onChange={(e) => setFirstName(e.target.value)}
+                    />
+                </div>
+                <div className="mb-4 flex items-center">
+                    <Input
+                        fullWidth
+                        className="dark:bg-gray-700 dark:text-white"
+                        label="Nom"
+                        placeholder="Entrez votre nom"
+                        value={lastName}
+                        onChange={(e) => setLastName(e.target.value)}
+                    />
+                </div>
+
                 {/* Adresse */}
                 <div className="mb-4 flex items-center">
-                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400" icon={faHome} />
+                    <FontAwesomeIcon
+                        className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400"
+                        icon={faHome}
+                    />
                     <Input
                         fullWidth
                         className="dark:bg-gray-700 dark:text-white"
                         label="Adresse de livraison"
                         placeholder="Entrez votre adresse"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
+                        value={address.street}
+                        onChange={(e) => setAddress({ ...address, street: e.target.value })}
+                    />
+                </div>
+                <div className="mb-4 flex items-center">
+                    <Input
+                        fullWidth
+                        className="dark:bg-gray-700 dark:text-white"
+                        label="Ville"
+                        placeholder="Entrez votre ville"
+                        value={address.city}
+                        onChange={(e) => setAddress({ ...address, city: e.target.value })}
+                    />
+                </div>
+                <div className="mb-4 flex items-center">
+                    <Input
+                        fullWidth
+                        className="dark:bg-gray-700 dark:text-white"
+                        label="Code postal"
+                        placeholder="Entrez votre code postal"
+                        value={address.postalCode}
+                        onChange={(e) => setAddress({ ...address, postalCode: e.target.value })}
+                    />
+                </div>
+                <div className="mb-4 flex items-center">
+                    <Input
+                        fullWidth
+                        className="dark:bg-gray-700 dark:text-white"
+                        label="Pays"
+                        placeholder="Entrez votre pays"
+                        value={address.country}
+                        onChange={(e) => setAddress({ ...address, country: e.target.value })}
                     />
                 </div>
 
                 {/* Numéro de téléphone */}
                 <div className="mb-4 flex items-center">
-                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400" icon={faPhone} />
+                    <FontAwesomeIcon
+                        className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400"
+                        icon={faPhone}
+                    />
                     <Input
                         fullWidth
                         className="dark:bg-gray-700 dark:text-white"
@@ -202,15 +293,21 @@ export default function PaymentPage() {
 
                 {/* Transporteur */}
                 <div className="mb-6 flex items-center">
-                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400" icon={faTruck} />
-                    <label className="mb-2 font-semibold hidden md:inline-block" htmlFor="transporteur">
+                    <FontAwesomeIcon
+                        className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400"
+                        icon={faTruck}
+                    />
+                    <label
+                        className="mb-2 font-semibold hidden md:inline-block"
+                        htmlFor="transporteur"
+                    >
                         Choisir un transporteur
                     </label>
                     <select
                         className="w-full p-3 border rounded-md md:ml-2 bg-green-50 dark:bg-gray-700 dark:text-white"
                         id="transporteur"
                         value={deliveryMethod}
-                        onChange={handleTransporterChange}
+                        onChange={(e) => setDeliveryMethod(e.target.value)}
                     >
                         {deliveryOptions.map((option) => (
                             <option key={option.label} value={option.label}>
@@ -222,29 +319,12 @@ export default function PaymentPage() {
 
                 {/* Formulaire Stripe */}
                 <Elements stripe={stripePromise}>
-                    <CheckoutForm totalAmount={totalToPay} />
+                    <CheckoutForm totalAmount={totalToPay} onPaymentSuccess={saveOrder} />
                 </Elements>
             </motion.div>
         </div>
     );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -113,6 +113,51 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+exports.updateUser = async (req, res) => {
+  const userId = req.params.id; // L'ID de l'utilisateur est extrait de l'URL
+  const { firstName, lastName, phone, deliveryAddress } = req.body;
+
+  // Vérifier si les champs requis sont fournis
+  if (!firstName || !lastName || !phone || !deliveryAddress) {
+    return res.status(400).json({ message: "Tous les champs sont obligatoires." });
+  }
+
+  try {
+    // Rechercher l'utilisateur par ID et mettre à jour les informations
+    const updatedUser = await User.findByIdAndUpdate(
+      userId,
+      {
+        $set: {
+          prenom: firstName,  // Met à jour le prénom
+          nom: lastName,      // Met à jour le nom
+          phone: phone,       // Met à jour le numéro de téléphone
+          deliveryAddress: {  // Met à jour l'adresse de livraison
+            street: deliveryAddress.street,
+            city: deliveryAddress.city,
+            postalCode: deliveryAddress.postalCode,
+            country: deliveryAddress.country,
+          },
+        },
+      },
+      { new: true } // Retourner l'utilisateur mis à jour
+    );
+
+    if (!updatedUser) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    // Répondre avec l'utilisateur mis à jour
+    res.status(200).json({
+      message: "Utilisateur mis à jour avec succès",
+      user: updatedUser,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la mise à jour de l'utilisateur :", error);
+    res.status(500).json({ message: "Erreur lors de la mise à jour de l'utilisateur" });
+  }
+};
+
+
 // Fonction pour supprimer un utilisateur par ID
 exports.deleteUser = async (req, res) => {
   try {

@@ -1,7 +1,9 @@
+/* eslint-disable padding-line-between-statements */
+/* eslint-disable prettier/prettier */
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, Button, Progress } from "@nextui-org/react";
+import { Card, Button, Progress, Avatar, Input } from "@nextui-org/react";
 import {
   LineChart,
   Line,
@@ -13,8 +15,9 @@ import {
 } from "recharts";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
+import Swal from "sweetalert2";
+import axios from "axios";
 
-// Exemple de données pour les cours, évaluations et articles
 const mockData = {
   courses: [
     { title: "Cours de Mathématiques", progress: 80, lastViewed: "2024-09-20" },
@@ -26,164 +29,225 @@ const mockData = {
   ],
   articles: [
     { title: "Article sur l'autisme", progress: 60, lastViewed: "2024-09-19" },
-    {
-      title: "Article sur la pédagogie",
-      progress: 30,
-      lastViewed: "2024-09-18",
-    },
+    { title: "Article sur la pédagogie", progress: 30, lastViewed: "2024-09-18" },
   ],
 };
 
-// Fonction de récupération des données utilisateur stockées dans le localStorage
-const fetchUserData = () => {
-  if (typeof window !== "undefined") {
-    // Utiliser localStorage uniquement dans le navigateur
-    const storedUser = localStorage.getItem("user");
-
-    return storedUser ? JSON.parse(storedUser) : null;
-  }
-
-  return null;
-};
+const countries = [
+  "France", "Belgique", "Suisse", "Canada", "États-Unis", "Royaume-Uni"
+];
 
 const ProfilePage = () => {
   const [user, setUser] = useState<any>(null);
   const [createdAt, setCreatedAt] = useState("");
   const [currentTime, setCurrentTime] = useState("");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [phone, setPhone] = useState("");
+  const [address, setAddress] = useState({
+    street: "",
+    city: "",
+    postalCode: "",
+    country: "France",
+  });
+
   const router = useRouter();
 
   useEffect(() => {
-    // Récupérer les données utilisateur à partir du localStorage
-    const fetchedUser = fetchUserData();
-
-    if (fetchedUser) {
-      setUser(fetchedUser);
-
-      // Formater la date de création si elle existe
-      const formattedCreatedAt = fetchedUser.createdAt
-        ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
-        : "Non disponible";
-
-      setCreatedAt(formattedCreatedAt);
-    } else {
-      router.push("/users/login"); // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
-    }
-
-    // Mettre à jour l'heure actuelle chaque seconde
-    const updateCurrentTime = () => {
-      setCurrentTime(dayjs().format("HH:mm:ss"));
+    const fetchUserData = () => {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        const fetchedUser = JSON.parse(storedUser);
+        setUser(fetchedUser);
+        setFirstName(fetchedUser.prenom || "");
+        setLastName(fetchedUser.nom || "");
+        setPhone(fetchedUser.phone || "");
+        setAddress(
+          fetchedUser.deliveryAddress || {
+            street: "",
+            city: "",
+            postalCode: "",
+            country: "France",
+          }
+        );
+        setCreatedAt(dayjs(fetchedUser.createdAt).format("DD/MM/YYYY"));
+      } else {
+        router.push("/users/login");
+      }
     };
-    const interval = setInterval(updateCurrentTime, 1000);
 
-    // Nettoyage de l'intervalle pour éviter les fuites de mémoire
+    fetchUserData();
+
+    const interval = setInterval(() => {
+      setCurrentTime(dayjs().format("HH:mm:ss"));
+    }, 1000);
+
     return () => clearInterval(interval);
   }, [router]);
 
+  const handleSaveProfile = async () => {
+    if (!user || !user._id) {
+      alert("Utilisateur non défini ou sans identifiant");
+      return;
+    }
+
+    try {
+      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
+        nom: lastName,
+        prenom: firstName,
+        phone,
+        deliveryAddress: address,
+      });
+
+      const updatedUser = {
+        ...user,
+        nom: lastName,
+        prenom: firstName,
+        phone,
+        deliveryAddress: address,
+      };
+
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setUser(updatedUser);
+
+      Swal.fire({
+        title: "Profil mis à jour",
+        text: "Vos informations ont été enregistrées avec succès.",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du profil:", error);
+      Swal.fire({
+        title: "Erreur",
+        text: "Une erreur est survenue lors de la mise à jour.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
   if (!user) {
-    return <div>Chargement...</div>; // Attendre que l'utilisateur soit chargé
+    return <div>Chargement...</div>;
   }
 
   return (
     <div className="container mx-auto mt-6">
-      <h1 className="mb-4 text-4xl font-bold">
-        Bonjour à toi {user.pseudo} 👋
-      </h1>
+      <h1 className="mb-4 text-4xl font-bold">Bonjour {user.pseudo} 👋</h1>
       <p className="mb-6 text-gray-600">
-        Il est : {currentTime} | la date de création de ton compte est :{" "}
-        {createdAt}
+        Il est : {currentTime} | Date de création de ton compte : {createdAt}
       </p>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
-        {/* Cours Consultés */}
-        <div>
-          <Card>
-            <div className="card-header">
-              <h3>Cours Consultés</h3>
-            </div>
-            <div style={{ padding: "20px" }}>
-              {mockData.courses.map((course, index) => (
-                <div key={index}>
-                  <p className="font-bold">{course.title}</p>
-                  <Progress color="primary" value={course.progress} />
-                  <p>Dernière consultation : {course.lastViewed}</p>
-                  <Button
-                    aria-label={`Reprendre ${course.title}`}
-                    className="mt-2"
-                  >
-                    Reprendre
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
+      <div className="container mx-auto p-8">
+        <h2 className="text-3xl font-bold mb-4">Modifier votre profil</h2>
+
+        <div className="flex items-center gap-4 mb-4">
+          <Avatar
+            isBordered
+            alt={`Avatar de ${user.pseudo}`}
+            aria-label={`Avatar de ${user.pseudo}`}
+            size="lg"
+            src={user.image || "/assets/default-avatar.webp"}
+          />
+          <div>
+            <p className="text-lg">Pseudo: {user.pseudo}</p>
+            <p className="text-lg">Email: {user.email}</p>
+            <p className="text-lg">Role: {user.role}</p>
+          </div>
         </div>
 
-        {/* Évaluations faites */}
-        <div>
-          <Card>
-            <div className="card-header">
-              <h3>Évaluations</h3>
-            </div>
-            <div style={{ padding: "20px" }}>
-              {mockData.evaluations.map((evaluation, index) => (
-                <div key={index}>
-                  <p className="font-bold">{evaluation.title}</p>
-                  <p>Score : {evaluation.score}%</p>
-                  <p>Date : {evaluation.date}</p>
-                  <Button
-                    aria-label={`Voir l'évaluation de ${evaluation.title}`}
-                    className="mt-2"
-                  >
-                    Voir l&apos;évaluation
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+        <Input
+          fullWidth
+          aria-label="Modifier votre prénom"
+          className="mb-4"
+          label="Prénom"
+          value={firstName}
+          onChange={(e) => setFirstName(e.target.value)}
+        />
 
-        {/* Articles Consultés */}
-        <div>
-          <Card>
-            <div className="card-header">
-              <h3>Articles Consultés</h3>
-            </div>
-            <div style={{ padding: "20px" }}>
-              {mockData.articles.map((article, index) => (
-                <div key={index}>
-                  <p className="font-bold">{article.title}</p>
-                  <Progress color="success" value={article.progress} />
-                  <p>Dernière consultation : {article.lastViewed}</p>
-                  <Button
-                    aria-label={`Reprendre ${article.title}`}
-                    className="mt-2"
-                  >
-                    Reprendre
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+        <Input
+          fullWidth
+          aria-label="Modifier votre nom"
+          className="mb-4"
+          label="Nom"
+          value={lastName}
+          onChange={(e) => setLastName(e.target.value)}
+        />
+
+        <Input
+          fullWidth
+          aria-label="Modifier votre numéro de téléphone"
+          className="mb-4"
+          label="Numéro de téléphone"
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
+        />
+
+        <Input
+          fullWidth
+          aria-label="Modifier votre adresse"
+          className="mb-4"
+          label="Adresse"
+          value={address.street}
+          onChange={(e) => setAddress({ ...address, street: e.target.value })}
+        />
+
+        <Input
+          fullWidth
+          aria-label="Modifier votre ville"
+          className="mb-4"
+          label="Ville"
+          value={address.city}
+          onChange={(e) => setAddress({ ...address, city: e.target.value })}
+        />
+
+        <Input
+          fullWidth
+          aria-label="Modifier votre code postal"
+          className="mb-4"
+          label="Code postal"
+          value={address.postalCode}
+          onChange={(e) => setAddress({ ...address, postalCode: e.target.value })}
+        />
+
+        <label className="block mb-2" htmlFor="country-select">
+          Pays
+        </label>
+        <select
+          aria-label="Sélectionnez votre pays"
+          className="p-3 mb-4 border rounded-md"
+          id="country-select"
+          value={address.country}
+          onChange={(e) => setAddress({ ...address, country: e.target.value })}
+        >
+          {countries.map((country) => (
+            <option key={country} value={country}>
+              {country}
+            </option>
+          ))}
+        </select>
+
+        <Button
+          aria-label="Enregistrer les modifications"
+          className="mt-8"
+          onClick={handleSaveProfile}
+        >
+          Enregistrer
+        </Button>
       </div>
 
-      {/* Diagramme de progression */}
+      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+        <CardSection data={mockData.courses} title="Cours Consultés" />
+        <CardSection isEvaluation data={mockData.evaluations} title="Évaluations" />
+        <CardSection data={mockData.articles} title="Articles Consultés" />
+      </div>
+
       <div className="mt-8">
         <h3 className="mb-4 text-2xl font-bold">Progression des activités</h3>
         <ResponsiveContainer height={300} width="100%">
-          <LineChart
-            data={[
-              { name: "Mathématiques", progress: 80 },
-              { name: "Français", progress: 50 },
-              { name: "Évaluation Math", progress: 75 },
-              { name: "Évaluation Français", progress: 88 },
-              { name: "Article Autisme", progress: 60 },
-              { name: "Article Pédagogie", progress: 30 },
-            ]}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-          >
+          <LineChart data={mockData.courses} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
             <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
+            <XAxis dataKey="title" />
             <YAxis />
             <Tooltip />
             <Line dataKey="progress" stroke="#82ca9d" type="monotone" />
@@ -194,4 +258,38 @@ const ProfilePage = () => {
   );
 };
 
+const CardSection = ({
+  title,
+  data,
+  isEvaluation = false,
+}: {
+  title: string;
+  data: any[];
+  isEvaluation?: boolean;
+}) => (
+  <Card>
+    <div className="card-header">
+      <h3>{title}</h3>
+    </div>
+    <div style={{ padding: "20px" }}>
+      {data.map((item, index) => (
+        <div key={index}>
+          <p className="font-bold">{item.title}</p>
+          {isEvaluation ? (
+            <>
+              <p>Score : {item.score}%</p>
+              <p>Date : {item.date}</p>
+            </>
+          ) : (
+            <Progress color="primary" value={item.progress} aria-label={`Progression de ${item.title}`} />
+          )}
+          <p>Dernière consultation : {item.lastViewed}</p>
+        </div>
+      ))}
+    </div>
+  </Card>
+);
+
 export default ProfilePage;
+
+

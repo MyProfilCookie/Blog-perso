@@ -30,38 +30,62 @@ export default function ShopPage() {
     const checkUserLoggedIn = () => {
         const userToken = localStorage.getItem("userToken");
 
+        return !!userToken;
+    };
+
+    // Charger le panier depuis le localStorage en fonction de l'utilisateur
+    useEffect(() => {
+        const userToken = localStorage.getItem("userToken");
+
         if (userToken) {
             setIsLoggedIn(true);
+
+            const storedCart = localStorage.getItem(`${userToken}-cartItems`);
+
+            if (storedCart) {
+                try {
+                    const parsedCart = JSON.parse(storedCart);
+
+                    if (Array.isArray(parsedCart)) {
+                        setCartItems(parsedCart);
+                    }
+                } catch (error: any) {
+                    alert(`Erreur lors de l'analyse du panier : ${error.message}`);
+                }
+            }
         } else {
             setIsLoggedIn(false);
         }
-    };
-
-    // Charger le panier depuis localStorage à l'initialisation et vérifier la connexion
-    useEffect(() => {
-        const storedCart = localStorage.getItem("cartItems");
-
-        checkUserLoggedIn();
-
-        if (storedCart) {
-            try {
-                const parsedCart = JSON.parse(storedCart);
-
-                if (Array.isArray(parsedCart)) {
-                    setCartItems(parsedCart);
-                }
-            } catch (error: any) {
-                alert(`Erreur lors de l'analyse du panier : ${error.message}`);
-            }
-        }
     }, []);
 
-    // Sauvegarder le panier dans localStorage à chaque mise à jour du panier
+    // Sauvegarder le panier dans le localStorage à chaque mise à jour du panier
     useEffect(() => {
         if (cartItems.length > 0) {
-            localStorage.setItem("cartItems", JSON.stringify(cartItems));
+            const userToken = localStorage.getItem("userToken");
+
+            if (userToken) {
+                localStorage.setItem(`${userToken}-cartItems`, JSON.stringify(cartItems));
+            }
         }
     }, [cartItems]);
+
+    // Réinitialiser le panier lors de la connexion d'un nouvel utilisateur
+    useEffect(() => {
+        const handleUserLogin = () => {
+            const userToken = localStorage.getItem("userToken");
+
+            if (userToken) {
+                localStorage.removeItem(`${userToken}-cartItems`); // Réinitialiser le panier de l'utilisateur précédent
+                setCartItems([]); // Réinitialiser l'état du panier
+            }
+        };
+
+        window.addEventListener("userLogin", handleUserLogin);
+
+        return () => {
+            window.removeEventListener("userLogin", handleUserLogin);
+        };
+    }, []);
 
     // Calculer le sous-total du panier
     const calculateTotal = () => {
@@ -285,6 +309,7 @@ export default function ShopPage() {
         </div>
     );
 }
+
 
 
 

@@ -26,6 +26,7 @@ import {
   faTachometerAlt,
   faShoppingCart,
   faBars,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
@@ -48,11 +49,10 @@ type User = {
 
 export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
-  const [cartItemsCount, setCartItemsCount] = useState<number>(0); // État pour le panier
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Gérer l'état du menu burger
+  const [cartItemsCount, setCartItemsCount] = useState<number>(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const router = useRouter();
 
-  // Charger l'utilisateur depuis le localStorage lors du montage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
@@ -66,7 +66,6 @@ export const Navbar = () => {
     }
   }, []);
 
-  // Écouter l'événement personnalisé pour mettre à jour l'état de l'utilisateur
   useEffect(() => {
     const handleUserUpdate = () => {
       const storedUser = localStorage.getItem("user");
@@ -128,13 +127,6 @@ export const Navbar = () => {
     });
   };
 
-  // Fonction pour ajouter un article au panier
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  const handleAddToCart = (article: any) => {
-    setCartItemsCount(cartItemsCount + 1); // Incrémente le nombre d'articles dans le panier
-    alert(`Article ajouté au panier: ${article.title}`);
-  };
-
   return (
     <NextUINavbar
       className="dark:bg-gray-900"
@@ -142,7 +134,6 @@ export const Navbar = () => {
       position="sticky"
       style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
     >
-      {/* Section gauche (logo et navigation principale) */}
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex items-center justify-start gap-1" href="/">
@@ -151,7 +142,6 @@ export const Navbar = () => {
           </NextLink>
         </NavbarBrand>
 
-        {/* Menu Toggle for Mobile */}
         <NavbarMenuToggle
           aria-label="Toggle navigation"
           className="lg:hidden"
@@ -160,7 +150,6 @@ export const Navbar = () => {
           <FontAwesomeIcon icon={faBars} />
         </NavbarMenuToggle>
 
-        {/* Navbar menu links */}
         <ul className="hidden gap-4 ml-2 lg:flex">
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.label}>
@@ -173,7 +162,6 @@ export const Navbar = () => {
             </NavbarItem>
           ))}
 
-          {/* Ajout de la page Shop avec l'icône du panier et la bulle */}
           <NavbarItem key="shop" className="relative">
             <NextLink
               className="text-gray-700 dark:text-gray-300 hover:text-green-500 flex items-center relative"
@@ -181,7 +169,6 @@ export const Navbar = () => {
             >
               <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
               Shop
-              {/* Afficher le Badge uniquement si cartItemsCount > 0 */}
               {cartItemsCount > 0 && (
                 <Badge
                   className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2"
@@ -195,7 +182,6 @@ export const Navbar = () => {
         </ul>
       </NavbarContent>
 
-      {/* Section droite (actions utilisateur et autres) */}
       <NavbarContent className="sm:flex basis-1/5 sm:basis-full" justify="end">
         <NavbarItem className="hidden gap-2 sm:flex">
           <Link
@@ -209,7 +195,6 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
 
-        {/* Afficher un lien Dashboard dynamique si l'utilisateur est connecté */}
         {user && (
           <NavbarItem className="hidden md:flex">
             <Button
@@ -234,7 +219,6 @@ export const Navbar = () => {
           </NavbarItem>
         )}
 
-        {/* Avatar et menu utilisateur */}
         {!user ? (
           <Avatar
             isBordered
@@ -259,7 +243,6 @@ export const Navbar = () => {
                   size="sm"
                   src={user?.avatar || "/assets/default-avatar.webp"}
                 />
-                {/* Masquer le pseudo en version mobile */}
                 <span className="ml-2 hidden lg:inline dark:text-white">
                   {user?.pseudo || "Utilisateur"}
                 </span>
@@ -270,6 +253,16 @@ export const Navbar = () => {
               className="dark:bg-gray-800"
             >
               <DropdownItem
+                key="profile"
+                className="text-gray-600 dark:text-gray-300 hover:text-green-500"
+                textValue="Profil"
+                onClick={() => router.replace("/profile")}
+              >
+                <FontAwesomeIcon icon={faUser} />
+                <span className="ml-2">Profil</span>
+              </DropdownItem>
+
+              <DropdownItem
                 key="courses"
                 className="text-gray-600 dark:text-gray-300 hover:text-green-500"
                 textValue="Cours"
@@ -279,7 +272,7 @@ export const Navbar = () => {
                 <span className="ml-2">Cours suivis</span>
               </DropdownItem>
 
-              {user?.role === "admin" ? (
+              {user?.role === "admin" && (
                 <DropdownItem
                   key="admin"
                   className="text-gray-600 dark:text-gray-300 hover:text-green-500"
@@ -289,8 +282,7 @@ export const Navbar = () => {
                   <FontAwesomeIcon icon={faCrown} />
                   <span className="ml-2">Admin</span>
                 </DropdownItem>
-              ) : null}
-
+              )}
 
               <DropdownItem
                 key="articles"
@@ -331,14 +323,12 @@ export const Navbar = () => {
                 <NextLink
                   className="text-gray-700 dark:text-gray-300 hover:text-green-500"
                   href={String(item.href)}
-                  onClick={() => setIsMenuOpen(false)} // Fermer le menu après avoir cliqué sur un lien
+                  onClick={() => setIsMenuOpen(false)}
                 >
                   {item.label}
                 </NextLink>
               </li>
             ))}
-
-            {/* Shop link with cart badge */}
             <li className="relative">
               <NextLink
                 className="text-gray-700 dark:text-gray-300 hover:text-green-500 flex items-center relative"
@@ -363,3 +353,4 @@ export const Navbar = () => {
     </NextUINavbar>
   );
 };
+

@@ -19,6 +19,7 @@ const lessonsRoutes = require("./api/routes/lessons.routes"); // Routes leçons
 const articleRoutes = require("./api/routes/article.routes"); // Routes articles
 const productRoutes = require("./api/routes/products.routes"); // Routes produits
 const paymentRoutes = require("./api/routes/payment.routes"); // Routes paiement
+const orderRoutes = require("./api/routes/order.routes"); // Routes commandes
 
 // Connexion à la base de données
 // Connexion à la base de données
@@ -98,6 +99,7 @@ app.use("/lessons", lessonsRoutes);
 app.use("/articles", articleRoutes);
 app.use("/products", productRoutes);
 app.use("/payments", paymentRoutes);
+app.use("/orders", orderRoutes);
 // Gestion des erreurs 404
 app.use((req, res, next) => {
   const error = createError(404, "Ressource non trouvée");

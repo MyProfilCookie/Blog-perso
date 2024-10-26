@@ -83,10 +83,10 @@ const ProfilePage = () => {
 
   return (
     <div className="container mx-auto mt-6">
-      <h1 className="mb-4 text-4xl font-bold">
+      <h1 className="mb-4 text-4xl font-bold text-center">
         Bonjour à toi, {user.pseudo} 👋
       </h1>
-      <p className="mb-6 text-gray-600">
+      <p className="mb-6 text-gray-600 text-center">
         Heure actuelle : {currentTime} | Date de création du compte :{" "}
         {createdAt}
       </p>
@@ -96,7 +96,9 @@ const ProfilePage = () => {
         <div>
           <Card>
             <div className="card-header">
-              <h3>Cours Consultés</h3>
+              <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-white p-4">
+                Cours Consultés
+              </h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.courses.map((course, index) => (
@@ -124,7 +126,9 @@ const ProfilePage = () => {
         <div>
           <Card>
             <div className="card-header">
-              <h3>Évaluations</h3>
+              <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-white p-4">
+                Évaluations
+              </h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.evaluations.map((evaluation, index) => (
@@ -148,7 +152,9 @@ const ProfilePage = () => {
         <div>
           <Card>
             <div className="card-header">
-              <h3>Articles Consultés</h3>
+              <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-white p-4">
+                Articles Consultés
+              </h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.articles.map((article, index) => (
@@ -175,7 +181,9 @@ const ProfilePage = () => {
 
       {/* Diagramme de progression */}
       <div className="mt-8">
-        <h3 className="mb-4 text-2xl font-bold">Progression des activités</h3>
+        <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-white p-4 rounded-lg">
+          Progression des activités
+        </h3>
         <ResponsiveContainer height={300} width="100%">
           <LineChart
             data={[
