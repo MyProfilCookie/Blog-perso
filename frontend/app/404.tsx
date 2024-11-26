@@ -22,6 +22,10 @@ const NotFoundPage = () => {
       <p>
         Vous serez redirigé vers la page d'accueil dans quelques secondes...
       </p>
+      <p>
+        Si vous n'êtes pas redirigé automatiquement, cliquez <a href="/">ici</a>{" "}
+        pour y accéder.
+      </p>
     </div>
   );
 };

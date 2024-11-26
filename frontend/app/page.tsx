@@ -336,7 +336,7 @@ export default function Home() {
               {articles.slice(currentIndex, currentIndex + 2).map((article, idx) => (
                 <Card
                   key={idx}
-                  className="w-full p-4 transition duration-300 ease-in-out rounded-lg shadow-md"
+                  className="w-full p-4 transition duration-300 ease-in-out rounded-lg shadow-lg"
                 >
                   <CardBody className="flex flex-col items-center text-center">
                     <Image
@@ -344,7 +344,7 @@ export default function Home() {
                       alt={article.title}
                       width={600}
                       className="object-cover rounded-lg w-full h-[180px] mb-3"
-                      height={480}
+                      height={280}
                       src={article.img}
                     />
                     <h4 className="mb-2 text-lg font-bold text-blue-700">
@@ -384,14 +384,14 @@ export default function Home() {
                   <CardBody className="text-center">
                     <div className="relative">
                       <img alt={member.name} className="object-cover w-24 h-24 mx-auto mb-4 border-2 border-purple-500 rounded-full" src={member.img} />
-                      <div className="flex justify-center gap-2 mt-4">
+                      {/* <div className="flex justify-center gap-2 mt-4">
                         <Button isIconOnly onClick={() => handlePreviousImage(index + currentTeamIndex * 2)} className="bg-purple-400 hover:bg-purple-500">
                           {"<"}
                         </Button>
                         <Button isIconOnly onClick={() => handleNextImage(index + currentTeamIndex * 2)} className="bg-purple-400 hover:bg-purple-500">
                           {">"}
                         </Button>
-                      </div>
+                      </div> */}
                     </div>
                     <h4 className="font-bold text-gray-700">{member.name}</h4>
                     <p className="text-gray-500">{member.role}</p>

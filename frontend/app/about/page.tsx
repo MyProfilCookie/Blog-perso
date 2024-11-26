@@ -10,7 +10,7 @@ import { title, subtitle } from "@/components/primitives";
 
 const AboutUsPage = () => {
   return (
-    <section className="flex flex-col items-center justify-center w-full gap-8 py-12 md:py-16">
+    <section className="flex flex-col gap-8 justify-center items-center py-12 w-full md:py-16">
       {/* Header Title Section */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
@@ -91,7 +91,7 @@ const AboutUsPage = () => {
       {/* Meet the Family Section */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-center w-full mt-12"
+        className="flex justify-center mt-12 w-full"
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.8, delay: 2.5 }}
       >
@@ -99,14 +99,14 @@ const AboutUsPage = () => {
           <CardBody className="flex flex-col items-center">
             <h3 className="mb-6 font-bold text-gray-800 text-large">Rencontrez les membres de la famille Ayivor</h3>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <Avatar isBordered alt="Membre 1" size="lg" src="/assets/avatar1.jpg" />
-              <Avatar isBordered alt="Membre 2" size="lg" src="/assets/avatar2.jpg" />
-              <Avatar isBordered alt="Membre 3" size="lg" src="/assets/avatar3.jpg" />
-              <Avatar isBordered alt="Membre 4" size="lg" src="/assets/avatar4.jpg" />
-              <Avatar isBordered alt="Membre 5" size="lg" src="/assets/avatar5.jpg" />
-              <Avatar isBordered alt="Membre 6" size="lg" src="/assets/avatar6.jpg" />
-              <Avatar isBordered alt="Membre 7" size="lg" src="/assets/avatar7.jpg" />
-              <Avatar isBordered alt="Membre 8" size="lg" src="/assets/avatar8.jpg" />
+              <Avatar isBordered alt="Membre 1" color="warning" size="lg" src="/assets/family/avatar/jessica.jpg" />
+              <Avatar isBordered alt="Membre 2" color="primary" size="lg" src="/assets/family/avatar/Joshua.jpg" />
+              <Avatar isBordered alt="Membre 3" color="danger" size="lg" src="/assets/family/avatar/Maeva.jpg" />
+              <Avatar isBordered alt="Membre 4" color="secondary" size="lg" src="/assets/family/avatar/maman.jpg" />
+              <Avatar isBordered alt="Membre 5" color="success" size="lg" src="/assets/family/avatar/nini.jpg" />
+              <Avatar isBordered alt="Membre 6" color="warning" size="lg" src="/assets/family/avatar/papa.jpg" />
+              <Avatar isBordered alt="Membre 7" color="primary" size="lg" src="/assets/family/avatar/pauline.jpg" />
+              <Avatar isBordered alt="Membre 8" color="danger" size="lg" src="/assets/family/avatar/titi.jpg" />
             </div>
           </CardBody>
         </Card>
@@ -115,7 +115,7 @@ const AboutUsPage = () => {
       {/* CTA Button */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="flex justify-center w-full mt-8"
+        className="flex justify-center mt-8 w-full"
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.8, delay: 3 }}
       >

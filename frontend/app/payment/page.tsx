@@ -1,330 +1,579 @@
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable react/jsx-sort-props */
+/* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 "use client";
-import { useEffect, useState } from "react";
+
+import React, { useState, useEffect } from "react";
+import { Button, Input, Avatar, Tooltip } from "@nextui-org/react";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import { Button, Input } from "@nextui-org/react";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
-import { CardElement, useElements, useStripe } from "@stripe/react-stripe-js";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faHome, faPhone, faTruck, faCreditCard } from "@fortawesome/free-solid-svg-icons";
-import { motion } from "framer-motion";
+import { faInfoCircle, faHeadset, faClock } from "@fortawesome/free-solid-svg-icons";
 
-import { Logo } from "@/components/icons";
-
-// Charger la clé publique Stripe
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
-// Composant pour gérer le paiement avec Stripe
-const CheckoutForm = ({
-    totalAmount,
-    onPaymentSuccess,
-}: {
-    totalAmount: number;
-    onPaymentSuccess: () => void;
-}) => {
+const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay: number; cartItems: any[]; onPaymentSuccess: () => void }) => {
     const stripe = useStripe();
     const elements = useElements();
     const router = useRouter();
 
-    const handleSubmit = async (event: any) => {
+    const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
         if (!stripe || !elements) {
+            Swal.fire({
+                title: "Erreur",
+                text: "Stripe n'est pas encore prêt.",
+                icon: "error",
+                confirmButtonText: "Réessayer",
+            });
+
             return;
         }
 
         const cardElement = elements.getElement(CardElement);
 
         if (!cardElement) {
-            return;
-        }
-
-        const { error, paymentMethod } = await stripe.createPaymentMethod({
-            type: "card",
-            card: cardElement,
-        });
-
-        if (error) {
             Swal.fire({
-                title: "Oh non!",
-                text: error.message,
+                title: "Erreur",
+                text: "L'élément de carte est introuvable.",
                 icon: "error",
                 confirmButtonText: "Réessayer",
             });
-        } else {
+
+            return;
+        }
+
+        try {
+            const { error, paymentMethod } = await stripe.createPaymentMethod({
+                type: "card",
+                card: cardElement,
+            });
+
+            if (error) {
+                Swal.fire({
+                    title: "Erreur",
+                    text: error.message || "Une erreur est survenue lors du paiement.",
+                    icon: "error",
+                    confirmButtonText: "Réessayer",
+                });
+
+                return;
+            }
+
+            // Appeler la fonction pour enregistrer la commande après un paiement réussi
+            await saveOrder(cartItems, totalToPay, paymentMethod?.id);
+
             Swal.fire({
                 title: "Paiement réussi",
-                text: "Merci pour votre confiance !",
+                text: "Merci pour votre achat !",
                 icon: "success",
-                confirmButtonText: "Super !",
+                confirmButtonText: "OK",
             }).then(() => {
                 onPaymentSuccess();
-                router.push("/confirmation");
+                router.push("/payment-confirmations");
+            });
+        } catch (err) {
+            console.error("Erreur lors du paiement :", err);
+            Swal.fire({
+                title: "Erreur",
+                text: "Une erreur est survenue lors du paiement.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+        }
+    };
+
+    // const saveOrder = async (items: any[], total: number, transactionId: string) => {
+    //     const token = localStorage.getItem("userToken");
+
+    //     if (!token) {
+    //         Swal.fire({
+    //             title: "Erreur",
+    //             text: "Utilisateur non authentifié. Veuillez vous reconnecter.",
+    //             icon: "error",
+    //             confirmButtonText: "OK",
+    //         });
+    //         return;
+    //     }
+
+    //     try {
+    //         // Récupération des données utilisateur
+    //         const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+
+    //         if (!userResponse.ok) throw new Error("Erreur lors de la récupération des informations utilisateur.");
+    //         const userData = (await userResponse.json()).user;
+
+    //         // Préparation des données de la commande
+    //         const orderData = {
+    //             items: items.map((item: { productId: any; title: any; quantity: any; price: any; weight: any; }) => ({
+    //                 productId: item.productId,
+    //                 title: item.title,
+    //                 quantity: item.quantity,
+    //                 price: item.price,
+    //                 weight: item.weight,
+    //             })),
+    //             totalAmount: total,
+    //             transactionId,
+    //             paymentMethod: "card",
+    //             deliveryCost: 5,
+    //             deliveryAddress: {
+    //                 street: userData.deliveryAddress?.street || "Adresse inconnue",
+    //                 city: userData.deliveryAddress?.city || "Ville inconnue",
+    //                 postalCode: userData.deliveryAddress?.postalCode || "Code postal inconnu",
+    //                 country: userData.deliveryAddress?.country || "France",
+    //             },
+    //             phone: userData.phone || "Numéro inconnu",
+    //             email: userData.email || "Email inconnu",
+    //             firstName: userData.firstName || "Prénom inconnu",
+    //             lastName: userData.lastName || "Nom inconnu",
+    //         };
+
+    //         console.log("Données envoyées à l'API /orders :", JSON.stringify(orderData, null, 2));
+
+    //         const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //             body: JSON.stringify(orderData),
+    //         });
+
+    //         const orderResponseData = await orderResponse.json();
+    //         if (!orderResponse.ok) {
+    //             console.error("Erreur API /orders :", orderResponseData);
+    //             throw new Error(orderResponseData.message || "Erreur lors de la création de la commande.");
+    //         }
+
+    //         const orderId = orderResponseData.order?._id;
+    //         if (!orderId) throw new Error("Aucun orderId retourné.");
+
+    //         // Préparation des données pour la confirmation de paiement
+    //         const paymentConfirmationData = {
+    //             orderId,
+    //             userId: userData._id,
+    //             transactionId,
+    //             paymentMethod: 'Credit Card',
+    //             paymentStatus: 'Paid',
+    //             amount: total,
+    //         };
+
+    //         console.log("Données pour la confirmation de paiement :", JSON.stringify(paymentConfirmationData, null, 2));
+
+    //         // Envoi de la confirmation de paiement
+    //         const paymentResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //             body: JSON.stringify(paymentConfirmationData),
+    //         });
+
+    //         const paymentResponseData = await paymentResponse.json();
+
+    //         if (!paymentResponse.ok) {
+    //             console.error("Erreur API /payment-confirmations :", paymentResponseData);
+    //             throw new Error("Erreur lors de la confirmation de paiement.");
+    //         }
+
+    //         console.log("Confirmation de paiement enregistrée :", paymentResponseData);
+
+    //         // Sauvegarde de l'_id de la confirmation dans le localStorage
+    //         localStorage.setItem("confirmationId", paymentResponseData.confirmation._id);
+
+    //         Swal.fire({
+    //             title: "Commande enregistrée",
+    //             text: "Votre commande et le paiement ont été enregistrés avec succès.",
+    //             icon: "success",
+    //             confirmButtonText: "OK",
+    //         });
+
+    //         return { orderId, confirmationId: paymentResponseData.confirmation._id };
+    //     } catch (error) {
+    //         console.error("Erreur lors de l'enregistrement de la commande ou de la confirmation :", error);
+    //         Swal.fire({
+    //             title: "Erreur",
+    //             text: "Impossible d'enregistrer votre commande et le paiement.",
+    //             icon: "error",
+    //             confirmButtonText: "OK",
+    //         });
+    //     }
+    // };
+
+    const saveOrder = async (items: any[], total: number, transactionId: string) => {
+        const token = localStorage.getItem("userToken");
+
+        if (!token) {
+            Swal.fire({
+                title: "Erreur",
+                text: "Utilisateur non authentifié. Veuillez vous reconnecter.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
+
+        try {
+            // Récupération des données utilisateur
+            const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!userResponse.ok) {
+                throw new Error("Erreur lors de la récupération des informations utilisateur.");
+            }
+
+            const userData = (await userResponse.json()).user;
+
+            // Vérifications supplémentaires des données utilisateur
+            const deliveryAddress = userData.deliveryAddress || {};
+            const orderData = {
+                items: items.map((item: { productId: any; title: any; quantity: any; price: any; weight: any }) => ({
+                    productId: item.productId,
+                    title: item.title,
+                    quantity: item.quantity,
+                    price: item.price,
+                    weight: item.weight,
+                })),
+                totalAmount: total,
+                transactionId,
+                paymentMethod: "card",
+                deliveryCost: 5,
+                deliveryAddress: {
+                    street: deliveryAddress.street || "Adresse inconnue",
+                    city: deliveryAddress.city || "Ville inconnue",
+                    postalCode: deliveryAddress.postalCode || "Code postal inconnu",
+                    country: deliveryAddress.country || "France",
+                },
+                phone: userData.phone || "Numéro inconnu",
+                email: userData.email || "Email inconnu",
+                firstName: userData.firstName || "Prénom inconnu",
+                lastName: userData.lastName || "Nom inconnu",
+            };
+
+            console.log("Données envoyées à l'API /orders :", JSON.stringify(orderData, null, 2));
+
+            // Création de la commande
+            const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(orderData),
+            });
+
+            const orderResponseData = await orderResponse.json();
+
+            if (!orderResponse.ok) {
+                console.error("Erreur API /orders :", orderResponseData);
+                throw new Error(orderResponseData.message || "Erreur lors de la création de la commande.");
+            }
+
+            const orderId = orderResponseData.order?._id;
+            if (!orderId) throw new Error("Aucun orderId retourné.");
+
+            // Préparation des données pour la confirmation de paiement
+            const paymentConfirmationData = {
+                orderId,
+                userId: userData._id,
+                transactionId,
+                paymentMethod: "Credit Card",
+                paymentStatus: "Paid",
+                amount: total,
+            };
+
+            console.log("Données pour la confirmation de paiement :", JSON.stringify(paymentConfirmationData, null, 2));
+
+            // Envoi de la confirmation de paiement
+            const paymentResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    Authorization: `Bearer ${token}`,
+                },
+                body: JSON.stringify(paymentConfirmationData),
+            });
+
+            const paymentResponseData = await paymentResponse.json();
+
+            if (!paymentResponse.ok) {
+                console.error("Erreur API /payment-confirmations :", paymentResponseData);
+                throw new Error("Erreur lors de la confirmation de paiement.");
+            }
+
+            console.log("Confirmation de paiement enregistrée :", paymentResponseData);
+
+            // Sauvegarde de l'_id de la confirmation dans le localStorage
+            localStorage.setItem("confirmationId", paymentResponseData.confirmation._id);
+
+            Swal.fire({
+                title: "Commande enregistrée",
+                text: "Votre commande et le paiement ont été enregistrés avec succès.",
+                icon: "success",
+                confirmButtonText: "OK",
+            });
+
+            return { orderId, confirmationId: paymentResponseData.confirmation._id };
+        } catch (error: any) {
+            console.error("Erreur lors de l'enregistrement de la commande ou de la confirmation :", error);
+            Swal.fire({
+                title: "Erreur",
+                text: error.message || "Impossible d'enregistrer votre commande et le paiement.",
+                icon: "error",
+                confirmButtonText: "OK",
             });
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div className="mb-4">
-                <label className="flex items-center text-lg font-bold text-green-600 dark:text-green-400" htmlFor="card-element">
-                    <FontAwesomeIcon className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400" icon={faCreditCard} />
-                    <span>Carte bancaire</span>
+        <form className="mt-6" onSubmit={handleSubmit}>
+            <div className="bg-gray-50 border rounded-lg shadow-md p-4">
+                <label className="block text-lg font-semibold mb-2 text-gray-700" htmlFor="card-element">
+                    Informations de Carte Bancaire
                 </label>
-                <CardElement className="p-4 border rounded-lg border-green-200 shadow-lg dark:border-gray-600" id="card-element" />
+                <div className="border p-4 rounded-lg bg-gray-50 shadow-sm mb-4">
+                    <CardElement
+                        id="card-element"
+                        options={{
+                            style: {
+                                base: {
+                                    fontSize: "16px",
+                                    color: "#32325d",
+                                    "::placeholder": { color: "#aab7c4" },
+                                },
+                                invalid: { color: "#fa755a" },
+                            },
+                        }}
+                    />
+                </div>
             </div>
-            <Button className="w-full mt-4 bg-green-500 text-white hover:bg-green-600 dark:bg-green-700 dark:hover:bg-green-800 rounded-full shadow-lg text-lg" disabled={!stripe} type="submit">
-                Payer {totalAmount} €
+            <Button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg mt-4" type="submit">
+                Payer {totalToPay} €
             </Button>
         </form>
     );
 };
 
-export default function PaymentPage() {
-    const [total, setTotal] = useState(0);
-    const [deliveryCost, setDeliveryCost] = useState(0);
+const PaymentPage = () => {
+    const [user, setUser] = useState<any>(null);
     const [cartItems, setCartItems] = useState<any[]>([]);
-    const [deliveryMethod, setDeliveryMethod] = useState("Mondial Relay");
-    const [estimatedDeliveryDate, setEstimatedDeliveryDate] = useState("");
+    const [totalAmount, setTotalAmount] = useState(0);
     const [totalToPay, setTotalToPay] = useState(0);
-    const [firstName, setFirstName] = useState("");
-    const [lastName, setLastName] = useState("");
-    const [email, setEmail] = useState("");
-    const [address, setAddress] = useState({ street: "", city: "", postalCode: "", country: "" });
-    const [phone, setPhone] = useState("");
+    const [deliveryCost, setDeliveryCost] = useState(4);
+    const [selectedTransporter, setSelectedTransporter] = useState<string>(""); const [promoCode, setPromoCode] = useState<string>("");
+    const [discount, setDiscount] = useState<number>(0);
+    const [remainingTime, setRemainingTime] = useState<number>(900); // 15 minutes
+    const [isLoading, setIsLoading] = useState(true);
 
-    const deliveryOptions = [
-        { label: "Mondial Relay", cost: 2 },
-        { label: "Colissimo", cost: 4 },
-        { label: "Chronopost", cost: 5 },
-    ];
-
-    const calculateDeliveryCost = (weight: number, method: string) => {
-        let baseCost = 0;
-
-        if (method === "Mondial Relay" && weight > 10) {
-            baseCost = 10;
-        } else if (weight <= 2) {
-            baseCost = method === "Colissimo" ? 4 : method === "Chronopost" ? 5 : 2;
-        } else if (weight > 2 && weight <= 5) {
-            baseCost = method === "Colissimo" ? 6 : method === "Chronopost" ? 7 : 4;
-        } else if (weight > 5 && weight <= 10) {
-            baseCost = method === "Colissimo" ? 8 : method === "Chronopost" ? 9 : 6;
-        } else {
-            baseCost = method === "Colissimo" ? 12 : method === "Chronopost" ? 13 : 8;
+    const router = useRouter();
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
+    const calculateDeliveryCost = (transporter: string, weight: number): number => {
+        if (transporter === "Colissimo") {
+            if (weight <= 2) return 4;
+            if (weight > 2 && weight <= 5) return 6;
+            return 8;
+        } else if (transporter === "UPS") {
+            if (weight <= 2) return 6;
+            if (weight > 2 && weight <= 5) return 8;
+            return 10;
+        } else if (transporter === "DHL") {
+            if (weight <= 2) return 8;
+            if (weight > 2 && weight <= 5) return 10;
+            return 12;
         }
-
-        return baseCost;
+        return 0; // Default cost
     };
-
-    // Récupérer les données du panier
     useEffect(() => {
-        const storedTotalPrice = localStorage.getItem("totalPrice");
-        const storedParcelWeight = localStorage.getItem("parcelWeight");
-        const storedCartItems = localStorage.getItem("cartItems");
+        const fetchUserData = async () => {
+            const token = localStorage.getItem("userToken");
 
-        if (storedTotalPrice && storedParcelWeight && storedCartItems) {
-            const totalWeight = parseFloat(storedParcelWeight);
-            const totalAmount = parseFloat(storedTotalPrice);
+            if (!token) {
+                Swal.fire({
+                    title: "Erreur",
+                    text: "Vous devez être connecté pour accéder à cette page.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                }).then(() => router.push("/users/login"));
 
-            setTotal(parseFloat(totalAmount.toFixed(2)));
-            const deliveryCost = calculateDeliveryCost(totalWeight, deliveryMethod);
-
-            setDeliveryCost(deliveryCost);
-            const totalToPay = totalAmount + deliveryCost;
-
-            setTotalToPay(parseFloat(totalToPay.toFixed(2)));
-            const today = new Date();
-
-            today.setDate(today.getDate() + 4);
-            setEstimatedDeliveryDate(today.toLocaleDateString("fr-FR"));
-            setCartItems(JSON.parse(storedCartItems));
-        }
-    }, [deliveryMethod]);
-
-    // Fonction pour enregistrer la commande
-    const saveOrder = async () => {
-        try {
-            const response = await fetch("http://localhost:3001/orders", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({
-                    firstName,
-                    lastName,
-                    email,
-                    phone,
-                    deliveryAddress: address,
-                    items: cartItems,
-                    totalAmount: totalToPay,
-                    deliveryMethod,
-                    deliveryCost,
-                    paymentMethod: "card",
-                    paymentStatus: "Paid",
-                }),
-            });
-
-            if (!response.ok) {
-                throw new Error("Erreur lors de l'enregistrement de la commande");
+                return;
             }
-            const data = await response.json();
 
-            console.log("Commande enregistrée avec succès :", data.message);
-        } catch (error) {
-            console.error("Erreur lors de l'enregistrement de la commande:", error);
-        }
+            try {
+                const response = await fetch(`${API_URL}/users/me`, {
+                    headers: {
+                        Authorization: `Bearer ${token}`,
+                    },
+                });
+
+                if (!response.ok) {
+                    throw new Error("Échec de la récupération des données utilisateur");
+                }
+
+                const { user } = await response.json();
+
+                setUser(user);
+            } catch (error) {
+                console.error("Erreur lors de la récupération des données utilisateur :", error);
+                Swal.fire({
+                    title: "Erreur",
+                    text: "Impossible de récupérer vos informations utilisateur.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
+            }
+        };
+
+        const loadCartData = () => {
+            const storedCartItems = localStorage.getItem("cartItems");
+            const storedTotalPrice = localStorage.getItem("totalPrice");
+
+            const items = storedCartItems ? JSON.parse(storedCartItems) : [];
+            const total = storedTotalPrice ? parseFloat(storedTotalPrice) : 0;
+
+            setCartItems(items);
+            setTotalAmount(total);
+            setTotalToPay(total - discount);
+        };
+
+        fetchUserData();
+        loadCartData();
+        setIsLoading(false);
+
+        // Décrémenter le temps restant
+        const timer = setInterval(() => {
+            setRemainingTime((prev) => (prev > 0 ? prev - 1 : 0));
+        }, 1000);
+
+        return () => clearInterval(timer);
+    }, [API_URL, router, discount]);
+    const handleTransporterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
+        const transporter = event.target.value;
+        const weight = cartItems.reduce((sum, item) => sum + item.weight, 0);
+        const cost = calculateDeliveryCost(transporter, weight);
+        setSelectedTransporter(transporter);
+        setDeliveryCost(cost);
     };
+
+    useEffect(() => {
+        const loadCartData = () => {
+            const storedCartItems = localStorage.getItem("cartItems");
+            setCartItems(storedCartItems ? JSON.parse(storedCartItems) : []);
+        };
+
+        loadCartData();
+    }, []);
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    function validatePromoCode(event: React.MouseEvent<HTMLButtonElement>): void {
+        throw new Error("Function not implemented.");
+    }
 
     return (
-        <div className="container mx-auto my-12 dark:bg-gray-900">
-            <motion.h1
-                animate={{ opacity: 1, y: 0 }}
-                className="text-4xl font-bold text-center mb-8 text-blue-800 dark:text-blue-200"
-                initial={{ opacity: 0, y: -50 }}
-                transition={{ duration: 0.8 }}
-            >
-                <Logo className="w-32 mx-auto" />
-                <p className="text-3xl font-semibold mb-4 text-green-600 dark:text-green-400">Bonjour MyProfilCookie,</p>
-                <p className="text-lg mb-4 text-gray-500 dark:text-gray-300">Voici votre panier, merci pour votre confiance !</p>
-            </motion.h1>
+        <div className="container mx-auto mt-10 bg-white p-6 rounded-lg shadow-lg">
+            <h1 className="text-4xl font-bold text-center mb-6 text-indigo-600">Paiement de vos Cours</h1>
+            {/* Transporter Selection */}
+            <div className="mt-4 mb-4">
+                <label htmlFor="transporter" className="block mb-2 font-semibold">Choisissez un transporteur :</label>
+                <select id="transporter" className="w-full p-3 border rounded-lg" onChange={handleTransporterChange}>
+                    <option value="">Sélectionnez un transporteur</option>
+                    <option value="UPS">UPS</option>
+                    <option value="DHL">DHL</option>
+                    <option value="Colissimo">Colissimo</option>
+                </select>
+            </div>
 
-            <motion.div
-                animate={{ opacity: 1, scale: 1 }}
-                className="border rounded-lg p-8 shadow-lg bg-white dark:bg-gray-800"
-                initial={{ opacity: 0, scale: 0.8 }}
-                style={{ maxWidth: "500px", margin: "0 auto", borderColor: "#c0e4cc" }}
-                transition={{ duration: 0.8 }}
-            >
-                <h2 className="text-2xl font-semibold mb-4 text-green-600 dark:text-green-400">Total à payer : {totalToPay} €</h2>
-                <hr className="mb-4 border-dashed border-gray-300 dark:border-gray-500" />
-                <p className="text-lg mb-4 font-semibold text-blue-500 dark:text-blue-300">Total du panier : {total} €</p>
-                <p className="text-lg mb-4 font-semibold text-blue-500 dark:text-blue-300">Nombre d&apos;articles : {cartItems.length}</p>
-                <p className="text-lg mb-4 font-semibold text-blue-500 dark:text-blue-300">Coût de livraison : {deliveryCost} €</p>
-                <hr className="mb-4 border-dashed border-gray-300 dark:border-gray-500" />
-                <p className="text-lg mb-4 text-gray-500 dark:text-gray-300">Estimation de la réception : {estimatedDeliveryDate}</p>
-                <hr className="mb-4 border-dashed border-gray-300 dark:border-gray-500" />
-
-                {/* Nom et prénom */}
-                <div className="mb-4 flex items-center">
-                    <Input
-                        fullWidth
-                        className="dark:bg-gray-700 dark:text-white"
-                        label="Prénom"
-                        placeholder="Entrez votre prénom"
-                        value={firstName}
-                        onChange={(e) => setFirstName(e.target.value)}
-                    />
-                </div>
-                <div className="mb-4 flex items-center">
-                    <Input
-                        fullWidth
-                        className="dark:bg-gray-700 dark:text-white"
-                        label="Nom"
-                        placeholder="Entrez votre nom"
-                        value={lastName}
-                        onChange={(e) => setLastName(e.target.value)}
-                    />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {/* Informations utilisateur */}
+                <div className="p-6 bg-indigo-50 rounded-lg shadow-md">
+                    <div className="flex items-center gap-4 mb-4">
+                        <Avatar
+                            size="lg"
+                            src={user?.image || "/assets/default-avatar.webp"}
+                            alt={`Avatar de ${user?.prenom || "Utilisateur"}`}
+                        />
+                        <h2 className="text-xl font-semibold text-gray-800">Bienvenue, {user?.prenom || "Utilisateur"} !</h2>
+                    </div>
+                    <div className="space-y-4">
+                        <p>
+                            <strong>Email :</strong> {user?.email}
+                        </p>
+                        <p>
+                            <strong>Adresse :</strong> {user?.deliveryAddress?.street}, {user?.deliveryAddress?.city},{" "}
+                            {user?.deliveryAddress?.postalCode}, {user?.deliveryAddress?.country}
+                        </p>
+                    </div>
                 </div>
 
-                {/* Adresse */}
-                <div className="mb-4 flex items-center">
-                    <FontAwesomeIcon
-                        className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400"
-                        icon={faHome}
-                    />
-                    <Input
-                        fullWidth
-                        className="dark:bg-gray-700 dark:text-white"
-                        label="Adresse de livraison"
-                        placeholder="Entrez votre adresse"
-                        value={address.street}
-                        onChange={(e) => setAddress({ ...address, street: e.target.value })}
-                    />
-                </div>
-                <div className="mb-4 flex items-center">
-                    <Input
-                        fullWidth
-                        className="dark:bg-gray-700 dark:text-white"
-                        label="Ville"
-                        placeholder="Entrez votre ville"
-                        value={address.city}
-                        onChange={(e) => setAddress({ ...address, city: e.target.value })}
-                    />
-                </div>
-                <div className="mb-4 flex items-center">
-                    <Input
-                        fullWidth
-                        className="dark:bg-gray-700 dark:text-white"
-                        label="Code postal"
-                        placeholder="Entrez votre code postal"
-                        value={address.postalCode}
-                        onChange={(e) => setAddress({ ...address, postalCode: e.target.value })}
-                    />
-                </div>
-                <div className="mb-4 flex items-center">
-                    <Input
-                        fullWidth
-                        className="dark:bg-gray-700 dark:text-white"
-                        label="Pays"
-                        placeholder="Entrez votre pays"
-                        value={address.country}
-                        onChange={(e) => setAddress({ ...address, country: e.target.value })}
-                    />
-                </div>
-
-                {/* Numéro de téléphone */}
-                <div className="mb-4 flex items-center">
-                    <FontAwesomeIcon
-                        className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400"
-                        icon={faPhone}
-                    />
-                    <Input
-                        fullWidth
-                        className="dark:bg-gray-700 dark:text-white"
-                        label="Numéro de téléphone"
-                        placeholder="Entrez votre numéro de téléphone"
-                        value={phone}
-                        onChange={(e) => setPhone(e.target.value)}
-                    />
-                </div>
-
-                {/* Transporteur */}
-                <div className="mb-6 flex items-center">
-                    <FontAwesomeIcon
-                        className="mr-2 text-green-600 hidden md:inline-block dark:text-green-400"
-                        icon={faTruck}
-                    />
-                    <label
-                        className="mb-2 font-semibold hidden md:inline-block"
-                        htmlFor="transporteur"
-                    >
-                        Choisir un transporteur
-                    </label>
-                    <select
-                        className="w-full p-3 border rounded-md md:ml-2 bg-green-50 dark:bg-gray-700 dark:text-white"
-                        id="transporteur"
-                        value={deliveryMethod}
-                        onChange={(e) => setDeliveryMethod(e.target.value)}
-                    >
-                        {deliveryOptions.map((option) => (
-                            <option key={option.label} value={option.label}>
-                                {option.label}
-                            </option>
+                {/* Récapitulatif de la commande */}
+                <div className="p-6 bg-indigo-50 rounded-lg shadow-md">
+                    <h2 className="text-xl font-semibold mb-4 text-gray-800">Résumé de votre commande</h2>
+                    <ul className="mb-4">
+                        {cartItems.map((item: any, index: number) => (
+                            <li key={index} className="mb-2">
+                                <strong>{item.title}</strong> - {item.price} € x {item.quantity}
+                            </li>
                         ))}
-                    </select>
+                    </ul>
+                    <p>
+                        <strong>Total des cours :</strong> {totalAmount} €
+                    </p>
+                    <p>
+                        <strong>Réduction :</strong> {discount.toFixed(2)} €
+                    </p>
+                    <p>
+                        <strong>Frais de livraison :</strong> {deliveryCost.toFixed(2)} €
+                    </p>
+                    <p>
+                        <strong>Total à payer :</strong> {(totalAmount - discount + deliveryCost).toFixed(2)} €
+                    </p>
                 </div>
+            </div>
+            {/* Promo Code */}
+            <div className="mt-4 mb-4">
+                <label htmlFor="promoCode" className="block mb-2 font-semibold">Entrez votre code promo :</label>
+                <input type="text" id="promoCode" className="w-full p-3 border rounded-lg" onChange={(e) => setPromoCode(e.target.value)} />
+            </div>
 
-                {/* Formulaire Stripe */}
+            {/* Promo Code Validation */}
+            <div className="mt-4 mb-4">
+                <button className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-semibold py-2 rounded-lg" onClick={validatePromoCode}>Valider le code promo</button>
+            </div>
+
+            {/* Timer */}
+            <div className="mt-4 mb-4">
+                <p>Temps restant pour payer : {Math.floor(remainingTime / 60)} minutes {remainingTime % 60} secondes</p>
+            </div>
+
+            {/* Formulaire de paiement */}
+            <div className="mt-6 bg-gray-50 p-6 rounded-lg shadow-md">
                 <Elements stripe={stripePromise}>
-                    <CheckoutForm totalAmount={totalToPay} onPaymentSuccess={saveOrder} />
+                    <CheckoutForm totalToPay={parseFloat((totalAmount - discount + deliveryCost).toFixed(2))} cartItems={cartItems} onPaymentSuccess={() => console.log("Paiement terminé")} />
                 </Elements>
-            </motion.div>
+            </div>
+
+
         </div>
     );
-}
+};
+
+export default PaymentPage;
+
+
+
+
+
+
+
+
+
+
+
 
 
 

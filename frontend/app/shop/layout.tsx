@@ -200,6 +200,9 @@ export default function ShopPage() {
     const removeItem = (title: string) => {
         setCartItems((prevItems) => prevItems.filter((item) => item.title !== title));
     };
+    // nombre d'articles dans le panier 
+    const totalItems = calculateTotalItems();
+    console.log(totalItems);
 
     return (
         <div>

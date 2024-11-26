@@ -101,7 +101,21 @@ exports.login = async (req, res) => {
   }
 };
 
+exports.getUserById = async (req, res) => {
+  try {
+    const userId = req.params.id === 'me' ? req.userId : req.params.id;
 
+    const user = await User.findById(userId);
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé" });
+    }
+
+    res.json(user);
+  } catch (error) {
+    console.error("Erreur lors de la récupération de l'utilisateur :", error);
+    res.status(500).json({ message: "Erreur lors de la récupération de l'utilisateur" });
+  }
+};
 
 exports.getUsers = async (req, res) => {
   try {
@@ -157,7 +171,24 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+exports.getCurrentUser = async (req, res) => {
+  try {
+    const userId = req.user?.id;
+    if (!userId) {
+      return res.status(400).json({ message: "ID utilisateur non trouvé dans le token." });
+    }
 
+    const user = await User.findById(userId).select('-password');
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Erreur lors de la récupération de l'utilisateur :", error);
+    res.status(500).json({ message: "Erreur lors de la récupération de l'utilisateur" });
+  }
+};
 // Fonction pour supprimer un utilisateur par ID
 exports.deleteUser = async (req, res) => {
   try {

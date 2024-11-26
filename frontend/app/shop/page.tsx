@@ -41,7 +41,14 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
 
         fetchArticles();
     }, []);
-
+    // netoyage du panier si on supprime un article lorsque nous ne sommes pas connectés
+    useEffect(() => {
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("cart");
+        }
+    }, []);
+    console.log(articles);
+    // le panier
     if (loading) {
         return <Loading />; // Message de chargement
     }

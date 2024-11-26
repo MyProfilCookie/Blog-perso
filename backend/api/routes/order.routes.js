@@ -17,4 +17,9 @@ router.put("/:id", orderController.updateOrder);
 // Supprimer une commande par ID
 router.delete("/:id", orderController.deleteOrder);
 
+// checkout 
+router.post("/checkout", orderController.checkout);
+
+
+
 module.exports = router;

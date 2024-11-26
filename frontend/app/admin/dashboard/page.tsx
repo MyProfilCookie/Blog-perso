@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-sort-props */
+/* eslint-disable prettier/prettier */
 "use client";
 import React, { useState, useEffect } from "react";
 import axios from "axios";
@@ -46,6 +48,7 @@ const AdminDashboard = () => {
   });
   const [currentTime, setCurrentTime] = useState("");
   const [users, setUsers] = useState<any[]>([]);
+  const [orders, setOrders] = useState<any[]>([]);
   const [, setArticles] = useState<any[]>([]);
   const [messages, setMessages] = useState<any[]>([]);
   const [newArticle, setNewArticle] = useState({ title: "", content: "" });
@@ -64,6 +67,7 @@ const AdminDashboard = () => {
       fetchUsers();
       fetchArticles();
       fetchMessages();
+      fetchOrders();
     } else {
       router.push("/"); // Redirige si l'utilisateur n'est pas admin
     }
@@ -356,6 +360,54 @@ const AdminDashboard = () => {
       alert(`Erreur lors de la suppression de l'article : ${error}`);
     }
   };
+  // Fonction pour récupérer les commandes
+  const fetchOrders = async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/orders`
+      );
+
+      // Si l'API retourne un objet contenant un tableau, mettez à jour en conséquence.
+      setOrders(response.data.orders || []);
+    } catch (error) {
+      console.error(`Erreur lors de la récupération des commandes : ${error}`);
+      setOrders([]); // Définit un tableau vide en cas d'erreur
+    }
+  };
+
+
+  // Fonction pour mettre à jour le statut d'une commande
+  const updateOrderStatus = async (id: string, status: string) => {
+    try {
+      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, {
+        status,
+      });
+      fetchOrders();
+    } catch (error) {
+      alert(`Erreur lors de la mise à jour de la commande : ${error}`);
+    }
+  };
+
+  // Fonction pour supprimer une commande
+  const deleteOrder = async (id: string) => {
+    Swal.fire({
+      title: "Êtes-vous sûr ?",
+      text: "Vous allez supprimer cette commande.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Oui, supprimer !",
+      cancelButtonText: "Annuler",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`);
+          fetchOrders();
+        } catch (error) {
+          alert(`Erreur lors de la suppression de la commande : ${error}`);
+        }
+      }
+    });
+  };
 
   if (!user) return null;
 
@@ -367,6 +419,51 @@ const AdminDashboard = () => {
         Bonjour, {user?.prenom || user.pseudo}{" "}
         <FontAwesomeIcon icon={faCrown} />
       </h2>
+      {/* Gestion des commandes */}
+      <div className="mt-8">
+        <h3 className="mb-4 text-xl font-semibold">Gestion des commandes</h3>
+        <Table aria-label="Liste des commandes">
+          <TableHeader>
+            <TableColumn>ID Commande</TableColumn>
+            <TableColumn>Client</TableColumn>
+            <TableColumn>Produit</TableColumn>
+            <TableColumn>Status</TableColumn>
+            <TableColumn>Date</TableColumn>
+            <TableColumn>Actions</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {orders.map((order: any) => (
+              <TableRow key={order._id}>
+                <TableCell>{order._id}</TableCell>
+                <TableCell>{order.LastName}</TableCell>
+                <TableCell>{order.productName}</TableCell>
+                <TableCell>{order.status}</TableCell>
+                <TableCell>{dayjs(order.date).format("DD/MM/YYYY")}</TableCell>
+                <TableCell>
+                  <Select
+                    aria-label="Modifier le statut de la commande"
+                    value={order.status}
+                    onChange={(e) =>
+                      updateOrderStatus(order._id, e.target.value)
+                    }
+                  >
+                    <SelectItem value="En cours" key={""}>En cours</SelectItem>
+                    <SelectItem value="Expédiée" key={""}>Expédiée</SelectItem>
+                    <SelectItem value="Livrée" key={""}>Livrée</SelectItem>
+                  </Select>
+                  <Button
+                    color="danger"
+                    onClick={() => deleteOrder(order._id)}
+                    className="ml-2"
+                  >
+                    <FontAwesomeIcon icon={faTrash} /> Supprimer
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
+      </div>
 
       {/* Gestion des utilisateurs */}
       <div className="mt-8">

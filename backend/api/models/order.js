@@ -27,18 +27,22 @@ const orderSchema = new mongoose.Schema({
         street: {
             type: String,
             required: true,
+            trim: true,
         },
         city: {
             type: String,
             required: true,
+            trim: true,
         },
         postalCode: {
             type: String,
             required: true,
+            trim: true,
         },
         country: {
             type: String,
             required: true,
+            trim: true,
         },
     },
     items: [
@@ -51,21 +55,25 @@ const orderSchema = new mongoose.Schema({
             title: {
                 type: String,
                 required: true,
+                trim: true,
             },
             quantity: {
                 type: Number,
                 required: true,
                 default: 1,
+                min: 1,
             },
             price: {
                 type: Number,
                 required: true,
+                min: 0,
             },
         },
     ],
     totalAmount: {
         type: Number,
         required: true,
+        min: 0,
     },
     deliveryMethod: {
         type: String,
@@ -76,6 +84,7 @@ const orderSchema = new mongoose.Schema({
     deliveryCost: {
         type: Number,
         required: true,
+        min: 0,
     },
     status: {
         type: String,
@@ -99,7 +108,17 @@ const orderSchema = new mongoose.Schema({
     deliveryDate: {
         type: Date,
     },
+    paymentConfirmation: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "PaymentConfirmation", // Lien avec le modèle PaymentConfirmation
+    },
 }, { timestamps: true });
+
+// Middleware : Calcul automatique du total avec livraison
+orderSchema.pre("save", function (next) {
+    this.totalAmount = this.items.reduce((sum, item) => sum + item.price * item.quantity, 0) + this.deliveryCost;
+    next();
+});
 
 // Création du modèle
 const Order = mongoose.model('Order', orderSchema);

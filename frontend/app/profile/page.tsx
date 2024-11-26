@@ -18,6 +18,8 @@ import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import axios from "axios";
 
+import Loading from "@/components/loading";
+
 const mockData = {
   courses: [
     { title: "Cours de Mathématiques", progress: 80, lastViewed: "2024-09-20" },
@@ -54,25 +56,59 @@ const ProfilePage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const fetchUserData = () => {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        const fetchedUser = JSON.parse(storedUser);
-        setUser(fetchedUser);
-        setFirstName(fetchedUser.prenom || "");
-        setLastName(fetchedUser.nom || "");
-        setPhone(fetchedUser.phone || "");
-        setAddress(
-          fetchedUser.deliveryAddress || {
+    const fetchUserData = async () => {
+      const token = localStorage.getItem("userToken");
+
+      if (!token) {
+        console.error("Token non trouvé");
+        Swal.fire({
+          title: "Erreur",
+          text: "Vous devez être connecté pour accéder à cette page.",
+          icon: "error",
+          confirmButtonText: "OK",
+        }).then(() => router.push("/users/login"));
+        return;
+      }
+
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 404) {
+            throw new Error("Utilisateur non trouvé");
+          }
+          throw new Error("Échec de la récupération des données utilisateur");
+        }
+
+        const { user } = await response.json();
+
+        if (user) {
+          setUser(user);
+          setFirstName(user.firstName || "");
+          setLastName(user.lastName || "");
+          setPhone(user.phone || "");
+          setAddress(user.deliveryAddress || {
             street: "",
             city: "",
             postalCode: "",
             country: "France",
-          }
-        );
-        setCreatedAt(dayjs(fetchedUser.createdAt).format("DD/MM/YYYY"));
-      } else {
-        router.push("/users/login");
+          });
+          setCreatedAt(dayjs(user.createdAt).format("DD/MM/YYYY"));
+
+          localStorage.setItem("user", JSON.stringify(user));
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération des données utilisateur :", error);
+        Swal.fire({
+          title: "Erreur",
+          text: "Impossible de récupérer les informations utilisateur. Veuillez vous reconnecter.",
+          icon: "error",
+          confirmButtonText: "OK",
+        }).then(() => router.push("/users/login"));
       }
     };
 
@@ -92,17 +128,26 @@ const ProfilePage = () => {
     }
 
     try {
-      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
-        nom: lastName,
-        prenom: firstName,
-        phone,
-        deliveryAddress: address,
-      });
+      const token = localStorage.getItem("userToken");
+      await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`,
+        {
+          firstName,
+          lastName,
+          phone,
+          deliveryAddress: address,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
 
       const updatedUser = {
         ...user,
-        nom: lastName,
-        prenom: firstName,
+        firstName,
+        lastName,
         phone,
         deliveryAddress: address,
       };
@@ -128,12 +173,12 @@ const ProfilePage = () => {
   };
 
   if (!user) {
-    return <div>Chargement...</div>;
+    return <Loading />;
   }
 
   return (
     <div className="container mx-auto mt-6">
-      <h1 className="mb-4 text-4xl font-bold">Bonjour {user.pseudo} 👋</h1>
+      <h1 className="mb-4 text-4xl font-bold">Bonjour {user.pseudo || "Utilisateur"} 👋</h1>
       <p className="mb-6 text-gray-600">
         Il est : {currentTime} | Date de création de ton compte : {createdAt}
       </p>
@@ -161,7 +206,7 @@ const ProfilePage = () => {
           aria-label="Modifier votre prénom"
           className="mb-4"
           label="Prénom"
-          value={firstName}
+          value={user.prenom}
           onChange={(e) => setFirstName(e.target.value)}
         />
 
@@ -170,7 +215,7 @@ const ProfilePage = () => {
           aria-label="Modifier votre nom"
           className="mb-4"
           label="Nom"
-          value={lastName}
+          value={user.nom}
           onChange={(e) => setLastName(e.target.value)}
         />
 
@@ -281,7 +326,7 @@ const CardSection = ({
               <p>Date : {item.date}</p>
             </>
           ) : (
-            <Progress color="primary" value={item.progress} aria-label={`Progression de ${item.title}`} />
+            <Progress aria-label={`Progression de ${item.title}`} color="primary" value={item.progress} />
           )}
           <p>Dernière consultation : {item.lastViewed}</p>
         </div>
@@ -291,5 +336,4 @@ const CardSection = ({
 );
 
 export default ProfilePage;
-
 
