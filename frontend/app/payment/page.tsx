@@ -86,126 +86,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
         }
     };
 
-    // const saveOrder = async (items: any[], total: number, transactionId: string) => {
-    //     const token = localStorage.getItem("userToken");
-
-    //     if (!token) {
-    //         Swal.fire({
-    //             title: "Erreur",
-    //             text: "Utilisateur non authentifié. Veuillez vous reconnecter.",
-    //             icon: "error",
-    //             confirmButtonText: "OK",
-    //         });
-    //         return;
-    //     }
-
-    //     try {
-    //         // Récupération des données utilisateur
-    //         const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-    //             headers: { Authorization: `Bearer ${token}` },
-    //         });
-
-    //         if (!userResponse.ok) throw new Error("Erreur lors de la récupération des informations utilisateur.");
-    //         const userData = (await userResponse.json()).user;
-
-    //         // Préparation des données de la commande
-    //         const orderData = {
-    //             items: items.map((item: { productId: any; title: any; quantity: any; price: any; weight: any; }) => ({
-    //                 productId: item.productId,
-    //                 title: item.title,
-    //                 quantity: item.quantity,
-    //                 price: item.price,
-    //                 weight: item.weight,
-    //             })),
-    //             totalAmount: total,
-    //             transactionId,
-    //             paymentMethod: "card",
-    //             deliveryCost: 5,
-    //             deliveryAddress: {
-    //                 street: userData.deliveryAddress?.street || "Adresse inconnue",
-    //                 city: userData.deliveryAddress?.city || "Ville inconnue",
-    //                 postalCode: userData.deliveryAddress?.postalCode || "Code postal inconnu",
-    //                 country: userData.deliveryAddress?.country || "France",
-    //             },
-    //             phone: userData.phone || "Numéro inconnu",
-    //             email: userData.email || "Email inconnu",
-    //             firstName: userData.firstName || "Prénom inconnu",
-    //             lastName: userData.lastName || "Nom inconnu",
-    //         };
-
-    //         console.log("Données envoyées à l'API /orders :", JSON.stringify(orderData, null, 2));
-
-    //         const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //             body: JSON.stringify(orderData),
-    //         });
-
-    //         const orderResponseData = await orderResponse.json();
-    //         if (!orderResponse.ok) {
-    //             console.error("Erreur API /orders :", orderResponseData);
-    //             throw new Error(orderResponseData.message || "Erreur lors de la création de la commande.");
-    //         }
-
-    //         const orderId = orderResponseData.order?._id;
-    //         if (!orderId) throw new Error("Aucun orderId retourné.");
-
-    //         // Préparation des données pour la confirmation de paiement
-    //         const paymentConfirmationData = {
-    //             orderId,
-    //             userId: userData._id,
-    //             transactionId,
-    //             paymentMethod: 'Credit Card',
-    //             paymentStatus: 'Paid',
-    //             amount: total,
-    //         };
-
-    //         console.log("Données pour la confirmation de paiement :", JSON.stringify(paymentConfirmationData, null, 2));
-
-    //         // Envoi de la confirmation de paiement
-    //         const paymentResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //             body: JSON.stringify(paymentConfirmationData),
-    //         });
-
-    //         const paymentResponseData = await paymentResponse.json();
-
-    //         if (!paymentResponse.ok) {
-    //             console.error("Erreur API /payment-confirmations :", paymentResponseData);
-    //             throw new Error("Erreur lors de la confirmation de paiement.");
-    //         }
-
-    //         console.log("Confirmation de paiement enregistrée :", paymentResponseData);
-
-    //         // Sauvegarde de l'_id de la confirmation dans le localStorage
-    //         localStorage.setItem("confirmationId", paymentResponseData.confirmation._id);
-
-    //         Swal.fire({
-    //             title: "Commande enregistrée",
-    //             text: "Votre commande et le paiement ont été enregistrés avec succès.",
-    //             icon: "success",
-    //             confirmButtonText: "OK",
-    //         });
-
-    //         return { orderId, confirmationId: paymentResponseData.confirmation._id };
-    //     } catch (error) {
-    //         console.error("Erreur lors de l'enregistrement de la commande ou de la confirmation :", error);
-    //         Swal.fire({
-    //             title: "Erreur",
-    //             text: "Impossible d'enregistrer votre commande et le paiement.",
-    //             icon: "error",
-    //             confirmButtonText: "OK",
-    //         });
-    //     }
-    // };
-
     const saveOrder = async (items: any[], total: number, transactionId: string) => {
         const token = localStorage.getItem("userToken");
 
@@ -225,16 +105,12 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
                 headers: { Authorization: `Bearer ${token}` },
             });
 
-            if (!userResponse.ok) {
-                throw new Error("Erreur lors de la récupération des informations utilisateur.");
-            }
-
+            if (!userResponse.ok) throw new Error("Erreur lors de la récupération des informations utilisateur.");
             const userData = (await userResponse.json()).user;
 
-            // Vérifications supplémentaires des données utilisateur
-            const deliveryAddress = userData.deliveryAddress || {};
+            // Préparation des données de la commande
             const orderData = {
-                items: items.map((item: { productId: any; title: any; quantity: any; price: any; weight: any }) => ({
+                items: items.map((item: { productId: any; title: any; quantity: any; price: any; weight: any; }) => ({
                     productId: item.productId,
                     title: item.title,
                     quantity: item.quantity,
@@ -246,20 +122,19 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
                 paymentMethod: "card",
                 deliveryCost: 5,
                 deliveryAddress: {
-                    street: deliveryAddress.street || "Adresse inconnue",
-                    city: deliveryAddress.city || "Ville inconnue",
-                    postalCode: deliveryAddress.postalCode || "Code postal inconnu",
-                    country: deliveryAddress.country || "France",
+                    street: userData.deliveryAddress?.street || "Adresse inconnue",
+                    city: userData.deliveryAddress?.city || "Ville inconnue",
+                    postalCode: userData.deliveryAddress?.postalCode || "Code postal inconnu",
+                    country: userData.deliveryAddress?.country || "France",
                 },
                 phone: userData.phone || "Numéro inconnu",
                 email: userData.email || "Email inconnu",
-                firstName: userData.firstName || "Prénom inconnu",
-                lastName: userData.lastName || "Nom inconnu",
+                firstName: userData.prenom || "Prénom inconnu",
+                lastName: userData.nom || "Nom inconnu",
             };
 
             console.log("Données envoyées à l'API /orders :", JSON.stringify(orderData, null, 2));
 
-            // Création de la commande
             const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
                 method: "POST",
                 headers: {
@@ -270,7 +145,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
             });
 
             const orderResponseData = await orderResponse.json();
-
             if (!orderResponse.ok) {
                 console.error("Erreur API /orders :", orderResponseData);
                 throw new Error(orderResponseData.message || "Erreur lors de la création de la commande.");
@@ -284,8 +158,8 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
                 orderId,
                 userId: userData._id,
                 transactionId,
-                paymentMethod: "Credit Card",
-                paymentStatus: "Paid",
+                paymentMethod: 'Credit Card',
+                paymentStatus: 'Paid',
                 amount: total,
             };
 
@@ -321,16 +195,148 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
             });
 
             return { orderId, confirmationId: paymentResponseData.confirmation._id };
-        } catch (error: any) {
+        } catch (error) {
             console.error("Erreur lors de l'enregistrement de la commande ou de la confirmation :", error);
             Swal.fire({
                 title: "Erreur",
-                text: error.message || "Impossible d'enregistrer votre commande et le paiement.",
+                text: "Impossible d'enregistrer votre commande et le paiement.",
                 icon: "error",
                 confirmButtonText: "OK",
             });
         }
     };
+
+    // const saveOrder = async (items: any[], total: number, transactionId: string) => {
+    //     const token = localStorage.getItem("userToken");
+
+    //     if (!token) {
+    //         Swal.fire({
+    //             title: "Erreur",
+    //             text: "Utilisateur non authentifié. Veuillez vous reconnecter.",
+    //             icon: "error",
+    //             confirmButtonText: "OK",
+    //         });
+    //         return;
+    //     }
+
+    //     try {
+    //         // Récupération des données utilisateur
+    //         const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+
+    //         if (!userResponse.ok) {
+    //             throw new Error("Erreur lors de la récupération des informations utilisateur.");
+    //         }
+
+    //         const userData = (await userResponse.json()).user;
+    //         console.log("User Data :", userData);
+
+    //         // Vérifications supplémentaires des données utilisateur
+    //         const deliveryAddress = userData.deliveryAddress || {};
+    //         const orderData = {
+    //             items: items.map((item: { productId: any; title: any; quantity: any; price: any; weight: any }) => ({
+    //                 productId: item.productId,
+    //                 title: item.title,
+    //                 quantity: item.quantity,
+    //                 price: item.price,
+    //                 weight: item.weight,
+    //             })),
+    //             totalAmount: total,
+    //             transactionId,
+    //             paymentMethod: "card",
+    //             deliveryCost: 5,
+    //             deliveryAddress: {
+    //                 street: deliveryAddress.street || "Adresse inconnue",
+    //                 city: deliveryAddress.city || "Ville inconnue",
+    //                 postalCode: deliveryAddress.postalCode || "Code postal inconnu",
+    //                 country: deliveryAddress.country || "France",
+    //             },
+    //             phone: userData.phone || "Numéro inconnu",
+    //             email: userData.email || "Email inconnu",
+    //             firstName: userData.prenom || "Prénom inconnu",
+    //             lastName: userData.nom || "Nom inconnu",
+    //         };
+
+    //         console.log("Données envoyées à l'API /orders :", JSON.stringify(orderData, null, 2));
+
+    //         // Création de la commande
+    //         const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //             body: JSON.stringify(orderData),
+    //         });
+
+    //         const orderResponseData = await orderResponse.json();
+
+    //         if (!orderResponse.ok) {
+    //             console.error("Erreur API /orders :", orderResponseData);
+    //             throw new Error(orderResponseData.message || "Erreur lors de la création de la commande.");
+    //         }
+
+    //         const orderId = orderResponseData.order?._id;
+    //         if (!orderId) throw new Error("Aucun orderId retourné.");
+
+    //         // Préparation des données pour la confirmation de paiement
+    //         const paymentConfirmationData = {
+    //             orderId,
+    //             userId: userData._id,
+    //             transactionId,
+    //             paymentMethod: "Credit Card",
+    //             paymentStatus: "Paid",
+    //             amount: total,
+    //         };
+
+    //         console.log("Données pour la confirmation de paiement :", JSON.stringify(paymentConfirmationData, null, 2));
+    //         // on conserve l'orderId dans le localStorage
+    //         localStorage.setItem("orderId", orderId);
+    //         console.log("Order ID :", orderId);
+
+    //         // Envoi de la confirmation de paiement
+    //         const paymentResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //             body: JSON.stringify(paymentConfirmationData),
+    //         });
+
+    //         const paymentResponseData = await paymentResponse.json();
+
+    //         if (!paymentResponse.ok) {
+    //             console.error("Erreur API /payment-confirmations :", paymentResponseData);
+    //             throw new Error("Erreur lors de la confirmation de paiement.");
+    //         }
+
+    //         console.log("Confirmation de paiement enregistrée :", paymentResponseData);
+
+    //         // Sauvegarde de l'_id de la confirmation dans le localStorage
+    //         localStorage.setItem("confirmationId", paymentResponseData.confirmation._id);
+
+    //         Swal.fire({
+    //             title: "Commande enregistrée",
+    //             text: "Votre commande et le paiement ont été enregistrés avec succès.",
+    //             icon: "success",
+    //             confirmButtonText: "OK",
+    //         });
+
+    //         return { orderId, confirmationId: paymentResponseData.confirmation._id };
+    //     } catch (error: any) {
+    //         console.error("Erreur lors de l'enregistrement de la commande ou de la confirmation :", error);
+    //         Swal.fire({
+    //             title: "Erreur",
+    //             text: error.message || "Impossible d'enregistrer votre commande et le paiement.",
+    //             icon: "error",
+    //             confirmButtonText: "OK",
+    //         });
+    //     }
+    // };
+
+
 
     return (
         <form className="mt-6" onSubmit={handleSubmit}>
