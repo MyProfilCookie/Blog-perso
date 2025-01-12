@@ -1,5 +1,6 @@
 /* eslint-disable prettier/prettier */
 "use client";
+
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import NextLink from "next/link";
@@ -13,27 +14,45 @@ type Article = {
     price: number;
     link: string;
     imageUrl: string;
+    productId: string;
 };
 
 interface ArticlesPageProps {
     onAddToCart: (article: Article) => void;
+    cart: Article[];
 }
 
-export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
+export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
+    console.log("Cart items:", cart);
+
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
+
+    // Fonction pour générer un ID unique (si nécessaire)
+    const generateUniqueId = () => "_" + Math.random().toString(36).substr(2, 9);
 
     // Fonction pour récupérer les articles via une API
     useEffect(() => {
         const fetchArticles = async () => {
             try {
-                const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`); // Assurez-vous que l'URL de l'API est correcte
-                const data = await res.json();
+                const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products`);
 
-                setArticles(data); // Mettre à jour l'état avec les articles récupérés
+                if (!response.ok) {
+                    throw new Error("Erreur lors de la récupération des produits");
+                }
+
+                const data = await response.json();
+
+                // Enrichir les données avec productId si manquant
+                const enrichedData = data.map((item: any) => ({
+                    ...item,
+                    // on recupère l'id de l'article dans la base de données
+                    productId: item.productId || item.id || generateUniqueId(),
+                }));
+
+                setArticles(enrichedData); // Mettre à jour les articles
             } catch (error) {
-                // eslint-disable-next-line no-console
-                console.error("Erreur lors du chargement des articles", error);
+                console.error("Erreur lors de la récupération des articles :", error);
             } finally {
                 setLoading(false); // Fin du chargement
             }
@@ -41,16 +60,17 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
 
         fetchArticles();
     }, []);
-    // netoyage du panier si on supprime un article lorsque nous ne sommes pas connectés
-    useEffect(() => {
-        if (typeof window !== "undefined") {
-            localStorage.removeItem("cart");
-        }
-    }, []);
-    console.log(articles);
-    // le panier
+
     if (loading) {
-        return <Loading />; // Message de chargement
+        return <Loading />; // Affichage du message de chargement
+    }
+
+    if (articles.length === 0) {
+        return (
+            <div className="flex flex-col items-center justify-center min-h-screen">
+                <p>Aucun article disponible pour le moment.</p>
+            </div>
+        );
     }
 
     return (
@@ -64,7 +84,7 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
                 <div className="grid gap-8 mt-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
                     {articles.map((article, index) => (
                         <motion.div
-                            key={index}
+                            key={article.productId || index}
                             animate={{ opacity: 1, y: 0 }}
                             className="w-full"
                             initial={{ opacity: 0, y: 20 }}
@@ -88,7 +108,7 @@ export default function ArticlesPage({ onAddToCart }: ArticlesPageProps) {
                                     <Button
                                         className="mt-4"
                                         color="secondary"
-                                        onClick={() => onAddToCart(article)} // Appel de la fonction pour ajouter au panier
+                                        onClick={() => onAddToCart(article)}
                                     >
                                         Ajouter au panier
                                     </Button>
