@@ -1,10 +1,11 @@
+/* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 "use client";
 
 import { useState, useEffect } from "react";
 import { Popover, PopoverTrigger, PopoverContent, Badge, Button } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faTrash, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
@@ -89,6 +90,7 @@ export default function ShopPage() {
                 text: "Vous devez être connecté pour ajouter des articles au panier.",
                 icon: "warning",
             });
+
             return;
         }
 
@@ -204,7 +206,7 @@ export default function ShopPage() {
             <ArticlesPage cart={cartItems} onAddToCart={addToCart} />
 
             {user && (
-                <Button onClick={handleLogout} style={{ marginTop: "20px" }}>
+                <Button style={{ marginTop: "20px" }} onClick={handleLogout}>
                     Déconnexion
                 </Button>
             )}
