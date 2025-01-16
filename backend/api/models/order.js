@@ -48,9 +48,9 @@ const orderSchema = new mongoose.Schema({
     items: [
         {
             productId: {
-                type: mongoose.Schema.Types.ObjectId,
-                ref: "Product",
+                type: String, // Remplace mongoose.Schema.Types.ObjectId par String
                 required: true,
+                trim: true,
             },
             title: {
                 type: String,

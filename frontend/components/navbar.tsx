@@ -341,9 +341,9 @@ export const Navbar = () => {
                 <FontAwesomeIcon icon={faShoppingCart} />
                 Shop
               </DropdownItem>
-              <DropdownItem onClick={() => router.push("/blog")}>
+              <DropdownItem onClick={() => router.push("/controle")}>
                 <FontAwesomeIcon icon={faNewspaper} />
-                Blog
+                Controle
               </DropdownItem>
               <DropdownItem onClick={handleLogout}>
                 <FontAwesomeIcon icon={faSignOutAlt} />
