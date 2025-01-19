@@ -209,6 +209,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
     const saveOrder = async (items: any[], total: number, transactionId: string) => {
         const token = localStorage.getItem("userToken");
 
+
         if (!token) {
             Swal.fire({
                 title: "Erreur",
@@ -228,25 +229,30 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
             });
             return;
         }
-
         try {
             const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
             if (!userResponse.ok) {
+                const errorData = await userResponse.text();
+                console.error("Erreur API /users/me :", errorData);
                 throw new Error("Erreur lors de la récupération des informations utilisateur.");
             }
 
             const userData = await userResponse.json();
-            const deliveryAddress = userData.deliveryAddress || {
+            console.log("Données utilisateur récupérées :", userData);
+
+            // Ajout des informations de livraison et du transporteur
+            userData.deliveryAddress = userData.deliveryAddress || {
                 street: "Adresse inconnue",
                 city: "Ville inconnue",
                 postalCode: "Code postal inconnu",
                 country: "France",
             };
+            const selectedTransporter = "Mondial Relay";
 
-            // Conversion des items
+            // Conversion des items pour l'API
             const formattedItems = items.map((item) => ({
                 productId: mongoose.Types.ObjectId.isValid(item.productId)
                     ? new mongoose.Types.ObjectId(item.productId)
@@ -256,19 +262,28 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
                 price: Number(item.price),
             }));
 
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, { headers: { Authorization: `Bearer ${token}` } });
+            const data = await response.json();
+
             const orderData = {
+                firstName: data.user.prenom?.trim() || "Prénom inconnu", // Utilise `prenom` pour `firstName`
+                lastName: data.user.nom?.trim() || "Nom inconnu",        // Utilise `nom` pour `lastName`
+                email: data.user.email?.trim() || "Email inconnu",
+                phone: data.user.phone?.trim() || "Numéro inconnu",
+                deliveryAddress: data.user.deliveryAddress || {
+                    street: "Adresse inconnue",
+                    city: "Ville inconnue",
+                    postalCode: "Code postal inconnu",
+                    country: "France",
+                },
                 items: formattedItems,
                 totalAmount: total,
                 transactionId,
                 paymentMethod: "card",
-                deliveryMethod: "Mondial Relay",
+                deliveryMethod: selectedTransporter,
                 deliveryCost: 5,
-                deliveryAddress,
-                phone: userData.phone || "Numéro inconnu",
-                email: userData.email || "Email inconnu",
-                firstName: userData.firstName || "Prénom inconnu",
-                lastName: userData.lastName || "Nom inconnu",
             };
+            console.log("Données utilisateur finalisées pour la commande :", JSON.stringify(orderData, null, 2));
 
             console.log("Données envoyées à l'API :", JSON.stringify(orderData, null, 2));
 
@@ -305,7 +320,91 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
                 confirmButtonText: "OK",
             });
         }
-    };
+    }
+
+    //     try {
+    //         const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+    //             headers: { Authorization: `Bearer ${token}` },
+    //         });
+
+    //         if (!userResponse.ok) {
+    //             throw new Error("Erreur lors de la récupération des informations utilisateur.");
+    //         }
+
+    //         const userData = await userResponse.json();
+    //         const deliveryAddress = userData.deliveryAddress || {
+    //             street: "Adresse inconnue",
+    //             city: "Ville inconnue",
+    //             postalCode: "Code postal inconnu",
+    //             country: "France",
+    //         };
+
+    //         userData.deliveryAddress = deliveryAddress;
+    //         const selectedTransporter = "Mondial Relay";
+
+
+    //         // Conversion des items
+    //         const formattedItems = items.map((item) => ({
+    //             productId: mongoose.Types.ObjectId.isValid(item.productId)
+    //                 ? new mongoose.Types.ObjectId(item.productId)
+    //                 : item.productId, // Laisse tel quel si c'est une chaîne
+    //             title: String(item.title).trim(),
+    //             quantity: Number(item.quantity),
+    //             price: Number(item.price),
+    //         }));
+    //         // On recupère les données de l'utilisateur
+    //         const user = await userResponse.json();
+    //         console.log("Données utilisateur récupérées :", userData);
+    //         const orderData = {
+    //             items: formattedItems,
+    //             totalAmount: total,
+    //             transactionId,
+    //             paymentMethod: "card",
+    //             deliveryMethod: selectedTransporter,
+    //             deliveryCost: 5,
+    //             deliveryAddress,
+    //             phone: user.phone || "Numéro inconnu",
+    //             email: user.email || "Email inconnu",
+    //             firstName: user.firstname || "Prénom inconnu",
+    //             lastName: user.nom || "Nom inconnu",
+    //         };
+
+    //         console.log("Données envoyées à l'API :", JSON.stringify(orderData, null, 2));
+
+    //         const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+    //             method: "POST",
+    //             headers: {
+    //                 "Content-Type": "application/json",
+    //                 Authorization: `Bearer ${token}`,
+    //             },
+    //             body: JSON.stringify(orderData),
+    //         });
+
+    //         if (!orderResponse.ok) {
+    //             const errorData = await orderResponse.json();
+    //             console.error("Erreur API /orders :", errorData);
+    //             throw new Error(errorData.message || "Erreur lors de la création de la commande.");
+    //         }
+
+    //         const orderResponseData = await orderResponse.json();
+    //         localStorage.setItem("orderId", orderResponseData.order?._id);
+
+    //         Swal.fire({
+    //             title: "Commande enregistrée",
+    //             text: "Votre commande et le paiement ont été enregistrés avec succès.",
+    //             icon: "success",
+    //             confirmButtonText: "OK",
+    //         });
+    //     } catch (error) {
+    //         console.error("Erreur lors de l'enregistrement de la commande :", error);
+    //         Swal.fire({
+    //             title: "Erreur",
+    //             text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
+    //             icon: "error",
+    //             confirmButtonText: "OK",
+    //         });
+    //     }
+    // };
 
     return (
         <form className="mt-6" onSubmit={handleSubmit}>
@@ -359,6 +458,7 @@ const PaymentPage = () => {
         const data = await response.json();
         console.log("data :", data);
         console.log("data.user :", data.user);
+        console.log("data.user.deliveryAddress :", data.user.deliveryAddress);
         return data.user;
 
     };
@@ -367,6 +467,30 @@ const PaymentPage = () => {
         fetchUser().then(setUser);
     }, []);
 
+    useEffect(() => {
+        const loadUserData = async () => {
+            const user = await fetchUser();
+
+            if (!user) {
+                console.warn("Utilisateur non authentifié. Redirection en cours...");
+                router.replace("/users/login");
+                return;
+            }
+
+            // Mise à jour de l'état utilisateur
+            setUser({
+                ...user,
+                deliveryAddress: user.deliveryAddress || {
+                    street: "Adresse inconnue",
+                    city: "Ville inconnue",
+                    postalCode: "Code postal inconnu",
+                    country: "France",
+                },
+            });
+        };
+
+        loadUserData();
+    }, []);
     useEffect(() => {
         const loadData = async () => {
             const storedCartItems = localStorage.getItem("cartItems");
