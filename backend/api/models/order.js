@@ -78,8 +78,8 @@ const orderSchema = new mongoose.Schema({
     deliveryMethod: {
         type: String,
         required: true,
-        enum: ["Mondial Relay", "Colissimo", "Chronopost"],
-        default: "Mondial Relay",
+        enum: ["Mondial Relay", "Colissimo", "UPS", "DHL"],
+        default: "",
     },
     deliveryCost: {
         type: Number,

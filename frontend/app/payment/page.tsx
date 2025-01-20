@@ -20,13 +20,23 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 // Définir une interface pour l'utilisateur
 
 
-const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay: number; cartItems: any[]; onPaymentSuccess: () => void }) => {
+const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTransporter }: { totalToPay: number; cartItems: any[]; onPaymentSuccess: () => void; selectedTransporter: string; }) => {
     const stripe = useStripe();
     const elements = useElements();
     const router = useRouter();
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
+
+        if (!selectedTransporter) {
+            Swal.fire({
+                title: "Erreur",
+                text: "Veuillez sélectionner un transporteur avant de continuer.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
 
         if (!stripe || !elements) {
             Swal.fire({
@@ -91,7 +101,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
             });
         }
     };
-    //     const token = localStorage.getItem("userToken");
     //     const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
     //         headers: { Authorization: `Bearer ${token}` },
     //     });
@@ -209,6 +218,16 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
     const saveOrder = async (items: any[], total: number, transactionId: string) => {
         const token = localStorage.getItem("userToken");
 
+        if (!selectedTransporter) {
+            Swal.fire({
+                title: "Erreur",
+                text: "Veuillez sélectionner un transporteur avant de continuer.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return;
+        }
+
 
         if (!token) {
             Swal.fire({
@@ -250,7 +269,25 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
                 postalCode: "Code postal inconnu",
                 country: "France",
             };
-            const selectedTransporter = "Mondial Relay";
+            const calculateDeliveryCost = (transporter: string, weight: number): number => {
+                if (transporter === "Colissimo") {
+                    if (weight <= 2) return 4;
+                    if (weight > 2 && weight <= 5) return 6;
+                    return 8;
+                } else if (transporter === "UPS") {
+                    if (weight <= 2) return 6;
+                    if (weight > 2 && weight <= 5) return 8;
+                    return 10;
+                } else if (transporter === "DHL") {
+                    if (weight <= 2) return 8;
+                    if (weight > 2 && weight <= 5) return 10;
+                    return 12;
+                }
+                return 0; // Default cost
+            };
+            // / Calcul dynamique des frais de livraison
+            const weight = items.reduce((sum, item) => sum + (item.weight || 0), 0); // Ajoutez un poids pour chaque article
+            const deliveryCost = calculateDeliveryCost(selectedTransporter, weight);
 
             // Conversion des items pour l'API
             const formattedItems = items.map((item) => ({
@@ -280,8 +317,8 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess }: { totalToPay:
                 totalAmount: total,
                 transactionId,
                 paymentMethod: "card",
-                deliveryMethod: selectedTransporter,
-                deliveryCost: 5,
+                deliveryMethod: selectedTransporter || "Non spécifié", // Inclure le transporteur choisi
+                deliveryCost,
             };
             console.log("Données utilisateur finalisées pour la commande :", JSON.stringify(orderData, null, 2));
 
@@ -692,7 +729,7 @@ const PaymentPage = () => {
             {/* Transporter Selection */}
             <div className="mt-4 mb-4">
                 <label htmlFor="transporter" className="block mb-2 font-semibold">Choisissez un transporteur :</label>
-                <select id="transporter" className="p-3 w-full rounded-lg border" onChange={handleTransporterChange}>
+                <select id="transporter" value={selectedTransporter} className="p-3 w-full rounded-lg border" onChange={handleTransporterChange}>
                     <option value="">Sélectionnez un transporteur</option>
                     <option value="UPS">UPS</option>
                     <option value="DHL">DHL</option>
@@ -779,10 +816,9 @@ const PaymentPage = () => {
             {/* Formulaire de paiement */}
             <div className="p-6 mt-6 bg-gray-50 rounded-lg shadow-md">
                 <Elements stripe={stripePromise}>
-                    <CheckoutForm totalToPay={parseFloat((totalAmount - discount + deliveryCost).toFixed(2))} cartItems={cartItems} onPaymentSuccess={() => console.log("Paiement terminé")} />
+                    <CheckoutForm totalToPay={parseFloat((totalAmount - discount + deliveryCost).toFixed(2))} cartItems={cartItems} onPaymentSuccess={() => console.log("Paiement terminé")} selectedTransporter={selectedTransporter} />
                 </Elements>
             </div>
-
 
         </div>
     );
