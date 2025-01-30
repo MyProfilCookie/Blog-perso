@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
@@ -33,7 +34,6 @@ const OrderConfirmationPage = () => {
 
                 console.log("Fetching order with ID:", orderId);
 
-                // Récupération des données de la commande
                 const response = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`,
                     {
@@ -64,6 +64,10 @@ const OrderConfirmationPage = () => {
 
                 console.log("Order data fetched successfully:", orderData);
                 setOrder(orderData);
+
+                // Vider le panier après récupération de la commande
+                localStorage.removeItem("cartItems");
+                localStorage.removeItem("totalPrice");
             } catch (error: any) {
                 console.error(
                     "Erreur lors de la récupération des données :",
@@ -119,6 +123,19 @@ const OrderConfirmationPage = () => {
         paymentMethod = "Non spécifiée",
         paymentStatus = "Inconnu",
     } = order;
+
+    const handleBack = () => {
+        Swal.fire({
+            title: "Retour",
+            text: "Vous allez être redirigé et votre panier sera vidé.",
+            icon: "info",
+            confirmButtonText: "Continuer",
+        }).then(() => {
+            localStorage.removeItem("cartItems");
+            localStorage.removeItem("totalPrice");
+            router.push("/");
+        });
+    };
 
     return (
         <div className="container p-6 mx-auto my-12 bg-white rounded-lg shadow-md">
@@ -191,8 +208,18 @@ const OrderConfirmationPage = () => {
                     <strong>Total :</strong> {totalAmount.toFixed(2)} €
                 </p>
             </div>
+
+            <div className="mt-6 text-center">
+                <button
+                    className="py-2 px-4 font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+                    onClick={handleBack}
+                >
+                    Retourner à l'accueil
+                </button>
+            </div>
         </div>
     );
 };
 
 export default OrderConfirmationPage;
+

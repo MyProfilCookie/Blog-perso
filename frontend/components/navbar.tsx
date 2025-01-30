@@ -216,6 +216,9 @@ export const Navbar = () => {
               )}
             </NextLink>
           </NavbarItem>
+          <NavbarItem>
+            <ThemeSwitch />
+          </NavbarItem>
         </ul>
 
         {/* Menu burger pour mobile */}
@@ -279,6 +282,7 @@ export const Navbar = () => {
                   Courses
                 </NextLink>
               </li>
+              <ThemeSwitch />
             </ul>
           </motion.div>
         )}

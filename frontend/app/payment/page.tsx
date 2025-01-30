@@ -101,7 +101,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
         }
     };
-    //     const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
     //         headers: { Authorization: `Bearer ${token}` },
     //     });
     //     const userData = await userResponse.json();
@@ -358,91 +357,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
         }
     }
-
-    //     try {
-    //         const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-    //             headers: { Authorization: `Bearer ${token}` },
-    //         });
-
-    //         if (!userResponse.ok) {
-    //             throw new Error("Erreur lors de la récupération des informations utilisateur.");
-    //         }
-
-    //         const userData = await userResponse.json();
-    //         const deliveryAddress = userData.deliveryAddress || {
-    //             street: "Adresse inconnue",
-    //             city: "Ville inconnue",
-    //             postalCode: "Code postal inconnu",
-    //             country: "France",
-    //         };
-
-    //         userData.deliveryAddress = deliveryAddress;
-    //         const selectedTransporter = "Mondial Relay";
-
-
-    //         // Conversion des items
-    //         const formattedItems = items.map((item) => ({
-    //             productId: mongoose.Types.ObjectId.isValid(item.productId)
-    //                 ? new mongoose.Types.ObjectId(item.productId)
-    //                 : item.productId, // Laisse tel quel si c'est une chaîne
-    //             title: String(item.title).trim(),
-    //             quantity: Number(item.quantity),
-    //             price: Number(item.price),
-    //         }));
-    //         // On recupère les données de l'utilisateur
-    //         const user = await userResponse.json();
-    //         console.log("Données utilisateur récupérées :", userData);
-    //         const orderData = {
-    //             items: formattedItems,
-    //             totalAmount: total,
-    //             transactionId,
-    //             paymentMethod: "card",
-    //             deliveryMethod: selectedTransporter,
-    //             deliveryCost: 5,
-    //             deliveryAddress,
-    //             phone: user.phone || "Numéro inconnu",
-    //             email: user.email || "Email inconnu",
-    //             firstName: user.firstname || "Prénom inconnu",
-    //             lastName: user.nom || "Nom inconnu",
-    //         };
-
-    //         console.log("Données envoyées à l'API :", JSON.stringify(orderData, null, 2));
-
-    //         const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //             body: JSON.stringify(orderData),
-    //         });
-
-    //         if (!orderResponse.ok) {
-    //             const errorData = await orderResponse.json();
-    //             console.error("Erreur API /orders :", errorData);
-    //             throw new Error(errorData.message || "Erreur lors de la création de la commande.");
-    //         }
-
-    //         const orderResponseData = await orderResponse.json();
-    //         localStorage.setItem("orderId", orderResponseData.order?._id);
-
-    //         Swal.fire({
-    //             title: "Commande enregistrée",
-    //             text: "Votre commande et le paiement ont été enregistrés avec succès.",
-    //             icon: "success",
-    //             confirmButtonText: "OK",
-    //         });
-    //     } catch (error) {
-    //         console.error("Erreur lors de l'enregistrement de la commande :", error);
-    //         Swal.fire({
-    //             title: "Erreur",
-    //             text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
-    //             icon: "error",
-    //             confirmButtonText: "OK",
-    //         });
-    //     }
-    // };
-
     return (
         <form className="mt-6" onSubmit={handleSubmit}>
             <div className="p-4 bg-gray-50 rounded-lg border shadow-md">
@@ -474,352 +388,118 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
 const PaymentPage = () => {
     const [user, setUser] = useState<any>(null);
     const [cartItems, setCartItems] = useState<any[]>([]);
-    const [totalAmount, setTotalAmount] = useState<number>(0);
     const [totalToPay, setTotalToPay] = useState<number>(0);
     const [deliveryCost, setDeliveryCost] = useState<number>(4);
     const [selectedTransporter, setSelectedTransporter] = useState<string>("");
-    const [promoCode, setPromoCode] = useState<string>("");
-    const [discount, setDiscount] = useState<number>(0);
-    const [remainingTime, setRemainingTime] = useState<number>(900); // 15 minutes
-    const [isLoading, setIsLoading] = useState(true);
-    const [estimatedDeliveryDate, setEstimatedDeliveryDate] = useState<string>("");
-
     const router = useRouter();
 
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001";
-
-    // recuperes les données dans la base de données
-    const fetchUser = async () => {
-        const token = localStorage.getItem("userToken");
-        const response = await fetch(`${API_URL}/users/me`, { headers: { Authorization: `Bearer ${token}` } });
-        const data = await response.json();
-        console.log("data :", data);
-        console.log("data.user :", data.user);
-        console.log("data.user.deliveryAddress :", data.user.deliveryAddress);
-        return data.user;
-
-    };
-
     useEffect(() => {
-        fetchUser().then(setUser);
-    }, []);
+        // Charger l'utilisateur et le panier depuis le localStorage
+        const storedUser = localStorage.getItem("user");
+        console.log("Utilisateur stocké :", storedUser);
+        // console.log("adresse de livraison :", user.deliveryAddress);
+        // console.log("nom de l'utilisateur :", user.nom);
+        // console.log("prenom de l'utilisateur :", user.prenom);
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser);
 
-    useEffect(() => {
-        const loadUserData = async () => {
-            const user = await fetchUser();
+            // Charger le panier correspondant au pseudo de l'utilisateur
+            const userCartKey = `cartItems_${parsedUser.pseudo}`;
+            const storedCart = localStorage.getItem(userCartKey);
 
-            if (!user) {
-                console.warn("Utilisateur non authentifié. Redirection en cours...");
-                router.replace("/users/login");
-                return;
-            }
+            if (storedCart) {
+                const parsedCart = JSON.parse(storedCart);
+                setCartItems(parsedCart);
 
-            // Mise à jour de l'état utilisateur
-            setUser({
-                ...user,
-                deliveryAddress: user.deliveryAddress || {
-                    street: "Adresse inconnue",
-                    city: "Ville inconnue",
-                    postalCode: "Code postal inconnu",
-                    country: "France",
-                },
-            });
-        };
-
-        loadUserData();
-    }, []);
-    useEffect(() => {
-        const loadData = async () => {
-            const storedCartItems = localStorage.getItem("cartItems");
-            const storedTotalPrice = localStorage.getItem("totalPrice");
-
-            const parsedCartItems = storedCartItems ? JSON.parse(storedCartItems) : [];
-            const parsedTotalPrice = storedTotalPrice ? parseFloat(storedTotalPrice) : 0;
-
-            const user = await fetchUser();
-            if (user) {
-                setUser(user);
+                // Calculer le total du panier
+                const total = parsedCart.reduce(
+                    (sum: number, item: any) => sum + item.price * item.quantity,
+                    0
+                );
+                setTotalToPay(total + deliveryCost);
             } else {
-                setUser(null);
-                router.replace("/users/login");
+                console.log("Aucun panier trouvé pour cet utilisateur.");
             }
-
-            setCartItems(parsedCartItems);
-            setTotalAmount(parsedTotalPrice);
-            setIsLoading(false);
-        };
-
-        loadData();
-    }, []);
-
-    // Écoute des mises à jour utilisateur via un événement personnalisé
-    useEffect(() => {
-        const handleUserUpdate = () => {
-            const storedUser = localStorage.getItem("user");
-            console.log("storedUser :", storedUser);
-            if (storedUser) {
-                const parsedUser = JSON.parse(storedUser);
-                console.log("parsedUser :", parsedUser);
-
-                setUser({
-                    ...parsedUser,
-                    deliveryAddress: parsedUser.deliveryAddress || {
-                        street: "Adresse inconnue",
-                        city: "Ville inconnue",
-                        postalCode: "Code postal inconnu",
-                        country: "Pays inconnu",
-                    },
-                });
-            } else {
-                setUser(null);
-                router.replace("/users/login");
-            }
-        };
-
-        window.addEventListener("userUpdate", handleUserUpdate);
-
-        return () => {
-            window.removeEventListener("userUpdate", handleUserUpdate);
-        };
-    }, [router]);
-
-    // Chargement des données du panier
-    useEffect(() => {
-        const loadCartData = () => {
-            const storedCartItems = localStorage.getItem("cartItems");
-            const storedTotalPrice = localStorage.getItem("totalPrice");
-
-            const items = storedCartItems ? JSON.parse(storedCartItems) : [];
-            const total = storedTotalPrice ? parseFloat(storedTotalPrice) : 0;
-
-            setCartItems(items);
-            setTotalAmount(total);
-            setTotalToPay(total - discount);
-        };
-
-        loadCartData();
-        setIsLoading(false);
-
-        // Décrémenter le temps restant
-        const timer = setInterval(() => {
-            setRemainingTime((prev) => (prev > 0 ? prev - 1 : 0));
-        }, 1000);
-
-        return () => clearInterval(timer);
-    }, [discount]);
-
-    // Gestion dynamique des frais de livraison
-    const calculateDeliveryCost = (transporter: string, weight: number): number => {
-        if (transporter === "Colissimo") {
-            if (weight <= 2) return 4;
-            if (weight > 2 && weight <= 5) return 6;
-            return 8;
-        } else if (transporter === "UPS") {
-            if (weight <= 2) return 6;
-            if (weight > 2 && weight <= 5) return 8;
-            return 10;
-        } else if (transporter === "DHL") {
-            if (weight <= 2) return 8;
-            if (weight > 2 && weight <= 5) return 10;
-            return 12;
+        } else {
+            console.log("Utilisateur non connecté. Redirection vers la page de connexion.");
+            router.push("/users/login");
         }
-        return 0; // Default cost
-    };
-    // Fonction pour calculer le total du panier
-    const calculateCartTotal = (items: any[]) => {
-        return items.reduce((total: number, item: { price: any; quantity: any; }) => {
-            const itemTotal = (item.price || 0) * (item.quantity || 0);
-            return total + itemTotal;
-        }, 0);
-    };
-
-    // Gestion des changements dans le transporteur et recalcul des totaux
-    useEffect(() => {
-        const totalCartAmount = calculateCartTotal(cartItems);
-        const updatedDeliveryCost = calculateDeliveryCost(selectedTransporter, cartItems.reduce((sum, item) => sum + item.weight, 0));
-        const updatedTotalToPay = totalCartAmount - discount + updatedDeliveryCost;
-
-        setDeliveryCost(updatedDeliveryCost);
-        setTotalAmount(totalCartAmount);
-        setTotalToPay(parseFloat(updatedTotalToPay.toFixed(2))); // Arrondi à 2 décimales
-    }, [cartItems, discount, selectedTransporter]);
-    // Gestion des réductions
+    }, [router, deliveryCost]);
 
     const handleTransporterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const transporter = event.target.value;
-        const weight = cartItems.reduce((sum, item) => sum + item.weight, 0);
-        const cost = calculateDeliveryCost(transporter, weight);
         setSelectedTransporter(transporter);
+
+        // Ajuster les frais de livraison en fonction du transporteur
+        const cost =
+            transporter === "Colissimo"
+                ? 4
+                : transporter === "UPS"
+                    ? 6
+                    : transporter === "DHL"
+                        ? 8
+                        : 0;
         setDeliveryCost(cost);
+
+        // Recalculer le total à payer
+        const totalCartAmount = cartItems.reduce(
+            (sum: number, item: any) => sum + item.price * item.quantity,
+            0
+        );
+        setTotalToPay(totalCartAmount + cost);
     };
-    const calculateEstimatedDeliveryDate = (transporter: string): string => {
-        const currentDate = new Date();
-        let deliveryDays = 4; // Default to Colissimo
-        if (transporter === "UPS") deliveryDays = 2;
-        else if (transporter === "DHL") deliveryDays = 3;
-
-        currentDate.setDate(currentDate.getDate() + deliveryDays);
-        return currentDate.toLocaleDateString("fr-FR");
-    };
-
-
-    const handleLogout = () => {
-        localStorage.removeItem("userToken");
-        router.replace("/users/login");
-    };
-
-    const validatePromoCode = () => {
-        if (promoCode === "PROMO10") {
-            setDiscount(totalAmount * 0.1);
-            Swal.fire({
-                title: "Code promo appliqué !",
-                text: "Vous avez bénéficié de 10% de réduction.",
-                icon: "success",
-                confirmButtonText: "OK",
-            });
-        } if (promoCode === "PROMO20") {
-            setDiscount(totalAmount * 0.2);
-            Swal.fire({
-                title: "Code promo appliqué !",
-                text: "Vous avez bénéficié de 20% de réduction.",
-                icon: "success",
-                confirmButtonText: "OK",
-            });
-        }
-        else {
-            Swal.fire({
-                title: "Code promo invalide",
-                text: "Veuillez entrer un code valide.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-        }
-    };
-    useEffect(() => {
-        const loadUserAndCart = async () => {
-            const token = localStorage.getItem("userToken");
-            if (!token) {
-                router.push("/users/login");
-                return;
-            }
-
-            const storedCartItems = localStorage.getItem("cartItems");
-            const parsedCartItems = storedCartItems ? JSON.parse(storedCartItems) : [];
-            const totalWeight = parsedCartItems.reduce((sum: any, item: { weight: any; }) => sum + (item.weight || 0), 0);
-
-            setCartItems(parsedCartItems);
-            setDeliveryCost(calculateDeliveryCost(selectedTransporter, totalWeight));
-        };
-
-        loadUserAndCart();
-    }, [selectedTransporter]);
-
-    useEffect(() => {
-        setEstimatedDeliveryDate(calculateEstimatedDeliveryDate(selectedTransporter));
-    }, [selectedTransporter]);
-
-
-
 
     return (
         <div className="container p-6 mx-auto mt-10 bg-white rounded-lg shadow-lg">
-            <h1 className="mb-6 text-4xl font-bold text-center text-indigo-600">Paiement de vos Cours</h1>
-            {/* date estimée de livraison si la commande est validée en fonction du transporteur choisit, 4 jours si c'est colissimo, dhl 3 jours et 2 jours ups  */}
-            <h2>Date estimée de livraison : <strong>{estimatedDeliveryDate}</strong></h2>
-            {/* Transporter Selection */}
-            <div className="mt-4 mb-4">
-                <label htmlFor="transporter" className="block mb-2 font-semibold">Choisissez un transporteur :</label>
+            <h1 className="mb-6 text-4xl font-bold text-center text-indigo-600">
+                Paiement
+            </h1>
+
+            {user && (
+                <div className="mb-6 p-4 bg-indigo-50 rounded-lg">
+                    <h2 className="text-2xl font-semibold text-gray-700 mb-4">Informations utilisateur</h2>
+                    <Avatar src={user.avatar || "/assets/default-avatar.webp"} size="lg" />
+                    <h3 className="text-xl font-semibold text-gray-700 mt-4">Bonjour {user.pseudo}</h3>
+                    <p><strong>Nom :</strong> {user.nom}</p>
+                    <p><strong>Prénom :</strong> {user.prenom}</p>
+                    <p><strong>Email :</strong> {user.email}</p>
+                    <p><strong>Téléphone :</strong> {user.phone}</p>
+                </div>
+            )}
+
+            <div className="mb-6">
+                <h2 className="text-2xl font-semibold text-gray-700 mb-4">Votre panier :</h2>
+                <ul>
+                    {cartItems.map((item, index) => (
+                        <li key={index} className="mb-2">
+                            <strong>{item.title}</strong> - {item.price} € x {item.quantity}
+                        </li>
+                    ))}
+                </ul>
+                <p><strong>Total avant livraison :</strong> {totalToPay - deliveryCost} €</p>
+                <p><strong>Frais de livraison :</strong> {deliveryCost} €</p>
+                <p><strong>Total à payer :</strong> {totalToPay} €</p>
+            </div>
+
+            <div className="mt-4">
+                <label htmlFor="transporter" className="block mb-2 font-semibold">Sélectionnez un transporteur :</label>
                 <select id="transporter" value={selectedTransporter} className="p-3 w-full rounded-lg border" onChange={handleTransporterChange}>
                     <option value="">Sélectionnez un transporteur</option>
+                    <option value="Colissimo">Colissimo</option>
                     <option value="UPS">UPS</option>
                     <option value="DHL">DHL</option>
-                    <option value="Colissimo">Colissimo</option>
                 </select>
             </div>
 
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                {/* Informations utilisateur */}
-                <div className="p-6 bg-indigo-50 rounded-lg shadow-md">
-                    <div className="flex gap-4 items-center mb-4">
-                        <Avatar
-                            size="lg"
-                            src={user?.avatar || "/assets/default-avatar.webp"}
-                            alt={`Avatar de ${user?.pseudo || "Utilisateur"}`}
-                        />
-                        <h2 className="text-xl font-semibold text-gray-800">Bienvenue, {user?.pseudo || "Utilisateur"} !</h2>
-                    </div>
-                    <div className="space-y-4">
-                        <p>
-                            <strong>Email :</strong> {user?.email}
-                        </p>
-                        <p>
-                            <strong>Nom :</strong> {user?.nom}
-                        </p>
-                        <p>
-                            <strong>Prénom :</strong> {user?.prenom}
-                        </p>
-                        <p>
-                            <strong>Adresse :</strong> {user?.deliveryAddress?.street}, {user?.deliveryAddress?.city}, {user?.deliveryAddress?.postalCode}, {user?.deliveryAddress?.country}
-                        </p>
-                        <p>
-                            <strong>Téléphone :</strong> {user?.phone}
-                        </p>
-                        <button className="py-2 w-full font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700" onClick={handleLogout}>Déconnexion</button>
-                    </div>
-                </div>
-
-                {/* Récapitulatif de la commande */}
-                <div className="p-6 bg-indigo-50 rounded-lg shadow-md">
-                    <h2 className="mb-4 text-xl font-semibold text-gray-800">Résumé de votre commande</h2>
-                    <ul className="mb-4">
-                        {cartItems.map((item: any, index: number) => (
-                            <li key={index} className="mb-2">
-                                <strong>{item.title}</strong> - {item.price} € x {item.quantity}
-                                {/* description des articles */}
-                                <p className="text-gray-600">{item.description}</p>
-                                {/* image du produit */}
-                                <img src={item.imageUrl} alt={item.title} className="w-10 h-10 object-cover object-center rounded-lg" />
-
-                            </li>
-                        ))}
-                    </ul>
-                    {/* <p>
-                        <strong>Total des cours :</strong> {totalAmount} €
-                    </p> */}
-                    <p>
-                        <strong>Réduction :</strong> {discount.toFixed(2)} €
-                    </p>
-                    <p>
-                        <strong>Frais de livraison :</strong> {deliveryCost.toFixed(2)} €
-                    </p>
-                    <p>
-                        <strong>Total à payer :</strong> {(totalAmount - discount + deliveryCost).toFixed(2)} €
-                    </p>
-                </div>
-            </div>
-            {/* Promo Code */}
-            <div className="mt-4 mb-4">
-                <label htmlFor="promoCode" className="block mb-2 font-semibold">Entrez votre code promo :</label>
-                <input type="text" id="promoCode" className="p-3 w-full rounded-lg border" onChange={(e) => setPromoCode(e.target.value)} />
-            </div>
-
-            {/* Promo Code Validation */}
-            <div className="mt-4 mb-4">
-                <button className="py-2 w-full font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700" onClick={validatePromoCode}>Valider le code promo</button>
-            </div>
-
-            {/* Timer */}
-            <div className="mt-4 mb-4">
-                <p>Temps restant pour payer : {Math.floor(remainingTime / 60)} minutes {remainingTime % 60} secondes</p>
-            </div>
-
-            {/* Formulaire de paiement */}
-            <div className="p-6 mt-6 bg-gray-50 rounded-lg shadow-md">
-                <Elements stripe={stripePromise}>
-                    <CheckoutForm totalToPay={parseFloat((totalAmount - discount + deliveryCost).toFixed(2))} cartItems={cartItems} onPaymentSuccess={() => console.log("Paiement terminé")} selectedTransporter={selectedTransporter} />
-                </Elements>
-            </div>
-
+            <Elements stripe={stripePromise}>
+                <CheckoutForm
+                    totalToPay={totalToPay}
+                    cartItems={cartItems}
+                    onPaymentSuccess={() => console.log("Paiement terminé")}
+                    selectedTransporter={selectedTransporter}
+                />
+            </Elements>
         </div>
     );
 };

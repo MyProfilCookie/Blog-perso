@@ -1,17 +1,16 @@
+/* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 "use client";
 
 import * as React from "react";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Input, Button, Checkbox } from "@nextui-org/react";
+import { Input, Button, Checkbox, avatar } from "@nextui-org/react";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import "sweetalert2/dist/sweetalert2.min.css";
 
-
-
-import { AutismLogo } from "@/components/icons"; // Assurez-vous que le chemin est correct pour votre logo
+import { AutismLogo } from "@/components/icons"; // Vérifie le bon chemin
 
 export default function Connexion() {
   const [identifier, setIdentifier] = useState(""); // Pseudo ou email
@@ -35,79 +34,70 @@ export default function Connexion() {
 
   // Fonction de gestion de la connexion
   const handleLogin = async () => {
-    // Validation du pseudo ou de l'email
     if (identifier.length < 8) {
       Swal.fire({
         icon: "error",
         title: "Erreur",
         text: "Le pseudo ou l'email doit comporter au moins 8 caractères.",
         confirmButtonText: "Ok",
-        customClass: {
-          confirmButton: "bg-blue-500 text-white",
-        },
       });
-
       return;
     }
 
-    // Validation du mot de passe
     const passwordRegex = /^(?=.*[!@#$%^&*])/;
-
     if (password.length < 8 || !passwordRegex.test(password)) {
       Swal.fire({
         icon: "error",
         title: "Erreur",
         text: "Le mot de passe doit comporter au moins 8 caractères et contenir un caractère spécial.",
         confirmButtonText: "Ok",
-        customClass: {
-          confirmButton: "bg-blue-500 text-white",
-        },
       });
-
       return;
     }
 
-    setLoading(true); // Début du chargement
+    setLoading(true);
 
-    const isEmail = /\S+@\S+\.\S+/.test(identifier); // Vérification si l'identifiant est un email
-
+    const isEmail = /\S+@\S+\.\S+/.test(identifier);
     try {
-      // Envoi des données de connexion
-      const loginData = isEmail
-        ? { email: identifier, password }
-        : { pseudo: identifier, password };
+      const loginData = isEmail ? { email: identifier, password } : { pseudo: identifier, password };
 
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(loginData),
       });
 
       const data = await response.json();
-
-      setLoading(false); // Fin du chargement
+      setLoading(false);
 
       if (!response.ok) {
-        // Gestion des erreurs du serveur
         handleLoginError(response.status, data.message);
-
         return;
       }
 
-      // Stocker le token dans le localStorage
+      // Stocker les infos utilisateur dans le localStorage
       localStorage.setItem("userToken", data.token);
-      console.log("token : ", data.token);
-      console.log("user : ", data.user);
+      localStorage.setItem(
+        "user",
+        JSON.stringify({
+          pseudo: data.user.pseudo,
+          email: data.user.email,
+          nom: data.user.nom,
+          prenom: data.user.prenom,
+          phone: data.user.phone,
+          avatar: data.user.avatar || "/assets/default-avatar.webp",
+          role: data.user.role || "user",
+          deliveryAddress: data.user.deliveryAddress || {
+            street: "Adresse inconnue",
+            city: "Ville inconnue",
+            postalCode: "Code postal inconnu",
+            country: "France",
+          },
+        })
+      );
 
-      // Stocker l'utilisateur dans le localStorage
-      localStorage.setItem("user", JSON.stringify({
-        pseudo: data.user.pseudo,
-        email: data.user.email,
-        avatar: data.user.avatar || "/assets/default-avatar.webp",
-        role: data.user.role || "user",
-      }));
+      console.log("Données utilisateur stockées :", localStorage.getItem("user"));
+
       // Déclencher un événement personnalisé pour rafraîchir la navbar
       window.dispatchEvent(new CustomEvent("userUpdate"));
 
@@ -117,11 +107,7 @@ export default function Connexion() {
         title: "Connexion réussie",
         text: `Bienvenue sur AutiStudy, ${data.user.pseudo || data.user.prenom}!`,
         confirmButtonText: "Ok",
-        customClass: {
-          confirmButton: "bg-green-500 text-white",
-        },
       }).then(() => {
-        // Redirection en fonction du rôle de l'utilisateur
         router.push(data.user.role === "admin" ? "/admin/dashboard" : "/dashboard");
       });
     } catch (error) {
@@ -131,9 +117,6 @@ export default function Connexion() {
         title: "Erreur",
         text: "Erreur lors de la connexion au serveur.",
         confirmButtonText: "Ok",
-        customClass: {
-          confirmButton: "bg-blue-500 text-white",
-        },
       });
     }
   };
@@ -147,10 +130,6 @@ export default function Connexion() {
         showCancelButton: true,
         confirmButtonText: "Oui, m'inscrire",
         cancelButtonText: "Annuler",
-        customClass: {
-          confirmButton: "bg-blue-500 text-white",
-          cancelButton: "bg-gray-500 text-white",
-        },
       }).then((result) => {
         if (result.isConfirmed) {
           router.push("/users/signup");
@@ -162,9 +141,6 @@ export default function Connexion() {
         title: "Erreur",
         text: "Mot de passe incorrect.",
         confirmButtonText: "Ok",
-        customClass: {
-          confirmButton: "bg-blue-500 text-white",
-        },
       });
     } else {
       Swal.fire({
@@ -172,9 +148,6 @@ export default function Connexion() {
         title: "Erreur",
         text: message || "Erreur serveur",
         confirmButtonText: "Ok",
-        customClass: {
-          confirmButton: "bg-blue-500 text-white",
-        },
       });
     }
   };
@@ -186,12 +159,7 @@ export default function Connexion() {
       initial={{ opacity: 0, y: -50 }}
       transition={{ duration: 1 }}
     >
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-6"
-        initial={{ opacity: 0, y: -50 }}
-        transition={{ duration: 1, delay: 0.2 }}
-      >
+      <motion.div animate={{ opacity: 1, y: 0 }} className="mb-6" initial={{ opacity: 0, y: -50 }} transition={{ duration: 1, delay: 0.2 }}>
         <AutismLogo className="mx-auto mb-2" size={60} />
         <h1 className="text-4xl font-bold text-center text-blue-600">Bienvenue sur AutiStudy</h1>
       </motion.div>
@@ -205,18 +173,8 @@ export default function Connexion() {
         Connectez-vous pour accéder à des ressources adaptées et un suivi personnalisé.
       </motion.p>
 
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col gap-4 w-[300px]"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 1, delay: 0.6 }}
-      >
-        <Input
-          required
-          placeholder="Pseudo ou Email"
-          value={identifier}
-          onChange={(e) => setIdentifier(e.target.value)}
-        />
+      <motion.div animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-4 w-[300px]" initial={{ opacity: 0, y: 50 }} transition={{ duration: 1, delay: 0.6 }}>
+        <Input required placeholder="Pseudo ou Email" value={identifier} onChange={(e) => setIdentifier(e.target.value)} />
 
         <Input
           required
@@ -228,16 +186,9 @@ export default function Connexion() {
             validatePassword(e.target.value);
           }}
         />
-        {password && (
-          <p className={`text-sm ${passwordStrength.includes("faible") ? "text-red-500" : "text-green-500"}`}>
-            {passwordStrength}
-          </p>
-        )}
+        {password && <p className={`text-sm ${passwordStrength.includes("faible") ? "text-red-500" : "text-green-500"}`}>{passwordStrength}</p>}
 
-        <Checkbox
-          isSelected={newsletter}
-          onChange={(e) => setNewsletter(e.target.checked)}
-        >
+        <Checkbox isSelected={newsletter} onChange={(e) => setNewsletter(e.target.checked)}>
           S&apos;inscrire à la newsletter
         </Checkbox>
 

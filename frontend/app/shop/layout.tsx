@@ -1,31 +1,30 @@
-/* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 "use client";
 
 import { useState, useEffect } from "react";
 import { Popover, PopoverTrigger, PopoverContent, Badge, Button } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faTrash, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
 import ArticlesPage from "./page";
 
 type Article = {
+    productId: string;
     title: string;
     description: string;
     price: number;
-    link: string;
     imageUrl: string;
+    link: string;
     quantity?: number;
-    weight?: number;
-    productId: string;
 };
 
 type User = {
-    id: string;
-    pseudo: string;
+    pseudo: any;
+    _id: string;
     email: string;
+    name: string;
 };
 
 export default function ShopPage() {
@@ -33,116 +32,150 @@ export default function ShopPage() {
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
 
-    /**
-     * Charger l'utilisateur depuis le localStorage
-     */
+    // Charger l'utilisateur depuis le localStorage et synchroniser le panier
     useEffect(() => {
-        const storedUser = localStorage.getItem("user");
+        try {
+            const storedUser = localStorage.getItem("user");
+            console.log("Données utilisateur dans localStorage :", storedUser);
 
-        if (storedUser) {
-            setUser(JSON.parse(storedUser));
+            if (storedUser) {
+                const parsedUser: User = JSON.parse(storedUser);
+                setUser(parsedUser);
+
+                const userCartKey = `cartItems_${parsedUser.pseudo}`;
+                console.log("Clé générée pour le panier :", userCartKey);
+
+                const storedUserCart = localStorage.getItem(userCartKey);
+                const guestCart = localStorage.getItem("guestCart");
+
+                let mergedCart: Article[] = [];
+                if (guestCart) mergedCart = JSON.parse(guestCart);
+                if (storedUserCart) mergedCart = mergeCarts(mergedCart, JSON.parse(storedUserCart));
+
+                setCartItems(mergedCart);
+
+                // Sauvegarder le panier fusionné et supprimer le panier invité
+                localStorage.setItem(userCartKey, JSON.stringify(mergedCart));
+                localStorage.removeItem("guestCart");
+            } else {
+                const guestCart = localStorage.getItem("guestCart");
+                if (guestCart) {
+                    setCartItems(JSON.parse(guestCart));
+                }
+            }
+        } catch (error) {
+            console.error("Erreur lors du chargement des données :", error);
         }
     }, []);
 
-    /**
-     * Charger le panier depuis le localStorage si l'utilisateur est connecté
-     */
+    // Sauvegarder le panier dans le localStorage à chaque mise à jour
     useEffect(() => {
-        if (user) {
-            const storedCart = localStorage.getItem(`cartItems_${user.id}`);
-
-            if (storedCart) {
-                try {
-                    const parsedCart = JSON.parse(storedCart);
-
-                    if (Array.isArray(parsedCart)) {
-                        setCartItems(parsedCart);
-                    }
-                } catch (error) {
-                    console.error("Erreur lors du chargement du panier :", error);
-                }
-            }
-        } else {
-            setCartItems([]); // Vider le panier si l'utilisateur est déconnecté
-        }
-    }, [user]);
-
-    /**
-     * Sauvegarder le panier dans le localStorage à chaque mise à jour
-     */
-    useEffect(() => {
-        if (user) {
-            if (cartItems.length > 0) {
-                localStorage.setItem(`cartItems_${user.id}`, JSON.stringify(cartItems));
+        try {
+            if (user) {
+                const userCartKey = `cartItems_${user.pseudo}`;
+                console.log("Sauvegarde du panier utilisateur :", cartItems);
+                localStorage.setItem(userCartKey, JSON.stringify(cartItems));
             } else {
-                localStorage.removeItem(`cartItems_${user.id}`);
+                console.log("Sauvegarde du panier invité :", cartItems);
+                localStorage.setItem("guestCart", JSON.stringify(cartItems));
             }
+        } catch (error) {
+            console.error("Erreur lors de la sauvegarde du panier :", error);
         }
     }, [cartItems, user]);
 
-    /**
-     * Ajouter un article au panier
-     */
+    // Fusionner deux paniers
+    const mergeCarts = (cart1: Article[], cart2: Article[]): Article[] => {
+        const merged = [...cart1];
+        cart2.forEach((item) => {
+            const existingItem = merged.find((cartItem) => cartItem.productId === item.productId);
+            if (existingItem) {
+                existingItem.quantity = (existingItem.quantity ?? 0) + (item.quantity ?? 0);
+            } else {
+                merged.push(item);
+            }
+        });
+        return merged;
+    };
+
+    // Ajouter un article au panier
     const addToCart = (article: Article) => {
-        if (!user) {
-            Swal.fire({
-                title: "Connectez-vous",
-                text: "Vous devez être connecté pour ajouter des articles au panier.",
-                icon: "warning",
-            });
-
-            return;
-        }
-
         setCartItems((prevItems) => {
-            const existingArticle = prevItems.find((item) => item.productId === article.productId);
-
-            if (existingArticle) {
+            const existingItem = prevItems.find((item) => item.productId === article.productId);
+            if (existingItem) {
                 return prevItems.map((item) =>
                     item.productId === article.productId
                         ? { ...item, quantity: (item.quantity ?? 1) + 1 }
                         : item
                 );
             }
-
             return [...prevItems, { ...article, quantity: 1 }];
         });
     };
 
-    /**
-     * Vider le panier à la déconnexion
-     */
-    const handleLogout = () => {
-        Swal.fire({
-            title: "Déconnexion",
-            text: "Votre panier sera vidé lors de la déconnexion.",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonText: "Se déconnecter",
-            cancelButtonText: "Annuler",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                if (user) {
-                    localStorage.removeItem(`cartItems_${user.id}`);
-                }
-                localStorage.removeItem("user");
-                setUser(null);
-                setCartItems([]);
-                Swal.fire("Déconnecté", "Vous avez été déconnecté(e).", "success");
-                router.replace("/");
-            }
-        });
+    // Augmenter la quantité d'un article
+    const increaseQuantity = (productId: string) => {
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.productId === productId
+                    ? { ...item, quantity: (item.quantity ?? 1) + 1 }
+                    : item
+            )
+        );
     };
 
-    /**
-     * Gestion des erreurs dans les composants
-     */
-    if (!user && cartItems.length > 0) {
-        setCartItems([]);
-    }
+    // Diminuer la quantité d'un article
+    const decreaseQuantity = (productId: string) => {
+        setCartItems((prevItems) =>
+            prevItems.map((item) =>
+                item.productId === productId && (item.quantity ?? 0) > 1
+                    ? { ...item, quantity: (item.quantity ?? 1) - 1 }
+                    : item
+            )
+        );
+    };
+
+    // Supprimer un article du panier
+    const removeItem = (productId: string) => {
+        setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+    };
+
+    // Calculer le nombre total d'articles
+    const calculateTotalItems = () => {
+        return cartItems.reduce((total, item) => total + (item.quantity ?? 1), 0);
+    };
+
+    // Calculer le sous-total du panier
+    const calculateTotal = () => {
+        return cartItems
+            .reduce((total, item) => total + item.price * (item.quantity ?? 1), 0)
+            .toFixed(2);
+    };
+
+    // Passer au paiement
+    const handleCheckout = () => {
+        if (!user) {
+            Swal.fire({
+                title: "Connexion requise",
+                text: "Vous devez être connecté pour accéder au paiement.",
+                icon: "warning",
+                confirmButtonText: "Se connecter",
+            }).then(() => {
+                router.push("/users/login");
+            });
+            return;
+        }
+
+        Swal.fire({
+            title: "Paiement",
+            text: "Redirection vers la page de paiement.",
+            icon: "info",
+        });
+        router.push("/payment");
+    };
 
     return (
-        <div>
+        <div className="min-h-screen px-4 py-8 md:px-10">
             {/* Popover pour le panier */}
             <Popover>
                 <PopoverTrigger>
@@ -150,7 +183,7 @@ export default function ShopPage() {
                         className="relative"
                         color="primary"
                         style={{
-                            padding: "12px",
+                            padding: "14px",
                             borderRadius: "30px",
                             backgroundColor: "#2D3748",
                             color: "#FFF",
@@ -160,7 +193,7 @@ export default function ShopPage() {
                         }}
                     >
                         <FontAwesomeIcon icon={faShoppingCart} />
-                        {cartItems.length > 0 && (
+                        {calculateTotalItems() > 0 && (
                             <Badge
                                 color="danger"
                                 style={{
@@ -169,31 +202,67 @@ export default function ShopPage() {
                                     right: "-10px",
                                 }}
                             >
-                                {cartItems.length}
+                                {calculateTotalItems()}
                             </Badge>
                         )}
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent>
-                    <div style={{ padding: "10px", minWidth: "300px" }}>
-                        <h3>Votre Panier</h3>
+                    <div className="p-4 min-w-[300px] bg-white shadow-lg rounded-lg">
+                        <h3 className="mb-4 text-xl font-semibold text-gray-700">Votre Panier</h3>
                         {cartItems.length === 0 ? (
-                            <p>Votre panier est vide.</p>
+                            <p className="text-gray-500">Votre panier est vide.</p>
                         ) : (
-                            <ul>
+                            <ul className="space-y-4">
                                 {cartItems.map((item, index) => (
-                                    <li key={index} style={{ marginBottom: "10px" }}>
-                                        <div>
-                                            <strong>{item.title}</strong> - {item.quantity} x {item.price.toFixed(2)} €
+                                    <li key={index} className="flex items-center gap-4">
+                                        <img
+                                            src={item.imageUrl}
+                                            alt={item.title}
+                                            className="object-cover w-16 h-16 rounded-lg"
+                                        />
+                                        <div className="flex-1">
+                                            <p className="font-semibold text-gray-800">{item.title}</p>
+                                            <p className="text-gray-600">
+                                                {item.quantity} x {item.price.toFixed(2)} €
+                                            </p>
+                                        </div>
+                                        <div className="flex items-center gap-2">
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                onClick={() => increaseQuantity(item.productId)}
+                                            >
+                                                <FontAwesomeIcon icon={faPlus} />
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                variant="ghost"
+                                                onClick={() => decreaseQuantity(item.productId)}
+                                                disabled={item.quantity === 1}
+                                            >
+                                                <FontAwesomeIcon icon={faMinus} />
+                                            </Button>
+                                            <Button
+                                                size="sm"
+                                                color="danger"
+                                                onClick={() => removeItem(item.productId)}
+                                            >
+                                                <FontAwesomeIcon icon={faTrash} />
+                                            </Button>
                                         </div>
                                     </li>
                                 ))}
                             </ul>
                         )}
                         {cartItems.length > 0 && (
-                            <div>
-                                <p>Total : {cartItems.reduce((sum, item) => sum + item.price * (item.quantity || 1), 0).toFixed(2)} €</p>
-                                <Button onClick={() => router.push("/payment")}>
+                            <div className="mt-4">
+                                <p className="font-semibold text-gray-700">Total : {calculateTotal()} €</p>
+                                <Button
+                                    className="w-full mt-2"
+                                    color="success"
+                                    onClick={handleCheckout}
+                                >
                                     Passer au paiement
                                 </Button>
                             </div>
@@ -203,13 +272,9 @@ export default function ShopPage() {
             </Popover>
 
             {/* Liste des articles */}
-            <ArticlesPage cart={cartItems} onAddToCart={addToCart} />
-
-            {user && (
-                <Button style={{ marginTop: "20px" }} onClick={handleLogout}>
-                    Déconnexion
-                </Button>
-            )}
+            <div className="gap-6 mt-8">
+                <ArticlesPage cart={cartItems} onAddToCart={addToCart} />
+            </div>
         </div>
     );
 }

@@ -29,10 +29,6 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
     const [articles, setArticles] = useState<Article[]>([]);
     const [loading, setLoading] = useState(true);
 
-    // Fonction pour générer un ID unique (si nécessaire)
-    const generateUniqueId = () => "_" + Math.random().toString(36).substr(2, 9);
-
-    // Fonction pour récupérer les articles via une API
     useEffect(() => {
         const fetchArticles = async () => {
             try {
@@ -43,19 +39,11 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                 }
 
                 const data = await response.json();
-
-                // Enrichir les données avec productId si manquant
-                const enrichedData = data.map((item: any) => ({
-                    ...item,
-                    // on recupère l'id de l'article dans la base de données
-                    productId: item.productId || item.id || generateUniqueId(),
-                }));
-
-                setArticles(enrichedData); // Mettre à jour les articles
+                setArticles(data);
             } catch (error) {
                 console.error("Erreur lors de la récupération des articles :", error);
             } finally {
-                setLoading(false); // Fin du chargement
+                setLoading(false);
             }
         };
 
@@ -63,7 +51,7 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
     }, []);
 
     if (loading) {
-        return <Loading />; // Affichage du message de chargement
+        return <Loading />;
     }
 
     if (articles.length === 0) {
@@ -75,56 +63,63 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
     }
 
     return (
-        <section className="flex flex-col justify-between min-h-screen py-8 dark:bg-gray-900">
-            <div className="flex flex-col items-center justify-center w-full max-w-6xl mx-auto px-4 text-center">
-                <h2 className="mt-4 text-lg text-gray-600 dark:text-gray-300">
-                    Voici une sélection d&apos;articles pour améliorer le quotidien des
-                    personnes autistes.
-                </h2>
-
-                <div className="grid gap-8 mt-8 sm:grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-                    {articles.map((article, index) => (
-                        <motion.div
-                            key={article.productId || index}
-                            animate={{ opacity: 1, y: 0 }}
-                            className="w-full"
-                            initial={{ opacity: 0, y: 20 }}
-                            transition={{ duration: 0.5 }}
-                        >
-                            <Card className="py-4 max-w-[400px] w-full mx-auto shadow-lg dark:bg-gray-800 dark:text-white">
-                                <img
-                                    alt={article.title}
-                                    className="w-full h-48 object-cover object-center"
-                                    src={article.imageUrl}
-                                />
-                                <CardBody className="flex flex-col items-center">
-                                    <h3 className="mb-2 text-xl font-bold">{article.title}</h3>
-                                    <p className="text-gray-700 dark:text-gray-300">{article.description}</p>
-                                    <p className="mt-4 text-lg font-semibold">{article.price} €</p>
-                                    <NextLink passHref href={article.link}>
-                                        <Button className="mt-4" color="primary">
-                                            Voir cet article
-                                        </Button>
-                                    </NextLink>
-                                    <Button
-                                        className="mt-4"
-                                        color="secondary"
-                                        onClick={() => onAddToCart(article)}
-                                    >
-                                        Ajouter au panier
-                                    </Button>
-                                </CardBody>
-                            </Card>
-                        </motion.div>
-                    ))}
+        <section className="min-h-screen px-6 py-12 lg:px-12 xl:px-20 dark:bg-gray-900">
+            {/* Conteneur avec une disposition fluide */}
+            <h2 className="text-2xl font-semibold leading-snug text-gray-700 dark:text-gray-300">
+                Découvrez notre sélection d&apos;articles pour améliorer le quotidien des
+                personnes autistes.
+            </h2>
+            <div className="flex flex-col mx-auto text-center max-w-7xl md:flex-row md:items-start md:text-left">
+                {/* Conteneur des articles */}
+                <div className="w-full">
+                    <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                        {articles.map((article, index) => (
+                            <motion.div
+                                key={article.productId || index}
+                                animate={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, y: 20 }}
+                                transition={{ duration: 0.4 }}
+                                className="w-full"
+                            >
+                                <Card className="overflow-hidden transition-all bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:text-white hover:shadow-xl h-full">
+                                    <img
+                                        alt={article.title}
+                                        className="object-cover object-center w-full h-52"
+                                        src={article.imageUrl}
+                                    />
+                                    <CardBody className="flex flex-col items-center p-5 h-full">
+                                        <h3 className="mb-2 text-lg font-bold text-center">{article.title}</h3>
+                                        <p className="text-sm text-center text-gray-600 dark:text-gray-300 line-clamp-3 min-h-[3rem]">
+                                            {article.description}
+                                        </p>
+                                        <p className="mt-4 text-lg font-semibold text-blue-600">
+                                            {article.price} €
+                                        </p>
+                                        <div className="flex flex-col w-full mt-4 space-y-3">
+                                            <NextLink passHref href={article.link}>
+                                                <Button fullWidth color="primary">
+                                                    Voir cet article
+                                                </Button>
+                                            </NextLink>
+                                            <Button
+                                                fullWidth
+                                                color="secondary"
+                                                onClick={() => onAddToCart(article)}
+                                            >
+                                                Ajouter au panier
+                                            </Button>
+                                        </div>
+                                    </CardBody>
+                                </Card>
+                            </motion.div>
+                        ))}
+                    </div>
                 </div>
             </div>
 
             {/* Footer */}
-            <footer className="w-full py-4 text-center dark:text-gray-300">
-                <p style={{ fontSize: "1em", color: "#888" }}>
-                    © 2024 AutiStudy - Tous droits réservés.
-                </p>
+            <footer className="w-full py-8 text-sm text-center text-gray-500 dark:text-gray-300">
+                © 2024 AutiStudy - Tous droits réservés.
             </footer>
         </section>
     );
