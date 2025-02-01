@@ -6,6 +6,8 @@ import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 import Loading from "@/components/loading";
 
@@ -64,13 +66,20 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
 
     return (
         <section className="min-h-screen px-6 py-12 lg:px-12 xl:px-20 dark:bg-gray-900">
-            {/* Conteneur avec une disposition fluide */}
-            <h2 className="text-2xl font-semibold leading-snug text-gray-700 dark:text-gray-300">
-                Découvrez notre sélection d&apos;articles pour améliorer le quotidien des
-                personnes autistes.
-            </h2>
+            <motion.h2
+                className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-snug text-gray-700 dark:text-gray-300 text-center mb-8"
+                animate={{
+                    scale: [1, 1.05, 1],
+                    color: ["#1E3A8A", "#F59E0B", "#10B981", "#1E3A8A"]
+                }}
+                transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+            >
+                <span className="icon">
+                    <FontAwesomeIcon icon={faStar} />
+                </span> Découvrez notre sélection d&apos;articles pour améliorer le quotidien des personnes autistes.
+            </motion.h2>
+
             <div className="flex flex-col mx-auto text-center max-w-7xl md:flex-row md:items-start md:text-left">
-                {/* Conteneur des articles */}
                 <div className="w-full">
                     <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
                         {articles.map((article, index) => (
@@ -117,12 +126,12 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                 </div>
             </div>
 
-            {/* Footer */}
             <footer className="w-full py-8 text-sm text-center text-gray-500 dark:text-gray-300">
                 © 2024 AutiStudy - Tous droits réservés.
             </footer>
         </section>
     );
 }
+
 
 
