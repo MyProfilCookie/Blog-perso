@@ -4,7 +4,7 @@
 import { useState, useEffect } from "react";
 import { Popover, PopoverTrigger, PopoverContent, Badge, Button } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faTrash, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 
@@ -32,59 +32,38 @@ export default function ShopPage() {
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
 
-    // Charger l'utilisateur depuis le localStorage et synchroniser le panier
     useEffect(() => {
-        try {
-            const storedUser = localStorage.getItem("user");
-            console.log("Données utilisateur dans localStorage :", storedUser);
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            const parsedUser: User = JSON.parse(storedUser);
+            setUser(parsedUser);
 
-            if (storedUser) {
-                const parsedUser: User = JSON.parse(storedUser);
-                setUser(parsedUser);
+            const userCartKey = `cartItems_${parsedUser.pseudo}`;
+            const storedUserCart = localStorage.getItem(userCartKey);
+            const guestCart = localStorage.getItem("guestCart");
 
-                const userCartKey = `cartItems_${parsedUser.pseudo}`;
-                console.log("Clé générée pour le panier :", userCartKey);
+            let mergedCart: Article[] = [];
+            if (guestCart) mergedCart = JSON.parse(guestCart);
+            if (storedUserCart) mergedCart = mergeCarts(mergedCart, JSON.parse(storedUserCart));
 
-                const storedUserCart = localStorage.getItem(userCartKey);
-                const guestCart = localStorage.getItem("guestCart");
-
-                let mergedCart: Article[] = [];
-                if (guestCart) mergedCart = JSON.parse(guestCart);
-                if (storedUserCart) mergedCart = mergeCarts(mergedCart, JSON.parse(storedUserCart));
-
-                setCartItems(mergedCart);
-
-                // Sauvegarder le panier fusionné et supprimer le panier invité
-                localStorage.setItem(userCartKey, JSON.stringify(mergedCart));
-                localStorage.removeItem("guestCart");
-            } else {
-                const guestCart = localStorage.getItem("guestCart");
-                if (guestCart) {
-                    setCartItems(JSON.parse(guestCart));
-                }
-            }
-        } catch (error) {
-            console.error("Erreur lors du chargement des données :", error);
+            setCartItems(mergedCart);
+            localStorage.setItem(userCartKey, JSON.stringify(mergedCart));
+            localStorage.removeItem("guestCart");
+        } else {
+            const guestCart = localStorage.getItem("guestCart");
+            if (guestCart) setCartItems(JSON.parse(guestCart));
         }
     }, []);
 
-    // Sauvegarder le panier dans le localStorage à chaque mise à jour
     useEffect(() => {
-        try {
-            if (user) {
-                const userCartKey = `cartItems_${user.pseudo}`;
-                console.log("Sauvegarde du panier utilisateur :", cartItems);
-                localStorage.setItem(userCartKey, JSON.stringify(cartItems));
-            } else {
-                console.log("Sauvegarde du panier invité :", cartItems);
-                localStorage.setItem("guestCart", JSON.stringify(cartItems));
-            }
-        } catch (error) {
-            console.error("Erreur lors de la sauvegarde du panier :", error);
+        if (user) {
+            const userCartKey = `cartItems_${user.pseudo}`;
+            localStorage.setItem(userCartKey, JSON.stringify(cartItems));
+        } else {
+            localStorage.setItem("guestCart", JSON.stringify(cartItems));
         }
     }, [cartItems, user]);
 
-    // Fusionner deux paniers
     const mergeCarts = (cart1: Article[], cart2: Article[]): Article[] => {
         const merged = [...cart1];
         cart2.forEach((item) => {
@@ -98,7 +77,6 @@ export default function ShopPage() {
         return merged;
     };
 
-    // Ajouter un article au panier
     const addToCart = (article: Article) => {
         setCartItems((prevItems) => {
             const existingItem = prevItems.find((item) => item.productId === article.productId);
@@ -113,7 +91,6 @@ export default function ShopPage() {
         });
     };
 
-    // Augmenter la quantité d'un article
     const increaseQuantity = (productId: string) => {
         setCartItems((prevItems) =>
             prevItems.map((item) =>
@@ -124,7 +101,6 @@ export default function ShopPage() {
         );
     };
 
-    // Diminuer la quantité d'un article
     const decreaseQuantity = (productId: string) => {
         setCartItems((prevItems) =>
             prevItems.map((item) =>
@@ -135,24 +111,34 @@ export default function ShopPage() {
         );
     };
 
-    // Supprimer un article du panier
-    const removeItem = (productId: string) => {
-        setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+    const confirmRemoveItem = (productId: string) => {
+        Swal.fire({
+            title: "Êtes-vous sûr ?",
+            text: "Voulez-vous vraiment supprimer cet article du panier ?",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#d33",
+            cancelButtonColor: "#3085d6",
+            confirmButtonText: "Oui, supprimer",
+            cancelButtonText: "Annuler",
+        }).then((result) => {
+            if (result.isConfirmed) {
+                setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
+                Swal.fire("Supprimé !", "L'article a été supprimé du panier.", "success");
+            }
+        });
     };
 
-    // Calculer le nombre total d'articles
     const calculateTotalItems = () => {
         return cartItems.reduce((total, item) => total + (item.quantity ?? 1), 0);
     };
 
-    // Calculer le sous-total du panier
     const calculateTotal = () => {
         return cartItems
             .reduce((total, item) => total + item.price * (item.quantity ?? 1), 0)
             .toFixed(2);
     };
 
-    // Passer au paiement
     const handleCheckout = () => {
         if (!user) {
             Swal.fire({
@@ -160,9 +146,7 @@ export default function ShopPage() {
                 text: "Vous devez être connecté pour accéder au paiement.",
                 icon: "warning",
                 confirmButtonText: "Se connecter",
-            }).then(() => {
-                router.push("/users/login");
-            });
+            }).then(() => router.push("/users/login"));
             return;
         }
 
@@ -176,31 +160,17 @@ export default function ShopPage() {
 
     return (
         <div className="min-h-screen px-4 py-8 md:px-10">
-            {/* Popover pour le panier */}
             <Popover>
                 <PopoverTrigger>
                     <Button
-                        className="relative"
+                        className="relative bg-gray-800 text-white p-4 rounded-full fixed right-4 bottom-4"
                         color="primary"
-                        style={{
-                            padding: "14px",
-                            borderRadius: "30px",
-                            backgroundColor: "#2D3748",
-                            color: "#FFF",
-                            position: "fixed",
-                            right: "20px",
-                            bottom: "20px",
-                        }}
                     >
                         <FontAwesomeIcon icon={faShoppingCart} />
                         {calculateTotalItems() > 0 && (
                             <Badge
                                 color="danger"
-                                style={{
-                                    position: "absolute",
-                                    top: "-10px",
-                                    right: "-10px",
-                                }}
+                                className="absolute -top-2 -right-2"
                             >
                                 {calculateTotalItems()}
                             </Badge>
@@ -208,47 +178,48 @@ export default function ShopPage() {
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent>
-                    <div className="p-4 min-w-[300px] bg-white shadow-lg rounded-lg">
-                        <h3 className="mb-4 text-xl font-semibold text-gray-700">Votre Panier</h3>
+                    <div className="p-4 w-72 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-lg shadow-lg">
+                        <h3 className="text-xl font-bold mb-4">Votre Panier</h3>
                         {cartItems.length === 0 ? (
-                            <p className="text-gray-500">Votre panier est vide.</p>
+                            <p>Votre panier est vide.</p>
                         ) : (
                             <ul className="space-y-4">
                                 {cartItems.map((item, index) => (
                                     <li key={index} className="flex items-center gap-4">
-                                        <img
-                                            src={item.imageUrl}
-                                            alt={item.title}
-                                            className="object-cover w-16 h-16 rounded-lg"
+                                        <button
+                                            aria-label={`Remove ${item.title} from cart`}
+                                            className="w-16 h-16 rounded-lg object-cover cursor-pointer"
+                                            style={{
+                                                backgroundImage: `url(${item.imageUrl})`,
+                                                backgroundSize: 'cover',
+                                                backgroundPosition: 'center',
+                                                border: 'none',
+                                                padding: 0,
+                                                overflow: 'hidden',
+                                            }}
+                                            onClick={() => confirmRemoveItem(item.productId)}
+                                            onKeyPress={(e) => {
+                                                if (e.key === 'Enter' || e.key === ' ') {
+                                                    confirmRemoveItem(item.productId);
+                                                }
+                                            }}
                                         />
                                         <div className="flex-1">
-                                            <p className="font-semibold text-gray-800">{item.title}</p>
-                                            <p className="text-gray-600">
+                                            <p className="font-semibold text-gray-900 dark:text-white">{item.title}</p>
+                                            <p>
                                                 {item.quantity} x {item.price.toFixed(2)} €
                                             </p>
                                         </div>
                                         <div className="flex items-center gap-2">
-                                            <Button
-                                                size="sm"
-                                                variant="ghost"
-                                                onClick={() => increaseQuantity(item.productId)}
-                                            >
+                                            <Button size="sm" onClick={() => increaseQuantity(item.productId)}>
                                                 <FontAwesomeIcon icon={faPlus} />
                                             </Button>
                                             <Button
                                                 size="sm"
-                                                variant="ghost"
                                                 onClick={() => decreaseQuantity(item.productId)}
                                                 disabled={item.quantity === 1}
                                             >
                                                 <FontAwesomeIcon icon={faMinus} />
-                                            </Button>
-                                            <Button
-                                                size="sm"
-                                                color="danger"
-                                                onClick={() => removeItem(item.productId)}
-                                            >
-                                                <FontAwesomeIcon icon={faTrash} />
                                             </Button>
                                         </div>
                                     </li>
@@ -257,12 +228,8 @@ export default function ShopPage() {
                         )}
                         {cartItems.length > 0 && (
                             <div className="mt-4">
-                                <p className="font-semibold text-gray-700">Total : {calculateTotal()} €</p>
-                                <Button
-                                    className="w-full mt-2"
-                                    color="success"
-                                    onClick={handleCheckout}
-                                >
+                                <p className="font-bold">Total: {calculateTotal()} €</p>
+                                <Button className="w-full mt-2" color="success" onClick={handleCheckout}>
                                     Passer au paiement
                                 </Button>
                             </div>
@@ -271,10 +238,12 @@ export default function ShopPage() {
                 </PopoverContent>
             </Popover>
 
-            {/* Liste des articles */}
             <div className="gap-6 mt-8">
                 <ArticlesPage cart={cartItems} onAddToCart={addToCart} />
             </div>
         </div>
     );
 }
+
+
+

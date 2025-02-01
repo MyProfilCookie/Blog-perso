@@ -109,7 +109,7 @@ export default function Connexion() {
         text: `Bienvenue sur AutiStudy, ${data.user.pseudo || data.user.prenom}!`,
         confirmButtonText: "Ok",
       }).then(() => {
-        router.push(data.user.role === "admin" ? "/admin/dashboard" : "/dashboard");
+        router.back(); // ✅ Redirection vers la page précédente
       });
     } catch (error) {
       setLoading(false);

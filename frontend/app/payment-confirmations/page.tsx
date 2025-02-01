@@ -22,17 +22,15 @@ const OrderConfirmationPage = () => {
 
                 if (!orderId) {
                     throw new Error(
-                        "Aucun ID de commande trouvé. Veuillez passer une commande.",
+                        "Aucun ID de commande trouvé. Veuillez passer une commande."
                     );
                 }
 
                 if (!token) {
                     throw new Error(
-                        "Utilisateur non authentifié. Veuillez vous reconnecter.",
+                        "Utilisateur non authentifié. Veuillez vous reconnecter."
                     );
                 }
-
-                console.log("Fetching order with ID:", orderId);
 
                 const response = await fetch(
                     `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`,
@@ -42,37 +40,19 @@ const OrderConfirmationPage = () => {
                             "Content-Type": "application/json",
                             Authorization: `Bearer ${token}`,
                         },
-                    },
+                    }
                 );
 
                 if (response.status === 404) {
-                    throw new Error(
-                        "Commande non trouvée. Assurez-vous d'avoir passé une commande valide.",
-                    );
-                }
-
-                if (!response.ok) {
-                    const errorData = await response.json();
-
-                    throw new Error(
-                        errorData.message ||
-                        "Erreur lors de la récupération des données de commande.",
-                    );
+                    throw new Error("Commande non trouvée.");
                 }
 
                 const orderData = await response.json();
-
-                console.log("Order data fetched successfully:", orderData);
                 setOrder(orderData);
 
-                // Vider le panier après récupération de la commande
                 localStorage.removeItem("cartItems");
                 localStorage.removeItem("totalPrice");
             } catch (error: any) {
-                console.error(
-                    "Erreur lors de la récupération des données :",
-                    error.message,
-                );
                 Swal.fire({
                     title: "Erreur",
                     text: error.message || "Une erreur inattendue s'est produite.",
@@ -89,7 +69,7 @@ const OrderConfirmationPage = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen">
+            <div className="flex justify-center items-center h-screen bg-gray-900">
                 <LoadingAnimation />
             </div>
         );
@@ -97,10 +77,8 @@ const OrderConfirmationPage = () => {
 
     if (!order) {
         return (
-            <div className="container mx-auto my-12 text-center">
-                <p className="text-red-500">
-                    Commande introuvable. Assurez-vous d'avoir passé une commande valide.
-                </p>
+            <div className="container mx-auto my-12 text-center text-white">
+                <p className="text-red-400">Commande introuvable.</p>
             </div>
         );
     }
@@ -138,83 +116,54 @@ const OrderConfirmationPage = () => {
     };
 
     return (
-        <div className="container p-6 mx-auto my-12 bg-white rounded-lg shadow-md">
-            <h1 className="mb-6 text-4xl font-bold text-center text-indigo-600">
-                Confirmation de Commande
+        <div className="container p-6 mx-auto my-12 bg-gray-900 rounded-lg shadow-xl text-white">
+            <h1 className="mb-6 text-4xl font-extrabold text-center text-yellow-400 animate-bounce">
+                🎉 Confirmation de Commande 🎉
             </h1>
 
-            <div className="p-6 bg-indigo-50 rounded-lg shadow-md">
-                <h2 className="mb-4 text-xl font-semibold text-gray-800">
-                    Informations Client
-                </h2>
+            <div className="p-6 bg-gray-800 rounded-lg shadow-md">
+                <h2 className="mb-4 text-xl font-semibold">👤 Informations Client</h2>
+                <p><strong>Prénom :</strong> {firstName}</p>
+                <p><strong>Nom :</strong> {lastName}</p>
+                <p><strong>Email :</strong> {email}</p>
+                <p><strong>Téléphone :</strong> {phone}</p>
+            </div>
+
+            <div className="p-6 mt-6 bg-gray-800 rounded-lg shadow-md">
+                <h2 className="mb-4 text-xl font-semibold">📦 Adresse de Livraison</h2>
                 <p>
-                    <strong>Prénom :</strong> {firstName}
-                </p>
-                <p>
-                    <strong>Nom :</strong> {lastName}
-                </p>
-                <p>
-                    <strong>Email :</strong> {email}
-                </p>
-                <p>
-                    <strong>Téléphone :</strong> {phone}
+                    {deliveryAddress.street}, {deliveryAddress.city}, {deliveryAddress.postalCode}, {deliveryAddress.country}
                 </p>
             </div>
 
-            <div className="p-6 mt-6 bg-indigo-50 rounded-lg shadow-md">
-                <h2 className="mb-4 text-xl font-semibold text-gray-800">
-                    Adresse de Livraison
-                </h2>
-                <p>
-                    {deliveryAddress.street}, {deliveryAddress.city},{" "}
-                    {deliveryAddress.postalCode}, {deliveryAddress.country}
-                </p>
-            </div>
-
-            <div className="p-6 mt-6 bg-indigo-50 rounded-lg shadow-md">
-                <h2 className="mb-4 text-xl font-semibold text-gray-800">
-                    Détails de la Commande
-                </h2>
+            <div className="p-6 mt-6 bg-gray-800 rounded-lg shadow-md">
+                <h2 className="mb-4 text-xl font-semibold">🛒 Détails de la Commande</h2>
                 <ul>
                     {items.length > 0 ? (
                         items.map((item: any) => (
-                            <li
-                                key={item.productId || item._id || Math.random()}
-                                className="mb-2"
-                            >
-                                <strong>{item.quantity}</strong> x {item.title || "Article"} -{" "}
-                                {item.price?.toFixed(2)} €
+                            <li key={item.productId || item._id} className="mb-2">
+                                <strong>{item.quantity}</strong> x {item.title} - {item.price?.toFixed(2)} €
                             </li>
                         ))
                     ) : (
-                        <li className="text-red-500">
-                            Aucun article trouvé dans la commande.
-                        </li>
+                        <li className="text-red-400">Aucun article trouvé dans la commande.</li>
                     )}
                 </ul>
-                <p>
-                    <strong>Méthode de Livraison :</strong> {deliveryMethod}
-                </p>
-                <p>
-                    <strong>Frais de Livraison :</strong> {deliveryCost.toFixed(2)} €
-                </p>
-                <p>
-                    <strong>Méthode de Paiement :</strong> {paymentMethod}
-                </p>
-                <p>
-                    <strong>Statut du Paiement :</strong> {paymentStatus}
-                </p>
-                <p className="mt-4 text-lg font-bold text-blue-500">
-                    <strong>Total :</strong> {totalAmount.toFixed(2)} €
+                <p><strong>🚚 Méthode de Livraison :</strong> {deliveryMethod}</p>
+                <p><strong>💸 Frais de Livraison :</strong> {deliveryCost.toFixed(2)} €</p>
+                <p><strong>💳 Méthode de Paiement :</strong> {paymentMethod}</p>
+                <p><strong>✅ Statut du Paiement :</strong> {paymentStatus}</p>
+                <p className="mt-4 text-2xl font-bold text-yellow-400">
+                    <strong>Total :</strong> {totalAmount.toFixed(2)} € 🎯
                 </p>
             </div>
 
             <div className="mt-6 text-center">
                 <button
-                    className="py-2 px-4 font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+                    className="py-3 px-6 font-bold text-white bg-yellow-500 rounded-lg hover:bg-yellow-600 transition-transform transform hover:scale-105"
                     onClick={handleBack}
                 >
-                    Retourner à l'accueil
+                    🔙 Retourner à l'accueil
                 </button>
             </div>
         </div>
