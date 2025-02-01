@@ -20,7 +20,7 @@ const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 // Définir une interface pour l'utilisateur
 
 
-const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTransporter }: { totalToPay: number; cartItems: any[]; onPaymentSuccess: () => void; selectedTransporter: string; }) => {
+const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTransporter, deliveryCost }: { totalToPay: number; cartItems: any[]; onPaymentSuccess: () => void; selectedTransporter: string; deliveryCost: number; }) => {
     const stripe = useStripe();
     const elements = useElements();
     const router = useRouter();
@@ -101,17 +101,27 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
         }
     };
-    //         headers: { Authorization: `Bearer ${token}` },
-    //     });
-    //     const userData = await userResponse.json();
-    //     console.log("Données utilisateur récupérées :", userData);
+    //     let token = localStorage.getItem("userToken");
+
+    //     if (!selectedTransporter) {
+    //         Swal.fire({
+    //             title: "Erreur",
+    //             text: "Veuillez sélectionner un transporteur avant de continuer.",
+    //             icon: "error",
+    //             confirmButtonText: "OK",
+    //         });
+    //         return;
+    //     }
 
     //     if (!token) {
     //         Swal.fire({
     //             title: "Erreur",
-    //             text: "Utilisateur non authentifié. Veuillez vous reconnecter.",
+    //             text: "Votre session a expiré. Veuillez vous reconnecter.",
     //             icon: "error",
-    //             confirmButtonText: "OK",
+    //             confirmButtonText: "Se reconnecter",
+    //         }).then(() => {
+    //             localStorage.removeItem("userToken"); // Supprimer le token corrompu
+    //             window.location.href = "/users/login"; // Rediriger vers la connexion
     //         });
     //         return;
     //     }
@@ -127,51 +137,83 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     //     }
 
     //     try {
+    //         // 🔍 Vérification du token en envoyant la requête à `/users/me`
     //         const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
     //             headers: { Authorization: `Bearer ${token}` },
     //         });
 
+    //         if (userResponse.status === 403) {
+    //             console.error("❌ Token invalide ou expiré, suppression et déconnexion.");
+    //             localStorage.removeItem("userToken"); // Supprime le token expiré
+
+    //             Swal.fire({
+    //                 title: "Session expirée",
+    //                 text: "Votre session a expiré. Veuillez vous reconnecter.",
+    //                 icon: "error",
+    //                 confirmButtonText: "Se reconnecter",
+    //             }).then(() => {
+    //                 window.location.href = "/users/login"; // Rediriger vers la connexion
+    //             });
+    //             return;
+    //         }
+
     //         if (!userResponse.ok) {
+    //             const errorData = await userResponse.text();
+    //             console.error("❌ Erreur API /users/me :", errorData);
     //             throw new Error("Erreur lors de la récupération des informations utilisateur.");
     //         }
 
     //         const userData = await userResponse.json();
-    //         const deliveryAddress = userData.deliveryAddress || {
-    //             street: "Adresse inconnue",
-    //             city: "Ville inconnue",
-    //             postalCode: "Code postal inconnu",
-    //             country: "France",
-    //         };
+    //         console.log("✅ Données utilisateur récupérées :", userData);
 
-    //         const formattedItems = items.map((item) => {
-    //             if (!item.productId || typeof item.productId !== "string") {
-    //                 throw new Error(`L'article "${item.title}" est invalide. Le champ "productId" est requis et doit être une chaîne.`);
-    //             }
-    //             return {
-    //                 productId: item.productId.trim(),
-    //                 title: item.title,
-    //                 quantity: item.quantity,
-    //                 price: item.price,
-    //             };
-    //         });
-    //         // recuperation des données de l'utilisateur
-    //         const user = await userResponse.json();
-    //         console.log("Données utilisateur récupérées :", userData);
+    //         // 🔍 Vérification et formatage des articles
+    //         const formattedItems = items
+    //             .map((item) => {
+    //                 const productId = item.productId || item._id;
+    //                 if (!productId || typeof productId !== "string") {
+    //                     console.error(`❌ Erreur: L'article "${item.title}" n'a pas de productId valide !`, item);
+    //                     return null;
+    //                 }
+
+    //                 return {
+    //                     productId: productId.trim(),
+    //                     title: String(item.title).trim(),
+    //                     quantity: Number(item.quantity),
+    //                     price: Number(item.price),
+    //                 };
+    //             })
+    //             .filter((item) => item !== null);
+
+    //         if (formattedItems.length === 0) {
+    //             Swal.fire({
+    //                 title: "Erreur",
+    //                 text: "Tous les articles du panier sont invalides !",
+    //                 icon: "error",
+    //                 confirmButtonText: "OK",
+    //             });
+    //             return;
+    //         }
+
     //         const orderData = {
+    //             firstName: userData.user.prenom?.trim() || "Prénom inconnu",
+    //             lastName: userData.user.nom?.trim() || "Nom inconnu",
+    //             email: userData.user.email?.trim() || "Email inconnu",
+    //             phone: userData.user.phone?.trim() || "Numéro inconnu",
+    //             deliveryAddress: userData.user.deliveryAddress || {
+    //                 street: "Adresse inconnue",
+    //                 city: "Ville inconnue",
+    //                 postalCode: "Code postal inconnu",
+    //                 country: "France",
+    //             },
     //             items: formattedItems,
     //             totalAmount: total,
     //             transactionId,
     //             paymentMethod: "card",
-    //             deliveryMethod: "Mondial Relay",
-    //             deliveryCost: 5,
-    //             deliveryAddress,
-    //             phone: user.phone || "Numéro inconnu",
-    //             email: user.email || "Email inconnu",
-    //             firstName: user.firstname || "Prénom inconnu",
-    //             lastName: user.nom || "Nom inconnu",
+    //             deliveryMethod: selectedTransporter || "Non spécifié",
+    //             deliveryCost: deliveryCost,
     //         };
 
-    //         console.log("Données envoyées à l'API :", JSON.stringify(orderData, null, 2));
+    //         console.log("📦 Données envoyées à l'API :", JSON.stringify(orderData, null, 2));
 
     //         const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
     //             method: "POST",
@@ -182,17 +224,22 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     //             body: JSON.stringify(orderData),
     //         });
 
-    //         const orderResponseData = await orderResponse.json();
-
     //         if (!orderResponse.ok) {
-    //             console.error("Erreur API /orders :", orderResponseData);
-    //             throw new Error(orderResponseData.message || "Erreur lors de la création de la commande.");
+    //             const errorData = await orderResponse.json();
+    //             console.error("❌ Erreur API /orders :", errorData);
+    //             throw new Error(errorData.message || "Erreur lors de la création de la commande.");
     //         }
 
-    //         const orderId = orderResponseData.order?._id;
-    //         if (!orderId) throw new Error("Aucun identifiant de commande n'a été retourné.");
+    //         const orderResponseData = await orderResponse.json();
+    //         localStorage.setItem("orderId", orderResponseData.order?._id);
 
-    //         localStorage.setItem("orderId", orderId);
+    //         // 🛒 **Vider le panier après paiement réussi**
+    //         const userCartKey = `cartItems_${userData.user.pseudo}`;
+    //         localStorage.removeItem(userCartKey);
+    //         localStorage.removeItem("totalPrice"); // Supprimer aussi le total enregistré
+
+    //         // 🔄 Déclencher un événement pour mettre à jour l'affichage du panier
+    //         window.dispatchEvent(new Event("cartUpdated"));
 
     //         Swal.fire({
     //             title: "Commande enregistrée",
@@ -200,22 +247,37 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     //             icon: "success",
     //             confirmButtonText: "OK",
     //         });
-
-    //         return { orderId };
-    //     } catch (error: any) {
-    //         console.error("Erreur lors de l'enregistrement de la commande :", error);
-
+    //     } catch (error) {
+    //         console.error("❌ Erreur lors de l'enregistrement de la commande :", error);
     //         Swal.fire({
     //             title: "Erreur",
-    //             text: error.message || "Impossible d'enregistrer votre commande et le paiement.",
+    //             text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
     //             icon: "error",
     //             confirmButtonText: "OK",
     //         });
     //     }
-    // };
+    //     const confirmPayment = async (
+    //         user: any,
+    //         transactionId: string,
+    //         amount: number,
+    //         paymentMethod: string
+    //     ) => {
+    //         const confirmationData = {
+    //             userId: user._id,
+    //             transactionId,
+    //             paymentMethod,
+    //             amount,
+    //         };
 
+    //         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations`, {
+    //             method: "POST",
+    //             headers: { "Content-Type": "application/json" },
+    //             body: JSON.stringify(confirmationData),
+    //         });
+    //     };
+    // };
     const saveOrder = async (items: any[], total: number, transactionId: string) => {
-        const token = localStorage.getItem("userToken");
+        let token = localStorage.getItem("userToken");
 
         if (!selectedTransporter) {
             Swal.fire({
@@ -227,13 +289,15 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             return;
         }
 
-
         if (!token) {
             Swal.fire({
                 title: "Erreur",
-                text: "Utilisateur non authentifié. Veuillez vous reconnecter.",
+                text: "Votre session a expiré. Veuillez vous reconnecter.",
                 icon: "error",
-                confirmButtonText: "OK",
+                confirmButtonText: "Se reconnecter",
+            }).then(() => {
+                localStorage.removeItem("userToken");
+                window.location.href = "/users/login";
             });
             return;
         }
@@ -247,81 +311,39 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
             return;
         }
+
         try {
             const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
             if (!userResponse.ok) {
-                const errorData = await userResponse.text();
-                console.error("Erreur API /users/me :", errorData);
                 throw new Error("Erreur lors de la récupération des informations utilisateur.");
             }
 
             const userData = await userResponse.json();
-            console.log("Données utilisateur récupérées :", userData);
+            console.log("✅ Données utilisateur récupérées :", userData);
 
-            // Ajout des informations de livraison et du transporteur
-            userData.deliveryAddress = userData.deliveryAddress || {
-                street: "Adresse inconnue",
-                city: "Ville inconnue",
-                postalCode: "Code postal inconnu",
-                country: "France",
-            };
-            const calculateDeliveryCost = (transporter: string, weight: number): number => {
-                if (transporter === "Colissimo") {
-                    if (weight <= 2) return 4;
-                    if (weight > 2 && weight <= 5) return 6;
-                    return 8;
-                } else if (transporter === "UPS") {
-                    if (weight <= 2) return 6;
-                    if (weight > 2 && weight <= 5) return 8;
-                    return 10;
-                } else if (transporter === "DHL") {
-                    if (weight <= 2) return 8;
-                    if (weight > 2 && weight <= 5) return 10;
-                    return 12;
-                }
-                return 0; // Default cost
-            };
-            // / Calcul dynamique des frais de livraison
-            const weight = items.reduce((sum, item) => sum + (item.weight || 0), 0); // Ajoutez un poids pour chaque article
-            const deliveryCost = calculateDeliveryCost(selectedTransporter, weight);
-
-            // Conversion des items pour l'API
             const formattedItems = items.map((item) => ({
-                productId: mongoose.Types.ObjectId.isValid(item.productId)
-                    ? new mongoose.Types.ObjectId(item.productId)
-                    : item.productId, // Laisse tel quel si c'est une chaîne
-                title: String(item.title).trim(),
-                quantity: Number(item.quantity),
-                price: Number(item.price),
+                productId: item.productId || item._id,
+                title: item.title,
+                quantity: item.quantity,
+                price: item.price,
             }));
 
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, { headers: { Authorization: `Bearer ${token}` } });
-            const data = await response.json();
-
             const orderData = {
-                firstName: data.user.prenom?.trim() || "Prénom inconnu", // Utilise `prenom` pour `firstName`
-                lastName: data.user.nom?.trim() || "Nom inconnu",        // Utilise `nom` pour `lastName`
-                email: data.user.email?.trim() || "Email inconnu",
-                phone: data.user.phone?.trim() || "Numéro inconnu",
-                deliveryAddress: data.user.deliveryAddress || {
-                    street: "Adresse inconnue",
-                    city: "Ville inconnue",
-                    postalCode: "Code postal inconnu",
-                    country: "France",
-                },
+                firstName: userData.user.prenom,
+                lastName: userData.user.nom,
+                email: userData.user.email,
+                phone: userData.user.phone,
+                deliveryAddress: userData.user.deliveryAddress,
                 items: formattedItems,
                 totalAmount: total,
                 transactionId,
                 paymentMethod: "card",
-                deliveryMethod: selectedTransporter || "Non spécifié", // Inclure le transporteur choisi
-                deliveryCost,
+                deliveryMethod: selectedTransporter,
+                deliveryCost: deliveryCost,
             };
-            console.log("Données utilisateur finalisées pour la commande :", JSON.stringify(orderData, null, 2));
-
-            console.log("Données envoyées à l'API :", JSON.stringify(orderData, null, 2));
 
             const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
                 method: "POST",
@@ -333,13 +355,19 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
 
             if (!orderResponse.ok) {
-                const errorData = await orderResponse.json();
-                console.error("Erreur API /orders :", errorData);
-                throw new Error(errorData.message || "Erreur lors de la création de la commande.");
+                throw new Error("Erreur lors de la création de la commande.");
             }
 
             const orderResponseData = await orderResponse.json();
-            localStorage.setItem("orderId", orderResponseData.order?._id);
+            const orderId = orderResponseData.order?._id;
+            localStorage.setItem("orderId", orderId);
+
+            // Enregistrer la confirmation de paiement
+            await confirmPayment(userData.user, orderId, transactionId, total, "card");
+
+            localStorage.removeItem(`cartItems_${userData.user.pseudo}`);
+            localStorage.removeItem("totalPrice");
+            window.dispatchEvent(new Event("cartUpdated"));
 
             Swal.fire({
                 title: "Commande enregistrée",
@@ -348,7 +376,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 confirmButtonText: "OK",
             });
         } catch (error) {
-            console.error("Erreur lors de l'enregistrement de la commande :", error);
+            console.error("❌ Erreur lors de l'enregistrement de la commande :", error);
             Swal.fire({
                 title: "Erreur",
                 text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
@@ -356,7 +384,54 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 confirmButtonText: "OK",
             });
         }
-    }
+    };
+
+    // ✅ Fonction d'enregistrement de la confirmation de paiement
+    const confirmPayment = async (
+        user: any,
+        orderId: string,
+        transactionId: string,
+        amount: number,
+        paymentMethod: string
+    ) => {
+        if (!user || !user._id || !orderId || !transactionId || !amount || !paymentMethod) {
+            console.error("❌ Erreur : Données manquantes pour la confirmation de paiement.");
+            return;
+        }
+
+        const confirmationData = {
+            orderId,
+            userId: user._id,
+            transactionId,
+            paymentMethod: paymentMethod === "card" ? "Credit Card" : paymentMethod,  // ✅ Conversion sécurisée
+            paymentStatus: "Paid",
+            amount,
+        };
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(confirmationData),
+            });
+
+            if (!response.ok) {
+                const errorData = await response.json();
+                console.error("❌ Erreur lors de l'envoi de la confirmation de paiement :", errorData);
+
+                throw new Error(
+                    errorData.message || "Erreur lors de la confirmation du paiement."
+                );
+            }
+
+            const result = await response.json();
+            console.log("✅ Confirmation de paiement enregistrée avec succès :", result);
+            return result; // Renvoie la confirmation pour un traitement ultérieur si nécessaire
+        } catch (error: any) {
+            console.error("❌ Erreur lors de l'enregistrement de la confirmation de paiement :", error.message);
+            throw new Error(error.message || "Erreur inattendue lors de la confirmation du paiement.");
+        }
+    };
     return (
         <form className="mt-6" onSubmit={handleSubmit}>
             <div className="p-4 bg-gray-50 rounded-lg border shadow-md">
@@ -498,6 +573,7 @@ const PaymentPage = () => {
                     cartItems={cartItems}
                     onPaymentSuccess={() => console.log("Paiement terminé")}
                     selectedTransporter={selectedTransporter}
+                    deliveryCost={deliveryCost}
                 />
             </Elements>
         </div>

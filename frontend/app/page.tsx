@@ -25,6 +25,7 @@ import ScrollToTopButton from "@/components/ScrollToTopButton";
 import HeaderAutisme from "@/components/headerAutisme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faCrown, faUser } from "@fortawesome/free-solid-svg-icons"; // Import des icônes
+import Contact from "./contact";
 
 
 export default function Home() {
@@ -135,6 +136,7 @@ export default function Home() {
   const previousSlide = () => setCurrentIndex((prevIndex) => (prevIndex === 0 ? articles.length - 1 : prevIndex - 1));
   const nextTeamSlide = () => setCurrentTeamIndex((prevIndex) => (prevIndex + 1) % teamGroups.length);
   const previousTeamSlide = () => setCurrentTeamIndex((prevIndex) => (prevIndex === 0 ? teamGroups.length - 1 : prevIndex - 1));
+
 
 
   return (
@@ -592,7 +594,7 @@ export default function Home() {
         </p>
 
         {/* Contact Form */}
-        <motion.div
+        {/* <motion.div
           animate={{ opacity: 1, y: 0 }}
           initial={{ opacity: 0, y: 50 }}
           transition={{ duration: 0.8, delay: 2 }}
@@ -641,7 +643,8 @@ export default function Home() {
               </Button>
             </CardBody>
           </Card>
-        </motion.div>
+        </motion.div> */}
+        <Contact />
       </motion.div>
 
       {/* Scroll to top button */}
