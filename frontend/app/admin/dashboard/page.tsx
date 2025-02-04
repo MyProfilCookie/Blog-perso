@@ -370,6 +370,7 @@ const AdminDashboard = () => {
       // Si l'API retourne un objet contenant un tableau, mettez à jour en conséquence.
       setOrders(response.data.orders || []);
     } catch (error) {
+      // eslint-disable-next-line no-console
       console.error(`Erreur lors de la récupération des commandes : ${error}`);
       setOrders([]); // Définit un tableau vide en cas d'erreur
     }
@@ -413,155 +414,220 @@ const AdminDashboard = () => {
 
   return (
     <div className="container mx-auto mt-6">
-      <h1 className="mb-4 text-4xl font-bold">Dashboard Admin {user.pseudo}</h1>
-      <p className="mb-6 text-gray-600">Heure actuelle : {currentTime}</p>
-      <h2 className="text-2xl font-semibold">
-        Bonjour, {user?.prenom || user.pseudo}{" "}
-        <FontAwesomeIcon icon={faCrown} />
+      <h1 className="mb-4 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-pulse text-center">
+        Dashboard Admin {user.pseudo}
+      </h1>
+
+      <p className="mb-6 text-gray-600 dark:text-white text-lg animate-bounce text-center">
+        Heure actuelle : {currentTime}
+      </p>
+
+      <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-center animate-slide-in">
+        Bonjour, {user?.prenom || user.pseudo}{' '}
+        <FontAwesomeIcon icon={faCrown} className="text-yellow-400 animate-spin-slow" />
       </h2>
+      <style>{`
+    @keyframes fade-in {
+      from {
+        opacity: 0;
+        transform: translateY(-20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    @keyframes slide-in {
+      from {
+        transform: translateX(-100%);
+        opacity: 0;
+      }
+      to {
+        transform: translateX(0);
+        opacity: 1;
+      }
+    }
+
+    @keyframes spin-slow {
+      from {
+        transform: rotate(0deg);
+      }
+      to {
+        transform: rotate(360deg);
+      }
+    }
+
+    .animate-fade-in {
+      animation: fade-in 1s ease-out;
+    }
+
+    .animate-slide-in {
+      animation: slide-in 1.5s ease-out;
+    }
+
+    .animate-spin-slow {
+      animation: spin-slow 4s linear infinite;
+    }
+
+    .card-hover:hover {
+      transform: scale(1.05);
+      transition: transform 0.3s ease-in-out;
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+    }
+  `}</style>
+
       {/* Gestion des commandes */}
-      <div className="mt-8">
-        <h3 className="mb-4 text-xl font-semibold">Gestion des commandes</h3>
-        <Table aria-label="Liste des commandes">
-          <TableHeader>
-            <TableColumn>ID Commande</TableColumn>
-            <TableColumn>Client</TableColumn>
-            <TableColumn>Produit</TableColumn>
-            <TableColumn>Status</TableColumn>
-            <TableColumn>Date</TableColumn>
-            <TableColumn>Actions</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {orders.map((order: any) => (
-              <TableRow key={order._id}>
-                <TableCell>{order._id}</TableCell>
-                <TableCell>{order.LastName}</TableCell>
-                <TableCell>{order.productName}</TableCell>
-                <TableCell>{order.status}</TableCell>
-                <TableCell>{dayjs(order.date).format("DD/MM/YYYY")}</TableCell>
-                <TableCell>
-                  <Select
-                    aria-label="Modifier le statut de la commande"
-                    value={order.status}
-                    onChange={(e) =>
-                      updateOrderStatus(order._id, e.target.value)
-                    }
-                  >
-                    <SelectItem value="En cours" key={""}>En cours</SelectItem>
-                    <SelectItem value="Expédiée" key={""}>Expédiée</SelectItem>
-                    <SelectItem value="Livrée" key={""}>Livrée</SelectItem>
-                  </Select>
+      <div className="mt-8 px-4">
+        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">Gestion des commandes</h3>
+        <div className="space-y-4">
+          {orders.map((order) => (
+            <div
+              key={order._id}
+              className="border rounded-lg shadow-md p-4 bg-white dark:bg-black dark:text-white flex flex-col gap-2"
+            >
+              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div className="flex-1 text-center sm:text-left break-words">
+                  <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {order._id}</p>
+                  <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
+                    Client : {order.LastName}
+                  </p>
+                  <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
+                    Produit : {order.productName}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-300">
+                    Date : {dayjs(order.date).format("DD/MM/YYYY")}
+                  </p>
+                  <p className="text-sm text-gray-700 dark:text-gray-400">Statut actuel : {order.status}</p>
+                </div>
+                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                  {['En cours', 'Expédiée', 'Livrée'].map((status) => (
+                    order.status !== status && (
+                      <Button
+                        key={status}
+                        color="primary"
+                        className="w-full sm:w-auto"
+                        onClick={() => updateOrderStatus(order._id, status)}
+                      >
+                        {status}
+                      </Button>
+                    )
+                  ))}
                   <Button
                     color="danger"
+                    className="w-full sm:w-auto"
                     onClick={() => deleteOrder(order._id)}
-                    className="ml-2"
                   >
                     <FontAwesomeIcon icon={faTrash} /> Supprimer
                   </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                </div>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
       {/* Gestion des utilisateurs */}
-      <div className="mt-8">
-        <h3 className="mb-4 text-xl font-semibold">Gestion des utilisateurs</h3>
-        <Table aria-label="Liste des utilisateurs">
-          <TableHeader>
-            <TableColumn>Pseudo</TableColumn>
-            <TableColumn>Email</TableColumn>
-            <TableColumn>Rôle</TableColumn>
-            <TableColumn>Actions</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {users.map((user) => (
-              <TableRow key={user._id}>
-                <TableCell>{user.pseudo}</TableCell>
-                <TableCell>{user.email}</TableCell>
-                <TableCell>{user.role}</TableCell>
-                <TableCell>
-                  {user.email !== "virginie.ayivor@yahoo.fr" && (
-                    <Button
-                      color={user.role === "admin" ? "warning" : "success"}
-                      onClick={() => promoteToAdminOrUser(user._id, user.role)}
-                    >
-                      {user.role === "admin"
-                        ? "Rétrograder en User"
-                        : "Promouvoir Admin"}
-                    </Button>
-                  )}
-                  <Select
-                    aria-label="Motif de bannissement"
-                    value={banReason}
-                    onChange={(e) => setBanReason(e.target.value)}
-                  >
-                    <SelectItem key="violation" value="Violation des règles">
-                      Violation des règles
-                    </SelectItem>
-                    <SelectItem key="spam" value="Spam">
-                      Spam
-                    </SelectItem>
-                    <SelectItem key="harcelement" value="Harcèlement">
-                      Harcèlement
-                    </SelectItem>
-                    <SelectItem key="autre" value="Autre">
-                      Autre
-                    </SelectItem>
-                  </Select>
-
+      <div className="mt-8 px-4">
+        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">Gestion des utilisateurs</h3>
+        <div className="space-y-4">
+          {users.map((user) => (
+            <div
+              key={user._id}
+              className="border rounded-lg shadow-md p-4 bg-white dark:bg-black dark:text-white flex flex-col gap-4"
+            >
+              <div className="flex flex-col items-center text-center break-words">
+                <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {user._id}</p>
+                <p className="font-bold text-lg truncate">Pseudo : {user.pseudo}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
+                  Email : {user.email}
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
+                  Courriel: {user.email}
+                </p>
+                <p className="text-sm text-gray-700 dark:text-gray-400">Rôle : {user.role}</p>
+              </div>
+              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 w-full sm:justify-center">
+                {user.email !== "virginie.ayivor@yahoo.fr" && (
                   <Button
-                    color="danger"
-                    disabled={user.email === "virginie.ayivor@yahoo.fr"}
-                    onClick={() => deleteUser(user._id, user.email)}
+                    color={user.role === "admin" ? "warning" : "success"}
+                    className="w-full sm:w-auto"
+                    onClick={() => promoteToAdminOrUser(user._id, user.role)}
                   >
-                    <FontAwesomeIcon icon={faTrash} /> Supprimer
+                    {user.role === "admin" ? "Rétrograder en User" : "Promouvoir"}
                   </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+                )}
+
+                {['Violation des règles', 'Spam', 'Harcèlement', 'Autre'].map((reason) => (
+                  <Button
+                    key={reason}
+                    color="secondary"
+                    className="w-full sm:w-auto"
+                    onClick={() => setBanReason(reason)}
+                  >
+                    {reason}
+                  </Button>
+                ))}
+
+                <Button
+                  color="danger"
+                  className="w-full sm:w-auto"
+                  disabled={user.email === "virginie.ayivor@yahoo.fr"}
+                  onClick={() => deleteUser(user._id, user.email)}
+                >
+                  <FontAwesomeIcon icon={faTrash} /> Supprimer
+                </Button>
+              </div>
+            </div>
+          ))}
+        </div>
       </div>
 
+
       {/* Gestion des leçons */}
-      <h3 className="mb-4 text-xl font-semibold">Gestion des leçons</h3>
-      <div className="grid grid-cols-3 gap-4 justify-center">
-        {lessons.map((lesson) => (
-          <div
-            key={lesson._id}
-            className="col-span-1 border rounded-lg shadow-md p-4 bg-white"
-          >
-            <div className="card-header mb-2">
-              <p className="font-bold text-lg">{lesson.title}</p>
-              <p className="text-sm text-gray-500">ID : {lesson._id}</p>{" "}
-              {/* Affichage de l'ID */}
+      <div className="mt-8 px-4">
+        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">Gestion des leçons</h3>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          {lessons.map((lesson) => (
+            <div
+              key={lesson._id}
+              className="col-span-1 border rounded-lg shadow-md p-4 bg-white dark:bg-black dark:text-white flex flex-col"
+            >
+              <div className="card-header mb-2 text-center">
+                <p className="font-bold text-lg truncate">{lesson.title}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-300 truncate max-w-full overflow-hidden">
+                  ID : {lesson._id}
+                </p>
+              </div>
+              <div className="card-body mb-2 text-center">
+                <p className="text-sm text-gray-700 dark:text-gray-400 mb-2">{lesson.content}</p>
+                <p className="text-sm text-gray-500 dark:text-gray-300">
+                  Date: {dayjs(lesson.date).format("DD/MM/YYYY")}
+                </p>
+              </div>
+              <div className="card-footer mt-4 flex flex-col sm:flex-row justify-between gap-2">
+                <Button
+                  color="primary"
+                  className="w-full sm:w-auto"
+                  onClick={() => updateLesson(lesson._id, lesson)}
+                >
+                  <FontAwesomeIcon icon={faEdit} /> Modifier
+                </Button>
+                <Button
+                  color="danger"
+                  className="w-full sm:w-auto"
+                  onClick={() => deleteLesson(lesson._id)}
+                >
+                  <FontAwesomeIcon icon={faTrash} /> Supprimer
+                </Button>
+              </div>
             </div>
-            <div className="card-body mb-2">
-              <p>{lesson.content}</p>
-              <p className="text-sm text-gray-500">
-                Date: {dayjs(lesson.date).format("DD/MM/YYYY")}{" "}
-                {/* Formatage de la date */}
-              </p>
-            </div>
-            <div className="card-footer mt-4 flex justify-between">
-              <Button
-                color="primary"
-                onClick={() => updateLesson(lesson._id, lesson)}
-              >
-                <FontAwesomeIcon icon={faEdit} /> Modifier
-              </Button>
-              <Button color="danger" onClick={() => deleteLesson(lesson._id)}>
-                <FontAwesomeIcon icon={faTrash} /> Supprimer
-              </Button>
-            </div>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       {/* Ajouter une nouvelle leçon */}
-      <div className="mt-8">
+      <div className="mt-8 px-4">
         <h3 className="mb-4 text-xl font-semibold">
           Ajouter une nouvelle leçon
         </h3>
@@ -599,28 +665,27 @@ const AdminDashboard = () => {
       {/* Gestion des articles */}
       <motion.div
         animate={{ opacity: 1 }}
-        className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+        className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4"
         initial={{ opacity: 0 }}
-        transition={{ duration: 0.6, delay: 3 }}
+        transition={{ duration: 0.6, delay: 0.3 }}
       >
-        <h3 className="mb-4 text-xl font-semibold col-span-full">
+        <h3 className="mb-4 text-xl font-semibold col-span-full text-center sm:text-left">
           Gestion des articles
         </h3>
         {articlesData.articles.map((article) => (
           <div
             key={article.id}
-            className="col-span-1 border rounded-lg shadow-md p-4 bg-white"
+            className="col-span-1 border rounded-lg shadow-md p-4 bg-white dark:bg-black flex flex-col"
           >
-            <div className="card-header mb-2">
+            <div className="card-header mb-2 text-center">
               <img
                 alt={article.title}
-                className="w-50 h-50"
+                className="w-full h-40 object-cover rounded-md mb-2"
                 src={article.image}
-              />{" "}
-              <p className="font-bold text-lg">{article.title}</p>
+              />
+              <p className="font-bold text-lg truncate">{article.title}</p>
             </div>
-            <div className="card-body mb-2">
-              {/* Afficher le contenu de l'article avec un bouton pour voir le contenu complet */}
+            <div className="card-body mb-2 text-center">
               <Button
                 className="mb-4 mx-auto"
                 onClick={() =>
@@ -634,17 +699,19 @@ const AdminDashboard = () => {
                   ? "Masquer le contenu"
                   : "Voir le contenu"}
               </Button>
-              {showContent[article.id] && <p>{article.content}</p>}
+              {showContent[article.id] && <p className="text-sm text-gray-600">{article.content}</p>}
             </div>
-            <div className="card-footer mt-4 flex justify-between">
+            <div className="card-footer mt-4 flex flex-col sm:flex-row justify-between gap-2">
               <Button
                 color="primary"
+                className="w-full sm:w-auto"
                 onClick={() => updateArticle(article.id.toString(), article)}
               >
                 <FontAwesomeIcon icon={faEdit} /> Modifier
               </Button>
               <Button
                 color="danger"
+                className="w-full sm:w-auto"
                 onClick={() => deleteArticle(article.id.toString())}
               >
                 <FontAwesomeIcon icon={faTrash} /> Supprimer
@@ -653,6 +720,7 @@ const AdminDashboard = () => {
           </div>
         ))}
       </motion.div>
+
 
       {/* Ajouter un nouvel article */}
       <motion.div

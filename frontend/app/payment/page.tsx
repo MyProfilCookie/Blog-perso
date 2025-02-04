@@ -547,8 +547,21 @@ const PaymentPage = () => {
                 <h2 className="text-2xl font-semibold text-gray-700 mb-4">Votre panier :</h2>
                 <ul>
                     {cartItems.map((item, index) => (
-                        <li key={index} className="mb-2">
-                            <strong>{item.title}</strong> - {item.price} € x {item.quantity}
+                        <li key={index} className="mb-4 p-4 border rounded-lg shadow-sm bg-gray-50">
+                            <div className="flex items-center bg-white rounded-lg shadow-md p-4">
+                                <div className="w-32 h-32 overflow-hidden rounded-lg">
+                                    <img
+                                        src={item.imageUrl}
+                                        alt={item.title}
+                                        className="object-cover object-center w-full h-full"
+                                    />
+                                </div>
+                                <div className="ml-4">
+                                    <strong className="block text-lg font-bold">{item.title}</strong>
+                                    <p className="text-gray-600 mb-1">{item.description}</p>
+                                    <p className="text-blue-600 font-semibold">{item.price} € x {item.quantity}</p>
+                                </div>
+                            </div>
                         </li>
                     ))}
                 </ul>
@@ -578,7 +591,5 @@ const PaymentPage = () => {
             </Elements>
         </div>
     );
-};
-
+}
 export default PaymentPage;
-

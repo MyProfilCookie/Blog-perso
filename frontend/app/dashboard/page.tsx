@@ -126,14 +126,16 @@ const ProfilePage = () => {
         <div>
           <Card>
             <div className="card-header">
-              <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-white p-4">
+              <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-gray-900 dark:text-white p-4">
                 Évaluations
               </h3>
             </div>
             <div style={{ padding: "20px" }}>
               {mockData.evaluations.map((evaluation, index) => (
                 <div key={index}>
-                  <p className="font-bold">{evaluation.title}</p>
+                  <p className="font-bold text-gray-900 dark:text-white">
+                    {evaluation.title}
+                  </p>
                   <p>Score : {evaluation.score}%</p>
                   <p>Date : {evaluation.date}</p>
                   <Button
