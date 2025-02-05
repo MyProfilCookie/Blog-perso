@@ -1,10 +1,15 @@
+/* eslint-disable padding-line-between-statements */
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable prettier/prettier */
 "use client";
 
 import { useEffect, useState } from "react";
-import { Card, CardBody, Radio, RadioGroup, Textarea } from "@nextui-org/react";
+import { Card, CardBody, Input, Radio, RadioGroup, Textarea } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import dayjs from "dayjs";
 
 import BackButton from "@/components/back";
+
 
 // Définir les types
 type Lesson = {
@@ -36,6 +41,10 @@ type LessonData = {
 export default function LessonOfTheDay() {
   const [lessonOfTheDay, setLessonOfTheDay] = useState<LessonData | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const today = dayjs().format("YYYY-DD-MM"); // Format de la date attendu pour l'input type="date"
+  const [selectedDate, setSelectedDate] = useState(today); // Initialisation avec la date du jour
+
+
   const [completedLessons, setCompletedLessons] = useState<{
     [key: number]: string;
   }>({});
@@ -43,18 +52,11 @@ export default function LessonOfTheDay() {
     [key: number]: string;
   }>({});
   const [comments, setComments] = useState<{ [key: number]: string }>({});
-
-  // Fonction pour charger les leçons du jour depuis l'API
-  const fetchLessonOfTheDay = async () => {
+  const fetchLessonOfTheDay = async (date: string) => {
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/lessons/lesson-of-the-day`,
-      );
-
-      if (!res.ok)
-        throw new Error("Erreur lors de la récupération des leçons.");
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/lessons/lesson-of-the-day?date=${date}`);
+      if (!res.ok) throw new Error("Erreur lors de la récupération des leçons.");
       const lesson: LessonData = await res.json();
-
       setLessonOfTheDay(lesson);
     } catch (error) {
       setError(`Erreur : ${(error as Error).message}`);
@@ -62,8 +64,29 @@ export default function LessonOfTheDay() {
   };
 
   useEffect(() => {
-    fetchLessonOfTheDay();
-  }, []);
+    fetchLessonOfTheDay(selectedDate);
+  }, [selectedDate]);
+
+  // // Fonction pour charger les leçons du jour depuis l'API
+  // const fetchLessonOfTheDay = async () => {
+  //   try {
+  //     const res = await fetch(
+  //       `${process.env.NEXT_PUBLIC_API_URL}/lessons/lesson-of-the-day`,
+  //     );
+
+  //     if (!res.ok)
+  //       throw new Error("Erreur lors de la récupération des leçons.");
+  //     const lesson: LessonData = await res.json();
+
+  //     setLessonOfTheDay(lesson);
+  //   } catch (error) {
+  //     setError(`Erreur : ${(error as Error).message}`);
+  //   }
+  // };
+
+  // useEffect(() => {
+  //   fetchLessonOfTheDay();
+  // }, []);
 
   // Gérer la sélection de l'état de la leçon
   const handleLessonCompletion = (lessonIndex: number, value: string) => {
@@ -124,6 +147,48 @@ export default function LessonOfTheDay() {
   return (
     <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10">
       <BackButton />
+      {/* <div className="w-full text-center">
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="p-6 border bg-violet-100 border-violet-300"
+          initial={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.7 }}
+        >
+          <h1 className="mb-4 text-5xl font-extrabold text-violet-600">Leçon du jour</h1>
+          <h2 className="mb-2 text-xl text-violet-700">Découvrez la leçon adaptée pour aujourd'hui.</h2>
+
+          <Input
+            className="mt-4"
+            type="date"
+            value={selectedDate}
+            onChange={(e) => setSelectedDate(e.target.value)}
+          />
+        </motion.div>
+      </div> */}
+
+      {/* {lessonOfTheDay ? (
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="w-full"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
+        >
+          {lessonOfTheDay?.lessons?.map((lesson, index) => (
+            <Card key={index} className="w-full p-4 mt-6 rounded-md shadow-sm bg-violet-50">
+              <CardBody>
+                <h4 className="text-3xl font-bold text-violet-600">
+                  {lesson.subject}: {lesson.lesson.title}
+                </h4>
+                <p className="mt-4 text-gray-600 text-md">{lesson.lesson.description}</p>
+              </CardBody>
+            </Card>
+          ))}
+        </motion.div>
+      ) : (
+        <div className="mt-8 text-center">
+          {error ? <h3 className="text-lg text-red-600">{error}</h3> : <h3 className="text-lg text-gray-600">Chargement de la leçon...</h3>}
+        </div>
+      )} */}
       <div className="w-full text-center">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
@@ -147,6 +212,18 @@ export default function LessonOfTheDay() {
             })}
             . Prêt(e) pour une nouvelle leçon ?
           </p>
+          <Input
+            className="mt-4"
+            placeholder="Sélectionnez une date"
+            type="date"
+            value={selectedDate}
+            onChange={(e) => {
+              const formattedDate = dayjs(e.target.value, "DD/MM/YYYY", true);
+              if (formattedDate.isValid()) {
+                setSelectedDate(formattedDate.format("YYYY-MM-DD"));
+              }
+            }}
+          />
         </motion.div>
       </div>
 

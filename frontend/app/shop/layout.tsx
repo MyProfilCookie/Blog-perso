@@ -1,3 +1,4 @@
+/* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 "use client";
 
@@ -169,8 +170,8 @@ export default function ShopPage() {
                         <FontAwesomeIcon icon={faShoppingCart} />
                         {calculateTotalItems() > 0 && (
                             <Badge
-                                color="danger"
                                 className="absolute -top-2 -right-2"
+                                color="danger"
                             >
                                 {calculateTotalItems()}
                             </Badge>
@@ -215,9 +216,9 @@ export default function ShopPage() {
                                                 <FontAwesomeIcon icon={faPlus} />
                                             </Button>
                                             <Button
+                                                disabled={item.quantity === 1}
                                                 size="sm"
                                                 onClick={() => decreaseQuantity(item.productId)}
-                                                disabled={item.quantity === 1}
                                             >
                                                 <FontAwesomeIcon icon={faMinus} />
                                             </Button>

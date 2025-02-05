@@ -61,14 +61,15 @@ exports.deleteLesson = async (req, res) => {
 };
 
 // Récupérer les leçons du jour
+// Récupérer les leçons du jour ou par date spécifique
 exports.getLessonOfTheDay = async (req, res) => {
-    const today = new Date().toISOString().split("T")[0]; // Formate la date en 'YYYY-MM-DD'
+    const date = req.query.date || new Date().toISOString().split("T")[0]; 
+    // Utilise la date passée en paramètre, sinon la date d'aujourd'hui
 
     try {
-        // Chercher la leçon du jour en fonction de la date
-        const lesson = await Lesson.findOne({ date: today });
+        const lesson = await Lesson.findOne({ date: date }); // Recherche par la date spécifiée
         if (!lesson) {
-            return res.status(404).json({ message: "Leçon non trouvée pour aujourd'hui" });
+            return res.status(404).json({ message: `Leçon non trouvée pour la date : ${date}` });
         }
         res.status(200).json(lesson);
     } catch (error) {
