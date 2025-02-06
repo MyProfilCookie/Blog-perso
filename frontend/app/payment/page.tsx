@@ -533,7 +533,7 @@ const PaymentPage = () => {
 
             {user && (
                 <div className="mb-6 p-4 bg-indigo-50 rounded-lg dark:bg-gray-800 dark:border-gray-700">
-                    <h2 className="text-2xl font-semibold text-gray-700 mb-4">Informations utilisateur</h2>
+                    <h2 className="text-2xl font-semibold text-gray-700 mb-4 dark:text-white">Informations utilisateur</h2>
                     <Avatar src={user.avatar || "/assets/default-avatar.webp"} size="lg" />
                     <h3 className="text-xl font-semibold text-gray-700 dark:text-white mt-4">Bonjour {user.pseudo}</h3>
                     <p className="text-gray-500 dark:text-white"><strong>Nom :</strong> {user.nom}</p>
@@ -545,11 +545,11 @@ const PaymentPage = () => {
             )}
 
             <div className="mb-6">
-                <h2 className="text-2xl font-semibold text-gray-700 mb-4">Votre panier :</h2>
+                <h2 className="text-2xl font-semibold text-gray-700 mb-4 dark:text-white">Votre panier :</h2>
                 <ul>
                     {cartItems.map((item, index) => (
-                        <li key={index} className="mb-4 p-4 border rounded-lg shadow-sm bg-gray-50">
-                            <div className="flex items-center bg-white rounded-lg shadow-md p-4">
+                        <li key={index} className="mb-4 p-4 border rounded-lg shadow-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+                            <div className="flex items-center bg-white rounded-lg shadow-md p-4 dark:bg-gray-800 dark:border-gray-700">
                                 <div className="w-32 h-32 overflow-hidden rounded-lg">
                                     <img
                                         src={item.imageUrl}
