@@ -1,28 +1,29 @@
 /* eslint-disable padding-line-between-statements */
+/* eslint-disable react/jsx-sort-props */
 /* eslint-disable prettier/prettier */
 "use client";
 
 import { useState, useEffect } from "react";
 import { Popover, PopoverTrigger, PopoverContent, Badge, Button } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faPlus, faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart, faPlus, faMinus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-
 import ArticlesPage from "./page";
 
 type Article = {
-    productId: string;
     title: string;
     description: string;
     price: number;
-    imageUrl: string;
     link: string;
+    imageUrl: string;
+    productId: string;
+    _id: string;
     quantity?: number;
 };
 
 type User = {
-    pseudo: any;
+    pseudo: string;
     _id: string;
     email: string;
     name: string;
@@ -38,21 +39,16 @@ export default function ShopPage() {
         if (storedUser) {
             const parsedUser: User = JSON.parse(storedUser);
             setUser(parsedUser);
-
             const userCartKey = `cartItems_${parsedUser.pseudo}`;
             const storedUserCart = localStorage.getItem(userCartKey);
-            const guestCart = localStorage.getItem("guestCart");
-
-            let mergedCart: Article[] = [];
-            if (guestCart) mergedCart = JSON.parse(guestCart);
-            if (storedUserCart) mergedCart = mergeCarts(mergedCart, JSON.parse(storedUserCart));
-
-            setCartItems(mergedCart);
-            localStorage.setItem(userCartKey, JSON.stringify(mergedCart));
-            localStorage.removeItem("guestCart");
+            if (storedUserCart) {
+                setCartItems(JSON.parse(storedUserCart));
+            }
         } else {
             const guestCart = localStorage.getItem("guestCart");
-            if (guestCart) setCartItems(JSON.parse(guestCart));
+            if (guestCart) {
+                setCartItems(JSON.parse(guestCart));
+            }
         }
     }, []);
 
@@ -65,69 +61,54 @@ export default function ShopPage() {
         }
     }, [cartItems, user]);
 
-    const mergeCarts = (cart1: Article[], cart2: Article[]): Article[] => {
-        const merged = [...cart1];
-        cart2.forEach((item) => {
-            const existingItem = merged.find((cartItem) => cartItem.productId === item.productId);
-            if (existingItem) {
-                existingItem.quantity = (existingItem.quantity ?? 0) + (item.quantity ?? 0);
-            } else {
-                merged.push(item);
-            }
-        });
-        return merged;
-    };
-
     const addToCart = (article: Article) => {
+        console.log("Article ajouté :", article);
+
+        if (!article._id) {  // Correction ici : vérification sur _id
+            console.error("⚠️ Erreur : article sans _id", article);
+            return;
+        }
+
         setCartItems((prevItems) => {
-            const existingItem = prevItems.find((item) => item.productId === article.productId);
-            if (existingItem) {
-                return prevItems.map((item) =>
-                    item.productId === article.productId
-                        ? { ...item, quantity: (item.quantity ?? 1) + 1 }
-                        : item
-                );
+            const existingItemIndex = prevItems.findIndex((item) => item._id === article._id);
+
+            if (existingItemIndex !== -1) {
+                // Si l'article existe déjà, on met à jour la quantité
+                const updatedCart = [...prevItems];
+                updatedCart[existingItemIndex] = {
+                    ...updatedCart[existingItemIndex],
+                    quantity: (updatedCart[existingItemIndex].quantity ?? 1) + 1,
+                };
+                return updatedCart;
             }
+
+            // Ajout d'un nouvel article
             return [...prevItems, { ...article, quantity: 1 }];
         });
     };
 
-    const increaseQuantity = (productId: string) => {
+    const increaseQuantity = (_id: string) => {
         setCartItems((prevItems) =>
             prevItems.map((item) =>
-                item.productId === productId
+                item._id === _id
                     ? { ...item, quantity: (item.quantity ?? 1) + 1 }
                     : item
             )
         );
     };
 
-    const decreaseQuantity = (productId: string) => {
+    const decreaseQuantity = (_id: string) => {
         setCartItems((prevItems) =>
             prevItems.map((item) =>
-                item.productId === productId && (item.quantity ?? 0) > 1
+                item._id === _id && (item.quantity ?? 1) > 1
                     ? { ...item, quantity: (item.quantity ?? 1) - 1 }
                     : item
             )
         );
     };
 
-    const confirmRemoveItem = (productId: string) => {
-        Swal.fire({
-            title: "Êtes-vous sûr ?",
-            text: "Voulez-vous vraiment supprimer cet article du panier ?",
-            icon: "warning",
-            showCancelButton: true,
-            confirmButtonColor: "#d33",
-            cancelButtonColor: "#3085d6",
-            confirmButtonText: "Oui, supprimer",
-            cancelButtonText: "Annuler",
-        }).then((result) => {
-            if (result.isConfirmed) {
-                setCartItems((prevItems) => prevItems.filter((item) => item.productId !== productId));
-                Swal.fire("Supprimé !", "L'article a été supprimé du panier.", "success");
-            }
-        });
+    const removeItem = (_id: string) => {
+        setCartItems((prevItems) => prevItems.filter((item) => item._id !== _id));
     };
 
     const calculateTotalItems = () => {
@@ -161,90 +142,67 @@ export default function ShopPage() {
 
     return (
         <div className="min-h-screen px-4 py-8 md:px-10">
-            <Popover>
+            <Popover placement="bottom-end">
                 <PopoverTrigger>
-                    <Button
-                        className="relative bg-gray-800 text-white p-4 rounded-full fixed right-4 bottom-4"
-                        color="primary"
-                    >
+                    <Button className="relative bg-gray-800 text-white p-4 rounded-full fixed right-4 bottom-4">
                         <FontAwesomeIcon icon={faShoppingCart} />
                         {calculateTotalItems() > 0 && (
-                            <Badge
-                                className="absolute -top-2 -right-2"
-                                color="danger"
-                            >
+                            <Badge className="absolute -top-2 -right-2" color="danger">
                                 {calculateTotalItems()}
                             </Badge>
                         )}
                     </Button>
                 </PopoverTrigger>
                 <PopoverContent>
-                    <div className="p-4 w-72 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-lg shadow-lg">
-                        <h3 className="text-xl font-bold mb-4">Votre Panier</h3>
+                    <div
+                        className="p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-lg shadow-lg"
+                        style={{
+                            // width: "320px", // Largeur fixe
+                            maxWidth: "90vw", // Évite le débordement sur petits écrans
+                            maxHeight: "400px", // Limite la hauteur
+                            overflowY: "auto", // Scroll si trop d'articles
+                            transformOrigin: "top right", // Animation plus fluide
+                        }}
+                    >
+                        <h3 className="text-lg font-bold mb-4 text-center">Votre Panier</h3>
+
                         {cartItems.length === 0 ? (
-                            <p>Votre panier est vide.</p>
+                            <p className="text-center">Votre panier est vide.</p>
                         ) : (
-                            <ul className="space-y-4">
-                                {cartItems.map((item, index) => (
-                                    <li key={index} className="flex items-center gap-4">
-                                        <button
-                                            aria-label={`Remove ${item.title} from cart`}
-                                            className="w-16 h-16 rounded-lg object-cover cursor-pointer"
-                                            style={{
-                                                backgroundImage: `url(${item.imageUrl})`,
-                                                backgroundSize: 'cover',
-                                                backgroundPosition: 'center',
-                                                border: 'none',
-                                                padding: 0,
-                                                overflow: 'hidden',
-                                            }}
-                                            onClick={() => confirmRemoveItem(item.productId)}
-                                            onKeyPress={(e) => {
-                                                if (e.key === 'Enter' || e.key === ' ') {
-                                                    confirmRemoveItem(item.productId);
-                                                }
-                                            }}
-                                        />
+                            <ul className="space-y-2">
+                                {cartItems.map((item) => (
+                                    <li key={item._id} className="flex items-center gap-3 border-b pb-2">
+                                        <img src={item.imageUrl} alt={item.title} className="w-12 h-12 rounded-md" />
                                         <div className="flex-1">
-                                            <p className="font-semibold text-gray-900 dark:text-white">{item.title}</p>
-                                            <p>
-                                                {item.quantity} x {item.price.toFixed(2)} €
-                                            </p>
+                                            <p className="text-sm font-semibold">{item.title}</p>
+                                            <p className="text-xs text-gray-400">{item.quantity} × {item.price.toFixed(2)} €</p>
                                         </div>
-                                        <div className="flex items-center gap-2">
-                                            <Button size="sm" onClick={() => increaseQuantity(item.productId)}>
+                                        <div className="flex items-center gap-1">
+                                            <Button size="sm" onClick={() => increaseQuantity(item._id)}>
                                                 <FontAwesomeIcon icon={faPlus} />
                                             </Button>
-                                            <Button
-                                                disabled={item.quantity === 1}
-                                                size="sm"
-                                                onClick={() => decreaseQuantity(item.productId)}
-                                            >
+                                            <Button size="sm" disabled={item.quantity === 1} onClick={() => decreaseQuantity(item._id)}>
                                                 <FontAwesomeIcon icon={faMinus} />
+                                            </Button>
+                                            <Button size="sm" color="danger" onClick={() => removeItem(item._id)}>
+                                                <FontAwesomeIcon icon={faTrash} />
                                             </Button>
                                         </div>
                                     </li>
                                 ))}
                             </ul>
                         )}
-                        {cartItems.length > 0 && (
-                            <div className="mt-4">
-                                <p className="font-bold">Total: {calculateTotal()} €</p>
-                                <Button className="w-full mt-2" color="success" onClick={handleCheckout}>
-                                    Passer au paiement
-                                </Button>
-                            </div>
-                        )}
+
+                        <p className="font-bold text-right mt-2">Total: {calculateTotal()} €</p>
+
+                        <Button className="w-full mt-3 text-sm p-2" color="success" onClick={handleCheckout}>
+                            Passer au paiement
+                        </Button>
                     </div>
                 </PopoverContent>
             </Popover>
 
-            <div className="gap-6 mt-8">
-                <ArticlesPage cart={cartItems} onAddToCart={addToCart} />
-            </div>
+            <ArticlesPage cart={cartItems} onAddToCart={addToCart} />
         </div>
     );
 }
-
-
-

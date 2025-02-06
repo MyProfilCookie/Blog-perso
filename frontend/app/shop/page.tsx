@@ -18,6 +18,8 @@ type Article = {
     link: string;
     imageUrl: string;
     productId: string;
+    _id: string;
+    quantity?: number;
 };
 
 interface ArticlesPageProps {

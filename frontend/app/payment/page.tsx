@@ -434,8 +434,8 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     };
     return (
         <form className="mt-6" onSubmit={handleSubmit}>
-            <div className="p-4 bg-gray-50 rounded-lg border shadow-md">
-                <label className="block mb-2 text-lg font-semibold text-gray-700" htmlFor="card-element">
+            <div className="p-4 bg-gray-50 rounded-lg border shadow-md dark:bg-gray-800 dark:border-gray-700">
+                <label className="block mb-2 text-lg font-semibold text-gray-700 dark:text-white" htmlFor="card-element">
                     Informations de Carte Bancaire
                 </label>
                 <div className="p-4 mb-4 bg-gray-50 rounded-lg border shadow-sm">
@@ -526,20 +526,21 @@ const PaymentPage = () => {
     };
 
     return (
-        <div className="container p-6 mx-auto mt-10 bg-white rounded-lg shadow-lg">
+        <div className="container p-6 mx-auto mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-none">
             <h1 className="mb-6 text-4xl font-bold text-center text-indigo-600">
                 Paiement
             </h1>
 
             {user && (
-                <div className="mb-6 p-4 bg-indigo-50 rounded-lg">
+                <div className="mb-6 p-4 bg-indigo-50 rounded-lg dark:bg-gray-800 dark:border-gray-700">
                     <h2 className="text-2xl font-semibold text-gray-700 mb-4">Informations utilisateur</h2>
                     <Avatar src={user.avatar || "/assets/default-avatar.webp"} size="lg" />
-                    <h3 className="text-xl font-semibold text-gray-700 mt-4">Bonjour {user.pseudo}</h3>
-                    <p><strong>Nom :</strong> {user.nom}</p>
-                    <p><strong>Prénom :</strong> {user.prenom}</p>
-                    <p><strong>Email :</strong> {user.email}</p>
-                    <p><strong>Téléphone :</strong> {user.phone}</p>
+                    <h3 className="text-xl font-semibold text-gray-700 dark:text-white mt-4">Bonjour {user.pseudo}</h3>
+                    <p className="text-gray-500 dark:text-white"><strong>Nom :</strong> {user.nom}</p>
+                    <p className="text-gray-500 dark:text-white"><strong>Prénom :</strong> {user.prenom}</p>
+                    <p className="text-gray-500 dark:text-white"><strong>Email :</strong> {user.email}</p>
+                    <p className="text-gray-500 dark:text-white"><strong>Téléphone :</strong> {user.phone}</p>
+
                 </div>
             )}
 
