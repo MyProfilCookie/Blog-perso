@@ -9,7 +9,9 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faPlus, faMinus, faTrash } from "@fortawesome/free-solid-svg-icons";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+
 import ArticlesPage from "./page";
+
 
 type Article = {
     title: string;
@@ -33,6 +35,17 @@ export default function ShopPage() {
     const [cartItems, setCartItems] = useState<Article[]>([]);
     const [user, setUser] = useState<User | null>(null);
     const router = useRouter();
+    const [isDesktop, setIsDesktop] = useState(false);
+    useEffect(() => {
+        const handleResize = () => {
+            setIsDesktop(window.innerWidth > 768); // 768px = breakpoint pour desktop
+        };
+
+        handleResize(); // Exécuter immédiatement
+        window.addEventListener("resize", handleResize);
+
+        return () => window.removeEventListener("resize", handleResize);
+    }, []);
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -64,7 +77,7 @@ export default function ShopPage() {
     const addToCart = (article: Article) => {
         console.log("Article ajouté :", article);
 
-        if (!article._id) {  // Correction ici : vérification sur _id
+        if (!article._id) {
             console.error("⚠️ Erreur : article sans _id", article);
             return;
         }
@@ -73,7 +86,6 @@ export default function ShopPage() {
             const existingItemIndex = prevItems.findIndex((item) => item._id === article._id);
 
             if (existingItemIndex !== -1) {
-                // Si l'article existe déjà, on met à jour la quantité
                 const updatedCart = [...prevItems];
                 updatedCart[existingItemIndex] = {
                     ...updatedCart[existingItemIndex],
@@ -82,7 +94,6 @@ export default function ShopPage() {
                 return updatedCart;
             }
 
-            // Ajout d'un nouvel article
             return [...prevItems, { ...article, quantity: 1 }];
         });
     };
@@ -144,7 +155,7 @@ export default function ShopPage() {
         <div className="min-h-screen px-4 py-8 md:px-10">
             <Popover placement="bottom-end">
                 <PopoverTrigger>
-                    <Button className="relative bg-gray-800 text-white p-4 rounded-full fixed right-4 bottom-4">
+                    <Button className="fixed bg-gray-800 text-white p-4 rounded-full right-4 bottom-4">
                         <FontAwesomeIcon icon={faShoppingCart} />
                         {calculateTotalItems() > 0 && (
                             <Badge className="absolute -top-2 -right-2" color="danger">

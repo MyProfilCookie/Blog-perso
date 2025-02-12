@@ -13,7 +13,9 @@ import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import mongoose from "mongoose";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faHeadset, faClock } from "@fortawesome/free-solid-svg-icons";
+import { faInfoCircle, faHeadset, faClock, faCheckCircle, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { motion } from "framer-motion";
+
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
 
@@ -101,181 +103,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
         }
     };
-    //     let token = localStorage.getItem("userToken");
-
-    //     if (!selectedTransporter) {
-    //         Swal.fire({
-    //             title: "Erreur",
-    //             text: "Veuillez sélectionner un transporteur avant de continuer.",
-    //             icon: "error",
-    //             confirmButtonText: "OK",
-    //         });
-    //         return;
-    //     }
-
-    //     if (!token) {
-    //         Swal.fire({
-    //             title: "Erreur",
-    //             text: "Votre session a expiré. Veuillez vous reconnecter.",
-    //             icon: "error",
-    //             confirmButtonText: "Se reconnecter",
-    //         }).then(() => {
-    //             localStorage.removeItem("userToken"); // Supprimer le token corrompu
-    //             window.location.href = "/users/login"; // Rediriger vers la connexion
-    //         });
-    //         return;
-    //     }
-
-    //     if (!items || items.length === 0) {
-    //         Swal.fire({
-    //             title: "Erreur",
-    //             text: "Le panier est vide. Ajoutez des articles avant de passer commande.",
-    //             icon: "error",
-    //             confirmButtonText: "OK",
-    //         });
-    //         return;
-    //     }
-
-    //     try {
-    //         // 🔍 Vérification du token en envoyant la requête à `/users/me`
-    //         const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-    //             headers: { Authorization: `Bearer ${token}` },
-    //         });
-
-    //         if (userResponse.status === 403) {
-    //             console.error("❌ Token invalide ou expiré, suppression et déconnexion.");
-    //             localStorage.removeItem("userToken"); // Supprime le token expiré
-
-    //             Swal.fire({
-    //                 title: "Session expirée",
-    //                 text: "Votre session a expiré. Veuillez vous reconnecter.",
-    //                 icon: "error",
-    //                 confirmButtonText: "Se reconnecter",
-    //             }).then(() => {
-    //                 window.location.href = "/users/login"; // Rediriger vers la connexion
-    //             });
-    //             return;
-    //         }
-
-    //         if (!userResponse.ok) {
-    //             const errorData = await userResponse.text();
-    //             console.error("❌ Erreur API /users/me :", errorData);
-    //             throw new Error("Erreur lors de la récupération des informations utilisateur.");
-    //         }
-
-    //         const userData = await userResponse.json();
-    //         console.log("✅ Données utilisateur récupérées :", userData);
-
-    //         // 🔍 Vérification et formatage des articles
-    //         const formattedItems = items
-    //             .map((item) => {
-    //                 const productId = item.productId || item._id;
-    //                 if (!productId || typeof productId !== "string") {
-    //                     console.error(`❌ Erreur: L'article "${item.title}" n'a pas de productId valide !`, item);
-    //                     return null;
-    //                 }
-
-    //                 return {
-    //                     productId: productId.trim(),
-    //                     title: String(item.title).trim(),
-    //                     quantity: Number(item.quantity),
-    //                     price: Number(item.price),
-    //                 };
-    //             })
-    //             .filter((item) => item !== null);
-
-    //         if (formattedItems.length === 0) {
-    //             Swal.fire({
-    //                 title: "Erreur",
-    //                 text: "Tous les articles du panier sont invalides !",
-    //                 icon: "error",
-    //                 confirmButtonText: "OK",
-    //             });
-    //             return;
-    //         }
-
-    //         const orderData = {
-    //             firstName: userData.user.prenom?.trim() || "Prénom inconnu",
-    //             lastName: userData.user.nom?.trim() || "Nom inconnu",
-    //             email: userData.user.email?.trim() || "Email inconnu",
-    //             phone: userData.user.phone?.trim() || "Numéro inconnu",
-    //             deliveryAddress: userData.user.deliveryAddress || {
-    //                 street: "Adresse inconnue",
-    //                 city: "Ville inconnue",
-    //                 postalCode: "Code postal inconnu",
-    //                 country: "France",
-    //             },
-    //             items: formattedItems,
-    //             totalAmount: total,
-    //             transactionId,
-    //             paymentMethod: "card",
-    //             deliveryMethod: selectedTransporter || "Non spécifié",
-    //             deliveryCost: deliveryCost,
-    //         };
-
-    //         console.log("📦 Données envoyées à l'API :", JSON.stringify(orderData, null, 2));
-
-    //         const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-    //             method: "POST",
-    //             headers: {
-    //                 "Content-Type": "application/json",
-    //                 Authorization: `Bearer ${token}`,
-    //             },
-    //             body: JSON.stringify(orderData),
-    //         });
-
-    //         if (!orderResponse.ok) {
-    //             const errorData = await orderResponse.json();
-    //             console.error("❌ Erreur API /orders :", errorData);
-    //             throw new Error(errorData.message || "Erreur lors de la création de la commande.");
-    //         }
-
-    //         const orderResponseData = await orderResponse.json();
-    //         localStorage.setItem("orderId", orderResponseData.order?._id);
-
-    //         // 🛒 **Vider le panier après paiement réussi**
-    //         const userCartKey = `cartItems_${userData.user.pseudo}`;
-    //         localStorage.removeItem(userCartKey);
-    //         localStorage.removeItem("totalPrice"); // Supprimer aussi le total enregistré
-
-    //         // 🔄 Déclencher un événement pour mettre à jour l'affichage du panier
-    //         window.dispatchEvent(new Event("cartUpdated"));
-
-    //         Swal.fire({
-    //             title: "Commande enregistrée",
-    //             text: "Votre commande et le paiement ont été enregistrés avec succès.",
-    //             icon: "success",
-    //             confirmButtonText: "OK",
-    //         });
-    //     } catch (error) {
-    //         console.error("❌ Erreur lors de l'enregistrement de la commande :", error);
-    //         Swal.fire({
-    //             title: "Erreur",
-    //             text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
-    //             icon: "error",
-    //             confirmButtonText: "OK",
-    //         });
-    //     }
-    //     const confirmPayment = async (
-    //         user: any,
-    //         transactionId: string,
-    //         amount: number,
-    //         paymentMethod: string
-    //     ) => {
-    //         const confirmationData = {
-    //             userId: user._id,
-    //             transactionId,
-    //             paymentMethod,
-    //             amount,
-    //         };
-
-    //         await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations`, {
-    //             method: "POST",
-    //             headers: { "Content-Type": "application/json" },
-    //             body: JSON.stringify(confirmationData),
-    //         });
-    //     };
-    // };
     const saveOrder = async (items: any[], total: number, transactionId: string) => {
         let token = localStorage.getItem("userToken");
 
@@ -438,7 +265,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 <label className="block mb-2 text-lg font-semibold text-gray-700 dark:text-white" htmlFor="card-element">
                     Informations de Carte Bancaire
                 </label>
-                <div className="p-4 mb-4 bg-gray-50 rounded-lg border shadow-sm">
+                <div className="p-4 mb-4 bg-gray-50 dark:bg-slate-900  rounded-lg border shadow-sm">
                     <CardElement
                         id="card-element"
                         options={{
@@ -467,6 +294,60 @@ const PaymentPage = () => {
     const [deliveryCost, setDeliveryCost] = useState<number>(4);
     const [selectedTransporter, setSelectedTransporter] = useState<string>("");
     const router = useRouter();
+    // ✅ Vérifie l'authentification de l'utilisateur
+    const checkAuthStatus = async () => {
+        const token = localStorage.getItem("userToken");
+
+        if (!token) {
+            console.log("🔴 Aucun token trouvé. Redirection vers la page de connexion.");
+            router.push("/users/login");
+            return;
+        }
+
+        try {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+                headers: { Authorization: `Bearer ${token}` },
+            });
+
+            if (!response.ok) {
+                console.error("🔴 Erreur lors de la vérification du token, suppression du token...");
+                localStorage.removeItem("userToken");
+                router.push("/users/login");
+                return;
+            }
+
+            const userData = await response.json();
+            console.log("✅ Utilisateur authentifié :", userData);
+            setUser(userData.user);
+
+            // Charger le panier correspondant au pseudo de l'utilisateur
+            const userCartKey = `cartItems_${userData.user.pseudo}`;
+            const storedCart = localStorage.getItem(userCartKey);
+
+            if (storedCart) {
+                const parsedCart = JSON.parse(storedCart);
+                setCartItems(parsedCart);
+
+                // Calculer le total du panier
+                const total = parsedCart.reduce(
+                    (sum: number, item: any) => sum + item.price * item.quantity,
+                    0
+                );
+                setTotalToPay(total + deliveryCost);
+            } else {
+                console.log("🛒 Aucun panier trouvé pour cet utilisateur.");
+            }
+        } catch (error) {
+            console.error("❌ Erreur lors de la vérification de l'authentification :", error);
+            localStorage.removeItem("userToken");
+            router.push("/users/login");
+        }
+    };
+
+    useEffect(() => {
+        checkAuthStatus();
+    }, [router, deliveryCost]);
+
 
     useEffect(() => {
         // Charger l'utilisateur et le panier depuis le localStorage
@@ -526,71 +407,116 @@ const PaymentPage = () => {
     };
 
     return (
-        <div className="container p-6 mx-auto mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-none">
-            <h1 className="mb-6 text-4xl font-bold text-center text-indigo-600">
+        <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5 }}
+            className="container p-6 mx-auto mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-none"
+        >
+            <motion.h1
+                className="mb-6 text-4xl font-bold text-center text-indigo-600"
+                initial={{ scale: 0.8, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.5 }}
+            >
                 Paiement
-            </h1>
+            </motion.h1>
 
             {user && (
-                <div className="mb-6 p-4 bg-indigo-50 rounded-lg dark:bg-gray-800 dark:border-gray-700">
+                <motion.div
+                    className="mb-6 p-4 bg-indigo-50 rounded-lg dark:bg-gray-800 dark:border-gray-700 shadow-md"
+                    initial={{ x: -50, opacity: 0 }}
+                    animate={{ x: 0, opacity: 1 }}
+                    transition={{ duration: 0.6 }}
+                >
                     <h2 className="text-2xl font-semibold text-gray-700 mb-4 dark:text-white">Informations utilisateur</h2>
                     <Avatar src={user.avatar || "/assets/default-avatar.webp"} size="lg" />
-                    <h3 className="text-xl font-semibold text-gray-700 dark:text-white mt-4">Bonjour {user.pseudo}</h3>
+                    <motion.h3 className="text-xl font-semibold text-gray-700 dark:text-white mt-4"
+                        animate={{ scale: [1, 1.1, 1] }}
+                        transition={{ repeat: Infinity, duration: 1.5 }}
+                    >
+                        Bonjour {user.pseudo} 👋
+                    </motion.h3>
                     <p className="text-gray-500 dark:text-white"><strong>Nom :</strong> {user.nom}</p>
                     <p className="text-gray-500 dark:text-white"><strong>Prénom :</strong> {user.prenom}</p>
                     <p className="text-gray-500 dark:text-white"><strong>Email :</strong> {user.email}</p>
                     <p className="text-gray-500 dark:text-white"><strong>Téléphone :</strong> {user.phone}</p>
-
-                </div>
+                </motion.div>
             )}
 
-            <div className="mb-6">
+            <motion.div className="mb-6" initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6 }}>
                 <h2 className="text-2xl font-semibold text-gray-700 mb-4 dark:text-white">Votre panier :</h2>
                 <ul>
                     {cartItems.map((item, index) => (
-                        <li key={index} className="mb-4 p-4 border rounded-lg shadow-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-700">
+                        <motion.li
+                            key={index}
+                            className="mb-4 p-4 border rounded-lg shadow-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
+                            whileHover={{ scale: 1.05 }}
+                        >
                             <div className="flex items-center bg-white rounded-lg shadow-md p-4 dark:bg-gray-800 dark:border-gray-700">
-                                <div className="w-32 h-32 overflow-hidden rounded-lg">
+                                <motion.div
+                                    className="w-32 h-32 overflow-hidden rounded-lg"
+                                    whileHover={{ rotate: 2 }}
+                                >
                                     <img
                                         src={item.imageUrl}
                                         alt={item.title}
                                         className="object-cover object-center w-full h-full"
                                     />
-                                </div>
+                                </motion.div>
                                 <div className="ml-4">
                                     <strong className="block text-lg font-bold">{item.title}</strong>
-                                    <p className="text-gray-600 mb-1">{item.description}</p>
+                                    <p className="text-gray-600 mb-1 dark:text-white">{item.description}</p>
                                     <p className="text-blue-600 font-semibold">{item.price} € x {item.quantity}</p>
                                 </div>
                             </div>
-                        </li>
+                        </motion.li>
                     ))}
                 </ul>
                 <p><strong>Total avant livraison :</strong> {totalToPay - deliveryCost} €</p>
                 <p><strong>Frais de livraison :</strong> {deliveryCost} €</p>
-                <p><strong>Total à payer :</strong> {totalToPay} €</p>
-            </div>
+                <p className="text-xl font-bold text-green-500"><FontAwesomeIcon icon={faCheckCircle} className="mr-2" />Total à payer : {totalToPay} €</p>
+            </motion.div>
 
-            <div className="mt-4">
+            <motion.div className="mt-4" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
                 <label htmlFor="transporter" className="block mb-2 font-semibold">Sélectionnez un transporteur :</label>
-                <select id="transporter" value={selectedTransporter} className="p-3 w-full rounded-lg border" onChange={handleTransporterChange}>
+                <select
+                    id="transporter"
+                    value={selectedTransporter}
+                    className="p-3 w-full rounded-lg border"
+                    onChange={handleTransporterChange}
+                >
                     <option value="">Sélectionnez un transporteur</option>
                     <option value="Colissimo">Colissimo</option>
                     <option value="UPS">UPS</option>
                     <option value="DHL">DHL</option>
                 </select>
-            </div>
+            </motion.div>
 
-            <Elements stripe={stripePromise}>
-                <CheckoutForm
-                    totalToPay={totalToPay}
-                    cartItems={cartItems}
-                    onPaymentSuccess={() => console.log("Paiement terminé")}
-                    selectedTransporter={selectedTransporter}
-                    deliveryCost={deliveryCost}
-                />
-            </Elements>
-        </div>
+            <motion.div className="mt-6 flex justify-center">
+                <motion.button
+                    className="px-6 py-3 bg-green-500 text-white rounded-lg text-lg font-bold shadow-md flex items-center"
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => console.log("Paiement enclenché")}
+                >
+                    <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+                    Payer maintenant
+                </motion.button>
+            </motion.div>
+
+            <motion.div className="mt-6" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+                <Elements stripe={stripePromise}>
+                    <CheckoutForm
+                        totalToPay={totalToPay}
+                        cartItems={cartItems}
+                        onPaymentSuccess={() => console.log("Paiement terminé")}
+                        selectedTransporter={selectedTransporter}
+                        deliveryCost={deliveryCost}
+                    />
+                </Elements>
+            </motion.div>
+        </motion.div>
     );
 }
 export default PaymentPage;

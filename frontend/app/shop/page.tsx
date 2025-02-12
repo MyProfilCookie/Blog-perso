@@ -43,6 +43,7 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                 }
 
                 const data = await response.json();
+
                 setArticles(data);
             } catch (error) {
                 console.error("Erreur lors de la récupération des articles :", error);
@@ -69,11 +70,11 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
     return (
         <section className="min-h-screen px-6 py-12 lg:px-12 xl:px-20 dark:bg-gray-900">
             <motion.h2
-                className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-snug text-gray-700 dark:text-gray-300 text-center mb-8"
                 animate={{
                     scale: [1, 1.05, 1],
                     color: ["#1E3A8A", "#F59E0B", "#10B981", "#1E3A8A"]
                 }}
+                className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-snug text-gray-700 dark:text-gray-300 text-center mb-8"
                 transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
             >
                 <span className="icon">
@@ -88,9 +89,9 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                             <motion.div
                                 key={article.productId || index}
                                 animate={{ opacity: 1, y: 0 }}
+                                className="w-full"
                                 initial={{ opacity: 0, y: 20 }}
                                 transition={{ duration: 0.4 }}
-                                className="w-full"
                             >
                                 <Card className="overflow-hidden transition-all bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:text-white hover:shadow-xl h-full">
                                     <img
