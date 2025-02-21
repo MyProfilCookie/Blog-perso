@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable prettier/prettier */
 "use client";
@@ -13,8 +14,6 @@ import {
   TableHeader,
   Table,
   TableBody,
-  Select,
-  SelectItem,
 } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -40,6 +39,8 @@ const fetchUserData = () => {
 
 const AdminDashboard = () => {
   const [user, setUser] = useState<any>(null);
+  const [transactionId, setTransactionId] = useState<string | null>(null);
+  const [paymentId, setPaymentId] = useState<string | null>(null);
   const [lessons, setLessons] = useState<any[]>([]);
   const [newLesson, setNewLesson] = useState({
     title: "",
@@ -57,6 +58,30 @@ const AdminDashboard = () => {
     {},
   );
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchTransaction = async () => {
+      if (!paymentId || paymentId === "null") { // Vérifie si l'ID est défini et valide
+        console.warn("⚠️ ID de paiement invalide ou null:", paymentId);
+        return;
+      }
+  
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations/${paymentId}`);
+  
+        if (!response.ok) throw new Error("Erreur lors de la récupération");
+  
+        const data = await response.json();
+        console.log("✅ Transaction récupérée :", data);
+        setTransactionId(data.transactionId);
+      } catch (error) {
+        console.error("❌ Erreur :", error);
+        setTransactionId(null);
+      }
+    };
+  
+    fetchTransaction();
+  }, [paymentId]);
 
   useEffect(() => {
     const fetchedUser = fetchUserData();
@@ -174,6 +199,70 @@ const AdminDashboard = () => {
           fetchLessons(); // Recharger les leçons après suppression
         } catch (error) {
           alert(`Erreur lors de la suppression de la leçon : ${error}`);
+        }
+      }
+    });
+  };
+
+  // ✅ Récupérer les messages de contact
+  const getContactMessages = async () => {
+    try {
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/contact`);
+
+      setMessages(response.data);
+    } catch (error) {
+      Swal.fire("Erreur", "Erreur lors de la récupération des messages.", "error");
+    }
+  };
+
+  // ✅ Marquer un message comme lu
+  const markContactMessageAsRead = async (id: string) => {
+    try {
+      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/contact/${id}/read`);
+      Swal.fire("Succès", "Le message a été marqué comme lu.", "success");
+      getContactMessages();
+    } catch (error) {
+      Swal.fire("Erreur", "Impossible de marquer le message comme lu.", "error");
+    }
+  };
+
+  // ✅ Répondre à un message
+  const replyToContactMessage = async (id: string) => {
+    const { value: reply } = await Swal.fire({
+      title: "Répondre au message",
+      input: "textarea",
+      inputPlaceholder: "Écrivez votre réponse ici...",
+      showCancelButton: true,
+    });
+
+    if (reply) {
+      try {
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/contact/${id}/reply`, { reponse: reply });
+        Swal.fire("Succès", "Votre réponse a été envoyée.", "success");
+        getContactMessages();
+      } catch (error) {
+        Swal.fire("Erreur", "Impossible d'envoyer la réponse.", "error");
+      }
+    }
+  };
+
+  // ✅ Supprimer un message
+  const deleteContactMessage = async (id: string) => {
+    Swal.fire({
+      title: "Êtes-vous sûr ?",
+      text: "Cette action supprimera définitivement le message.",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Oui, supprimer !",
+      cancelButtonText: "Annuler",
+    }).then(async (result) => {
+      if (result.isConfirmed) {
+        try {
+          await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/contact/${id}`);
+          Swal.fire("Supprimé !", "Le message a été supprimé.", "success");
+          getContactMessages();
+        } catch (error) {
+          Swal.fire("Erreur", "Impossible de supprimer le message.", "error");
         }
       }
     });
@@ -363,18 +452,40 @@ const AdminDashboard = () => {
   // Fonction pour récupérer les commandes
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/orders`
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/orders`);
+      const ordersData = response.data.orders || [];
+  
+      const ordersWithPayments = await Promise.all(
+        ordersData.map(async (order: { paymentId: any; }) => {
+          // Utiliser le bon champ pour l'ID de paiement
+          const paymentId = order.paymentId; // Si le champ s'appelle autrement, adaptez ici (ex: order.payment_id)
+  
+          const paymentDetails = paymentId ? await fetchPaymentDetails(paymentId) : null;
+  
+          return { ...order, payment: paymentDetails };
+        })
       );
-
-      // Si l'API retourne un objet contenant un tableau, mettez à jour en conséquence.
-      setOrders(response.data.orders || []);
-    } catch (error) {
-      // eslint-disable-next-line no-console
-      console.error(`Erreur lors de la récupération des commandes : ${error}`);
-      setOrders([]); // Définit un tableau vide en cas d'erreur
-    }
+  
+      setOrders(ordersWithPayments);
+    } catch (error) { /* ... */ }
   };
+  
+  const fetchPaymentDetails = async (paymentId: any) => {
+    if (!paymentId) {
+      console.warn("⚠️ ID de paiement invalide:", paymentId);
+
+      return null;
+    }
+  
+    try {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations/${paymentId}`); // Assurez-vous d'avoir une route /payments/:id dans votre backend
+
+      if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
+
+      return response.json();
+    } catch (error) { /* ... */ }
+  };
+
 
 
   // Fonction pour mettre à jour le statut d'une commande
@@ -476,7 +587,6 @@ const AdminDashboard = () => {
       box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
     }
   `}</style>
-
       {/* Gestion des commandes */}
       <div className="mt-8 px-4">
         <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">Gestion des commandes</h3>
@@ -490,15 +600,25 @@ const AdminDashboard = () => {
                 <div className="flex-1 text-center sm:text-left break-words">
                   <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {order._id}</p>
                   <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
-                    Client : {order.LastName}
+                    Client : {order.lastName ? `${order.firstName} ${order.lastName}` : "Inconnu"}
                   </p>
                   <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
-                    Produit : {order.productName}
+                    Produit : {order.items?.map((item: { title: any; }) => item.title).join(" • ") || "Aucun"}
                   </p>
                   <p className="text-sm text-gray-500 dark:text-gray-300">
-                    Date : {dayjs(order.date).format("DD/MM/YYYY")}
+                    Date : {dayjs(order.orderDate).format("DD/MM/YYYY")}
                   </p>
-                  <p className="text-sm text-gray-700 dark:text-gray-400">Statut actuel : {order.status}</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-400">
+                    Statut actuel : {order.status}
+                  </p>
+                  <p className="text-sm text-blue-500 dark:text-blue-300">
+                    Paiement : {order.paymentStatus} ({order.paymentMethod})
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                    <strong>Transaction ID :</strong> {transactionId ? transactionId : "Non disponible"}
+                    </p>
+                  </div>
                 </div>
                 <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
                   {['En cours', 'Expédiée', 'Livrée'].map((status) => (
@@ -523,8 +643,52 @@ const AdminDashboard = () => {
                 </div>
               </div>
             </div>
-          ))}
-        </div>
+          ))}  </div>
+      </div>
+
+      {/* Gestion des messages de contact */}
+      <div className="mt-8 px-4">
+        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">Gestion des messages de contact</h3>
+
+        <Table aria-label="Liste des messages de contact" className="mb-4">
+          <TableHeader>
+            <TableColumn>Nom</TableColumn>
+            <TableColumn>Email</TableColumn>
+            <TableColumn>Message</TableColumn>
+            <TableColumn>Date</TableColumn>
+            <TableColumn>Lu</TableColumn>
+            <TableColumn>Répondre</TableColumn>
+            <TableColumn>Supprimer</TableColumn>
+          </TableHeader>
+          <TableBody>
+            {messages.map((contactMsg, index) => (
+              <TableRow key={contactMsg._id || index}>
+                <TableCell>{contactMsg.nom}</TableCell>
+                <TableCell>{contactMsg.email}</TableCell>
+                <TableCell>{contactMsg.message}</TableCell>
+                <TableCell>{dayjs(contactMsg.date).format("DD/MM/YYYY HH:mm")}</TableCell>
+                <TableCell>
+                  <Button
+                    color={contactMsg.lu ? "success" : "secondary"}
+                    onClick={() => markContactMessageAsRead(contactMsg._id)}
+                  >
+                    {contactMsg.lu ? "✔ Lu" : "📩 Non lu"}
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button color="primary" onClick={() => replyToContactMessage(contactMsg._id)}>
+                    <FontAwesomeIcon icon={faReply} /> Répondre
+                  </Button>
+                </TableCell>
+                <TableCell>
+                  <Button color="danger" onClick={() => deleteContactMessage(contactMsg._id)}>
+                    <FontAwesomeIcon icon={faTrash} /> Supprimer
+                  </Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+        </Table>
       </div>
 
       {/* Gestion des utilisateurs */}
@@ -827,3 +991,7 @@ const AdminDashboard = () => {
 };
 
 export default AdminDashboard;
+function setLoading(arg0: boolean) {
+  throw new Error("Function not implemented.");
+}
+

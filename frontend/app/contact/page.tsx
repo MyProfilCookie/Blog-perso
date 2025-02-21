@@ -1,149 +1,216 @@
-/* eslint-disable jsx-a11y/label-has-associated-control */
-/* eslint-disable prettier/prettier */
-/* eslint-disable react/jsx-no-comment-textnodes */
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { Card, CardBody } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import Swal from "sweetalert2";
+import withReactContent from "sweetalert2-react-content";
 
-import { title } from "@/components/primitives";
+const MySwal = withReactContent(Swal);
 
 export default function ContactPage() {
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
+  const [user, setUser] = useState(null);
+  const [loadingUser, setLoadingUser] = useState(true);
+  const router = useRouter();
 
-  const handleSubmit = async (e: { preventDefault: () => void; }) => {
-    e.preventDefault();
+  useEffect(() => {
+    const fetchUser = async () => {
+      const token = localStorage.getItem("userToken");
 
-    const contactData = {
-      nom,
-      email,
-      message,
+      if (!token) {
+        router.push("/login");
+        return;
+      }
+
+      try {
+        const response = await fetch("http://localhost:3001/users/me", {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (!response.ok) {
+          if (response.status === 401) {
+            localStorage.removeItem("userToken");
+            MySwal.fire({
+              title: "Session expirée",
+              text: "Veuillez vous reconnecter.",
+              icon: "warning",
+              confirmButtonColor: "#F59E0B",
+              confirmButtonText: "Se reconnecter",
+            }).then(() => {
+              router.push("/user/login");
+            });
+            return;
+          }
+          throw new Error("Erreur lors de la récupération des données.");
+        }
+
+        const data = await response.json();
+        const userData = data.user || data;
+
+        setUser(userData);
+        setNom(userData.nom || "");
+        setEmail(userData.email || "");
+      } catch (error) {
+        console.error(
+          "Erreur lors de la récupération de l'utilisateur :",
+          error,
+        );
+      } finally {
+        setLoadingUser(false);
+      }
     };
 
+    fetchUser();
+  }, [router]);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    const contactData = { nom, email, message };
+
     try {
-      const response = await fetch("/api/contact", {
+      const response = await fetch("/contact", {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(contactData),
       });
 
       if (response.ok) {
-        alert("Message envoyé avec succès !");
-        setNom("");
-        setEmail("");
+        MySwal.fire({
+          title: "Message envoyé !",
+          text: "Nous vous répondrons dès que possible.",
+          icon: "success",
+          confirmButtonColor: "#8B5CF6",
+        });
         setMessage("");
       } else {
-        alert("Erreur lors de l'envoi du message.");
+        throw new Error("Échec de l'envoi");
       }
     } catch (error) {
-      // Log the error to an external service or handle it appropriately
-      // logError("Erreur lors de l'envoi du message :", error);
-      alert("Une erreur est survenue. Veuillez réessayer plus tard.");
+      MySwal.fire({
+        title: "Erreur",
+        text: "Une erreur est survenue. Réessayez plus tard.",
+        icon: "error",
+        confirmButtonColor: "#DC2626",
+      });
     }
   };
 
   return (
-    <section className="flex flex-col justify-between w-screen min-h-screen py-8">
-      <div className="flex flex-col items-center justify-center flex-grow w-full px-4 text-center">
-        <h1 className={title({ color: "violet" })}>Nous contacter</h1>
-        <h2 className="mt-4 text-lg text-gray-600">
-          Nous sommes là pour répondre à toutes vos questions.
-        </h2>
+    <section className="flex flex-col items-center">
+      {/* Titre animé */}
+      <motion.h1
+        initial={{ opacity: 0, scale: 0.8, y: -10 }}
+        animate={{ opacity: 1, scale: 1, y: 0 }}
+        transition={{ duration: 0.8, ease: "easeOut" }}
+        className="text-4xl font-extrabold text-indigo-700 text-center"
+      >
+        📩 Contactez-nous
+      </motion.h1>
 
-        {/* Card avec les informations de contact */}
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full"
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="py-4 max-w-[1000px] w-full mx-auto mt-8">
-            <CardBody className="flex flex-col items-center">
-              <h3 className="mb-4 font-bold text-large">Contactez-nous</h3>
-              <p style={{ fontSize: "1.2em", lineHeight: "1.8" }}>
-                Si vous avez des questions ou des suggestions, n'hésitez pas à nous contacter via l'un des moyens suivants :
-              </p>
-              <ul className="mt-4 text-left">
-                <li>
-                  📧 Email : <a className="text-violet-600" href="mailto:contact@autistudy.com">contact@autistudy.com</a>
-                </li>
-                <li>
-                  ☎️ Téléphone : <a className="text-violet-600" href="tel:+33123456789">+33 1 23 45 67 89</a>
-                </li>
-                <li>
-                  🏢 Adresse : 27 Rue Pablo Picasso, 78500 Sartrouville, France
-                </li>
-              </ul>
-            </CardBody>
-          </Card>
-        </motion.div>
+      <motion.h2
+        initial={{ opacity: 0, y: -10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="mt-3 text-lg text-gray-600 text-center"
+      >
+        Une question ? Besoin d&apos;aide ? Envoyez-nous un message ! 🚀
+      </motion.h2>
 
-        {/* Formulaire de contact */}
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full"
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-        >
-          <Card className="py-4 max-w-[1000px] w-full mx-auto mt-8">
-            <CardBody className="flex flex-col items-center">
-              <h3 className="mb-4 font-bold text-large">Envoyer un message</h3>
-              <form className="w-full max-w-[800px]" onSubmit={handleSubmit}>
-                <div className="flex flex-col mb-4">
-                  <label className="mb-2 font-medium text-left">Nom</label>
-                  <input
-                    required
-                    className="px-4 py-2 border border-gray-300 rounded-md"
-                    placeholder="Votre nom"
-                    type="text"
-                    value={nom}
-                    onChange={(e) => setNom(e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col mb-4">
-                  <label className="mb-2 font-medium text-left">Email</label>
-                  <input
-                    required
-                    className="px-4 py-2 border border-gray-300 rounded-md"
-                    placeholder="Votre adresse email"
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                  />
-                </div>
-                <div className="flex flex-col mb-4">
-                  <label className="mb-2 font-medium text-left">Message</label>
-                  <textarea
-                    required
-                    className="px-4 py-2 border border-gray-300 rounded-md"
-                    placeholder="Votre message"
-                    rows={5}
-                    value={message}
-                    onChange={(e) => setMessage(e.target.value)}
-                  />
-                </div>
-                <button className="px-4 py-2 text-white rounded-md bg-violet-600 hover:bg-violet-700">
-                  Envoyer
-                </button>
-              </form>
-            </CardBody>
-          </Card>
-        </motion.div>
-      </div>
+      {/* Formulaire */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.7 }}
+        className="w-full max-w-2xl mt-8"
+      >
+        <Card className="py-6 bg-white shadow-lg rounded-2xl">
+          <CardBody className="flex flex-col items-center">
+            <h3 className="mb-4 text-lg font-semibold text-gray-800">
+              💬 Envoyer un message
+            </h3>
+            <form className="w-full px-6" onSubmit={handleSubmit}>
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4 }}
+                className="flex flex-col mb-4"
+              >
+                <label htmlFor="nom" className="mb-2 text-gray-700 font-medium">Nom</label>
+                <input
+                  id="nom"
+                  required
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Votre nom"
+                  type="text"
+                  value={nom}
+                  onChange={(e) => setNom(e.target.value)}
+                />
+              </motion.div>
 
-      {/* Footer */}
-      <footer className="w-full py-4 text-center">
-        <p style={{ fontSize: "1em", color: "#888" }}>
-          © 2024 AutiStudy - Tous droits réservés.
-        </p>
-      </footer>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.4, delay: 0.2 }}
+                className="flex flex-col mb-4"
+              >
+                <label
+                  className="mb-2 text-gray-700 font-medium"
+                  htmlFor="email"
+                >
+                  Email
+                </label>
+                <input
+                  id="email"
+                  required
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Votre email"
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </motion.div>
+
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4, delay: 0.4 }}
+                className="flex flex-col mb-4"
+              >
+                <label htmlFor="message" className="mb-2 text-gray-700 font-medium">
+                  Message
+                </label>
+                <textarea
+                  id="message"
+                  required
+                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                  placeholder="Votre message"
+                  rows={5}
+                  value={message}
+                  onChange={(e) => setMessage(e.target.value)}
+                />
+              </motion.div>
+
+              <motion.button
+                whileHover={{ scale: 1.1 }}
+                whileTap={{ scale: 0.9 }}
+                transition={{ duration: 0.2 }}
+                className="w-full px-6 py-3 font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+              >
+                🚀 Envoyer
+              </motion.button>
+            </form>
+          </CardBody>
+        </Card>
+      </motion.div>
     </section>
   );
 }
-

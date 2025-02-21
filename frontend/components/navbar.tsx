@@ -1,5 +1,5 @@
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -19,7 +19,6 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt,
-  faBook,
   faNewspaper,
   faCrown,
   faTachometerAlt,
@@ -31,11 +30,11 @@ import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import { motion, AnimatePresence } from "framer-motion";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { GithubIcon, AutismLogo } from "@/components/icons";
-import { motion } from "framer-motion";
+import { AutismLogo } from "@/components/icons";
 
 // Définir le type pour l'utilisateur
 type User = {
@@ -45,15 +44,32 @@ type User = {
   avatar?: string;
   role: string;
 };
-
 export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
+  // ✅ Ferme le menu quand on clique à l'extérieur
+  useEffect(() => {
+    function handleClickOutside(event: MouseEvent) {
+      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+        setIsMenuOpen(false);
+      }
+    }
+
+    if (isMenuOpen) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, [isMenuOpen]);
+
   /**
-   * Charger l'utilisateur et le panier depuis le localStorage
+   * Récupérer l'utilisateur et son panier depuis le stockage local
    */
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -173,7 +189,6 @@ export const Navbar = () => {
             <p className="font-bold text-blue-800 dark:text-white">AutiStudy</p>
           </NextLink>
         </NavbarBrand>
-
         <NavbarMenuToggle
           aria-label="Toggle navigation"
           className="lg:hidden"
@@ -181,7 +196,6 @@ export const Navbar = () => {
         >
           <FontAwesomeIcon icon={faBars} />
         </NavbarMenuToggle>
-
         {/* Onglets visibles dans la barre de navigation */}
         <ul className="hidden gap-4 ml-2 lg:flex">
           {siteConfig.navItems.map((item) => (
@@ -220,72 +234,107 @@ export const Navbar = () => {
             <ThemeSwitch />
           </NavbarItem>
         </ul>
-
         {/* Menu burger pour mobile */}
-        {isMenuOpen && (
-          <motion.div
-            animate={{ height: "auto", opacity: 1 }}
-            className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-md absolute top-full left-0 z-20"
-            exit={{ height: 0, opacity: 0 }}
-            initial={{ height: 0, opacity: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <ul className="flex flex-col items-start p-4 gap-4">
-              {siteConfig.navItems.map((item) => (
-                <li key={item.label}>
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div
+              ref={menuRef}
+              animate={{ height: "auto", opacity: 1, y: 0 }}
+              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-md absolute top-full left-0 z-20"
+              exit={{ height: 0, opacity: 0, y: -20 }}
+              initial={{ height: 0, opacity: 0, y: -20 }}
+              transition={{ duration: 0.5, ease: "easeInOut" }}
+            >
+              <ul className="flex flex-col items-start p-4 gap-4">
+                {siteConfig.navItems.map((item) => (
+                  <li key={item.label}>
+                    <NextLink
+                      className="text-gray-700 dark:text-gray-300 hover:text-green-500"
+                      href={String(item.href)}
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      {item.label}
+                    </NextLink>
+                  </li>
+                ))}
+                <li className="relative">
                   <NextLink
-                    className="text-gray-700 dark:text-gray-300 hover:text-green-500"
-                    href={String(item.href)}
+                    className="text-gray-700 dark:text-gray-300 hover:text-green-500 flex items-center relative"
+                    href="/shop"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    {item.label}
+                    <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
+                    Shop
+                    {cartItemsCount > 0 && (
+                      <Badge
+                        color="danger"
+                        style={{
+                          position: "absolute",
+                          top: "-10px",
+                          right: "-10px",
+                        }}
+                      >
+                        {cartItemsCount}
+                      </Badge>
+                    )}
                   </NextLink>
                 </li>
-              ))}
-              <li className="relative">
-                <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-green-500 flex items-center relative"
-                  href="/shop"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
-                  Shop
-                  {cartItemsCount > 0 && (
-                    <Badge
-                      color="danger"
-                      style={{
-                        position: "absolute",
-                        top: "-10px",
-                        right: "-10px",
-                      }}
-                    >
-                      {cartItemsCount}
-                    </Badge>
-                  )}
-                </NextLink>
-              </li>
-              <li>
-                <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-green-500"
-                  href="/blog"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Blog
-                </NextLink>
-              </li>
-              <li>
-                <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-green-500"
-                  href="/courses"
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  Courses
-                </NextLink>
-              </li>
-              <ThemeSwitch />
-            </ul>
+                <li>
+                  <NextLink
+                    className="text-gray-700 dark:text-gray-300 hover:text-green-500"
+                    href="/blog"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Blog
+                  </NextLink>
+                </li>
+                <li>
+                  <NextLink
+                    className="text-gray-700 dark:text-gray-300 hover:text-green-500"
+                    href="/courses"
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    Courses
+                  </NextLink>
+                </li>
+                <ThemeSwitch />
+              </ul>
+            </motion.div>
+          )}
+        </AnimatePresence>
+        {/* ✅ Menu Mobile (se ferme au clic extérieur) */}
+        {/* {isMenuOpen && (
+          <motion.div
+            ref={menuRef}
+            animate={{ opacity: 1, y: 0 }}
+            className="lg:hidden bg-gray-900 absolute top-16 left-0 w-full p-4 shadow-md"
+            exit={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.3 }}
+          >
+            <NextLink
+              className="block text-white py-2"
+              href="/shop"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Shop
+            </NextLink>
+            <NextLink
+              className="block text-white py-2"
+              href="/blog"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Blog
+            </NextLink>
+            <NextLink
+              className="block text-white py-2"
+              href="/courses"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              Courses
+            </NextLink>
           </motion.div>
-        )}
+        )} */}
       </NavbarContent>
 
       <NavbarContent className="sm:flex basis-1/5 sm:basis-full" justify="end">

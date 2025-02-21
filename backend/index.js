@@ -20,7 +20,9 @@ const articleRoutes = require("./api/routes/article.routes"); // Routes articles
 const productRoutes = require("./api/routes/products.routes"); // Routes produits
 const paymentRoutes = require("./api/routes/payment.routes"); // Routes paiement
 const orderRoutes = require("./api/routes/order.routes"); // Routes commandes
-const paymentConfirmationRoutes = require("./api/routes/PaymentConfirmation.routes"); // Routes confirmations de paiement
+const paymentConfirmationRoutes = require("./api/routes/paymentConfirmation.routes"); // Routes 
+//confirmations de paiement
+const contactRoutes = require("./api/routes/contact.routes"); // Routes contact
 
 // Connexion à la base de données
 connect(process.env.DB)
@@ -151,6 +153,7 @@ app.use("/products", productRoutes);
 app.use("/payments", paymentRoutes);
 app.use("/orders", orderRoutes);
 app.use("/payment-confirmations", paymentConfirmationRoutes);
+app.use("/contact", contactRoutes);
 
 // Gestion des erreurs 404
 app.use((req, res, next) => {

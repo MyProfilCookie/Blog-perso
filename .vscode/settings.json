@@ -1,4 +1,11 @@
 {
     "editor.tabCompletion": "on",
-    "MutableAI.upsell": true
+    "MutableAI.upsell": true,
+    "cSpell.words": [
+        "après",
+        "d'accueil",
+        "Gestion",
+        "trouvé",
+        "Utilisateur"
+    ]
 }

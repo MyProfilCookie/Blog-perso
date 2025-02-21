@@ -1,4 +1,4 @@
-const Article = require('../models/article');
+const Article = require('../models/Article');
 
 // Obtenir tous les articles
 exports.getAllArticles = async (req, res) => {

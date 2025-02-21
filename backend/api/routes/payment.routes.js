@@ -21,6 +21,24 @@ router.post('/create-payment-intent', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la création de l\'intention de paiement', error });
   }
 });
+// ✅ Récupérer un paiement par orderId
+router.get('/:orderId', async (req, res) => {
+  try {
+    const { orderId } = req.params;
+
+    // Vérifie si un paiement existe pour cet orderId
+    const payment = await Payment.findOne({ orderId });
+
+    if (!payment) {
+      return res.status(404).json({ message: "Aucun paiement trouvé pour cette commande." });
+    }
+
+    res.status(200).json(payment);
+  } catch (error) {
+    console.error("Erreur lors de la récupération du paiement:", error);
+    res.status(500).json({ message: "Erreur serveur", error });
+  }
+});
 
 // Création d'une transaction PayPal (exemple)
 router.post('/create-paypal-transaction', async (req, res) => {
@@ -63,6 +81,49 @@ router.get('/', async (req, res) => {
     res.status(500).json({ message: 'Erreur lors de la récupération des paiements', error });
   }
 });
+router.get('/:id', async (req, res) => {
+  const paymentId = req.params.id;
+
+  try {
+    // 🔹 Vérifie si on cherche par orderId ou _id
+    const payment = await Payment.findOne({ $or: [{ _id: paymentId }, { orderId: paymentId }] });
+
+    if (!payment) {
+      return res.status(404).json({ message: 'Paiement non trouvé' });
+    }
+
+    res.status(200).json(payment);
+  } catch (error) {
+    console.error('Erreur lors de la récupération du paiement:', error);
+    res.status(500).json({ message: 'Erreur serveur', error });
+  }
+});
+
+router.get('/transaction/:transactionId', async (req, res) => {
+  try {
+    const { transactionId } = req.params;
+    console.log(`🔍 Recherche du paiement avec transactionId: ${transactionId}`);
+
+    if (!transactionId) {
+      return res.status(400).json({ message: '⚠ Transaction ID manquant dans la requête.' });
+    }
+
+    const payment = await Payment.findOne({ transactionId });
+
+    if (!payment) {
+      console.log("❌ Aucun paiement trouvé avec cet ID !");
+      return res.status(404).json({ message: "Aucun paiement trouvé pour cette transaction." });
+    }
+
+    console.log("✅ Paiement trouvé :", payment);
+    res.status(200).json(payment);
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du paiement:", error);
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+
 
 
 
@@ -114,6 +175,31 @@ router.get('/all', async (req, res) => {
   } catch (error) {
     console.error('Erreur lors de la récupération de tous les paiements:', error);
     res.status(500).json({ message: 'Erreur lors de la récupération de tous les paiements', error });
+  }
+});
+
+// recupère le numéro de transaction
+router.get('/:transactionId', async (req, res) => {
+  const { transactionId } = req.params;
+  console.log("🔍 transactionId reçu :", transactionId); // Vérification
+
+  try {
+    if (!transactionId) {
+      return res.status(400).json({ message: 'Transaction ID manquant' });
+    }
+
+    const payment = await Payment.findOne({ transactionId });
+
+    if (!payment) {
+      console.log("❌ Aucun paiement trouvé avec cet ID !");
+      return res.status(404).json({ message: 'Paiement non trouvé' });
+    }
+
+    console.log("✅ Paiement trouvé :", payment);
+    res.status(200).json(payment);
+  } catch (error) {
+    console.error('❌ Erreur lors de la récupération du paiement:', error);
+    res.status(500).json({ message: 'Erreur interne du serveur', error: error.message });
   }
 });
 

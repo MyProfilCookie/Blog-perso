@@ -413,14 +413,32 @@ const PaymentPage = () => {
             transition={{ duration: 0.5 }}
             className="container p-6 mx-auto mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-none"
         >
+            { user &&(
             <motion.h1
-                className="mb-6 text-4xl font-bold text-center text-indigo-600"
-                initial={{ scale: 0.8, opacity: 0 }}
-                animate={{ scale: 1, opacity: 1 }}
-                transition={{ duration: 0.5 }}
+            className="mb-6 text-4xl font-bold text-center text-indigo-600"
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ duration: 0.5 }}
+        >
+            Commande du client :{" "}
+            <motion.span
+                className="text-violet-500"
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
             >
-                Paiement
-            </motion.h1>
+                {user.nom}
+            </motion.span>{" "}
+            <motion.span
+                className="text-violet-500"
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
+            >
+                {user.prenom}
+            </motion.span>
+        </motion.h1>
+            )}
 
             {user && (
                 <motion.div
@@ -493,7 +511,7 @@ const PaymentPage = () => {
                 </select>
             </motion.div>
 
-            <motion.div className="mt-6 flex justify-center">
+            {/* <motion.div className="mt-6 flex justify-center">
                 <motion.button
                     className="px-6 py-3 bg-green-500 text-white rounded-lg text-lg font-bold shadow-md flex items-center"
                     whileHover={{ scale: 1.05 }}
@@ -503,7 +521,7 @@ const PaymentPage = () => {
                     <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
                     Payer maintenant
                 </motion.button>
-            </motion.div>
+            </motion.div> */}
 
             <motion.div className="mt-6" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
                 <Elements stripe={stripePromise}>

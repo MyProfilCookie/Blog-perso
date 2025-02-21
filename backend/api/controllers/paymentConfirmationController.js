@@ -97,6 +97,61 @@ exports.getPaymentConfirmation = async (req, res) => {
         res.status(500).json({ message: "Erreur serveur lors de la récupération de la confirmation de paiement." });
     }
 };
+// recuperer toutes les confirmations de paiement
+exports.getAllPaymentConfirmations = async (req, res) => {
+    try {
+        const confirmations = await PaymentConfirmation.find()
+            .populate('orderId')
+            .populate('userId');
+            res.status(200).json(confirmations);
+            } catch (error) {
+        console.error("Erreur lors de la récupération des confirmations de paiement :", error);
+        res.status(500).json({ message: "Erreur serveur lors de la récupération des confirmations de paiement." });
+    }
+};
+// recuperer le numéro de la transaction
+exports.getTransactionNumber = async (req, res) => {
+    try {
+        const { transactionId } = req.params;
+
+        if (!transactionId || typeof transactionId !== "string") {
+            return res.status(400).json({ message: "❌ ID de transaction invalide." });
+        }
+
+        console.log("🔍 Recherche transactionId :", transactionId);
+
+        // 🔥 Utiliser findOne() avec transactionId
+        const confirmation = await PaymentConfirmation.findOne({ transactionId }).lean();
+
+        if (!confirmation) {
+            console.log("❌ Aucune transaction trouvée en base !");
+            return res.status(404).json({ message: "🚫 Confirmation de paiement introuvable." });
+        }
+
+        console.log("✅ Transaction trouvée :", confirmation);
+        res.status(200).json(confirmation);
+    } catch (error) {
+        console.error("❌ Erreur lors de la récupération :", error);
+        res.status(500).json({ message: "Erreur serveur.", error: error.message });
+    }
+};
+
+// Supprimer une confirmation de paiement par ID
+exports.updatePaymentConfirmation = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const { paymentStatus } = req.body;
+        const updatedConfirmation = await PaymentConfirmation.findByIdAndUpdate(id, { paymentStatus }, { new: true });
+        if (!updatedConfirmation) {
+            return res.status(404).json({ message: "Confirmation de paiement introuvable." });
+        }
+        res.status(200).json({ message: "Confirmation de paiement mise à jour avec succès.", confirmation: updatedConfirmation });
+    }
+    catch (error) {
+        console.error("Erreur lors de la mise à jour de la confirmation de paiement :", error);
+        res.status(500).json({ message: "Erreur serveur lors de la mise à jour de la confirmation de paiement." });
+    }
+};
 
 // Supprimer une confirmation de paiement
 exports.deletePaymentConfirmation = async (req, res) => {
@@ -114,5 +169,21 @@ exports.deletePaymentConfirmation = async (req, res) => {
         console.error("Erreur lors de la suppression de la confirmation de paiement :", error);
         res.status(500).json({ message: "Erreur serveur lors de la suppression de la confirmation de paiement." });
     }
+};
+// recuperer le numéro de la transaction
+exports.getTransactionNumber = async (req, res) => {
+    try {
+        const { id } = req.params;
+        const confirmation = await PaymentConfirmation.findById(id);
+        if (!confirmation) {
+            return res.status(404).json({ message: "Confirmation de paiement introuvable." });
+        }
+        res.status(200).json({ transactionId: confirmation.transactionId });
+    }
+    catch (error) {
+        console.error("Erreur lors de la récupération du numéro de transaction :", error);
+        res.status(500).json({ message: "Erreur serveur lors de la récupération du numéro de transaction." });
+    }
+
 };
 

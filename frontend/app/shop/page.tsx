@@ -12,6 +12,7 @@ import { faStar } from "@fortawesome/free-solid-svg-icons";
 import Loading from "@/components/loading";
 
 type Article = {
+    [x: string]: any;
     title: string;
     description: string;
     price: number;
@@ -108,18 +109,12 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                                             {article.price} €
                                         </p>
                                         <div className="flex flex-col w-full mt-4 space-y-3">
-                                            <NextLink passHref href={article.link}>
-                                                <Button fullWidth color="primary">
-                                                    Voir cet article
-                                                </Button>
-                                            </NextLink>
-                                            <Button
-                                                fullWidth
-                                                color="secondary"
-                                                onClick={() => onAddToCart(article)}
-                                            >
-                                                Ajouter au panier
-                                            </Button>
+                                        <NextLink passHref href={`/products/${article._id}`}>
+  <Button fullWidth color="primary">Voir cet article</Button>
+</NextLink>
+                                        <Button fullWidth color="secondary" onClick={() => onAddToCart(article)}>
+    Ajouter au panier
+                                        </Button>
                                         </div>
                                     </CardBody>
                                 </Card>
