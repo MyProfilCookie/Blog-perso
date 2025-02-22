@@ -23,7 +23,8 @@ const orderRoutes = require("./api/routes/order.routes"); // Routes commandes
 const paymentConfirmationRoutes = require("./api/routes/paymentConfirmation.routes"); // Routes 
 //confirmations de paiement
 const contactRoutes = require("./api/routes/contact.routes"); // Routes contact
-
+// confirmation de blog 
+const blogRoutes = require("./api/routes/blog.routes"); // Routes blog
 // Connexion à la base de données
 connect(process.env.DB)
   .then(() => {
@@ -154,6 +155,7 @@ app.use("/payments", paymentRoutes);
 app.use("/orders", orderRoutes);
 app.use("/payment-confirmations", paymentConfirmationRoutes);
 app.use("/contact", contactRoutes);
+app.use("/blog", blogRoutes);
 
 // Gestion des erreurs 404
 app.use((req, res, next) => {

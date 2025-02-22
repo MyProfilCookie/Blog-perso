@@ -110,7 +110,7 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                                         </p>
                                         <div className="flex flex-col w-full mt-4 space-y-3">
                                         <NextLink passHref href={`/products/${article._id}`}>
-  <Button fullWidth color="primary">Voir cet article</Button>
+  <Button fullWidth color="danger">Voir cet article</Button>
 </NextLink>
                                         <Button fullWidth color="secondary" onClick={() => onAddToCart(article)}>
     Ajouter au panier

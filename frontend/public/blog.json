@@ -1,0 +1,102 @@
+[
+    {
+        "_id": "1",
+        "title": "Comprendre l’autisme au quotidien",
+        "description": "Un guide pour mieux vivre avec l’autisme.",
+        "content": "L’autisme est un spectre qui affecte chaque personne différemment, et vivre avec peut parfois sembler un mystère pour les proches comme pour les personnes concernées. Cet article explore les défis quotidiens tels que la gestion des interactions sociales, la sensibilité sensorielle (bruits forts, lumières intenses), et les besoins de routine. Par exemple, une personne autiste peut trouver difficile de s’adapter à des changements imprévus ou de décoder les expressions faciales. Pour y remédier, nous proposons des stratégies d’adaptation : établir des horaires visuels pour structurer la journée, utiliser des écouteurs antibruit dans les environnements bruyants, et pratiquer des techniques de relaxation comme la respiration profonde. Ces outils simples peuvent transformer la vie quotidienne en une expérience plus prévisible et confortable.",
+        "category": "Conseils",
+        "author": "Dr. Sophie Martin",
+        "imageUrl": "https://example.com/images/autism-daily.jpg",
+        "createdAt": "2023-01-10T00:00:00Z"
+    },
+    {
+        "_id": "2",
+        "title": "Témoignage : Mon parcours avec l’autisme",
+        "description": "Une histoire personnelle sur la vie avec l’autisme.",
+        "content": "Je m’appelle Lucas, et j’ai été diagnostiqué autiste à 8 ans. À l’époque, je ne comprenais pas pourquoi je me sentais si différent des autres enfants. Les récréations étaient un cauchemar : trop de bruit, trop de chaos. J’ai passé des années à apprendre à gérer mes émotions et à communiquer mes besoins, souvent par des moyens non verbaux au début, comme des dessins. Ma famille a joué un rôle clé en m’aidant à trouver des stratégies qui fonctionnent pour moi, comme me retirer dans un coin calme quand je me sentais submergé. Aujourd’hui, à 25 ans, je suis indépendant et je travaille dans un domaine qui valorise ma capacité à me concentrer sur les détails. Mon conseil aux familles : écoutez votre enfant, même s’il ne parle pas – il a toujours quelque chose à dire, à sa manière.",
+        "category": "Témoignages",
+        "author": "Lucas Dupont",
+        "imageUrl": "https://example.com/images/autism-story.jpg",
+        "createdAt": "2023-02-15T00:00:00Z"
+    },
+    {
+        "_id": "3",
+        "title": "Les mythes sur l’autisme démystifiés",
+        "description": "Démystifier les idées reçues sur l’autisme.",
+        "content": "Beaucoup pensent que l’autisme empêche toute communication ou que toutes les personnes autistes ont des compétences extraordinaires, comme dans les films. Ces mythes sont non seulement faux, mais aussi nuisibles. En réalité, l’autisme est un spectre vaste : certaines personnes peuvent être non verbales et avoir besoin d’un soutien constant, tandis que d’autres vivent de manière indépendante et occupent des emplois variés. Un autre mythe courant est que les autistes n’ont pas d’émotions ou d’empathie – c’est faux ! Souvent, nous ressentons les émotions intensément, mais nous les exprimons différemment. Cet article clarifie ces misconceptions avec des exemples concrets et des données issues de recherches récentes, pour aider le grand public à mieux comprendre et accepter cette diversité neurologique.",
+        "category": "Sensibilisation",
+        "author": "Marie Leclerc",
+        "imageUrl": "https://example.com/images/autism-myths.jpg",
+        "createdAt": "2023-03-01T00:00:00Z"
+    },
+    {
+        "_id": "4",
+        "title": "Stratégies pour les parents d’enfants autistes",
+        "description": "Conseils pratiques pour accompagner un enfant autiste.",
+        "content": "Être parent d’un enfant autiste peut être un défi, mais aussi une expérience incroyablement enrichissante. Chaque enfant est unique, mais certains principes universels peuvent aider. Par exemple, la communication peut être facilitée par des outils visuels comme des tableaux de pictogrammes, qui permettent à l’enfant d’exprimer ses besoins ou de comprendre une séquence d’activités. La patience est essentielle : un enfant autiste peut avoir besoin de plus de temps pour traiter une instruction ou gérer une transition. Cet article propose des techniques concrètes : créer un espace calme à la maison, utiliser des renforçateurs positifs (comme des compliments ou des petites récompenses), et collaborer avec des professionnels comme des orthophonistes ou des ergothérapeutes pour soutenir le développement de l’enfant.",
+        "category": "Conseils",
+        "author": "Claire Dubois",
+        "imageUrl": "https://example.com/images/autism-parents.jpg",
+        "createdAt": "2023-04-20T00:00:00Z"
+    },
+    {
+        "_id": "5",
+        "title": "Ma vie en tant qu’adulte autiste",
+        "description": "Un témoignage sur l’autisme à l’âge adulte.",
+        "content": "Diagnostiquée tardivement à 30 ans, j’ai passé des années à me demander pourquoi je me sentais si différente. Les interactions sociales étaient épuisantes : je ne comprenais pas les sous-entendus, et les environnements bruyants me donnaient des migraines. Une fois mon diagnostic posé, tout a pris sens. J’ai appris à naviguer dans un monde neurotypique en mettant en place des stratégies : je planifie mes journées à l’avance pour éviter les surprises, je porte des lunettes de soleil pour réduire la stimulation visuelle, et je m’entoure de personnes qui comprennent mes besoins. Aujourd’hui, je travaille comme graphiste freelance, un métier qui me permet de canaliser ma créativité et ma précision. Mon parcours montre qu’un diagnostic tardif peut être une renaissance.",
+        "category": "Témoignages",
+        "author": "Sophie Lemoine",
+        "imageUrl": "https://example.com/images/autism-adult.jpg",
+        "createdAt": "2023-05-12T00:00:00Z"
+    },
+    {
+        "_id": "6",
+        "title": "Les avancées récentes dans la recherche sur l’autisme",
+        "description": "Un aperçu des dernières découvertes scientifiques.",
+        "content": "La recherche sur l’autisme progresse rapidement, offrant de nouvelles perspectives sur ses causes et ses interventions. En 2023, des études ont mis en lumière des facteurs génétiques spécifiques, identifiant plus de 100 gènes potentiellement liés au spectre autistique. Par ailleurs, des essais cliniques explorent l’impact de thérapies comportementales précoces, comme l’analyse appliquée du comportement (ABA), qui montre des améliorations significatives dans les compétences sociales chez les jeunes enfants. Une autre avancée prometteuse concerne les technologies : des applications de réalité virtuelle sont testées pour aider les autistes à s’entraîner aux interactions sociales dans un environnement contrôlé. Cet article résume ces découvertes et discute de leur potentiel pour améliorer la qualité de vie.",
+        "category": "Recherche",
+        "author": "Pr. Julien Bernard",
+        "imageUrl": "https://example.com/images/autism-research.jpg",
+        "createdAt": "2023-06-05T00:00:00Z"
+    },
+    {
+        "_id": "7",
+        "title": "Comment sensibiliser son entourage à l’autisme",
+        "description": "Des idées pour expliquer l’autisme aux proches.",
+        "content": "Parler de l’autisme peut être intimidant, surtout quand les proches ne comprennent pas pourquoi une personne agit différemment. Cet article propose des approches simples pour éduquer votre entourage. Commencez par des faits de base : expliquez que l’autisme affecte la communication, les interactions sociales et parfois les sens, mais que chaque personne est unique. Utilisez des exemples concrets, comme ‘Mon fils préfère jouer seul parce que ça le calme’. Organiser une discussion ouverte ou partager des ressources (livres, vidéos) peut aussi aider. L’objectif est de remplacer les jugements par de la curiosité et de l’empathie, créant un environnement plus inclusif pour les personnes autistes.",
+        "category": "Sensibilisation",
+        "author": "Emma Laurent",
+        "imageUrl": "https://example.com/images/autism-awareness.jpg",
+        "createdAt": "2023-07-18T00:00:00Z"
+    },
+    {
+        "_id": "8",
+        "title": "Routine et autisme : Pourquoi c’est important",
+        "description": "L’importance des routines pour les personnes autistes.",
+        "content": "Les routines offrent sécurité et prévisibilité, deux éléments cruciaux pour beaucoup de personnes autistes. Un changement imprévu – comme un retard de bus ou une annulation – peut provoquer une anxiété intense, car le cerveau autiste traite souvent l’incertitude différemment. Cet article explique comment mettre en place des routines efficaces : utilisez des calendriers visuels avec des couleurs pour chaque activité, préparez les transitions à l’avance (ex. ‘Dans 10 minutes, on arrête’), et intégrez des moments de flexibilité progressive pour développer la résilience. Des exemples pratiques montrent comment une routine bien conçue peut réduire le stress et favoriser l’autonomie, tant pour les enfants que pour les adultes.",
+        "category": "Conseils",
+        "author": "Dr. Anne Moreau",
+        "imageUrl": "https://example.com/images/autism-routine.jpg",
+        "createdAt": "2023-08-22T00:00:00Z"
+    },
+    {
+        "_id": "9",
+        "title": "Vivre avec un frère autiste",
+        "description": "Le témoignage d’une sœur neurotypique.",
+        "content": "Mon frère est autiste, et cela a façonné ma vie d’une manière que je n’aurais jamais imaginée. Enfant, je ne comprenais pas pourquoi il ne jouait pas avec moi ou pourquoi il faisait des crises quand on changeait de restaurant. Avec le temps, j’ai appris que son monde était différent : il adore les trains et peut réciter tous les horaires par cœur, mais il a du mal avec les câlins ou les conversations spontanées. Être sa sœur m’a enseigné la patience, l’acceptation, et une forme d’amour qui ne demande pas de mots. Aujourd’hui, je suis fière de l’aider à s’épanouir à sa façon, et ce témoignage explore les hauts, les bas et les leçons tirées de notre relation.",
+        "category": "Témoignages",
+        "author": "Julie Renaud",
+        "imageUrl": "https://example.com/images/autism-sibling.jpg",
+        "createdAt": "2023-09-10T00:00:00Z"
+    },
+    {
+        "_id": "10",
+        "title": "Autisme et emploi : Défis et solutions",
+        "description": "Comment intégrer les autistes dans le monde du travail.",
+        "content": "Trouver et conserver un emploi est un défi pour beaucoup d’autistes en raison de barrières comme les entretiens d’embauche (où le contact visuel est souvent attendu) ou les environnements de travail bruyants. Pourtant, les personnes autistes apportent des forces uniques : attention aux détails, pensée logique, et persévérance. Cet article propose des solutions concrètes : pour les employeurs, aménager des espaces calmes et offrir des instructions claires ; pour les employés, se préparer avec des simulations d’entretien et chercher des rôles adaptés à leurs compétences. Des études montrent que les entreprises inclusives bénéficient d’une productivité accrue – un argument de plus pour changer les pratiques actuelles.",
+        "category": "Recherche",
+        "author": "Marc Dubois",
+        "imageUrl": "https://example.com/images/autism-employment.jpg",
+        "createdAt": "2023-10-25T00:00:00Z"
+    }
+]

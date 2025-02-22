@@ -27,10 +27,10 @@ export const siteConfig = {
       label: "A propos de nous",
       href: "/about",
     },
-    // {
-    //   label: "Maeva",
-    //   href: "/maeva",
-    // },
+    {
+      label: "Blog",
+      href: "/blog",
+    },
   ],
   navMenuItems: [
     {
