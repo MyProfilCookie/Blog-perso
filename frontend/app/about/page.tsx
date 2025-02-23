@@ -1,141 +1,191 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Card, CardBody, Avatar, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import { Sparkles, Users, HeartHandshake, Code, Target } from "lucide-react";
 
 import { title, subtitle } from "@/components/primitives";
 
+// ✅ Définition des couleurs en format hexadécimal pour éviter Tailwind
+const colorVariants = [
+  "#DBEAFE",
+  "#D1FAE5",
+  "#E9D5FF",
+  "#FEF3C7",
+  "#FECACA",
+  "#CCFBF1",
+];
+
 const AboutUsPage = () => {
+  const familyMembers = [
+    { name: "Jessica", img: "/assets/family/avatar/jessica.jpg" },
+    { name: "Joshua", img: "/assets/family/avatar/Joshua.jpg" },
+    { name: "Maeva", img: "/assets/family/avatar/Maeva.jpg" },
+    { name: "Maman", img: "/assets/family/avatar/maman.jpg" },
+    { name: "Nini", img: "/assets/family/avatar/nini.jpg" },
+    { name: "Papa", img: "/assets/family/avatar/papa.jpg" },
+    { name: "Pauline", img: "/assets/family/avatar/pauline.jpg" },
+    { name: "Titi", img: "/assets/family/avatar/titi.jpg" },
+  ];
+
+  // ✅ Attribution aléatoire des couleurs
+  const [cardColors, setCardColors] = useState(() =>
+    Array(4)
+      .fill(null)
+      .map(
+        () => colorVariants[Math.floor(Math.random() * colorVariants.length)],
+      ),
+  );
+
+  // ✅ Couleur dynamique pour la carte famille
+  const [familyCardColor, setFamilyCardColor] = useState(
+    colorVariants[Math.floor(Math.random() * colorVariants.length)],
+  );
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCardColors(
+        Array(4)
+          .fill(null)
+          .map(
+            () =>
+              colorVariants[Math.floor(Math.random() * colorVariants.length)],
+          ),
+      );
+      setFamilyCardColor(
+        colorVariants[Math.floor(Math.random() * colorVariants.length)],
+      );
+    }, 60000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <section className="flex flex-col gap-8 justify-center items-center py-12 w-full md:py-16">
-      {/* Header Title Section */}
+      {/* 🎇 Titre animé */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="text-center"
         initial={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className={title({ color: "blue" })}>Notre Histoire</h1>
+        <motion.h1
+          animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.1, 1] }}
+          className={
+            title({ color: "blue" }) + " flex items-center justify-center gap-2"
+          }
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          Notre Histoire <Sparkles className="text-blue-600 w-6 h-6" />
+        </motion.h1>
         <h2 className={subtitle({ class: "mt-4 text-blue-600" })}>
-          Découvrez la famille derrière AutiStudy et notre mission dédiée à l'éducation adaptée des enfants autistes.
+          Découvrez la famille derrière AutiStudy et notre mission dédiée à
+          l&apos;éducation adaptée des enfants autistes.
         </h2>
       </motion.div>
 
-      {/* First Block: Introduction to the Family */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[800px]"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-      >
-        <Card className="px-8 py-6 bg-blue-100 rounded-lg shadow-lg">
-          <CardBody>
-            <p className="text-lg text-gray-700">
-              Nous sommes une famille nombreuse, composée de plusieurs enfants âgés de 38 ans à 14 ans, Maeva étant la benjamine. Chaque membre de la famille a un rôle essentiel dans la création de <strong>AutiStudy</strong>, une plateforme éducative dédiée aux enfants autistes.
-            </p>
-          </CardBody>
-        </Card>
-      </motion.div>
+      {/* 🏡 Cartes informatives avec couleurs dynamiques en style inline */}
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-2 gap-6 w-full max-w-[1000px]">
+        {[
+          {
+            title: "Notre Famille",
+            text: "Nous sommes une famille nombreuse avec plusieurs enfants âgés de 38 à 14 ans, Maeva étant la benjamine.",
+            icon: <Users className="text-blue-600 w-8 h-8" />,
+          },
+          {
+            title: "Notre Maman",
+            text: "Notre maman, formée en gestion des émotions, s'occupe de créer un environnement bienveillant pour chaque enfant.",
+            icon: <HeartHandshake className="text-green-600 w-8 h-8" />,
+          },
+          {
+            title: "Notre Papa",
+            text: "Notre papa, ingénieur télécom, met à profit ses compétences pour développer des solutions éducatives adaptées. Il est le co-fondateur d'AutiStudy.",
+            icon: <Code className="text-purple-600 w-8 h-8" />,
+          },
+          {
+            title: "Notre Mission",
+            text: "Nous avons créé AutiStudy, une plateforme d'apprentissage adaptée aux enfants autistes. Notre mission est de rendre l'éducation inclusive.",
+            icon: <Target className="text-yellow-600 w-8 h-8" />,
+          },
+        ].map((info, index) => (
+          <motion.div
+            key={index}
+            transition={{ duration: 0.3 }}
+            whileHover={{ scale: 1.05 }}
+          >
+            <Card
+              className="p-6 rounded-lg shadow-lg min-h-[220px] flex flex-col items-center text-center"
+              style={{ backgroundColor: cardColors[index] }}
+            >
+              <div className="mb-4">{info.icon}</div>
+              <CardBody>
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">
+                  {info.title}
+                </h3>
+                <p className="text-lg text-gray-700">{info.text}</p>
+              </CardBody>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
 
-      {/* Second Block: The Role of Mom */}
+      {/* 👨‍👩‍👧‍👦 Carte dynamique des membres de la famille avec couleur en style inline */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[800px]"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 1 }}
+        className=" max-w-[800px] w-full mt-6 rounded-lg shadow-lg transition-colors duration-500"
+        transition={{ duration: 0.5, ease: "easeInOut" }}
+        whileHover={{ scale: 1.05 }}
       >
-        <Card className="px-8 py-6 bg-green-100 rounded-lg shadow-lg">
-          <CardBody>
-            <p className="text-lg text-gray-700">
-              <strong>Notre maman</strong>, formée en <strong>Sogelene</strong> et en <strong>gestion des émotions</strong>, s'occupe de créer un environnement serein et bienveillant pour chaque enfant. Elle veille à ce que chacun trouve sa place et s'épanouisse dans un cadre qui respecte les particularités de chacun, notamment celles de Maeva.
-            </p>
-          </CardBody>
-        </Card>
-      </motion.div>
-
-      {/* Third Block: The Role of Dad */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[800px]"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 1.5 }}
-      >
-        <Card className="px-8 py-6 bg-purple-100 rounded-lg shadow-lg">
-          <CardBody>
-            <p className="text-lg text-gray-700">
-              <strong>Notre papa</strong>, ingénieur télécom, met à profit ses compétences pour développer des solutions éducatives adaptées aux besoins spécifiques des enfants autistes. Il accompagne le développement de Maeva en adaptant des outils technologiques pour favoriser son apprentissage.
-            </p>
-          </CardBody>
-        </Card>
-      </motion.div>
-
-      {/* Fourth Block: Our Mission */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[800px]"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 2 }}
-      >
-        <Card className="px-8 py-6 bg-yellow-100 rounded-lg shadow-lg">
-          <CardBody>
-            <p className="text-lg text-gray-700">
-              Ensemble, nous avons créé <strong>AutiStudy</strong>, une plateforme d'apprentissage adaptée aux enfants autistes. Notre mission est de rendre l'apprentissage plus accessible, agréable et personnalisé pour chaque enfant, en tenant compte de leurs besoins particuliers.
-            </p>
-          </CardBody>
-        </Card>
-      </motion.div>
-
-      {/* Meet the Family Section */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="flex justify-center mt-12 w-full"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 2.5 }}
-      >
-        <Card className="py-4 max-w-[800px] w-full mt-6 bg-teal-100 rounded-lg">
+        <Card
+          className="rounded-lg shadow-lg"
+          style={{ backgroundColor: familyCardColor }}
+        >
           <CardBody className="flex flex-col items-center">
-            <h3 className="mb-6 font-bold text-gray-800 text-large">Rencontrez les membres de la famille Ayivor</h3>
+            <h3 className="mb-6 font-bold text-gray-800 text-large">
+              Rencontrez les membres de la famille Ayivor
+            </h3>
             <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
-              <Avatar isBordered alt="Membre 1" color="warning" size="lg" src="/assets/family/avatar/jessica.jpg" />
-              <Avatar isBordered alt="Membre 2" color="primary" size="lg" src="/assets/family/avatar/Joshua.jpg" />
-              <Avatar isBordered alt="Membre 3" color="danger" size="lg" src="/assets/family/avatar/Maeva.jpg" />
-              <Avatar isBordered alt="Membre 4" color="secondary" size="lg" src="/assets/family/avatar/maman.jpg" />
-              <Avatar isBordered alt="Membre 5" color="success" size="lg" src="/assets/family/avatar/nini.jpg" />
-              <Avatar isBordered alt="Membre 6" color="warning" size="lg" src="/assets/family/avatar/papa.jpg" />
-              <Avatar isBordered alt="Membre 7" color="primary" size="lg" src="/assets/family/avatar/pauline.jpg" />
-              <Avatar isBordered alt="Membre 8" color="danger" size="lg" src="/assets/family/avatar/titi.jpg" />
+              {familyMembers.map((member, index) => (
+                <Avatar
+                  key={index}
+                  isBordered
+                  alt={member.name}
+                  color="primary"
+                  size="lg"
+                  src={member.img}
+                />
+              ))}
             </div>
           </CardBody>
         </Card>
       </motion.div>
 
-      {/* CTA Button */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="flex justify-center mt-8 w-full"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 3 }}
-      >
-        <Button className="text-white bg-blue-600 hover:bg-blue-500" href="/resources">
-          Explorer nos ressources
+      {/* 🎨 Bouton pour changer manuellement les couleurs */}
+      <div className="flex justify-center mt-6">
+        <Button
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+          onClick={() => {
+            setCardColors(
+              Array(4)
+                .fill(null)
+                .map(
+                  () =>
+                    colorVariants[
+                      Math.floor(Math.random() * colorVariants.length)
+                    ],
+                ),
+            );
+            setFamilyCardColor(
+              colorVariants[Math.floor(Math.random() * colorVariants.length)],
+            );
+          }}
+        >
+          Changer les couleurs
         </Button>
-      </motion.div>
-
-      {/* Footer */}
-      <footer className="mt-16 text-center">
-        <p className="text-sm text-gray-500">
-          © 2024 AutiStudy - Tous droits réservés. Créé par la famille Ayivor.
-        </p>
-      </footer>
+      </div>
     </section>
   );
 };
 
 export default AboutUsPage;
-
-
-
-
