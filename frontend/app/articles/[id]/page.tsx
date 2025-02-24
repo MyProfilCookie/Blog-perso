@@ -48,27 +48,45 @@ const ArticlePage = () => {
       switch (item.type) {
         case "paragraph":
           return (
-            <p key={index} className="mt-4 leading-relaxed text-justify text-gray-800">
+            <motion.p
+              key={index}
+              className="mt-4 leading-relaxed text-justify text-gray-800"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: index * 0.2 }}
+            >
               {(item.text ?? '').split(/(\*\*.*?\*\*)/g).map((part, i) =>
                 part.startsWith('**') ? <strong key={i} className="text-violet-600">{part.slice(2, -2)}</strong> : part
               )}
-            </p>
+            </motion.p>
           );
         case "subtitle":
           return (
-            <h3 key={index} className="mt-8 text-2xl font-semibold text-violet-700">
+            <motion.h3
+              key={index}
+              className="mt-8 text-2xl font-semibold text-violet-700"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: index * 0.2 }}
+            >
               {item.text}
-            </h3>
+            </motion.h3>
           );
         case "image":
           return (
-            <div key={index} className="my-8">
+            <motion.div
+              key={index}
+              className="my-8"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.8, delay: index * 0.2 }}
+            >
               <img
                 alt={item.alt}
                 className="object-cover w-full h-auto max-h-[500px] rounded-lg shadow-md"
                 src={item.src}
               />
-            </div>
+            </motion.div>
           );
         default:
           return null;
@@ -77,69 +95,72 @@ const ArticlePage = () => {
   };
 
   return (
-    <section className="flex flex-col items-center justify-start w-full min-h-screen gap-12 px-4 py-16 bg-white md:px-8">
-      {/* Informations sur l'Article */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="max-w-2xl text-center"
-        initial={{ opacity: 0, y: -50 }}
-        transition={{ duration: 0.8 }}
-      >
-        <h1 className={`${title({ color: "violet" })} text-4xl md:text-5xl font-bold leading-tight`}>{article.title}</h1>
-        <h2 className={`${subtitle({ class: "mt-4" })} text-xl md:text-2xl text-gray-600 italic`}>{article.subtitle}</h2>
-        <div className="mt-4 text-sm text-gray-500">
-          <p>Publié le : <span className="font-medium text-violet-600">{formatDate(article.date)}</span></p>
-          <p>Auteur : <span className="font-medium text-violet-600">{article.author}</span></p>
-        </div>
-      </motion.div>
-
-      {/* Image de l'Article */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-4xl"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-      >
-        <img
-          alt={article.title}
-          className="object-cover w-full h-auto max-h-[500px] rounded-lg shadow-md"
-          src={article.image}
-        />
-      </motion.div>
-
-      {/* Contenu de l'Article */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-3xl mt-8"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 1 }}
-      >
-        <Card className="bg-white shadow-none">
-          <CardBody className="p-8 text-lg leading-relaxed text-gray-800">
-            {renderContent()}
-          </CardBody>
-        </Card>
-      </motion.div>
-
-      {/* Lien de Retour à la Liste des Articles */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="mt-12"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 1.5 }}
-      >
-        <Link href="/articles">
-          <Button className="px-6 py-3 text-white rounded-lg bg-violet-600 hover:bg-violet-700">
-            Retour à la liste des articles
-          </Button>
-        </Link>
-      </motion.div>
-    </section>
+    <section className="flex flex-col items-center justify-center min-h-screen gap-12 px-4 py-16 bg-white md:px-8 mx-auto">
+    {/* Informations sur l'Article */}
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      className="max-w-3xl text-center mx-auto"
+      initial={{ opacity: 0, y: -50 }}
+      transition={{ duration: 0.8 }}
+    >
+      <h1 className={`${title({ color: "violet" })} text-4xl md:text-5xl font-bold leading-tight`}>
+        {article.title}
+      </h1>
+      <h2 className={`${subtitle({ class: "mt-4" })} text-xl md:text-2xl text-gray-600 italic`}>
+        {article.subtitle}
+      </h2>
+      <div className="mt-4 text-sm text-gray-500">
+        <p>Publié le : <span className="font-medium text-violet-600">{formatDate(article.date)}</span></p>
+        <p>Auteur : <span className="font-medium text-violet-600">{article.author}</span></p>
+      </div>
+    </motion.div>
+  
+    {/* Image de l'Article */}
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-4xl mx-auto"
+      initial={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.8, delay: 0.5 }}
+    >
+      <img
+        alt={article.title}
+        className="object-cover w-full h-auto max-h-[500px] rounded-lg shadow-md"
+        src={article.image}
+      />
+    </motion.div>
+  
+    {/* Contenu de l'Article */}
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      className="w-full max-w-3xl mt-8 mx-auto"
+      initial={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.8, delay: 1 }}
+    >
+      <Card className="bg-white shadow-none">
+        <CardBody className="p-8 text-lg leading-relaxed text-gray-800">
+          {renderContent()}
+        </CardBody>
+      </Card>
+    </motion.div>
+  
+    {/* Lien de Retour à la Liste des Articles */}
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      className="mt-12 mx-auto"
+      initial={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.8, delay: 1.5 }}
+    >
+      <Link href="/articles">
+        <Button className="px-6 py-3 text-white rounded-lg bg-violet-600 hover:bg-violet-700">
+          Retour à la liste des articles
+        </Button>
+      </Link>
+    </motion.div>
+  </section>
   );
 };
 
 export default ArticlePage;
-
 
 
 

@@ -20,7 +20,23 @@ const produitSchema = new mongoose.Schema({
     imageUrl: {
         type: String,
         required: true
-    }
+    },
+    weight: { 
+        type: Number, 
+        required: false // ✅ Optionnel
+    },
+    category: { 
+        type: String, 
+        required: false // ✅ Optionnel
+    },
+    dimensions: { 
+        type: String, 
+        required: false // ✅ Optionnel
+    },
+    features: [{ 
+        type: String, 
+        required: false // ✅ Liste de caractéristiques optionnelles
+    }]
 });
 
 const Produit = mongoose.model('Produit', produitSchema);
