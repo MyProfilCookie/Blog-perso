@@ -8,7 +8,7 @@ import { motion } from "framer-motion";
 import { ShoppingCart, Info, Ruler, CheckCircle } from "lucide-react";
 
 import LoadingAnimation from "@/components/loading";
-
+import Footer from "@/components/footer";
 export default function ProductPage() {
   const params = useParams();
   const _id = params?.id;
@@ -226,6 +226,7 @@ export default function ProductPage() {
           </table>
         </motion.div>
       </motion.div>
+      <Footer />
     </section>
   );
 }

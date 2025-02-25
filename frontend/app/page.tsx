@@ -15,7 +15,7 @@ import {
   Textarea,
   Image,
 } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
@@ -24,8 +24,9 @@ import { GithubIcon } from "@/components/icons";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import HeaderAutisme from "@/components/headerAutisme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCrown, faUser } from "@fortawesome/free-solid-svg-icons"; // Import des icônes
+import { faClock, faCrown, faEnvelope, faMapMarkerAlt, faMoon, faPhone, faQuestionCircle, faSun, faUser } from "@fortawesome/free-solid-svg-icons"; // Import des icônes
 import Contact from "./contact";
+import Footer from "@/components/footer";
 
 
 export default function Home() {
@@ -138,6 +139,10 @@ export default function Home() {
   const previousTeamSlide = () => setCurrentTeamIndex((prevIndex) => (prevIndex === 0 ? teamGroups.length - 1 : prevIndex - 1));
 
 
+
+  function setIsDarkMode(arg0: boolean): void {
+    throw new Error("Function not implemented.");
+  }
 
   return (
     <section className="flex flex-col items-center justify-center w-full gap-8 py-12 md:py-16">
@@ -372,41 +377,69 @@ export default function Home() {
       </motion.div>
 
       {/* Team Section */}
-      <motion.div animate={{ opacity: 1, y: 0 }} className="w-full max-w-[600px] mt-16 text-center" initial={{ opacity: 0, y: 50 }} transition={{ duration: 0.8, delay: 2.5 }}>
-        <h2 className={`${title()} text-purple-700 text-4xl font-bold`}>Notre Équipe</h2>
-        <p className="mt-4 text-lg text-gray-500">Une équipe dédiée à offrir un apprentissage adapté à tous.</p>
-        <div className="relative mt-8">
-          <Button isIconOnly className="absolute left-0 z-10 flex items-center justify-center w-12 h-12 text-lg text-white transform -translate-y-1/2 bg-purple-600 rounded-full shadow-md hover:bg-purple-700 top-1/2" onClick={previousTeamSlide}>
-            {"<"}
-          </Button>
-          <motion.div key={currentTeamIndex} animate={{ opacity: 1, x: 0 }} className="w-full" exit={{ opacity: 0, x: -100 }} initial={{ opacity: 0, x: 100 }} transition={{ duration: 0.8 }}>
-            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-              {teamGroups[currentTeamIndex].map((member, index) => (
-                <Card key={index} className="p-6 transition duration-300 ease-in-out rounded-lg shadow-md bg-purple-50 hover:bg-purple-100">
-                  <CardBody className="text-center">
-                    <div className="relative">
-                      <img alt={member.name} className="object-cover w-24 h-24 mx-auto mb-4 border-2 border-purple-500 rounded-full" src={member.img} />
-                      {/* <div className="flex justify-center gap-2 mt-4">
-                        <Button isIconOnly onClick={() => handlePreviousImage(index + currentTeamIndex * 2)} className="bg-purple-400 hover:bg-purple-500">
-                          {"<"}
-                        </Button>
-                        <Button isIconOnly onClick={() => handleNextImage(index + currentTeamIndex * 2)} className="bg-purple-400 hover:bg-purple-500">
-                          {">"}
-                        </Button>
-                      </div> */}
-                    </div>
-                    <h4 className="font-bold text-gray-700">{member.name}</h4>
-                    <p className="text-gray-500">{member.role}</p>
-                  </CardBody>
-                </Card>
-              ))}
-            </div>
-          </motion.div>
-          <Button isIconOnly className="absolute right-0 z-10 flex items-center justify-center w-12 h-12 text-lg text-white transform -translate-y-1/2 bg-purple-600 rounded-full shadow-md hover:bg-purple-700 top-1/2" onClick={nextTeamSlide}>
-            {">"}
-          </Button>
-        </div>
-      </motion.div>
+      <motion.div
+  className="w-full max-w-5xl mx-auto mt-16 text-center px-4 md:px-0"
+  initial={{ opacity: 0, y: 50 }}
+  animate={{ opacity: 1, y: 0 }}
+  transition={{ duration: 0.6 }}
+>
+  {/* 🏆 Titre */}
+  <h2 className="text-4xl font-bold text-violet-700">Notre Équipe</h2>
+  <p className="mt-3 text-lg text-gray-500">
+    Une équipe dédiée à offrir un apprentissage adapté à tous.
+  </p>
+
+  <div className="relative flex items-center justify-center mt-10">
+    {/* 🔙 Bouton précédent */}
+    <Button
+      isIconOnly
+      className="absolute left-2 md:left-4 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all"
+      onClick={previousTeamSlide}
+    >
+      {"<"}
+    </Button>
+
+    {/* 👥 Contenu des membres */}
+    <div className="w-full max-w-3xl">
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentTeamIndex}
+          initial={{ opacity: 0, x: 50 }}
+          animate={{ opacity: 1, x: 0 }}
+          exit={{ opacity: 0, x: -50 }}
+          transition={{ duration: 0.6 }}
+          className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+        >
+          {teamGroups[currentTeamIndex].map((member, index) => (
+            <Card
+              key={index}
+              className="p-6 transition-all transform bg-white border border-gray-200 shadow-md rounded-xl hover:shadow-lg hover:border-violet-500"
+            >
+              <CardBody className="text-center">
+                <img
+                  src={member.img}
+                  alt={member.name}
+                  className="w-24 h-24 mx-auto mb-4 border-2 border-violet-500 rounded-full transition-all duration-300 hover:border-violet-700"
+                />
+                <h4 className="font-bold text-gray-800">{member.name}</h4>
+                <p className="text-gray-500">{member.role}</p>
+              </CardBody>
+            </Card>
+          ))}
+        </motion.div>
+      </AnimatePresence>
+    </div>
+
+    {/* 🔜 Bouton suivant */}
+    <Button
+      isIconOnly
+      className="absolute right-2 md:right-4 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all"
+      onClick={nextTeamSlide}
+    >
+      {">"}
+    </Button>
+  </div>
+</motion.div>
 
       {/*  New Section: L'accompagnement de l'enfant et de l'adulte autiste */}
       <motion.div
@@ -581,71 +614,88 @@ export default function Home() {
 
       {/* Contact Section */}
       <motion.div
-        animate={{ opacity: 1 }}
-        className="w-full max-w-[1200px] mt-16 text-center px-4 md:px-0"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 2 }}
-      >
-        <h2 className={title()}>Contactez-nous pour plus d'informations</h2>
-        <p className="mt-4 text-lg text-gray-600 max-w-[800px] mx-auto">
-          Vous avez des questions ou souhaitez en savoir plus ? Remplissez le
-          formulaire ci-dessous et notre équipe vous contactera dans les plus
-          brefs délais.
-        </p>
+      animate={{ opacity: 1 }}
+      className="w-full max-w-4xl mt-16 text-center px-6 md:px-0 mx-auto"
+      initial={{ opacity: 0, y: 50 }}
+      transition={{ duration: 0.8 }}
+    >
+      {/* 🏆 Titre */}
+      <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-purple-400">
+        Nous Contacter
+      </h2>
+      <p className="mt-4 text-lg text-gray-700 max-w-2xl mx-auto">
+        Besoin d’assistance ou d’informations supplémentaires ? Voici comment
+        nous joindre !
+      </p>
 
-        {/* Contact Form */}
-        {/* <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          initial={{ opacity: 0, y: 50 }}
-          transition={{ duration: 0.8, delay: 2 }}
-          className="relative mt-12"
+      {/* 📞 Contact & Infos */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 text-left">
+        {/* 📍 Adresse */}
+        <motion.div
+          className="p-6 border-2 border-purple-400 shadow-lg bg-gradient-to-br from-violet-100 to-purple-50 rounded-xl hover:shadow-xl transition-all"
+          whileHover={{ scale: 1.05 }}
         >
-          <Card className="p-10 rounded-lg">
-            <CardBody className="p-8 rounded-lg">
-              <h2
-                className={title({ color: "violet" })}
-                style={{
-                  marginBottom: "1.5rem",
-                  fontSize: "2rem",
-                  fontWeight: "bold",
-                  textAlign: "center",
-                }}
-              >
-                Envoyez-nous un message
-              </h2>
-              <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                <Input
-                  aria-label="Nom"
-                  isClearable
-                  placeholder="Votre nom"
-                  fullWidth
-                  color="default"
-                />
-                <Input
-                  aria-label="Email"
-                  isClearable
-                  placeholder="Votre email"
-                  type="email"
-                  fullWidth
-                  color="default"
-                />
-              </div>
-              <Textarea
-                aria-label="Message"
-                placeholder="Votre message"
-                rows={4}
-                fullWidth
-                color="default"
-                className="mt-4"
-              />
-              <Button className="w-full mt-6 text-white bg-purple-600 hover:bg-purple-700">
-                Envoyer votre message
-              </Button>
-            </CardBody>
-          </Card>
-        </motion.div> */}
-        <Contact />
-      </motion.div>
+          <FontAwesomeIcon
+            icon={faMapMarkerAlt}
+            className="text-4xl text-purple-500"
+          />
+          <h4 className="text-lg font-bold text-gray-900 mt-2">Notre Adresse</h4>
+          <p className="text-gray-600">123 Avenue des Lumières, 75000 Paris</p>
+        </motion.div>
+
+        {/* 📞 Téléphone */}
+        <motion.div
+          className="p-6 border-2 border-indigo-400 shadow-lg bg-gradient-to-br from-indigo-100 to-blue-50 rounded-xl hover:shadow-xl transition-all"
+          whileHover={{ scale: 1.05 }}
+        >
+          <FontAwesomeIcon
+            icon={faPhone}
+            className="text-4xl text-indigo-500"
+          />
+          <h4 className="text-lg font-bold text-gray-900 mt-2">Appelez-nous</h4>
+          <p className="text-gray-600">+33 1 23 45 67 89</p>
+        </motion.div>
+
+        {/* 📧 Email */}
+        <motion.div
+          className="p-6 border-2 border-pink-400 shadow-lg bg-gradient-to-br from-pink-100 to-red-50 rounded-xl hover:shadow-xl transition-all"
+          whileHover={{ scale: 1.05 }}
+        >
+          <FontAwesomeIcon
+            icon={faEnvelope}
+            className="text-4xl text-pink-500"
+          />
+          <h4 className="text-lg font-bold text-gray-900 mt-2">Email</h4>
+          <p className="text-gray-600">contact@notreplateforme.com</p>
+        </motion.div>
+
+        {/* 🕒 Horaires */}
+        <motion.div
+          className="p-6 border-2 border-green-400 shadow-lg bg-gradient-to-br from-green-100 to-lime-50 rounded-xl hover:shadow-xl transition-all"
+          whileHover={{ scale: 1.05 }}
+        >
+          <FontAwesomeIcon
+            icon={faClock}
+            className="text-4xl text-green-500"
+          />
+          <h4 className="text-lg font-bold text-gray-900 mt-2">Nos Horaires</h4>
+          <p className="text-gray-600">Lundi - Vendredi : 9h - 18h</p>
+        </motion.div>
+      </div>
+
+      {/* ❓ Besoin d’aide supplémentaire ? */}
+      <div className="mt-10">
+        <Link href="/faq">
+          <motion.button
+            className="px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white font-bold rounded-lg shadow-md hover:from-violet-700 hover:to-purple-800 transition-all flex items-center gap-2"
+            whileHover={{ scale: 1.05 }}
+          >
+            <FontAwesomeIcon icon={faQuestionCircle} />
+            Visitez notre FAQ
+          </motion.button>
+        </Link>
+      </div>
+    </motion.div>
 
       {/* Scroll to top button */}
       <motion.div
@@ -657,20 +707,8 @@ export default function Home() {
         <ScrollToTopButton />
       </motion.div>
 
-      {/* Section  */}
-
       {/* Footer */}
-      <motion.footer
-        animate={{ opacity: 1 }}
-        className="mt-16 text-center"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.6, delay: 3 }}
-        style={{ paddingBottom: "2rem", zIndex: 10 }}
-      >
-        <p className="text-sm text-gray-500">
-          © 2024 AutiStudy - Tous droits réservés. Créé par la famille Ayivor.
-        </p>
-      </motion.footer>
+      <Footer />
     </section>
   );
 }

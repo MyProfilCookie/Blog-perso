@@ -239,65 +239,61 @@ export const Navbar = () => {
           {isMenuOpen && (
             <motion.div
               ref={menuRef}
-              animate={{ height: "auto", opacity: 1, y: 0 }}
-              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-md absolute top-full left-0 z-20"
-              exit={{ height: 0, opacity: 0, y: -20 }}
-              initial={{ height: 0, opacity: 0, y: -20 }}
-              transition={{ duration: 0.5, ease: "easeInOut" }}
+              initial={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ height: "auto", opacity: 1, y: 0, scale: 1 }}
+              exit={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
+              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-md absolute top-full left-0 z-20 max-h-[300px] overflow-y-auto rounded-b-lg p-4"
             >
-              <ul className="flex flex-col items-start p-4 gap-4">
+              <ul className="grid grid-cols-2 gap-3">
                 {siteConfig.navItems.map((item) => (
-                  <li key={item.label}>
+                  <li key={item.label} className="w-full text-center">
                     <NextLink
-                      className="text-gray-700 dark:text-gray-300 hover:text-green-500"
                       href={String(item.href)}
+                      className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-green-500 rounded-md"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       {item.label}
                     </NextLink>
                   </li>
                 ))}
-                <li className="relative">
+
+                {/* 🛒 Shop avec badge */}
+                <li className="relative w-full text-center">
                   <NextLink
-                    className="text-gray-700 dark:text-gray-300 hover:text-green-500 flex items-center relative"
                     href="/shop"
+                    className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-green-500 rounded-md"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
                     Shop
                     {cartItemsCount > 0 && (
-                      <Badge
-                        color="danger"
-                        style={{
-                          position: "absolute",
-                          top: "-10px",
-                          right: "-10px",
-                        }}
-                      >
+                      <Badge color="danger" className="ml-2">
                         {cartItemsCount}
                       </Badge>
                     )}
                   </NextLink>
                 </li>
-                <li>
+
+                <li className="w-full text-center">
                   <NextLink
-                    className="text-gray-700 dark:text-gray-300 hover:text-green-500"
                     href="/blog"
+                    className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-green-500 rounded-md"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Blog
                   </NextLink>
                 </li>
-                <li>
+
+                <li className="w-full text-center">
                   <NextLink
-                    className="text-gray-700 dark:text-gray-300 hover:text-green-500"
                     href="/courses"
+                    className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-green-500 rounded-md"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     Courses
                   </NextLink>
                 </li>
-                <ThemeSwitch />
               </ul>
             </motion.div>
           )}

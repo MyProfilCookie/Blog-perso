@@ -19,7 +19,7 @@ import Swal from "sweetalert2";
 import axios from "axios";
 
 import Loading from "@/components/loading";
-
+import Footer from "@/components/footer";
 const mockData = {
   courses: [
     { title: "Cours de Mathématiques", progress: 80, lastViewed: "2024-09-20" },
@@ -332,6 +332,7 @@ const CardSection = ({
         </div>
       ))}
     </div>
+    <Footer />
   </Card>
 );
 

@@ -10,7 +10,7 @@ import { motion } from "framer-motion";
 import "sweetalert2/dist/sweetalert2.min.css";
 
 import { AutismLogo } from "@/components/icons"; // Assurez-vous que le chemin est correct pour votre logo
-
+import Footer from "@/components/footer";
 export default function Inscription() {
   const [pseudo, setPseudo] = useState("");
   const [nom, setNom] = useState("");
@@ -268,6 +268,7 @@ export default function Inscription() {
           </Button>
         )}
       </motion.div>
+      <Footer />
     </motion.div>
   );
 }

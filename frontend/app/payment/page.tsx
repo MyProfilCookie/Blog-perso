@@ -15,6 +15,7 @@ import mongoose from "mongoose";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faHeadset, faClock, faCheckCircle, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
+import Footer from "@/components/footer";
 
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
@@ -293,8 +294,25 @@ const PaymentPage = () => {
     const [totalToPay, setTotalToPay] = useState<number>(0);
     const [deliveryCost, setDeliveryCost] = useState<number>(4);
     const [selectedTransporter, setSelectedTransporter] = useState<string>("");
+    const [totalWeight, setTotalWeight] = useState<number>(0);
     const router = useRouter();
-    // ✅ Vérifie l'authentification de l'utilisateur
+
+    // ✅ Fonction pour calculer le poids total du colis
+    const calculateTotalWeight = (items: any[]) => {
+        return items.reduce((sum, item) => sum + (item.weight || 0) * item.quantity, 0);
+    };
+
+    // ✅ Fonction pour calculer les frais de livraison en fonction du poids et du transporteur
+    const calculateDeliveryCost = (weight: number, transporter: string) => {
+        const pricing = {
+            Colissimo: weight <= 1 ? 4 : weight <= 3 ? 6 : weight <= 5 ? 8 : 12,
+            UPS: weight <= 1 ? 6 : weight <= 3 ? 8 : weight <= 5 ? 10 : 15,
+            DHL: weight <= 1 ? 8 : weight <= 3 ? 10 : weight <= 5 ? 12 : 18,
+        } as Record<string, number>;
+        return pricing[transporter] || 0;
+    };
+
+    // ✅ Vérifier l'authentification et charger les données utilisateur et panier
     const checkAuthStatus = async () => {
         const token = localStorage.getItem("userToken");
 
@@ -310,7 +328,7 @@ const PaymentPage = () => {
             });
 
             if (!response.ok) {
-                console.error("🔴 Erreur lors de la vérification du token, suppression du token...");
+                console.error("🔴 Erreur lors de la vérification du token.");
                 localStorage.removeItem("userToken");
                 router.push("/users/login");
                 return;
@@ -328,17 +346,25 @@ const PaymentPage = () => {
                 const parsedCart = JSON.parse(storedCart);
                 setCartItems(parsedCart);
 
-                // Calculer le total du panier
+                // ✅ Calcul du poids total du colis
+                const weight = calculateTotalWeight(parsedCart);
+                setTotalWeight(weight);
+
+                // ✅ Calcul du coût de livraison initial
+                const cost = calculateDeliveryCost(weight, selectedTransporter);
+                setDeliveryCost(cost);
+
+                // ✅ Calcul du total
                 const total = parsedCart.reduce(
                     (sum: number, item: any) => sum + item.price * item.quantity,
                     0
                 );
-                setTotalToPay(total + deliveryCost);
+                setTotalToPay(total + cost);
             } else {
-                console.log("🛒 Aucun panier trouvé pour cet utilisateur.");
+                console.log("🛒 Aucun panier trouvé.");
             }
         } catch (error) {
-            console.error("❌ Erreur lors de la vérification de l'authentification :", error);
+            console.error("❌ Erreur lors de la récupération de l'utilisateur :", error);
             localStorage.removeItem("userToken");
             router.push("/users/login");
         }
@@ -346,59 +372,18 @@ const PaymentPage = () => {
 
     useEffect(() => {
         checkAuthStatus();
-    }, [router, deliveryCost]);
+    }, [router, selectedTransporter]);
 
-
-    useEffect(() => {
-        // Charger l'utilisateur et le panier depuis le localStorage
-        const storedUser = localStorage.getItem("user");
-        console.log("Utilisateur stocké :", storedUser);
-        // console.log("adresse de livraison :", user.deliveryAddress);
-        // console.log("nom de l'utilisateur :", user.nom);
-        // console.log("prenom de l'utilisateur :", user.prenom);
-        if (storedUser) {
-            const parsedUser = JSON.parse(storedUser);
-            setUser(parsedUser);
-
-            // Charger le panier correspondant au pseudo de l'utilisateur
-            const userCartKey = `cartItems_${parsedUser.pseudo}`;
-            const storedCart = localStorage.getItem(userCartKey);
-
-            if (storedCart) {
-                const parsedCart = JSON.parse(storedCart);
-                setCartItems(parsedCart);
-
-                // Calculer le total du panier
-                const total = parsedCart.reduce(
-                    (sum: number, item: any) => sum + item.price * item.quantity,
-                    0
-                );
-                setTotalToPay(total + deliveryCost);
-            } else {
-                console.log("Aucun panier trouvé pour cet utilisateur.");
-            }
-        } else {
-            console.log("Utilisateur non connecté. Redirection vers la page de connexion.");
-            router.push("/users/login");
-        }
-    }, [router, deliveryCost]);
-
+    // ✅ Gestion du changement de transporteur
     const handleTransporterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
         const transporter = event.target.value;
         setSelectedTransporter(transporter);
 
-        // Ajuster les frais de livraison en fonction du transporteur
-        const cost =
-            transporter === "Colissimo"
-                ? 4
-                : transporter === "UPS"
-                    ? 6
-                    : transporter === "DHL"
-                        ? 8
-                        : 0;
+        // 🔥 Mise à jour du coût de livraison en fonction du poids
+        const cost = calculateDeliveryCost(totalWeight, transporter);
         setDeliveryCost(cost);
 
-        // Recalculer le total à payer
+        // 🔥 Mise à jour du total à payer
         const totalCartAmount = cartItems.reduce(
             (sum: number, item: any) => sum + item.price * item.quantity,
             0
@@ -413,97 +398,35 @@ const PaymentPage = () => {
             transition={{ duration: 0.5 }}
             className="container p-6 mx-auto mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-none"
         >
-            { user &&(
-            <motion.h1
-            className="mb-6 text-4xl font-bold text-center text-indigo-600"
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ duration: 0.5 }}
-        >
-            Commande du client :{" "}
-            <motion.span
-                className="text-violet-500"
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 0.3, ease: "easeOut" }}
-            >
-                {user.nom}
-            </motion.span>{" "}
-            <motion.span
-                className="text-violet-500"
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.7, delay: 0.5, ease: "easeOut" }}
-            >
-                {user.prenom}
-            </motion.span>
-        </motion.h1>
+            {user && (
+                <motion.h1 className="mb-6 text-4xl font-bold text-center text-indigo-600">
+                    Commande de {user.nom} {user.prenom}
+                </motion.h1>
             )}
 
+            {/* 🏠 Informations Utilisateur */}
             {user && (
-                <motion.div
-                    className="mb-6 p-4 bg-indigo-50 rounded-lg dark:bg-gray-800 dark:border-gray-700 shadow-md"
-                    initial={{ x: -50, opacity: 0 }}
-                    animate={{ x: 0, opacity: 1 }}
-                    transition={{ duration: 0.6 }}
-                >
+                <motion.div className="mb-6 p-4 bg-indigo-50 rounded-lg dark:bg-gray-800 shadow-md">
                     <h2 className="text-2xl font-semibold text-gray-700 mb-4 dark:text-white">Informations utilisateur</h2>
                     <Avatar src={user.avatar || "/assets/default-avatar.webp"} size="lg" />
-                    <motion.h3 className="text-xl font-semibold text-gray-700 dark:text-white mt-4"
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ repeat: Infinity, duration: 1.5 }}
-                    >
-                        Bonjour {user.pseudo} 👋
-                    </motion.h3>
-                    <p className="text-gray-500 dark:text-white"><strong>Nom :</strong> {user.nom}</p>
-                    <p className="text-gray-500 dark:text-white"><strong>Prénom :</strong> {user.prenom}</p>
                     <p className="text-gray-500 dark:text-white"><strong>Email :</strong> {user.email}</p>
                     <p className="text-gray-500 dark:text-white"><strong>Téléphone :</strong> {user.phone}</p>
                 </motion.div>
             )}
 
-            <motion.div className="mb-6" initial={{ y: 50, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6 }}>
+            {/* 🛒 Détails du panier */}
+            <motion.div className="mb-6">
                 <h2 className="text-2xl font-semibold text-gray-700 mb-4 dark:text-white">Votre panier :</h2>
-                <ul>
-                    {cartItems.map((item, index) => (
-                        <motion.li
-                            key={index}
-                            className="mb-4 p-4 border rounded-lg shadow-sm bg-gray-50 dark:bg-gray-800 dark:border-gray-700"
-                            whileHover={{ scale: 1.05 }}
-                        >
-                            <div className="flex items-center bg-white rounded-lg shadow-md p-4 dark:bg-gray-800 dark:border-gray-700">
-                                <motion.div
-                                    className="w-32 h-32 overflow-hidden rounded-lg"
-                                    whileHover={{ rotate: 2 }}
-                                >
-                                    <img
-                                        src={item.imageUrl}
-                                        alt={item.title}
-                                        className="object-cover object-center w-full h-full"
-                                    />
-                                </motion.div>
-                                <div className="ml-4">
-                                    <strong className="block text-lg font-bold">{item.title}</strong>
-                                    <p className="text-gray-600 mb-1 dark:text-white">{item.description}</p>
-                                    <p className="text-blue-600 font-semibold">{item.price} € x {item.quantity}</p>
-                                </div>
-                            </div>
-                        </motion.li>
-                    ))}
-                </ul>
+                <p><strong>Poids total :</strong> {totalWeight.toFixed(2)} kg</p>
                 <p><strong>Total avant livraison :</strong> {totalToPay - deliveryCost} €</p>
                 <p><strong>Frais de livraison :</strong> {deliveryCost} €</p>
-                <p className="text-xl font-bold text-green-500"><FontAwesomeIcon icon={faCheckCircle} className="mr-2" />Total à payer : {totalToPay} €</p>
+                <p className="text-xl font-bold text-green-500">Total à payer : {totalToPay} €</p>
             </motion.div>
 
-            <motion.div className="mt-4" initial={{ scale: 0.9, opacity: 0 }} animate={{ scale: 1, opacity: 1 }} transition={{ duration: 0.5 }}>
+            {/* 🚚 Sélection du transporteur */}
+            <motion.div className="mt-4">
                 <label htmlFor="transporter" className="block mb-2 font-semibold">Sélectionnez un transporteur :</label>
-                <select
-                    id="transporter"
-                    value={selectedTransporter}
-                    className="p-3 w-full rounded-lg border"
-                    onChange={handleTransporterChange}
-                >
+                <select id="transporter" value={selectedTransporter} className="p-3 w-full rounded-lg border" onChange={handleTransporterChange}>
                     <option value="">Sélectionnez un transporteur</option>
                     <option value="Colissimo">Colissimo</option>
                     <option value="UPS">UPS</option>
@@ -511,19 +434,8 @@ const PaymentPage = () => {
                 </select>
             </motion.div>
 
-            {/* <motion.div className="mt-6 flex justify-center">
-                <motion.button
-                    className="px-6 py-3 bg-green-500 text-white rounded-lg text-lg font-bold shadow-md flex items-center"
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    onClick={() => console.log("Paiement enclenché")}
-                >
-                    <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
-                    Payer maintenant
-                </motion.button>
-            </motion.div> */}
-
-            <motion.div className="mt-6" initial={{ opacity: 0, y: 30 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.7 }}>
+            {/* 💳 Paiement */}
+            <motion.div className="mt-6">
                 <Elements stripe={stripePromise}>
                     <CheckoutForm
                         totalToPay={totalToPay}
@@ -533,8 +445,10 @@ const PaymentPage = () => {
                         deliveryCost={deliveryCost}
                     />
                 </Elements>
-            </motion.div>
-        </motion.div>
-    );
-}
+      </motion.div>
+      <Footer />
+    </motion.div>
+  );
+};
+
 export default PaymentPage;

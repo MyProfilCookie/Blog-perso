@@ -10,7 +10,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 import Loading from "@/components/loading";
-
+import Footer from "@/components/footer";
 type Article = {
     [x: string]: any;
     title: string;
@@ -122,14 +122,9 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                         ))}
                     </div>
                 </div>
-            </div>
-
-            <footer className="w-full py-8 text-sm text-center text-gray-500 dark:text-gray-300">
-                © 2024 AutiStudy - Tous droits réservés.
-            </footer>
-        </section>
-    );
+      </div>
+      <Footer />
+    </section>
+  );
 }
-
-
 
