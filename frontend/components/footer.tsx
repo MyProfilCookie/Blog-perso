@@ -12,7 +12,6 @@ const Footer = () => {
   return (
     <footer className="border-t border-gray-300 dark:border-gray-700 bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-300 mt-16 px-6 py-10">
       <div className="max-w-7xl mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-8 text-center sm:text-left">
-        
         {/* 🏠 À propos */}
         <div className="flex flex-col items-center sm:items-start">
           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
@@ -50,7 +49,10 @@ const Footer = () => {
           </h3>
           <ul className="mt-3 space-y-2 text-sm">
             <li className="flex items-center gap-2">
-              <FontAwesomeIcon className="text-violet-500" icon={faMapMarkerAlt} />
+              <FontAwesomeIcon
+                className="text-violet-500"
+                icon={faMapMarkerAlt}
+              />
               <span>Paris, France</span>
             </li>
             <li className="flex items-center gap-2">

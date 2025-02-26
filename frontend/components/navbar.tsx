@@ -25,6 +25,12 @@ import {
   faShoppingCart,
   faBars,
   faUser,
+  faHome,
+  faInfoCircle,
+  faPhone,
+  faUserGroup,
+  faGraduationCap,
+  faQuestionCircle,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
@@ -43,11 +49,61 @@ type User = {
   email: string;
   avatar?: string;
   role: string;
+  token?: string; // Ajouté pour la vérification du token
 };
+
+// Fonction pour obtenir l'icône appropriée pour chaque élément de navigation
+const getIconForNavItem = (label: string) => {
+  const iconMap: Record<string, any> = {
+    Accueil: faHome,
+    "À propos": faInfoCircle,
+    Contact: faPhone,
+    Services: faInfoCircle,
+    Équipe: faUserGroup,
+    Blog: faNewspaper,
+    Cours: faGraduationCap,
+    FAQ: faQuestionCircle,
+  };
+
+  return iconMap[label] || faInfoCircle; // Icône par défaut si aucune correspondance
+};
+
+// Fonction pour vérifier la validité du token
+const verifyToken = async (token: string): Promise<boolean> => {
+  // Vérification simple pour éviter les appels API inutiles
+  if (!token) return false;
+  
+  try {
+    // Remplacer par votre endpoint API réel pour vérifier le token
+    const response = await fetch('/api/auth/verify-token', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}` // Ajouter le token dans les headers pour sécurité
+      },
+      body: JSON.stringify({ token }),
+      // Ajouter ces options pour s'assurer que les cookies sont envoyés
+      credentials: 'include'
+    });
+
+    if (!response.ok) {
+      console.warn('Token verification failed with status:', response.status);
+      return false;
+    }
+
+    const data = await response.json();
+    return data.valid === true;
+  } catch (error) {
+    console.error('Erreur lors de la vérification du token:', error);
+    return false;
+  }
+};
+
 export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isVerifyingToken, setIsVerifyingToken] = useState(false); // Flag pour éviter les vérifications multiples
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -69,22 +125,107 @@ export const Navbar = () => {
   }, [isMenuOpen]);
 
   /**
+   * Gérer un token invalide
+   */
+  const handleTokenInvalid = () => {
+    // Éviter de montrer plusieurs alertes
+    if (isVerifyingToken) return;
+    
+    Swal.fire({
+      title: 'Session expirée',
+      text: 'Votre session a expiré. Veuillez vous reconnecter pour continuer.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#4169E1',
+      cancelButtonColor: '#FFB74D',
+      confirmButtonText: 'Se connecter',
+      cancelButtonText: 'Annuler',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        // Effacer les données utilisateur invalides
+        const userId = user?.id;
+        localStorage.removeItem('user');
+        if (userId) {
+          localStorage.removeItem(`cart_${userId}`);
+        }
+        setUser(null);
+        setCartItemsCount(0);
+        
+        // Déclencher l'événement de mise à jour
+        const event = new CustomEvent('userUpdate');
+        window.dispatchEvent(event);
+        
+        // Rediriger vers la page de connexion
+        router.push('/users/login');
+      }
+    });
+  };
+
+  /**
+   * Vérifier la validité du token
+   */
+  const checkTokenValidity = async () => {
+    // Éviter les vérifications multiples
+    if (isVerifyingToken) return;
+    
+    setIsVerifyingToken(true);
+    
+    const storedUser = localStorage.getItem('user');
+    
+    if (storedUser) {
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        const token = parsedUser.token;
+        
+        if (!token) {
+          console.warn('No token found in user data');
+          setIsVerifyingToken(false);
+          return;
+        }
+        
+        const isValid = await verifyToken(token);
+        
+        if (!isValid) {
+          handleTokenInvalid();
+        }
+      } catch (error) {
+        console.error('Error checking token validity:', error);
+      }
+    }
+    
+    setIsVerifyingToken(false);
+  };
+
+  /**
    * Récupérer l'utilisateur et son panier depuis le stockage local
+   * Vérifier la validité du token uniquement lors de l'initialisation
+   * et non à chaque rafraichissement
    */
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
 
     if (storedUser) {
-      const parsedUser = JSON.parse(storedUser);
+      try {
+        const parsedUser = JSON.parse(storedUser);
+        setUser(parsedUser);
 
-      setUser(parsedUser);
-
-      const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
-
-      if (userCart) {
-        setCartItemsCount(JSON.parse(userCart).length);
+        const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
+        if (userCart) {
+          setCartItemsCount(JSON.parse(userCart).length);
+        }
+        
+        // Vérification initiale du token - commentez cette ligne si vous voulez désactiver temporairement
+        // checkTokenValidity();
+      } catch (error) {
+        console.error('Error parsing user data:', error);
       }
     }
+    
+    // Vérifier périodiquement la validité du token (toutes les 30 minutes)
+    // Prolonger l'intervalle pour éviter des vérifications trop fréquentes
+    const intervalId = setInterval(checkTokenValidity, 30 * 60 * 1000);
+    
+    return () => clearInterval(intervalId);
   }, []);
 
   /**
@@ -95,13 +236,15 @@ export const Navbar = () => {
       const storedUser = localStorage.getItem("user");
 
       if (storedUser) {
-        const parsedUser = JSON.parse(storedUser);
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
 
-        setUser(parsedUser);
-
-        const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
-
-        setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
+          const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
+          setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
+        } catch (error) {
+          console.error('Error parsing user data during update:', error);
+        }
       } else {
         setUser(null);
         setCartItemsCount(0);
@@ -124,7 +267,7 @@ export const Navbar = () => {
       text: "Vous allez être déconnecté(e) et votre panier sera vidé.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#4CAF50",
+      confirmButtonColor: "#4169E1", // Royal Blue au lieu de vert #4CAF50
       cancelButtonColor: "#FFB74D",
       confirmButtonText: "Oui, déconnectez-moi !",
       cancelButtonText: "Annuler",
@@ -201,7 +344,7 @@ export const Navbar = () => {
           {siteConfig.navItems.map((item) => (
             <NavbarItem key={item.label}>
               <NextLink
-                className="text-gray-700 dark:text-gray-300 hover:text-green-500"
+                className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
                 href={String(item.href)}
               >
                 {item.label}
@@ -211,7 +354,7 @@ export const Navbar = () => {
 
           <NavbarItem key="shop" className="relative">
             <NextLink
-              className="text-gray-700 dark:text-gray-300 hover:text-green-500 flex items-center relative"
+              className="text-gray-700 dark:text-gray-300 hover:text-blue-500 flex items-center relative"
               href="/shop"
             >
               <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
@@ -234,103 +377,57 @@ export const Navbar = () => {
             <ThemeSwitch />
           </NavbarItem>
         </ul>
-        {/* Menu burger pour mobile */}
+        {/* Menu burger pour mobile amélioré avec des icônes */}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
               ref={menuRef}
-              initial={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
               animate={{ height: "auto", opacity: 1, y: 0, scale: 1 }}
-              exit={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
               className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-md absolute top-full left-0 z-20 max-h-[300px] overflow-y-auto rounded-b-lg p-4"
+              exit={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
+              initial={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: "easeInOut" }}
             >
               <ul className="grid grid-cols-2 gap-3">
                 {siteConfig.navItems.map((item) => (
-                  <li key={item.label} className="w-full text-center">
+                  <li key={item.label} className="w-full">
                     <NextLink
+                      className="flex items-center justify-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-500 rounded-md transition-colors"
                       href={String(item.href)}
-                      className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-green-500 rounded-md"
                       onClick={() => setIsMenuOpen(false)}
                     >
+                      <FontAwesomeIcon
+                        className="mr-2 text-blue-500 dark:text-blue-400"
+                        icon={getIconForNavItem(item.label)}
+                      />
                       {item.label}
                     </NextLink>
                   </li>
                 ))}
 
                 {/* 🛒 Shop avec badge */}
-                <li className="relative w-full text-center">
+                <li className="relative w-full">
                   <NextLink
+                    className="flex items-center justify-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-500 rounded-md transition-colors"
                     href="/shop"
-                    className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-green-500 rounded-md"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
+                    <FontAwesomeIcon
+                      className="mr-2 text-blue-500 dark:text-blue-400"
+                      icon={faShoppingCart}
+                    />
                     Shop
                     {cartItemsCount > 0 && (
-                      <Badge color="danger" className="ml-2">
+                      <Badge className="ml-2" color="danger">
                         {cartItemsCount}
                       </Badge>
                     )}
-                  </NextLink>
-                </li>
-
-                <li className="w-full text-center">
-                  <NextLink
-                    href="/blog"
-                    className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-green-500 rounded-md"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Blog
-                  </NextLink>
-                </li>
-
-                <li className="w-full text-center">
-                  <NextLink
-                    href="/courses"
-                    className="block px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-green-500 rounded-md"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    Courses
                   </NextLink>
                 </li>
               </ul>
             </motion.div>
           )}
         </AnimatePresence>
-        {/* ✅ Menu Mobile (se ferme au clic extérieur) */}
-        {/* {isMenuOpen && (
-          <motion.div
-            ref={menuRef}
-            animate={{ opacity: 1, y: 0 }}
-            className="lg:hidden bg-gray-900 absolute top-16 left-0 w-full p-4 shadow-md"
-            exit={{ opacity: 0, y: -10 }}
-            initial={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.3 }}
-          >
-            <NextLink
-              className="block text-white py-2"
-              href="/shop"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Shop
-            </NextLink>
-            <NextLink
-              className="block text-white py-2"
-              href="/blog"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Blog
-            </NextLink>
-            <NextLink
-              className="block text-white py-2"
-              href="/courses"
-              onClick={() => setIsMenuOpen(false)}
-            >
-              Courses
-            </NextLink>
-          </motion.div>
-        )} */}
       </NavbarContent>
 
       <NavbarContent className="sm:flex basis-1/5 sm:basis-full" justify="end">
@@ -372,7 +469,7 @@ export const Navbar = () => {
                 <Avatar
                   isBordered
                   alt={`Avatar de ${user?.pseudo}`}
-                  color="success"
+                  color="primary"
                   size="sm"
                   src={user?.avatar || "/assets/default-avatar.webp"}
                 />
