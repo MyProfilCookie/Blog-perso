@@ -166,7 +166,7 @@ export default function ShopPage() {
                 </PopoverTrigger>
                 <PopoverContent>
                     <div
-                        className="p-4 bg-white dark:bg-gray-900 text-gray-900 dark:text-white rounded-lg shadow-lg"
+                        className="p-4 bg-cream dark:bg-gray-900 text-gray-900 dark:text-white rounded-lg shadow-lg"
                         style={{
                             // width: "320px", // Largeur fixe
                             maxWidth: "90vw", // Évite le débordement sur petits écrans

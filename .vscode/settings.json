@@ -7,5 +7,7 @@
         "Gestion",
         "trouvé",
         "Utilisateur"
-    ]
+    ],
+    "inlineChat.accessibleDiffView": "on",
+    "inlineChat.finishOnType": true
 }

@@ -94,7 +94,7 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                                 initial={{ opacity: 0, y: 20 }}
                                 transition={{ duration: 0.4 }}
                             >
-                                <Card className="overflow-hidden transition-all bg-white rounded-lg shadow-lg dark:bg-gray-800 dark:text-white hover:shadow-xl h-full">
+                                <Card className="overflow-hidden transition-all bg-cream rounded-lg shadow-lg dark:bg-gray-800 dark:text-white hover:shadow-xl h-full">
                                     <img
                                         alt={article.title}
                                         className="object-cover object-center w-full h-52"

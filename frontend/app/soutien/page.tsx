@@ -132,7 +132,7 @@ export default function FAQ() {
             {item.isOpen && (
               <motion.div
                 animate={{ opacity: 1, height: "auto" }}
-                className="px-4 py-2 bg-white dark:bg-gray-700"
+                className="px-4 py-2 bg-cream dark:bg-gray-700"
                 initial={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
               >

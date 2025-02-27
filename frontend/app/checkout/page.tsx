@@ -19,7 +19,7 @@ export default function CheckoutPage() {
 
     return (
         <section className="flex flex-col items-center justify-center min-h-screen py-8">
-            <div className="w-full max-w-lg p-6 bg-white shadow-md rounded-md">
+            <div className="w-full max-w-lg p-6 bg-cream shadow-md rounded-md">
                 <h1 className="text-3xl font-bold text-center">Paiement sécurisé</h1>
 
                 <Elements stripe={stripePromise}>

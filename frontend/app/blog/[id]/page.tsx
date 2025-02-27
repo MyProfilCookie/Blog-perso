@@ -103,7 +103,7 @@ export default function BlogPostPage() {
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
-        className="max-w-3xl w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg p-8 space-y-6"
+        className="max-w-3xl w-full bg-cream dark:bg-gray-800 shadow-lg rounded-lg p-8 space-y-6"
       >
         <img
           src={blog.imageUrl}

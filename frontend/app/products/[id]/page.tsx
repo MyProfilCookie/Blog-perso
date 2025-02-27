@@ -142,7 +142,7 @@ export default function ProductPage() {
               <Ruler className="mr-2 text-blue-500" /> Choisissez une taille :
             </label>
             <select
-              className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-900 text-gray-700 dark:text-gray-200 cursor-pointer"
+              className="p-2 border border-gray-300 dark:border-gray-600 rounded-lg bg-cream dark:bg-gray-900 text-gray-700 dark:text-gray-200 cursor-pointer"
               value={selectedSize ?? ""}
               onChange={(e) => setSelectedSize(e.target.value)}
             >

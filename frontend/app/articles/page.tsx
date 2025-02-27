@@ -21,7 +21,7 @@ const ArticleCard = ({ id, title, subtitle, img }: { id: number, title: string, 
     animate={{ opacity: 1, y: 0 }}
     transition={{ duration: 0.6 }}
   >
-    <Card className="shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-white rounded-lg overflow-hidden flex flex-col h-full">
+    <Card className="shadow-lg hover:shadow-2xl transition-shadow duration-300 bg-cream rounded-lg overflow-hidden flex flex-col h-full">
       <CardBody className="p-4">
         <Link href={`/articles/${id}`}>
           <motion.img

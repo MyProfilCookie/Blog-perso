@@ -413,7 +413,7 @@ export default function Home() {
           {teamGroups[currentTeamIndex].map((member, index) => (
             <Card
               key={index}
-              className="p-6 transition-all transform bg-white border border-gray-200 shadow-md rounded-xl hover:shadow-lg hover:border-violet-500"
+              className="p-6 transition-all transform bg-cream border border-gray-200 shadow-md rounded-xl hover:shadow-lg hover:border-violet-500"
             >
               <CardBody className="text-center">
                 <img
@@ -706,9 +706,6 @@ export default function Home() {
       >
         <ScrollToTopButton />
       </motion.div>
-
-      {/* Footer */}
-      <Footer />
     </section>
   );
 }

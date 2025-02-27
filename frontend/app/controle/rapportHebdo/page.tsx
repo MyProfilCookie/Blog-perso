@@ -166,7 +166,7 @@ const WeeklyReport = () => {
           {selectedWeek}
         </Button>
         {showWeeks && (
-          <div className="absolute z-10 mt-2 bg-white border border-gray-300 rounded-md shadow-lg">
+          <div className="absolute z-10 mt-2 bg-cream border border-gray-300 rounded-md shadow-lg">
             {weeks.map((week) => (
               <div
                 key={week}

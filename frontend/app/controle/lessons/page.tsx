@@ -211,7 +211,7 @@ export default function LessonOfTheDay() {
         >
           {lessonOfTheDay.lessons.map((lesson, lessonIndex) => (
             <motion.div key={lessonIndex} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Card className="w-full p-4 mt-6 rounded-md shadow-md bg-white border border-gray-200">
+              <Card className="w-full p-4 mt-6 rounded-md shadow-md bg-cream border border-gray-200">
                 <CardBody>
                   <h3 className="text-3xl font-bold text-violet-600">
                     {lesson.subject}: {lesson.lesson.title}

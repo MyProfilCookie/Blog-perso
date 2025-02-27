@@ -88,7 +88,7 @@ const SearchBar: React.FC<SearchBarProps> = ({
 
       {/* Résultats de recherche */}
       {results.length > 0 && (
-        <div className="p-4 mt-2 bg-white rounded-lg shadow-md">
+        <div className="p-4 mt-2 bg-cream rounded-lg shadow-md">
           {results.map((result, index) => (
             // eslint-disable-next-line jsx-a11y/click-events-have-key-events
             <button

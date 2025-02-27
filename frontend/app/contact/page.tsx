@@ -1,3 +1,5 @@
+/* eslint-disable react/no-unescaped-entities */
+/* eslint-disable no-console */
 "use client";
 
 import { useState, useEffect } from "react";
@@ -23,6 +25,7 @@ export default function ContactPage() {
 
       if (!token) {
         router.push("/login");
+
         return;
       }
 
@@ -40,13 +43,18 @@ export default function ContactPage() {
             localStorage.removeItem("userToken");
             MySwal.fire({
               title: "Session expirée",
-              text: "Veuillez vous reconnecter.",
+              text: "Votre session a expiré. Veuillez vous reconnecter.",
               icon: "warning",
               confirmButtonColor: "#F59E0B",
               confirmButtonText: "Se reconnecter",
-            }).then(() => {
-              router.push("/user/login");
+              showCancelButton: true,
+              cancelButtonText: "Annuler",
+            }).then((result) => {
+              if (result.isConfirmed) {
+                router.push("/login");
+              }
             });
+
             return;
           }
           throw new Error("Erreur lors de la récupération des données.");
@@ -73,7 +81,6 @@ export default function ContactPage() {
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
     const contactData = { nom, email, message };
 
     try {
@@ -105,112 +112,128 @@ export default function ContactPage() {
   };
 
   return (
-    <section className="flex flex-col items-center">
-      {/* Titre animé */}
+    <section className="flex flex-col items-center p-8">
       <motion.h1
-        initial={{ opacity: 0, scale: 0.8, y: -10 }}
-        animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 0.8, ease: "easeOut" }}
-        className="text-4xl font-extrabold text-indigo-700 text-center"
+        animate={{
+          scale: [1, 1.05, 1], // Effet de pulsation léger
+          y: [0, -5, 0], // Léger rebond pour donner du mouvement
+          backgroundImage: [
+            "linear-gradient(90deg, #FFC1CC, #FFD700)",
+            "linear-gradient(90deg, #FFD700, #90EE90)",
+            "linear-gradient(90deg, #90EE90, #87CEFA)",
+            "linear-gradient(90deg, #87CEFA, #FFC1CC)",
+          ], // Changement de couleur progressif et apaisant
+          WebkitBackgroundClip: "text",
+          WebkitTextFillColor: "transparent",
+        }}
+        className="text-4xl font-extrabold text-center mb-6"
+        transition={{
+          duration: 4, // Animation fluide et douce
+          ease: "easeInOut",
+          repeat: Infinity, // Animation en boucle
+          repeatType: "reverse", // Alterne entre les couleurs et les mouvements
+        }}
       >
         📩 Contactez-nous
       </motion.h1>
 
-      <motion.h2
+      <motion.p
+        animate={{ opacity: 1, y: 0 }}
+        className="text-lg text-gray-600 text-center mb-8"
         initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.2 }}
-        className="mt-3 text-lg text-gray-600 text-center"
       >
-        Une question ? Besoin d&apos;aide ? Envoyez-nous un message ! 🚀
-      </motion.h2>
+        Une question ? Un problème ? Une suggestion ? Nous sommes à votre
+        disposition ! <br />
+        Notre équipe s'engage à vous répondre sous **24 à 48 heures**.
+      </motion.p>
 
-      {/* Formulaire */}
       <motion.div
-        initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-2xl"
+        initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.7 }}
-        className="w-full max-w-2xl mt-8"
       >
-        <Card className="py-6 bg-white shadow-lg rounded-2xl">
+        <Card className="py-6 px-8 bg-cream shadow-lg rounded-2xl">
           <CardBody className="flex flex-col items-center">
             <h3 className="mb-4 text-lg font-semibold text-gray-800">
               💬 Envoyer un message
             </h3>
-            <form className="w-full px-6" onSubmit={handleSubmit}>
-              <motion.div
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4 }}
-                className="flex flex-col mb-4"
-              >
-                <label htmlFor="nom" className="mb-2 text-gray-700 font-medium">Nom</label>
-                <input
-                  id="nom"
-                  required
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
-                  placeholder="Votre nom"
-                  type="text"
-                  value={nom}
-                  onChange={(e) => setNom(e.target.value)}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.4, delay: 0.2 }}
-                className="flex flex-col mb-4"
-              >
-                <label
-                  className="mb-2 text-gray-700 font-medium"
-                  htmlFor="email"
-                >
-                  Email
-                </label>
-                <input
-                  id="email"
-                  required
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
-                  placeholder="Votre email"
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                />
-              </motion.div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.4, delay: 0.4 }}
-                className="flex flex-col mb-4"
-              >
-                <label htmlFor="message" className="mb-2 text-gray-700 font-medium">
-                  Message
-                </label>
-                <textarea
-                  id="message"
-                  required
-                  className="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
-                  placeholder="Votre message"
-                  rows={5}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                />
-              </motion.div>
-
-              <motion.button
-                whileHover={{ scale: 1.1 }}
-                whileTap={{ scale: 0.9 }}
-                transition={{ duration: 0.2 }}
-                className="w-full px-6 py-3 font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700"
+            <p className="text-gray-600 text-sm text-center mb-4">
+              Nous sommes disponibles pour répondre à toutes vos demandes.
+              **N'hésitez pas à nous contacter !**
+            </p>
+            <form className="w-full space-y-6" onSubmit={handleSubmit}>
+              <input
+                required
+                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                id="nom"
+                placeholder="Votre nom"
+                type="text"
+                value={nom}
+                onChange={(e) => setNom(e.target.value)}
+              />
+              <input
+                required
+                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                id="email"
+                placeholder="Votre email"
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
+              <textarea
+                required
+                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                id="message"
+                placeholder="Votre message"
+                rows={5}
+                value={message}
+                onChange={(e) => setMessage(e.target.value)}
+              />
+              <button
+                className="w-full py-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition text-lg"
+                type="submit"
               >
                 🚀 Envoyer
-              </motion.button>
+              </button>
             </form>
           </CardBody>
         </Card>
       </motion.div>
+
+      <section className="mt-12 max-w-2xl">
+        <h3 className="text-xl font-semibold text-indigo-700">
+          📢 Pourquoi nous contacter ?
+        </h3>
+        <p className="text-gray-600 mt-2">
+          💡 Besoin d'informations sur nos services ? Nous répondons à toutes
+          vos questions.
+        </p>
+        <p className="text-gray-600 mt-2">
+          🛠️ Un problème technique ? Décrivez-le nous, nous ferons de notre
+          mieux pour le résoudre rapidement.
+        </p>
+        <p className="text-gray-600 mt-2">
+          🚀 Une suggestion ? Votre avis est précieux et nous aide à nous
+          améliorer !
+        </p>
+      </section>
+
+      <section className="mt-8 max-w-2xl">
+        <h3 className="text-xl font-semibold text-indigo-700">
+          📞 Autres moyens de contact
+        </h3>
+        <p className="text-gray-600 mt-2">
+          📆 Nos horaires : **Lundi - Vendredi : 9h - 18h**
+        </p>
+        <p className="text-gray-600 mt-2">
+          📞 Téléphone : **+33 1 23 45 67 89**
+        </p>
+        <p className="text-gray-600 mt-2">
+          📍 Adresse : **123 Rue de Paris, 75001 Paris, France**
+        </p>
+      </section>
     </section>
   );
 }

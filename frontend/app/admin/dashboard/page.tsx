@@ -594,7 +594,7 @@ const AdminDashboard = () => {
           {orders.map((order) => (
             <div
               key={order._id}
-              className="border rounded-lg shadow-md p-4 bg-white dark:bg-black dark:text-white flex flex-col gap-2"
+              className="border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2"
             >
               <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
                 <div className="flex-1 text-center sm:text-left break-words">
@@ -698,7 +698,7 @@ const AdminDashboard = () => {
           {users.map((user) => (
             <div
               key={user._id}
-              className="border rounded-lg shadow-md p-4 bg-white dark:bg-black dark:text-white flex flex-col gap-4"
+              className="border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-4"
             >
               <div className="flex flex-col items-center text-center break-words">
                 <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {user._id}</p>
@@ -755,7 +755,7 @@ const AdminDashboard = () => {
           {lessons.map((lesson) => (
             <div
               key={lesson._id}
-              className="col-span-1 border rounded-lg shadow-md p-4 bg-white dark:bg-black dark:text-white flex flex-col"
+              className="col-span-1 border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col"
             >
               <div className="card-header mb-2 text-center">
                 <p className="font-bold text-lg truncate">{lesson.title}</p>
@@ -839,7 +839,7 @@ const AdminDashboard = () => {
         {articlesData.articles.map((article) => (
           <div
             key={article.id}
-            className="col-span-1 border rounded-lg shadow-md p-4 bg-white dark:bg-black flex flex-col"
+            className="col-span-1 border rounded-lg shadow-md p-4 bg-cream dark:bg-black flex flex-col"
           >
             <div className="card-header mb-2 text-center">
               <img

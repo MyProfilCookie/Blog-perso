@@ -395,7 +395,7 @@ export const Navbar = () => {
             <motion.div
               ref={menuRef}
               animate={{ height: "auto", opacity: 1, y: 0, scale: 1 }}
-              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-md absolute top-full left-0 z-20 max-h-[300px] overflow-y-auto rounded-b-lg p-4"
+              className="lg:hidden dark:bg-gray-900 bg-cream w-full shadow-md absolute top-full left-0 z-20 max-h-[300px] overflow-y-auto rounded-b-lg p-4"
               exit={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
               initial={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}

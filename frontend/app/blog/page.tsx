@@ -109,7 +109,7 @@ export default function BlogPage() {
 
         {/* 🔽 Select pour filtrer par catégorie (Correction de l'erreur) */}
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-full sm:w-1/3 px-4 py-2 border rounded-lg shadow-lg bg-white dark:bg-gray-800 dark:text-white">
+          <SelectTrigger className="w-full sm:w-1/3 px-4 py-2 border rounded-lg shadow-lg bg-cream dark:bg-gray-800 dark:text-white">
             {selectedCategory}
           </SelectTrigger>
           <SelectContent>
@@ -152,7 +152,7 @@ export default function BlogPage() {
             transition={{ duration: 0.4 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Card className="shadow-2xl bg-white dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-xl flex flex-col h-full">
+            <Card className="shadow-2xl bg-cream dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-xl flex flex-col h-full">
               <img
                 alt={blog.title}
                 className="w-full h-48 object-cover"

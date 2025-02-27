@@ -4,10 +4,8 @@ export default function PricingLayout({
   children: React.ReactNode;
 }) {
   return (
-    <section className="flex items-center justify-center gap-6 py-12 shadow-lg md:py-16">
-      <div className="inline-block p-6 text-center rounded-lg shadow-lg">
-        {children}
-      </div>
+    <section className="flex items-center justify-center gap-6 py-12 md:py-16">
+      <div className="bg-cream">{children}</div>
     </section>
   );
 }

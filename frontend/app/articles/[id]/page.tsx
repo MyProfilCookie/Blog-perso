@@ -95,7 +95,7 @@ const ArticlePage = () => {
   };
 
   return (
-    <section className="flex flex-col items-center justify-center min-h-screen gap-12 px-4 py-16 bg-white md:px-8 mx-auto">
+    <section className="flex flex-col items-center justify-center min-h-screen gap-12 px-4 py-16 bg-cream md:px-8 mx-auto">
     {/* Informations sur l'Article */}
     <motion.div
       animate={{ opacity: 1, y: 0 }}
@@ -136,7 +136,7 @@ const ArticlePage = () => {
       initial={{ opacity: 0, y: 50 }}
       transition={{ duration: 0.8, delay: 1 }}
     >
-      <Card className="bg-white shadow-none">
+      <Card className="bg-cream shadow-none">
         <CardBody className="p-8 text-lg leading-relaxed text-gray-800">
           {renderContent()}
         </CardBody>

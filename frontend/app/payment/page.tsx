@@ -396,7 +396,7 @@ const PaymentPage = () => {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5 }}
-            className="container p-6 mx-auto mt-10 bg-white dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-none"
+            className="container p-6 mx-auto mt-10 bg-cream dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-none"
         >
             {user && (
                 <motion.h1 className="mb-6 text-4xl font-bold text-center text-indigo-600">
