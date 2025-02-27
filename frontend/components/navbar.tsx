@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import {
@@ -31,6 +32,7 @@ import {
   faUserGroup,
   faGraduationCap,
   faQuestionCircle,
+  faMoon,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
@@ -72,29 +74,32 @@ const getIconForNavItem = (label: string) => {
 const verifyToken = async (token: string): Promise<boolean> => {
   // Vérification simple pour éviter les appels API inutiles
   if (!token) return false;
-  
+
   try {
     // Remplacer par votre endpoint API réel pour vérifier le token
-    const response = await fetch('/api/auth/verify-token', {
-      method: 'POST',
+    const response = await fetch("/api/auth/verify-token", {
+      method: "POST",
       headers: {
-        'Content-Type': 'application/json',
-        'Authorization': `Bearer ${token}` // Ajouter le token dans les headers pour sécurité
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`, // Ajouter le token dans les headers pour sécurité
       },
       body: JSON.stringify({ token }),
       // Ajouter ces options pour s'assurer que les cookies sont envoyés
-      credentials: 'include'
+      credentials: "include",
     });
 
     if (!response.ok) {
-      console.warn('Token verification failed with status:', response.status);
+      console.warn("Token verification failed with status:", response.status);
+
       return false;
     }
 
     const data = await response.json();
+
     return data.valid === true;
   } catch (error) {
-    console.error('Erreur lors de la vérification du token:', error);
+    console.error("Erreur lors de la vérification du token:", error);
+
     return false;
   }
 };
@@ -130,33 +135,35 @@ export const Navbar = () => {
   const handleTokenInvalid = () => {
     // Éviter de montrer plusieurs alertes
     if (isVerifyingToken) return;
-    
+
     Swal.fire({
-      title: 'Session expirée',
-      text: 'Votre session a expiré. Veuillez vous reconnecter pour continuer.',
-      icon: 'warning',
+      title: "Session expirée",
+      text: "Votre session a expiré. Veuillez vous reconnecter pour continuer.",
+      icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: '#4169E1',
-      cancelButtonColor: '#FFB74D',
-      confirmButtonText: 'Se connecter',
-      cancelButtonText: 'Annuler',
+      confirmButtonColor: "#4169E1",
+      cancelButtonColor: "#FFB74D",
+      confirmButtonText: "Se connecter",
+      cancelButtonText: "Annuler",
     }).then((result) => {
       if (result.isConfirmed) {
         // Effacer les données utilisateur invalides
         const userId = user?.id;
-        localStorage.removeItem('user');
+
+        localStorage.removeItem("user");
         if (userId) {
           localStorage.removeItem(`cart_${userId}`);
         }
         setUser(null);
         setCartItemsCount(0);
-        
+
         // Déclencher l'événement de mise à jour
-        const event = new CustomEvent('userUpdate');
+        const event = new CustomEvent("userUpdate");
+
         window.dispatchEvent(event);
-        
+
         // Rediriger vers la page de connexion
-        router.push('/users/login');
+        router.push("/users/login");
       }
     });
   };
@@ -167,32 +174,33 @@ export const Navbar = () => {
   const checkTokenValidity = async () => {
     // Éviter les vérifications multiples
     if (isVerifyingToken) return;
-    
+
     setIsVerifyingToken(true);
-    
-    const storedUser = localStorage.getItem('user');
-    
+
+    const storedUser = localStorage.getItem("user");
+
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
         const token = parsedUser.token;
-        
+
         if (!token) {
-          console.warn('No token found in user data');
+          console.warn("No token found in user data");
           setIsVerifyingToken(false);
+
           return;
         }
-        
+
         const isValid = await verifyToken(token);
-        
+
         if (!isValid) {
           handleTokenInvalid();
         }
       } catch (error) {
-        console.error('Error checking token validity:', error);
+        console.error("Error checking token validity:", error);
       }
     }
-    
+
     setIsVerifyingToken(false);
   };
 
@@ -207,24 +215,26 @@ export const Navbar = () => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
+
         setUser(parsedUser);
 
         const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
+
         if (userCart) {
           setCartItemsCount(JSON.parse(userCart).length);
         }
-        
+
         // Vérification initiale du token - commentez cette ligne si vous voulez désactiver temporairement
         // checkTokenValidity();
       } catch (error) {
-        console.error('Error parsing user data:', error);
+        console.error("Error parsing user data:", error);
       }
     }
-    
+
     // Vérifier périodiquement la validité du token (toutes les 30 minutes)
     // Prolonger l'intervalle pour éviter des vérifications trop fréquentes
     const intervalId = setInterval(checkTokenValidity, 30 * 60 * 1000);
-    
+
     return () => clearInterval(intervalId);
   }, []);
 
@@ -238,12 +248,14 @@ export const Navbar = () => {
       if (storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser);
+
           setUser(parsedUser);
 
           const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
+
           setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
         } catch (error) {
-          console.error('Error parsing user data during update:', error);
+          console.error("Error parsing user data during update:", error);
         }
       } else {
         setUser(null);
@@ -494,6 +506,15 @@ export const Navbar = () => {
               <DropdownItem onClick={handleLogout}>
                 <FontAwesomeIcon icon={faSignOutAlt} />
                 Déconnexion
+              </DropdownItem>
+              {/* mode */}
+              <DropdownItem
+                onClick={() => {
+                  document.documentElement.classList.toggle("dark");
+                }}
+              >
+                <FontAwesomeIcon icon={faMoon} />
+                Mode
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

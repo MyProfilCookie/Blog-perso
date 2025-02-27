@@ -48,6 +48,7 @@ const OrderConfirmationPage = () => {
                 }
 
                 const orderData = await response.json();
+
                 setOrder(orderData);
 
                 localStorage.removeItem("cartItems");
@@ -69,7 +70,7 @@ const OrderConfirmationPage = () => {
 
     if (loading) {
         return (
-            <div className="flex justify-center items-center h-screen bg-gray-900">
+            <div className="flex justify-center items-center h-screen">
                 <LoadingAnimation />
             </div>
         );
@@ -116,12 +117,12 @@ const OrderConfirmationPage = () => {
     };
 
     return (
-        <div className="container p-6 mx-auto my-12 bg-gray-900 rounded-lg shadow-xl text-white">
+        <div className="container mx-auto my-12 dark:bg-gray-900">
             <h1 className="mb-6 text-4xl font-extrabold text-center text-yellow-400 animate-bounce">
                 🎉 Confirmation de Commande 🎉
             </h1>
 
-            <div className="p-6 bg-gray-800 rounded-lg shadow-md">
+            <div className="p-6 dark:bg-gray-800">
                 <h2 className="mb-4 text-xl font-semibold">👤 Informations Client</h2>
                 <p><strong>Prénom :</strong> {firstName}</p>
                 <p><strong>Nom :</strong> {lastName}</p>
@@ -129,14 +130,14 @@ const OrderConfirmationPage = () => {
                 <p><strong>Téléphone :</strong> {phone}</p>
             </div>
 
-            <div className="p-6 mt-6 bg-gray-800 rounded-lg shadow-md">
+            <div className="p-6 mt-6 dark:bg-gray-800">
                 <h2 className="mb-4 text-xl font-semibold">📦 Adresse de Livraison</h2>
                 <p>
                     {deliveryAddress.street}, {deliveryAddress.city}, {deliveryAddress.postalCode}, {deliveryAddress.country}
                 </p>
             </div>
 
-            <div className="p-6 mt-6 bg-gray-800 rounded-lg shadow-md">
+            <div className="p-6 mt-6 dark:bg-gray-800">
                 <h2 className="mb-4 text-xl font-semibold">🛒 Détails de la Commande</h2>
                 <ul>
                     {items.length > 0 ? (
