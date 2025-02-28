@@ -1,10 +1,9 @@
 "use client";
 
-import { FC } from "react";
+import { FC, useEffect, useState } from "react";
 import { VisuallyHidden } from "@react-aria/visually-hidden";
 import { SwitchProps, useSwitch } from "@nextui-org/switch";
 import { useTheme } from "next-themes";
-import { useIsSSR } from "@react-aria/ssr";
 import clsx from "clsx";
 
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
@@ -18,32 +17,35 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
   className,
   classNames,
 }) => {
-  const { theme, setTheme } = useTheme();
-  const isSSR = useIsSSR();
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  const onChange = () => {
-    theme === "light" ? setTheme("dark") : setTheme("light");
-  };
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-  const {
-    Component,
-    slots,
-    isSelected,
-    getBaseProps,
-    getInputProps,
-    getWrapperProps,
-  } = useSwitch({
-    isSelected: theme === "light" || isSSR,
-    "aria-label": `Passer en mode ${theme === "light" || isSSR ? "sombre" : "clair"}`,
-    onChange,
-  });
+  // Appelle useSwitch en dehors de la condition
+  const isDarkMode = resolvedTheme === "dark";
+  const onChange = () => setTheme(isDarkMode ? "light" : "dark");
+
+  const { Component, slots, getBaseProps, getInputProps, getWrapperProps } =
+    useSwitch({
+      isSelected: isDarkMode,
+      "aria-label": `Passer en mode ${isDarkMode ? "clair" : "sombre"}`,
+      onChange,
+    });
+
+  // Évite le rendu côté serveur mais garde l'appel du Hook
+  if (!mounted) {
+    return <div className="w-5 h-5 bg-gray-300 rounded-full animate-pulse" />;
+  }
 
   return (
     <Component
       {...getBaseProps({
         className: clsx(
           "px-2 py-1 transition-opacity hover:opacity-80 cursor-pointer rounded-full",
-          "bg-cream/80 shadow-md border border-gray-300", // Fond crème semi-transparent avec une bordure subtile
+          "bg-cream/80 shadow-md border border-gray-300",
           className,
           classNames?.base,
         ),
@@ -56,25 +58,22 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
         {...getWrapperProps()}
         className={slots.wrapper({
           class: clsx(
-            [
-              "w-5 h-5 flex items-center justify-center rounded-full",
-              "transition-all duration-300 ease-in-out",
-              isSelected
-                ? "bg-gray-900 text-gray-300 shadow-lg" // Mode sombre
-                : "bg-cream text-gray-700 shadow", // Mode clair
-            ],
+            "w-5 h-5 flex items-center justify-center rounded-full transition-all duration-300 ease-in-out",
+            isDarkMode
+              ? "bg-gray-800 text-gray-300 shadow-lg"
+              : "bg-cream text-gray-700 shadow",
             classNames?.wrapper,
           ),
         })}
       >
-        {!isSelected || isSSR ? (
-          <SunFilledIcon
-            className="text-yellow-500 transition-all duration-300"
+        {isDarkMode ? (
+          <MoonFilledIcon
+            className="text-blue-300 transition-all duration-300"
             size={18}
           />
         ) : (
-          <MoonFilledIcon
-            className="text-blue-300 transition-all duration-300"
+          <SunFilledIcon
+            className="text-yellow-500 transition-all duration-300"
             size={18}
           />
         )}

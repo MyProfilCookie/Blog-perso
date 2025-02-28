@@ -26,7 +26,6 @@ import HeaderAutisme from "@/components/headerAutisme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faCrown, faEnvelope, faMapMarkerAlt, faMoon, faPhone, faQuestionCircle, faSun, faUser } from "@fortawesome/free-solid-svg-icons"; // Import des icônes
 import Contact from "./contact";
-import Footer from "@/components/footer";
 
 
 export default function Home() {

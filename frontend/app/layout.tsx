@@ -3,7 +3,6 @@ import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 
 import { Providers } from "./providers";
-
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
@@ -38,29 +37,18 @@ export default function RootLayout({
       <body
         className={clsx(
           "min-h-screen font-sans antialiased transition-colors duration-300",
-          "bg-cream text-gray-900 dark:bg-gray-900 dark:text-gray-100", // Support du mode sombre
-          fontSans.variable,
+          "bg-cream text-gray-900 dark:bg-gray-900 dark:text-gray-100",
+          fontSans.variable
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "dark" }}>
-          <div className="relative flex flex-col h-screen">
+        <Providers themeProps={{ attribute: "class", defaultTheme: "system" }}>
+          {/* Utilisation de flex-col + min-h-screen pour assurer que la page prend toute la hauteur */}
+          <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
             <Navbar />
-            <main className="flex-grow px-6 pt-16 mx-auto max-w-7xl">
+            <main className="flex-grow px-6 pt-16 mx-auto max-w-7xl w-full">
               {children}
             </main>
-            {/* <footer className="flex items-center justify-center w-full py-3">
-              <Link
-                isExternal
-                className="flex items-center gap-1 text-current"
-                href="https://nextui-docs-v2.vercel.app?utm_source=next-app-template"
-                title="nextui.org homepage"
-              >
-                <span className="text-default-600">© 2024 AutiStudy</span>
-                <p className="text-primary">
-                  Tous droits réservés. Créé par la famille Ayivor
-                </p>
-              </Link>
-            </footer> */}
+            {/* Correction : Footer bien collé en bas */}
             <Footer />
           </div>
         </Providers>

@@ -15,7 +15,7 @@ import mongoose from "mongoose";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInfoCircle, faHeadset, faClock, faCheckCircle, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
-import Footer from "@/components/footer";
+
 
 
 const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
@@ -446,7 +446,6 @@ const PaymentPage = () => {
                     />
                 </Elements>
       </motion.div>
-      <Footer />
     </motion.div>
   );
 };

@@ -12,7 +12,6 @@ import { motion } from "framer-motion";
 import "sweetalert2/dist/sweetalert2.min.css";
 
 import { AutismLogo } from "@/components/icons"; // Vérifie le bon chemin
-import Footer from "@/components/footer";
 export default function Connexion() {
   const [identifier, setIdentifier] = useState(""); // Pseudo ou email
   const [password, setPassword] = useState("");
@@ -210,7 +209,6 @@ export default function Connexion() {
           </Button>
         </p>
       </motion.div>
-      <Footer />
     </motion.div>
   );
 }

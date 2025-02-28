@@ -10,7 +10,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
 
 import Loading from "@/components/loading";
-import Footer from "@/components/footer";
 type Article = {
     [x: string]: any;
     title: string;
@@ -123,7 +122,6 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                     </div>
                 </div>
       </div>
-      <Footer />
     </section>
   );
 }

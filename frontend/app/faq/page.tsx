@@ -107,18 +107,6 @@ export default function FAQ() {
           </div>
         ))}
       </motion.div>
-       {/* Footer */}
-       <motion.footer
-        animate={{ opacity: 1 }}
-        className="px-4 mt-16 text-center"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.6, delay: 1.5 }}
-        style={{ paddingBottom: "2rem", zIndex: 10 }}
-      >
-        <p className="text-sm text-gray-500 dark:text-gray-400">
-          © 2024 AutiStudy - Tous droits réservés. Créé par la famille Ayivor.
-        </p>
-      </motion.footer>
     </section>
   );
 }

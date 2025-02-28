@@ -215,12 +215,6 @@ const HistoryPage: React.FC = () => {
           Calculer le score final
         </button>
       </div>
-
-      <footer className="w-full mt-8 text-center">
-        <p className="text-sm text-gray-500">
-          © 2024 AutiStudy - Tous droits réservés. Créé par la famille Ayivor.
-        </p>
-      </footer>
     </section>
   );
 };

@@ -128,17 +128,6 @@ const ArticlesPage = () => {
           Voir toutes nos ressources
         </motion.button>
       </motion.div>
-
-      <footer className="mt-16 text-center">
-        <motion.p
-          style={{ fontSize: "1em", color: "#888" }}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 1, delay: 2 }}
-        >
-          © 2024 AutiStudy - Tous droits réservés. Créé par la famille Ayivor.
-        </motion.p>
-      </footer>
     </section>
   );
 };

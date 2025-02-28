@@ -65,6 +65,7 @@ module.exports = {
   				'5': 'hsl(var(--chart-5))'
         },
         cream: "#faf9f5",
+		lBlack: "#111827",
       },
     },
   },

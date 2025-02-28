@@ -20,8 +20,9 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     <NextUIProvider navigate={router.push}>
       <NextThemesProvider
         enableSystem
-        attribute="class" // Permet à next-themes d'ajouter `dark` à <html>
+        attribute="class"
         defaultTheme="system"
+        storageKey="theme" // Sauvegarde le dernier thème choisi
         {...themeProps}
       >
         <UserProvider>{children}</UserProvider>

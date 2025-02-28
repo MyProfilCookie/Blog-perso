@@ -973,19 +973,6 @@ const AdminDashboard = () => {
           </TableBody>
         </Table>
       </motion.div>
-
-      {/* Footer */}
-      <motion.footer
-        animate={{ opacity: 1 }}
-        className="mt-16 text-center"
-        initial={{ opacity: 0 }}
-        style={{ paddingBottom: "2rem", zIndex: 10 }}
-        transition={{ duration: 0.6, delay: 3 }}
-      >
-        <p className="text-sm text-gray-500">
-          © 2024 AutiStudy - Tous droits réservés. Créé par la famille Ayivor.
-        </p>
-      </motion.footer>
     </div>
   );
 };

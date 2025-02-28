@@ -25,7 +25,6 @@ export default function ContactPage() {
 
       if (!token) {
         router.push("/login");
-
         return;
       }
 
@@ -67,10 +66,7 @@ export default function ContactPage() {
         setNom(userData.nom || "");
         setEmail(userData.email || "");
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération de l'utilisateur :",
-          error,
-        );
+        console.error("Erreur lors de la récupération de l'utilisateur :", error);
       } finally {
         setLoadingUser(false);
       }
@@ -112,7 +108,7 @@ export default function ContactPage() {
   };
 
   return (
-    <section className="flex flex-col items-center p-8">
+    <section className="flex flex-col items-center justify-center min-h-screen p-8 bg-cream dark:bg-gray-900 w-full">
       <motion.h1
         animate={{
           scale: [1, 1.05, 1], // Effet de pulsation léger
@@ -122,16 +118,16 @@ export default function ContactPage() {
             "linear-gradient(90deg, #FFD700, #90EE90)",
             "linear-gradient(90deg, #90EE90, #87CEFA)",
             "linear-gradient(90deg, #87CEFA, #FFC1CC)",
-          ], // Changement de couleur progressif et apaisant
+          ],
           WebkitBackgroundClip: "text",
           WebkitTextFillColor: "transparent",
         }}
         className="text-4xl font-extrabold text-center mb-6"
         transition={{
-          duration: 4, // Animation fluide et douce
+          duration: 4,
           ease: "easeInOut",
-          repeat: Infinity, // Animation en boucle
-          repeatType: "reverse", // Alterne entre les couleurs et les mouvements
+          repeat: Infinity,
+          repeatType: "reverse",
         }}
       >
         📩 Contactez-nous
@@ -143,30 +139,25 @@ export default function ContactPage() {
         initial={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        Une question ? Un problème ? Une suggestion ? Nous sommes à votre
-        disposition ! <br />
-        Notre équipe s'engage à vous répondre sous **24 à 48 heures**.
+        Une question ? Un problème ? Une suggestion ? Nous sommes à votre disposition !
+        <br /> Notre équipe s'engage à vous répondre sous **24 à 48 heures**.
       </motion.p>
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-2xl"
+        className="w-full max-w-3xl"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.7 }}
       >
-        <Card className="py-6 px-8 bg-cream shadow-lg rounded-2xl">
+        <Card className="py-6 px-8 bg-cream dark:bg-gray-900 shadow-lg rounded-2xl w-full">
           <CardBody className="flex flex-col items-center">
-            <h3 className="mb-4 text-lg font-semibold text-gray-800">
+            <h3 className="mb-4 text-lg font-semibold text-gray-800 dark:text-gray-100">
               💬 Envoyer un message
             </h3>
-            <p className="text-gray-600 text-sm text-center mb-4">
-              Nous sommes disponibles pour répondre à toutes vos demandes.
-              **N'hésitez pas à nous contacter !**
-            </p>
             <form className="w-full space-y-6" onSubmit={handleSubmit}>
               <input
                 required
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-white"
                 id="nom"
                 placeholder="Votre nom"
                 type="text"
@@ -175,7 +166,7 @@ export default function ContactPage() {
               />
               <input
                 required
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-white"
                 id="email"
                 placeholder="Votre email"
                 type="email"
@@ -184,56 +175,20 @@ export default function ContactPage() {
               />
               <textarea
                 required
-                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500"
+                className="w-full p-4 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 dark:bg-gray-800 dark:text-white"
                 id="message"
                 placeholder="Votre message"
                 rows={5}
                 value={message}
                 onChange={(e) => setMessage(e.target.value)}
               />
-              <button
-                className="w-full py-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition text-lg"
-                type="submit"
-              >
+              <button className="w-full py-4 bg-indigo-600 text-white font-semibold rounded-lg hover:bg-indigo-700 transition text-lg">
                 🚀 Envoyer
               </button>
             </form>
           </CardBody>
         </Card>
       </motion.div>
-
-      <section className="mt-12 max-w-2xl">
-        <h3 className="text-xl font-semibold text-indigo-700">
-          📢 Pourquoi nous contacter ?
-        </h3>
-        <p className="text-gray-600 mt-2">
-          💡 Besoin d'informations sur nos services ? Nous répondons à toutes
-          vos questions.
-        </p>
-        <p className="text-gray-600 mt-2">
-          🛠️ Un problème technique ? Décrivez-le nous, nous ferons de notre
-          mieux pour le résoudre rapidement.
-        </p>
-        <p className="text-gray-600 mt-2">
-          🚀 Une suggestion ? Votre avis est précieux et nous aide à nous
-          améliorer !
-        </p>
-      </section>
-
-      <section className="mt-8 max-w-2xl">
-        <h3 className="text-xl font-semibold text-indigo-700">
-          📞 Autres moyens de contact
-        </h3>
-        <p className="text-gray-600 mt-2">
-          📆 Nos horaires : **Lundi - Vendredi : 9h - 18h**
-        </p>
-        <p className="text-gray-600 mt-2">
-          📞 Téléphone : **+33 1 23 45 67 89**
-        </p>
-        <p className="text-gray-600 mt-2">
-          📍 Adresse : **123 Rue de Paris, 75001 Paris, France**
-        </p>
-      </section>
     </section>
   );
 }
