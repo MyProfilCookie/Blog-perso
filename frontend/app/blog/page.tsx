@@ -9,7 +9,12 @@ import { RefreshCw } from "lucide-react";
 
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Select, SelectTrigger, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Select,
+  SelectTrigger,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 
 interface Blog {
   _id: string;
@@ -22,7 +27,13 @@ interface Blog {
   createdAt: string;
 }
 
-const categories = ["Tous", "Sensibilisation", "Témoignages", "Conseils", "Recherche"];
+const categories = [
+  "Tous",
+  "Sensibilisation",
+  "Témoignages",
+  "Conseils",
+  "Recherche",
+];
 
 export default function BlogPage() {
   const router = useRouter();
@@ -40,12 +51,14 @@ export default function BlogPage() {
     setError(null);
     try {
       const response = await fetch(
-        `http://localhost:3001/blog?page=${pageNum}&limit=${blogsPerPage}`
+        `http://localhost:3001/blog?page=${pageNum}&limit=${blogsPerPage}`,
       );
 
-      if (!response.ok) throw new Error("Erreur lors de la récupération des articles");
+      if (!response.ok)
+        throw new Error("Erreur lors de la récupération des articles");
 
       const data = await response.json();
+
       setBlogs(data.blogs);
       setTotalPages(data.totalPages || 1);
     } catch (err) {
@@ -77,11 +90,11 @@ export default function BlogPage() {
   const filteredBlogs = blogs.filter(
     (blog) =>
       blog.title.toLowerCase().includes(search.toLowerCase()) &&
-      (selectedCategory === "Tous" || blog.category === selectedCategory)
+      (selectedCategory === "Tous" || blog.category === selectedCategory),
   );
 
   return (
-    <section className="min-h-screen bg-gray-50 dark:bg-gray-900 py-10 px-6">
+    <section className="min-h-screen bg-cream dark:bg-gray-900 py-10 px-6">
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="text-center mb-10"
@@ -100,7 +113,7 @@ export default function BlogPage() {
       <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8 max-w-3xl mx-auto">
         {/* 🔎 Input de recherche */}
         <Input
-          className="w-full sm:w-2/3 px-4 py-2 border rounded-lg shadow-lg focus:ring-2 focus:ring-violet-500"
+          className="w-full sm:w-2/3 px-4 py-2 border rounded-lg shadow-lg focus:ring-2 focus:ring-violet-500 bg-cream"
           placeholder="Rechercher un article..."
           type="text"
           value={search}
@@ -143,7 +156,7 @@ export default function BlogPage() {
       )}
 
       {/* ✅ Liste des articles filtrés */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto bg-cream dark:bg-gray-800 p-6 rounded-lg shadow-lg">
         {filteredBlogs.map((blog) => (
           <motion.div
             key={blog._id}
@@ -157,13 +170,17 @@ export default function BlogPage() {
                 alt={blog.title}
                 className="w-full h-48 object-cover"
                 src={blog.imageUrl}
-                onError={(e) => (e.currentTarget.src = "/assets/autism-daily.jpg")}
+                onError={(e) =>
+                  (e.currentTarget.src = "/assets/autism-daily.jpg")
+                }
               />
               <CardBody className="p-4 flex flex-col justify-between flex-grow">
                 <h2 className="text-xl font-semibold text-gray-800 shadow-sm p-2 rounded-lg">
                   {blog.title}
                 </h2>
-                <p className="text-gray-600 mt-2 line-clamp-2">{blog.description}</p>
+                <p className="text-gray-600 mt-2 line-clamp-2">
+                  {blog.description}
+                </p>
                 <motion.button
                   className="mt-4 px-4 py-2 bg-violet-600 text-white rounded-lg shadow-lg self-start"
                   whileHover={{ scale: 1.1 }}
@@ -181,19 +198,21 @@ export default function BlogPage() {
       {/* ✅ Pagination */}
       <div className="flex justify-center gap-4 mt-8">
         <Button
-          onClick={prevPage}
-          disabled={page === 1}
           className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700"
+          disabled={page === 1}
+          onClick={prevPage}
         >
           Précédent
         </Button>
         <div className="flex items-center">
-          <span className="text-gray-700 dark:text-gray-300">Page {page} sur {totalPages}</span>
+          <span className="text-gray-700 dark:text-gray-300">
+            Page {page} sur {totalPages}
+          </span>
         </div>
         <Button
-          onClick={nextPage}
-          disabled={page === totalPages}
           className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700"
+          disabled={page === totalPages}
+          onClick={nextPage}
         >
           Suivant
         </Button>

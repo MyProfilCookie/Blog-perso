@@ -87,7 +87,7 @@ const ArticlesPage = () => {
           className="w-full flex justify-center"
         >
           <Input
-            className="w-full sm:w-2/3 px-4 py-2 border rounded-lg shadow-lg focus:ring-2 focus:ring-violet-500 mt-4"
+            className="w-full sm:w-2/3 px-4 py-2 border rounded-lg shadow-lg focus:ring-2 focus:ring-violet-500 mt-4 bg-cream"
             placeholder="Rechercher un article..."
             type="text"
             value={search}

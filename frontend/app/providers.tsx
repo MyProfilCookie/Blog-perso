@@ -18,12 +18,13 @@ export function Providers({ children, themeProps }: ProvidersProps) {
 
   return (
     <NextUIProvider navigate={router.push}>
-      <NextThemesProvider {...themeProps}>
-        <UserProvider>
-          {" "}
-          {/* Ajout du UserProvider pour gérer l'utilisateur globalement */}
-          {children}
-        </UserProvider>
+      <NextThemesProvider
+        enableSystem
+        attribute="class" // Permet à next-themes d'ajouter `dark` à <html>
+        defaultTheme="system"
+        {...themeProps}
+      >
+        <UserProvider>{children}</UserProvider>
       </NextThemesProvider>
     </NextUIProvider>
   );

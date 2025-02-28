@@ -22,8 +22,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
+    { media: "(prefers-color-scheme: light)", color: "#faf9f5" }, // Fond crème en mode clair
+    { media: "(prefers-color-scheme: dark)", color: "#111827" }, // Fond sombre adapté
   ],
 };
 
@@ -33,11 +33,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html suppressHydrationWarning className="bg-cream" lang="en">
+    <html suppressHydrationWarning lang="en">
       <head />
       <body
         className={clsx(
-          "min-h-screen bg-background font-sans antialiased bg-cream",
+          "min-h-screen font-sans antialiased transition-colors duration-300",
+          "bg-cream text-gray-900 dark:bg-gray-900 dark:text-gray-100", // Support du mode sombre
           fontSans.variable,
         )}
       >

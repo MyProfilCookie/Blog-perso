@@ -34,7 +34,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     getWrapperProps,
   } = useSwitch({
     isSelected: theme === "light" || isSSR,
-    "aria-label": `Switch to ${theme === "light" || isSSR ? "dark" : "light"} mode`,
+    "aria-label": `Passer en mode ${theme === "light" || isSSR ? "sombre" : "clair"}`,
     onChange,
   });
 
@@ -42,7 +42,8 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     <Component
       {...getBaseProps({
         className: clsx(
-          "px-px transition-opacity hover:opacity-80 cursor-pointer",
+          "px-2 py-1 transition-opacity hover:opacity-80 cursor-pointer rounded-full",
+          "bg-cream/80 shadow-md border border-gray-300", // Fond crème semi-transparent avec une bordure subtile
           className,
           classNames?.base,
         ),
@@ -56,24 +57,26 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
         className={slots.wrapper({
           class: clsx(
             [
-              "w-auto h-auto",
-              "bg-transparent",
-              "rounded-lg",
-              "flex items-center justify-center",
-              "group-data-[selected=true]:bg-transparent",
-              "!text-default-500",
-              "pt-px",
-              "px-0",
-              "mx-0",
+              "w-5 h-5 flex items-center justify-center rounded-full",
+              "transition-all duration-300 ease-in-out",
+              isSelected
+                ? "bg-gray-900 text-gray-300 shadow-lg" // Mode sombre
+                : "bg-cream text-gray-700 shadow", // Mode clair
             ],
             classNames?.wrapper,
           ),
         })}
       >
         {!isSelected || isSSR ? (
-          <SunFilledIcon size={22} />
+          <SunFilledIcon
+            className="text-yellow-500 transition-all duration-300"
+            size={18}
+          />
         ) : (
-          <MoonFilledIcon size={22} />
+          <MoonFilledIcon
+            className="text-blue-300 transition-all duration-300"
+            size={18}
+          />
         )}
       </div>
     </Component>
