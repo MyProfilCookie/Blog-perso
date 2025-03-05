@@ -1,8 +1,9 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-console */
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation"; // Pour la redirection
+import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { Card, CardBody } from "@nextui-org/react";
 import { RefreshCw } from "lucide-react";
@@ -86,7 +87,6 @@ export default function BlogPage() {
     if (page > 1) setPage((prevPage) => prevPage - 1);
   };
 
-  // 🔎 **Filtrage combiné par titre et catégorie**
   const filteredBlogs = blogs.filter(
     (blog) =>
       blog.title.toLowerCase().includes(search.toLowerCase()) &&
@@ -101,42 +101,42 @@ export default function BlogPage() {
         initial={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-violet-700 dark:text-violet-300 shadow-md p-2 rounded-lg">
+        <h1 className="text-4xl md:text-5xl font-bold text-violet-700 dark:text-violet-300 shadow-md p-2 rounded-lg bg-white/50 dark:bg-gray-800/50">
           📰 Nos Derniers Articles
         </h1>
-        <p className="text-gray-600 dark:text-gray-300 mt-3 text-lg">
-          Explorez nos articles, astuces et conseils sur l’autisme.
+        <p className="mt-3 text-lg text-gray-600 dark:text-gray-300">
+          Explorez nos articles, astuces et conseils sur l'autisme.
         </p>
       </motion.div>
 
-      {/* ✅ Ajout du champ de recherche et du filtre catégorie */}
       <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mb-8 max-w-3xl mx-auto">
-        {/* 🔎 Input de recherche */}
         <Input
-          className="w-full sm:w-2/3 px-4 py-2 border rounded-lg shadow-lg focus:ring-2 focus:ring-violet-500 bg-cream"
+          className="w-full sm:w-2/3 px-4 py-2 border rounded-lg shadow-lg focus:ring-2 focus:ring-violet-500 bg-cream dark:bg-gray-800 dark:text-white dark:border-gray-700"
           placeholder="Rechercher un article..."
           type="text"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
 
-        {/* 🔽 Select pour filtrer par catégorie (Correction de l'erreur) */}
         <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-          <SelectTrigger className="w-full sm:w-1/3 px-4 py-2 border rounded-lg shadow-lg bg-cream dark:bg-gray-800 dark:text-white">
+          <SelectTrigger className="w-full sm:w-1/3 px-4 py-2 border rounded-lg shadow-lg bg-cream dark:bg-gray-800 dark:text-white dark:border-gray-700">
             {selectedCategory}
           </SelectTrigger>
-          <SelectContent>
+          <SelectContent className="dark:bg-gray-800 dark:border-gray-700">
             {categories.map((cat) => (
-              <SelectItem key={cat} value={cat}>
+              <SelectItem
+                key={cat}
+                value={cat}
+                className="dark:text-white dark:hover:bg-gray-700"
+              >
                 {cat}
               </SelectItem>
             ))}
           </SelectContent>
         </Select>
 
-        {/* 🔄 Bouton de rafraîchissement */}
         <Button
-          className="bg-violet-600 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-violet-700 shadow-lg"
+          className="bg-violet-600 dark:bg-violet-700 text-white px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-violet-700 dark:hover:bg-violet-800 shadow-lg transition-colors"
           disabled={loading}
           onClick={handleRefresh}
         >
@@ -148,15 +148,14 @@ export default function BlogPage() {
       {error && (
         <motion.div
           animate={{ opacity: 1 }}
-          className="text-center text-red-600 bg-red-100 p-4 rounded-lg shadow-lg"
+          className="text-center text-red-600 dark:text-red-400 bg-red-100 dark:bg-red-900/30 p-4 rounded-lg shadow-lg"
           initial={{ opacity: 0 }}
         >
           {error}
         </motion.div>
       )}
 
-      {/* ✅ Liste des articles filtrés */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto bg-cream dark:bg-gray-800 p-6 rounded-lg shadow-lg">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto bg-cream dark:bg-gray-800/50 p-6 rounded-lg shadow-lg">
         {filteredBlogs.map((blog) => (
           <motion.div
             key={blog._id}
@@ -165,7 +164,7 @@ export default function BlogPage() {
             transition={{ duration: 0.4 }}
             whileHover={{ scale: 1.05 }}
           >
-            <Card className="shadow-2xl bg-cream dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-xl flex flex-col h-full">
+            <Card className="shadow-2xl bg-cream dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-xl flex flex-col h-full border border-transparent dark:border-gray-700">
               <img
                 alt={blog.title}
                 className="w-full h-48 object-cover"
@@ -175,14 +174,14 @@ export default function BlogPage() {
                 }
               />
               <CardBody className="p-4 flex flex-col justify-between flex-grow">
-                <h2 className="text-xl font-semibold text-gray-800 shadow-sm p-2 rounded-lg">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white shadow-sm p-2 rounded-lg bg-white/50 dark:bg-gray-700/50">
                   {blog.title}
                 </h2>
-                <p className="text-gray-600 mt-2 line-clamp-2">
+                <p className="text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
                   {blog.description}
                 </p>
                 <motion.button
-                  className="mt-4 px-4 py-2 bg-violet-600 text-white rounded-lg shadow-lg self-start"
+                  className="mt-4 px-4 py-2 bg-violet-600 dark:bg-violet-700 text-white rounded-lg shadow-lg self-start hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors"
                   whileHover={{ scale: 1.1 }}
                   whileTap={{ scale: 0.9 }}
                   onClick={() => router.push(`/blog/${blog._id}`)}
@@ -195,10 +194,9 @@ export default function BlogPage() {
         ))}
       </div>
 
-      {/* ✅ Pagination */}
       <div className="flex justify-center gap-4 mt-8">
         <Button
-          className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700"
+          className="bg-violet-600 dark:bg-violet-700 text-white px-4 py-2 rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors"
           disabled={page === 1}
           onClick={prevPage}
         >
@@ -210,7 +208,7 @@ export default function BlogPage() {
           </span>
         </div>
         <Button
-          className="bg-violet-600 text-white px-4 py-2 rounded-lg hover:bg-violet-700"
+          className="bg-violet-600 dark:bg-violet-700 text-white px-4 py-2 rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors"
           disabled={page === totalPages}
           onClick={nextPage}
         >

@@ -1,31 +1,35 @@
-/* eslint-disable padding-line-between-statements */
-/* eslint-disable no-console */
-/* eslint-disable prettier/prettier */
-// eslint-disable-next-line react-hooks/rules-of-hooks
 "use client";
 
-import { AwaitedReactNode, JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useEffect, useState } from "react";
+import {
+  AwaitedReactNode,
+  JSXElementConstructor,
+  Key,
+  ReactElement,
+  ReactNode,
+  ReactPortal,
+  useEffect,
+  useState,
+} from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
-
-// en français
-import "dayjs/locale/fr"; // 📅 Importer la locale française
-dayjs.locale("fr"); // 📌 Définir la locale en français
-
+import "dayjs/locale/fr"; // 📅 Locale française
 
 import BackButton from "@/components/back";
 
-// Définition des types
+// Configuration de la locale française
+dayjs.locale("fr");
+
 type Lesson = {
   subject: string;
   lesson: {
-    activities: any;
-    questions: any;
+    [x: string]: any;
+    activities?: { title: string; duration: string; steps: string[] }[];
+    questions?: any;
     title: string;
     description: string;
-    objectives: string[];
+    objectives?: string[];
   };
 };
 
@@ -34,31 +38,28 @@ type LessonData = {
   lessons: Lesson[];
 };
 
-
 export default function LessonOfTheDay() {
-  const today = dayjs().format("YYYY-MM-DD"); // 📅 Format d'affichage correct
+  const today = dayjs().format("YYYY-MM-DD");
   const [selectedDate, setSelectedDate] = useState(today);
   const [lessonOfTheDay, setLessonOfTheDay] = useState<LessonData | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [userName, setUserName] = useState<string>(""); // 🏷️ Stocke le prénom de l'utilisateur
+  const [userName, setUserName] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const router = useRouter();
 
-  // ✅ Fonction pour forcer la déconnexion proprement
   const handleLogout = () => {
     localStorage.removeItem("userToken");
     localStorage.removeItem("userFirstName");
     setIsLoggedIn(false);
-    setTimeout(() => router.push("/users/login"), 300); // 🚀 Délai court pour éviter les erreurs React
+    setTimeout(() => router.push("/users/login"), 300);
   };
 
-  // ✅ Récupération des données utilisateur avec gestion propre des erreurs
   const fetchUserData = async () => {
     const token = localStorage.getItem("userToken");
 
     if (!token) {
-      console.warn("⚠️ Aucun token trouvé, déconnexion...");
       handleLogout();
+
       return;
     }
 
@@ -73,26 +74,18 @@ export default function LessonOfTheDay() {
       });
 
       if (res.status === 401 || res.status === 403) {
-        console.warn("⏳ Token expiré ou accès interdit. Déconnexion...");
         handleLogout();
+
         return;
       }
 
-      if (!res.ok) {
-        throw new Error("❌ Erreur de récupération des données utilisateur.");
-      }
+      if (!res.ok)
+        throw new Error("Erreur lors de la récupération de l'utilisateur.");
 
       const userData = await res.json();
-      console.log("✅ Données utilisateur récupérées :", userData);
 
-      if (userData.user && userData.user.prenom) {
-        setUserName(userData.user.prenom);
-        localStorage.setItem("userFirstName", userData.user.prenom);
-      } else {
-        setUserName("Utilisateur inconnu");
-      }
+      setUserName(userData?.user?.prenom || "Utilisateur inconnu");
     } catch (error) {
-      console.error("⚠️ Erreur lors de la récupération du prénom :", error);
       handleLogout();
     }
   };
@@ -102,19 +95,20 @@ export default function LessonOfTheDay() {
     fetchUserData();
   }, []);
 
-  // 🔄 Récupération de la leçon du jour
   const fetchLessonOfTheDay = async (date: string) => {
     if (!isLoggedIn) return;
 
     try {
-      const formattedDateForAPI = dayjs(date, "DD-MM-YYYY").format("YYYY-MM-DD");
+      const formattedDateForAPI = dayjs(date).format("YYYY-MM-DD");
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/lessons/lesson-of-the-day?date=${formattedDateForAPI}`
+        `${process.env.NEXT_PUBLIC_API_URL}/lessons/lesson-of-the-day?date=${formattedDateForAPI}`,
       );
 
-      if (!res.ok) throw new Error("Erreur lors de la récupération des leçons.");
+      if (!res.ok)
+        throw new Error("Erreur lors de la récupération des leçons.");
 
       const lesson: LessonData = await res.json();
+
       setLessonOfTheDay(lesson);
     } catch (error) {
       setError(`Erreur : ${(error as Error).message}`);
@@ -125,7 +119,23 @@ export default function LessonOfTheDay() {
     if (isLoggedIn) fetchLessonOfTheDay(selectedDate);
   }, [selectedDate, isLoggedIn]);
 
-  // ✅ Gérer l'affichage de la déconnexion proprement
+  const [ratings, setRatings] = useState<{
+    Facile: number;
+    Moyen: number;
+    Difficile: number;
+  }>({
+    Facile: 0,
+    Moyen: 0,
+    Difficile: 0,
+  });
+
+  const handleLessonRating = (rating: "Facile" | "Moyen" | "Difficile") => {
+    setRatings((prevRatings) => ({
+      ...prevRatings,
+      [rating]: prevRatings[rating] + 1,
+    }));
+  };
+
   if (!isLoggedIn) {
     return (
       <motion.section
@@ -135,11 +145,8 @@ export default function LessonOfTheDay() {
         transition={{ duration: 1 }}
       >
         <h1 className="text-3xl font-bold text-red-600">⚠️ Session expirée</h1>
-        <p className="text-lg text-gray-700">
-          Votre session a expiré. Veuillez vous reconnecter pour accéder à votre leçon du jour.
-        </p>
         <Button
-          className="bg-blue-600 text-white px-6 py-2 rounded-md mt-4 hover:bg-blue-700"
+          className="bg-blue-600 text-white px-6 py-2 rounded-md mt-4"
           onClick={handleLogout}
         >
           🔑 Se reconnecter
@@ -148,53 +155,27 @@ export default function LessonOfTheDay() {
     );
   }
 
-  // eslint-disable-next-line react-hooks/rules-of-hooks
-  const [, setRatings] = useState<{ Facile: number; Moyen: number; Difficile: number }>({
-    Facile: 0,
-    Moyen: 0,
-    Difficile: 0,
-  });
-
-  const handleLessonRating = (lessonIndex: number, rating: "Facile" | "Moyen" | "Difficile") => {
-    setRatings((prevRatings) => ({
-      ...prevRatings,
-      [rating]: prevRatings[rating] + 1,
-    }));
-  };
-
-
   return (
     <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10">
       <BackButton />
-      <motion.h1
-        animate={{ opacity: 1, y: 0 }}
-        className="text-4xl font-extrabold text-violet-600 text-center"
-        initial={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.7, ease: "easeOut" }}
-      >
+      <motion.h1 className="text-4xl font-extrabold text-violet-600 text-center">
         ✨ Bonjour, <span className="text-indigo-500">{userName}</span> ! ✨
       </motion.h1>
 
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="p-6 border bg-violet-100 border-violet-300 rounded-lg shadow-md text-center w-full md:w-3/4"
-        initial={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.7 }}
-      >
-        <h2 className="text-3xl font-bold text-violet-700">📚 Leçon du jour
-        </h2>
+      <motion.div className="p-6 border bg-violet-100 border-violet-300 rounded-lg shadow-md text-center w-full md:w-3/4">
+        <h2 className="text-3xl font-bold text-violet-700">📚 Leçon du jour</h2>
         <p className="mt-2 text-lg font-semibold text-gray-700">
-          Nous sommes le {dayjs().locale("fr").format("dddd DD MMMM YYYY")}. Prêt(e) pour une nouvelle leçon ?
+          Nous sommes le {dayjs().format("dddd DD MMMM YYYY")}
         </p>
         <div className="flex justify-center gap-4 mt-4">
           <input
-            className="px-4 py-2 rounded-md border border-gray-200 focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className="px-4 py-2 rounded-md border border-gray-200"
             type="date"
             value={selectedDate}
             onChange={(e) => setSelectedDate(e.target.value)}
           />
           <Button
-            className="px-4 py-2 rounded-md bg-violet-600 text-white hover:bg-violet-700"
+            className="px-4 py-2 rounded-md bg-violet-600 text-white"
             onClick={() => fetchLessonOfTheDay(selectedDate)}
           >
             🔄 Changer la date
@@ -203,94 +184,131 @@ export default function LessonOfTheDay() {
       </motion.div>
 
       {lessonOfTheDay ? (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full md:w-3/4"
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.5 }}
-        >
+        <motion.div className="w-full md:w-3/4">
           {lessonOfTheDay.lessons.map((lesson, lessonIndex) => (
-            <motion.div key={lessonIndex} whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-              <Card className="w-full p-4 mt-6 rounded-md shadow-md bg-cream border border-gray-200">
-                <CardBody>
-                  <h3 className="text-3xl font-bold text-violet-600">
-                    {lesson.subject}: {lesson.lesson.title}
-                  </h3>
-                  <motion.div
-                    animate={{ scale: 1, opacity: 1 }}
-                    className="flex justify-center my-4"
-                    initial={{ scale: 0.9, opacity: 0 }}
-                    transition={{ duration: 0.7 }}
-                  >
-                    <img
-                      alt={`Leçon ${lesson.lesson.title}`}
-                      className="object-cover rounded-md shadow-md w-80 h-60"
-                      src={`/assets/${lesson.subject.toLowerCase()}.jpg`}
-                    />
-                  </motion.div>
+            <Card
+              key={lessonIndex}
+              className="w-full p-4 mt-6 rounded-md shadow-md bg-cream border border-gray-200"
+            >
+              <CardBody>
+                <h3 className="text-3xl font-bold text-violet-600">
+                  {lesson.subject}: {lesson.lesson.title}
+                </h3>
 
-                  <p className="mt-4 text-gray-600 text-md">{lesson.lesson.description}</p>
-                  <h4 className="mt-4 text-lg font-semibold text-violet-600">🌟 Objectifs
-                  </h4>
-                  <ul className="mt-2 text-gray-700 list-disc list-inside">
-                    {lesson.lesson.objectives.map((objective, i) => (
-                      <li key={i}>{objective}</li>
-                    ))}
-                  </ul>
+                <motion.div className="flex justify-center my-4">
+                  <img
+                    alt={`Leçon ${lesson.lesson.title}`}
+                    className="object-cover rounded-md shadow-md w-80 h-60"
+                    src={`/assets/${lesson.subject.toLowerCase()}.jpg`}
+                    onError={(e) =>
+                      (e.currentTarget.src = "/assets/lessons.jpg")
+                    }
+                  />
+                </motion.div>
 
-                  {lesson.lesson.activities && (
-                    <div className="mt-6 bg-gray-100 p-4 rounded-lg shadow-md">
-                      <h3 className="text-xl font-semibold text-violet-700">🎨 Activités
-                      </h3>
-                      {lesson.lesson.activities.map((activity: { title: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; duration: string | number | bigint | boolean | ReactElement<any, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<AwaitedReactNode> | null | undefined; steps: any[]; }, activityIndex: Key | null | undefined) => (
-                        <div key={activityIndex} className="mt-4">
-                          <h4 className="text-lg font-semibold">{activity.title}</h4>
-                          <p className="text-sm text-gray-600">⏳ Durée: {activity.duration}
-                          </p>
-                          <ul className="mt-2 text-gray-700 list-disc list-inside">
-                            {activity.steps.map((step, stepIndex) => (
-                              <li key={stepIndex}>{step}</li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
+                <p className="mt-4 text-gray-600">
+                  {lesson.lesson.description}
+                </p>
+
+                {lesson.lesson.objectives &&
+                  lesson.lesson.objectives.length > 0 && (
+                    <>
+                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
+                        🌟 Objectifs
+                      </h4>
+                      <ul className="mt-2 text-gray-700 list-disc list-inside">
+                        {lesson.lesson.objectives.map((objective, i) => (
+                          <li key={i}>{objective}</li>
+                        ))}
+                      </ul>
+                    </>
                   )}
 
-                  {/* Notation de la leçon */}
-                  <div className="mt-6 bg-blue-100 p-4 rounded-lg shadow-md text-center">
-                    <h3 className="text-lg font-semibold text-violet-700">📊 Noter cette leçon
-                    </h3>
-                    <div className="flex justify-center gap-4 mt-2">
-                      <Button
-                        className="px-4 py-2 rounded-md bg-green-500 text-white hover:bg-green-600"
-                        onClick={() => handleLessonRating(lessonIndex, "Facile")}
-                      >
-                        😊 Facile
-                      </Button>
-                      <Button
-                        className="px-4 py-2 rounded-md bg-yellow-500 text-white hover:bg-yellow-600"
-                        onClick={() => handleLessonRating(lessonIndex, "Moyen")}
-                      >
-                        😐 Moyen
-                      </Button>
-                      <Button
-                        className="px-4 py-2 rounded-md bg-red-500 text-white hover:bg-red-600"
-                        onClick={() => handleLessonRating(lessonIndex, "Difficile")}
-                      >
-                        😓 Difficile
-                      </Button>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </motion.div>
+                {/* Step */}
+                {lesson.lesson.steps && lesson.lesson.steps.length > 0 && (
+                  <>
+                    <h4 className="mt-4 text-lg font-semibold text-violet-600">
+                      🌟 Étapes
+                    </h4>
+                    <ul className="mt-2 text-gray-700 list-disc list-inside">
+                      {lesson.lesson.steps.map(
+                        (
+                          step:
+                            | string
+                            | number
+                            | bigint
+                            | boolean
+                            | ReactElement<
+                                any,
+                                string | JSXElementConstructor<any>
+                              >
+                            | Iterable<ReactNode>
+                            | ReactPortal
+                            | Promise<AwaitedReactNode>
+                            | null
+                            | undefined,
+                          i: Key | null | undefined,
+                        ) => (
+                          <li key={i}>{step}</li>
+                        ),
+                      )}
+                    </ul>
+                  </>
+                )}
+
+                {/* Activités */}
+                {lesson.lesson.activities &&
+                  lesson.lesson.activities.length > 0 && (
+                    <>
+                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
+                        🌟 Activités
+                      </h4>
+                    </>
+                  )}
+                {/* Explications */}
+                {lesson.lesson.explanation &&
+                  lesson.lesson.explanation.length > 0 && (
+                    <>
+                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
+                        🌟 Explications
+                      </h4>
+                    </>
+                  )}
+                {/* Final activity */}
+                {lesson.lesson.final_activity &&
+                  lesson.lesson.final_activity.length > 0 && (
+                    <>
+                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
+                        🌟 Activité finale
+                      </h4>
+                    </>
+                  )}
+                {/* Conclusion */}
+                {lesson.lesson.conclusion &&
+                  lesson.lesson.conclusion.length > 0 && (
+                    <>
+                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
+                        🌟 Conclusion
+                      </h4>
+                    </>
+                  )}
+                <div className="mt-6 flex justify-center gap-4">
+                  <Button onClick={() => handleLessonRating("Facile")}>
+                    😊 Facile
+                  </Button>
+                  <Button onClick={() => handleLessonRating("Moyen")}>
+                    😐 Moyen
+                  </Button>
+                  <Button onClick={() => handleLessonRating("Difficile")}>
+                    😓 Difficile
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
           ))}
         </motion.div>
       ) : (
-        <motion.div animate={{ opacity: 1 }} className="mt-8 text-center" initial={{ opacity: 0 }} transition={{ duration: 0.5 }}>
-          {error ? <h3 className="text-lg text-red-600">{error}</h3> : <h3 className="text-lg text-gray-600">Chargement de la leçon...</h3>}
-        </motion.div>
+        <h3 className="text-lg text-gray-600">Chargement de la leçon...</h3>
       )}
     </section>
   );

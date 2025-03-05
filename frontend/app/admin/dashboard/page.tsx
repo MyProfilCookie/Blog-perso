@@ -3,7 +3,7 @@
 /* eslint-disable prettier/prettier */
 "use client";
 import React, { useState, useEffect } from "react";
-import axios from "axios";
+import axios, { AxiosError } from "axios";
 import {
   Button,
   Input,
@@ -23,6 +23,7 @@ import {
   faCrown,
   faReply,
   faCheck,
+  faHistory,
 } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
@@ -30,6 +31,8 @@ import dayjs from "dayjs";
 import { motion } from "framer-motion";
 
 import articlesData from "@/public/dataarticles.json";
+import ProgressionCommande from "@/components/ProgressionCommande";
+
 // Fonction pour vérifier si l'utilisateur est admin
 const fetchUserData = () => {
   const storedUser = localStorage.getItem("user");
@@ -57,21 +60,28 @@ const AdminDashboard = () => {
   const [showContent, setShowContent] = useState<{ [key: string]: boolean }>(
     {},
   );
+  const [selectedStatus, setSelectedStatus] = useState("");
   const router = useRouter();
 
-  useEffect(() => {
+  useEffect(() => { 
     const fetchTransaction = async () => {
-      if (!paymentId || paymentId === "null") { // Vérifie si l'ID est défini et valide
-        console.warn("⚠️ ID de paiement invalide ou null:", paymentId);
+      // Vérifier silencieusement sans log si aucun ID n'est fourni
+      if (!paymentId || paymentId === "null") {
+        // Log uniquement en environnement de développement
+        if (process.env.NODE_ENV === 'development') {
+          console.debug("Aucun ID de paiement disponible pour cette commande");
+        }
+
         return;
       }
-  
+        
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations/${paymentId}`);
-  
+          
         if (!response.ok) throw new Error("Erreur lors de la récupération");
-  
+           
         const data = await response.json();
+
         console.log("✅ Transaction récupérée :", data);
         setTransactionId(data.transactionId);
       } catch (error) {
@@ -79,7 +89,7 @@ const AdminDashboard = () => {
         setTransactionId(null);
       }
     };
-  
+      
     fetchTransaction();
   }, [paymentId]);
 
@@ -117,6 +127,7 @@ const AdminDashboard = () => {
       alert(`Erreur lors de la récupération des leçons : ${error}`);
     }
   };
+
 
   // Fonction pour récupérer tous les utilisateurs
   const fetchUsers = async () => {
@@ -439,6 +450,7 @@ const AdminDashboard = () => {
       );
     }
   };
+  
 
   // Fonction pour supprimer un article
   const deleteArticle = async (id: string) => {
@@ -489,17 +501,117 @@ const AdminDashboard = () => {
 
 
   // Fonction pour mettre à jour le statut d'une commande
-  const updateOrderStatus = async (id: string, status: string) => {
-    try {
-      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`, {
-        status,
-      });
-      fetchOrders();
-    } catch (error) {
-      alert(`Erreur lors de la mise à jour de la commande : ${error}`);
-    }
-  };
+const updateOrderStatus = async (id: any, status: string) => {
+  try {
+    console.log(`Tentative de mise à jour du statut pour la commande ${id} vers ${status}`);
 
+    // Demander une note optionnelle pour le changement de statut
+    const { value: notes, isConfirmed } = await Swal.fire({
+      title: "Mise à jour du statut",
+      text: `Voulez-vous changer le statut en "${status}" ?`,
+      icon: "question",
+      input: "textarea",
+      inputLabel: "Notes (optionnel)",
+      inputPlaceholder: "Ajoutez des notes pour ce changement de statut...",
+      showCancelButton: true,
+      confirmButtonText: "Confirmer",
+      cancelButtonText: "Annuler"
+    });
+
+    if (!isConfirmed) {
+      console.log("Mise à jour annulée par l'utilisateur");
+
+      return;
+    }
+
+    console.log(`Envoi de la requête avec statut=${status} et notes=${notes || 'aucune'}`);
+
+    // Utiliser l'endpoint spécifique pour la mise à jour du statut
+    const response = await axios.put(
+      `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/status`,
+      { status, notes }
+    );
+
+    console.log("Réponse du serveur:", response.data);
+
+    if (response.status === 200) {
+      // Afficher un message de succès
+      Swal.fire({
+        title: "Statut mis à jour !",
+        text: `La commande est maintenant en statut : ${status}`,
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+      
+      // Rafraîchir les commandes
+      fetchOrders();
+    } else {
+      console.warn("Réponse inattendue du serveur:", response);
+      throw new Error(`Réponse inattendue: ${response.status}`);
+    }
+  } catch (error) {
+    console.error("Erreur détaillée lors de la mise à jour du statut:", error);
+    
+    // Extraire les détails de l'erreur pour un message plus informatif
+    let errorMessage = "Une erreur s'est produite lors de la mise à jour du statut.";
+    
+    if ((error as AxiosError).response) {
+      // La requête a été faite et le serveur a répondu avec un code d'erreur
+      const axiosError = error as AxiosError;
+
+      console.error("Détails de l'erreur serveur:", axiosError.response?.data);
+      errorMessage = `Erreur serveur: ${axiosError.response?.status} - ${(axiosError.response?.data as any)?.message || 'Erreur inconnue'}`;
+    } else if ((error as AxiosError).request) {
+      // La requête a été faite mais aucune réponse n'a été reçue
+      errorMessage = "Aucune réponse du serveur. Vérifiez votre connexion réseau.";
+    } else {
+      // Une erreur s'est produite lors de la configuration de la requête
+      const err = error as Error;
+
+      errorMessage = `Erreur: ${err.message}`;
+    }
+    
+    Swal.fire({
+      title: "Erreur",
+      text: errorMessage,
+      icon: "error",
+      confirmButtonText: "OK",
+    });
+  }
+};
+  
+  // Fonction pour afficher l'historique des statuts
+  const showStatusHistory = (order: { statusHistory: { date: string | number | Date | dayjs.Dayjs | null | undefined; status: any; notes: any; }[]; }) => {
+    if (!order.statusHistory || order.statusHistory.length === 0) {
+      Swal.fire({
+        title: "Historique des statuts",
+        text: "Aucun historique disponible pour cette commande.",
+        icon: "info",
+      });
+
+      return;
+    }
+  
+    // Formater l'historique des statuts pour l'affichage
+    const historyHtml = order.statusHistory
+      .map((entry: { date: string | number | Date | dayjs.Dayjs | null | undefined; status: any; notes: any; }) => {
+        const date = dayjs(entry.date).format("DD/MM/YYYY HH:mm");
+
+        return `<div class="mb-3 pb-2 border-b">
+          <div class="font-bold text-lg">${entry.status}</div>
+          <div class="text-sm text-gray-500">${date}</div>
+          ${entry.notes ? `<div class="mt-1 text-sm italic">"${entry.notes}"</div>` : ""}
+        </div>`;
+      })
+      .join("");
+  
+    Swal.fire({
+      title: "Historique des statuts",
+      html: `<div class="max-h-80 overflow-y-auto">${historyHtml}</div>`,
+      icon: "info",
+      width: 600,
+    });
+  };
   // Fonction pour supprimer une commande
   const deleteOrder = async (id: string) => {
     Swal.fire({
@@ -535,7 +647,7 @@ const AdminDashboard = () => {
 
       <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-center animate-slide-in">
         Bonjour, {user?.prenom || user.pseudo}{' '}
-        <FontAwesomeIcon icon={faCrown} className="text-yellow-400 animate-spin-slow" />
+        <FontAwesomeIcon icon={faCrown} size="xl" className="text-yellow-400 animate-spin-slow" />
       </h2>
       <style>{`
     @keyframes fade-in {
@@ -589,62 +701,102 @@ const AdminDashboard = () => {
   `}</style>
       {/* Gestion des commandes */}
       <div className="mt-8 px-4">
-        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">Gestion des commandes</h3>
-        <div className="space-y-4">
-          {orders.map((order) => (
-            <div
-              key={order._id}
-              className="border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2"
-            >
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div className="flex-1 text-center sm:text-left break-words">
-                  <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {order._id}</p>
-                  <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
-                    Client : {order.lastName ? `${order.firstName} ${order.lastName}` : "Inconnu"}
-                  </p>
-                  <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
-                    Produit : {order.items?.map((item: { title: any; }) => item.title).join(" • ") || "Aucun"}
-                  </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-300">
-                    Date : {dayjs(order.orderDate).format("DD/MM/YYYY")}
-                  </p>
-                  <p className="text-sm text-gray-700 dark:text-gray-400">
-                    Statut actuel : {order.status}
-                  </p>
-                  <p className="text-sm text-blue-500 dark:text-blue-300">
-                    Paiement : {order.paymentStatus} ({order.paymentMethod})
-                  </p>
-                  <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                    <p className="text-sm text-gray-500 dark:text-gray-400">
-                    <strong>Transaction ID :</strong> {transactionId ? transactionId : "Non disponible"}
-                    </p>
-                  </div>
-                </div>
-                <div className="flex flex-col sm:flex-row gap-2 w-full sm:w-auto">
-                  {['En cours', 'Expédiée', 'Livrée'].map((status) => (
-                    order.status !== status && (
-                      <Button
-                        key={status}
-                        color="primary"
-                        className="w-full sm:w-auto"
-                        onClick={() => updateOrderStatus(order._id, status)}
-                      >
-                        {status}
-                      </Button>
-                    )
-                  ))}
-                  <Button
-                    color="danger"
-                    className="w-full sm:w-auto"
-                    onClick={() => deleteOrder(order._id)}
-                  >
-                    <FontAwesomeIcon icon={faTrash} /> Supprimer
-                  </Button>
-                </div>
-              </div>
-            </div>
-          ))}  </div>
+  <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">Gestion des commandes</h3>
+  <div className="space-y-6">
+    {orders.map((order) => (
+      <div
+        key={order._id}
+        className="border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2"
+      >
+        <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+          {/* Informations sur la commande */}
+          <div className="flex-1 text-left break-words">
+            <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {order._id}</p>
+            <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
+              Client : {order.lastName ? `${order.firstName} ${order.lastName}` : "Inconnu"}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
+              Email : {order.email}
+            </p>
+            <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
+              Produit : {order.items?.map((item: { title: any; }) => item.title).join(" • ") || "Aucun"}
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-300">
+              Date : {dayjs(order.orderDate).format("DD/MM/YYYY")}
+            </p>
+            <p className="text-sm text-blue-500 dark:text-blue-300">
+              Paiement : {order.paymentStatus} ({order.paymentMethod})
+            </p>
+            {order.trackingNumber && (
+              <p className="text-sm text-green-600 dark:text-green-400">
+                N° de suivi : {order.trackingNumber}
+              </p>
+            )}
+          </div>
+          
+          {/* Actions pour les commandes */}
+          <div className="flex flex-col gap-2 min-w-[200px]">
+  <Button
+    color="secondary"
+    size="sm"
+    className="w-full"
+    onClick={() => showStatusHistory(order)}
+  >
+    <FontAwesomeIcon icon={faHistory} className="mr-2" /> Historique
+  </Button>
+  {order.status === "Shipped" && (
+    <div className="mt-2 w-full">
+      <Input
+        placeholder="N° de suivi"
+        size="sm"
+        value={order.trackingNumber || ""}
+        onChange={(e) => {
+          const updatedOrder = { ...order, trackingNumber: e.target.value };
+
+          updatedOrder(order._id, updatedOrder);
+        }}
+      />
+    </div>
+  )}
+</div>
+        </div>
+        
+        {/* Composant de progression */}
+        <div className="mt-4 mb-2 w-full">
+          <ProgressionCommande statut={order.status || "Enregistree"} />
+        </div>
+        
+        {/* Actions pour les statuts */}
+        <div className="flex flex-wrap gap-2 mt-3">
+  <select 
+    className="p-2 border rounded-md bg-cream dark:bg-gray-800 text-gray-800 dark:text-white flex-grow"
+    value="" // Reset à chaque changement
+    onChange={(e) => {
+      if (e.target.value) {
+        updateOrderStatus(order._id, e.target.value);
+        e.target.value = ""; // Reset après sélection
+      }
+    }}
+  >
+    <option value="">Changer le statut...</option>
+    {order.status !== "Pending" && <option value="Pending">Enregistrée</option>}
+    {order.status !== "Processing" && <option value="Processing">En préparation</option>}
+    {order.status !== "Shipped" && <option value="Shipped">Expédiée</option>}
+    {order.status !== "Delivered" && <option value="Delivered">Livrée</option>}
+    {order.status !== "Cancelled" && <option value="Cancelled">Annulée</option>}
+  </select>
+  
+  <Button
+    color="danger"
+    onClick={() => deleteOrder(order._id)}
+  >
+    <FontAwesomeIcon icon={faTrash} /> Supprimer
+  </Button>
+</div>
       </div>
+    ))}
+  </div>
+</div>
 
       {/* Gestion des messages de contact */}
       <div className="mt-8 px-4">

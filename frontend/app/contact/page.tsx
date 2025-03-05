@@ -24,7 +24,8 @@ export default function ContactPage() {
       const token = localStorage.getItem("userToken");
 
       if (!token) {
-        router.push("/login");
+        router.push("/users/login");
+
         return;
       }
 
@@ -50,7 +51,7 @@ export default function ContactPage() {
               cancelButtonText: "Annuler",
             }).then((result) => {
               if (result.isConfirmed) {
-                router.push("/login");
+                router.push("/users/login");
               }
             });
 
@@ -66,7 +67,10 @@ export default function ContactPage() {
         setNom(userData.nom || "");
         setEmail(userData.email || "");
       } catch (error) {
-        console.error("Erreur lors de la récupération de l'utilisateur :", error);
+        console.error(
+          "Erreur lors de la récupération de l'utilisateur :",
+          error,
+        );
       } finally {
         setLoadingUser(false);
       }
@@ -139,7 +143,8 @@ export default function ContactPage() {
         initial={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.8, delay: 0.2 }}
       >
-        Une question ? Un problème ? Une suggestion ? Nous sommes à votre disposition !
+        Une question ? Un problème ? Une suggestion ? Nous sommes à votre
+        disposition !
         <br /> Notre équipe s'engage à vous répondre sous **24 à 48 heures**.
       </motion.p>
 

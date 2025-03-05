@@ -164,6 +164,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 lastName: userData.user.nom,
                 email: userData.user.email,
                 phone: userData.user.phone,
+                userId: userData.user._id,
                 deliveryAddress: userData.user.deliveryAddress,
                 items: formattedItems,
                 totalAmount: total,
@@ -409,6 +410,12 @@ const PaymentPage = () => {
                 <motion.div className="mb-6 p-4 bg-indigo-50 rounded-lg dark:bg-gray-800 shadow-md">
                     <h2 className="text-2xl font-semibold text-gray-700 mb-4 dark:text-white">Informations utilisateur</h2>
                     <Avatar src={user.avatar || "/assets/default-avatar.webp"} size="lg" />
+                    <p className="text-gray-500 dark:text-white"><strong>Nom :</strong> {user.nom}</p>
+                    <p className="text-gray-500 dark:text-white"><strong>Prénom :</strong> {user.prenom}</p>
+                    <p className="text-gray-500 dark:text-white"><strong>Pseudo :</strong> {user.pseudo}</p>
+                    <p className="text-gray-500 dark:text-white">
+  <strong>Adresse de livraison :</strong> {`${user.deliveryAddress.street}, ${user.deliveryAddress.city}, ${user.deliveryAddress.postalCode}, ${user.deliveryAddress.country}`}
+</p>
                     <p className="text-gray-500 dark:text-white"><strong>Email :</strong> {user.email}</p>
                     <p className="text-gray-500 dark:text-white"><strong>Téléphone :</strong> {user.phone}</p>
                 </motion.div>

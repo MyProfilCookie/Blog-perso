@@ -244,18 +244,26 @@ export default function Home() {
         transition={{ duration: 0.8, delay: 1.5 }}
       >
         {/* Feature 1 */}
-        <Card className="p-6">
+        <Card
+          className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl hover:shadow-xl hover:border-violet-500"
+          style={{
+            borderRadius: '10px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          }}
+        >
           <Link href="/controle">
             <CardBody className="text-center">
-              <Image
-                isZoomed
-                width={600}
-                alt="Learning"
-                className="h-20 mx-auto mb-4"
-                src="/assets/online-learning.webp"
-              />
-              <h4 className="font-bold text-large">Cours en ligne adaptés</h4>
-              <p className="mt-2 text-default-500">
+              <div className="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-full w-24 h-24 mx-auto mb-4 flex items-center justify-center">
+                <Image
+                  isZoomed
+                  width={600}
+                  alt="Learning"
+                  className="h-16 w-16 object-contain"
+                  src="/assets/online-learning.webp"
+                />
+              </div>
+              <h4 className="font-bold text-large text-gray-800 dark:text-white">Cours en ligne adaptés</h4>
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
                 Des leçons personnalisées, adaptées aux besoins spécifiques des
                 enfants autistes, pour chaque niveau scolaire.
               </p>
@@ -264,18 +272,26 @@ export default function Home() {
         </Card>
 
         {/* Feature 2 */}
-        <Card className="p-6">
+        <Card
+          className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md rounded-xl hover:shadow-xl hover:border-violet-500"
+          style={{
+            borderRadius: '10px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          }}
+        >
           <Link href="/soutien">
             <CardBody className="text-center">
-              <Image
-                isZoomed
-                width={600}
-                alt="Support"
-                className="h-20 mx-auto mb-4"
-                src="/assets/community-support.webp"
-              />
-              <h4 className="font-bold text-large">Soutien communautaire</h4>
-              <p className="mt-2 text-default-500">
+              <div className="bg-green-100 dark:bg-green-900/30 p-4 rounded-full w-24 h-24 mx-auto mb-4 flex items-center justify-center">
+                <Image
+                  isZoomed
+                  width={600}
+                  alt="Support"
+                  className="h-16 w-16 object-contain"
+                  src="/assets/community-support.webp"
+                />
+              </div>
+              <h4 className="font-bold text-large text-gray-800 dark:text-white">Soutien communautaire</h4>
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
                 Un espace où parents, enseignants, et professionnels échangent des
                 conseils et du soutien.
               </p>
@@ -284,18 +300,26 @@ export default function Home() {
         </Card>
 
         {/* Feature 3 */}
-        <Card className="p-6">
+        <Card
+          className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md rounded-xl hover:shadow-xl hover:border-violet-500"
+          style={{
+            borderRadius: '10px',
+            boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+          }}
+        >
           <Link href="/progres">
             <CardBody className="text-center">
-              <Image
-                isZoomed
-                width={600}
-                alt="Progress"
-                className="h-20 mx-auto mb-4"
-                src="/assets/progress-tracking.webp"
-              />
-              <h4 className="font-bold text-large">Suivi des progrès</h4>
-              <p className="mt-2 text-default-500">
+              <div className="bg-purple-100 dark:bg-purple-900/30 p-4 rounded-full w-24 h-24 mx-auto mb-4 flex items-center justify-center">
+                <Image
+                  isZoomed
+                  width={600}
+                  alt="Progress"
+                  className="h-16 w-16 object-contain"
+                  src="/assets/progress-tracking.webp"
+                />
+              </div>
+              <h4 className="font-bold text-large text-gray-800 dark:text-white">Suivi des progrès</h4>
+              <p className="mt-2 text-gray-600 dark:text-gray-300">
                 Des outils pour suivre les progrès de chaque enfant, pour une
                 approche d'apprentissage optimisée.
               </p>
@@ -314,10 +338,10 @@ export default function Home() {
         initial={{ opacity: 0 }}
         transition={{ duration: 0.8, delay: 1 }}
       >
-        <h2 className="mb-4 text-3xl font-bold text-blue-700">
+        <h2 className="mb-4 text-3xl font-bold text-blue-700 dark:text-blue-400">
           Articles et Astuces
         </h2>
-        <p className="mb-8 text-lg text-blue-500">
+        <p className="mb-8 text-lg text-blue-500 dark:text-blue-300">
           Des conseils pratiques pour aider les enfants autistes au quotidien.
         </p>
 
@@ -342,7 +366,11 @@ export default function Home() {
               {articles.slice(currentIndex, currentIndex + 2).map((article, idx) => (
                 <Card
                   key={idx}
-                  className="w-full p-4 transition duration-300 ease-in-out rounded-lg shadow-lg"
+                  className="w-full p-4 transition duration-300 ease-in-out rounded-lg shadow-lg bg-cream dark:bg-gray-800 hover:shadow-xl hover:border-blue-500 dark:border-gray-700"
+                  style={{
+                    borderRadius: '10px',
+                    boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                  }}
                 >
                   <CardBody className="flex flex-col items-center text-center">
                     <Image
@@ -353,10 +381,10 @@ export default function Home() {
                       height={280}
                       src={article.img}
                     />
-                    <h4 className="mb-2 text-lg font-bold text-blue-700">
+                    <h4 className="mb-2 text-lg font-bold text-blue-700 dark:text-blue-400">
                       {article.title}
                     </h4>
-                    <p className="text-sm text-blue-500">
+                    <p className="text-sm text-blue-500 dark:text-blue-300">
                       {article.description}
                     </p>
                   </CardBody>
@@ -377,68 +405,74 @@ export default function Home() {
 
       {/* Team Section */}
       <motion.div
-  className="w-full max-w-5xl mx-auto mt-16 text-center px-4 md:px-0"
-  initial={{ opacity: 0, y: 50 }}
-  animate={{ opacity: 1, y: 0 }}
-  transition={{ duration: 0.6 }}
->
-  {/* 🏆 Titre */}
-  <h2 className="text-4xl font-bold text-violet-700">Notre Équipe</h2>
-  <p className="mt-3 text-lg text-gray-500">
-    Une équipe dédiée à offrir un apprentissage adapté à tous.
-  </p>
+        className="w-full max-w-5xl mx-auto mt-16 text-center px-4 md:px-0"
+        initial={{ opacity: 0, y: 50 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.6 }}
+      >
+        {/* 🏆 Titre */}
+        <h2 className="text-4xl font-bold text-violet-700 dark:text-violet-400">Notre Équipe</h2>
+        <p className="mt-3 text-lg text-gray-500 dark:text-gray-400">
+          Une équipe dédiée à offrir un apprentissage adapté à tous.
+        </p>
 
-  <div className="relative flex items-center justify-center mt-10">
-    {/* 🔙 Bouton précédent */}
-    <Button
-      isIconOnly
-      className="absolute left-2 md:left-4 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all"
-      onClick={previousTeamSlide}
-    >
-      {"<"}
-    </Button>
+        <div className="relative flex items-center justify-center mt-10">
+          {/* 🔙 Bouton précédent */}
+          <Button
+            isIconOnly
+            className="absolute left-2 md:left-4 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all"
+            onClick={previousTeamSlide}
+          >
+            {"<"}
+          </Button>
 
-    {/* 👥 Contenu des membres */}
-    <div className="w-full max-w-3xl">
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={currentTeamIndex}
-          initial={{ opacity: 0, x: 50 }}
-          animate={{ opacity: 1, x: 0 }}
-          exit={{ opacity: 0, x: -50 }}
-          transition={{ duration: 0.6 }}
-          className="grid grid-cols-1 gap-6 sm:grid-cols-2"
-        >
-          {teamGroups[currentTeamIndex].map((member, index) => (
-            <Card
-              key={index}
-              className="p-6 transition-all transform bg-cream border border-gray-200 shadow-md rounded-xl hover:shadow-lg hover:border-violet-500"
-            >
-              <CardBody className="text-center">
-                <img
-                  src={member.img}
-                  alt={member.name}
-                  className="w-24 h-24 mx-auto mb-4 border-2 border-violet-500 rounded-full transition-all duration-300 hover:border-violet-700"
-                />
-                <h4 className="font-bold text-gray-800">{member.name}</h4>
-                <p className="text-gray-500">{member.role}</p>
-              </CardBody>
-            </Card>
-          ))}
-        </motion.div>
-      </AnimatePresence>
-    </div>
+          {/* 👥 Contenu des membres */}
+          <div className="w-full max-w-3xl">
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={currentTeamIndex}
+                initial={{ opacity: 0, x: 50 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: -50 }}
+                transition={{ duration: 0.6 }}
+                className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+              >
+                {teamGroups[currentTeamIndex].map((member, index) => (
+                  <Card
+                    key={index}
+                    className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl hover:shadow-xl hover:border-violet-500"
+                    style={{
+                      borderRadius: '10px',
+                      boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                    }}
+                  >
+                    <CardBody className="text-center">
+                      <div className="w-24 h-24 mx-auto mb-4 rounded-full p-1 bg-gradient-to-r from-violet-500 to-purple-500 dark:from-violet-400 dark:to-purple-400">
+                        <img
+                          src={member.img}
+                          alt={member.name}
+                          className="w-full h-full object-cover rounded-full transition-all duration-300"
+                        />
+                      </div>
+                      <h4 className="font-bold text-gray-800 dark:text-white">{member.name}</h4>
+                      <p className="text-gray-500 dark:text-gray-300">{member.role}</p>
+                    </CardBody>
+                  </Card>
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          </div>
 
-    {/* 🔜 Bouton suivant */}
-    <Button
-      isIconOnly
-      className="absolute right-2 md:right-4 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all"
-      onClick={nextTeamSlide}
-    >
-      {">"}
-    </Button>
-  </div>
-</motion.div>
+          {/* 🔜 Bouton suivant */}
+          <Button
+            isIconOnly
+            className="absolute right-2 md:right-4 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all"
+            onClick={nextTeamSlide}
+          >
+            {">"}
+          </Button>
+        </div>
+      </motion.div>
 
       {/*  New Section: L'accompagnement de l'enfant et de l'adulte autiste */}
       <motion.div
@@ -447,22 +481,24 @@ export default function Home() {
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.8, delay: 1.5 }}
       >
-        <h2 className={title({ color: "blue", class: "text-center" })}>
+        <h2 className={title({ color: "blue", class: "text-center dark:text-blue-400" })}>
           L'accompagnement des enfants et des adultes autistes
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1200px] mt-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1200px] mt-12 mx-auto px-4">
           {/* Card 1 */}
-          <Card className="shadow-md bg-blue-50">
-            <CardBody className="text-left text-blue-700">
-              <h3 className="text-center"><strong>L’accompagnement de l’enfant autiste</strong></h3>
-              <Image
-                isZoomed
-                width={600}
-                height={200}
-                alt="Learning"
-                className="h-20 mx-auto mb-4"
-                src="/assets/online-learning.webp"
-              />
+          <Card className="shadow-md bg-blue-50 dark:bg-blue-900/30 border border-transparent dark:border-blue-800">
+            <CardBody className="text-left text-blue-700 dark:text-blue-300">
+              <h3 className="text-center"><strong>L'accompagnement de l'enfant autiste</strong></h3>
+              <div className="bg-white dark:bg-blue-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <Image
+                  isZoomed
+                  width={600}
+                  height={200}
+                  alt="Learning"
+                  className="h-14 w-14 object-contain"
+                  src="/assets/online-learning.webp"
+                />
+              </div>
               <p>
                 L'éducation des enfants autistes demande patience et organisation. Nos fiches pédagogiques aident à chaque étape, de l'apprentissage de la propreté au développement de l'autonomie.
               </p>
@@ -470,17 +506,19 @@ export default function Home() {
           </Card>
 
           {/* Card 2 */}
-          <Card className="shadow-md bg-green-50">
-            <CardBody className="text-left text-green-700">
-              <h3 className="text-center"><strong>L’accompagnement de l’adulte autiste</strong></h3>
-              <Image
-                isZoomed
-                width={600}
-                height={200}
-                alt="Learning"
-                className="h-20 mx-auto mb-4 cover"
-                src="/assets/accompagnement.webp"
-              />
+          <Card className="shadow-md bg-green-50 dark:bg-green-900/30 border border-transparent dark:border-green-800">
+            <CardBody className="text-left text-green-700 dark:text-green-300">
+              <h3 className="text-center"><strong>L'accompagnement de l'adulte autiste</strong></h3>
+              <div className="bg-white dark:bg-green-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <Image
+                  isZoomed
+                  width={600}
+                  height={200}
+                  alt="Learning"
+                  className="h-14 w-14 object-contain"
+                  src="/assets/accompagnement.webp"
+                />
+              </div>
               <p>
                 L'accompagnement de l'adulte autiste est essentiel pour la vie professionnelle et sociale. Nos ressources les guident vers une plus grande autonomie et une meilleure qualité de vie.
               </p>
@@ -488,17 +526,19 @@ export default function Home() {
           </Card>
 
           {/* Card 3 */}
-          <Card className="shadow-md bg-purple-50">
-            <CardBody className="text-left text-purple-700">
+          <Card className="shadow-md bg-purple-50 dark:bg-purple-900/30 border border-transparent dark:border-purple-800">
+            <CardBody className="text-left text-purple-700 dark:text-purple-300">
               <h3 className="text-center"><strong>Travailler avec des enfants autistes</strong></h3>
-              <Image
-                isZoomed
-                width={600}
-                height={200}
-                alt="Learning"
-                className="h-20 mx-auto mb-4"
-                src="/assets/online-learn.webp"
-              />
+              <div className="bg-white dark:bg-purple-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <Image
+                  isZoomed
+                  width={600}
+                  height={200}
+                  alt="Learning"
+                  className="h-14 w-14 object-contain"
+                  src="/assets/online-learn.webp"
+                />
+              </div>
               <p>
                 Les méthodes éducatives telles que ABA et TEACCH sont recommandées pour favoriser le développement et l'épanouissement de l'enfant autiste. Découvrez-en plus dans nos ressources.
               </p>
@@ -506,17 +546,19 @@ export default function Home() {
           </Card>
 
           {/* Card 4 */}
-          <Card className="shadow-md bg-orange-50">
-            <CardBody className="text-left text-orange-700">
+          <Card className="shadow-md bg-orange-50 dark:bg-orange-900/30 border border-transparent dark:border-orange-800">
+            <CardBody className="text-left text-orange-700 dark:text-orange-300">
               <h3 className="text-center"><strong>Interventions et thérapies</strong></h3>
-              <Image
-                isZoomed
-                width={600}
-                height={200}
-                alt="Learning"
-                className="h-20 mx-auto mb-4"
-                src="/assets/interventions.webp"
-              />
+              <div className="bg-white dark:bg-orange-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <Image
+                  isZoomed
+                  width={600}
+                  height={200}
+                  alt="Learning"
+                  className="h-14 w-14 object-contain"
+                  src="/assets/interventions.webp"
+                />
+              </div>
               <p>
                 Un large éventail de thérapies est disponible pour accompagner les personnes autistes. Nos recommandations issues de la HAS vous aident à choisir les plus adaptées.
               </p>
@@ -524,41 +566,46 @@ export default function Home() {
           </Card>
 
           {/* Card 5 */}
-          <Card className="shadow-md bg-red-50">
-            <CardBody className="text-left text-red-700">
+          <Card className="shadow-md bg-red-50 dark:bg-red-900/30 border border-transparent dark:border-red-800">
+            <CardBody className="text-left text-red-700 dark:text-red-300">
               <h3 className="text-center"><strong>Ressources web</strong></h3>
-              <Image
-                isZoomed
-                width={600}
-                height={200}
-                alt="Learning"
-                className="h-20 mx-auto mb-4"
-                src="/assets/ressources.webp"
-              />
+              <div className="bg-white dark:bg-red-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <Image
+                  isZoomed
+                  width={600}
+                  height={200}
+                  alt="Learning"
+                  className="h-14 w-14 object-contain"
+                  src="/assets/ressources.webp"
+                />
+              </div>
               <p>
-                Des outils numériques et sites dédiés à l’autisme sont disponibles. Consultez, achetez ou téléchargez nos supports pédagogiques pour un apprentissage adapté.
+                Des outils numériques et sites dédiés à l'autisme sont disponibles. Consultez, achetez ou téléchargez nos supports pédagogiques pour un apprentissage adapté.
               </p>
-              <Link href="/resources" className="block mt-2 text-center text-blue-500 hover:underline">
+              <Link href="/resources" className="block mt-2 text-center text-blue-500 dark:text-blue-300 hover:underline">
                 En savoir plus
               </Link>
             </CardBody>
           </Card>
+
           {/* Card 6 */}
-          <Card className="shadow-md bg-yellow-50">
-            <CardBody className="text-left text-yellow-700">
+          <Card className="shadow-md bg-yellow-50 dark:bg-yellow-900/30 border border-transparent dark:border-yellow-800">
+            <CardBody className="text-left text-yellow-700 dark:text-yellow-300">
               <h3 className="text-center"><strong>Supports pédagogiques</strong></h3>
-              <Image
-                isZoomed
-                width={600}
-                height={200}
-                alt="Learning"
-                className="h-20 mx-auto mb-4"
-                src="/assets/support.webp"
-              />
+              <div className="bg-white dark:bg-yellow-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+                <Image
+                  isZoomed
+                  width={600}
+                  height={200}
+                  alt="Learning"
+                  className="h-14 w-14 object-contain"
+                  src="/assets/support.webp"
+                />
+              </div>
               <p>
-                Des outils numériques et sites dédiés à l’autisme sont disponibles. Consultez, achetez ou déchargez nos supports pédagogiques pour un apprentissage adapté.
+                Des outils numériques et sites dédiés à l'autisme sont disponibles. Consultez, achetez ou déchargez nos supports pédagogiques pour un apprentissage adapté.
               </p>
-              <Link href="/resources" className="block mt-2 text-center text-blue-500 hover:underline">
+              <Link href="/resources" className="block mt-2 text-center text-blue-500 dark:text-blue-300 hover:underline">
                 En savoir plus
               </Link>
             </CardBody>
@@ -569,43 +616,58 @@ export default function Home() {
       {/* New Section: Testimonials */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="w-full max-w-[1200px] mt-16 text-center"
+        className="w-full max-w-[1200px] mt-16 text-center mx-auto px-4"
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.8, delay: 2 }}
       >
-        <h2 className="text-3xl font-bold text-blue-700">Témoignages</h2>
-        <p className="mt-4 text-lg text-blue-500">
+        <h2 className="text-3xl font-bold text-blue-700 dark:text-blue-400">Témoignages</h2>
+        <p className="mt-4 text-lg text-blue-500 dark:text-blue-300">
           Ce que disent les parents et les professionnels à propos de notre plateforme.
         </p>
 
         <div className="grid grid-cols-1 gap-8 mt-8 md:grid-cols-3">
           {/* Testimonial 1 */}
-          <Card className="p-6 transition-transform transform bg-blue-100 shadow-lg rounded-xl hover:scale-105">
+          <Card className="p-6 transition-transform transform bg-blue-100 dark:bg-blue-900/30 shadow-lg rounded-xl hover:scale-105 border border-transparent dark:border-blue-800">
             <CardBody>
-              <p className="italic text-gray-700">
+              <div className="mb-4 text-blue-500 dark:text-blue-300">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                </svg>
+              </div>
+              <p className="italic text-gray-700 dark:text-gray-300">
                 "AutiStudy a complètement transformé la façon dont mon enfant apprend. Les ressources sont parfaitement adaptées à ses besoins."
               </p>
-              <p className="mt-4 font-bold text-blue-700">- Marie, Maman de Léo</p>
+              <p className="mt-4 font-bold text-blue-700 dark:text-blue-400">- Marie, Maman de Léo</p>
             </CardBody>
           </Card>
 
           {/* Testimonial 2 */}
-          <Card className="p-6 transition-transform transform bg-blue-100 shadow-lg rounded-xl hover:scale-105">
+          <Card className="p-6 transition-transform transform bg-blue-100 dark:bg-blue-900/30 shadow-lg rounded-xl hover:scale-105 border border-transparent dark:border-blue-800">
             <CardBody>
-              <p className="italic text-gray-700">
+              <div className="mb-4 text-blue-500 dark:text-blue-300">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                </svg>
+              </div>
+              <p className="italic text-gray-700 dark:text-gray-300">
                 "En tant qu'éducateur, je trouve les outils proposés très complets et adaptés aux enfants autistes. Cela a fait une grande différence."
               </p>
-              <p className="mt-4 font-bold text-blue-700">- Pierre, Enseignant spécialisé</p>
+              <p className="mt-4 font-bold text-blue-700 dark:text-blue-400">- Pierre, Enseignant spécialisé</p>
             </CardBody>
           </Card>
 
           {/* Testimonial 3 */}
-          <Card className="p-6 transition-transform transform bg-blue-100 shadow-lg rounded-xl hover:scale-105">
+          <Card className="p-6 transition-transform transform bg-blue-100 dark:bg-blue-900/30 shadow-lg rounded-xl hover:scale-105 border border-transparent dark:border-blue-800">
             <CardBody>
-              <p className="italic text-gray-700">
+              <div className="mb-4 text-blue-500 dark:text-blue-300">
+                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto opacity-50" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
+                </svg>
+              </div>
+              <p className="italic text-gray-700 dark:text-gray-300">
                 "L'accompagnement proposé par AutiStudy est inestimable. J'ai enfin trouvé un endroit où ma fille est comprise et aidée."
               </p>
-              <p className="mt-4 font-bold text-blue-700">- Sarah, Maman de Julia</p>
+              <p className="mt-4 font-bold text-blue-700 dark:text-blue-400">- Sarah, Maman de Julia</p>
             </CardBody>
           </Card>
         </div>
@@ -613,93 +675,93 @@ export default function Home() {
 
       {/* Contact Section */}
       <motion.div
-      animate={{ opacity: 1 }}
-      className="w-full max-w-4xl mt-16 text-center px-6 md:px-0 mx-auto"
-      initial={{ opacity: 0, y: 50 }}
-      transition={{ duration: 0.8 }}
-    >
-      {/* 🏆 Titre */}
-      <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-purple-400">
-        Nous Contacter
-      </h2>
-      <p className="mt-4 text-lg text-gray-700 max-w-2xl mx-auto">
-        Besoin d’assistance ou d’informations supplémentaires ? Voici comment
-        nous joindre !
-      </p>
+        animate={{ opacity: 1 }}
+        className="w-full max-w-4xl mt-16 text-center px-6 md:px-0 mx-auto"
+        initial={{ opacity: 0, y: 50 }}
+        transition={{ duration: 0.8 }}
+      >
+        {/* 🏆 Titre */}
+        <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-purple-400 dark:from-violet-400 dark:to-purple-300">
+          Nous Contacter
+        </h2>
+        <p className="mt-4 text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+          Besoin d'assistance ou d'informations supplémentaires ? Voici comment
+          nous joindre !
+        </p>
 
-      {/* 📞 Contact & Infos */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 text-left">
-        {/* 📍 Adresse */}
-        <motion.div
-          className="p-6 border-2 border-purple-400 shadow-lg bg-gradient-to-br from-violet-100 to-purple-50 rounded-xl hover:shadow-xl transition-all"
-          whileHover={{ scale: 1.05 }}
-        >
-          <FontAwesomeIcon
-            icon={faMapMarkerAlt}
-            className="text-4xl text-purple-500"
-          />
-          <h4 className="text-lg font-bold text-gray-900 mt-2">Notre Adresse</h4>
-          <p className="text-gray-600">123 Avenue des Lumières, 75000 Paris</p>
-        </motion.div>
-
-        {/* 📞 Téléphone */}
-        <motion.div
-          className="p-6 border-2 border-indigo-400 shadow-lg bg-gradient-to-br from-indigo-100 to-blue-50 rounded-xl hover:shadow-xl transition-all"
-          whileHover={{ scale: 1.05 }}
-        >
-          <FontAwesomeIcon
-            icon={faPhone}
-            className="text-4xl text-indigo-500"
-          />
-          <h4 className="text-lg font-bold text-gray-900 mt-2">Appelez-nous</h4>
-          <p className="text-gray-600">+33 1 23 45 67 89</p>
-        </motion.div>
-
-        {/* 📧 Email */}
-        <motion.div
-          className="p-6 border-2 border-pink-400 shadow-lg bg-gradient-to-br from-pink-100 to-red-50 rounded-xl hover:shadow-xl transition-all"
-          whileHover={{ scale: 1.05 }}
-        >
-          <FontAwesomeIcon
-            icon={faEnvelope}
-            className="text-4xl text-pink-500"
-          />
-          <h4 className="text-lg font-bold text-gray-900 mt-2">Email</h4>
-          <p className="text-gray-600">contact@notreplateforme.com</p>
-        </motion.div>
-
-        {/* 🕒 Horaires */}
-        <motion.div
-          className="p-6 border-2 border-green-400 shadow-lg bg-gradient-to-br from-green-100 to-lime-50 rounded-xl hover:shadow-xl transition-all"
-          whileHover={{ scale: 1.05 }}
-        >
-          <FontAwesomeIcon
-            icon={faClock}
-            className="text-4xl text-green-500"
-          />
-          <h4 className="text-lg font-bold text-gray-900 mt-2">Nos Horaires</h4>
-          <p className="text-gray-600">Lundi - Vendredi : 9h - 18h</p>
-        </motion.div>
-      </div>
-
-      {/* ❓ Besoin d’aide supplémentaire ? */}
-      <div className="mt-10">
-        <Link href="/faq">
-          <motion.button
-            className="px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 text-white font-bold rounded-lg shadow-md hover:from-violet-700 hover:to-purple-800 transition-all flex items-center gap-2"
+        {/* 📞 Contact & Infos */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 text-left">
+          {/* 📍 Adresse */}
+          <motion.div
+            className="p-6 border-2 border-purple-400 dark:border-purple-500 shadow-lg bg-gradient-to-br from-violet-100 to-purple-50 dark:from-violet-900/40 dark:to-purple-900/40 rounded-xl hover:shadow-xl transition-all"
             whileHover={{ scale: 1.05 }}
           >
-            <FontAwesomeIcon icon={faQuestionCircle} />
-            Visitez notre FAQ
-          </motion.button>
-        </Link>
-      </div>
-    </motion.div>
+            <FontAwesomeIcon
+              icon={faMapMarkerAlt}
+              className="text-4xl text-purple-500 dark:text-purple-400"
+            />
+            <h4 className="text-lg font-bold text-gray-900 dark:text-white mt-2">Notre Adresse</h4>
+            <p className="text-gray-600 dark:text-gray-300">123 Avenue des Lumières, 75000 Paris</p>
+          </motion.div>
+
+          {/* 📞 Téléphone */}
+          <motion.div
+            className="p-6 border-2 border-indigo-400 dark:border-indigo-500 shadow-lg bg-gradient-to-br from-indigo-100 to-blue-50 dark:from-indigo-900/40 dark:to-blue-900/40 rounded-xl hover:shadow-xl transition-all"
+            whileHover={{ scale: 1.05 }}
+          >
+            <FontAwesomeIcon
+              icon={faPhone}
+              className="text-4xl text-indigo-500 dark:text-indigo-400"
+            />
+            <h4 className="text-lg font-bold text-gray-900 dark:text-white mt-2">Appelez-nous</h4>
+            <p className="text-gray-600 dark:text-gray-300">+33 1 23 45 67 89</p>
+          </motion.div>
+
+          {/* 📧 Email */}
+          <motion.div
+            className="p-6 border-2 border-pink-400 dark:border-pink-500 shadow-lg bg-gradient-to-br from-pink-100 to-red-50 dark:from-pink-900/40 dark:to-red-900/40 rounded-xl hover:shadow-xl transition-all"
+            whileHover={{ scale: 1.05 }}
+          >
+            <FontAwesomeIcon
+              icon={faEnvelope}
+              className="text-4xl text-pink-500 dark:text-pink-400"
+            />
+            <h4 className="text-lg font-bold text-gray-900 dark:text-white mt-2">Email</h4>
+            <p className="text-gray-600 dark:text-gray-300">contact@notreplateforme.com</p>
+          </motion.div>
+
+          {/* 🕒 Horaires */}
+          <motion.div
+            className="p-6 border-2 border-green-400 dark:border-green-500 shadow-lg bg-gradient-to-br from-green-100 to-lime-50 dark:from-green-900/40 dark:to-lime-900/40 rounded-xl hover:shadow-xl transition-all"
+            whileHover={{ scale: 1.05 }}
+          >
+            <FontAwesomeIcon
+              icon={faClock}
+              className="text-4xl text-green-500 dark:text-green-400"
+            />
+            <h4 className="text-lg font-bold text-gray-900 dark:text-white mt-2">Nos Horaires</h4>
+            <p className="text-gray-600 dark:text-gray-300">Lundi - Vendredi : 9h - 18h</p>
+          </motion.div>
+        </div>
+
+        {/* ❓ Besoin d'aide supplémentaire ? */}
+        <div className="mt-10">
+          <Link href="/faq">
+            <motion.button
+              className="px-6 py-3 bg-gradient-to-r from-violet-500 to-purple-600 dark:from-violet-600 dark:to-purple-700 text-white font-bold rounded-lg shadow-md hover:from-violet-700 hover:to-purple-800 transition-all flex items-center gap-2"
+              whileHover={{ scale: 1.05 }}
+            >
+              <FontAwesomeIcon icon={faQuestionCircle} />
+              Visitez notre FAQ
+            </motion.button>
+          </Link>
+        </div>
+      </motion.div>
 
       {/* Scroll to top button */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="fixed z-10 bottom-8 right-8"
+        className="fixed z-10 bottom-8 right-8 filter drop-shadow-lg dark:drop-shadow-[0_0_10px_rgba(255,255,255,0.2)]"
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.8, delay: 3 }}
       >

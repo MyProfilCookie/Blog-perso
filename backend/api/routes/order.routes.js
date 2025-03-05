@@ -1,3 +1,5 @@
+// Mise à jour du fichier router pour les commandes
+
 const express = require("express");
 const router = express.Router();
 const orderController = require("../controllers/orderController");
@@ -8,6 +10,9 @@ router.post("/", orderController.createOrder);
 // Obtenir toutes les commandes
 router.get("/", orderController.getAllOrders);
 
+// Route spécifique pour mettre à jour le statut d'une commande
+router.put("/:id/status", orderController.updateOrderStatus);
+
 // Obtenir une commande spécifique par ID
 router.get("/:id", orderController.getOrderById);
 
@@ -17,9 +22,10 @@ router.put("/:id", orderController.updateOrder);
 // Supprimer une commande par ID
 router.delete("/:id", orderController.deleteOrder);
 
-// checkout 
+// Checkout
 router.post("/checkout", orderController.checkout);
 
-
+// Route pour obtenir les commandes d'un utilisateur spécifique
+router.get('/user/:userId', orderController.getUserOrders);
 
 module.exports = router;

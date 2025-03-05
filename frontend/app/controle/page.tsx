@@ -87,6 +87,13 @@ const courseThemes = [
     route: "/controle/rapportHebdo",
     bgColor: "bg-gray-200", // Couleur personnalisée
   },
+  {
+    id: 11,
+    title: "Technologie",
+    description: "Apprends la technologie.",
+    image: "/assets/technology.jpg",
+    route: "/controle/technology",
+  },
 ];
 
 const BlogPage = () => {

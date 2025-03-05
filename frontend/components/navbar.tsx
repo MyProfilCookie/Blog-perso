@@ -111,6 +111,26 @@ export const Navbar = () => {
   const [isVerifyingToken, setIsVerifyingToken] = useState(false); // Flag pour éviter les vérifications multiples
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  const [avatarColorIndex, setAvatarColorIndex] = useState(0);
+
+  // Couleurs pour l'animation des avatars
+  const adminColors = ["#FF0000", "#FF3333", "#FF6666", "#FF9999"];
+  const userColors = ["#0066FF", "#3399FF", "#66CCFF", "#99DDFF"];
+  const guestColors = ["#000000", "#333333", "#666666", "#999999"];
+
+  // Animation des couleurs d'avatar
+  useEffect(() => {
+    const colorInterval = setInterval(() => {
+      setAvatarColorIndex((prevIndex) => (prevIndex + 1) % 4);
+    }, 1500);
+
+    return () => clearInterval(colorInterval);
+  }, []);
+
+  // Ajout d'un effet de débogage pour vérifier que l'index change bien
+  useEffect(() => {
+    console.log("Avatar color index changed:", avatarColorIndex);
+  }, [avatarColorIndex]);
 
   // ✅ Ferme le menu quand on clique à l'extérieur
   useEffect(() => {
@@ -338,12 +358,15 @@ export const Navbar = () => {
       style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
+        {/* Logo */}
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex items-center justify-start gap-1" href="/">
             <AutismLogo />
             <p className="font-bold text-blue-800 dark:text-white">AutiStudy</p>
           </NextLink>
         </NavbarBrand>
+
+        {/* Bouton menu mobile */}
         <NavbarMenuToggle
           aria-label="Toggle navigation"
           className="lg:hidden"
@@ -351,44 +374,51 @@ export const Navbar = () => {
         >
           <FontAwesomeIcon icon={faBars} />
         </NavbarMenuToggle>
-        {/* Onglets visibles dans la barre de navigation */}
-        <ul className="hidden gap-4 ml-2 lg:flex">
-          {siteConfig.navItems.map((item) => (
-            <NavbarItem key={item.label}>
-              <NextLink
-                className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
-                href={String(item.href)}
-              >
-                {item.label}
-              </NextLink>
-            </NavbarItem>
-          ))}
 
-          <NavbarItem key="shop" className="relative">
-            <NextLink
-              className="text-gray-700 dark:text-gray-300 hover:text-blue-500 flex items-center relative"
-              href="/shop"
-            >
-              <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
-              Shop
-              {cartItemsCount > 0 && (
-                <Badge
-                  color="danger"
-                  style={{
-                    position: "absolute",
-                    top: "-10px",
-                    right: "-10px",
-                  }}
+        {/* Conteneur pour centrer la navigation */}
+        <div className="hidden lg:flex flex-grow justify-center">
+          <div className="flex items-center">
+            {/* Onglets visibles dans la barre de navigation */}
+            <ul className="flex gap-4 items-center">
+              {siteConfig.navItems.map((item) => (
+                <NavbarItem key={item.label}>
+                  <NextLink
+                    className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
+                    href={String(item.href)}
+                  >
+                    {item.label}
+                  </NextLink>
+                </NavbarItem>
+              ))}
+
+              <NavbarItem key="shop" className="relative">
+                <NextLink
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 flex items-center relative"
+                  href="/shop"
                 >
-                  {cartItemsCount}
-                </Badge>
-              )}
-            </NextLink>
-          </NavbarItem>
-          <NavbarItem>
-            <ThemeSwitch />
-          </NavbarItem>
-        </ul>
+                  <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
+                  Shop
+                  {cartItemsCount > 0 && (
+                    <Badge
+                      color="danger"
+                      style={{
+                        position: "absolute",
+                        top: "-10px",
+                        right: "-10px",
+                      }}
+                    >
+                      {cartItemsCount}
+                    </Badge>
+                  )}
+                </NextLink>
+              </NavbarItem>
+              <NavbarItem>
+                <ThemeSwitch />
+              </NavbarItem>
+            </ul>
+          </div>
+        </div>
+
         {/* Menu burger pour mobile amélioré avec des icônes */}
         <AnimatePresence>
           {isMenuOpen && (
@@ -467,11 +497,15 @@ export const Navbar = () => {
             isBordered
             showFallback
             aria-label="Connectez-vous pour accéder à votre profil"
-            className="cursor-pointer text-tiny text-default-500"
-            color="danger"
+            className="cursor-pointer text-tiny text-default-500 transition-colors duration-700"
             name="Invité"
-            size="sm"
+            size="md"
             src="/assets/default-avatar.webp"
+            style={{
+              borderColor: guestColors[avatarColorIndex],
+              borderWidth: "3px",
+              boxShadow: `0 0 8px ${guestColors[avatarColorIndex]}`,
+            }}
             onClick={handleLoginRedirect}
           />
         ) : (
@@ -481,9 +515,20 @@ export const Navbar = () => {
                 <Avatar
                   isBordered
                   alt={`Avatar de ${user?.pseudo}`}
-                  color="primary"
+                  className="transition-colors duration-700"
                   size="sm"
                   src={user?.avatar || "/assets/default-avatar.webp"}
+                  style={{
+                    borderColor:
+                      user?.role === "admin"
+                        ? adminColors[avatarColorIndex]
+                        : userColors[avatarColorIndex],
+                    borderWidth: "3px",
+                    boxShadow: `0 0 8px ${user?.role === "admin"
+                      ? adminColors[avatarColorIndex]
+                      : userColors[avatarColorIndex]
+                      }`,
+                  }}
                 />
                 <span className="ml-2 hidden lg:inline dark:text-white">
                   {user?.pseudo || "Utilisateur"}
@@ -492,15 +537,15 @@ export const Navbar = () => {
             </DropdownTrigger>
             <DropdownMenu>
               <DropdownItem onClick={() => router.push("/profile")}>
-                <FontAwesomeIcon icon={faUser} />
+                <FontAwesomeIcon className="mr-2" icon={faUser} />
                 Profil
               </DropdownItem>
               <DropdownItem onClick={() => router.push("/shop")}>
-                <FontAwesomeIcon icon={faShoppingCart} />
+                <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
                 Shop
               </DropdownItem>
               <DropdownItem onClick={() => router.push("/controle")}>
-                <FontAwesomeIcon icon={faNewspaper} />
+                <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
                 Controle
               </DropdownItem>
               <DropdownItem onClick={handleLogout}>

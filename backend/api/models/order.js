@@ -1,8 +1,14 @@
-// Import de mongoose
 const mongoose = require('mongoose');
 
 // Définition du schéma de commande
 const orderSchema = new mongoose.Schema({
+    // Ajout du champ userId pour lier la commande à un utilisateur
+    userId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User',
+        required: [true, "L'ID utilisateur est obligatoire"],
+        index: true // Ajout d'un index pour améliorer les performances de recherche
+    },
     firstName: {
         type: String,
         required: true,
@@ -86,11 +92,11 @@ const orderSchema = new mongoose.Schema({
         required: true,
         min: 0,
     },
-    status: {
-        type: String,
-        enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
-        default: "Pending",
-    },
+  status: {
+    type: String,
+    enum: ["Pending", "Processing", "Shipped", "Delivered", "Cancelled"],
+    default: "Pending",
+},
     paymentMethod: {
         type: String,
         enum: ["card", "paypal", "bank_transfer"],
@@ -120,8 +126,10 @@ orderSchema.pre("save", function (next) {
     next();
 });
 
+// Ajout d'un index composé pour optimiser les recherches fréquentes
+orderSchema.index({ userId: 1, orderDate: -1 });
+
 // Création du modèle
 const Order = mongoose.model('Order', orderSchema);
 
 module.exports = Order;
-

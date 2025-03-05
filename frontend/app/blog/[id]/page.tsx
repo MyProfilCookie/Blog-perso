@@ -1,9 +1,11 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
-import { Loader2, CheckCircle } from "lucide-react";
+import { Loader2, CheckCircle, Calendar, User, Tag } from "lucide-react";
+import Link from "next/link";
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -30,6 +32,7 @@ export default function BlogPostPage() {
     if (!id) {
       setError("Aucun ID fourni pour récupérer l'article.");
       setLoading(false);
+
       return;
     }
 
@@ -41,6 +44,7 @@ export default function BlogPostPage() {
         if (!response.ok) throw new Error("Article introuvable");
 
         const data = await response.json();
+
         console.log("📦 Données récupérées :", data);
 
         if (data.blog) {
@@ -62,25 +66,47 @@ export default function BlogPostPage() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <Loader2 className="animate-spin h-10 w-10 text-violet-600" />
+      <div className="flex justify-center items-center min-h-screen bg-cream dark:bg-gray-900">
+        <Loader2 className="animate-spin h-10 w-10 text-violet-600 dark:text-violet-400" />
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex justify-center items-center min-h-screen">
-        <p className="text-red-600 font-semibold">{error}</p>
+      <div className="flex flex-col justify-center items-center min-h-screen bg-cream dark:bg-gray-900 p-6">
+        <p className="text-red-600 dark:text-red-400 font-semibold text-xl mb-4">
+          {error}
+        </p>
+        <Link href="/blog">
+          <motion.button
+            className="px-4 py-2 bg-violet-600 dark:bg-violet-700 text-white rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Retour aux articles
+          </motion.button>
+        </Link>
       </div>
     );
   }
 
   if (!blog) {
     return (
-      <p className="text-center text-red-600 font-semibold">
-        ❌ Article introuvable...
-      </p>
+      <div className="flex flex-col justify-center items-center min-h-screen bg-cream dark:bg-gray-900 p-6">
+        <p className="text-center text-red-600 dark:text-red-400 font-semibold text-xl mb-4">
+          ❌ Article introuvable...
+        </p>
+        <Link href="/blog">
+          <motion.button
+            className="px-4 py-2 bg-violet-600 dark:bg-violet-700 text-white rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Retour aux articles
+          </motion.button>
+        </Link>
+      </div>
     );
   }
 
@@ -89,50 +115,107 @@ export default function BlogPostPage() {
     ? blog.content
     : blog.content?.split("\n").filter((line) => line.trim() !== "") || [];
 
+  // Format date
+  const formattedDate = blog.createdAt
+    ? new Date(blog.createdAt).toLocaleDateString("fr-FR", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+    })
+    : "";
+
   return (
-    <section className="flex flex-col items-center justify-center min-h-screen p-8">
-      <motion.h1
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.5 }}
-        className="text-4xl font-bold text-violet-700 dark:text-violet-300 mb-8"
-      >
-        📝 Découvrez notre article !
-      </motion.h1>
+    <section className="flex flex-col items-center justify-center min-h-screen p-4 md:p-8 bg-cream dark:bg-gray-900">
       <motion.div
         animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-4xl mx-auto mb-8"
+        initial={{ opacity: 0, y: -20 }}
+        transition={{ duration: 0.5 }}
+      >
+        <Link href="/blog">
+          <motion.button
+            className="px-4 py-2 mb-6 bg-violet-600 dark:bg-violet-700 text-white rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors flex items-center gap-2"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            ← Retour aux articles
+          </motion.button>
+        </Link>
+
+        <h1 className="text-4xl font-bold text-violet-700 dark:text-violet-300 mb-4 text-center">
+          📝 Découvrez notre article !
+        </h1>
+      </motion.div>
+
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-3xl w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
-        className="max-w-3xl w-full bg-cream dark:bg-gray-800 shadow-lg rounded-lg p-8 space-y-6"
       >
         <img
-          src={blog.imageUrl}
           alt={blog.title}
-          className="w-full h-64 object-cover rounded-lg mb-6"
+          className="w-full h-64 object-cover"
+          src={blog.imageUrl}
           onError={(e) => (e.currentTarget.src = "/assets/default-blog.jpg")}
         />
-        <h1 className="text-3xl font-bold text-violet-700 dark:text-violet-300 mb-4">
-          {blog.title}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-300 mb-2">
-          <strong>Auteur :</strong> {blog.author}
-        </p>
-        <p className="text-gray-500 dark:text-gray-400 mb-4">
-          <strong>Catégorie :</strong> {blog.category}
-        </p>
 
-        {/* ✅ Affichage propre des paragraphes sans espaces vides */}
-        <div className="text-gray-800 dark:text-gray-100">
-          <ul className="list-none space-y-4">
-            {contentArray.map((paragraph, index) => (
-              <li key={index} className="flex items-start space-x-3">
-                <CheckCircle className="w-5 h-5 text-green-500 mt-1 flex-shrink-0" />
-                <span className="leading-relaxed">{paragraph}</span>
-              </li>
-            ))}
-          </ul>
+        <div className="p-6 md:p-8 space-y-6">
+          <h1 className="text-3xl font-bold text-violet-700 dark:text-violet-300">
+            {blog.title}
+          </h1>
+
+          <div className="flex flex-wrap gap-4 text-sm">
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+              <User className="w-4 h-4" />
+              <span>{blog.author}</span>
+            </div>
+
+            {formattedDate && (
+              <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+                <Calendar className="w-4 h-4" />
+                <span>{formattedDate}</span>
+              </div>
+            )}
+
+            <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
+              <Tag className="w-4 h-4" />
+              <span className="px-2 py-1 bg-violet-100 dark:bg-violet-900/40 text-violet-700 dark:text-violet-300 rounded-full text-xs">
+                {blog.category}
+              </span>
+            </div>
+          </div>
+
+          <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+            <p className="text-gray-700 dark:text-gray-300 mb-6 italic">
+              {blog.description}
+            </p>
+
+            <div className="text-gray-800 dark:text-gray-100 bg-gray-50 dark:bg-gray-800/50 p-6 rounded-lg">
+              <ul className="list-none space-y-4">
+                {contentArray.map((paragraph, index) => (
+                  <li key={index} className="flex items-start space-x-3">
+                    <CheckCircle className="w-5 h-5 text-green-500 dark:text-green-400 mt-1 flex-shrink-0" />
+                    <span className="leading-relaxed">{paragraph}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
         </div>
       </motion.div>
+
+      <div className="w-full max-w-3xl mt-8 flex justify-center">
+        <Link href="/blog">
+          <motion.button
+            className="px-6 py-3 bg-violet-600 dark:bg-violet-700 text-white rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors shadow-md"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+          >
+            Découvrir d'autres articles
+          </motion.button>
+        </Link>
+      </div>
     </section>
   );
 }
