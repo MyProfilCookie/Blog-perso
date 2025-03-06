@@ -475,50 +475,184 @@ export const Navbar = () => {
             <motion.div
               ref={menuRef}
               animate={{ height: "auto", opacity: 1, y: 0, scale: 1 }}
-              className="lg:hidden dark:bg-gray-900 bg-cream w-full shadow-md absolute top-full left-0 z-20 max-h-[300px] overflow-y-auto rounded-b-lg p-4"
+              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-md absolute top-full left-0 z-20 max-h-[80vh] overflow-y-auto rounded-b-lg border-t border-gray-200 dark:border-gray-800"
               exit={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
               initial={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
             >
-              <ul className="grid grid-cols-2 gap-3">
-                {siteConfig.navItems.map((item) => (
-                  <li key={item.label} className="w-full">
-                    <NextLink
-                      className="flex items-center justify-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-500 rounded-md transition-colors"
-                      href={String(item.href)}
-                      onClick={() => setIsMenuOpen(false)}
-                    >
-                      <FontAwesomeIcon
-                        className="mr-2 text-blue-500 dark:text-blue-400"
-                        icon={getIconForNavItem(item.label)}
-                      />
-                      {item.label}
-                    </NextLink>
-                  </li>
-                ))}
-
-                {/* 🛒 Shop avec badge */}
-                <li className="relative w-full">
-                  <NextLink
-                    className="flex items-center justify-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:text-blue-500 rounded-md transition-colors"
-                    href="/shop"
+              <div className="p-4">
+                {/* En-tête du menu */}
+                <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
+                  <p className="font-bold text-blue-700 dark:text-blue-400">
+                    Navigation
+                  </p>
+                  <button
+                    className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <FontAwesomeIcon
-                      className="mr-2 text-blue-500 dark:text-blue-400"
-                      icon={faShoppingCart}
-                    />
-                    Shop
-                    {cartItemsCount > 0 && (
-                      <Badge className="ml-2" color="danger">
-                        {cartItemsCount}
-                      </Badge>
-                    )}
-                  </NextLink>
-                </li>
+                    <svg
+                      fill="none"
+                      height="20"
+                      stroke="currentColor"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      strokeWidth="2"
+                      viewBox="0 0 24 24"
+                      width="20"
+                      xmlns="http://www.w3.org/2000/svg"
+                    >
+                      <line x1="18" x2="6" y1="6" y2="18" />
+                      <line x1="6" x2="18" y1="6" y2="18" />
+                    </svg>
+                  </button>
+                </div>
 
-                {/* Suppression du sélecteur de thème du menu burger puisqu'il est maintenant dans la navbar */}
-              </ul>
+                {/* Sections principales */}
+                <div className="grid gap-4">
+                  {/* Navigation principale */}
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                      Pages principales
+                    </h3>
+                    <ul className="grid gap-1">
+                      {siteConfig.navItems
+                        .filter((item) =>
+                          [
+                            "Accueil",
+                            "À propos",
+                            "Services",
+                            "Contact",
+                          ].includes(item.label),
+                        )
+                        .map((item) => (
+                          <li key={item.label}>
+                            <NextLink
+                              className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                              href={String(item.href)}
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              <FontAwesomeIcon
+                                className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                                icon={getIconForNavItem(item.label)}
+                              />
+                              {item.label}
+                            </NextLink>
+                          </li>
+                        ))}
+                    </ul>
+                  </div>
+
+                  {/* Sections secondaires */}
+                  <div>
+                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                      Découvrir
+                    </h3>
+                    <ul className="grid gap-1">
+                      {siteConfig.navItems
+                        .filter((item) =>
+                          ["Blog", "Équipe", "Cours", "FAQ"].includes(
+                            item.label,
+                          ),
+                        )
+                        .map((item) => (
+                          <li key={item.label}>
+                            <NextLink
+                              className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                              href={String(item.href)}
+                              onClick={() => setIsMenuOpen(false)}
+                            >
+                              <FontAwesomeIcon
+                                className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                                icon={getIconForNavItem(item.label)}
+                              />
+                              {item.label}
+                            </NextLink>
+                          </li>
+                        ))}
+
+                      {/* Shop avec badge */}
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/shop"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <FontAwesomeIcon
+                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                            icon={faShoppingCart}
+                          />
+                          <span className="flex-1">Shop</span>
+                          {cartItemsCount > 0 && (
+                            <Badge color="danger">{cartItemsCount}</Badge>
+                          )}
+                        </NextLink>
+                      </li>
+                    </ul>
+                  </div>
+
+                  {/* Section utilisateur */}
+                  {user && (
+                    <div>
+                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                        Mon compte
+                      </h3>
+                      <ul className="grid gap-1">
+                        <li>
+                          <NextLink
+                            className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                            href="/profile"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            <FontAwesomeIcon
+                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                              icon={faUser}
+                            />
+                            Profil
+                          </NextLink>
+                        </li>
+                        <li>
+                          <NextLink
+                            className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                            href={
+                              user.role === "admin"
+                                ? "/admin/dashboard"
+                                : "/dashboard"
+                            }
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            <FontAwesomeIcon
+                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                              icon={
+                                user.role === "admin"
+                                  ? faCrown
+                                  : faTachometerAlt
+                              }
+                            />
+                            {user.role === "admin"
+                              ? "Dashboard Admin"
+                              : "Dashboard"}
+                          </NextLink>
+                        </li>
+                        <li>
+                          <button
+                            className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                            onClick={() => {
+                              setIsMenuOpen(false);
+                              handleLogout();
+                            }}
+                          >
+                            <FontAwesomeIcon
+                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                              icon={faSignOutAlt}
+                            />
+                            Déconnexion
+                          </button>
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>

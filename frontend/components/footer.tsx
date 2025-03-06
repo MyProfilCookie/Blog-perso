@@ -6,27 +6,55 @@ import {
   faEnvelope,
   faPhone,
   faMapMarkerAlt,
+  faMoon,
 } from "@fortawesome/free-solid-svg-icons";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
+import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
 
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 
 const Footer = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const [avatarColorIndex, setAvatarColorIndex] = useState(0); // Pour être cohérent avec Navbar
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  const toggleTheme = () => {
-    if (resolvedTheme === "dark") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
-  };
+  // Auto theme updater based on time of day
+  useEffect(() => {
+    // Only run if mounted
+    if (!mounted) return;
+
+    // Function to update theme based on time
+    const updateThemeByTime = () => {
+      if (localStorage.getItem("themeMode") === "auto") {
+        const currentHour = new Date().getHours();
+        const isDayTime = currentHour >= 6 && currentHour < 18;
+
+        if (isDayTime) {
+          document.documentElement.classList.remove("dark");
+          localStorage.setItem("theme", "light");
+        } else {
+          document.documentElement.classList.add("dark");
+          localStorage.setItem("theme", "dark");
+        }
+
+        // Force re-render
+        setAvatarColorIndex(prev => prev);
+      }
+    };
+
+    // Update theme immediately
+    updateThemeByTime();
+
+    // Set interval to check every minute
+    const interval = setInterval(updateThemeByTime, 60000);
+
+    return () => clearInterval(interval);
+  }, [mounted]);
 
   return (
     <footer className="border-t transition-colors duration-300 bg-cream/80 border-gray-300 dark:border-gray-700 dark:bg-gray-900/90 text-gray-700 dark:text-gray-300 mt-16 px-6 py-10">
@@ -95,27 +123,80 @@ const Footer = () => {
       {/* 🎨 Theme Switch et Copyright */}
       <div className="flex flex-col items-center justify-center mt-10 space-y-4">
         <div className="flex items-center gap-2">
-          <button
-            aria-label="Toggle theme"
-            className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-cream dark:bg-gray-800 border border-gray-300 dark:border-gray-700 transition-colors duration-300"
-            onClick={toggleTheme}
-          >
-            {mounted && resolvedTheme === "dark" ? (
-              <>
-                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                  Manuel
-                </span>
-                <MoonFilledIcon className="text-blue-300" size={16} />
-              </>
-            ) : (
-              <>
-                <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
-                  Manuel
-                </span>
-                <SunFilledIcon className="text-yellow-500" size={16} />
-              </>
-            )}
-          </button>
+          <Dropdown>
+            <DropdownTrigger>
+              <button
+                aria-label="Toggle theme"
+                className="flex items-center gap-2 px-3 py-1.5 rounded-md bg-cream dark:bg-gray-800 border border-gray-300 dark:border-gray-700 transition-colors duration-300 hover:bg-gray-200 dark:hover:bg-gray-700"
+              >
+                {mounted && (
+                  <>
+                    <span className="text-xs font-medium text-gray-700 dark:text-gray-300">
+                      Thème
+                    </span>
+                    {document.documentElement.classList.contains("dark") ? (
+                      <MoonFilledIcon className="text-blue-300" size={16} />
+                    ) : (
+                      <SunFilledIcon className="text-yellow-500" size={16} />
+                    )}
+                  </>
+                )}
+              </button>
+            </DropdownTrigger>
+            <DropdownMenu aria-label="Options de thème">
+              <DropdownItem
+                key="light"
+                onClick={() => {
+                  document.documentElement.classList.remove("dark");
+                  localStorage.setItem("theme", "light");
+                  localStorage.setItem("themeMode", "manual");
+                  setAvatarColorIndex(prev => prev);
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <SunFilledIcon className="text-yellow-500" size={16} />
+                  <span>Mode clair</span>
+                </div>
+              </DropdownItem>
+              <DropdownItem
+                key="dark"
+                onClick={() => {
+                  document.documentElement.classList.add("dark");
+                  localStorage.setItem("theme", "dark");
+                  localStorage.setItem("themeMode", "manual");
+                  setAvatarColorIndex(prev => prev);
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <MoonFilledIcon className="text-blue-300" size={16} />
+                  <span>Mode sombre</span>
+                </div>
+              </DropdownItem>
+              <DropdownItem
+                key="auto"
+                onClick={() => {
+                  localStorage.setItem("themeMode", "auto");
+                  // Apply theme based on current time
+                  const currentHour = new Date().getHours();
+                  const isDayTime = currentHour >= 6 && currentHour < 18;
+
+                  if (isDayTime) {
+                    document.documentElement.classList.remove("dark");
+                    localStorage.setItem("theme", "light");
+                  } else {
+                    document.documentElement.classList.add("dark");
+                    localStorage.setItem("theme", "dark");
+                  }
+                  setAvatarColorIndex(prev => prev);
+                }}
+              >
+                <div className="flex items-center gap-2">
+                  <FontAwesomeIcon icon={faMoon} className="text-gray-500" />
+                  <span>Mode automatique</span>
+                </div>
+              </DropdownItem>
+            </DropdownMenu>
+          </Dropdown>
         </div>
         <p className="text-xs text-gray-500 transition-colors duration-300">
           © {new Date().getFullYear()} Tous droits réservés | AutiStudy
