@@ -62,7 +62,7 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
 
     if (articles.length === 0) {
         return (
-            <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+            <div className="flex flex-col items-center justify-center min-h-screen bg-cream dark:bg-gray-900 text-gray-800 dark:text-gray-200">
                 <p className="text-xl font-semibold">Aucun article disponible pour le moment.</p>
                 <Button
                     as={NextLink}
@@ -76,7 +76,7 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
     }
 
     return (
-        <section className="min-h-screen px-6 py-12 lg:px-12 xl:px-20 bg-white dark:bg-gray-900 transition-colors">
+        <section className="min-h-screen px-6 py-12 lg:px-12 xl:px-20 bg-cream dark:bg-gray-900 transition-colors">
             <motion.div
                 animate={{ opacity: 1, y: 0 }}
                 className="max-w-7xl mx-auto mb-12"

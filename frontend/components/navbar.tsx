@@ -548,18 +548,18 @@ export const Navbar = () => {
                 <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
                 Controle
               </DropdownItem>
-              <DropdownItem onClick={handleLogout}>
-                <FontAwesomeIcon icon={faSignOutAlt} />
-                Déconnexion
-              </DropdownItem>
               {/* mode */}
               <DropdownItem
                 onClick={() => {
                   document.documentElement.classList.toggle("dark");
                 }}
               >
-                <FontAwesomeIcon icon={faMoon} />
+                <FontAwesomeIcon className="mr-2" icon={faMoon} />
                 Mode
+              </DropdownItem>
+              <DropdownItem onClick={handleLogout}>
+                <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
+                Déconnexion
               </DropdownItem>
             </DropdownMenu>
           </Dropdown>

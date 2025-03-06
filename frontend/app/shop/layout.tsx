@@ -176,7 +176,7 @@ export default function ShopPage() {
     };
 
     return (
-        <div className="min-h-screen px-4 py-8 md:px-10 bg-white dark:bg-gray-900 transition-colors">
+        <div className="min-h-screen px-4 py-8 md:px-10 bg-cream dark:bg-gray-900 transition-colors">
             <div className="mb-6 text-center">
                 <motion.h1
                     className="text-3xl font-bold text-gray-800 dark:text-white mb-2"
@@ -216,7 +216,7 @@ export default function ShopPage() {
                         </Button>
                     </PopoverTrigger>
                     <PopoverContent className="w-[90vw] sm:w-[400px]">
-                        <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                        <div className="p-4 bg-cream dark:bg-gray-800 rounded-lg">
                             <h3 className="text-xl font-bold mb-4 text-center text-violet-600 dark:text-violet-400">
                                 Votre Panier
                             </h3>

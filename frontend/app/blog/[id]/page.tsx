@@ -149,7 +149,7 @@ export default function BlogPostPage() {
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="max-w-3xl w-full bg-white dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden"
+        className="max-w-3xl w-full bg-cream dark:bg-gray-800 shadow-lg rounded-lg overflow-hidden"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
       >

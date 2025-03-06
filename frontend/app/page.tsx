@@ -489,7 +489,7 @@ export default function Home() {
           <Card className="shadow-md bg-blue-50 dark:bg-blue-900/30 border border-transparent dark:border-blue-800">
             <CardBody className="text-left text-blue-700 dark:text-blue-300">
               <h3 className="text-center"><strong>L'accompagnement de l'enfant autiste</strong></h3>
-              <div className="bg-white dark:bg-blue-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+              <div className="bg-cream dark:bg-blue-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                 <Image
                   isZoomed
                   width={600}
@@ -509,7 +509,7 @@ export default function Home() {
           <Card className="shadow-md bg-green-50 dark:bg-green-900/30 border border-transparent dark:border-green-800">
             <CardBody className="text-left text-green-700 dark:text-green-300">
               <h3 className="text-center"><strong>L'accompagnement de l'adulte autiste</strong></h3>
-              <div className="bg-white dark:bg-green-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+              <div className="bg-cream dark:bg-green-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                 <Image
                   isZoomed
                   width={600}
@@ -529,7 +529,7 @@ export default function Home() {
           <Card className="shadow-md bg-purple-50 dark:bg-purple-900/30 border border-transparent dark:border-purple-800">
             <CardBody className="text-left text-purple-700 dark:text-purple-300">
               <h3 className="text-center"><strong>Travailler avec des enfants autistes</strong></h3>
-              <div className="bg-white dark:bg-purple-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+              <div className="bg-cream dark:bg-purple-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                 <Image
                   isZoomed
                   width={600}
@@ -549,7 +549,7 @@ export default function Home() {
           <Card className="shadow-md bg-orange-50 dark:bg-orange-900/30 border border-transparent dark:border-orange-800">
             <CardBody className="text-left text-orange-700 dark:text-orange-300">
               <h3 className="text-center"><strong>Interventions et thérapies</strong></h3>
-              <div className="bg-white dark:bg-orange-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+              <div className="bg-cream dark:bg-orange-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                 <Image
                   isZoomed
                   width={600}
@@ -569,7 +569,7 @@ export default function Home() {
           <Card className="shadow-md bg-red-50 dark:bg-red-900/30 border border-transparent dark:border-red-800">
             <CardBody className="text-left text-red-700 dark:text-red-300">
               <h3 className="text-center"><strong>Ressources web</strong></h3>
-              <div className="bg-white dark:bg-red-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+              <div className="bg-cream dark:bg-red-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                 <Image
                   isZoomed
                   width={600}
@@ -592,7 +592,7 @@ export default function Home() {
           <Card className="shadow-md bg-yellow-50 dark:bg-yellow-900/30 border border-transparent dark:border-yellow-800">
             <CardBody className="text-left text-yellow-700 dark:text-yellow-300">
               <h3 className="text-center"><strong>Supports pédagogiques</strong></h3>
-              <div className="bg-white dark:bg-yellow-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
+              <div className="bg-cream dark:bg-yellow-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
                 <Image
                   isZoomed
                   width={600}

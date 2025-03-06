@@ -61,7 +61,7 @@ const ArticlesPage = () => {
   }, [search]);
 
   return (
-    <section className="flex flex-col items-center justify-center w-full gap-8 py-12 md:py-16 bg-white dark:bg-gray-900">
+    <section className="flex flex-col items-center justify-center w-full gap-8 py-12 md:py-16 bg-cream dark:bg-gray-900">
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="text-center"

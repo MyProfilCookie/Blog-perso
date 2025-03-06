@@ -101,7 +101,7 @@ export default function BlogPage() {
         initial={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.6 }}
       >
-        <h1 className="text-4xl md:text-5xl font-bold text-violet-700 dark:text-violet-300 shadow-md p-2 rounded-lg bg-white/50 dark:bg-gray-800/50">
+        <h1 className="text-4xl md:text-5xl font-bold text-violet-700 dark:text-violet-300 shadow-md p-2 rounded-lg bg-cream/50 dark:bg-gray-800/50">
           📰 Nos Derniers Articles
         </h1>
         <p className="mt-3 text-lg text-gray-600 dark:text-gray-300">
@@ -174,7 +174,7 @@ export default function BlogPage() {
                 }
               />
               <CardBody className="p-4 flex flex-col justify-between flex-grow">
-                <h2 className="text-xl font-semibold text-gray-800 dark:text-white shadow-sm p-2 rounded-lg bg-white/50 dark:bg-gray-700/50">
+                <h2 className="text-xl font-semibold text-gray-800 dark:text-white shadow-sm p-2 rounded-lg bg-cream/50 dark:bg-gray-700/50">
                   {blog.title}
                 </h2>
                 <p className="text-gray-600 dark:text-gray-300 mt-2 line-clamp-2">
