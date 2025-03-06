@@ -1,6 +1,8 @@
+/* eslint-disable prettier/prettier */
 import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
+import { Toaster } from "sonner";
 
 import { Providers } from "./providers";
 import { siteConfig } from "@/config/site";
@@ -51,6 +53,18 @@ export default function RootLayout({
             {/* Correction : Footer bien collé en bas */}
             <Footer />
           </div>
+          {/* Intégration du composant Toaster de Sonner avec les thèmes sombre/clair */}
+          <Toaster
+            theme={
+              typeof window !== 'undefined' &&
+                window.document.documentElement.classList.contains('dark')
+                ? 'dark'
+                : 'light'
+            }
+            position="bottom-right"
+            closeButton
+            richColors
+          />
         </Providers>
       </body>
     </html>

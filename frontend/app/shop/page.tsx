@@ -1,16 +1,20 @@
 /* eslint-disable react/no-unescaped-entities */
-/* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 "use client";
 
-import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faStar, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+
+// Importation des composants shadcn/ui
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 import Loading from "@/components/loading";
+
 type Article = {
     [x: string]: any;
     title: string;
@@ -65,11 +69,12 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
             <div className="flex flex-col items-center justify-center min-h-screen bg-cream dark:bg-gray-900 text-gray-800 dark:text-gray-200">
                 <p className="text-xl font-semibold">Aucun article disponible pour le moment.</p>
                 <Button
-                    as={NextLink}
-                    className="mt-6 bg-violet-600 dark:bg-violet-700 text-white hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors"
-                    href="/"
+                    asChild
+                    className="mt-6 bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white"
                 >
-                    Retour à l'accueil
+                    <NextLink href="/">
+                        Retour à l'accueil
+                    </NextLink>
                 </Button>
             </div>
         );
@@ -79,29 +84,13 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
         <section className="min-h-screen px-6 py-12 lg:px-12 xl:px-20 bg-cream dark:bg-gray-900 transition-colors">
             <motion.div
                 animate={{ opacity: 1, y: 0 }}
-                className="max-w-7xl mx-auto mb-12"
+                className="mb-12 text-center"
                 initial={{ opacity: 0, y: -20 }}
-                transition={{ duration: 0.6 }}
+                transition={{ duration: 0.4 }}
             >
-                <h1 className="text-center mb-2">
-                    <span className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-800 dark:text-white flex items-center justify-center gap-2">
-                        🛍️ Notre Boutique
-                    </span>
-                </h1>
-                <p className="text-center text-gray-600 dark:text-gray-400 text-lg max-w-3xl mx-auto mb-8">
-                    Découvrez notre sélection de produits spécialement conçus pour améliorer le quotidien
-                    des personnes autistes.
-                </p>
-                <motion.h2
-                    className="text-2xl md:text-3xl lg:text-4xl font-extrabold leading-snug text-gray-700 dark:text-gray-300 text-center mb-4 flex items-center justify-center gap-2"
-                >
-                    <span className="text-yellow-500">
-                        <FontAwesomeIcon icon={faStar} />
-                    </span>
-                    Découvrez notre sélection d&apos;articles
-                </motion.h2>
-                <p className="text-center text-gray-600 dark:text-gray-400 text-lg max-w-3xl mx-auto">
-                    Des produits soigneusement sélectionnés pour améliorer le quotidien des personnes autistes et faciliter leur inclusion.
+                <h2 className="text-3xl font-bold text-gray-800 dark:text-white">Nos articles</h2>
+                <p className="mt-2 text-gray-600 dark:text-gray-400">
+                    Découvrez nos articles de qualité supérieure.
                 </p>
             </motion.div>
 
@@ -114,39 +103,52 @@ export default function ArticlesPage({ onAddToCart, cart }: ArticlesPageProps) {
                             initial={{ opacity: 0, y: 20 }}
                             transition={{ duration: 0.4, delay: index * 0.1 }}
                             whileHover={{ y: -5, transition: { duration: 0.2 } }}
+                            className="h-full"
                         >
-                            <Card className="overflow-hidden bg-cream dark:bg-gray-800 rounded-lg shadow-lg hover:shadow-xl h-full">
+                            <Card className="overflow-hidden bg-cream dark:bg-gray-800 border-transparent dark:border-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
                                 <div className="relative">
                                     <img
                                         alt={article.title}
                                         className="object-cover object-center w-full h-52"
                                         src={article.imageUrl}
                                     />
-                                    <div className="absolute top-2 right-2 bg-purple-600 text-white px-3 py-1 rounded-full text-base font-bold">
-                                        {article.price} €
+                                    <div className="absolute top-2 right-2">
+                                        <Badge className="bg-purple-600 hover:bg-purple-700 px-3 py-1 text-base font-bold">
+                                            {article.price} €
+                                        </Badge>
                                     </div>
                                 </div>
-                                <CardBody className="flex flex-col items-center p-5 h-full">
+
+                                <CardHeader className="p-5 pb-0">
                                     <h3 className="mb-2 text-lg font-bold text-center text-gray-800 dark:text-white">{article.title}</h3>
-                                    <p className="text-sm text-center text-gray-600 dark:text-gray-300 line-clamp-3 mb-4">
+                                </CardHeader>
+
+                                <CardContent className="p-5 pt-2 flex-grow">
+                                    <p className="text-sm text-center text-gray-600 dark:text-gray-300 line-clamp-3">
                                         {article.description}
                                     </p>
-                                    <div className="flex flex-col w-full mt-auto space-y-3">
+                                </CardContent>
+
+                                <CardFooter className="p-5 pt-0 flex flex-col space-y-3">
+                                    <Button
+                                        asChild
+                                        variant="default"
+                                        className="w-full bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white"
+                                    >
                                         <NextLink href={`/products/${article._id}`}>
-                                            <Button fullWidth className="bg-violet-600 text-white hover:bg-violet-700">
-                                                Voir cet article
-                                            </Button>
+                                            Voir cet article
                                         </NextLink>
-                                        <Button
-                                            fullWidth
-                                            className="bg-blue-600 text-white hover:bg-blue-700"
-                                            onClick={() => onAddToCart(article)}
-                                        >
-                                            <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
-                                            Ajouter au panier
-                                        </Button>
-                                    </div>
-                                </CardBody>
+                                    </Button>
+
+                                    <Button
+                                        variant="default"
+                                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white"
+                                        onClick={() => onAddToCart(article)}
+                                    >
+                                        <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
+                                        Ajouter au panier
+                                    </Button>
+                                </CardFooter>
                             </Card>
                         </motion.div>
                     ))}
