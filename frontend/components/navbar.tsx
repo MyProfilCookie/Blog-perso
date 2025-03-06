@@ -770,118 +770,157 @@ export const Navbar = () => {
             onClick={handleLoginRedirect}
           />
         ) : (
-          <Dropdown>
-            <DropdownTrigger>
-              <Button aria-label="Menu utilisateur" className="bg-transparent">
-                <Avatar
-                  isBordered
-                  alt={`Avatar de ${user?.pseudo}`}
-                  className="transition-colors duration-700"
-                  size="sm"
-                  src={user?.avatar || "/assets/default-avatar.webp"}
-                  style={{
-                    borderColor:
-                      user?.role === "admin"
-                        ? adminColors[avatarColorIndex]
-                        : userColors[avatarColorIndex],
-                    borderWidth: "3px",
-                    boxShadow: `0 0 8px ${user?.role === "admin"
-                        ? adminColors[avatarColorIndex]
-                        : userColors[avatarColorIndex]
-                      }`,
-                  }}
-                />
-                <span className="ml-2 hidden xl:inline dark:text-white">
-                  {user?.pseudo || "Utilisateur"}
-                </span>
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu>
-              <DropdownItem onClick={() => router.push("/profile")}>
-                <FontAwesomeIcon className="mr-2" icon={faUser} />
-                Profil
-              </DropdownItem>
-              <DropdownItem onClick={() => router.push("/shop")}>
-                <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
-                Shop
-              </DropdownItem>
-              <DropdownItem onClick={() => router.push("/controle")}>
-                <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
-                Controle
-              </DropdownItem>
-              {/* mode */}
-              <DropdownItem>
-                <Dropdown placement="left-start">
-                  <DropdownTrigger>
-                    <div className="flex items-center w-full cursor-pointer">
-                      <FontAwesomeIcon className="mr-2" icon={faMoon} />
-                      Thème
-                    </div>
-                  </DropdownTrigger>
-                  <DropdownMenu aria-label="Options de thème">
-                    <DropdownItem
-                      key="light"
-                      onClick={() => {
-                        document.documentElement.classList.remove("dark");
-                        localStorage.setItem("theme", "light");
-                        localStorage.setItem("themeMode", "manual");
-                        setAvatarColorIndex((prev) => prev);
-                      }}
-                    >
-                      <div className="flex items-center gap-2">
-                        <SunFilledIcon className="text-yellow-500" size={16} />
-                        <span>Mode clair</span>
-                      </div>
-                    </DropdownItem>
-                    <DropdownItem
-                      key="dark"
-                      onClick={() => {
-                        document.documentElement.classList.add("dark");
-                        localStorage.setItem("theme", "dark");
-                        localStorage.setItem("themeMode", "manual");
-                        setAvatarColorIndex((prev) => prev);
-                      }}
-                    >
-                      <div className="flex items-center gap-2">
-                        <MoonFilledIcon className="text-blue-300" size={16} />
-                        <span>Mode sombre</span>
-                      </div>
-                    </DropdownItem>
-                    <DropdownItem
-                      key="auto"
-                      onClick={() => {
-                        localStorage.setItem("themeMode", "auto");
-                        // Apply theme based on current time
-                        const currentHour = new Date().getHours();
-                        const isDayTime = currentHour >= 6 && currentHour < 18;
+          // Replace the entire Dropdown component with this conditional rendering
+          <>
+            {/* For mobile view - direct click to profile */}
+            <div className="md:hidden">
+              <Avatar
+                isBordered
+                alt={`Avatar de ${user?.pseudo}`}
+                className="transition-colors duration-700 cursor-pointer"
+                size="sm"
+                src={user?.avatar || "/assets/default-avatar.webp"}
+                style={{
+                  borderColor:
+                    user?.role === "admin"
+                      ? adminColors[avatarColorIndex]
+                      : userColors[avatarColorIndex],
+                  borderWidth: "3px",
+                  boxShadow: `0 0 8px ${user?.role === "admin"
+                      ? adminColors[avatarColorIndex]
+                      : userColors[avatarColorIndex]
+                    }`,
+                }}
+                onClick={() => router.push("/profile")}
+              />
+            </div>
 
-                        if (isDayTime) {
-                          document.documentElement.classList.remove("dark");
-                          localStorage.setItem("theme", "light");
-                        } else {
-                          document.documentElement.classList.add("dark");
-                          localStorage.setItem("theme", "dark");
-                        }
-                        setAvatarColorIndex((prev) => prev);
+            {/* For desktop view - keep the dropdown */}
+            <div className="hidden md:block">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    aria-label="Menu utilisateur"
+                    className="bg-transparent"
+                  >
+                    <Avatar
+                      isBordered
+                      alt={`Avatar de ${user?.pseudo}`}
+                      className="transition-colors duration-700"
+                      size="sm"
+                      src={user?.avatar || "/assets/default-avatar.webp"}
+                      style={{
+                        borderColor:
+                          user?.role === "admin"
+                            ? adminColors[avatarColorIndex]
+                            : userColors[avatarColorIndex],
+                        borderWidth: "3px",
+                        boxShadow: `0 0 8px ${user?.role === "admin"
+                            ? adminColors[avatarColorIndex]
+                            : userColors[avatarColorIndex]
+                          }`,
                       }}
-                    >
-                      <div className="flex items-center gap-2">
-                        <FontAwesomeIcon
-                          className="text-gray-500"
-                          icon={faMoon}
-                        />
-                        <span>Mode automatique</span>
-                      </div>
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              </DropdownItem>
-              <DropdownItem onClick={handleLogout}>
-                <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
-                Déconnexion
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+                    />
+                    <span className="ml-2 hidden xl:inline dark:text-white">
+                      {user?.pseudo || "Utilisateur"}
+                    </span>
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu>
+                  <DropdownItem onClick={() => router.push("/profile")}>
+                    <FontAwesomeIcon className="mr-2" icon={faUser} />
+                    Profil
+                  </DropdownItem>
+                  <DropdownItem onClick={() => router.push("/shop")}>
+                    <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
+                    Shop
+                  </DropdownItem>
+                  <DropdownItem onClick={() => router.push("/controle")}>
+                    <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
+                    Controle
+                  </DropdownItem>
+                  {/* mode */}
+                  <DropdownItem>
+                    <Dropdown placement="left-start">
+                      <DropdownTrigger>
+                        <div className="flex items-center w-full cursor-pointer">
+                          <FontAwesomeIcon className="mr-2" icon={faMoon} />
+                          Thème
+                        </div>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Options de thème">
+                        <DropdownItem
+                          key="light"
+                          onClick={() => {
+                            document.documentElement.classList.remove("dark");
+                            localStorage.setItem("theme", "light");
+                            localStorage.setItem("themeMode", "manual");
+                            setAvatarColorIndex((prev) => prev);
+                          }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <SunFilledIcon
+                              className="text-yellow-500"
+                              size={16}
+                            />
+                            <span>Mode clair</span>
+                          </div>
+                        </DropdownItem>
+                        <DropdownItem
+                          key="dark"
+                          onClick={() => {
+                            document.documentElement.classList.add("dark");
+                            localStorage.setItem("theme", "dark");
+                            localStorage.setItem("themeMode", "manual");
+                            setAvatarColorIndex((prev) => prev);
+                          }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <MoonFilledIcon
+                              className="text-blue-300"
+                              size={16}
+                            />
+                            <span>Mode sombre</span>
+                          </div>
+                        </DropdownItem>
+                        <DropdownItem
+                          key="auto"
+                          onClick={() => {
+                            localStorage.setItem("themeMode", "auto");
+                            // Apply theme based on current time
+                            const currentHour = new Date().getHours();
+                            const isDayTime =
+                              currentHour >= 6 && currentHour < 18;
+
+                            if (isDayTime) {
+                              document.documentElement.classList.remove("dark");
+                              localStorage.setItem("theme", "light");
+                            } else {
+                              document.documentElement.classList.add("dark");
+                              localStorage.setItem("theme", "dark");
+                            }
+                            setAvatarColorIndex((prev) => prev);
+                          }}
+                        >
+                          <div className="flex items-center gap-2">
+                            <FontAwesomeIcon
+                              className="text-gray-500"
+                              icon={faMoon}
+                            />
+                            <span>Mode automatique</span>
+                          </div>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </DropdownItem>
+                  <DropdownItem onClick={handleLogout}>
+                    <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
+                    Déconnexion
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+          </>
         )}
       </NavbarContent>
     </NextUINavbar>
