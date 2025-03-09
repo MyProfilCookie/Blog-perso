@@ -1,3 +1,6 @@
+/* eslint-disable react/jsx-sort-props */
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 import NextLink from "next/link";
@@ -15,7 +18,7 @@ import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-o
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 
 const Footer = () => {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  useTheme();
   const [mounted, setMounted] = useState(false);
   const [avatarColorIndex, setAvatarColorIndex] = useState(0); // Pour être cohérent avec Navbar
 

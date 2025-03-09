@@ -21,7 +21,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
   startNightModeHour = 20,
   endNightModeHour = 7,
 }) => {
-  const { theme, setTheme, resolvedTheme } = useTheme();
+  const { setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const [isAutoMode, setIsAutoMode] = useState(true);
   const isDarkMode = resolvedTheme === "dark";

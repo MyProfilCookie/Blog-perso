@@ -7,7 +7,7 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import { motion } from "framer-motion";
-import { Sparkles, ChevronLeft, ChevronRight } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import Link from "next/link";
 
 // Importation des composants shadcn/ui

@@ -1,3 +1,5 @@
+/* eslint-disable prettier/prettier */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React, { useEffect, useState } from "react";
 
 /**
@@ -126,17 +128,16 @@ const ProgressionCommande = ({ statut }: { statut: string }) => {
             >
               {/* Circle indicator */}
               <div
-                className={`w-5 h-5 rounded-full mx-auto mb-1 transition-all duration-500 ${
-                  isActive
-                    ? "transform scale-110"
-                    : "bg-gray-200 dark:bg-gray-600"
-                }`}
+                className={`w-5 h-5 rounded-full mx-auto mb-1 transition-all duration-500 ${isActive
+                  ? "transform scale-110"
+                  : "bg-gray-200 dark:bg-gray-600"
+                  }`}
                 style={
                   isActive
                     ? {
-                        backgroundColor: s.couleur,
-                        boxShadow: `0 0 0 3px ${s.bgLight}`,
-                      }
+                      backgroundColor: s.couleur,
+                      boxShadow: `0 0 0 3px ${s.bgLight}`,
+                    }
                     : {}
                 }
               >
@@ -160,16 +161,15 @@ const ProgressionCommande = ({ statut }: { statut: string }) => {
 
               {/* Status label */}
               <div
-                className={`transition-all duration-300 ${
-                  isActive
-                    ? "font-medium dark:font-semibold"
-                    : "text-gray-500 dark:text-gray-400"
-                }`}
+                className={`transition-all duration-300 ${isActive
+                  ? "font-medium dark:font-semibold"
+                  : "text-gray-500 dark:text-gray-400"
+                  }`}
                 style={
                   isActive
                     ? {
-                        color: s.couleur,
-                      }
+                      color: s.couleur,
+                    }
                     : {}
                 }
               >

@@ -1,9 +1,12 @@
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable padding-line-between-statements */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable prettier/prettier */
 "use client";
 import React, { useState, useEffect } from "react";
-import axios, { AxiosError } from "axios";
+import axios from "axios";
 import {
   Button,
   Input,
@@ -30,6 +33,7 @@ import Swal from "sweetalert2";
 import dayjs from "dayjs";
 import { motion } from "framer-motion";
 
+import OrderHistoryDialog from "@/components/OrderHistoryDialog";
 import articlesData from "@/public/dataarticles.json";
 import ProgressionCommande from "@/components/ProgressionCommande";
 
@@ -41,29 +45,29 @@ const fetchUserData = () => {
 };
 
 const AdminDashboard = () => {
-  const [user, setUser] = useState<any>(null);
-  const [transactionId, setTransactionId] = useState<string | null>(null);
-  const [paymentId, setPaymentId] = useState<string | null>(null);
-  const [lessons, setLessons] = useState<any[]>([]);
+  const [user, setUser] = useState(null);
+  const [, setTransactionId] = useState(null);
+  const [paymentId, setPaymentId] = useState(null);
+  const [lessons, setLessons] = useState([]);
   const [newLesson, setNewLesson] = useState({
     title: "",
     content: "",
     date: "",
   });
   const [currentTime, setCurrentTime] = useState("");
-  const [users, setUsers] = useState<any[]>([]);
-  const [orders, setOrders] = useState<any[]>([]);
-  const [, setArticles] = useState<any[]>([]);
-  const [messages, setMessages] = useState<any[]>([]);
+  const [users, setUsers] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [, setArticles] = useState([]);
+  const [messages, setMessages] = useState([]);
   const [newArticle, setNewArticle] = useState({ title: "", content: "" });
   const [banReason, setBanReason] = useState("Violation des règles");
-  const [showContent, setShowContent] = useState<{ [key: string]: boolean }>(
-    {},
-  );
+  const [showContent, setShowContent] = useState({});
   const [selectedStatus, setSelectedStatus] = useState("");
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
   const router = useRouter();
 
-  useEffect(() => { 
+  useEffect(() => {
     const fetchTransaction = async () => {
       // Vérifier silencieusement sans log si aucun ID n'est fourni
       if (!paymentId || paymentId === "null") {
@@ -74,12 +78,12 @@ const AdminDashboard = () => {
 
         return;
       }
-        
+
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations/${paymentId}`);
-          
+
         if (!response.ok) throw new Error("Erreur lors de la récupération");
-           
+
         const data = await response.json();
 
         console.log("✅ Transaction récupérée :", data);
@@ -89,7 +93,7 @@ const AdminDashboard = () => {
         setTransactionId(null);
       }
     };
-      
+
     fetchTransaction();
   }, [paymentId]);
 
@@ -180,7 +184,7 @@ const AdminDashboard = () => {
   };
 
   // Fonction pour mettre à jour une leçon
-  const updateLesson = async (id: string, updatedData: any) => {
+  const updateLesson = async (id: any, updatedData: never) => {
     try {
       await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/lessons/${id}`,
@@ -193,7 +197,7 @@ const AdminDashboard = () => {
   };
 
   // Fonction pour supprimer une leçon
-  const deleteLesson = async (id: string) => {
+  const deleteLesson = async (id: any) => {
     Swal.fire({
       title: "Êtes-vous sûr ?",
       text: "Vous allez supprimer cette leçon.",
@@ -227,7 +231,7 @@ const AdminDashboard = () => {
   };
 
   // ✅ Marquer un message comme lu
-  const markContactMessageAsRead = async (id: string) => {
+  const markContactMessageAsRead = async (id: any) => {
     try {
       await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/contact/${id}/read`);
       Swal.fire("Succès", "Le message a été marqué comme lu.", "success");
@@ -238,7 +242,7 @@ const AdminDashboard = () => {
   };
 
   // ✅ Répondre à un message
-  const replyToContactMessage = async (id: string) => {
+  const replyToContactMessage = async (id: any) => {
     const { value: reply } = await Swal.fire({
       title: "Répondre au message",
       input: "textarea",
@@ -258,7 +262,7 @@ const AdminDashboard = () => {
   };
 
   // ✅ Supprimer un message
-  const deleteContactMessage = async (id: string) => {
+  const deleteContactMessage = async (id: any) => {
     Swal.fire({
       title: "Êtes-vous sûr ?",
       text: "Cette action supprimera définitivement le message.",
@@ -346,7 +350,7 @@ const AdminDashboard = () => {
   };
 
   // Fonction pour mettre à jour un article
-  const updateArticle = async (id: string, updatedData: any) => {
+  const updateArticle = async (id: string, updatedData: { id: number; title: string; subtitle: string; image: string; content: string; }) => {
     try {
       await axios.put(
         `${process.env.NEXT_PUBLIC_API_URL}/articles/${id}`,
@@ -383,7 +387,7 @@ const AdminDashboard = () => {
     }
   };
   // Cette fonction a été renommée pour éviter les conflits d'identifiants
-  const initiateReplyToMessage = async (messageId: string) => {
+  const initiateReplyToMessage = async (messageId: any) => {
     try {
       // Afficher une boîte de dialogue pour saisir une réponse
       const { value: reply } = await Swal.fire({
@@ -415,7 +419,7 @@ const AdminDashboard = () => {
     }
   };
 
-  const deleteMessage = async (messageId: string) => {
+  const deleteMessage = async (messageId: any) => {
     try {
       // Confirmation avant de supprimer le message
       const confirmation = await Swal.fire({
@@ -450,7 +454,7 @@ const AdminDashboard = () => {
       );
     }
   };
-  
+
 
   // Fonction pour supprimer un article
   const deleteArticle = async (id: string) => {
@@ -462,158 +466,162 @@ const AdminDashboard = () => {
     }
   };
   // Fonction pour récupérer les commandes
+  // const fetchOrders = async () => {
+  //   try {
+  //     const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/orders`);
+  //     const ordersData = response.data.orders || [];
+
+  //     const ordersWithPayments = await Promise.all(
+  //       ordersData.map(async (order: { paymentId: any; }) => {
+  //         // Utiliser le bon champ pour l'ID de paiement
+  //         const paymentId = order.paymentId; // Si le champ s'appelle autrement, adaptez ici (ex: order.payment_id)
+
+  //         const paymentDetails = paymentId ? await fetchPaymentDetails(paymentId) : null;
+
+  //         return { ...order, payment: paymentDetails };
+  //       })
+  //     );
+
+  //     newFunction(ordersWithPayments);
+  //   } catch (error) {
+  //     console.error("Erreur lors de la récupération des commandes:", error);
+  //     Swal.fire("Erreur", "Impossible de récupérer les commandes.", "error");
+  //   }
+
+  //   function newFunction(ordersWithPayments: any[]) {
+  //     setOrders(ordersWithPayments);
+  //   }
+  // };
+  // Fonction pour récupérer les commandes
   const fetchOrders = async () => {
     try {
       const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/orders`);
       const ordersData = response.data.orders || [];
-  
+
       const ordersWithPayments = await Promise.all(
         ordersData.map(async (order: { paymentId: any; }) => {
           // Utiliser le bon champ pour l'ID de paiement
           const paymentId = order.paymentId; // Si le champ s'appelle autrement, adaptez ici (ex: order.payment_id)
-  
+
           const paymentDetails = paymentId ? await fetchPaymentDetails(paymentId) : null;
-  
+
           return { ...order, payment: paymentDetails };
         })
       );
-  
-      setOrders(ordersWithPayments);
-    } catch (error) { /* ... */ }
+
+      // Set orders directly instead of using a nested function
+      setOrders(ordersWithPayments as never[]);
+    } catch (error) {
+      console.error("Erreur lors de la récupération des commandes:", error);
+      Swal.fire("Erreur", "Impossible de récupérer les commandes.", "error");
+    }
   };
-  
-  const fetchPaymentDetails = async (paymentId: any) => {
+
+  async function fetchPaymentDetails(paymentId: any) {
     if (!paymentId) {
       console.warn("⚠️ ID de paiement invalide:", paymentId);
 
       return null;
     }
-  
+
     try {
       const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations/${paymentId}`); // Assurez-vous d'avoir une route /payments/:id dans votre backend
 
       if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
       return response.json();
-    } catch (error) { /* ... */ }
+    } catch (error) {
+      console.error("Erreur lors de la récupération des détails de paiement:", error);
+      return null;
+    }
+  }
+
+  // Fonction pour afficher l'historique des statuts
+  const showStatusHistory = (orderId: React.SetStateAction<null>) => {
+    setSelectedOrderId(orderId);
+    setIsHistoryDialogOpen(true);
   };
-
-
 
   // Fonction pour mettre à jour le statut d'une commande
-const updateOrderStatus = async (id: any, status: string) => {
-  try {
-    console.log(`Tentative de mise à jour du statut pour la commande ${id} vers ${status}`);
+  const updateOrderStatus = async (id: any, status: string) => {
+    try {
+      console.log(`Tentative de mise à jour du statut pour la commande ${id} vers ${status}`);
 
-    // Demander une note optionnelle pour le changement de statut
-    const { value: notes, isConfirmed } = await Swal.fire({
-      title: "Mise à jour du statut",
-      text: `Voulez-vous changer le statut en "${status}" ?`,
-      icon: "question",
-      input: "textarea",
-      inputLabel: "Notes (optionnel)",
-      inputPlaceholder: "Ajoutez des notes pour ce changement de statut...",
-      showCancelButton: true,
-      confirmButtonText: "Confirmer",
-      cancelButtonText: "Annuler"
-    });
+      // Demander une note optionnelle pour le changement de statut
+      const { value: notes, isConfirmed } = await Swal.fire({
+        title: "Mise à jour du statut",
+        text: `Voulez-vous changer le statut en "${status}" ?`,
+        icon: "question",
+        input: "textarea",
+        inputLabel: "Notes (optionnel)",
+        inputPlaceholder: "Ajoutez des notes pour ce changement de statut...",
+        showCancelButton: true,
+        confirmButtonText: "Confirmer",
+        cancelButtonText: "Annuler"
+      });
 
-    if (!isConfirmed) {
-      console.log("Mise à jour annulée par l'utilisateur");
+      if (!isConfirmed) {
+        console.log("Mise à jour annulée par l'utilisateur");
 
-      return;
-    }
+        return;
+      }
 
-    console.log(`Envoi de la requête avec statut=${status} et notes=${notes || 'aucune'}`);
+      console.log(`Envoi de la requête avec statut=${status} et notes=${notes || 'aucune'}`);
 
-    // Utiliser l'endpoint spécifique pour la mise à jour du statut
-    const response = await axios.put(
-      `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/status`,
-      { status, notes }
-    );
+      // Utiliser l'endpoint spécifique pour la mise à jour du statut
+      const response = await axios.put(
+        `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/status`,
+        { status, notes }
+      );
 
-    console.log("Réponse du serveur:", response.data);
+      console.log("Réponse du serveur:", response.data);
 
-    if (response.status === 200) {
-      // Afficher un message de succès
+      if (response.status === 200) {
+        // Afficher un message de succès
+        Swal.fire({
+          title: "Statut mis à jour !",
+          text: `La commande est maintenant en statut : ${status}`,
+          icon: "success",
+          confirmButtonText: "OK",
+        });
+
+        // Rafraîchir les commandes
+        fetchOrders();
+      } else {
+        console.warn("Réponse inattendue du serveur:", response);
+        throw new Error(`Réponse inattendue: ${response.status}`);
+      }
+    } catch (error) {
+      console.error("Erreur détaillée lors de la mise à jour du statut:", error);
+
+      // Extraire les détails de l'erreur pour un message plus informatif
+      let errorMessage = "Une erreur s'est produite lors de la mise à jour du statut.";
+
+
+      if (axios.isAxiosError(error)) {
+        // La requête a été faite et le serveur a répondu avec un code d'erreur
+        console.error("Détails de l'erreur serveur:", error.response?.data);
+        errorMessage = `Erreur serveur: ${error.response?.status} - ${error.response?.data?.message || 'Erreur inconnue'}`;
+      } else if ((error as any).request) {
+        // La requête a été faite mais aucune réponse n'a été reçue
+        errorMessage = "Aucune réponse du serveur. Vérifiez votre connexion réseau.";
+      } else {
+        // Une erreur s'est produite lors de la configuration de la requête
+        const err = error as Error;
+        errorMessage = `Erreur: ${err.message}`;
+      }
+
       Swal.fire({
-        title: "Statut mis à jour !",
-        text: `La commande est maintenant en statut : ${status}`,
-        icon: "success",
+        title: "Erreur",
+        text: errorMessage,
+        icon: "error",
         confirmButtonText: "OK",
       });
-      
-      // Rafraîchir les commandes
-      fetchOrders();
-    } else {
-      console.warn("Réponse inattendue du serveur:", response);
-      throw new Error(`Réponse inattendue: ${response.status}`);
     }
-  } catch (error) {
-    console.error("Erreur détaillée lors de la mise à jour du statut:", error);
-    
-    // Extraire les détails de l'erreur pour un message plus informatif
-    let errorMessage = "Une erreur s'est produite lors de la mise à jour du statut.";
-    
-    if ((error as AxiosError).response) {
-      // La requête a été faite et le serveur a répondu avec un code d'erreur
-      const axiosError = error as AxiosError;
-
-      console.error("Détails de l'erreur serveur:", axiosError.response?.data);
-      errorMessage = `Erreur serveur: ${axiosError.response?.status} - ${(axiosError.response?.data as any)?.message || 'Erreur inconnue'}`;
-    } else if ((error as AxiosError).request) {
-      // La requête a été faite mais aucune réponse n'a été reçue
-      errorMessage = "Aucune réponse du serveur. Vérifiez votre connexion réseau.";
-    } else {
-      // Une erreur s'est produite lors de la configuration de la requête
-      const err = error as Error;
-
-      errorMessage = `Erreur: ${err.message}`;
-    }
-    
-    Swal.fire({
-      title: "Erreur",
-      text: errorMessage,
-      icon: "error",
-      confirmButtonText: "OK",
-    });
-  }
-};
-  
-  // Fonction pour afficher l'historique des statuts
-  const showStatusHistory = (order: { statusHistory: { date: string | number | Date | dayjs.Dayjs | null | undefined; status: any; notes: any; }[]; }) => {
-    if (!order.statusHistory || order.statusHistory.length === 0) {
-      Swal.fire({
-        title: "Historique des statuts",
-        text: "Aucun historique disponible pour cette commande.",
-        icon: "info",
-      });
-
-      return;
-    }
-  
-    // Formater l'historique des statuts pour l'affichage
-    const historyHtml = order.statusHistory
-      .map((entry: { date: string | number | Date | dayjs.Dayjs | null | undefined; status: any; notes: any; }) => {
-        const date = dayjs(entry.date).format("DD/MM/YYYY HH:mm");
-
-        return `<div class="mb-3 pb-2 border-b">
-          <div class="font-bold text-lg">${entry.status}</div>
-          <div class="text-sm text-gray-500">${date}</div>
-          ${entry.notes ? `<div class="mt-1 text-sm italic">"${entry.notes}"</div>` : ""}
-        </div>`;
-      })
-      .join("");
-  
-    Swal.fire({
-      title: "Historique des statuts",
-      html: `<div class="max-h-80 overflow-y-auto">${historyHtml}</div>`,
-      icon: "info",
-      width: 600,
-    });
   };
+
   // Fonction pour supprimer une commande
-  const deleteOrder = async (id: string) => {
+  const deleteOrder = async (id: any) => {
     Swal.fire({
       title: "Êtes-vous sûr ?",
       text: "Vous allez supprimer cette commande.",
@@ -638,7 +646,7 @@ const updateOrderStatus = async (id: any, status: string) => {
   return (
     <div className="container mx-auto mt-6">
       <h1 className="mb-4 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-pulse text-center">
-        Dashboard Admin {user.pseudo}
+        Dashboard Admin {(user as { pseudo: string }).pseudo}
       </h1>
 
       <p className="mb-6 text-gray-600 dark:text-white text-lg animate-bounce text-center">
@@ -646,7 +654,7 @@ const updateOrderStatus = async (id: any, status: string) => {
       </p>
 
       <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-center animate-slide-in">
-        Bonjour, {user?.prenom || user.pseudo}{' '}
+        Bonjour, {(user as { prenom?: string })?.prenom || (user as { pseudo: string }).pseudo}{' '}
         <FontAwesomeIcon icon={faCrown} size="xl" className="text-yellow-400 animate-spin-slow" />
       </h2>
       <style>{`
@@ -701,102 +709,106 @@ const updateOrderStatus = async (id: any, status: string) => {
   `}</style>
       {/* Gestion des commandes */}
       <div className="mt-8 px-4">
-  <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">Gestion des commandes</h3>
-  <div className="space-y-6">
-    {orders.map((order) => (
-      <div
-        key={order._id}
-        className="border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2"
-      >
-        <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
-          {/* Informations sur la commande */}
-          <div className="flex-1 text-left break-words">
-            <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {order._id}</p>
-            <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
-              Client : {order.lastName ? `${order.firstName} ${order.lastName}` : "Inconnu"}
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
-              Email : {order.email}
-            </p>
-            <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
-              Produit : {order.items?.map((item: { title: any; }) => item.title).join(" • ") || "Aucun"}
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-300">
-              Date : {dayjs(order.orderDate).format("DD/MM/YYYY")}
-            </p>
-            <p className="text-sm text-blue-500 dark:text-blue-300">
-              Paiement : {order.paymentStatus} ({order.paymentMethod})
-            </p>
-            {order.trackingNumber && (
-              <p className="text-sm text-green-600 dark:text-green-400">
-                N° de suivi : {order.trackingNumber}
-              </p>
-            )}
-          </div>
-          
-          {/* Actions pour les commandes */}
-          <div className="flex flex-col gap-2 min-w-[200px]">
-  <Button
-    color="secondary"
-    size="sm"
-    className="w-full"
-    onClick={() => showStatusHistory(order)}
-  >
-    <FontAwesomeIcon icon={faHistory} className="mr-2" /> Historique
-  </Button>
-  {order.status === "Shipped" && (
-    <div className="mt-2 w-full">
-      <Input
-        placeholder="N° de suivi"
-        size="sm"
-        value={order.trackingNumber || ""}
-        onChange={(e) => {
-          const updatedOrder = { ...order, trackingNumber: e.target.value };
+        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">Gestion des commandes</h3>
+        <div className="space-y-6">
+          {orders.map((order) => (
+            <div
+              key={order && typeof order === 'object' && '_id' in order ? (order as { _id: string })._id : undefined}
+              className="border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2"
+            >
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+                {/* Informations sur la commande */}
+                <div className="flex-1 text-left break-words">
+                  <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {(order as { _id: string })._id}</p>
+                  <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
+                    Client : {(order as { lastName?: string, firstName?: string }).lastName ? `${(order as { firstName?: string }).firstName} ${(order as { lastName?: string }).lastName}` : "Inconnu"}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
+                    Email : {(order as { email: string }).email}
+                  </p>
+                  <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
+                    Produit : {(order as { items?: Array<{ title: string }> }).items?.map(item => item.title).join(" • ") || "Aucun"}
+                  </p>
+                  <p className="text-sm text-gray-500 dark:text-gray-300">
+                    Date : {dayjs((order as { orderDate: string }).orderDate).format("DD/MM/YYYY")}
+                  </p>
+                  <p className="text-sm text-blue-500 dark:text-blue-300">
+                    Paiement : {(order as { paymentStatus?: string }).paymentStatus} ({(order as { paymentMethod?: string }).paymentMethod})
+                  </p>
+                  {(order as { trackingNumber?: string }).trackingNumber && (
+                    <p className="text-sm text-green-600 dark:text-green-400">
+                      N° de suivi : {(order as { trackingNumber?: string }).trackingNumber}
+                    </p>
+                  )}
+                </div>
 
-          updatedOrder(order._id, updatedOrder);
-        }}
-      />
-    </div>
-  )}
-</div>
+                {/* Actions pour les commandes */}
+                <div className="flex flex-col gap-2 min-w-[200px]">
+                  <Button
+                    color="secondary"
+                    size="sm"
+                    className="w-full"
+                    onClick={() => showStatusHistory((order as { _id: string })._id as unknown as null)}
+                  >
+                    <FontAwesomeIcon icon={faHistory} className="mr-2" /> Historique
+                  </Button>
+                  {(order as { status?: string }).status === "Shipped" && (
+                    <div className="mt-2 w-full">
+                      <Input
+                        placeholder="N° de suivi"
+                        size="sm"
+                        value={(order as { trackingNumber?: string }).trackingNumber || ""}
+                        onChange={(e) => {
+                          const updatedOrder = {
+                            ...order as { _id: string; trackingNumber?: string },
+                            trackingNumber: e.target.value
+                          };
+
+                          // TODO: Implement updateOrder function or use appropriate update method
+                          console.log('Order update requested:', (order as { _id: string })._id, updatedOrder);
+                        }}
+                      />
+                    </div>
+                  )}
+                </div>
+              </div>
+
+              {/* Composant de progression */}
+              <div className="mt-4 mb-2 w-full">
+                <ProgressionCommande statut={(order as { status?: string }).status || "Enregistree"} />
+              </div>
+
+              {/* Actions pour les statuts */}
+              <div className="flex flex-wrap gap-2 mt-3">
+                <select
+                  className="p-2 border rounded-md bg-cream dark:bg-gray-800 text-gray-800 dark:text-white flex-grow"
+                  value="" // Reset à chaque changement
+                  onChange={(e) => {
+                    if (e.target.value) {
+                      updateOrderStatus((order as { _id: string })._id, e.target.value);
+                      e.target.value = ""; // Reset après sélection
+                    }
+                  }}
+                >
+                  <option value="">Changer le statut...</option>
+                  {(order as { status?: string }).status !== "Pending" && <option value="Pending">Enregistrée</option>}
+                  {(order as { status?: string }).status !== "Processing" && <option value="Processing">En préparation</option>}
+                  {(order as { status?: string }).status !== "Shipped" && <option value="Shipped">Expédiée</option>}
+                  {(order as { status?: string }).status !== "Delivered" && <option value="Delivered">Livrée</option>}
+                  {(order as { status?: string }).status !== "Cancelled" && <option value="Cancelled">Annulée</option>}
+                </select>
+
+                <Button
+                  color="danger"
+                  onClick={() => deleteOrder((order as { _id: string })._id)}
+                >
+                  <FontAwesomeIcon icon={faTrash} /> Supprimer
+                </Button>
+              </div>
+            </div>
+          ))}
         </div>
-        
-        {/* Composant de progression */}
-        <div className="mt-4 mb-2 w-full">
-          <ProgressionCommande statut={order.status || "Enregistree"} />
-        </div>
-        
-        {/* Actions pour les statuts */}
-        <div className="flex flex-wrap gap-2 mt-3">
-  <select 
-    className="p-2 border rounded-md bg-cream dark:bg-gray-800 text-gray-800 dark:text-white flex-grow"
-    value="" // Reset à chaque changement
-    onChange={(e) => {
-      if (e.target.value) {
-        updateOrderStatus(order._id, e.target.value);
-        e.target.value = ""; // Reset après sélection
-      }
-    }}
-  >
-    <option value="">Changer le statut...</option>
-    {order.status !== "Pending" && <option value="Pending">Enregistrée</option>}
-    {order.status !== "Processing" && <option value="Processing">En préparation</option>}
-    {order.status !== "Shipped" && <option value="Shipped">Expédiée</option>}
-    {order.status !== "Delivered" && <option value="Delivered">Livrée</option>}
-    {order.status !== "Cancelled" && <option value="Cancelled">Annulée</option>}
-  </select>
-  
-  <Button
-    color="danger"
-    onClick={() => deleteOrder(order._id)}
-  >
-    <FontAwesomeIcon icon={faTrash} /> Supprimer
-  </Button>
-</div>
       </div>
-    ))}
-  </div>
-</div>
 
       {/* Gestion des messages de contact */}
       <div className="mt-8 px-4">
@@ -814,26 +826,26 @@ const updateOrderStatus = async (id: any, status: string) => {
           </TableHeader>
           <TableBody>
             {messages.map((contactMsg, index) => (
-              <TableRow key={contactMsg._id || index}>
-                <TableCell>{contactMsg.nom}</TableCell>
-                <TableCell>{contactMsg.email}</TableCell>
-                <TableCell>{contactMsg.message}</TableCell>
-                <TableCell>{dayjs(contactMsg.date).format("DD/MM/YYYY HH:mm")}</TableCell>
+              <TableRow key={(contactMsg as { _id?: string })._id || index}>
+                <TableCell>{(contactMsg as { nom?: string }).nom || 'Unknown'}</TableCell>
+                <TableCell>{(contactMsg as { email?: string }).email}</TableCell>
+                <TableCell>{(contactMsg as { message?: string }).message}</TableCell>
+                <TableCell>{dayjs((contactMsg as { date?: string }).date || new Date()).format("DD/MM/YYYY HH:mm")}</TableCell>
                 <TableCell>
                   <Button
-                    color={contactMsg.lu ? "success" : "secondary"}
-                    onClick={() => markContactMessageAsRead(contactMsg._id)}
+                    color={(contactMsg as { lu?: boolean }).lu ? "success" : "secondary"}
+                    onClick={() => markContactMessageAsRead((contactMsg as { _id: string })._id)}
                   >
-                    {contactMsg.lu ? "✔ Lu" : "📩 Non lu"}
+                    {(contactMsg as { lu?: boolean }).lu ? "✔ Lu" : "📩 Non lu"}
                   </Button>
                 </TableCell>
                 <TableCell>
-                  <Button color="primary" onClick={() => replyToContactMessage(contactMsg._id)}>
+                  <Button color="primary" onClick={() => replyToContactMessage((contactMsg as { _id: string })._id)}>
                     <FontAwesomeIcon icon={faReply} /> Répondre
                   </Button>
                 </TableCell>
                 <TableCell>
-                  <Button color="danger" onClick={() => deleteContactMessage(contactMsg._id)}>
+                  <Button color="danger" onClick={() => deleteContactMessage((contactMsg as { _id: string })._id)}>
                     <FontAwesomeIcon icon={faTrash} /> Supprimer
                   </Button>
                 </TableCell>
@@ -849,28 +861,28 @@ const updateOrderStatus = async (id: any, status: string) => {
         <div className="space-y-4">
           {users.map((user) => (
             <div
-              key={user._id}
+              key={user && typeof user === 'object' && '_id' in user ? (user as { _id: string })._id : undefined}
               className="border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-4"
             >
               <div className="flex flex-col items-center text-center break-words">
-                <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {user._id}</p>
-                <p className="font-bold text-lg truncate">Pseudo : {user.pseudo}</p>
+                <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">ID : {(user as { _id: string })._id}</p>
+                <p className="font-bold text-lg truncate">Pseudo : {(user as { pseudo: string }).pseudo}</p>
                 <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
-                  Email : {user.email}
+                  Email : {(user as { email: string }).email}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
-                  Courriel: {user.email}
+                  Courriel: {(user as { email: string }).email}
                 </p>
-                <p className="text-sm text-gray-700 dark:text-gray-400">Rôle : {user.role}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-400">Rôle : {(user as { role: string }).role}</p>
               </div>
               <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 w-full sm:justify-center">
-                {user.email !== "virginie.ayivor@yahoo.fr" && (
+                {(user as { email: string }).email !== "virginie.ayivor@yahoo.fr" && (
                   <Button
-                    color={user.role === "admin" ? "warning" : "success"}
+                    color={(user as { role: string }).role === "admin" ? "warning" : "success"}
                     className="w-full sm:w-auto"
-                    onClick={() => promoteToAdminOrUser(user._id, user.role)}
+                    onClick={() => promoteToAdminOrUser((user as any)._id, (user as any).role)}
                   >
-                    {user.role === "admin" ? "Rétrograder en User" : "Promouvoir"}
+                    {(user as { role: string }).role === "admin" ? "Rétrograder en User" : "Promouvoir"}
                   </Button>
                 )}
 
@@ -888,8 +900,8 @@ const updateOrderStatus = async (id: any, status: string) => {
                 <Button
                   color="danger"
                   className="w-full sm:w-auto"
-                  disabled={user.email === "virginie.ayivor@yahoo.fr"}
-                  onClick={() => deleteUser(user._id, user.email)}
+                  disabled={typeof user === 'object' && 'email' in user && (user as { email: string }).email === "virginie.ayivor@yahoo.fr"}
+                  onClick={() => deleteUser((user as any)._id, (user as { email: string }).email)}
                 >
                   <FontAwesomeIcon icon={faTrash} /> Supprimer
                 </Button>
@@ -906,33 +918,33 @@ const updateOrderStatus = async (id: any, status: string) => {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           {lessons.map((lesson) => (
             <div
-              key={lesson._id}
+              key={(lesson as any)._id}
               className="col-span-1 border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col"
             >
               <div className="card-header mb-2 text-center">
-                <p className="font-bold text-lg truncate">{lesson.title}</p>
+                <p className="font-bold text-lg truncate">{(lesson as { title: string }).title}</p>
                 <p className="text-sm text-gray-500 dark:text-gray-300 truncate max-w-full overflow-hidden">
-                  ID : {lesson._id}
+                  ID : {(lesson as any)._id}
                 </p>
               </div>
               <div className="card-body mb-2 text-center">
-                <p className="text-sm text-gray-700 dark:text-gray-400 mb-2">{lesson.content}</p>
+                <p className="text-sm text-gray-700 dark:text-gray-400 mb-2">{(lesson as { content: string }).content}</p>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
-                  Date: {dayjs(lesson.date).format("DD/MM/YYYY")}
+                  Date: {dayjs((lesson as any).date).format("DD/MM/YYYY")}
                 </p>
               </div>
               <div className="card-footer mt-4 flex flex-col sm:flex-row justify-between gap-2">
                 <Button
                   color="primary"
                   className="w-full sm:w-auto"
-                  onClick={() => updateLesson(lesson._id, lesson)}
+                  onClick={() => updateLesson((lesson as any)._id?.toString() || '', lesson)}
                 >
                   <FontAwesomeIcon icon={faEdit} /> Modifier
                 </Button>
                 <Button
                   color="danger"
                   className="w-full sm:w-auto"
-                  onClick={() => deleteLesson(lesson._id)}
+                  onClick={() => deleteLesson((lesson as any)._id?.toString() || '')}
                 >
                   <FontAwesomeIcon icon={faTrash} /> Supprimer
                 </Button>
@@ -1007,15 +1019,15 @@ const updateOrderStatus = async (id: any, status: string) => {
                 onClick={() =>
                   setShowContent((prev) => ({
                     ...prev,
-                    [article.id]: !prev[article.id],
+                    [article.id.toString()]: !Boolean(prev[article.id.toString() as keyof typeof prev]),
                   }))
                 }
               >
-                {showContent[article.id]
+                {showContent[article.id as keyof typeof showContent]
                   ? "Masquer le contenu"
                   : "Voir le contenu"}
               </Button>
-              {showContent[article.id] && <p className="text-sm text-gray-600">{article.content}</p>}
+              {showContent[article.id as keyof typeof showContent] && <p className="text-sm text-gray-600">{article.content}</p>}
             </div>
             <div className="card-footer mt-4 flex flex-col sm:flex-row justify-between gap-2">
               <Button
@@ -1090,16 +1102,16 @@ const updateOrderStatus = async (id: any, status: string) => {
 
           <TableBody>
             {messages.map((message, index) => (
-              <TableRow key={message._id || index}>
-                <TableCell>{message.pseudo}</TableCell>
-                <TableCell>{message.message}</TableCell>
+              <TableRow key={(message as { _id?: string })?._id || index}>
+                <TableCell>{(message as { pseudo?: string }).pseudo || 'Unknown'}</TableCell>
+                <TableCell>{(message as { message?: string }).message || 'No message'}</TableCell>
                 <TableCell>
-                  {dayjs(message.date).format("DD/MM/YYYY HH:mm")}
+                  {dayjs((message as { date?: string }).date || new Date()).format("DD/MM/YYYY HH:mm")}
                 </TableCell>
                 <TableCell>
                   <Button
                     color="danger"
-                    onClick={() => deleteMessage(message._id)}
+                    onClick={() => deleteMessage((message as { _id?: string })?._id)}
                   >
                     <FontAwesomeIcon icon={faTrash} /> Supprimer
                   </Button>
@@ -1107,7 +1119,7 @@ const updateOrderStatus = async (id: any, status: string) => {
                 <TableCell>
                   <Button
                     color="primary"
-                    onClick={() => initiateReplyToMessage(message._id)}
+                    onClick={() => initiateReplyToMessage((message as { _id?: string })?._id)}
                   >
                     <FontAwesomeIcon icon={faReply} /> Répondre
                   </Button>
@@ -1115,7 +1127,7 @@ const updateOrderStatus = async (id: any, status: string) => {
                 <TableCell>
                   <Button
                     color="success"
-                    onClick={() => markMessageAsRead(message._id)}
+                    onClick={() => markMessageAsRead((message as { _id?: string })?._id)}
                   >
                     <FontAwesomeIcon icon={faCheck} /> Lu
                   </Button>
@@ -1125,12 +1137,16 @@ const updateOrderStatus = async (id: any, status: string) => {
           </TableBody>
         </Table>
       </motion.div>
+
+      {/* Intégration du composant de dialogue pour l'historique des commandes */}
+      <OrderHistoryDialog
+        isOpen={isHistoryDialogOpen}
+        onClose={() => setIsHistoryDialogOpen(false)}
+        orderId={selectedOrderId || ''}
+      />
     </div>
   );
 };
 
 export default AdminDashboard;
-function setLoading(arg0: boolean) {
-  throw new Error("Function not implemented.");
-}
 

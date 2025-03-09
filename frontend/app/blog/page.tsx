@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
@@ -198,8 +199,8 @@ export default function BlogPage() {
               {categories.map((cat) => (
                 <SelectItem
                   key={cat}
-                  value={cat}
                   className="dark:text-white dark:hover:bg-gray-700"
+                  value={cat}
                 >
                   {cat}
                 </SelectItem>
@@ -234,10 +235,10 @@ export default function BlogPage() {
             <motion.div
               key={blog._id}
               animate={{ opacity: 1, scale: 1 }}
+              className="h-full"
               initial={{ opacity: 0, scale: 0.95 }}
               transition={{ duration: 0.4 }}
               whileHover={{ scale: 1.03 }}
-              className="h-full"
             >
               <Card className="shadow-xl h-full bg-cream dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl border border-transparent dark:border-gray-700 transition-shadow duration-300">
                 <div className="relative h-48 w-full overflow-hidden">
@@ -299,8 +300,8 @@ export default function BlogPage() {
             <PaginationContent>
               <PaginationItem>
                 <PaginationPrevious
-                  onClick={() => paginate(page - 1)}
                   className={page === 1 ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-violet-100 dark:hover:bg-violet-900/30"}
+                  onClick={() => paginate(page - 1)}
                 />
               </PaginationItem>
 
@@ -312,12 +313,12 @@ export default function BlogPage() {
                 ) : (
                   <PaginationItem key={`page-${pageNum}`}>
                     <PaginationLink
-                      onClick={() => paginate(pageNum as number)}
-                      isActive={pageNum === page}
                       className={pageNum === page
                         ? "bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800"
                         : "hover:bg-violet-100 dark:hover:bg-violet-900/30 cursor-pointer"
                       }
+                      isActive={pageNum === page}
+                      onClick={() => paginate(pageNum as number)}
                     >
                       {pageNum}
                     </PaginationLink>
@@ -327,8 +328,8 @@ export default function BlogPage() {
 
               <PaginationItem>
                 <PaginationNext
-                  onClick={() => paginate(page + 1)}
                   className={page === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-violet-100 dark:hover:bg-violet-900/30"}
+                  onClick={() => paginate(page + 1)}
                 />
               </PaginationItem>
             </PaginationContent>

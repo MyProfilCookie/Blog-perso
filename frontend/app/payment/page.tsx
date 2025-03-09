@@ -5,15 +5,12 @@
 /* eslint-disable prettier/prettier */
 "use client";
 
-import React, { useState, useEffect, use } from "react";
-import { Button, Input, Avatar, Tooltip, user } from "@nextui-org/react";
+import React, { useState, useEffect } from "react";
+import { Button, Avatar } from "@nextui-org/react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import mongoose from "mongoose";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faInfoCircle, faHeadset, faClock, faCheckCircle, faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
 
 
@@ -414,8 +411,8 @@ const PaymentPage = () => {
                     <p className="text-gray-500 dark:text-white"><strong>Prénom :</strong> {user.prenom}</p>
                     <p className="text-gray-500 dark:text-white"><strong>Pseudo :</strong> {user.pseudo}</p>
                     <p className="text-gray-500 dark:text-white">
-  <strong>Adresse de livraison :</strong> {`${user.deliveryAddress.street}, ${user.deliveryAddress.city}, ${user.deliveryAddress.postalCode}, ${user.deliveryAddress.country}`}
-</p>
+                        <strong>Adresse de livraison :</strong> {`${user.deliveryAddress.street}, ${user.deliveryAddress.city}, ${user.deliveryAddress.postalCode}, ${user.deliveryAddress.country}`}
+                    </p>
                     <p className="text-gray-500 dark:text-white"><strong>Email :</strong> {user.email}</p>
                     <p className="text-gray-500 dark:text-white"><strong>Téléphone :</strong> {user.phone}</p>
                 </motion.div>
@@ -452,9 +449,9 @@ const PaymentPage = () => {
                         deliveryCost={deliveryCost}
                     />
                 </Elements>
-      </motion.div>
-    </motion.div>
-  );
+            </motion.div>
+        </motion.div>
+    );
 };
 
 export default PaymentPage;

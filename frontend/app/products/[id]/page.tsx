@@ -91,9 +91,9 @@ export default function ProductPage() {
       {/* Conteneur principal */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
+        className="max-w-3xl w-full bg-transparent flex flex-col items-center text-center"
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
-        className="max-w-3xl w-full bg-transparent flex flex-col items-center text-center"
       >
         <motion.h2
           animate={{ opacity: 1, y: 0 }}
@@ -167,9 +167,9 @@ export default function ProductPage() {
         {/* Section Détails supplémentaires */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
+          className="w-full mt-8 bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md"
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5 }}
-          className="w-full mt-8 bg-gray-100 dark:bg-gray-800 p-6 rounded-lg shadow-md"
         >
           <h3 className="text-2xl font-bold text-gray-700 dark:text-white flex items-center mb-4">
             <Info className="mr-2 text-blue-500" /> Détails du produit

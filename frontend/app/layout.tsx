@@ -5,6 +5,7 @@ import clsx from "clsx";
 import { Toaster } from "sonner";
 
 import { Providers } from "./providers";
+
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
@@ -55,15 +56,15 @@ export default function RootLayout({
           </div>
           {/* Intégration du composant Toaster de Sonner avec les thèmes sombre/clair */}
           <Toaster
+            closeButton
+            richColors
+            position="bottom-right"
             theme={
               typeof window !== 'undefined' &&
                 window.document.documentElement.classList.contains('dark')
                 ? 'dark'
                 : 'light'
             }
-            position="bottom-right"
-            closeButton
-            richColors
           />
         </Providers>
       </body>

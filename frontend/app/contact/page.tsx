@@ -15,8 +15,8 @@ export default function ContactPage() {
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
-  const [user, setUser] = useState(null);
-  const [loadingUser, setLoadingUser] = useState(true);
+  const [, setUser] = useState(null);
+  const [, setLoadingUser] = useState(true);
   const router = useRouter();
 
   useEffect(() => {

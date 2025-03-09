@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable prettier/prettier */
@@ -11,8 +12,6 @@ import {
   Card,
   CardBody,
   Button,
-  Input,
-  Textarea,
   Image,
 } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -24,8 +23,7 @@ import { GithubIcon } from "@/components/icons";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import HeaderAutisme from "@/components/headerAutisme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faClock, faCrown, faEnvelope, faMapMarkerAlt, faMoon, faPhone, faQuestionCircle, faSun, faUser } from "@fortawesome/free-solid-svg-icons"; // Import des icônes
-import Contact from "./contact";
+import { faClock, faCrown, faEnvelope, faMapMarkerAlt, faPhone, faQuestionCircle, faUser } from "@fortawesome/free-solid-svg-icons"; // Import des icônes
 
 
 export default function Home() {
@@ -118,13 +116,6 @@ export default function Home() {
   };
 
   // Fonction pour revenir à l'image précédente
-  const handlePreviousImage = (index: number) => {
-    const newIndex = (imageIndices[index] - 1 + teamMembers.length) % teamMembers.length;
-    const newImageIndices = [...imageIndices];
-
-    newImageIndices[index] = newIndex;
-    setImageIndices(newImageIndices);
-  };
 
   const teamGroups = [];
 
@@ -139,9 +130,6 @@ export default function Home() {
 
 
 
-  function setIsDarkMode(arg0: boolean): void {
-    throw new Error("Function not implemented.");
-  }
 
   return (
     <section className="flex flex-col items-center justify-center w-full gap-8 py-12 md:py-16">

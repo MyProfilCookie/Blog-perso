@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 "use client";
 
 import {
@@ -42,7 +43,7 @@ export default function LessonOfTheDay() {
   const today = dayjs().format("YYYY-MM-DD");
   const [selectedDate, setSelectedDate] = useState(today);
   const [lessonOfTheDay, setLessonOfTheDay] = useState<LessonData | null>(null);
-  const [error, setError] = useState<string | null>(null);
+  const [, setError] = useState<string | null>(null);
   const [userName, setUserName] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const router = useRouter();
@@ -119,7 +120,7 @@ export default function LessonOfTheDay() {
     if (isLoggedIn) fetchLessonOfTheDay(selectedDate);
   }, [selectedDate, isLoggedIn]);
 
-  const [ratings, setRatings] = useState<{
+  const [, setRatings] = useState<{
     Facile: number;
     Moyen: number;
     Difficile: number;
@@ -239,9 +240,9 @@ export default function LessonOfTheDay() {
                             | bigint
                             | boolean
                             | ReactElement<
-                                any,
-                                string | JSXElementConstructor<any>
-                              >
+                              any,
+                              string | JSXElementConstructor<any>
+                            >
                             | Iterable<ReactNode>
                             | ReactPortal
                             | Promise<AwaitedReactNode>

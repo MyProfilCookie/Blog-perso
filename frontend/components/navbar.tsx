@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable padding-line-between-statements */
+/* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 "use client";
 import React, { useState, useRef, useEffect } from "react";
@@ -46,17 +49,17 @@ import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { AutismLogo } from "@/components/icons";
 
-// Définir le type pour l'utilisateur
+// Type definition for user
 type User = {
   id: string;
   pseudo: string;
   email: string;
   avatar?: string;
   role: string;
-  token?: string; // Ajouté pour la vérification du token
+  token?: string;
 };
 
-// Fonction pour obtenir l'icône appropriée pour chaque élément de navigation
+// Function to get the appropriate icon for each navigation item
 const getIconForNavItem = (label: string) => {
   const iconMap: Record<string, any> = {
     Accueil: faHome,
@@ -69,39 +72,33 @@ const getIconForNavItem = (label: string) => {
     FAQ: faQuestionCircle,
   };
 
-  return iconMap[label] || faInfoCircle; // Icône par défaut si aucune correspondance
+  return iconMap[label] || faInfoCircle; // Default icon if no match
 };
 
-// Fonction pour vérifier la validité du token
+// Function to verify token validity
 const verifyToken = async (token: string): Promise<boolean> => {
-  // Vérification simple pour éviter les appels API inutiles
   if (!token) return false;
 
   try {
-    // Remplacer par votre endpoint API réel pour vérifier le token
     const response = await fetch("/api/auth/verify-token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`, // Ajouter le token dans les headers pour sécurité
+        Authorization: `Bearer ${token}`,
       },
       body: JSON.stringify({ token }),
-      // Ajouter ces options pour s'assurer que les cookies sont envoyés
       credentials: "include",
     });
 
     if (!response.ok) {
       console.warn("Token verification failed with status:", response.status);
-
       return false;
     }
 
     const data = await response.json();
-
     return data.valid === true;
   } catch (error) {
-    console.error("Erreur lors de la vérification du token:", error);
-
+    console.error("Error verifying token:", error);
     return false;
   }
 };
@@ -110,12 +107,14 @@ export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isVerifyingToken, setIsVerifyingToken] = useState(false); // Flag pour éviter les vérifications multiples
+  const [isVerifyingToken, setIsVerifyingToken] = useState(false);
+  const [orderCount, setOrderCount] = useState<number>(0);
+  const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
 
-  // Couleurs pour l'animation des avatars
+  // Colors for avatar animation
   const adminColors = ["#FF0000", "#FF3333", "#FF6666", "#FF9999"];
   const userColors = ["#0066FF", "#3399FF", "#66CCFF", "#99DDFF"];
   const guestColors = ["#000000", "#333333", "#666666", "#999999"];
@@ -127,20 +126,12 @@ export const Navbar = () => {
     setMounted(true);
   }, []);
 
-  const toggleTheme = () => {
-    if (resolvedTheme === "dark") {
-      setTheme("light");
-    } else {
-      setTheme("dark");
-    }
-  };
+  // Toggle theme function
 
   // Auto theme updater based on time of day
   useEffect(() => {
-    // Only run if mounted
     if (!mounted) return;
 
-    // Function to update theme based on time
     const updateThemeByTime = () => {
       if (localStorage.getItem("themeMode") === "auto") {
         const currentHour = new Date().getHours();
@@ -153,22 +144,15 @@ export const Navbar = () => {
           document.documentElement.classList.add("dark");
           localStorage.setItem("theme", "dark");
         }
-
-        // Force re-render
-        setAvatarColorIndex((prev) => prev);
       }
     };
 
-    // Update theme immediately
     updateThemeByTime();
-
-    // Set interval to check every minute
     const interval = setInterval(updateThemeByTime, 60000);
-
     return () => clearInterval(interval);
   }, [mounted]);
 
-  // Animation des couleurs d'avatar
+  // Avatar color animation
   useEffect(() => {
     const colorInterval = setInterval(() => {
       setAvatarColorIndex((prevIndex) => (prevIndex + 1) % 4);
@@ -177,12 +161,7 @@ export const Navbar = () => {
     return () => clearInterval(colorInterval);
   }, []);
 
-  // Ajout d'un effet de débogage pour vérifier que l'index change bien
-  useEffect(() => {
-    console.log("Avatar color index changed:", avatarColorIndex);
-  }, [avatarColorIndex]);
-
-  // ✅ Ferme le menu quand on clique à l'extérieur
+  // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
@@ -200,10 +179,9 @@ export const Navbar = () => {
   }, [isMenuOpen]);
 
   /**
-   * Gérer un token invalide
+   * Handle invalid token
    */
   const handleTokenInvalid = () => {
-    // Éviter de montrer plusieurs alertes
     if (isVerifyingToken) return;
 
     Swal.fire({
@@ -217,7 +195,6 @@ export const Navbar = () => {
       cancelButtonText: "Annuler",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Effacer les données utilisateur invalides
         const userId = user?.id;
 
         localStorage.removeItem("user");
@@ -227,22 +204,18 @@ export const Navbar = () => {
         setUser(null);
         setCartItemsCount(0);
 
-        // Déclencher l'événement de mise à jour
         const event = new CustomEvent("userUpdate");
-
         window.dispatchEvent(event);
 
-        // Rediriger vers la page de connexion
         router.push("/users/login");
       }
     });
   };
 
   /**
-   * Vérifier la validité du token
+   * Check token validity
    */
   const checkTokenValidity = async () => {
-    // Éviter les vérifications multiples
     if (isVerifyingToken) return;
 
     setIsVerifyingToken(true);
@@ -257,7 +230,6 @@ export const Navbar = () => {
         if (!token) {
           console.warn("No token found in user data");
           setIsVerifyingToken(false);
-
           return;
         }
 
@@ -275,9 +247,7 @@ export const Navbar = () => {
   };
 
   /**
-   * Récupérer l'utilisateur et son panier depuis le stockage local
-   * Vérifier la validité du token uniquement lors de l'initialisation
-   * et non à chaque rafraichissement
+   * Get user and cart from local storage
    */
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -285,31 +255,24 @@ export const Navbar = () => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-
         setUser(parsedUser);
 
         const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
-
         if (userCart) {
           setCartItemsCount(JSON.parse(userCart).length);
         }
-
-        // Vérification initiale du token - commentez cette ligne si vous voulez désactiver temporairement
-        // checkTokenValidity();
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
     }
 
-    // Vérifier périodiquement la validité du token (toutes les 30 minutes)
-    // Prolonger l'intervalle pour éviter des vérifications trop fréquentes
+    // Check token validity every 30 minutes
     const intervalId = setInterval(checkTokenValidity, 30 * 60 * 1000);
-
     return () => clearInterval(intervalId);
   }, []);
 
   /**
-   * Mettre à jour l'utilisateur et le panier lorsqu'un événement "userUpdate" est déclenché
+   * Update user and cart when a "userUpdate" event is triggered
    */
   useEffect(() => {
     const handleUserUpdate = () => {
@@ -318,11 +281,9 @@ export const Navbar = () => {
       if (storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser);
-
           setUser(parsedUser);
 
           const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
-
           setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
         } catch (error) {
           console.error("Error parsing user data during update:", error);
@@ -334,14 +295,13 @@ export const Navbar = () => {
     };
 
     window.addEventListener("userUpdate", handleUserUpdate);
-
     return () => {
       window.removeEventListener("userUpdate", handleUserUpdate);
     };
   }, []);
 
   /**
-   * Déconnexion de l'utilisateur
+   * User logout
    */
   const handleLogout = () => {
     Swal.fire({
@@ -349,7 +309,7 @@ export const Navbar = () => {
       text: "Vous allez être déconnecté(e) et votre panier sera vidé.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#4169E1", // Royal Blue au lieu de vert #4CAF50
+      confirmButtonColor: "#4169E1",
       cancelButtonColor: "#FFB74D",
       confirmButtonText: "Oui, déconnectez-moi !",
       cancelButtonText: "Annuler",
@@ -365,7 +325,6 @@ export const Navbar = () => {
         setCartItemsCount(0);
 
         const event = new CustomEvent("userUpdate");
-
         window.dispatchEvent(event);
 
         Swal.fire({
@@ -381,7 +340,7 @@ export const Navbar = () => {
   };
 
   /**
-   * Redirection vers la page de connexion ou d'inscription
+   * Redirect to login or signup page
    */
   const handleLoginRedirect = () => {
     Swal.fire({
@@ -400,6 +359,86 @@ export const Navbar = () => {
     });
   };
 
+  /**
+   * Fetch order count from API
+   */
+  const fetchOrderCount = async () => {
+    if (!user || !user.id || isLoadingOrders) return;
+
+    setIsLoadingOrders(true);
+
+    try {
+      const token = user.token || localStorage.getItem('token') || localStorage.getItem('userToken');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+
+      const response = await fetch(`${apiUrl}/users/${user.id}/orders/count`, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+
+        // Handle different response formats
+        let count = 0;
+        if (typeof data === 'number') {
+          count = data;
+        } else if (data && typeof data.count === 'number') {
+          count = data.count;
+        } else if (data && typeof data.updates === 'number') {
+          count = data.updates;
+        } else if (Array.isArray(data)) {
+          count = data.length;
+        } else if (typeof data === 'string') {
+          count = parseInt(data, 10) || 0;
+        }
+
+        setOrderCount(count);
+      }
+    } catch (error) {
+      console.error("Error fetching order count:", error);
+    } finally {
+      setIsLoadingOrders(false);
+    }
+  };
+
+  /**
+   * Mark order updates as read
+   */
+  const markOrderUpdatesAsRead = async () => {
+    if (!user || !user.id) return;
+
+    try {
+      const token = user.token || localStorage.getItem('token') || localStorage.getItem('userToken');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
+
+      await fetch(`${apiUrl}/users/${user.id}/orders/updates/read`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        }
+      });
+
+      setOrderCount(0);
+    } catch (error) {
+      console.error("Error marking updates as read:", error);
+    }
+  };
+
+  // Fetch order count when user is loaded or changes
+  useEffect(() => {
+    if (user && user.id) {
+      fetchOrderCount();
+
+      // Set up interval to refresh order count
+      const intervalId = setInterval(fetchOrderCount, 60000); // Check every minute
+      return () => clearInterval(intervalId);
+    }
+  }, [user]);
   return (
     <NextUINavbar
       className="dark:bg-gray-900 bg-cream"
@@ -634,6 +673,34 @@ export const Navbar = () => {
                           </NextLink>
                         </li>
                         <li>
+                          <NextLink
+                            className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                            href="/orders"
+                            onClick={() => {
+                              setIsMenuOpen(false);
+                              markOrderUpdatesAsRead();
+                            }}
+                          >
+                            <FontAwesomeIcon
+                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                              icon={faNewspaper}
+                            />
+                            <span className="flex-1">Mes commandes</span>
+                            {orderCount > 0 ? (
+                              <Badge
+                                className="animate-pulse"
+                                color="danger"
+                              >
+                                {orderCount}
+                              </Badge>
+                            ) : (
+                              <span className="text-xs text-gray-400">
+                                {orderCount === 0 ? "(0)" : "..."}
+                              </span>
+                            )}
+                          </NextLink>
+                        </li>
+                        <li>
                           <button
                             className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
                             onClick={() => {
@@ -787,8 +854,8 @@ export const Navbar = () => {
                       : userColors[avatarColorIndex],
                   borderWidth: "3px",
                   boxShadow: `0 0 8px ${user?.role === "admin"
-                      ? adminColors[avatarColorIndex]
-                      : userColors[avatarColorIndex]
+                    ? adminColors[avatarColorIndex]
+                    : userColors[avatarColorIndex]
                     }`,
                 }}
                 onClick={() => router.push("/profile")}
@@ -801,7 +868,7 @@ export const Navbar = () => {
                 <DropdownTrigger>
                   <Button
                     aria-label="Menu utilisateur"
-                    className="bg-transparent"
+                    className="bg-transparent relative"
                   >
                     <Avatar
                       isBordered
@@ -816,14 +883,23 @@ export const Navbar = () => {
                             : userColors[avatarColorIndex],
                         borderWidth: "3px",
                         boxShadow: `0 0 8px ${user?.role === "admin"
-                            ? adminColors[avatarColorIndex]
-                            : userColors[avatarColorIndex]
+                          ? adminColors[avatarColorIndex]
+                          : userColors[avatarColorIndex]
                           }`,
                       }}
                     />
                     <span className="ml-2 hidden xl:inline dark:text-white">
                       {user?.pseudo || "Utilisateur"}
                     </span>
+                    {/* Badge des mises à jour de commandes */}
+                    {orderCount > 0 && (
+                      <Badge
+                        className="absolute -top-2 -right-2"
+                        color="danger"
+                      >
+                        {orderCount}
+                      </Badge>
+                    )}
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
@@ -834,6 +910,31 @@ export const Navbar = () => {
                   <DropdownItem onClick={() => router.push("/shop")}>
                     <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
                     Shop
+                  </DropdownItem>
+                  <DropdownItem
+                    className="relative"
+                    startContent={<FontAwesomeIcon className="text-blue-500" icon={faNewspaper} />}
+                    onClick={() => {
+                      markOrderUpdatesAsRead();
+                      router.push("/orders");
+                    }}
+                  >
+                    <div className="flex items-center w-full justify-between">
+                      <div>Mes commandes</div>
+                      {orderCount > 0 ? (
+                        <Badge
+                          className="ml-2 text-xs animate-pulse"
+                          color="danger"
+                          size="sm"
+                        >
+                          {orderCount}
+                        </Badge>
+                      ) : (
+                        <span className="text-xs text-gray-400 ml-2">
+                          {orderCount === 0 ? "(0)" : "..."}
+                        </span>
+                      )}
+                    </div>
                   </DropdownItem>
                   <DropdownItem onClick={() => router.push("/controle")}>
                     <FontAwesomeIcon className="mr-2" icon={faNewspaper} />

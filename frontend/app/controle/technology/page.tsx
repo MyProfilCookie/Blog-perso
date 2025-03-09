@@ -1,3 +1,5 @@
+/* eslint-disable react/jsx-sort-props */
+/* eslint-disable no-console */
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
@@ -241,7 +243,7 @@ const TechPage: React.FC = () => {
       </motion.div>
 
       {finalScore !== null && (
-        <motion.div 
+        <motion.div
           className="p-6 mt-8 text-center bg-cream rounded-lg shadow-lg"
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
@@ -251,10 +253,10 @@ const TechPage: React.FC = () => {
             Résultat: {finalScore.toFixed(1)}% {emoji}
           </h2>
           <p className="mt-2 text-gray-600">
-            {finalScore === 100 ? "Parfait ! Vous maîtrisez ces concepts technologiques." : 
-             finalScore >= 80 ? "Excellent travail ! Vous avez une bonne compréhension des concepts." :
-             finalScore >= 50 ? "Bon effort. Continuez à pratiquer pour améliorer vos compétences." :
-             "N'abandonnez pas ! Revoyez les concepts et réessayez."}
+            {finalScore === 100 ? "Parfait ! Vous maîtrisez ces concepts technologiques." :
+              finalScore >= 80 ? "Excellent travail ! Vous avez une bonne compréhension des concepts." :
+                finalScore >= 50 ? "Bon effort. Continuez à pratiquer pour améliorer vos compétences." :
+                  "N'abandonnez pas ! Revoyez les concepts et réessayez."}
           </p>
         </motion.div>
       )}

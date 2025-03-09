@@ -209,7 +209,7 @@ const OrderConfirmationPage = () => {
                 <CardContent>
                     {items.length > 0 ? (
                         <div className="space-y-4">
-                            {items.map((item: any, index: number) => (
+                            {items.map((item: any) => (
                                 <div key={item.productId || item._id} className="flex justify-between items-center">
                                     <div className="flex items-center">
                                         <Badge variant="outline" className="mr-2">
