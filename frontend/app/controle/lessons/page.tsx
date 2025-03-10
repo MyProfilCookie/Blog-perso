@@ -1,3 +1,4 @@
+/* eslint-disable import/order */
 /* eslint-disable prettier/prettier */
 "use client";
 
@@ -16,6 +17,8 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import "dayjs/locale/fr"; // 📅 Locale française
+
+import Image from "next/image";
 
 import BackButton from "@/components/back";
 
@@ -197,7 +200,7 @@ export default function LessonOfTheDay() {
                 </h3>
 
                 <motion.div className="flex justify-center my-4">
-                  <img
+                  <Image
                     alt={`Leçon ${lesson.lesson.title}`}
                     className="object-cover rounded-md shadow-md w-80 h-60"
                     src={`/assets/${lesson.subject.toLowerCase()}.jpg`}

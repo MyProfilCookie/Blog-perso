@@ -903,22 +903,21 @@ export const Navbar = () => {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem onClick={() => router.push("/profile")}>
+                  <DropdownItem onClick={() => router.push("/profile")} key={""}>
                     <FontAwesomeIcon className="mr-2" icon={faUser} />
                     Profil
                   </DropdownItem>
-                  <DropdownItem onClick={() => router.push("/shop")}>
+                  <DropdownItem onClick={() => router.push("/shop")} key={""}>
                     <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
                     Shop
                   </DropdownItem>
                   <DropdownItem
-                    className="relative"
-                    startContent={<FontAwesomeIcon className="text-blue-500" icon={faNewspaper} />}
-                    onClick={() => {
-                      markOrderUpdatesAsRead();
-                      router.push("/orders");
-                    }}
-                  >
+                      className="relative"
+                      startContent={<FontAwesomeIcon className="text-blue-500" icon={faNewspaper} />}
+                      onClick={() => {
+                        markOrderUpdatesAsRead();
+                        router.push("/orders");
+                      } } key={""}                  >
                     <div className="flex items-center w-full justify-between">
                       <div>Mes commandes</div>
                       {orderCount > 0 ? (
@@ -936,12 +935,12 @@ export const Navbar = () => {
                       )}
                     </div>
                   </DropdownItem>
-                  <DropdownItem onClick={() => router.push("/controle")}>
+                  <DropdownItem onClick={() => router.push("/controle")} key={""}>
                     <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
                     Controle
                   </DropdownItem>
                   {/* mode */}
-                  <DropdownItem>
+                  <DropdownItem key={""}>
                     <Dropdown placement="left-start">
                       <DropdownTrigger>
                         <div className="flex items-center w-full cursor-pointer">
@@ -1014,7 +1013,7 @@ export const Navbar = () => {
                       </DropdownMenu>
                     </Dropdown>
                   </DropdownItem>
-                  <DropdownItem onClick={handleLogout}>
+                  <DropdownItem onClick={handleLogout} key={""}>
                     <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
                     Déconnexion
                   </DropdownItem>

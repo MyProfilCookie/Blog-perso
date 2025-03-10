@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 /* eslint-disable react/no-unescaped-entities */
@@ -8,6 +9,7 @@ import { useParams } from "next/navigation";
 import { motion } from "framer-motion";
 import { Loader2, CheckCircle, Calendar, User, Tag } from "lucide-react";
 import Link from "next/link";
+import Image from "next/image";
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -155,7 +157,7 @@ export default function BlogPostPage() {
         initial={{ opacity: 0, y: 20 }}
         transition={{ duration: 0.5 }}
       >
-        <img
+        <Image
           alt={blog.title}
           className="w-full h-64 object-cover"
           src={blog.imageUrl}

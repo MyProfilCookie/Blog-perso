@@ -1,27 +1,25 @@
+/* eslint-disable import/order */
+/* eslint-disable prettier/prettier */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-console */
 "use client";
 
+// 📌 1. Imports de bibliothèques tierces
 import { motion } from "framer-motion";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
-// Importation des composants shadcn/ui
-import { useCart } from "../contexts/cart-context";
-
-import {
-  Card,
-  CardContent,
-  CardFooter,
-  CardHeader,
-} from "@/components/ui/card";
+// 📌 2. Imports absolus (depuis "@/components/")
+import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import Loading from "@/components/loading";
 
+// 📌 3. Imports relatifs (fichiers du projet)
+import { useCart } from "../contexts/cart-context";
 // Import du contexte du panier
 
 type Article = {

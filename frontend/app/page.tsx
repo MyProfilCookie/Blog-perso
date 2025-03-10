@@ -436,7 +436,7 @@ export default function Home() {
                   >
                     <CardBody className="text-center">
                       <div className="w-24 h-24 mx-auto mb-4 rounded-full p-1 bg-gradient-to-r from-violet-500 to-purple-500 dark:from-violet-400 dark:to-purple-400">
-                        <img
+                        <Image
                           src={member.img}
                           alt={member.name}
                           className="w-full h-full object-cover rounded-full transition-all duration-300"

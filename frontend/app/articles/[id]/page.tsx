@@ -6,6 +6,7 @@ import React from "react";
 import { useParams } from "next/navigation"; // Utiliser useParams pour obtenir les paramètres de l'URL
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
 
 // Importation des données d'articles depuis le fichier JSON
@@ -83,10 +84,12 @@ const ArticlePage = () => {
               initial={{ opacity: 0 }}
               transition={{ duration: 0.8, delay: index * 0.2 }}
             >
-              <img
-                alt={item.alt}
+              <Image
+                alt={item.alt || ''}
                 className="object-cover w-full h-auto max-h-[500px] rounded-lg shadow-md dark:shadow-gray-800"
-                src={item.src}
+                height={0}
+                src={item.src || ''}
+                width={0}
               />
             </motion.div>
           );
@@ -126,10 +129,12 @@ const ArticlePage = () => {
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <div className="w-full max-w-4xl">
-            <img
+            <Image
               alt={article.title}
               className="object-cover w-full h-auto max-h-[500px] rounded-lg shadow-md dark:shadow-gray-800"
+              height={0}
               src={article.image}
+              width={0}
             />
           </div>
         </motion.div>

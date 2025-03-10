@@ -2,6 +2,7 @@
 import { Card, CardBody } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 import { title } from "@/components/primitives";
 import BackButton from "@/components/back";
@@ -123,7 +124,7 @@ const BlogPage = () => {
               <CardBody className="flex flex-col items-center p-0">
                 {" "}
                 {/* Remplacer le padding par `p-0` */}
-                <img
+                <Image
                   alt={theme.title}
                   className="object-cover w-full h-[250px] rounded-none"
                   src={theme.image}

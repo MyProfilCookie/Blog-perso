@@ -4,7 +4,7 @@ import type { NextApiRequest, NextApiResponse } from "next";
 import Stripe from "stripe";
 
 const stripe = new Stripe(process.env.NEXT_PUBLIC_STRIPE_SECRET_KEY || "", {
-    apiVersion: "2024-09-30.acacia",
+    apiVersion: "2025-02-24.acacia",
 });
 
 export default async function handler(

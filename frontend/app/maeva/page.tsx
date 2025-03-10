@@ -13,6 +13,7 @@ import {
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 
 import { title } from "@/components/primitives";
 
@@ -86,7 +87,7 @@ const CoursePage = () => {
         <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {images.map((image, index) => (
             <div key={index} className="flex justify-center">
-              <img
+              <Image
                 alt={`Maeva ${index + 1}`}
                 className="object-cover w-full h-auto cursor-pointer rounded-xl"
                 src={image}
@@ -101,7 +102,7 @@ const CoursePage = () => {
       <Modal isOpen={isModalOpen} onClose={closeModal}>
         <ModalContent onClick={closeModal}>
           {selectedImage && (
-            <img
+            <Image
               alt={`Maeva ${selectedImage}`}
               className="object-cover w-full h-auto rounded-xl"
               src={selectedImage}

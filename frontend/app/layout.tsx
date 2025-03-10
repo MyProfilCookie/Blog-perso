@@ -1,15 +1,21 @@
+/* eslint-disable import/order */
 /* eslint-disable prettier/prettier */
+// 📌 1. Import du fichier CSS global
 import "@/styles/globals.css";
+
+// 📌 2. Imports de bibliothèques tierces
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import { Toaster } from "sonner";
 
-import { Providers } from "./providers";
-
+// 📌 3. Imports de fichiers absolus (du projet)
 import { siteConfig } from "@/config/site";
 import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
+
+// 📌 4. Imports relatifs (liés au projet local)
+import { Providers } from "./providers"; // Déplacé en dernier
 
 export const metadata: Metadata = {
   title: {

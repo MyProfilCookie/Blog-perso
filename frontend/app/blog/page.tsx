@@ -1,3 +1,4 @@
+/* eslint-disable react/no-unknown-property */
 /* eslint-disable no-console */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable padding-line-between-statements */
@@ -8,6 +9,7 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 import { RefreshCw } from "lucide-react";
+import Image from "next/image";
 
 // Importation des composants shadcn/ui
 import { Input } from "@/components/ui/input";
@@ -242,7 +244,7 @@ export default function BlogPage() {
             >
               <Card className="shadow-xl h-full bg-cream dark:bg-gray-800 rounded-lg overflow-hidden hover:shadow-2xl border border-transparent dark:border-gray-700 transition-shadow duration-300">
                 <div className="relative h-48 w-full overflow-hidden">
-                  <img
+                  <Image
                     alt={blog.title}
                     className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
                     src={blog.imageUrl}

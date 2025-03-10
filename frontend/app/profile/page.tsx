@@ -20,6 +20,7 @@ import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import axios from "axios";
+import Image from "next/image";
 
 import ProgressionCommande from "@/components/ProgressionCommande";
 
@@ -359,7 +360,7 @@ const SectionCommandes = ({
                           <div className="flex justify-center md:ml-4">
                             {urlImage ? (
                               <div className="relative h-24 w-24">
-                                <img
+                                <Image
                                   alt={`Image de ${article.title}`}
                                   className="h-24 w-24 object-contain rounded border border-gray-200 dark:border-gray-600"
                                   src={urlImage}
