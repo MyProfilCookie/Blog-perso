@@ -4,12 +4,13 @@ const Article = require('../models/Article');
 const Message = require('../models/message');
 
 // Gestion des utilisateurs
-exports.getAllUsers = async (req, res) => {
+exports.getAllArticles = async (req, res) => {
   try {
-    const users = await User.find();
-    res.status(200).json(users);
+      const articles = await Article.find();
+      res.status(200).json(articles);
   } catch (error) {
-    res.status(500).json({ message: "Erreur lors de la récupération des utilisateurs" });
+      console.error("❌ Erreur MongoDB :", error);
+      res.status(500).json({ message: "Erreur lors de la récupération des articles", error: error.message });
   }
 };
 
