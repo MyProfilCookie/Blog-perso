@@ -194,6 +194,7 @@ const path = require("path");
 
 // Importation des modèles
 const User = require("./api/models/User");
+const Article = require("./api/models/Article"); // Ajout pour test MongoDB
 
 // Importation des routes
 const userRoutes = require("./api/routes/User.routes");
@@ -208,15 +209,28 @@ const paymentConfirmationRoutes = require("./api/routes/paymentConfirmation.rout
 const contactRoutes = require("./api/routes/contact.routes");
 const blogRoutes = require("./api/routes/blog.routes");
 
-// Connexion à la base de données
+// 🔍 Connexion à MongoDB avec test
 connect(process.env.DB)
-  .then(() => console.log("✅ Connexion à la base réussie"))
+  .then(async () => {
+    console.log("✅ Connexion à MongoDB réussie !");
+    
+    try {
+      const test = await Article.findOne(); 
+      if (test) {
+        console.log("✅ MongoDB fonctionne, premier article trouvé :", test);
+      } else {
+        console.log("⚠️ MongoDB est connecté mais la collection 'articles' est vide !");
+      }
+    } catch (err) {
+      console.error("❌ Erreur lors de la récupération d'un article :", err);
+    }
+  })
   .catch((err) => {
-    console.error("❌ Erreur de connexion à la base :", err.message);
+    console.error("❌ Erreur de connexion MongoDB :", err.message);
     process.exit(1);
   });
 
-// Middlewares
+// 🔧 Middlewares
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
@@ -230,7 +244,7 @@ app.use(
   })
 );
 
-// 🔑 Fonctions pour générer des tokens
+// 🔑 Fonctions pour générer des tokens JWT
 const generateAccessToken = (userId) => jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "15m" });
 const generateRefreshToken = (userId) => jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
 
@@ -257,7 +271,7 @@ app.post("/api/auth/login", async (req, res) => {
 
     res.json({ accessToken });
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    res.status(500).json({ message: "Erreur lors de la connexion", error: error.message });
   }
 });
 
@@ -269,7 +283,7 @@ app.post("/api/auth/refresh-token", (req, res) => {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
     res.json({ accessToken: generateAccessToken(decoded.id) });
   } catch (error) {
-    res.status(403).json({ message: "Refresh token invalide ou expiré" });
+    res.status(403).json({ message: "Refresh token invalide ou expiré", error: error.message });
   }
 });
 
@@ -288,7 +302,7 @@ const authenticateToken = (req, res, next) => {
     req.userId = decoded.id;
     next();
   } catch (error) {
-    res.status(403).json({ message: "Token invalide ou expiré" });
+    res.status(403).json({ message: "Token invalide ou expiré", error: error.message });
   }
 };
 
@@ -315,6 +329,7 @@ app.use((req, res, next) => next(createError(404, "Ressource non trouvée")));
 
 // ⚠ Gestion des erreurs globales
 app.use((err, req, res, next) => {
+  console.error("⚠️ Erreur globale :", err);
   res.status(err.status || 500).json({ error: { message: err.message } });
 });
 
