@@ -236,9 +236,16 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(compression());
+
 app.use(
   cors({
-    origin: "https://autistudy-gmwbpf7k9-myprofilcookies-projects.vercel.app", // Remplace par ton frontend si besoin
+    origin: (origin, callback) => {
+      if (!origin || origin.endsWith(".vercel.app")) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
     credentials: true,
     optionsSuccessStatus: 200,
   })
