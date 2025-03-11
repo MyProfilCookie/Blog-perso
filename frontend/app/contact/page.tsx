@@ -30,7 +30,7 @@ export default function ContactPage() {
       }
 
       try {
-        const response = await fetch("http://localhost:3001/users/me", {
+        const response = await fetch("https://blog-perso.onrender.com/api/users/me", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

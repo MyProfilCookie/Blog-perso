@@ -52,7 +52,7 @@ const ContactForm = () => {
         const formData = { nom, email, message, pseudo };
 
         try {
-            const response = await fetch("http://localhost:3001/messages", {
+            const response = await fetch("https://blog-perso.onrender.com/api/messages", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(formData),
