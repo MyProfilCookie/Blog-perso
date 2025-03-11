@@ -80,7 +80,7 @@ export default function BlogPage() {
     setError(null);
     try {
       const response = await fetch(
-        `http://localhost:3001/blog?page=${pageNum}&limit=${blogsPerPage}`,
+        `/blog?page=${pageNum}&limit=${blogsPerPage}`,
       );
 
       if (!response.ok)

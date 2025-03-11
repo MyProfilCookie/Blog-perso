@@ -215,7 +215,7 @@ connect(process.env.DB)
     console.log("✅ Connexion à MongoDB réussie !");
     
     try {
-      const test = await Articles.findOne(); 
+      const test = await Article.findOne(); 
       if (test) {
         console.log("✅ MongoDB fonctionne, premier article trouvé :", test);
       } else {
