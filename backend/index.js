@@ -238,7 +238,7 @@ app.use(bodyParser.json());
 app.use(compression());
 app.use(
   cors({
-    origin: "https://blog-perso.onrender.com", // Remplace par ton frontend si besoin
+    origin: "https://autistudy-gmwbpf7k9-myprofilcookies-projects.vercel.app", // Remplace par ton frontend si besoin
     credentials: true,
     optionsSuccessStatus: 200,
   })
