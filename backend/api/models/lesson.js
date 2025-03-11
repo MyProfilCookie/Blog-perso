@@ -79,5 +79,3 @@ const lessonSchema = new Schema({
 }, { timestamps: true });
 
 const Lesson = mongoose.model('Lesson', lessonSchema);
-
-module.exports = Lesson;
