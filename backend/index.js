@@ -43,7 +43,7 @@ app.use(bodyParser.json());
 app.use(compression());
 app.use(
   cors({
-    origin: "http://localhost:3000",
+    origin: "https://autistudy-gmwbpf7k9-myprofilcookies-projects.vercel.app",
     credentials: true,
     optionsSuccessStatus: 200,
   })
