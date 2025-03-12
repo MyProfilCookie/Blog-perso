@@ -352,9 +352,9 @@ export const Navbar = () => {
       cancelButtonText: "S'inscrire",
     }).then((result) => {
       if (result.isConfirmed) {
-        router.push("/users/login");
+        router.push(`${process.env.NEXT_PUBLIC_API_URL}/users/login`);
       } else {
-        router.push("/users/signup");
+        router.push(`${process.env.NEXT_PUBLIC_API_URL}/users/signup`);
       }
     });
   };
