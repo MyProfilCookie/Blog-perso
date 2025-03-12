@@ -30,13 +30,16 @@ export default function ContactPage() {
       }
 
       try {
-        const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/users/me", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
+        const response = await fetch(
+          "${process.env.NEXT_PUBLIC_API_URL}/users/me",
+          {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
           },
-        });
+        );
 
         if (!response.ok) {
           if (response.status === 401) {
