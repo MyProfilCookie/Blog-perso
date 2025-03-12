@@ -80,7 +80,7 @@ export default function BlogPage() {
     setError(null);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/blog?page=${pageNum}&limit=${blogsPerPage}`,
+        `https://blog-perso.onrender.com/blog?page=${pageNum}&limit=${blogsPerPage}`,
       );
 
       if (!response.ok)
