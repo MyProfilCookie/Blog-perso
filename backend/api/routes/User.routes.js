@@ -29,7 +29,7 @@ router.post('/promote/:userId', makeAdmin);
 // router.get("/me", authMiddleware, getCurrentUser);
 
 // Route pour obtenir les informations d'un utilisateur par son ID
-router.get("/me", extractUserIdFromToken, getUserById);
+router.get("/me", authMiddleware, getCurrentUser);
 
 module.exports = router;
 

@@ -2,6 +2,7 @@ const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const Ban = require("../models/ban");
+const { generateAccessToken, generateRefreshToken } = require("../utils/tokenUtils");
 
 // Fonction d'inscription
 exports.signup = async (req, res) => {
@@ -48,6 +49,25 @@ exports.signup = async (req, res) => {
   }
 };
 
+exports.getCurrentUser = async (req, res) => {
+  try {
+    // Assure-toi que l'utilisateur est authentifié
+    if (!req.user || !req.user.id) {
+      return res.status(401).json({ message: "Non autorisé" });
+    }
+
+    // Recherche l'utilisateur avec l'ID extrait du token
+    const user = await User.findById(req.user.id).select("-password");
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des données utilisateur :", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
 // Fonction de connexion
 exports.login = async (req, res) => {
   const { email, pseudo, password } = req.body;

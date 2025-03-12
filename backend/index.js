@@ -191,6 +191,7 @@ const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const bcrypt = require("bcrypt");
 const path = require("path");
+const { generateAccessToken, generateRefreshToken } = require("./utils/tokenUtils");
 
 // Importation des modèles
 const User = require("./api/models/User");
@@ -259,26 +260,46 @@ const generateRefreshToken = (userId) => jwt.sign({ id: userId }, process.env.JW
 app.post("/api/auth/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const user = await User.findOne({ email });
 
+    // Vérifier si l'utilisateur existe
+    const user = await User.findOne({ email });
     if (!user) return res.status(404).json({ message: "Utilisateur non trouvé" });
 
+    // Vérifier si l'utilisateur est banni
+    if (user.isBanned) {
+      return res.status(403).json({ message: "Votre compte est banni." });
+    }
+
+    // Vérifier le mot de passe
     const isPasswordValid = await bcrypt.compare(password, user.password);
     if (!isPasswordValid) return res.status(401).json({ message: "Mot de passe incorrect" });
 
+    // Générer les tokens
     const accessToken = generateAccessToken(user._id);
     const refreshToken = generateRefreshToken(user._id);
 
+    // Stocker le refresh token dans un cookie sécurisé
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: true,
+      secure: process.env.NODE_ENV === "production",
       sameSite: "Strict",
       maxAge: 7 * 24 * 60 * 60 * 1000, // 7 jours
     });
 
-    res.json({ accessToken });
+    res.status(200).json({
+      message: "Connexion réussie",
+      accessToken,
+      user: {
+        _id: user._id,
+        pseudo: user.pseudo,
+        email: user.email,
+        role: user.role,
+        avatar: user.image || "/assets/default-avatar.webp",
+      },
+    });
   } catch (error) {
-    res.status(500).json({ message: "Erreur lors de la connexion", error: error.message });
+    console.error("Erreur lors de la connexion :", error);
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 });
 
@@ -288,13 +309,27 @@ app.post("/api/auth/refresh-token", (req, res) => {
 
   try {
     const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
-    res.json({ accessToken: generateAccessToken(decoded.id) });
+    
+    // Vérifier si l'utilisateur existe toujours
+    User.findById(decoded.id)
+      .then(user => {
+        if (!user) return res.status(404).json({ message: "Utilisateur introuvable" });
+
+        // Générer un nouvel accessToken
+        const newAccessToken = generateAccessToken(user._id);
+        res.json({ accessToken: newAccessToken });
+      })
+      .catch(error => res.status(500).json({ message: "Erreur serveur", error: error.message }));
   } catch (error) {
     res.status(403).json({ message: "Refresh token invalide ou expiré", error: error.message });
   }
 });
 
 app.post("/api/auth/logout", (req, res) => {
+  if (!req.cookies.refreshToken) {
+    return res.status(400).json({ message: "Aucun refresh token trouvé" });
+  }
+
   res.clearCookie("refreshToken");
   res.status(200).json({ message: "Déconnexion réussie" });
 });
@@ -302,11 +337,14 @@ app.post("/api/auth/logout", (req, res) => {
 // 🔒 Middleware pour vérifier l'authentification
 const authenticateToken = (req, res, next) => {
   const token = req.headers.authorization?.split(" ")[1];
-  if (!token) return res.status(401).json({ message: "Token manquant" });
+
+  if (!token) {
+    return res.status(401).json({ message: "Token manquant. Veuillez vous reconnecter." });
+  }
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userId = decoded.id;
+    req.user = { id: decoded.id }; // Ajout de `req.user` pour éviter les répétitions
     next();
   } catch (error) {
     res.status(403).json({ message: "Token invalide ou expiré", error: error.message });
