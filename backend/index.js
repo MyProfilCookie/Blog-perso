@@ -191,7 +191,7 @@ const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
 const bcrypt = require("bcrypt");
 const path = require("path");
-const { generateAccessToken, generateRefreshToken } = require("./utils/tokenUtils");
+const { generateAccessToken, generateRefreshToken } = require("./api/utils/tokenUtils");
 
 // Importation des modèles
 const User = require("./api/models/User");
