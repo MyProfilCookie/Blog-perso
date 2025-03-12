@@ -500,11 +500,14 @@ const ProfilePage = () => {
       }
 
       try {
+        const apiUrl = (
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+        ).replace(/\/$/, "");
+
         // Fetch user data
-        const userResponse = await axios.get(
-          `https://blog-perso.onrender.com/api/users/me`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
+        const userResponse = await axios.get(`${apiUrl}/users/me`, {
+          headers: { Authorization: `Bearer ${token}` },
+        });
 
         const userData = userResponse.data.user;
 
@@ -530,34 +533,7 @@ const ProfilePage = () => {
 
           // Fetch user orders
           if (userData._id) {
-            try {
-              console.log("Fetching orders for user:", userData._id);
-              const ordersResponse = await axios.get(
-                `https://blog-perso.onrender.com/api/orders/user/${userData._id}`,
-                { headers: { Authorization: `Bearer ${token}` } },
-              );
-
-              console.log("Orders response:", ordersResponse.data);
-
-              if (ordersResponse.data) {
-                if (Array.isArray(ordersResponse.data.orders)) {
-                  setOrders(ordersResponse.data.orders);
-                } else if (Array.isArray(ordersResponse.data)) {
-                  setOrders(ordersResponse.data);
-                } else {
-                  console.warn(
-                    "Unexpected orders response format:",
-                    ordersResponse.data,
-                  );
-                  setOrders([]);
-                }
-              }
-            } catch (orderError) {
-              console.error(
-                "Erreur lors de la récupération des commandes:",
-                orderError,
-              );
-            }
+            fetchUserOrders(userData._id, token);
           }
         }
       } catch (error) {
@@ -565,7 +541,6 @@ const ProfilePage = () => {
           "Erreur lors de la récupération des données utilisateur:",
           error,
         );
-
         Swal.fire({
           title: "Erreur",
           text: "Impossible de récupérer les informations utilisateur. Veuillez vous reconnecter.",
@@ -580,6 +555,42 @@ const ProfilePage = () => {
     fetchUserData();
   }, [router]);
 
+  const fetchUserOrders = async (userId: string, token: string) => {
+    try {
+      console.log("Fetching orders for user:", userId);
+      const apiUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+      ).replace(/\/$/, "");
+
+      const ordersResponse = await axios.get(
+        `${apiUrl}/orders/user/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+        },
+      );
+
+      console.log("Orders response:", ordersResponse.data);
+
+      if (ordersResponse.data) {
+        if (Array.isArray(ordersResponse.data.orders)) {
+          setOrders(ordersResponse.data.orders);
+        } else if (Array.isArray(ordersResponse.data)) {
+          setOrders(ordersResponse.data);
+        } else {
+          console.warn(
+            "Unexpected orders response format:",
+            ordersResponse.data,
+          );
+          setOrders([]);
+        }
+      }
+    } catch (orderError) {
+      console.error(
+        "Erreur lors de la récupération des commandes:",
+        orderError,
+      );
+    }
+  };
   // Profile update handler
   const handleSaveProfile = async () => {
     if (!user || !user._id) {
@@ -597,20 +608,14 @@ const ProfilePage = () => {
 
     try {
       const token = localStorage.getItem("userToken");
+      const apiUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+      ).replace(/\/$/, "");
 
       await axios.put(
-        `https://blog-perso.onrender.com/api/users/${user._id}`,
-        {
-          firstName,
-          lastName,
-          phone,
-          deliveryAddress: address,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
+        `${apiUrl}/users/${user._id}`,
+        { firstName, lastName, phone, deliveryAddress: address },
+        { headers: { Authorization: `Bearer ${token}` } },
       );
 
       const updatedUser = {

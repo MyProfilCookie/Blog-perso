@@ -1,3 +1,10 @@
+/* eslint-disable no-console */
+console.log("✅ NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
+console.log(
+  "✅ NEXT_PUBLIC_STRIPE_PUBLIC_KEY:",
+  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
+);
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,

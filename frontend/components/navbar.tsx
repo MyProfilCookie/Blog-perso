@@ -270,6 +270,7 @@ export const Navbar = () => {
     const intervalId = setInterval(checkTokenValidity, 30 * 60 * 1000);
     return () => clearInterval(intervalId);
   }, []);
+  console.log("🔍 FRONTEND - NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
 
   /**
    * Update user and cart when a "userUpdate" event is triggered
@@ -364,38 +365,38 @@ export const Navbar = () => {
    */
   const fetchOrderCount = async () => {
     if (!user || !user.id || isLoadingOrders) return;
-
+  
     setIsLoadingOrders(true);
-
+  
     try {
-      const token = user.token || localStorage.getItem('token') || localStorage.getItem('userToken');
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
-
+      const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
+      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, ""); // Supprime le "/" à la fin si présent
+  
       const response = await fetch(`${apiUrl}/users/${user.id}/orders/count`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
-
+  
       if (response.ok) {
         const data = await response.json();
-
-        // Handle different response formats
+  
+        // Gestion des différents formats de réponse
         let count = 0;
-        if (typeof data === 'number') {
+        if (typeof data === "number") {
           count = data;
-        } else if (data && typeof data.count === 'number') {
+        } else if (data && typeof data.count === "number") {
           count = data.count;
-        } else if (data && typeof data.updates === 'number') {
+        } else if (data && typeof data.updates === "number") {
           count = data.updates;
         } else if (Array.isArray(data)) {
           count = data.length;
-        } else if (typeof data === 'string') {
+        } else if (typeof data === "string") {
           count = parseInt(data, 10) || 0;
         }
-
+  
         setOrderCount(count);
       }
     } catch (error) {
@@ -410,19 +411,19 @@ export const Navbar = () => {
    */
   const markOrderUpdatesAsRead = async () => {
     if (!user || !user.id) return;
-
+  
     try {
-      const token = user.token || localStorage.getItem('token') || localStorage.getItem('userToken');
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
-
+      const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
+      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, ""); // Supprime le "/" à la fin si présent
+  
       await fetch(`${apiUrl}/users/${user.id}/orders/updates/read`, {
-        method: 'POST',
+        method: "POST",
         headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${token}`
-        }
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
       });
-
+  
       setOrderCount(0);
     } catch (error) {
       console.error("Error marking updates as read:", error);
