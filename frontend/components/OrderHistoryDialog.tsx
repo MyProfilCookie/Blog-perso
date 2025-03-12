@@ -64,7 +64,7 @@ const OrderHistoryDialog = ({
         setError(null);
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}/status-history`);
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders/${orderId}/status-history`);
 
             if (!response.ok) {
                 throw new Error(`Erreur HTTP: ${response.status}`);

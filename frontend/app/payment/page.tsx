@@ -138,7 +138,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
         }
 
         try {
-            const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+            const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 
@@ -171,7 +171,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 deliveryCost: deliveryCost,
             };
 
-            const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
+            const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/orders`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -235,7 +235,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
         };
 
         try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations`, {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payment-confirmations`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify(confirmationData),

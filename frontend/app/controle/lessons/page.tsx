@@ -68,7 +68,7 @@ export default function LessonOfTheDay() {
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/users/me`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -105,7 +105,7 @@ export default function LessonOfTheDay() {
     try {
       const formattedDateForAPI = dayjs(date).format("YYYY-MM-DD");
       const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/lessons/lesson-of-the-day?date=${formattedDateForAPI}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/lessons/lesson-of-the-day?date=${formattedDateForAPI}`,
       );
 
       if (!res.ok)
