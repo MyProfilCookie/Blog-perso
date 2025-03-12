@@ -212,24 +212,6 @@ const blogRoutes = require("./api/routes/blog.routes");
 
 // 🔍 Connexion à MongoDB avec test
 connect(process.env.DB)
-  .then(async () => {
-    console.log("✅ Connexion à MongoDB réussie !");
-    
-    try {
-      const test = await Article.findOne(); 
-      if (test) {
-        console.log("✅ MongoDB fonctionne, premier article trouvé :", test);
-      } else {
-        console.log("⚠️ MongoDB est connecté mais la collection 'articles' est vide !");
-      }
-    } catch (err) {
-      console.error("❌ Erreur lors de la récupération d'un article :", err);
-    }
-  })
-  .catch((err) => {
-    console.error("❌ Erreur de connexion MongoDB :", err.message);
-    process.exit(1);
-  });
 
 // 🔧 Middlewares
 app.use(express.json());

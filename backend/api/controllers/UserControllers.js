@@ -241,3 +241,23 @@ exports.makeAdmin = async (req, res) => {
     res.status(500).json({ message: "Erreur lors de la promotion en administrateur." });
   }
 };
+
+// ========================
+// ❌ Suppression d'un utilisateur
+// ========================
+exports.deleteUser = async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    
+    if (!user) {
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    await User.findByIdAndDelete(req.params.id);
+
+    res.status(200).json({ message: "Utilisateur supprimé avec succès." });
+  } catch (error) {
+    console.error("❌ Erreur lors de la suppression de l'utilisateur :", error);
+    res.status(500).json({ message: "Erreur lors de la suppression de l'utilisateur." });
+  }
+};
