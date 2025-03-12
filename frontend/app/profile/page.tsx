@@ -502,7 +502,7 @@ const ProfilePage = () => {
       try {
         // Fetch user data
         const userResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/users/me`,
+          `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
@@ -533,7 +533,7 @@ const ProfilePage = () => {
             try {
               console.log("Fetching orders for user:", userData._id);
               const ordersResponse = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_URL}/api/orders/user/${userData._id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/orders/user/${userData._id}`,
                 { headers: { Authorization: `Bearer ${token}` } },
               );
 
@@ -571,7 +571,7 @@ const ProfilePage = () => {
           text: "Impossible de récupérer les informations utilisateur. Veuillez vous reconnecter.",
           icon: "error",
           confirmButtonText: "OK",
-        }).then(() => router.push("api/users/login"));
+        }).then(() => router.push("/users/login"));
       } finally {
         setLoading(false);
       }
@@ -599,7 +599,7 @@ const ProfilePage = () => {
       const token = localStorage.getItem("userToken");
 
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}api/users/${user._id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`,
         {
           firstName,
           lastName,

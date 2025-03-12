@@ -42,7 +42,7 @@ export default function ProductPage() {
     const fetchProduct = async () => {
       try {
         console.log("🔍 Recherche du produit avec ID:", _id);
-        const response = await fetch(`https://blog-perso.onrender.com/api/products/${_id}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/products/${_id}`, {
           headers: { Accept: "application/json" },
         });
 

@@ -80,7 +80,7 @@ export default function BlogPage() {
     setError(null);
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/blog?page=${pageNum}&limit=${blogsPerPage}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/blog?page=${pageNum}&limit=${blogsPerPage}`,
       );
 
       if (!response.ok)

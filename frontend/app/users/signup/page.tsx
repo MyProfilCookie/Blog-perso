@@ -88,7 +88,7 @@ export default function Inscription() {
     try {
       // Envoi des données au backend
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/users/signup`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users/signup`,
         {
           method: "POST",
           headers: {

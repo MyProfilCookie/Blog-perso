@@ -80,7 +80,7 @@ const AdminDashboard = () => {
       }
 
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/payment-confirmations/${paymentId}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations/${paymentId}`);
 
         if (!response.ok) throw new Error("Erreur lors de la récupération");
 
@@ -122,7 +122,7 @@ const AdminDashboard = () => {
   const fetchLessons = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}api/lessons`,
+        `${process.env.NEXT_PUBLIC_API_URL}/lessons`,
       );
 
       setLessons(response.data);
@@ -137,7 +137,7 @@ const AdminDashboard = () => {
   const fetchUsers = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}api/users`,
+        `${process.env.NEXT_PUBLIC_API_URL}/users`,
       );
 
       setUsers(response.data);
@@ -150,7 +150,7 @@ const AdminDashboard = () => {
   const fetchArticles = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}api/articles`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles`,
       );
 
       setArticles(response.data);
@@ -163,7 +163,7 @@ const AdminDashboard = () => {
   const fetchMessages = async () => {
     try {
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}api/messages`,
+        `${process.env.NEXT_PUBLIC_API_URL}/messages`,
       );
 
       setMessages(response.data);
@@ -175,7 +175,7 @@ const AdminDashboard = () => {
   // Fonction pour ajouter une leçon
   const addLesson = async () => {
     try {
-      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}api/lessons`, newLesson);
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/lessons`, newLesson);
       setNewLesson({ title: "", content: "", date: "" });
       fetchLessons(); // Recharger les leçons après l'ajout
     } catch (error) {
@@ -187,7 +187,7 @@ const AdminDashboard = () => {
   const updateLesson = async (id: any, updatedData: never) => {
     try {
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}api/lessons/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/lessons/${id}`,
         updatedData,
       );
       fetchLessons(); // Recharger les leçons après la mise à jour
@@ -209,7 +209,7 @@ const AdminDashboard = () => {
       if (result.isConfirmed) {
         try {
           await axios.delete(
-            `${process.env.NEXT_PUBLIC_API_URL}api/lessons/${id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/lessons/${id}`,
           );
           fetchLessons(); // Recharger les leçons après suppression
         } catch (error) {
@@ -222,7 +222,7 @@ const AdminDashboard = () => {
   // ✅ Récupérer les messages de contact
   const getContactMessages = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}api/contact`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/contact`);
 
       setMessages(response.data);
     } catch (error) {
@@ -233,7 +233,7 @@ const AdminDashboard = () => {
   // ✅ Marquer un message comme lu
   const markContactMessageAsRead = async (id: any) => {
     try {
-      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}api/contact/${id}/read`);
+      await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/contact/${id}/read`);
       Swal.fire("Succès", "Le message a été marqué comme lu.", "success");
       getContactMessages();
     } catch (error) {
@@ -252,7 +252,7 @@ const AdminDashboard = () => {
 
     if (reply) {
       try {
-        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}api/contact/${id}/reply`, { reponse: reply });
+        await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/contact/${id}/reply`, { reponse: reply });
         Swal.fire("Succès", "Votre réponse a été envoyée.", "success");
         getContactMessages();
       } catch (error) {
@@ -273,7 +273,7 @@ const AdminDashboard = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}api/contact/${id}`);
+          await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/contact/${id}`);
           Swal.fire("Supprimé !", "Le message a été supprimé.", "success");
           getContactMessages();
         } catch (error) {
@@ -306,7 +306,7 @@ const AdminDashboard = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}api/users/ban`, {
+          await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/users/ban`, {
             userId: id,
             reason: banReason,
           });
@@ -322,11 +322,11 @@ const AdminDashboard = () => {
     try {
       if (role === "admin") {
         await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}api/users/demote/${id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/users/demote/${id}`,
         );
       } else {
         await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}api/users/promote/${id}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/users/promote/${id}`,
         );
       }
       fetchUsers(); // Recharger la liste des utilisateurs après modification
@@ -339,7 +339,7 @@ const AdminDashboard = () => {
   const addArticle = async () => {
     try {
       await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}api/articles`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles`,
         newArticle,
       );
       setNewArticle({ title: "", content: "" });
@@ -353,7 +353,7 @@ const AdminDashboard = () => {
   const updateArticle = async (id: string, updatedData: { id: number; title: string; subtitle: string; image: string; content: string; }) => {
     try {
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}api/articles/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles/${id}`,
         updatedData,
       );
       fetchArticles();
@@ -366,7 +366,7 @@ const AdminDashboard = () => {
     try {
       // Envoyer une requête pour marquer le message comme lu (ici on utilise une requête PUT)
       const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}api/messages/${messageId}/read`,
+        `${process.env.NEXT_PUBLIC_API_URL}/messages/${messageId}/read`,
         {},
       );
 
@@ -401,7 +401,7 @@ const AdminDashboard = () => {
       if (reply) {
         // Envoyer une requête pour enregistrer la réponse
         const response = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL}api/messages/${messageId}/reply`,
+          `${process.env.NEXT_PUBLIC_API_URL}/messages/${messageId}/reply`,
           { reply },
         );
 
@@ -434,7 +434,7 @@ const AdminDashboard = () => {
       if (confirmation.isConfirmed) {
         // Suppression du message via l'API
         const response = await axios.delete(
-          `${process.env.NEXT_PUBLIC_API_URL}api/messages/${messageId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/messages/${messageId}`,
         );
 
         if (response.status === 200) {
@@ -459,7 +459,7 @@ const AdminDashboard = () => {
   // Fonction pour supprimer un article
   const deleteArticle = async (id: string) => {
     try {
-      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}api/articles/${id}`);
+      await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/articles/${id}`);
       fetchArticles();
     } catch (error) {
       alert(`Erreur lors de la suppression de l'article : ${error}`);
@@ -495,7 +495,7 @@ const AdminDashboard = () => {
   // Fonction pour récupérer les commandes
   const fetchOrders = async () => {
     try {
-      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}api/orders`);
+      const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/orders`);
       const ordersData = response.data.orders || [];
 
       const ordersWithPayments = await Promise.all(
@@ -525,7 +525,7 @@ const AdminDashboard = () => {
     }
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}api/payment-confirmations/${paymentId}`); // Assurez-vous d'avoir une route /payments/:id dans votre backend
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations/${paymentId}`); // Assurez-vous d'avoir une route /payments/:id dans votre backend
 
       if (!response.ok) throw new Error(`HTTP error! Status: ${response.status}`);
 
@@ -570,7 +570,7 @@ const AdminDashboard = () => {
 
       // Utiliser l'endpoint spécifique pour la mise à jour du statut
       const response = await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}api/orders/${id}/status`,
+        `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/status`,
         { status, notes }
       );
 
@@ -632,7 +632,7 @@ const AdminDashboard = () => {
     }).then(async (result) => {
       if (result.isConfirmed) {
         try {
-          await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}api/orders/${id}`);
+          await axios.delete(`${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`);
           fetchOrders();
         } catch (error) {
           alert(`Erreur lors de la suppression de la commande : ${error}`);

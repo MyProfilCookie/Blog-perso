@@ -30,7 +30,7 @@ export default function ContactPage() {
       }
 
       try {
-        const response = await fetch("https://blog-perso.onrender.com/api/users/me", {
+        const response = await fetch("${process.env.NEXT_PUBLIC_API_URL}/users/me", {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

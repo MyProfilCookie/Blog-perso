@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 export const saveTokens = (accessToken, refreshToken) => {
@@ -22,7 +23,7 @@ export const saveTokens = (accessToken, refreshToken) => {
         throw new Error("Refresh token manquant.");
       }
   
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/auth/refresh-token`, {
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

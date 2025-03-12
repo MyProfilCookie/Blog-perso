@@ -43,7 +43,7 @@ export default function BlogPostPage() {
     const fetchBlog = async () => {
       try {
         console.log("📡 Récupération des données...");
-        const response = await fetch(`https://blog-perso.onrender.com/api/blog/${id}`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/blog/${id}`);
 
         if (!response.ok) throw new Error("Article introuvable");
 
