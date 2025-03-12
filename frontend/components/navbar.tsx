@@ -80,7 +80,7 @@ const verifyToken = async (token: string): Promise<boolean> => {
   if (!token) return false;
 
   try {
-    const response = await fetch("/api/auth/verify-token", {
+    const response = await fetch("/auth/verify-token", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -207,7 +207,7 @@ export const Navbar = () => {
         const event = new CustomEvent("userUpdate");
         window.dispatchEvent(event);
 
-        router.push("/api/users/login");
+        router.push("/users/login");
       }
     });
   };
@@ -352,9 +352,9 @@ export const Navbar = () => {
       cancelButtonText: "S'inscrire",
     }).then((result) => {
       if (result.isConfirmed) {
-        router.push("/api/users/login");
+        router.push("/users/login");
       } else {
-        router.push("/api/users/signup");
+        router.push("/users/signup");
       }
     });
   };
@@ -371,7 +371,7 @@ export const Navbar = () => {
       const token = user.token || localStorage.getItem('token') || localStorage.getItem('userToken');
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 
-      const response = await fetch(`${apiUrl}/api/users/${user.id}/orders/count`, {
+      const response = await fetch(`${apiUrl}/users/${user.id}/orders/count`, {
         method: 'GET',
         headers: {
           'Content-Type': 'application/json',
@@ -415,7 +415,7 @@ export const Navbar = () => {
       const token = user.token || localStorage.getItem('token') || localStorage.getItem('userToken');
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
 
-      await fetch(`${apiUrl}/api/users/${user.id}/orders/updates/read`, {
+      await fetch(`${apiUrl}/users/${user.id}/orders/updates/read`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
