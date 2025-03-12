@@ -174,7 +174,7 @@ export default function BlogPage() {
         transition={{ duration: 0.6 }}
       >
         <h1 className="text-4xl md:text-5xl font-bold text-violet-700 dark:text-violet-300 shadow-md p-2 rounded-lg bg-cream/50 dark:bg-gray-800/50">
-          📰 Nos Derniers Articles
+          📰 Nos Derniers Articles de blog
         </h1>
         <p className="mt-3 text-lg text-gray-600 dark:text-gray-300">
           Explorez nos articles, astuces et conseils sur l'autisme.
