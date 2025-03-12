@@ -138,7 +138,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
         }
 
         try {
-            const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+            const userResponse = await fetch(`https://blog-perso.onrender.com/api/users/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
 

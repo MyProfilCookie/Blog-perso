@@ -502,7 +502,7 @@ const ProfilePage = () => {
       try {
         // Fetch user data
         const userResponse = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+          `https://blog-perso.onrender.com/api/users/me`,
           { headers: { Authorization: `Bearer ${token}` } },
         );
 
@@ -533,7 +533,7 @@ const ProfilePage = () => {
             try {
               console.log("Fetching orders for user:", userData._id);
               const ordersResponse = await axios.get(
-                `${process.env.NEXT_PUBLIC_API_URL}/orders/user/${userData._id}`,
+                `https://blog-perso.onrender.com/api/orders/user/${userData._id}`,
                 { headers: { Authorization: `Bearer ${token}` } },
               );
 
@@ -599,7 +599,7 @@ const ProfilePage = () => {
       const token = localStorage.getItem("userToken");
 
       await axios.put(
-        `${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`,
+        `https://blog-perso.onrender.com/api/users/${user._id}`,
         {
           firstName,
           lastName,
