@@ -106,51 +106,37 @@ exports.signup = async (req, res) => {
 /**
  * Connexion d'un utilisateur
  */
+// UNIQUEMENT POUR TESTER - À RETIRER ENSUITE
 exports.login = async (req, res) => {
   try {
     const { email, password } = req.body;
-
-    // Vérification des champs obligatoires
-    if (!email || !password) {
-      return res.status(400).json({ message: "Email et mot de passe requis" });
-    }
-
-    console.log("📧 Tentative de connexion avec l'email:", email);
     
-    // Recherche de l'utilisateur par email
     const user = await User.findOne({ email });
     
     if (!user) {
-      console.log("❌ Utilisateur non trouvé pour l'email:", email);
       return res.status(404).json({ message: "Email ou mot de passe incorrect" });
     }
-
-    // Vérification du mot de passe
-    const isPasswordValid = await bcrypt.compare(password, user.password);
     
-    if (!isPasswordValid) {
-      console.log("❌ Mot de passe incorrect pour l'email:", email);
-      return res.status(401).json({ message: "Email ou mot de passe incorrect" });
-    }
-
-    console.log("✅ Connexion réussie pour l'utilisateur:", user.pseudo, "ID:", user._id);
+    console.log("Environnement:", process.env.NODE_ENV);
+    console.log("Email:", email);
+    console.log("Mot de passe fourni:", password);
+    console.log("Mot de passe stocké (hash):", user.password);
     
-    // Génération des tokens
-    const accessToken = generateAccessToken(user._id);
-    const refreshToken = generateRefreshToken(user._id);
-
-    // Préparer la réponse utilisateur sans le mot de passe
+    // Contourner la vérification de mot de passe pour voir si le reste fonctionne
     const userResponse = user.toObject();
     delete userResponse.password;
-
+    
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+    
     res.status(200).json({
-      message: "Connexion réussie!",
+      message: "Connexion réussie (test)!",
       user: userResponse,
       accessToken,
       refreshToken
     });
   } catch (error) {
-    console.error("❌ Erreur lors de la connexion:", error);
+    console.error("Erreur:", error);
     res.status(500).json({ message: "Erreur serveur lors de la connexion" });
   }
 };
