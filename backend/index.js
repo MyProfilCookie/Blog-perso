@@ -232,21 +232,11 @@ app.use(compression());
 
 // Configuration CORS
 const corsOptions = {
-  // Origines autorisées - ajoutez vos domaines
-  origin: [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    'https://votre-app.vercel.app',
-    'https://votre-autre-domaine.com'
-  ],
-  // Permettre les cookies et authentification
+  origin: ['https://autistudy.vercel.app', 'http://localhost:3000'],
   credentials: true,
-  // Méthodes HTTP autorisées
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  // Headers autorisés
   allowedHeaders: ['Content-Type', 'Authorization']
 };
-
 // Appliquer CORS avant toute autre middleware
 app.use(cors(corsOptions));
 
