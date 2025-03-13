@@ -485,34 +485,64 @@ const ProfilePage = () => {
   useEffect(() => {
     const fetchUserData = async () => {
       setLoading(true);
-      const token = localStorage.getItem("userToken");
-
-      if (!token) {
-        console.error("Token non trouvé");
-        Swal.fire({
-          title: "Erreur",
-          text: "Vous devez être connecté pour accéder à cette page.",
-          icon: "error",
-          confirmButtonText: "OK",
-        }).then(() => router.push("/users/login"));
-
-        return;
-      }
 
       try {
+        // Récupérer le token du localStorage
+        const token = localStorage.getItem("userToken");
+
+        console.log(
+          "🔍 Token extrait du localStorage:",
+          token ? `${token.substring(0, 15)}...` : "AUCUN TOKEN",
+        );
+
+        if (!token) {
+          console.error("Token non trouvé dans localStorage");
+          Swal.fire({
+            title: "Erreur d'authentification",
+            text: "Vous devez être connecté pour accéder à cette page.",
+            icon: "error",
+            confirmButtonText: "OK",
+          }).then(() => router.push("/users/login"));
+
+          return;
+        }
+
+        // Construire l'URL de l'API
         const apiUrl = (
           process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
         ).replace(/\/$/, "");
 
-        // Fetch user data
-        const userResponse = await axios.get(`${apiUrl}/users/me`, {
-          headers: { Authorization: `Bearer ${token}` },
-        });
+        console.log("🔍 URL de l'API utilisée:", apiUrl);
 
+        // Configurer les headers avec le token
+        const headers = {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        };
+
+        console.log("🔍 Headers envoyés:", headers);
+
+        // Fetch user data
+        const userResponse = await axios
+          .get(`${apiUrl}/users/me`, { headers })
+          .catch((error) => {
+            console.error(
+              "❌ Erreur de requête utilisateur:",
+              error.response?.status,
+              error.response?.data,
+            );
+            throw error;
+          });
+
+        console.log(
+          "✅ Réponse API:",
+          userResponse?.status,
+          userResponse?.statusText,
+        );
         const userData = userResponse.data.user;
 
         if (userData) {
-          console.log("User data:", userData);
+          console.log("✅ Données utilisateur reçues:", userData._id);
           setUser(userData);
 
           // Set profile form fields
@@ -529,6 +559,8 @@ const ProfilePage = () => {
           );
 
           setCreatedAt(dayjs(userData.createdAt).format("DD/MM/YYYY"));
+
+          // Stocker les données utilisateur à jour
           localStorage.setItem("user", JSON.stringify(userData));
 
           // Fetch user orders
@@ -537,16 +569,29 @@ const ProfilePage = () => {
           }
         }
       } catch (error) {
-        console.error(
-          "Erreur lors de la récupération des données utilisateur:",
-          error,
-        );
-        Swal.fire({
-          title: "Erreur",
-          text: "Impossible de récupérer les informations utilisateur. Veuillez vous reconnecter.",
-          icon: "error",
-          confirmButtonText: "OK",
-        }).then(() => router.push("/users/login"));
+        console.error("❌ Erreur dans fetchUserData:", error);
+        // Vérifier si c'est une erreur d'authentification
+        if ((error as any).response?.status === 401) {
+          console.log(
+            "❌ Token expiré ou invalide, redirection vers la page de connexion",
+          );
+          // Supprimer le token invalide
+          localStorage.removeItem("userToken");
+
+          Swal.fire({
+            title: "Session expirée",
+            text: "Votre session a expiré. Veuillez vous reconnecter.",
+            icon: "warning",
+            confirmButtonText: "OK",
+          }).then(() => router.push("/users/login"));
+        } else {
+          Swal.fire({
+            title: "Erreur",
+            text: "Impossible de récupérer vos informations. Veuillez réessayer.",
+            icon: "error",
+            confirmButtonText: "OK",
+          });
+        }
       } finally {
         setLoading(false);
       }

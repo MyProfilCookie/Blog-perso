@@ -1,6 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable padding-line-between-statements */
-/* eslint-disable prettier/prettier */
 "use client";
 
 import * as React from "react";
@@ -10,15 +7,19 @@ import { Input, Button, Checkbox } from "@nextui-org/react";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import "sweetalert2/dist/sweetalert2.min.css";
+import axios from "axios";
 
+import { useAuth } from "@/context/AuthContext"; // Assurez-vous d'avoir ce chemin correct
 import { AutismLogo } from "@/components/icons"; // Vérifie le bon chemin
+
 export default function Connexion() {
-  const [identifier, setIdentifier] = useState(""); // Pseudo ou email
+  const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newsletter, setNewsletter] = useState(false); // Checkbox newsletter
   const [loading, setLoading] = useState(false); // État de chargement
   const [passwordStrength, setPasswordStrength] = useState(""); // Force du mot de passe
   const router = useRouter();
+  // const { login } = useAuth(); // Utilisation du contexte d'authentification
 
   // Fonction de validation du mot de passe
   const validatePassword = (value: string) => {
@@ -26,7 +27,9 @@ export default function Connexion() {
     const specialCharValid = /[!@#$%^&*]/.test(value);
 
     if (!lengthValid || !specialCharValid) {
-      setPasswordStrength("Mot de passe faible (8 caractères minimum et un caractère spécial)");
+      setPasswordStrength(
+        "Mot de passe faible (8 caractères minimum et un caractère spécial)",
+      );
     } else {
       setPasswordStrength("Mot de passe fort");
     }
@@ -34,17 +37,21 @@ export default function Connexion() {
 
   // Fonction de gestion de la connexion
   const handleLogin = async () => {
-    if (identifier.length < 8) {
+    // Validation de l'email (doit ressembler à un email)
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
       Swal.fire({
         icon: "error",
         title: "Erreur",
-        text: "Le pseudo ou l'email doit comporter au moins 8 caractères.",
+        text: "Veuillez entrer une adresse email valide.",
         confirmButtonText: "Ok",
       });
+
       return;
     }
 
+    // Validation du mot de passe
     const passwordRegex = /^(?=.*[!@#$%^&*])/;
+
     if (password.length < 8 || !passwordRegex.test(password)) {
       Swal.fire({
         icon: "error",
@@ -52,72 +59,108 @@ export default function Connexion() {
         text: "Le mot de passe doit comporter au moins 8 caractères et contenir un caractère spécial.",
         confirmButtonText: "Ok",
       });
+
       return;
     }
 
     setLoading(true);
 
-    const isEmail = /\S+@\S+\.\S+/.test(identifier);
     try {
-      const loginData = isEmail ? { email: identifier, password } : { pseudo: identifier, password };
+      console.log("🔍 Tentative de connexion pour:", email);
+      const apiUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+      ).replace(/\/$/, "");
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(loginData),
+      console.log("🔍 URL API:", apiUrl);
+
+      const response = await axios.post(`${apiUrl}/users/login`, {
+        email,
+        password,
       });
 
-      const data = await response.json();
-      setLoading(false);
+      console.log("✅ Réponse de connexion:", response.status);
 
-      if (!response.ok) {
-        handleLoginError(response.status, data.message);
-        return;
+      // Vérifier si la réponse contient un token et un utilisateur
+      if (response.data && response.data.accessToken) {
+        // Stocker le token
+        console.log(
+          "🔑 Token reçu (début):",
+          response.data.accessToken.substring(0, 15) + "...",
+        );
+        localStorage.setItem("userToken", response.data.accessToken);
+
+        // Vérifier que le token est bien stocké
+        const storedToken = localStorage.getItem("userToken");
+
+        console.log(
+          "🔍 Token stocké dans localStorage:",
+          storedToken ? "OUI" : "NON",
+        );
+
+        // Stocker les informations utilisateur
+        if (response.data.user) {
+          // Normaliser les données utilisateur
+          const userData = {
+            ...response.data.user,
+            avatar:
+              response.data.user.image ||
+              response.data.user.avatar ||
+              "/assets/default-avatar.webp",
+            role: response.data.user.role || "user",
+            deliveryAddress: response.data.user.deliveryAddress || {
+              street: "Adresse inconnue",
+              city: "Ville inconnue",
+              postalCode: "Code postal inconnu",
+              country: "France",
+            },
+          };
+
+          localStorage.setItem("user", JSON.stringify(userData));
+          console.log(
+            "✅ Données utilisateur stockées:",
+            userData.pseudo || userData.email,
+          );
+
+          // Notifier les autres composants que l'utilisateur s'est connecté
+          window.dispatchEvent(new CustomEvent("userUpdate"));
+
+          // Afficher le succès et rediriger
+          Swal.fire({
+            icon: "success",
+            title: "Connexion réussie",
+            text: `Bienvenue sur AutiStudy, ${userData.pseudo || userData.prenom || userData.nom || userData.email}!`,
+            confirmButtonText: "Ok",
+          }).then(() => {
+            router.back(); // Redirection vers la page précédente
+          });
+        } else {
+          handleLoginError(
+            400,
+            "Données utilisateur manquantes dans la réponse",
+          );
+        }
+      } else {
+        console.error("❌ Réponse incorrecte:", response.data);
+        handleLoginError(400, "Token manquant dans la réponse");
       }
+    } catch (error: any) {
+      console.error("❌ Erreur de connexion:", error);
 
-      // Stocker les infos utilisateur dans le localStorage
-      localStorage.setItem("userToken", data.token);
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          pseudo: data.user.pseudo,
-          email: data.user.email,
-          nom: data.user.nom,
-          prenom: data.user.prenom,
-          phone: data.user.phone,
-          avatar: data.user.avatar || "/assets/default-avatar.webp",
-          role: data.user.role || "user",
-          deliveryAddress: data.user.deliveryAddress || {
-            street: "Adresse inconnue",
-            city: "Ville inconnue",
-            postalCode: "Code postal inconnu",
-            country: "France",
-          },
-        })
-      );
-
-      console.log("Données utilisateur stockées :", localStorage.getItem("user"));
-
-      // Déclencher un événement personnalisé pour rafraîchir la navbar
-      window.dispatchEvent(new CustomEvent("userUpdate"));
-
-      // Afficher le succès et rediriger
-      Swal.fire({
-        icon: "success",
-        title: "Connexion réussie",
-        text: `Bienvenue sur AutiStudy, ${data.user.pseudo || data.user.prenom}!`,
-        confirmButtonText: "Ok",
-      }).then(() => {
-        router.back(); // ✅ Redirection vers la page précédente
-      });
-    } catch (error) {
+      if (error.response) {
+        console.log(
+          "❌ Détails de l'erreur:",
+          error.response.status,
+          error.response.data,
+        );
+        handleLoginError(
+          error.response.status,
+          error.response.data.message || "Erreur inconnue",
+        );
+      } else {
+        handleLoginError(500, "Erreur de connexion au serveur");
+      }
+    } finally {
       setLoading(false);
-      Swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: "Erreur lors de la connexion au serveur.",
-        confirmButtonText: "Ok",
-      });
     }
   };
 
@@ -135,7 +178,7 @@ export default function Connexion() {
           router.push("/users/signup");
         }
       });
-    } else if (status === 400) {
+    } else if (status === 401) {
       Swal.fire({
         icon: "error",
         title: "Erreur",
@@ -159,9 +202,16 @@ export default function Connexion() {
       initial={{ opacity: 0, y: -50 }}
       transition={{ duration: 1 }}
     >
-      <motion.div animate={{ opacity: 1, y: 0 }} className="mb-6" initial={{ opacity: 0, y: -50 }} transition={{ duration: 1, delay: 0.2 }}>
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="mb-6"
+        initial={{ opacity: 0, y: -50 }}
+        transition={{ duration: 1, delay: 0.2 }}
+      >
         <AutismLogo className="mx-auto mb-2" size={60} />
-        <h1 className="text-4xl font-bold text-center text-blue-600">Bienvenue sur AutiStudy</h1>
+        <h1 className="text-4xl font-bold text-center text-blue-600">
+          Bienvenue sur AutiStudy
+        </h1>
       </motion.div>
 
       <motion.p
@@ -170,15 +220,29 @@ export default function Connexion() {
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 1, delay: 0.4 }}
       >
-        Connectez-vous pour accéder à des ressources adaptées et un suivi personnalisé.
+        Connectez-vous pour accéder à des ressources adaptées et un suivi
+        personnalisé.
       </motion.p>
 
-      <motion.div animate={{ opacity: 1, y: 0 }} className="flex flex-col gap-4 w-[300px]" initial={{ opacity: 0, y: 50 }} transition={{ duration: 1, delay: 0.6 }}>
-        <Input required placeholder="Pseudo ou Email" value={identifier} onChange={(e) => setIdentifier(e.target.value)} />
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col gap-4 w-[300px]"
+        initial={{ opacity: 0, y: 50 }}
+        transition={{ duration: 1, delay: 0.6 }}
+      >
+        <Input
+          required
+          label="Email"
+          placeholder="exemple@email.com"
+          type="email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
 
         <Input
           required
-          placeholder="Mot de passe (8 caractères + caractère spécial)"
+          label="Mot de passe"
+          placeholder="8 caractères min. + caractère spécial"
           type="password"
           value={password}
           onChange={(e) => {
@@ -186,25 +250,34 @@ export default function Connexion() {
             validatePassword(e.target.value);
           }}
         />
-        {password && <p className={`text-sm ${passwordStrength.includes("faible") ? "text-red-500" : "text-green-500"}`}>{passwordStrength}</p>}
+        {password && (
+          <p
+            className={`text-sm ${passwordStrength.includes("faible") ? "text-red-500" : "text-green-500"}`}
+          >
+            {passwordStrength}
+          </p>
+        )}
 
-        <Checkbox isSelected={newsletter} onChange={(e) => setNewsletter(e.target.checked)}>
+        <Checkbox isSelected={newsletter} onValueChange={setNewsletter}>
           S&apos;inscrire à la newsletter
         </Checkbox>
 
-        {loading ? (
-          <Button disabled className="bg-blue-500">
-            Connexion...
-          </Button>
-        ) : (
-          <Button className="bg-blue-500" onClick={handleLogin}>
-            Se connecter
-          </Button>
-        )}
+        <Button
+          className="mt-2"
+          color="primary"
+          isLoading={loading}
+          onClick={handleLogin}
+        >
+          {loading ? "Connexion..." : "Se connecter"}
+        </Button>
 
         <p className="mt-4 text-center">
           Vous n&apos;avez pas de compte ?{" "}
-          <Button color="primary" onClick={() => router.push("/users/signup")}>
+          <Button
+            color="secondary"
+            variant="light"
+            onClick={() => router.push("/users/signup")}
+          >
             S&apos;inscrire
           </Button>
         </p>
@@ -212,5 +285,3 @@ export default function Connexion() {
     </motion.div>
   );
 }
-
-

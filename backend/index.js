@@ -230,19 +230,33 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(compression());
 
-app.use(
-  cors({
-    origin: (origin, callback) => {
-      if (!origin || origin.endsWith(".vercel.app")) {
-        callback(null, true);
-      } else {
-        callback(new Error("Not allowed by CORS"));
-      }
-    },
-    credentials: true,
-    optionsSuccessStatus: 200,
-  })
-);
+// Configuration CORS
+const corsOptions = {
+  // Origines autorisées - ajoutez vos domaines
+  origin: [
+    'http://localhost:3000',
+    'http://localhost:3001',
+    'https://votre-app.vercel.app',
+    'https://votre-autre-domaine.com'
+  ],
+  // Permettre les cookies et authentification
+  credentials: true,
+  // Méthodes HTTP autorisées
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  // Headers autorisés
+  allowedHeaders: ['Content-Type', 'Authorization']
+};
+
+// Appliquer CORS avant toute autre middleware
+app.use(cors(corsOptions));
+
+// Log des requêtes pour débogage
+app.use((req, res, next) => {
+  console.log(`${req.method} ${req.url}`);
+  console.log('Origin:', req.headers.origin);
+  console.log('Headers:', req.headers.authorization ? 'Auth: Présent' : 'Auth: Absent');
+  next();
+});
 
 // 🔐 Routes d'authentification
 app.post("/api/auth/login", async (req, res) => {
