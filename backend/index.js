@@ -182,6 +182,11 @@
 const express = require("express");
 const app = express();
 require("dotenv").config();
+console.log("🔍 Chargement des variables d'environnement...");
+console.log("✅ JWT_SECRET:", process.env.JWT_SECRET ? "Chargé ✅" : "❌ Manquant");
+console.log("✅ JWT_REFRESH_SECRET:", process.env.JWT_REFRESH_SECRET ? "Chargé ✅" : "❌ Manquant");
+console.log("✅ DB:", process.env.DB ? "Chargé ✅" : "❌ Manquant");
+console.log("✅ NODE_ENV:", process.env.NODE_ENV);
 const cors = require("cors");
 const jwt = require("jsonwebtoken");
 const compression = require("compression");
@@ -211,7 +216,12 @@ const contactRoutes = require("./api/routes/contact.routes");
 const blogRoutes = require("./api/routes/blog.routes");
 
 // 🔍 Connexion à MongoDB avec test
-connect(process.env.DB)
+const mongoose = require("mongoose");
+
+mongoose
+  .connect(process.env.DB, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("✅ Connecté à MongoDB"))
+  .catch((err) => console.error("❌ Erreur de connexion MongoDB:", err));
 
 // 🔧 Middlewares
 app.use(express.json());
@@ -233,10 +243,6 @@ app.use(
     optionsSuccessStatus: 200,
   })
 );
-
-// // 🔑 Fonctions pour générer des tokens JWT
-// const generateAccessToken = (userId) => jwt.sign({ id: userId }, process.env.JWT_SECRET, { expiresIn: "15m" });
-// const generateRefreshToken = (userId) => jwt.sign({ id: userId }, process.env.JWT_REFRESH_SECRET, { expiresIn: "7d" });
 
 // 🔐 Routes d'authentification
 app.post("/api/auth/login", async (req, res) => {
@@ -340,6 +346,8 @@ app.get("/api", (req, res) => {
 
 // 📌 Déclaration des routes avec `/api/`
 app.use("/api/users", userRoutes);
+// app use pour /me
+// app.use("/api/users/me", authenticateToken, userRoutes); // Middleware d'authentification pour /me
 app.use("/api/courses", monthlyCourseRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/lessons", lessonsRoutes);
@@ -352,13 +360,15 @@ app.use("/api/contact", contactRoutes);
 app.use("/api/blog", blogRoutes);
 
 // ❌ Gestion des erreurs 404
-app.use((req, res, next) => next(createError(404, "Ressource non trouvée")));
+app.use((req, res, next) => res.status(404).json({ message: "Ressource non trouvée" }));
 
 // ⚠ Gestion des erreurs globales
 app.use((err, req, res, next) => {
   console.error("⚠️ Erreur globale :", err);
   res.status(err.status || 500).json({ error: { message: err.message } });
 });
+
+
 
 // 🚀 Lancement du serveur
 const PORT = process.env.PORT || 10000;

@@ -1,35 +1,39 @@
 const express = require("express");
 const router = express.Router();
-const { authMiddleware } = require("../middlewares/authMiddleware");
-const { extractUserIdFromToken } = require('../middlewares/authMiddleware');
-const { signup, login, getUsers, deleteUser, makeAdmin, updateUser, getCurrentUser, getUserById } = require("../controllers/UserControllers"); // Importer les contrôleurs
+const { authMiddleware, isAdmin } = require("../middlewares/authMiddleware");
+const UserController = require("../controllers/UserControllers");
+
+console.log("📌 User.routes.js chargé");
+console.log("🔍 Contrôleurs disponibles:", Object.keys(UserController));
+
+// Attention à l'ordre des routes - les routes spécifiques doivent être placées avant les routes génériques
+// Sinon, les routes comme /me pourraient être interprétées comme /:id
+
+// Route pour obtenir les informations de l'utilisateur actuellement connecté
+// Cette route doit être AVANT la route "/:id"
+router.get("/me", authMiddleware, UserController.getCurrentUser);
 
 // Route pour l'inscription d'un utilisateur
-router.post("/signup", signup);
+router.post("/signup", UserController.signup);
 
 // Route pour la connexion d'un utilisateur
-router.post("/login", login);
+router.post("/login", UserController.login);
 
-// Route pour recuperer tous les utilisateurs
-router.get("/", getUsers);
-
-// Route pour supprimer un utilisateur
-router.delete("/:id", deleteUser);
-
-// Route pour mettre à jour les informations d'un utilisateur
-router.put("/:id", updateUser);
-
-// Route pour obtenir les informations d'un utilisateur
-router.get("/:id", getUserById);
+// Route pour récupérer tous les utilisateurs
+router.get("/", UserController.getUsers);
 
 // Route pour promouvoir un utilisateur en administrateur
-router.post('/promote/:userId', makeAdmin);
+router.post('/promote/:userId', UserController.makeAdmin);
 
-// // Route pour obtenir les informations de l'utilisateur actuellement connecté
-// router.get("/me", authMiddleware, getCurrentUser);
+// Route pour supprimer un utilisateur
+router.delete("/:id", UserController.deleteUser);
+
+// Route pour mettre à jour les informations d'un utilisateur
+router.put("/:id", UserController.updateUser);
 
 // Route pour obtenir les informations d'un utilisateur par son ID
-router.get("/me", authMiddleware, getCurrentUser);
+// Cette route doit être APRÈS /me pour éviter les conflits
+router.get("/:id", UserController.getUserById);
 
 module.exports = router;
 
