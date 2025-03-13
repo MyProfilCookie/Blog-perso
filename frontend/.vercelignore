@@ -1,3 +1,6 @@
 node_modules
 .next
 .git
+# .vercelignore
+.next
+node_modules

@@ -1,16 +1,27 @@
 /* eslint-disable no-console */
-console.log("✅ NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
+// Import dotenv pour charger les variables d'environnement correctement
+require("dotenv").config();
+/* eslint-disable no-console */
+require("./debug"); // Ajoutez cette ligne
+
+// Log des variables d'environnement avec vérification de leur existence
+console.log(
+  "✅ NEXT_PUBLIC_API_URL:",
+  process.env.NEXT_PUBLIC_API_URL || "(non défini)",
+);
 console.log(
   "✅ NEXT_PUBLIC_STRIPE_PUBLIC_KEY:",
-  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
+  process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "(non défini)",
 );
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Définir des valeurs par défaut pour éviter les problèmes d'undefined
   env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL,
-    NEXT_PUBLIC_STRIPE_PUBLIC_KEY: process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY,
+    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "",
+    NEXT_PUBLIC_STRIPE_PUBLIC_KEY:
+      process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "",
   },
 
   async redirects() {
