@@ -230,21 +230,49 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(compression());
 
-// Configuration CORS
+// Configuration CORS pour autoriser plusieurs origines
+const allowedOrigins = [
+  'https://autistudy.vercel.app',
+  'https://autistudy-48mon62zt-myprofilcookies-projects.vercel.app',
+  'http://localhost:3000'
+];
+
 const corsOptions = {
-  origin: ['https://autistudy.vercel.app', 'http://localhost:3000'],
+  origin: function (origin, callback) {
+    // Autoriser les requêtes sans origine (comme les appels API mobiles)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      console.log("Origine non autorisée:", origin);
+      callback(null, true); // Temporairement autoriser toutes les origines pour déboguer
+    }
+  },
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
 };
-// Appliquer CORS avant toute autre middleware
+
+// Appliquer CORS avant toutes les autres middlewares
 app.use(cors(corsOptions));
 
-// Log des requêtes pour débogage
+// Middleware de journalisation des requêtes
 app.use((req, res, next) => {
   console.log(`${req.method} ${req.url}`);
   console.log('Origin:', req.headers.origin);
   console.log('Headers:', req.headers.authorization ? 'Auth: Présent' : 'Auth: Absent');
+  
+  // Ajouter manuellement les en-têtes CORS pour s'assurer qu'ils sont présents
+  res.header('Access-Control-Allow-Origin', req.headers.origin || '*');
+  res.header('Access-Control-Allow-Credentials', 'true');
+  res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  
+  if (req.method === 'OPTIONS') {
+    return res.sendStatus(200);
+  }
+  
   next();
 });
 
