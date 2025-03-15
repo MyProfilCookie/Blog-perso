@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, Button, Progress } from "@nextui-org/react";
 import {
   LineChart,
   Line,
@@ -14,9 +13,13 @@ import {
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 
+// Import shadcn components
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
 import Loading from "@/components/loading";
 
-// Exemple de données pour les cours, évaluations et articles
+// Example data for courses, evaluations, and articles
 const mockData = {
   courses: [
     { title: "Cours de Mathématiques", progress: 80, lastViewed: "2024-09-20" },
@@ -36,7 +39,7 @@ const mockData = {
   ],
 };
 
-// Fonction de récupération des données utilisateur stockées dans le localStorage
+// Function to retrieve user data stored in localStorage
 const fetchUserData = () => {
   if (typeof window !== "undefined") {
     const storedUser = localStorage.getItem("user");
@@ -54,7 +57,7 @@ const ProfilePage = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Récupérer les données utilisateur à partir du localStorage
+    // Retrieve user data from localStorage
     const fetchedUser = fetchUserData();
 
     if (fetchedUser) {
@@ -65,147 +68,159 @@ const ProfilePage = () => {
 
       setCreatedAt(formattedCreatedAt);
     } else {
-      router.push("/users/login"); // Redirection vers la page de connexion si l'utilisateur n'est pas connecté
+      router.push("/users/login"); // Redirect to login page if user is not logged in
     }
 
-    // Mettre à jour l'heure actuelle chaque seconde
+    // Update current time every second
     const interval = setInterval(() => {
       setCurrentTime(dayjs().format("HH:mm:ss"));
     }, 1000);
 
-    // Nettoyage de l'intervalle pour éviter les fuites de mémoire
+    // Clean up interval to avoid memory leaks
     return () => clearInterval(interval);
   }, [router]);
 
   if (!user) {
-    return <Loading />; // Attendre que l'utilisateur soit chargé
+    return <Loading />; // Wait for user to load
   }
 
   return (
-    <div className="container mx-auto mt-6">
-      <h1 className="mb-4 text-4xl font-bold text-center">
+    <div className="container px-4 mx-auto mt-6">
+      <h1 className="mb-4 text-3xl font-bold text-center md:text-4xl">
         Bonjour à toi, {user.pseudo} 👋
       </h1>
-      <p className="mb-6 text-gray-600 text-center">
+      <p className="mb-6 text-sm text-center text-muted-foreground md:text-base">
         Heure actuelle : {currentTime} | Date de création du compte :{" "}
         {createdAt}
       </p>
 
-      <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {/* Cours Consultés */}
-        <div>
-          <Card>
-            <div className="card-header">
-              <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-white p-4">
-                Cours Consultés
-              </h3>
-            </div>
-            <div style={{ padding: "20px" }}>
-              {mockData.courses.map((course, index) => (
-                <div key={index}>
-                  <p className="font-bold">{course.title}</p>
-                  <Progress
-                    aria-label={`Progression du cours ${course.title}`}
-                    color="primary"
-                    value={course.progress}
-                  />
-                  <p>Dernière consultation : {course.lastViewed}</p>
-                  <Button
-                    aria-label={`Reprendre ${course.title}`}
-                    className="mt-2"
-                  >
-                    Reprendre
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+        <Card className="overflow-hidden shadow-md">
+          <CardHeader className="bg-primary p-3">
+            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl">
+              Cours Consultés
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            {mockData.courses.map((course, index) => (
+              <div key={index} className="mb-4">
+                <p className="mb-1 font-medium">{course.title}</p>
+                <Progress
+                  aria-label={`Progression du cours ${course.title}`}
+                  className="h-2 mb-1"
+                  value={course.progress}
+                />
+                <p className="mb-2 text-sm text-muted-foreground">
+                  Dernière consultation : {course.lastViewed}
+                </p>
+                <Button
+                  aria-label={`Reprendre ${course.title}`}
+                  className="w-full mt-1"
+                  size="sm"
+                >
+                  Reprendre
+                </Button>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
 
         {/* Évaluations faites */}
-        <div>
-          <Card>
-            <div className="card-header">
-              <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-gray-900 dark:text-white p-4">
-                Évaluations
-              </h3>
-            </div>
-            <div style={{ padding: "20px" }}>
-              {mockData.evaluations.map((evaluation, index) => (
-                <div key={index}>
-                  <p className="font-bold text-gray-900 dark:text-white">
-                    {evaluation.title}
-                  </p>
-                  <p>Score : {evaluation.score}%</p>
-                  <p>Date : {evaluation.date}</p>
-                  <Button
-                    aria-label={`Voir l'évaluation de ${evaluation.title}`}
-                    className="mt-2"
-                  >
-                    Voir l&apos;évaluation
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+        <Card className="overflow-hidden shadow-md">
+          <CardHeader className="bg-primary p-3">
+            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl">
+              Évaluations
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            {mockData.evaluations.map((evaluation, index) => (
+              <div key={index} className="mb-4">
+                <p className="mb-1 font-medium">{evaluation.title}</p>
+                <p className="text-sm">Score : {evaluation.score}%</p>
+                <p className="mb-2 text-sm text-muted-foreground">
+                  Date : {evaluation.date}
+                </p>
+                <Button
+                  aria-label={`Voir l'évaluation de ${evaluation.title}`}
+                  className="w-full mt-1"
+                  size="sm"
+                >
+                  Voir l&apos;évaluation
+                </Button>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
 
         {/* Articles Consultés */}
-        <div>
-          <Card>
-            <div className="card-header">
-              <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-white p-4">
-                Articles Consultés
-              </h3>
-            </div>
-            <div style={{ padding: "20px" }}>
-              {mockData.articles.map((article, index) => (
-                <div key={index}>
-                  <p className="font-bold">{article.title}</p>
-                  <Progress
-                    aria-label={`Progression de l'article ${article.title}`}
-                    color="success"
-                    value={article.progress}
-                  />
-                  <p>Dernière consultation : {article.lastViewed}</p>
-                  <Button
-                    aria-label={`Reprendre ${article.title}`}
-                    className="mt-2"
-                  >
-                    Reprendre
-                  </Button>
-                </div>
-              ))}
-            </div>
-          </Card>
-        </div>
+        <Card className="overflow-hidden shadow-md">
+          <CardHeader className="bg-primary p-3">
+            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl">
+              Articles Consultés
+            </CardTitle>
+          </CardHeader>
+          <CardContent className="p-4">
+            {mockData.articles.map((article, index) => (
+              <div key={index} className="mb-4">
+                <p className="mb-1 font-medium">{article.title}</p>
+                <Progress
+                  aria-label={`Progression de l'article ${article.title}`}
+                  className="h-2 mb-1"
+                  value={article.progress}
+                />
+                <p className="mb-2 text-sm text-muted-foreground">
+                  Dernière consultation : {article.lastViewed}
+                </p>
+                <Button
+                  aria-label={`Reprendre ${article.title}`}
+                  className="w-full mt-1"
+                  size="sm"
+                >
+                  Reprendre
+                </Button>
+              </div>
+            ))}
+          </CardContent>
+        </Card>
       </div>
 
       {/* Diagramme de progression */}
-      <div className="mt-8">
-        <h3 className="mb-4 text-2xl font-bold text-center bg-blue-500 text-white p-4 rounded-lg">
-          Progression des activités
-        </h3>
-        <ResponsiveContainer height={300} width="100%">
-          <LineChart
-            data={[
-              { name: "Mathématiques", progress: 80 },
-              { name: "Français", progress: 50 },
-              { name: "Évaluation Math", progress: 75 },
-              { name: "Évaluation Français", progress: 88 },
-              { name: "Article Autisme", progress: 60 },
-              { name: "Article Pédagogie", progress: 30 },
-            ]}
-            margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-          >
-            <CartesianGrid strokeDasharray="3 3" />
-            <XAxis dataKey="name" />
-            <YAxis />
-            <Tooltip />
-            <Line dataKey="progress" stroke="#82ca9d" type="monotone" />
-          </LineChart>
-        </ResponsiveContainer>
-      </div>
+      <Card className="mt-8 overflow-hidden shadow-md">
+        <CardHeader className="bg-primary p-3">
+          <CardTitle className="text-lg text-center text-primary-foreground md:text-xl">
+            Progression des activités
+          </CardTitle>
+        </CardHeader>
+        <CardContent className="p-4">
+          <div className="w-full" style={{ height: "300px" }}>
+            <ResponsiveContainer height="100%" width="100%">
+              <LineChart
+                data={[
+                  { name: "Math", progress: 80 },
+                  { name: "Français", progress: 50 },
+                  { name: "Éval Math", progress: 75 },
+                  { name: "Éval FR", progress: 88 },
+                  { name: "Art Autisme", progress: 60 },
+                  { name: "Art Péda", progress: 30 },
+                ]}
+                margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" />
+                <XAxis dataKey="name" tick={{ fontSize: 12 }} tickSize={8} />
+                <YAxis tick={{ fontSize: 12 }} tickSize={8} />
+                <Tooltip />
+                <Line
+                  dataKey="progress"
+                  stroke="hsl(var(--primary))"
+                  strokeWidth={2}
+                  type="monotone"
+                />
+              </LineChart>
+            </ResponsiveContainer>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 };
