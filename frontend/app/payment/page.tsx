@@ -25,6 +25,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     const stripe = useStripe();
     const elements = useElements();
     const router = useRouter();
+    const [, setCartItems] = useState<any[]>([]);
 
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -195,6 +196,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             localStorage.removeItem(`cartItems_${userData.user.pseudo}`);
             localStorage.removeItem("totalPrice");
             window.dispatchEvent(new Event("cartUpdated"));
+            setCartItems([]); // 🔥 Vide le panier immédiatement dans l'état React
 
             Swal.fire({
                 title: "Commande enregistrée",

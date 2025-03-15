@@ -21,7 +21,7 @@ const nextConfig = {
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "",
     NEXT_PUBLIC_STRIPE_PUBLIC_KEY:
-      process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "",
+      "pk_test_51PJX1EJ9cNEOCcHhPnKT4sBxvL5xs9aQN7VTmRUabgl4khJ6k7KbYIcjJsHIhesao1lhsj0YYfIAjhn9hvAPxwLw008vby1XDo",
   },
 
   async redirects() {
