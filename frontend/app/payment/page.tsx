@@ -26,10 +26,10 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     const elements = useElements();
     const router = useRouter();
     const [, setCartItems] = useState<any[]>([]);
-
+    const [user, setUser] = useState<any>(null);
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-
+    
         if (!selectedTransporter) {
             Swal.fire({
                 title: "Erreur",
@@ -39,7 +39,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
             return;
         }
-
+    
         if (!stripe || !elements) {
             Swal.fire({
                 title: "Erreur",
@@ -47,12 +47,12 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 icon: "error",
                 confirmButtonText: "Réessayer",
             });
-
+    
             return;
         }
-
+    
         const cardElement = elements.getElement(CardElement);
-
+    
         if (!cardElement) {
             Swal.fire({
                 title: "Erreur",
@@ -60,16 +60,16 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 icon: "error",
                 confirmButtonText: "Réessayer",
             });
-
+    
             return;
         }
-
+    
         try {
             const { error, paymentMethod } = await stripe.createPaymentMethod({
                 type: "card",
                 card: cardElement,
             });
-
+    
             if (error) {
                 Swal.fire({
                     title: "Erreur",
@@ -77,20 +77,20 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                     icon: "error",
                     confirmButtonText: "Réessayer",
                 });
-
+    
                 return;
             }
-
-            // Appeler la fonction pour enregistrer la commande après un paiement réussi
+    
+            // ✅ Enregistrer la commande après paiement
             await saveOrder(cartItems, totalToPay, paymentMethod?.id);
-
+    
             Swal.fire({
                 title: "Paiement réussi",
                 text: "Merci pour votre achat !",
                 icon: "success",
                 confirmButtonText: "OK",
             }).then(() => {
-                onPaymentSuccess();
+                onPaymentSuccess(); // 🔥 Met à jour le panier immédiatement
                 router.push("/payment-confirmations");
             });
         } catch (err) {
@@ -105,7 +105,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     };
     const saveOrder = async (items: any[], total: number, transactionId: string) => {
         let token = localStorage.getItem("userToken");
-
+    
         if (!selectedTransporter) {
             Swal.fire({
                 title: "Erreur",
@@ -115,7 +115,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
             return;
         }
-
+    
         if (!token) {
             Swal.fire({
                 title: "Erreur",
@@ -128,7 +128,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
             return;
         }
-
+    
         if (!items || items.length === 0) {
             Swal.fire({
                 title: "Erreur",
@@ -138,26 +138,26 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
             return;
         }
-
+    
         try {
-            const userResponse = await fetch(`https://blog-perso.onrender.com/api/users/me`, {
+            const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
-
+    
             if (!userResponse.ok) {
                 throw new Error("Erreur lors de la récupération des informations utilisateur.");
             }
-
+    
             const userData = await userResponse.json();
             console.log("✅ Données utilisateur récupérées :", userData);
-
+    
             const formattedItems = items.map((item) => ({
                 productId: item.productId || item._id,
                 title: item.title,
                 quantity: item.quantity,
                 price: item.price,
             }));
-
+    
             const orderData = {
                 firstName: userData.user.prenom,
                 lastName: userData.user.nom,
@@ -172,7 +172,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 deliveryMethod: selectedTransporter,
                 deliveryCost: deliveryCost,
             };
-
+    
             const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
                 method: "POST",
                 headers: {
@@ -181,23 +181,21 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 },
                 body: JSON.stringify(orderData),
             });
-
+    
             if (!orderResponse.ok) {
                 throw new Error("Erreur lors de la création de la commande.");
             }
-
-            const orderResponseData = await orderResponse.json();
-            const orderId = orderResponseData.order?._id;
-            localStorage.setItem("orderId", orderId);
-
-            // Enregistrer la confirmation de paiement
-            await confirmPayment(userData.user, orderId, transactionId, total, "card");
-
+    
+            // ✅ Supprimer le panier de localStorage
             localStorage.removeItem(`cartItems_${userData.user.pseudo}`);
             localStorage.removeItem("totalPrice");
+    
+            // ✅ Déclencher un événement pour vider le panier
             window.dispatchEvent(new Event("cartUpdated"));
-            setCartItems([]); // 🔥 Vide le panier immédiatement dans l'état React
-
+    
+            // ✅ Vider l'état React immédiatement
+            setCartItems([]);
+    
             Swal.fire({
                 title: "Commande enregistrée",
                 text: "Votre commande et le paiement ont été enregistrés avec succès.",
@@ -214,6 +212,27 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
         }
     };
+    useEffect(() => {
+        if (!user) return; // ⚠️ Empêcher l'exécution si `user` n'est pas encore défini
+    
+        const updateCart = () => {
+            console.log("🔄 Mise à jour du panier après paiement...");
+            
+            // 🔥 Supprime le panier du localStorage
+            localStorage.removeItem(`cartItems_${user.pseudo}`);
+            localStorage.removeItem("totalPrice");
+    
+            // 🔥 Met à jour le state React
+            setCartItems([]);
+        };
+    
+        // 🛑 Écoute l'événement `cartUpdated` pour vider le panier
+        window.addEventListener("cartUpdated", updateCart);
+    
+        return () => {
+            window.removeEventListener("cartUpdated", updateCart);
+        };
+    }, [user]);
 
     // ✅ Fonction d'enregistrement de la confirmation de paiement
     const confirmPayment = async (
