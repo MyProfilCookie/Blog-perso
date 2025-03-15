@@ -7,6 +7,7 @@ import "@/styles/globals.css";
 import { Metadata, Viewport } from "next";
 import clsx from "clsx";
 import { Toaster } from "sonner";
+import { SpeedInsights } from "@vercel/speed-insights/next"
 
 // 📌 3. Imports de fichiers absolus (du projet)
 import { siteConfig } from "@/config/site";
@@ -56,6 +57,7 @@ export default function RootLayout({
             <Navbar />
             <main className="flex-grow px-6 pt-16 mx-auto max-w-7xl w-full">
               {children}
+              <SpeedInsights />
             </main>
             {/* Correction : Footer bien collé en bas */}
             <Footer />
