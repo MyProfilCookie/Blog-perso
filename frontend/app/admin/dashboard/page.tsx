@@ -1,7 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
-/* eslint-disable no-console */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/order */
+/* eslint-disable @next/next/no-img-element */
+/* eslint-disable @typescript-eslint/no-unused-vars */
+/* eslint-disable no-console */
 "use client";
 
 import React, { useState, useEffect } from "react";
