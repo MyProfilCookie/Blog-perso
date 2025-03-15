@@ -17,7 +17,7 @@ const userRoutes = require("./api/routes/User.routes");
 const paymentRoutes = require("./api/routes/payment.routes");
 const orderRoutes = require("./api/routes/order.routes");
 const productRoutes = require("./api/routes/products.routes");
-
+const Payment = require("./api/models/payments"); // Modèle de paiement
 // 🔍 Vérification des variables d'environnement
 console.log("🔍 Chargement des variables d'environnement...");
 console.log("✅ JWT_SECRET:", process.env.JWT_SECRET ? "Chargé ✅" : "❌ Manquant");
@@ -30,8 +30,48 @@ mongoose
   .then(() => console.log("✅ Connecté à MongoDB"))
   .catch((err) => console.error("❌ Erreur de connexion MongoDB:", err));
 
-// 🔧 Activer express.raw() AVANT express.json() pour Stripe Webhooks
-app.use('/api/payments/webhook/stripe', express.raw({ type: 'application/json' }));
+
+// ✅ Activer express.raw() AVANT express.json() pour Stripe Webhooks
+app.post('/api/payments/webhook/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
+  console.log("🔔 Webhook Stripe reçu !");
+  
+  const sig = req.headers['stripe-signature']; // Récupération de la signature
+  let event;
+
+  try {
+      // ✅ Vérification de l'authenticité de la requête Stripe
+      event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
+      console.log(`✅ Webhook validé avec succès : ${event.type}`);
+  } catch (err) {
+      console.error("❌ Erreur Webhook Stripe :", err.message);
+      return res.status(400).send(`Webhook Error: ${err.message}`);
+  }
+
+  const paymentIntent = event.data.object;
+
+  console.log("🔍 ID du paiement :", paymentIntent.id);
+  console.log("💰 Montant reçu :", paymentIntent.amount_received);
+  console.log("💳 Devise :", paymentIntent.currency);
+  console.log("📧 Email reçu :", paymentIntent.receipt_email);
+
+  try {
+      const newPayment = new Payment({
+          stripePaymentId: paymentIntent.id,
+          amount: paymentIntent.amount_received / 100,
+          status: "Paid",
+          currency: paymentIntent.currency,
+          email: paymentIntent.receipt_email || "N/A"
+      });
+
+      await newPayment.save();  // Sauvegarde en base
+
+      console.log("✅ Paiement enregistré en base :", JSON.stringify(newPayment, null, 2));
+      res.status(200).json({ received: true });
+  } catch (error) {
+      console.error("❌ Erreur lors de la sauvegarde en base :", error);
+      res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
 
 // 🔧 Puis activer express.json() pour le reste de l'API
 app.use(express.json());
@@ -62,6 +102,7 @@ const corsOptions = {
 };
 
 app.use(cors(corsOptions));
+
 
 // ✅ Middleware de journalisation des requêtes
 app.use((req, res, next) => {

@@ -35,51 +35,43 @@ router.post('/create-payment-intent', async (req, res) => {
 /**
  * ✅ 2. Webhook Stripe - Écoute les événements de paiement
  */
-router.post('/webhook/stripe', express.raw({ type: 'application/json' }), async (req, res) => {
-    console.log("🔔 Webhook Stripe reçu ! Vérification en cours...");
+router.post('/webhook/stripe', express.json(), async (req, res) => {
+  console.log("🔔 Webhook Stripe reçu !");
+  
+  // Vérification du corps de la requête
+  console.log("📥 Requête reçue :", JSON.stringify(req.body, null, 2));
 
-    const sig = req.headers['stripe-signature'];
-    let event;
+  const event = req.body;  // On récupère l'événement brut
 
-    try {
-        event = stripe.webhooks.constructEvent(req.body, sig, process.env.STRIPE_WEBHOOK_SECRET);
-        console.log(`✅ Webhook validé avec succès : ${event.type}`);
-    } catch (err) {
-        console.error('❌ Erreur Webhook Stripe :', err.message);
-        return res.status(400).send(`Webhook Error: ${err.message}`);
-    }
+  if (!event || !event.data || !event.data.object) {
+      console.error("❌ Erreur : Événement mal formé !");
+      return res.status(400).json({ message: "Erreur : événement mal formé" });
+  }
 
-    const paymentIntent = event.data.object;
+  const paymentIntent = event.data.object;
 
-    // 🔍 Vérifier l'événement reçu
-    console.log("📦 Contenu de l'événement :", JSON.stringify(event, null, 2));
+  console.log("🔍 ID du paiement :", paymentIntent.id);
+  console.log("💰 Montant reçu :", paymentIntent.amount_received);
+  console.log("💳 Devise :", paymentIntent.currency);
+  console.log("📧 Email reçu :", paymentIntent.receipt_email);
 
-    switch (event.type) {
-        case 'checkout.session.completed':
-            console.log("✅ Paiement Stripe validé :", paymentIntent.id);
-            await Payment.findOneAndUpdate(
-                { stripePaymentId: paymentIntent.id },
-                { status: "Paid" }
-            );
-            break;
-        case 'payment_intent.succeeded':
-            console.log("✅ Paiement réussi :", paymentIntent.id);
-            await Payment.create({
-                stripePaymentId: paymentIntent.id,
-                amount: paymentIntent.amount_received / 100,
-                status: "Paid",
-                currency: paymentIntent.currency,
-                email: paymentIntent.receipt_email || "N/A"
-            });
-            break;
-        case 'payment_intent.payment_failed':
-            console.log("❌ Échec du paiement :", paymentIntent.id);
-            break;
-        default:
-            console.log(`⚠️ Événement non traité : ${event.type}`);
-    }
+  try {
+      const newPayment = new Payment({
+          stripePaymentId: paymentIntent.id,
+          amount: paymentIntent.amount_received / 100,
+          status: "Paid",
+          currency: paymentIntent.currency,
+          email: paymentIntent.receipt_email || "N/A"
+      });
 
-    res.status(200).json({ received: true });
+      await newPayment.save();  // Sauvegarde en base
+
+      console.log("✅ Paiement enregistré en base :", JSON.stringify(newPayment, null, 2));
+      res.status(200).json({ received: true });
+  } catch (error) {
+      console.error("❌ Erreur lors de la sauvegarde en base :", error);
+      res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
 });
 
 /**
@@ -172,5 +164,20 @@ router.get('/', verifyToken, async (req, res) => {
         res.status(500).json({ message: 'Erreur serveur', error });
     }
 });
+
+/**
+ * ✅ 8. Récuperation du bug sur stripe 
+ */
+router.get('/debug/payments', async (req, res) => {
+  try {
+      const payments = await Payment.find();
+      console.log("🔍 Paiements en base :", payments);
+      res.status(200).json(payments);
+  } catch (error) {
+      console.error("❌ Erreur lors de la récupération des paiements :", error);
+      res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
 
 module.exports = router;
