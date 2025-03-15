@@ -1,7 +1,7 @@
-/* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable import/order */
+/* eslint-disable @next/next/no-img-element */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -778,12 +778,37 @@ const AdminDashboard = () => {
         defaultValue="orders"
         onValueChange={setActiveTab}
       >
-        <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-6">
-          <TabsTrigger value="orders">Commandes</TabsTrigger>
-          <TabsTrigger value="contact">Messages</TabsTrigger>
-          <TabsTrigger value="users">Utilisateurs</TabsTrigger>
-          <TabsTrigger value="lessons">Leçons</TabsTrigger>
-          <TabsTrigger value="articles">Articles</TabsTrigger>
+        <TabsList className="grid grid-cols-2 md:grid-cols-5 mb-6 bg-background dark:bg-slate-900 p-1">
+          <TabsTrigger
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-medium"
+            value="orders"
+          >
+            Commandes
+          </TabsTrigger>
+          <TabsTrigger
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-medium"
+            value="contact"
+          >
+            Messages
+          </TabsTrigger>
+          <TabsTrigger
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-medium"
+            value="users"
+          >
+            Utilisateurs
+          </TabsTrigger>
+          <TabsTrigger
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-medium"
+            value="lessons"
+          >
+            Leçons
+          </TabsTrigger>
+          <TabsTrigger
+            className="data-[state=active]:bg-primary data-[state=active]:text-primary-foreground font-medium"
+            value="articles"
+          >
+            Articles
+          </TabsTrigger>
         </TabsList>
 
         {/* ORDERS TAB */}
