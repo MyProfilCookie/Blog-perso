@@ -15,10 +15,16 @@ import { motion } from "framer-motion";
 
 
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
+if (!stripeKey) {
+  console.error("❌ ERREUR: La clé publique Stripe est manquante !");
+} else {
+  console.log("✅ Clé Stripe chargée :", stripeKey);
+}
+
+const stripePromise = loadStripe(stripeKey as string);
 
 // Définir une interface pour l'utilisateur
-
 
 const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTransporter, deliveryCost }: { totalToPay: number; cartItems: any[]; onPaymentSuccess: () => void; selectedTransporter: string; deliveryCost: number; }) => {
     const stripe = useStripe();
