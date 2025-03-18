@@ -17,7 +17,17 @@ const userRoutes = require("./api/routes/User.routes");
 const paymentRoutes = require("./api/routes/payment.routes");
 const orderRoutes = require("./api/routes/order.routes");
 const productRoutes = require("./api/routes/products.routes");
+const contactRoutes = require("./api/routes/contact.routes");
+const articleRoutes = require("./api/routes/article.routes");
+const lessonRoutes = require("./api/routes/lessons.routes");
+const messageRoutes = require("./api/routes/message.routes");
+const blogRoutes = require("./api/routes/blog.routes");
+const adminRoutes = require("./api/routes/admin.routes");
+const monthlyRoutes = require("./api/routes/monthly_courses.routes");
+
+
 const Payment = require("./api/models/payments"); // Modèle de paiement
+
 // 🔍 Vérification des variables d'environnement
 console.log("🔍 Chargement des variables d'environnement...");
 console.log("✅ JWT_SECRET:", process.env.JWT_SECRET ? "Chargé ✅" : "❌ Manquant");
@@ -115,6 +125,14 @@ app.use("/api/users", userRoutes);
 app.use("/api/payments", paymentRoutes);
 app.use("/api/orders", orderRoutes);
 app.use("/api/products", productRoutes);
+app.use("/api/contact", contactRoutes);
+app.use("/api/articles", articleRoutes);
+app.use("/api/lessons", lessonRoutes);
+app.use("/api/messages", messageRoutes);
+app.use("/api/blogs", blogRoutes);
+app.use("/api/admin", adminRoutes);
+app.use("/api/monthly", monthlyRoutes);
+
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   console.log('Headers:', req.headers);
