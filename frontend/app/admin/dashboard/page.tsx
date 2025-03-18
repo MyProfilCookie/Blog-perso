@@ -976,7 +976,7 @@ const AdminDashboard = () => {
         <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
           Gestion des commandes
         </h3>
-        <div className="space-y-3 sm:space-y-4">
+        <div className="space-y-3 sm:space-y-3">
           {orders.map((order) => (
             <div
               key={
