@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/no-img-element */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 "use client";
@@ -77,7 +78,7 @@ const AdminDashboard = () => {
 
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/api/payment-confirmations/${paymentId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations/${paymentId}`,
         );
 
         if (!response.ok) throw new Error("Erreur lors de la récupération");
@@ -120,7 +121,7 @@ const AdminDashboard = () => {
   const fetchLessons = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/lessons`,
+        `${process.env.NEXT_PUBLIC_API_URL}/lessons`,
       );
 
       if (!response.ok) {
@@ -139,9 +140,7 @@ const AdminDashboard = () => {
   // Fonction pour récupérer tous les utilisateurs
   const fetchUsers = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/users`,
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -159,7 +158,7 @@ const AdminDashboard = () => {
   const fetchArticles = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/articles`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles`,
       );
 
       if (!response.ok) {
@@ -178,7 +177,7 @@ const AdminDashboard = () => {
   const fetchMessages = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/messages`,
+        `${process.env.NEXT_PUBLIC_API_URL}/messages`,
       );
 
       if (!response.ok) {
@@ -197,7 +196,7 @@ const AdminDashboard = () => {
   const addLesson = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/lessons`,
+        `${process.env.NEXT_PUBLIC_API_URL}/lessons`,
         {
           method: "POST",
           headers: {
@@ -222,7 +221,7 @@ const AdminDashboard = () => {
   const updateLesson = async (id: any, updatedData: never) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/lessons/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/lessons/${id}`,
         {
           method: "PUT",
           headers: {
@@ -255,7 +254,7 @@ const AdminDashboard = () => {
       if (result.isConfirmed) {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}api/lessons/${id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/lessons/${id}`,
             {
               method: "DELETE",
             },
@@ -277,7 +276,7 @@ const AdminDashboard = () => {
   const getContactMessages = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/contact`,
+        `${process.env.NEXT_PUBLIC_API_URL}/contact`,
       );
 
       if (!response.ok) {
@@ -300,7 +299,7 @@ const AdminDashboard = () => {
   const markContactMessageAsRead = async (id: string) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/contact/${id}/read`,
+        `${process.env.NEXT_PUBLIC_API_URL}/contact/${id}/read`,
         {
           method: "PUT",
           headers: {
@@ -336,7 +335,7 @@ const AdminDashboard = () => {
     if (reply) {
       try {
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}api/contact/${id}/reply`,
+          `${process.env.NEXT_PUBLIC_API_URL}/contact/${id}/reply`,
           {
             method: "POST",
             headers: {
@@ -371,7 +370,7 @@ const AdminDashboard = () => {
       if (result.isConfirmed) {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}api/contact/${id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/contact/${id}`,
             {
               method: "DELETE",
             },
@@ -414,7 +413,7 @@ const AdminDashboard = () => {
       if (result.isConfirmed) {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}api/users/ban`,
+            `${process.env.NEXT_PUBLIC_API_URL}/users/ban`,
             {
               method: "POST",
               headers: {
@@ -444,9 +443,9 @@ const AdminDashboard = () => {
       let url = "";
 
       if (role === "admin") {
-        url = `${process.env.NEXT_PUBLIC_API_URL}api/users/demote/${id}`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/users/demote/${id}`;
       } else {
-        url = `${process.env.NEXT_PUBLIC_API_URL}api/users/promote/${id}`;
+        url = `${process.env.NEXT_PUBLIC_API_URL}/users/promote/${id}`;
       }
 
       const response = await fetch(url, {
@@ -470,7 +469,7 @@ const AdminDashboard = () => {
   const addArticle = async () => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/articles`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles`,
         {
           method: "POST",
           headers: {
@@ -504,7 +503,7 @@ const AdminDashboard = () => {
   ) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/articles/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles/${id}`,
         {
           method: "PUT",
           headers: {
@@ -527,7 +526,7 @@ const AdminDashboard = () => {
   const markMessageAsRead = async (messageId: string | undefined) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/messages/${messageId}/read`,
+        `${process.env.NEXT_PUBLIC_API_URL}/messages/${messageId}/read`,
         {
           method: "PUT",
           headers: {
@@ -568,7 +567,7 @@ const AdminDashboard = () => {
       if (reply) {
         // Envoyer une requête pour enregistrer la réponse
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}api/messages/${messageId}/reply`,
+          `${process.env.NEXT_PUBLIC_API_URL}/messages/${messageId}/reply`,
           {
             method: "POST",
             headers: {
@@ -607,7 +606,7 @@ const AdminDashboard = () => {
       if (confirmation.isConfirmed) {
         // Suppression du message via l'API
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}api/messages/${messageId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/messages/${messageId}`,
           {
             method: "DELETE",
           },
@@ -635,7 +634,7 @@ const AdminDashboard = () => {
   const deleteArticle = async (id: string) => {
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/articles/${id}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/articles/${id}`,
         {
           method: "DELETE",
         },
@@ -654,9 +653,7 @@ const AdminDashboard = () => {
   // Fonction pour récupérer les commandes
   const fetchOrders = async () => {
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/orders`,
-      );
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`);
 
       if (!response.ok) {
         throw new Error(`HTTP error! Status: ${response.status}`);
@@ -666,7 +663,7 @@ const AdminDashboard = () => {
       const ordersData = responseData.orders || [];
 
       const ordersWithPayments = await Promise.all(
-        ordersData.map(async (order: { paymentId: any; }) => {
+        ordersData.map(async (order: { paymentId: any }) => {
           // Utiliser le bon champ pour l'ID de paiement
           const paymentId = order.paymentId; // Si le champ s'appelle autrement, adaptez ici (ex: order.payment_id)
 
@@ -695,7 +692,7 @@ const AdminDashboard = () => {
 
     try {
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/payment-confirmations/${paymentId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations/${paymentId}`,
       );
 
       if (!response.ok)
@@ -750,7 +747,7 @@ const AdminDashboard = () => {
 
       // Utiliser l'endpoint spécifique pour la mise à jour du statut
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}api/orders/${id}/status`,
+        `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}/status`,
         {
           method: "PUT",
           headers: {
@@ -811,7 +808,7 @@ const AdminDashboard = () => {
       if (result.isConfirmed) {
         try {
           const response = await fetch(
-            `${process.env.NEXT_PUBLIC_API_URL}api/orders/${id}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/orders/${id}`,
             {
               method: "DELETE",
             },
