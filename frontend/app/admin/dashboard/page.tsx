@@ -1,9 +1,7 @@
 /* eslint-disable @next/next/no-img-element */
-/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 "use client";
 import React, { useState, useEffect } from "react";
-// Removed axios import
 import {
   Button,
   Input,
@@ -829,81 +827,156 @@ const AdminDashboard = () => {
   if (!user) return null;
 
   return (
-    <div className="container mx-auto mt-6">
-      <h1 className="mb-4 text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-pulse text-center">
-        Dashboard Admin {(user as { pseudo: string }).pseudo}
+    <div className="container mx-auto mt-6 px-2 sm:px-4">
+      {/* Styles responsifs */}
+      <style>{`
+        .text-ellipsis {
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 100%;
+        }
+        
+        .id-field {
+          font-size: 0.75rem;
+          word-break: break-all;
+          max-width: 100%;
+          display: -webkit-box;
+          -webkit-line-clamp: 2;
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+        }
+        
+        .scrollable-content {
+          overflow-x: auto;
+          -webkit-overflow-scrolling: touch;
+          max-width: 100%;
+          scrollbar-width: thin;
+        }
+        
+        .scrollable-content::-webkit-scrollbar {
+          height: 4px;
+        }
+        
+        .scrollable-content::-webkit-scrollbar-thumb {
+          background-color: rgba(0, 0, 0, 0.2);
+          border-radius: 4px;
+        }
+        
+        /* Réorganisation des cartes pour mobile */
+        @media (max-width: 640px) {
+          .card-content {
+            flex-direction: column;
+          }
+          
+          .admin-table {
+            display: block;
+            overflow-x: auto;
+            white-space: nowrap;
+          }
+          
+          .order-card {
+            padding: 0.75rem !important;
+          }
+          
+          .order-details {
+            font-size: 0.75rem !important;
+          }
+          
+          .user-actions {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 0.5rem;
+          }
+          
+          .user-card,
+          .lesson-card {
+            padding: 0.75rem !important;
+          }
+          
+          /* Ajustement pour les longs textes */
+          .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+          }
+        }
+
+        @keyframes fade-in {
+          from {
+            opacity: 0;
+            transform: translateY(-20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+    
+        @keyframes slide-in {
+          from {
+            transform: translateX(-100%);
+            opacity: 0;
+          }
+          to {
+            transform: translateX(0);
+            opacity: 1;
+          }
+        }
+    
+        @keyframes spin-slow {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+    
+        .animate-fade-in {
+          animation: fade-in 1s ease-out;
+        }
+    
+        .animate-slide-in {
+          animation: slide-in 1.5s ease-out;
+        }
+    
+        .animate-spin-slow {
+          animation: spin-slow 4s linear infinite;
+        }
+    
+        .card-hover:hover {
+          transform: scale(1.02);
+          transition: transform 0.3s ease-in-out;
+          box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+        }
+      `}</style>
+
+      <h1 className="mb-4 text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-pulse text-center">
+        Dashboard Admin
       </h1>
 
-      <p className="mb-6 text-gray-600 dark:text-white text-lg animate-bounce text-center">
+      <p className="mb-3 sm:mb-6 text-gray-600 dark:text-white text-base sm:text-lg animate-bounce text-center">
         Heure actuelle : {currentTime}
       </p>
 
-      <h2 className="text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-center animate-slide-in">
+      <h2 className="text-xl sm:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-center animate-slide-in">
         Bonjour,{" "}
         {(user as { prenom?: string })?.prenom ||
           (user as { pseudo: string }).pseudo}{" "}
         <FontAwesomeIcon
           className="text-yellow-400 animate-spin-slow"
           icon={faCrown}
-          size="xl"
+          size="sm"
         />
       </h2>
-      <style>{`
-    @keyframes fade-in {
-      from {
-        opacity: 0;
-        transform: translateY(-20px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
 
-    @keyframes slide-in {
-      from {
-        transform: translateX(-100%);
-        opacity: 0;
-      }
-      to {
-        transform: translateX(0);
-        opacity: 1;
-      }
-    }
-
-    @keyframes spin-slow {
-      from {
-        transform: rotate(0deg);
-      }
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    .animate-fade-in {
-      animation: fade-in 1s ease-out;
-    }
-
-    .animate-slide-in {
-      animation: slide-in 1.5s ease-out;
-    }
-
-    .animate-spin-slow {
-      animation: spin-slow 4s linear infinite;
-    }
-
-    .card-hover:hover {
-      transform: scale(1.05);
-      transition: transform 0.3s ease-in-out;
-      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-    }
-  `}</style>
       {/* Gestion des commandes */}
-      <div className="mt-8 px-4">
-        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">
+      <div className="mt-6 sm:mt-8">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
           Gestion des commandes
         </h3>
-        <div className="space-y-6">
+        <div className="space-y-3 sm:space-y-4">
           {orders.map((order) => (
             <div
               key={
@@ -911,30 +984,34 @@ const AdminDashboard = () => {
                   ? (order as { _id: string })._id
                   : undefined
               }
-              className="border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2"
+              className="border rounded-lg shadow-md p-2 sm:p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2 order-card card-hover"
             >
-              <div className="flex flex-col sm:flex-row justify-between items-start gap-4">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
                 {/* Informations sur la commande */}
-                <div className="flex-1 text-left break-words">
-                  <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">
+                <div className="flex-1 text-left overflow-hidden">
+                  <p className="id-field font-bold text-sm">
                     ID : {(order as { _id: string })._id}
                   </p>
-                  <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
+                  <p className="text-sm text-gray-700 dark:text-gray-400 truncate">
                     Client :{" "}
                     {(order as { lastName?: string; firstName?: string })
                       .lastName
-                      ? `${(order as { firstName?: string }).firstName} ${(order as { lastName?: string }).lastName}`
+                      ? `${(order as { firstName?: string }).firstName} ${
+                          (order as { lastName?: string }).lastName
+                        }`
                       : "Inconnu"}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
+                  <p className="text-sm text-gray-500 dark:text-gray-300 truncate">
                     Email : {(order as { email: string }).email}
                   </p>
-                  <p className="text-sm text-gray-700 dark:text-gray-400 break-words max-w-full">
-                    Produit :{" "}
-                    {(order as { items?: Array<{ title: string }> }).items
-                      ?.map((item) => item.title)
-                      .join(" • ") || "Aucun"}
-                  </p>
+                  <div className="scrollable-content order-details">
+                    <p className="text-sm text-gray-700 dark:text-gray-400">
+                      Produit :{" "}
+                      {(order as { items?: Array<{ title: string }> }).items
+                        ?.map((item) => item.title)
+                        .join(" • ") || "Aucun"}
+                    </p>
+                  </div>
                   <p className="text-sm text-gray-500 dark:text-gray-300">
                     Date :{" "}
                     {dayjs((order as { orderDate: string }).orderDate).format(
@@ -947,7 +1024,7 @@ const AdminDashboard = () => {
                     {(order as { paymentMethod?: string }).paymentMethod})
                   </p>
                   {(order as { trackingNumber?: string }).trackingNumber && (
-                    <p className="text-sm text-green-600 dark:text-green-400">
+                    <p className="text-sm text-green-600 dark:text-green-400 truncate">
                       N° de suivi :{" "}
                       {(order as { trackingNumber?: string }).trackingNumber}
                     </p>
@@ -955,7 +1032,7 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Actions pour les commandes */}
-                <div className="flex flex-col gap-2 min-w-[200px]">
+                <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[180px]">
                   <Button
                     className="w-full"
                     color="secondary"
@@ -970,7 +1047,7 @@ const AdminDashboard = () => {
                     Historique
                   </Button>
                   {(order as { status?: string }).status === "Shipped" && (
-                    <div className="mt-2 w-full">
+                    <div className="mt-1 w-full">
                       <Input
                         placeholder="N° de suivi"
                         size="sm"
@@ -987,7 +1064,6 @@ const AdminDashboard = () => {
                             trackingNumber: e.target.value,
                           };
 
-                          // TODO: Implement updateOrder function or use appropriate update method
                           console.log(
                             "Order update requested:",
                             (order as { _id: string })._id,
@@ -1001,7 +1077,7 @@ const AdminDashboard = () => {
               </div>
 
               {/* Composant de progression */}
-              <div className="mt-4 mb-2 w-full">
+              <div className="mt-2 mb-2 w-full">
                 <ProgressionCommande
                   statut={
                     (order as { status?: string }).status || "Enregistree"
@@ -1010,9 +1086,9 @@ const AdminDashboard = () => {
               </div>
 
               {/* Actions pour les statuts */}
-              <div className="flex flex-wrap gap-2 mt-3">
+              <div className="flex flex-wrap gap-2 mt-2">
                 <select
-                  className="p-2 border rounded-md bg-cream dark:bg-gray-800 text-gray-800 dark:text-white flex-grow"
+                  className="p-2 border rounded-md bg-cream dark:bg-gray-800 text-gray-800 dark:text-white flex-grow text-sm"
                   value="" // Reset à chaque changement
                   onChange={(e) => {
                     if (e.target.value) {
@@ -1044,6 +1120,7 @@ const AdminDashboard = () => {
 
                 <Button
                   color="danger"
+                  size="sm"
                   onClick={() => deleteOrder((order as { _id: string })._id)}
                 >
                   <FontAwesomeIcon icon={faTrash} /> Supprimer
@@ -1055,88 +1132,96 @@ const AdminDashboard = () => {
       </div>
 
       {/* Gestion des messages de contact */}
-      <div className="mt-8 px-4">
-        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">
+      <div className="mt-6 sm:mt-8">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
           Gestion des messages de contact
         </h3>
 
-        <Table aria-label="Liste des messages de contact" className="mb-4">
-          <TableHeader>
-            <TableColumn>Nom</TableColumn>
-            <TableColumn>Email</TableColumn>
-            <TableColumn>Message</TableColumn>
-            <TableColumn>Date</TableColumn>
-            <TableColumn>Lu</TableColumn>
-            <TableColumn>Répondre</TableColumn>
-            <TableColumn>Supprimer</TableColumn>
-          </TableHeader>
-          <TableBody>
-            {messages.map((contactMsg, index) => (
-              <TableRow key={(contactMsg as { _id?: string })._id || index}>
-                <TableCell>
-                  {(contactMsg as { nom?: string }).nom || "Unknown"}
-                </TableCell>
-                <TableCell>
-                  {(contactMsg as { email?: string }).email}
-                </TableCell>
-                <TableCell>
-                  {(contactMsg as { message?: string }).message}
-                </TableCell>
-                <TableCell>
-                  {dayjs(
-                    (contactMsg as { date?: string }).date || new Date(),
-                  ).format("DD/MM/YYYY HH:mm")}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    color={
-                      (contactMsg as { lu?: boolean }).lu
-                        ? "success"
-                        : "secondary"
-                    }
-                    onClick={() =>
-                      markContactMessageAsRead(
-                        (contactMsg as { _id: string })._id,
-                      )
-                    }
-                  >
-                    {(contactMsg as { lu?: boolean }).lu
-                      ? "✔ Lu"
-                      : "📩 Non lu"}
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    color="primary"
-                    onClick={() =>
-                      replyToContactMessage((contactMsg as { _id: string })._id)
-                    }
-                  >
-                    <FontAwesomeIcon icon={faReply} /> Répondre
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    color="danger"
-                    onClick={() =>
-                      deleteContactMessage((contactMsg as { _id: string })._id)
-                    }
-                  >
-                    <FontAwesomeIcon icon={faTrash} /> Supprimer
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+        <div className="scrollable-content admin-table">
+          <Table
+            aria-label="Liste des messages de contact"
+            className="min-w-full"
+          >
+            <TableHeader>
+              <TableColumn>Nom</TableColumn>
+              <TableColumn>Email</TableColumn>
+              <TableColumn>Message</TableColumn>
+              <TableColumn>Date</TableColumn>
+              <TableColumn>Actions</TableColumn>
+            </TableHeader>
+            <TableBody>
+              {messages.map((contactMsg, index) => (
+                <TableRow key={(contactMsg as { _id?: string })._id || index}>
+                  <TableCell className="max-w-[100px] truncate">
+                    {(contactMsg as { nom?: string }).nom || "Unknown"}
+                  </TableCell>
+                  <TableCell className="max-w-[120px] truncate">
+                    {(contactMsg as { email?: string }).email}
+                  </TableCell>
+                  <TableCell className="max-w-[200px]">
+                    <div className="line-clamp-2">
+                      {(contactMsg as { message?: string }).message}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {dayjs(
+                      (contactMsg as { date?: string }).date || new Date(),
+                    ).format("DD/MM/YY")}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1">
+                      <Button
+                        color={
+                          (contactMsg as { lu?: boolean }).lu
+                            ? "success"
+                            : "secondary"
+                        }
+                        size="sm"
+                        onClick={() =>
+                          markContactMessageAsRead(
+                            (contactMsg as { _id: string })._id,
+                          )
+                        }
+                      >
+                        {(contactMsg as { lu?: boolean }).lu ? "✓" : "📩"}
+                      </Button>
+                      <Button
+                        color="primary"
+                        size="sm"
+                        onClick={() =>
+                          replyToContactMessage(
+                            (contactMsg as { _id: string })._id,
+                          )
+                        }
+                      >
+                        <FontAwesomeIcon icon={faReply} />
+                      </Button>
+                      <Button
+                        color="danger"
+                        size="sm"
+                        onClick={() =>
+                          deleteContactMessage(
+                            (contactMsg as { _id: string })._id,
+                          )
+                        }
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </div>
 
       {/* Gestion des utilisateurs */}
-      <div className="mt-8 px-4">
-        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">
+      <div className="mt-6 sm:mt-8">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
           Gestion des utilisateurs
         </h3>
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
           {users.map((user) => (
             <div
               key={
@@ -1144,35 +1229,33 @@ const AdminDashboard = () => {
                   ? (user as { _id: string })._id
                   : undefined
               }
-              className="border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-4"
+              className="border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2 user-card card-hover"
             >
-              <div className="flex flex-col items-center text-center break-words">
-                <p className="font-bold text-sm break-words max-w-full overflow-hidden text-ellipsis">
+              <div className="flex flex-col items-center text-center overflow-hidden">
+                <p className="id-field font-bold text-sm">
                   ID : {(user as { _id: string })._id}
                 </p>
-                <p className="font-bold text-lg truncate">
+                <p className="font-bold text-lg truncate max-w-full">
                   Pseudo : {(user as { pseudo: string }).pseudo}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
+                <p className="text-sm text-gray-500 dark:text-gray-300 truncate max-w-full">
                   Email : {(user as { email: string }).email}
-                </p>
-                <p className="text-sm text-gray-500 dark:text-gray-300 break-words max-w-full">
-                  Courriel: {(user as { email: string }).email}
                 </p>
                 <p className="text-sm text-gray-700 dark:text-gray-400">
                   Rôle : {(user as { role: string }).role}
                 </p>
               </div>
-              <div className="flex flex-col sm:flex-row sm:flex-wrap gap-2 w-full sm:justify-center">
+              <div className="grid user-actions gap-2 w-full grid-cols-1 sm:grid-cols-2 mt-2">
                 {(user as { email: string }).email !==
                   "virginie.ayivor@yahoo.fr" && (
                   <Button
-                    className="w-full sm:w-auto"
+                    className="w-full col-span-full"
                     color={
                       (user as { role: string }).role === "admin"
                         ? "warning"
                         : "success"
                     }
+                    size="sm"
                     onClick={() =>
                       promoteToAdminOrUser(
                         (user as any)._id,
@@ -1181,26 +1264,31 @@ const AdminDashboard = () => {
                     }
                   >
                     {(user as { role: string }).role === "admin"
-                      ? "Rétrograder en User"
+                      ? "Rétrograder"
                       : "Promouvoir"}
                   </Button>
                 )}
 
-                {["Violation des règles", "Spam", "Harcèlement", "Autre"].map(
-                  (reason) => (
-                    <Button
-                      key={reason}
-                      className="w-full sm:w-auto"
-                      color="secondary"
-                      onClick={() => setBanReason(reason)}
-                    >
-                      {reason}
-                    </Button>
-                  ),
-                )}
+                {["Violation", "Spam", "Harcèlement", "Autre"].map((reason) => (
+                  <Button
+                    key={reason}
+                    className="w-full"
+                    color="secondary"
+                    size="sm"
+                    onClick={() =>
+                      setBanReason(
+                        reason === "Violation"
+                          ? "Violation des règles"
+                          : reason,
+                      )
+                    }
+                  >
+                    {reason}
+                  </Button>
+                ))}
 
                 <Button
-                  className="w-full sm:w-auto"
+                  className="w-full col-span-full"
                   color="danger"
                   disabled={
                     typeof user === "object" &&
@@ -1208,6 +1296,7 @@ const AdminDashboard = () => {
                     (user as { email: string }).email ===
                       "virginie.ayivor@yahoo.fr"
                   }
+                  size="sm"
                   onClick={() =>
                     deleteUser(
                       (user as any)._id,
@@ -1224,36 +1313,38 @@ const AdminDashboard = () => {
       </div>
 
       {/* Gestion des leçons */}
-      <div className="mt-8 px-4">
-        <h3 className="mb-4 text-xl font-semibold text-center sm:text-left">
+      <div className="mt-6 sm:mt-8">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
           Gestion des leçons
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
           {lessons.map((lesson) => (
             <div
               key={(lesson as any)._id}
-              className="col-span-1 border rounded-lg shadow-md p-4 bg-cream dark:bg-black dark:text-white flex flex-col"
+              className="border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black dark:text-white 
+                flex flex-col lesson-card card-hover"
             >
               <div className="card-header mb-2 text-center">
-                <p className="font-bold text-lg truncate">
+                <p className="font-bold text-lg truncate max-w-full">
                   {(lesson as { title: string }).title}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-300 truncate max-w-full overflow-hidden">
+                <p className="id-field text-gray-500 dark:text-gray-300">
                   ID : {(lesson as any)._id}
                 </p>
               </div>
               <div className="card-body mb-2 text-center">
-                <p className="text-sm text-gray-700 dark:text-gray-400 mb-2">
+                <p className="text-sm text-gray-700 dark:text-gray-400 mb-2 line-clamp-2">
                   {(lesson as { content: string }).content}
                 </p>
                 <p className="text-sm text-gray-500 dark:text-gray-300">
                   Date: {dayjs((lesson as any).date).format("DD/MM/YYYY")}
                 </p>
               </div>
-              <div className="card-footer mt-4 flex flex-col sm:flex-row justify-between gap-2">
+              <div className="card-footer mt-auto pt-2 flex gap-2">
                 <Button
-                  className="w-full sm:w-auto"
+                  className="flex-1"
                   color="primary"
+                  size="sm"
                   onClick={() =>
                     updateLesson((lesson as any)._id?.toString() || "", lesson)
                   }
@@ -1261,8 +1352,9 @@ const AdminDashboard = () => {
                   <FontAwesomeIcon icon={faEdit} /> Modifier
                 </Button>
                 <Button
-                  className="w-full sm:w-auto"
+                  className="flex-1"
                   color="danger"
+                  size="sm"
                   onClick={() =>
                     deleteLesson((lesson as any)._id?.toString() || "")
                   }
@@ -1276,13 +1368,13 @@ const AdminDashboard = () => {
       </div>
 
       {/* Ajouter une nouvelle leçon */}
-      <div className="mt-8 px-4">
-        <h3 className="mb-4 text-xl font-semibold">
+      <div className="mt-6 sm:mt-8">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold">
           Ajouter une nouvelle leçon
         </h3>
         <Input
           key="title"
-          className="mb-4"
+          className="mb-3"
           label="Titre de la leçon"
           value={newLesson.title}
           onChange={(e) =>
@@ -1291,7 +1383,7 @@ const AdminDashboard = () => {
         />
         <Textarea
           key="content"
-          className="mb-4"
+          className="mb-3"
           label="Contenu de la leçon"
           value={newLesson.content}
           onChange={(e) =>
@@ -1300,13 +1392,13 @@ const AdminDashboard = () => {
         />
         <Input
           key="date"
-          className="mb-4"
+          className="mb-3"
           label="Date de la leçon"
           type="date"
           value={newLesson.date}
           onChange={(e) => setNewLesson({ ...newLesson, date: e.target.value })}
         />
-        <Button className="mt-4" onClick={addLesson}>
+        <Button className="mt-3" size="sm" onClick={addLesson}>
           <FontAwesomeIcon icon={faPlus} /> Ajouter une leçon
         </Button>
       </div>
@@ -1314,29 +1406,31 @@ const AdminDashboard = () => {
       {/* Gestion des articles */}
       <motion.div
         animate={{ opacity: 1 }}
-        className="mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 px-4"
+        className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
         initial={{ opacity: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
       >
-        <h3 className="mb-4 text-xl font-semibold col-span-full text-center sm:text-left">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold col-span-full text-center sm:text-left">
           Gestion des articles
         </h3>
         {articlesData.articles.map((article) => (
           <div
             key={article.id}
-            className="col-span-1 border rounded-lg shadow-md p-4 bg-cream dark:bg-black flex flex-col"
+            className="col-span-1 border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black 
+              flex flex-col card-hover"
           >
             <div className="card-header mb-2 text-center">
               <img
                 alt={article.title}
-                className="w-full h-40 object-cover rounded-md mb-2"
+                className="w-full h-32 sm:h-40 object-cover rounded-md mb-2"
                 src={article.image}
               />
               <p className="font-bold text-lg truncate">{article.title}</p>
             </div>
             <div className="card-body mb-2 text-center">
               <Button
-                className="mb-4 mx-auto"
+                className="mb-3 mx-auto"
+                size="sm"
                 onClick={() =>
                   setShowContent((prev) => ({
                     ...prev,
@@ -1351,20 +1445,24 @@ const AdminDashboard = () => {
                   : "Voir le contenu"}
               </Button>
               {showContent[article.id as keyof typeof showContent] && (
-                <p className="text-sm text-gray-600">{article.content}</p>
+                <p className="text-sm text-gray-600 line-clamp-2">
+                  {article.content}
+                </p>
               )}
             </div>
-            <div className="card-footer mt-4 flex flex-col sm:flex-row justify-between gap-2">
+            <div className="card-footer mt-auto pt-2 flex gap-2">
               <Button
-                className="w-full sm:w-auto"
+                className="flex-1"
                 color="primary"
+                size="sm"
                 onClick={() => updateArticle(article.id.toString(), article)}
               >
                 <FontAwesomeIcon icon={faEdit} /> Modifier
               </Button>
               <Button
-                className="w-full sm:w-auto"
+                className="flex-1"
                 color="danger"
+                size="sm"
                 onClick={() => deleteArticle(article.id.toString())}
               >
                 <FontAwesomeIcon icon={faTrash} /> Supprimer
@@ -1379,11 +1477,11 @@ const AdminDashboard = () => {
         animate={{ opacity: 1 }}
         className="mt-4"
         initial={{ opacity: 0 }}
-        transition={{ duration: 0.6, delay: 3 }}
+        transition={{ duration: 0.6, delay: 0.5 }}
       >
         <Input
           key="title"
-          className="mb-4"
+          className="mb-3"
           label="Titre de l'article"
           value={newArticle.title}
           onChange={(e) =>
@@ -1392,14 +1490,14 @@ const AdminDashboard = () => {
         />
         <Textarea
           key="content"
-          className="mb-4"
+          className="mb-3"
           label="Contenu de l'article"
           value={newArticle.content}
           onChange={(e) =>
             setNewArticle({ ...newArticle, content: e.target.value })
           }
         />
-        <Button onClick={addArticle}>
+        <Button size="sm" onClick={addArticle}>
           <FontAwesomeIcon icon={faPlus} /> Ajouter un article
         </Button>
       </motion.div>
@@ -1407,71 +1505,77 @@ const AdminDashboard = () => {
       {/* Visualisation des messages */}
       <motion.div
         animate={{ opacity: 1 }}
-        className="mt-8"
+        className="mt-6 sm:mt-8"
         initial={{ opacity: 0 }}
-        transition={{ duration: 0.6, delay: 3 }}
+        transition={{ duration: 0.6, delay: 0.7 }}
       >
-        <h3 className="mb-4 text-xl font-semibold">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold">
           Messages des utilisateurs
         </h3>
-        <Table aria-label="Liste des messages" className="mb-4">
-          <TableHeader>
-            <TableColumn>Pseudo</TableColumn>
-            <TableColumn>Message</TableColumn>
-            <TableColumn>Date</TableColumn>
-            <TableColumn>Supprimer</TableColumn>
-            <TableColumn>Répondre</TableColumn>
-            <TableColumn>Lu</TableColumn>
-          </TableHeader>
+        <div className="scrollable-content admin-table">
+          <Table aria-label="Liste des messages" className="min-w-full">
+            <TableHeader>
+              <TableColumn>Pseudo</TableColumn>
+              <TableColumn>Message</TableColumn>
+              <TableColumn>Date</TableColumn>
+              <TableColumn>Actions</TableColumn>
+            </TableHeader>
 
-          <TableBody>
-            {messages.map((message, index) => (
-              <TableRow key={(message as { _id?: string })?._id || index}>
-                <TableCell>
-                  {(message as { pseudo?: string }).pseudo || "Unknown"}
-                </TableCell>
-                <TableCell>
-                  {(message as { message?: string }).message || "No message"}
-                </TableCell>
-                <TableCell>
-                  {dayjs(
-                    (message as { date?: string }).date || new Date(),
-                  ).format("DD/MM/YYYY HH:mm")}
-                </TableCell>
-                <TableCell>
-                  <Button
-                    color="danger"
-                    onClick={() =>
-                      deleteMessage((message as { _id?: string })?._id)
-                    }
-                  >
-                    <FontAwesomeIcon icon={faTrash} /> Supprimer
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    color="primary"
-                    onClick={() =>
-                      initiateReplyToMessage((message as { _id?: string })?._id)
-                    }
-                  >
-                    <FontAwesomeIcon icon={faReply} /> Répondre
-                  </Button>
-                </TableCell>
-                <TableCell>
-                  <Button
-                    color="success"
-                    onClick={() =>
-                      markMessageAsRead((message as { _id?: string })?._id)
-                    }
-                  >
-                    <FontAwesomeIcon icon={faCheck} /> Lu
-                  </Button>
-                </TableCell>
-              </TableRow>
-            ))}
-          </TableBody>
-        </Table>
+            <TableBody>
+              {messages.map((message, index) => (
+                <TableRow key={(message as { _id?: string })?._id || index}>
+                  <TableCell className="max-w-[100px] truncate">
+                    {(message as { pseudo?: string }).pseudo || "Unknown"}
+                  </TableCell>
+                  <TableCell className="max-w-[200px]">
+                    <div className="line-clamp-2">
+                      {(message as { message?: string }).message ||
+                        "No message"}
+                    </div>
+                  </TableCell>
+                  <TableCell>
+                    {dayjs(
+                      (message as { date?: string }).date || new Date(),
+                    ).format("DD/MM/YY")}
+                  </TableCell>
+                  <TableCell>
+                    <div className="flex flex-wrap gap-1">
+                      <Button
+                        color="danger"
+                        size="sm"
+                        onClick={() =>
+                          deleteMessage((message as { _id?: string })?._id)
+                        }
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
+                      </Button>
+                      <Button
+                        color="primary"
+                        size="sm"
+                        onClick={() =>
+                          initiateReplyToMessage(
+                            (message as { _id?: string })?._id,
+                          )
+                        }
+                      >
+                        <FontAwesomeIcon icon={faReply} />
+                      </Button>
+                      <Button
+                        color="success"
+                        size="sm"
+                        onClick={() =>
+                          markMessageAsRead((message as { _id?: string })?._id)
+                        }
+                      >
+                        <FontAwesomeIcon icon={faCheck} />
+                      </Button>
+                    </div>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+          </Table>
+        </div>
       </motion.div>
 
       {/* Intégration du composant de dialogue pour l'historique des commandes */}
