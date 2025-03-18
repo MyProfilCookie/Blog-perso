@@ -976,7 +976,7 @@ const AdminDashboard = () => {
         <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
           Gestion des commandes
         </h3>
-        <div className="space-y-3 sm:space-y-3">
+        <div className="space-y-3 sm:space-y-4">
           {orders.map((order) => (
             <div
               key={
@@ -1417,7 +1417,7 @@ const AdminDashboard = () => {
           <div
             key={article.id}
             className="col-span-1 border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black 
-              flex flex-col card-hover"
+              flex flex-col card-hover sm:w-full"
           >
             <div className="card-header mb-2 text-center">
               <img
