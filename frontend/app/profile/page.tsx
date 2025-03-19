@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import Image from "next/image";
-import { useTheme } from "next-themes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -677,8 +676,7 @@ const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("profile");
 
   // Theme handling
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme(); // This is still useful for some operations
+  const [mounted, setMounted] = useState(false); // This is still useful for some operations
   const [isDarkMode, setIsDarkMode] = useState(false);
 
   const router = useRouter();
