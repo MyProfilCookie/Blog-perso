@@ -6,7 +6,7 @@ import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 
-import { UserProvider } from "@/context/UserContext"; // Importer le UserProvider
+import { UserProvider } from "@/context/UserContext";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -15,6 +15,12 @@ export interface ProvidersProps {
 
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
+  const [mounted, setMounted] = React.useState(false);
+
+  // Éviter les problèmes d'hydratation liés au thème
+  React.useEffect(() => {
+    setMounted(true);
+  }, []);
 
   return (
     <NextUIProvider navigate={router.push}>
@@ -22,10 +28,16 @@ export function Providers({ children, themeProps }: ProvidersProps) {
         enableSystem
         attribute="class"
         defaultTheme="system"
-        storageKey="theme" // Sauvegarde le dernier thème choisi
+        storageKey="theme"
         {...themeProps}
       >
-        <UserProvider>{children}</UserProvider>
+        <UserProvider>
+          {mounted ? (
+            children
+          ) : (
+            <div style={{ visibility: "hidden" }}>{children}</div>
+          )}
+        </UserProvider>
       </NextThemesProvider>
     </NextUIProvider>
   );
