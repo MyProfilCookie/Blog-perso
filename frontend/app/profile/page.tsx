@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import Image from "next/image";
+import { useTheme } from "next-themes";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faUser,
@@ -676,48 +677,49 @@ const ProfilePage = () => {
   const [activeTab, setActiveTab] = useState("profile");
 
   // Theme handling
-  const [mounted, setMounted] = useState(false); // This is still useful for some operations
-
+  const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme(); // This is still useful for some operations
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const router = useRouter();
 
-  // // Handle hydration
-  // useEffect(() => {
-  //   setMounted(true);
-  //   // Check if dark mode is enabled using document.documentElement.classList
-  //   const isDark = document.documentElement.classList.contains("dark");
+  // Handle hydration
+  useEffect(() => {
+    setMounted(true);
+    // Check if dark mode is enabled using document.documentElement.classList
+    const isDark = document.documentElement.classList.contains("dark");
 
-  //   setIsDarkMode(isDark);
-  // }, []);
+    setIsDarkMode(isDark);
+  }, []);
 
-  // // Update current time
-  // useEffect(() => {
-  //   const interval = setInterval(() => {
-  //     setCurrentTime(dayjs().format("HH:mm:ss"));
-  //   }, 1000);
+  // Update current time
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCurrentTime(dayjs().format("HH:mm:ss"));
+    }, 1000);
 
-  //   return () => clearInterval(interval);
-  // }, []);
+    return () => clearInterval(interval);
+  }, []);
 
-  // // Check for theme changes
-  // useEffect(() => {
-  //   const observer = new MutationObserver((mutations) => {
-  //     mutations.forEach((mutation) => {
-  //       if (
-  //         mutation.attributeName === "class" &&
-  //         mutation.target === document.documentElement
-  //       ) {
-  //         const isDark = document.documentElement.classList.contains("dark");
+  // Check for theme changes
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.attributeName === "class" &&
+          mutation.target === document.documentElement
+        ) {
+          const isDark = document.documentElement.classList.contains("dark");
 
-  //         setIsDarkMode(isDark);
-  //       }
-  //     });
-  //   });
+          setIsDarkMode(isDark);
+        }
+      });
+    });
 
-  //   observer.observe(document.documentElement, { attributes: true });
+    observer.observe(document.documentElement, { attributes: true });
 
-  //   return () => observer.disconnect();
-  // }, []);
+    return () => observer.disconnect();
+  }, []);
 
   // Fetch user data and orders
   useEffect(() => {
