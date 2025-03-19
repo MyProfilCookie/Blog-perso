@@ -63,18 +63,40 @@ module.exports = {
   				'3': 'hsl(var(--chart-3))',
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
-        },
-        "cream": "#faf9f5",
-		"lBlack": "#111827",
-		"lGray": "#374151",
-		"crem-500": "#f5f3ec",
-		"crem-600": "#e7e5d9", 
-		"crem-700": "#d6d3c8",
-		"crem-800": "#d1d5db",
-		"crem-900": "#d1d5db",
-      },
-    },
+  			},
+  			'cream': '#faf9f5',
+  			'lBlack': '#111827',
+  			'lGray': '#374151',
+  			'crem-500': '#f5f3ec',
+  			'crem-600': '#e7e5d9',
+  			'crem-700': '#d6d3c8',
+  			'crem-800': '#d1d5db',
+  			'crem-900': '#d1d5db'
+  		},
+  		keyframes: {
+  			'accordion-down': {
+  				from: {
+  					height: '0'
+  				},
+  				to: {
+  					height: 'var(--radix-accordion-content-height)'
+  				}
+  			},
+  			'accordion-up': {
+  				from: {
+  					height: 'var(--radix-accordion-content-height)'
+  				},
+  				to: {
+  					height: '0'
+  				}
+  			}
+  		},
+  		animation: {
+  			'accordion-down': 'accordion-down 0.2s ease-out',
+  			'accordion-up': 'accordion-up 0.2s ease-out'
+  		}
+  	}
   },
-  darkMode: "class",
+  darkMode: ["class", 'class'],
   plugins: [nextui(), require("tailwindcss-animate")],
 }

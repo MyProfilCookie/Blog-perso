@@ -1,12 +1,15 @@
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/img-redundant-alt */
-/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-console */
+/* eslint-disable import/order */
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, Button, Progress, Avatar, Input } from "@nextui-org/react";
+import { useRouter } from "next/navigation";
+import dayjs from "dayjs";
+import Swal from "sweetalert2";
+import axios from "axios";
+import Image from "next/image";
+
+// ShadCN UI Components
 import {
   LineChart,
   Line,
@@ -16,12 +19,41 @@ import {
   Tooltip,
   ResponsiveContainer,
 } from "recharts";
-import { useRouter } from "next/navigation";
-import dayjs from "dayjs";
-import Swal from "sweetalert2";
-import axios from "axios";
-import Image from "next/image";
 
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardFooter,
+} from "@/components/ui/card";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { Badge } from "@/components/ui/badge";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ScrollArea } from "@/components/ui/scroll-area";
+
+// Charts
+
+// Original components
 import ProgressionCommande from "@/components/ProgressionCommande";
 
 // Define TypeScript interfaces
@@ -117,331 +149,310 @@ const countries = [
 // Loading component
 const Loading = () => (
   <div className="flex justify-center items-center h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500" />
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-primary" />
   </div>
 );
 
-// Card Section Component
-const CardSection = ({
+// Activity Card Component
+const ActivityCard = ({
   title,
   data,
   isEvaluation = false,
 }: CardSectionProps) => (
-  <Card className="dark:bg-gray-800">
-    <div className="card-header p-4">
-      <h3 className="text-xl font-bold dark:text-gray-100">{title}</h3>
-    </div>
-    <div className="p-4">
-      {data.map((item, index) => (
-        <div
-          key={index}
-          className="mb-4 pb-3 border-b border-gray-100 dark:border-gray-700 last:border-0"
-        >
-          <p className="font-bold dark:text-gray-100">{item.title}</p>
-          {isEvaluation ? (
-            <>
-              <p className="dark:text-gray-300">
-                Score : {(item as EvaluationItem).score}%
-              </p>
-              <p className="dark:text-gray-300">
-                Date : {(item as EvaluationItem).date}
-              </p>
-            </>
-          ) : (
-            <Progress
-              aria-label={`Progression de ${item.title}`}
-              className="my-2"
-              color="primary"
-              value={(item as CourseItem).progress}
-            />
-          )}
-          {!isEvaluation && (
-            <p className="text-sm text-gray-600 dark:text-gray-400">
-              Dernière consultation : {(item as CourseItem).lastViewed}
-            </p>
-          )}
-        </div>
-      ))}
-    </div>
+  <Card className="h-full">
+    <CardHeader>
+      <CardTitle>{title}</CardTitle>
+    </CardHeader>
+    <CardContent className="space-y-4">
+      <ScrollArea className="h-[200px]">
+        {data.map((item, index) => (
+          <div key={index} className="mb-4 pb-3 border-b last:border-0">
+            <p className="font-medium">{item.title}</p>
+            {isEvaluation ? (
+              <div className="space-y-1">
+                <div className="flex items-center justify-between">
+                  <span>Score</span>
+                  <Badge
+                    variant={
+                      (item as EvaluationItem).score >= 75
+                        ? "default"
+                        : (item as EvaluationItem).score >= 50
+                          ? "secondary"
+                          : "destructive"
+                    }
+                  >
+                    {(item as EvaluationItem).score}%
+                  </Badge>
+                </div>
+                <p className="text-sm text-muted-foreground">
+                  Date: {(item as EvaluationItem).date}
+                </p>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <div className="flex items-center justify-between">
+                  <span className="text-sm text-muted-foreground">
+                    {(item as CourseItem).progress}%
+                  </span>
+                </div>
+                <Progress
+                  className="h-2"
+                  value={(item as CourseItem).progress}
+                />
+                <p className="text-xs text-muted-foreground">
+                  Dernière consultation: {(item as CourseItem).lastViewed}
+                </p>
+              </div>
+            )}
+          </div>
+        ))}
+      </ScrollArea>
+    </CardContent>
   </Card>
 );
 
-// Orders Section Component avec frais de livraison gratuits pour admin
-const SectionCommandes = ({
+// Orders Section Component
+const OrdersSection = ({
   orders,
   user,
 }: {
   orders: Order[];
   user: User | null;
 }) => {
-  // State to track which orders are expanded
-  const [commandesDeveloppees, setCommandesDeveloppees] = useState<{
-    [key: string]: boolean;
-  }>({});
-
-  // Toggle expansion for a specific order
-  const basculerDeveloppementCommande = (orderId: string) => {
-    setCommandesDeveloppees((prev) => ({
-      ...prev,
-      [orderId]: !prev[orderId],
-    }));
-  };
-
   if (!orders || orders.length === 0) {
     return (
       <div className="mt-8">
-        <h3 className="mb-4 text-2xl font-bold dark:text-gray-100">
-          Vos Commandes
-        </h3>
-        <div className="bg-cream dark:bg-gray-800 p-6 rounded-lg shadow text-center">
-          <p className="text-gray-600 dark:text-gray-400">
-            Vous n'avez pas encore passé de commande.
-          </p>
-        </div>
+        <h3 className="text-2xl font-bold mb-4">Vos Commandes</h3>
+        <Card>
+          <CardContent className="pt-6 text-center">
+            <p className="text-muted-foreground">
+              Vous n&apos;avez pas encore passé de commande.
+            </p>
+          </CardContent>
+        </Card>
       </div>
     );
   }
 
   return (
     <div className="mt-8">
-      <h3 className="mb-4 text-2xl font-bold dark:text-gray-100">
-        Vos Commandes ({orders.length})
-      </h3>
-      <ul className="bg-cream dark:bg-gray-800 rounded-lg shadow divide-y divide-gray-100 dark:divide-gray-700">
-        {orders.map((commande) => (
-          <li
-            key={commande._id}
-            className="p-4 transition-all duration-200 hover:bg-cream500 dark:hover:bg-gray-700"
+      <div className="flex items-center justify-between mb-4">
+        <h3 className="text-2xl font-bold">Vos Commandes</h3>
+        <Badge className="text-base font-normal" variant="outline">
+          {orders.length}
+        </Badge>
+      </div>
+
+      <Accordion className="w-full space-y-4" type="multiple">
+        {orders.map((order) => (
+          <AccordionItem
+            key={order._id}
+            className="border rounded-lg overflow-hidden"
+            value={order._id}
           >
-            <div
-              className="flex justify-between items-center flex-wrap cursor-pointer"
-              onClick={() => basculerDeveloppementCommande(commande._id)}
-            >
-              <div>
-                <p className="font-semibold dark:text-gray-100">
-                  Commande #{commande._id.substring(0, 8)}...
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium dark:text-gray-300">Date:</span>{" "}
-                  {dayjs(commande.date || commande.createdAt).format(
-                    "DD/MM/YYYY",
-                  )}
-                </p>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  <span className="font-medium dark:text-gray-300">Total:</span>{" "}
-                  {user && user.role === "admin" ? (
-                    <span className="flex items-center gap-2">
-                      <span className="line-through">
-                        {commande.total || commande.totalAmount || 0} €
-                      </span>
-                      <span className="px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full">
-                        Gratuit • Admin
-                      </span>
-                    </span>
-                  ) : (
-                    `${commande.total || commande.totalAmount || 0} €`
-                  )}
-                </p>
-              </div>
-              <div className="flex items-center gap-2">
-                <span
-                  className={`px-3 py-1 rounded-full text-xs font-medium 
-                  ${
-                    commande.status === "Delivered" ||
-                    commande.status === "Livrée"
-                      ? "bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100"
-                      : commande.status === "Processed" ||
-                          commande.status === "En cours"
-                        ? "bg-blue-100 text-blue-800 dark:bg-blue-800 dark:text-blue-100"
-                        : "bg-yellow-100 text-yellow-800 dark:bg-yellow-800 dark:text-yellow-100"
-                  }`}
-                >
-                  {commande.status}
-                </span>
-                <div className="text-gray-500 dark:text-gray-400">
-                  {commandesDeveloppees[commande._id] ? (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M4.5 15.75l7.5-7.5 7.5 7.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  ) : (
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeWidth={1.5}
-                      viewBox="0 0 24 24"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                      />
-                    </svg>
-                  )}
-                </div>
-              </div>
-            </div>
+            <Card>
+              <CardHeader className="p-0">
+                <AccordionTrigger className="px-6 py-4 hover:no-underline hover:bg-muted/50 transition-all">
+                  <div className="flex flex-1 flex-col sm:flex-row sm:items-center justify-between w-full overflow-hidden">
+                    <div className="space-y-1 text-left">
+                      <p className="font-medium">
+                        Commande #{order._id.substring(0, 8)}...
+                      </p>
+                      <p className="text-sm text-muted-foreground">
+                        {dayjs(order.date || order.createdAt).format(
+                          "DD/MM/YYYY",
+                        )}
+                      </p>
+                    </div>
 
-            {/* Barre de progression de la commande */}
-            <div className="mt-3">
-              <ProgressionCommande statut={commande.status} />
-            </div>
+                    <div className="flex items-center gap-3 mt-2 sm:mt-0">
+                      <Badge
+                        variant={
+                          order.status === "Delivered" ||
+                          order.status === "Livrée"
+                            ? "default"
+                            : order.status === "Processed" ||
+                                order.status === "En cours"
+                              ? "secondary"
+                              : "destructive"
+                        }
+                      >
+                        {order.status}
+                      </Badge>
 
-            {/* Order Items - Expanded View */}
-            {commandesDeveloppees[commande._id] && (
-              <div className="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700">
-                <h4 className="text-md font-medium mb-2 dark:text-gray-100">
-                  Articles commandés
-                </h4>
-                {commande.items && commande.items.length > 0 ? (
-                  <div className="space-y-4">
-                    {commande.items.map((article, idx) => {
-                      // Chercher l'image dans différentes propriétés possibles
-                      const urlImage =
-                        article.image ||
-                        (article as any).imageUrl ||
-                        (article as any).img ||
-                        (article as any).photo ||
-                        (article as any).thumbnail;
-
-                      return (
-                        <div
-                          key={idx}
-                          className="flex flex-col md:flex-row md:items-center p-3 bg-gray-50 dark:bg-gray-700 rounded"
-                        >
-                          {/* Informations de l'article */}
-                          <div className="md:flex-grow mb-2 md:mb-0">
-                            <p className="font-medium dark:text-gray-100">
-                              {article.title}
-                            </p>
-                            <p className="text-xs text-gray-500 dark:text-gray-400">
-                              Réf: {article.productId}
-                            </p>
-                            <div className="mt-1">
-                              <p className="text-sm dark:text-gray-300">
-                                {article.quantity} x {article.price} €
-                              </p>
-                              {user && user.role === "admin" ? (
-                                <div className="flex items-center gap-2">
-                                  <p className="font-medium line-through dark:text-gray-100">
-                                    {(article.quantity * article.price).toFixed(
-                                      2,
-                                    )}{" "}
-                                    €
-                                  </p>
-                                  <span className="px-2 py-0.5 text-xs font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full">
-                                    Gratuit
-                                  </span>
-                                </div>
-                              ) : (
-                                <p className="font-medium dark:text-gray-100">
-                                  {(article.quantity * article.price).toFixed(
-                                    2,
-                                  )}{" "}
-                                  €
-                                </p>
-                              )}
-                            </div>
-                          </div>
-
-                          {/* Image de l'article avec gestion améliorée */}
-                          <div className="flex justify-center md:ml-4">
-                            {urlImage ? (
-                              <div className="relative h-24 w-24">
-                                <Image
-                                  alt={`Image de ${article.title}`}
-                                  className="h-24 w-24 object-contain rounded border border-gray-200 dark:border-gray-600"
-                                  src={urlImage}
-                                  onError={(e) => {
-                                    console.log(
-                                      "Erreur de chargement d'image:",
-                                      urlImage,
-                                    );
-                                    (
-                                      e.target as HTMLImageElement
-                                    ).style.display = "none";
-                                    (
-                                      e.target as HTMLImageElement
-                                    ).parentElement!.innerHTML =
-                                      '<div class="h-24 w-24 flex items-center justify-center bg-gray-100 dark:bg-gray-600 rounded border border-gray-200 dark:border-gray-600">' +
-                                      '<span class="text-xs text-gray-400 dark:text-gray-300">Image indisponible</span></div>';
-                                  }}
-                                />
-                              </div>
-                            ) : (
-                              <div className="h-24 w-24 flex items-center justify-center bg-gray-100 dark:bg-gray-600 rounded border border-gray-200 dark:border-gray-600">
-                                <span className="text-xs text-gray-400 dark:text-gray-300">
-                                  Pas d'image
-                                </span>
-                              </div>
-                            )}
-                          </div>
+                      {user && user.role === "admin" ? (
+                        <div className="flex items-center">
+                          <span className="line-through text-sm mr-2">
+                            {order.total || order.totalAmount || 0}€
+                          </span>
+                          <Badge
+                            className="bg-primary/10 text-primary"
+                            variant="outline"
+                          >
+                            Gratuit • Admin
+                          </Badge>
                         </div>
-                      );
-                    })}
+                      ) : (
+                        <span className="font-medium">
+                          {order.total || order.totalAmount || 0}€
+                        </span>
+                      )}
+                    </div>
                   </div>
-                ) : (
-                  <p className="text-sm text-gray-500 dark:text-gray-400">
-                    Aucun détail d'article disponible pour cette commande.
-                  </p>
-                )}
+                </AccordionTrigger>
+              </CardHeader>
 
-                {/* Order Summary */}
-                <div className="mt-4 pt-3 border-t border-gray-200 dark:border-gray-700">
-                  <div className="flex justify-between items-center">
-                    <span className="font-medium dark:text-gray-300">
-                      Total:
-                    </span>
-                    {user && user.role === "admin" ? (
-                      <div className="flex items-center gap-2">
-                        <span className="font-bold line-through dark:text-gray-100">
-                          {commande.total || commande.totalAmount || 0} €
-                        </span>
-                        <span className="px-2 py-1 text-xs font-medium bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 rounded-full">
-                          Gratuit • Admin
-                        </span>
+              <AccordionContent>
+                <CardContent className="pt-0">
+                  <div className="my-4">
+                    <ProgressionCommande statut={order.status} />
+                  </div>
+
+                  <Separator className="my-4" />
+
+                  <div className="space-y-4">
+                    <h4 className="font-medium">Articles commandés</h4>
+
+                    {order.items && order.items.length > 0 ? (
+                      <div className="space-y-3">
+                        {order.items.map((item, idx) => {
+                          // Get image URL from various possible properties
+                          const imageUrl =
+                            item.image ||
+                            (item as any).imageUrl ||
+                            (item as any).img ||
+                            (item as any).photo ||
+                            (item as any).thumbnail;
+
+                          return (
+                            <div
+                              key={idx}
+                              className="flex flex-col sm:flex-row gap-4 p-3 bg-muted/50 rounded-md"
+                            >
+                              {/* Product image */}
+                              <div className="flex-shrink-0 flex justify-center">
+                                {imageUrl ? (
+                                  <div className="relative h-24 w-24 rounded-md overflow-hidden border">
+                                    <Image
+                                      alt={`Image de ${item.title}`}
+                                      className="object-contain"
+                                      src={imageUrl}
+                                      onError={(e) => {
+                                        (
+                                          e.target as HTMLImageElement
+                                        ).style.display = "none";
+                                        (
+                                          e.target as HTMLImageElement
+                                        ).parentElement!.innerHTML =
+                                          '<div class="h-24 w-24 flex items-center justify-center bg-muted"><span class="text-xs text-muted-foreground">Image indisponible</span></div>';
+                                      }}
+                                    />
+                                  </div>
+                                ) : (
+                                  <div className="h-24 w-24 flex items-center justify-center bg-muted rounded-md border">
+                                    <span className="text-xs text-muted-foreground">
+                                      Pas d&apos;image
+                                    </span>
+                                  </div>
+                                )}
+                              </div>
+
+                              {/* Product info */}
+                              <div className="flex-1 space-y-1 min-w-0">
+                                <p className="font-medium break-words">
+                                  {item.title}
+                                </p>
+                                <p className="text-xs text-muted-foreground break-all">
+                                  Réf: {item.productId}
+                                </p>
+                                <div className="flex flex-wrap gap-2 items-center">
+                                  <span className="text-sm">
+                                    {item.quantity} × {item.price}€
+                                  </span>
+
+                                  {user && user.role === "admin" ? (
+                                    <div className="flex items-center gap-2">
+                                      <span className="line-through font-medium">
+                                        {(item.quantity * item.price).toFixed(
+                                          2,
+                                        )}
+                                        €
+                                      </span>
+                                      <Badge
+                                        className="text-xs bg-primary/10 text-primary"
+                                        variant="outline"
+                                      >
+                                        Gratuit
+                                      </Badge>
+                                    </div>
+                                  ) : (
+                                    <span className="font-medium">
+                                      {(item.quantity * item.price).toFixed(2)}€
+                                    </span>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
                       </div>
                     ) : (
-                      <span className="font-bold dark:text-gray-100">
-                        {commande.total || commande.totalAmount || 0} €
-                      </span>
+                      <p className="text-sm text-muted-foreground">
+                        Aucun détail d&apos;article disponible pour cette commande.
+                      </p>
                     )}
                   </div>
-                  {commande.deliveryCost && (
-                    <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                      <span>Frais de livraison:</span>
+
+                  <Separator className="my-4" />
+
+                  {/* Order summary */}
+                  <div className="space-y-2">
+                    {order.deliveryCost && (
+                      <div className="flex justify-between items-center flex-wrap">
+                        <span className="text-sm">Frais de livraison:</span>
+                        {user && user.role === "admin" ? (
+                          <div className="flex items-center gap-2">
+                            <span className="line-through">
+                              {order.deliveryCost}€
+                            </span>
+                            <Badge
+                              className="text-xs bg-green-100 text-green-700 dark:bg-green-900 dark:text-green-300"
+                              variant="outline"
+                            >
+                              Gratuit
+                            </Badge>
+                          </div>
+                        ) : (
+                          <span>{order.deliveryCost}€</span>
+                        )}
+                      </div>
+                    )}
+
+                    <div className="flex justify-between items-center flex-wrap font-medium">
+                      <span>Total:</span>
                       {user && user.role === "admin" ? (
                         <div className="flex items-center gap-2">
                           <span className="line-through">
-                            {commande.deliveryCost} €
+                            {order.total || order.totalAmount || 0}€
                           </span>
-                          <span className="px-2 py-0.5 text-xs font-medium bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 rounded-full">
-                            Gratuit
-                          </span>
+                          <Badge
+                            className="bg-primary/10 text-primary"
+                            variant="outline"
+                          >
+                            Gratuit • Admin
+                          </Badge>
                         </div>
                       ) : (
-                        <span>{commande.deliveryCost} €</span>
+                        <span>{order.total || order.totalAmount || 0}€</span>
                       )}
                     </div>
-                  )}
-                </div>
-              </div>
-            )}
-          </li>
+                  </div>
+                </CardContent>
+              </AccordionContent>
+            </Card>
+          </AccordionItem>
         ))}
-      </ul>
+      </Accordion>
     </div>
   );
 };
@@ -636,6 +647,7 @@ const ProfilePage = () => {
       );
     }
   };
+
   // Profile update handler
   const handleSaveProfile = async () => {
     if (!user || !user._id) {
@@ -698,180 +710,258 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="container mx-auto mt-6 px-4">
-      {/* center le titre en version mobile mais laisser le titre a gauche en version desktop */}
-      <h1
-        className="mb-4 text-4xl font-bold text-center md:text-left dark:text-gray-100"
-        style={{
-          fontSize: "2rem",
-          fontWeight: "bold",
-        }}
-      >
-        {/* si la personne est un admin cela affiche "Bonjour à vous Admin 👑" sinon cela affiche "Bonjour à vous avec le pseudo de la personne" */}
-        {user?.role === "admin"
-          ? `Bonjour à vous Admin 👑`
-          : `Bonjour ${user?.pseudo || "Utilisateur"} 👋`}
-      </h1>
-      <p className="mb-6 text-gray-600 dark:text-gray-400 text-center md:text-left">
-        Il est : {currentTime} | Date de création de ton compte : {createdAt}
-      </p>
-
-      {/* Profile Form Section */}
-      <div className="bg-cream dark:bg-gray-800 rounded-lg shadow-lg p-6 mb-8">
-        <h2 className="text-3xl font-bold mb-4 dark:text-gray-100">
-          Modifier votre profil
-        </h2>
-
-        <div className="flex items-center gap-4 mb-6">
-          <Avatar
-            isBordered
-            alt={`Avatar de ${user?.pseudo}`}
-            aria-label={`Avatar de ${user?.pseudo}`}
-            size="lg"
-            src={user?.image || "/assets/default-avatar.webp"}
-          />
+    <div className="container mx-auto px-4 py-8 max-w-7xl overflow-x-hidden">
+      {/* Welcome Banner */}
+      <div className="mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between">
           <div>
-            <p className="text-lg dark:text-gray-100">Pseudo: {user?.pseudo}</p>
-            <p className="text-lg dark:text-gray-100">Email: {user?.email}</p>
-            <p className="text-lg dark:text-gray-100">Role: {user?.role}</p>
+            <h1 className="text-3xl md:text-4xl font-bold text-center md:text-left">
+              {user?.role === "admin"
+                ? `Bonjour à vous Admin 👑`
+                : `Bonjour ${user?.pseudo || "Utilisateur"} 👋`}
+            </h1>
+            <p className="mt-2 text-muted-foreground text-center md:text-left">
+              Il est : {currentTime} | Date de création de ton compte :{" "}
+              {createdAt}
+            </p>
           </div>
-        </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            fullWidth
-            aria-label="Modifier votre prénom"
-            className="mb-4"
-            label="Prénom"
-            value={firstName}
-            onChange={(e) => setFirstName(e.target.value)}
-          />
-
-          <Input
-            fullWidth
-            aria-label="Modifier votre nom"
-            className="mb-4"
-            label="Nom"
-            value={lastName}
-            onChange={(e) => setLastName(e.target.value)}
-          />
-        </div>
-
-        <Input
-          fullWidth
-          aria-label="Modifier votre numéro de téléphone"
-          className="mb-4"
-          label="Numéro de téléphone"
-          value={phone}
-          onChange={(e) => setPhone(e.target.value)}
-        />
-
-        <h3 className="text-xl font-semibold mt-4 mb-3 dark:text-gray-100">
-          Adresse de livraison
-        </h3>
-
-        <Input
-          fullWidth
-          aria-label="Modifier votre adresse"
-          className="mb-4"
-          label="Adresse"
-          value={address.street}
-          onChange={(e) => setAddress({ ...address, street: e.target.value })}
-        />
-
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          <Input
-            fullWidth
-            aria-label="Modifier votre ville"
-            className="mb-4"
-            label="Ville"
-            value={address.city}
-            onChange={(e) => setAddress({ ...address, city: e.target.value })}
-          />
-
-          <Input
-            fullWidth
-            aria-label="Modifier votre code postal"
-            className="mb-4"
-            label="Code postal"
-            value={address.postalCode}
-            onChange={(e) =>
-              setAddress({ ...address, postalCode: e.target.value })
-            }
-          />
-        </div>
-
-        <div className="mb-4">
-          <label
-            className="block mb-2 font-medium dark:text-gray-100"
-            htmlFor="country-select"
-          >
-            Pays
-          </label>
-          <select
-            aria-label="Sélectionnez votre pays"
-            className="w-full p-3 border rounded-md dark:bg-gray-700 dark:border-gray-600 dark:text-gray-100"
-            id="country-select"
-            value={address.country}
-            onChange={(e) =>
-              setAddress({ ...address, country: e.target.value })
-            }
-          >
-            {countries.map((country) => (
-              <option key={country} value={country}>
-                {country}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <Button
-          aria-label="Enregistrer les modifications"
-          className="mt-4"
-          color="primary"
-          disabled={saving}
-          onClick={handleSaveProfile}
-        >
-          {saving ? "Enregistrement..." : "Enregistrer"}
-        </Button>
-      </div>
-
-      {/* Orders Section */}
-      <SectionCommandes orders={orders} user={user} />
-
-      {/* Activity Sections */}
-      <h2 className="text-3xl font-bold mt-12 mb-6 dark:text-gray-100">
-        Vos Activités
-      </h2>
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-        <CardSection data={mockData.courses} title="Cours Consultés" />
-        <CardSection
-          isEvaluation
-          data={mockData.evaluations}
-          title="Évaluations"
-        />
-        <CardSection data={mockData.articles} title="Articles Consultés" />
-      </div>
-
-      <div className="mt-12 mb-16">
-        <h3 className="mb-4 text-2xl font-bold dark:text-gray-100">
-          Progression des activités
-        </h3>
-        <div className="bg-cream dark:bg-gray-800 p-4 rounded-lg shadow-lg">
-          <ResponsiveContainer height={300} width="100%">
-            <LineChart
-              data={mockData.courses}
-              margin={{ top: 5, right: 30, left: 20, bottom: 5 }}
-            >
-              <CartesianGrid strokeDasharray="3 3" />
-              <XAxis dataKey="title" />
-              <YAxis />
-              <Tooltip />
-              <Line dataKey="progress" stroke="#82ca9d" type="monotone" />
-            </LineChart>
-          </ResponsiveContainer>
+          {user && (
+            <div className="mt-4 md:mt-0 self-center md:self-auto">
+              <Badge
+                className="text-sm"
+                variant={user.role === "admin" ? "default" : "secondary"}
+              >
+                {user.role === "admin" ? "Administrateur" : "Utilisateur"}
+              </Badge>
+            </div>
+          )}
         </div>
       </div>
+
+      {/* Main Content */}
+      <Tabs className="w-full" defaultValue="profile">
+        <TabsList className="mb-6 w-full md:w-auto">
+          <TabsTrigger value="profile">Profil</TabsTrigger>
+          <TabsTrigger value="orders">Commandes</TabsTrigger>
+          <TabsTrigger value="activities">Activités</TabsTrigger>
+        </TabsList>
+
+        {/* Profile Tab */}
+        <TabsContent className="mt-0 space-y-4" value="profile">
+          <Card>
+            <CardHeader>
+              <CardTitle>Modifier votre profil</CardTitle>
+              <CardDescription>
+                Mettez à jour vos informations personnelles et votre adresse de
+                livraison.
+              </CardDescription>
+            </CardHeader>
+
+            <CardContent className="space-y-6">
+              {/* User info summary */}
+              <div className="flex items-start md:items-center gap-4 flex-wrap md:flex-nowrap">
+                <Avatar className="h-16 w-16">
+                  <AvatarImage
+                    alt={`Avatar de ${user?.pseudo}`}
+                    src={user?.image || "/assets/default-avatar.webp"}
+                  />
+                  <AvatarFallback>
+                    {user?.pseudo?.substring(0, 2).toUpperCase() || "U"}
+                  </AvatarFallback>
+                </Avatar>
+
+                <div className="space-y-1 flex-1 min-w-0">
+                  <p className="font-medium text-lg">@{user?.pseudo}</p>
+                  <p className="text-muted-foreground break-all">
+                    {user?.email}
+                  </p>
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Personal information form */}
+              <div className="space-y-4">
+                <h3 className="font-medium text-lg">
+                  Informations personnelles
+                </h3>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="firstName">Prénom</Label>
+                    <Input
+                      id="firstName"
+                      placeholder="Votre prénom"
+                      value={firstName}
+                      onChange={(e) => setFirstName(e.target.value)}
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="lastName">Nom</Label>
+                    <Input
+                      id="lastName"
+                      placeholder="Votre nom"
+                      value={lastName}
+                      onChange={(e) => setLastName(e.target.value)}
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="phone">Numéro de téléphone</Label>
+                  <Input
+                    id="phone"
+                    placeholder="Votre numéro de téléphone"
+                    value={phone}
+                    onChange={(e) => setPhone(e.target.value)}
+                  />
+                </div>
+              </div>
+
+              <Separator />
+
+              {/* Delivery address form */}
+              <div className="space-y-4">
+                <h3 className="font-medium text-lg">Adresse de livraison</h3>
+
+                <div className="space-y-2">
+                  <Label htmlFor="street">Adresse</Label>
+                  <Input
+                    id="street"
+                    placeholder="Numéro et nom de rue"
+                    value={address.street}
+                    onChange={(e) =>
+                      setAddress({ ...address, street: e.target.value })
+                    }
+                  />
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <Label htmlFor="city">Ville</Label>
+                    <Input
+                      id="city"
+                      placeholder="Votre ville"
+                      value={address.city}
+                      onChange={(e) =>
+                        setAddress({ ...address, city: e.target.value })
+                      }
+                    />
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="postalCode">Code postal</Label>
+                    <Input
+                      id="postalCode"
+                      placeholder="Code postal"
+                      value={address.postalCode}
+                      onChange={(e) =>
+                        setAddress({ ...address, postalCode: e.target.value })
+                      }
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-2">
+                  <Label htmlFor="country">Pays</Label>
+                  <Select
+                    value={address.country}
+                    onValueChange={(value) =>
+                      setAddress({ ...address, country: value })
+                    }
+                  >
+                    <SelectTrigger id="country">
+                      <SelectValue placeholder="Sélectionnez un pays" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {countries.map((country) => (
+                        <SelectItem key={country} value={country}>
+                          {country}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </CardContent>
+
+            <CardFooter>
+              <Button
+                className="w-full md:w-auto"
+                disabled={saving}
+                onClick={handleSaveProfile}
+              >
+                {saving ? "Enregistrement..." : "Enregistrer les modifications"}
+              </Button>
+            </CardFooter>
+          </Card>
+        </TabsContent>
+
+        {/* Orders Tab */}
+        <TabsContent className="mt-0" value="orders">
+          <OrdersSection orders={orders} user={user} />
+        </TabsContent>
+
+        {/* Activities Tab */}
+        <TabsContent className="mt-0 space-y-6" value="activities">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <ActivityCard data={mockData.courses} title="Cours Consultés" />
+            <ActivityCard
+              isEvaluation
+              data={mockData.evaluations}
+              title="Évaluations"
+            />
+            <ActivityCard data={mockData.articles} title="Articles Consultés" />
+          </div>
+
+          <Card>
+            <CardHeader>
+              <CardTitle>Progression des activités</CardTitle>
+              <CardDescription>
+                Visualisation graphique de votre progression dans les différents
+                cours
+              </CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="h-[300px] w-full">
+                <ResponsiveContainer height="100%" width="100%">
+                  <LineChart
+                    data={mockData.courses}
+                    margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
+                  >
+                    <CartesianGrid
+                      stroke="#888"
+                      strokeDasharray="3 3"
+                      strokeOpacity={0.2}
+                    />
+                    <XAxis
+                      dataKey="title"
+                      tick={{ fontSize: 12 }}
+                      tickLine={false}
+                    />
+                    <YAxis
+                      domain={[0, 100]}
+                      tick={{ fontSize: 12 }}
+                      tickLine={false}
+                    />
+                    <Tooltip />
+                    <Line
+                      activeDot={{ r: 6, strokeWidth: 0 }}
+                      dataKey="progress"
+                      dot={{ strokeWidth: 2, r: 4 }}
+                      stroke="hsl(var(--primary))"
+                      strokeWidth={2}
+                      type="monotone"
+                    />
+                  </LineChart>
+                </ResponsiveContainer>
+              </div>
+            </CardContent>
+          </Card>
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
