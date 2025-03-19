@@ -33,8 +33,8 @@ export const metadata: Metadata = {
 
 export const viewport: Viewport = {
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" }, // Fond crème en mode clair
-    { media: "(prefers-color-scheme: dark)", color: "black" }, // Fond sombre adapté
+    { media: "(prefers-color-scheme: light)", color: "#faf9f5" }, // Fond crème en mode clair
+    { media: "(prefers-color-scheme: dark)", color: "#111827" }, // Fond sombre adapté
   ],
 };
 
