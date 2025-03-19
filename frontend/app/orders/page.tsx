@@ -239,10 +239,10 @@ export default function OrdersPage() {
                 let response = null;
                 const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
                 const endpoints = [
-                    `/api/orders/user/${userId}`,
-                    `/api/orders/users/${userId}`,
-                    `/api/user/${userId}/orders`,
-                    `/api/users/${userId}/orders`
+                    `/orders/user/${userId}`,
+                    `/orders/users/${userId}`,
+                    `/user/${userId}/orders`,
+                    `/users/${userId}/orders`
                 ];
 
                 for (const endpoint of endpoints) {
