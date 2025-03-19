@@ -1,51 +1,12 @@
-/* eslint-disable import/order */
-/* eslint-disable no-console */
 "use client";
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
+import Image from "next/image";
 
-// ShadCN UI Components
-import {
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  CartesianGrid,
-  Tooltip,
-  ResponsiveContainer,
-} from "recharts";
-
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardFooter,
-} from "@/components/ui/card";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Badge } from "@/components/ui/badge";
-import { Progress } from "@/components/ui/progress";
-import { Separator } from "@/components/ui/separator";
-import { ScrollArea } from "@/components/ui/scroll-area";
-
-// Charts
-
-// Custom Components
-import AutiStudyHeader from "@/components/AutiStudyHeader";
+// Components
 import OrdersSection from "@/components/OrdersSection";
 
 // Define TypeScript interfaces
@@ -149,56 +110,61 @@ const ActivityCard = ({
   data: CourseItem[] | EvaluationItem[];
   isEvaluation?: boolean;
 }) => (
-  <Card className="h-full">
-    <CardHeader>
-      <CardTitle>{title}</CardTitle>
-    </CardHeader>
-    <CardContent className="space-y-4">
-      <ScrollArea className="h-[200px]">
-        {data.map((item, index) => (
-          <div key={index} className="mb-4 pb-3 border-b last:border-0">
-            <p className="font-medium">{item.title}</p>
-            {isEvaluation ? (
-              <div className="space-y-1">
-                <div className="flex items-center justify-between">
-                  <span>Score</span>
-                  <Badge
-                    variant={
-                      (item as EvaluationItem).score >= 75
-                        ? "default"
-                        : (item as EvaluationItem).score >= 50
-                          ? "secondary"
-                          : "destructive"
-                    }
-                  >
-                    {(item as EvaluationItem).score}%
-                  </Badge>
-                </div>
-                <p className="text-sm text-muted-foreground">
-                  Date: {(item as EvaluationItem).date}
-                </p>
+  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md h-full overflow-hidden">
+    <div className="p-4 border-b border-gray-100 dark:border-gray-700">
+      <h3 className="text-lg font-semibold">{title}</h3>
+    </div>
+    <div className="p-4 space-y-4 max-h-[300px] overflow-y-auto">
+      {data.map((item, index) => (
+        <div
+          key={index}
+          className="mb-4 pb-3 border-b border-gray-100 dark:border-gray-700 last:border-0"
+        >
+          <p className="font-medium">{item.title}</p>
+          {isEvaluation ? (
+            <div className="mt-2">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-gray-600 dark:text-gray-400">
+                  Score:
+                </span>
+                <span
+                  className={`text-sm px-2 py-0.5 rounded-full font-medium ${
+                    (item as EvaluationItem).score >= 75
+                      ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
+                      : (item as EvaluationItem).score >= 50
+                        ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
+                        : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200"
+                  }`}
+                >
+                  {(item as EvaluationItem).score}%
+                </span>
               </div>
-            ) : (
-              <div className="space-y-2">
-                <div className="flex items-center justify-between">
-                  <span className="text-sm text-muted-foreground">
-                    {(item as CourseItem).progress}%
-                  </span>
-                </div>
-                <Progress
-                  className="h-2"
-                  value={(item as CourseItem).progress}
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                Date: {(item as EvaluationItem).date}
+              </p>
+            </div>
+          ) : (
+            <div className="mt-2 space-y-2">
+              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+                <div
+                  className="bg-blue-600 h-2.5 rounded-full"
+                  style={{ width: `${(item as CourseItem).progress}%` }}
                 />
-                <p className="text-xs text-muted-foreground">
-                  Dernière consultation: {(item as CourseItem).lastViewed}
+              </div>
+              <div className="flex justify-between">
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  Progression: {(item as CourseItem).progress}%
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400">
+                  {(item as CourseItem).lastViewed}
                 </p>
               </div>
-            )}
-          </div>
-        ))}
-      </ScrollArea>
-    </CardContent>
-  </Card>
+            </div>
+          )}
+        </div>
+      ))}
+    </div>
+  </div>
 );
 
 const ProfilePage = () => {
@@ -224,6 +190,7 @@ const ProfilePage = () => {
   // UI state
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState("profile");
 
   const router = useRouter();
 
@@ -245,11 +212,6 @@ const ProfilePage = () => {
         // Get token from localStorage
         const token = localStorage.getItem("userToken");
 
-        console.log(
-          "🔍 Token extrait du localStorage:",
-          token ? `${token.substring(0, 15)}...` : "AUCUN TOKEN",
-        );
-
         if (!token) {
           console.error("Token not found in localStorage");
           Swal.fire({
@@ -267,15 +229,11 @@ const ProfilePage = () => {
           process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
         ).replace(/\/$/, "");
 
-        console.log("🔍 URL de l'API utilisée:", apiUrl);
-
         // Configure headers with token
         const headers = {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
-
-        console.log("🔍 Headers envoyés:", headers);
 
         // Fetch user data with fetch API
         const userResponse = await fetch(`${apiUrl}/users/me`, {
@@ -285,26 +243,12 @@ const ProfilePage = () => {
 
         // Check for error response
         if (!userResponse.ok) {
-          const errorData = await userResponse.json().catch(() => ({}));
-
-          console.error(
-            "❌ Erreur de requête utilisateur:",
-            userResponse.status,
-            errorData,
-          );
           throw new Error(`HTTP error! Status: ${userResponse.status}`);
         }
 
         const userData = await userResponse.json();
 
-        console.log(
-          "✅ Réponse API:",
-          userResponse.status,
-          userResponse.statusText,
-        );
-
         if (userData.user) {
-          console.log("✅ Données utilisateur reçues:", userData.user._id);
           setUser(userData.user);
 
           // Set profile form fields
@@ -331,12 +275,9 @@ const ProfilePage = () => {
           }
         }
       } catch (error) {
-        console.error("❌ Erreur dans fetchUserData:", error);
+        console.error("Error in fetchUserData:", error);
         // Check if it's an authentication error (401)
         if (error instanceof Error && error.message.includes("401")) {
-          console.log(
-            "❌ Token expiré ou invalide, redirection vers la page de connexion",
-          );
           // Remove invalid token
           localStorage.removeItem("userToken");
 
@@ -364,7 +305,6 @@ const ProfilePage = () => {
 
   const fetchUserOrders = async (userId: string, token: string) => {
     try {
-      console.log("Fetching orders for user:", userId);
       const apiUrl = (
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
       ).replace(/\/$/, "");
@@ -383,8 +323,6 @@ const ProfilePage = () => {
 
       const ordersData = await ordersResponse.json();
 
-      console.log("Orders response:", ordersData);
-
       if (ordersData) {
         if (Array.isArray(ordersData.orders)) {
           setOrders(ordersData.orders);
@@ -396,10 +334,7 @@ const ProfilePage = () => {
         }
       }
     } catch (orderError) {
-      console.error(
-        "Erreur lors de la récupération des commandes:",
-        orderError,
-      );
+      console.error("Error fetching orders:", orderError);
     }
   };
 
@@ -460,7 +395,7 @@ const ProfilePage = () => {
         confirmButtonText: "OK",
       });
     } catch (error) {
-      console.error("Erreur lors de la mise à jour du profil:", error);
+      console.error("Error updating profile:", error);
       Swal.fire({
         title: "Erreur",
         text: "Une erreur est survenue lors de la mise à jour.",
@@ -477,176 +412,245 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background">
-      <AutiStudyHeader user={user} />
+    <div className="pb-16">
+      {/* Welcome Banner */}
+      <div className="mb-8">
+        <div className="flex flex-col md:flex-row md:items-end justify-between">
+          <div>
+            <h1 className="text-3xl md:text-4xl font-bold text-center md:text-left">
+              {user?.role === "admin"
+                ? `Bonjour à vous Admin 👑`
+                : `Bonjour ${user?.pseudo || "Utilisateur"} 👋`}
+            </h1>
+            <p className="mt-2 text-gray-600 dark:text-gray-400 text-center md:text-left">
+              Il est : {currentTime} | Date de création de ton compte :{" "}
+              {createdAt}
+            </p>
+          </div>
+        </div>
+      </div>
 
-      <main className="container mx-auto px-4 py-8 max-w-7xl">
-        {/* Welcome Banner */}
-        <div className="mb-8">
-          <div className="flex flex-col md:flex-row md:items-end justify-between">
-            <div>
-              <h1 className="text-3xl md:text-4xl font-bold text-center md:text-left">
-                {user?.role === "admin"
-                  ? `Bonjour à vous Admin 👑`
-                  : `Bonjour ${user?.pseudo || "Utilisateur"} 👋`}
-              </h1>
-              <p className="mt-2 text-muted-foreground text-center md:text-left">
-                Il est : {currentTime} | Date de création de ton compte :{" "}
-                {createdAt}
+      {/* Tab Navigation */}
+      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
+        <ul className="flex flex-wrap -mb-px">
+          <li className="mr-2">
+            <button
+              className={`inline-block p-4 rounded-t-lg ${
+                activeTab === "profile"
+                  ? "text-primary border-b-2 border-primary"
+                  : "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              }`}
+              onClick={() => setActiveTab("profile")}
+            >
+              Profil
+            </button>
+          </li>
+          <li className="mr-2">
+            <button
+              className={`inline-block p-4 rounded-t-lg ${
+                activeTab === "orders"
+                  ? "text-primary border-b-2 border-primary"
+                  : "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              }`}
+              onClick={() => setActiveTab("orders")}
+            >
+              Commandes
+            </button>
+          </li>
+          <li className="mr-2">
+            <button
+              className={`inline-block p-4 rounded-t-lg ${
+                activeTab === "activities"
+                  ? "text-primary border-b-2 border-primary"
+                  : "hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              }`}
+              onClick={() => setActiveTab("activities")}
+            >
+              Activités
+            </button>
+          </li>
+        </ul>
+      </div>
+
+      {/* Profile Tab */}
+      {activeTab === "profile" && (
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8">
+          <h2 className="text-2xl font-bold mb-6">Modifier votre profil</h2>
+
+          {/* User info summary */}
+          <div className="flex items-start md:items-center gap-4 flex-wrap md:flex-nowrap mb-6">
+            <div className="h-16 w-16 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 relative">
+              <Image
+                alt={`Avatar de ${user?.pseudo}`}
+                className="rounded-full"
+                layout="fill"
+                objectFit="cover"
+                src={user?.image || "/assets/default-avatar.webp"}
+              />
+            </div>
+
+            <div className="space-y-1 flex-1 min-w-0">
+              <p className="font-medium text-lg">Pseudo: {user?.pseudo}</p>
+              <p className="text-gray-600 dark:text-gray-400 break-all">
+                Email: {user?.email}
+              </p>
+              <p className="text-gray-600 dark:text-gray-400">
+                Role: {user?.role}
               </p>
             </div>
           </div>
-        </div>
 
-        {/* Profile Form */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>Modifier votre profil</CardTitle>
-          </CardHeader>
+          <hr className="my-6 border-gray-200 dark:border-gray-700" />
 
-          <CardContent className="space-y-6">
-            {/* User info summary */}
-            <div className="flex items-start md:items-center gap-4 flex-wrap md:flex-nowrap">
-              <Avatar className="h-16 w-16">
-                <AvatarImage
-                  alt={`Avatar de ${user?.pseudo}`}
-                  src={user?.image || "/assets/default-avatar.webp"}
-                />
-                <AvatarFallback>
-                  {user?.pseudo?.substring(0, 2).toUpperCase() || "U"}
-                </AvatarFallback>
-              </Avatar>
-
-              <div className="space-y-1 flex-1 min-w-0">
-                <p className="font-medium text-lg">Pseudo: {user?.pseudo}</p>
-                <p className="text-muted-foreground break-all">
-                  Email: {user?.email}
-                </p>
-                <p className="text-muted-foreground">Role: {user?.role}</p>
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Personal information form */}
-            <div className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="firstName">Prénom</Label>
-                  <Input
-                    id="firstName"
-                    placeholder="Votre prénom"
-                    value={firstName}
-                    onChange={(e) => setFirstName(e.target.value)}
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="lastName">Nom</Label>
-                  <Input
-                    id="lastName"
-                    placeholder="Votre nom"
-                    value={lastName}
-                    onChange={(e) => setLastName(e.target.value)}
-                  />
-                </div>
-              </div>
-
+          {/* Personal information form */}
+          <div className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="phone">Numéro de téléphone</Label>
-                <Input
-                  id="phone"
-                  placeholder="Votre numéro de téléphone"
-                  value={phone}
-                  onChange={(e) => setPhone(e.target.value)}
-                />
-              </div>
-            </div>
-
-            <Separator />
-
-            {/* Delivery address form */}
-            <div className="space-y-4">
-              <h3 className="font-medium text-lg">Adresse de livraison</h3>
-
-              <div className="space-y-2">
-                <Label htmlFor="street">Adresse</Label>
-                <Input
-                  id="street"
-                  placeholder="Numéro et nom de rue"
-                  value={address.street}
-                  onChange={(e) =>
-                    setAddress({ ...address, street: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <Label htmlFor="city">Ville</Label>
-                  <Input
-                    id="city"
-                    placeholder="Votre ville"
-                    value={address.city}
-                    onChange={(e) =>
-                      setAddress({ ...address, city: e.target.value })
-                    }
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="postalCode">Code postal</Label>
-                  <Input
-                    id="postalCode"
-                    placeholder="Code postal"
-                    value={address.postalCode}
-                    onChange={(e) =>
-                      setAddress({ ...address, postalCode: e.target.value })
-                    }
-                  />
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <Label htmlFor="country">Pays</Label>
-                <Select
-                  value={address.country}
-                  onValueChange={(value) =>
-                    setAddress({ ...address, country: value })
-                  }
+                <label
+                  className="block text-sm font-medium"
+                  htmlFor="firstName"
                 >
-                  <SelectTrigger id="country">
-                    <SelectValue placeholder="Sélectionnez un pays" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    {countries.map((country) => (
-                      <SelectItem key={country} value={country}>
-                        {country}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
+                  Prénom
+                </label>
+                <input
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  id="firstName"
+                  placeholder="Votre prénom"
+                  type="text"
+                  value={firstName}
+                  onChange={(e) => setFirstName(e.target.value)}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label className="block text-sm font-medium" htmlFor="lastName">
+                  Nom
+                </label>
+                <input
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  id="lastName"
+                  placeholder="Votre nom"
+                  type="text"
+                  value={lastName}
+                  onChange={(e) => setLastName(e.target.value)}
+                />
               </div>
             </div>
-          </CardContent>
 
-          <CardFooter>
-            <Button
-              className="w-full md:w-auto"
+            <div className="space-y-2">
+              <label className="block text-sm font-medium" htmlFor="phone">
+                Numéro de téléphone
+              </label>
+              <input
+                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                id="phone"
+                placeholder="Votre numéro de téléphone"
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+              />
+            </div>
+          </div>
+
+          <hr className="my-6 border-gray-200 dark:border-gray-700" />
+
+          {/* Delivery address form */}
+          <div className="space-y-4">
+            <h3 className="font-medium text-lg">Adresse de livraison</h3>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium" htmlFor="street">
+                Adresse
+              </label>
+              <input
+                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                id="street"
+                placeholder="Numéro et nom de rue"
+                type="text"
+                value={address.street}
+                onChange={(e) =>
+                  setAddress({ ...address, street: e.target.value })
+                }
+              />
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <label className="block text-sm font-medium" htmlFor="city">
+                  Ville
+                </label>
+                <input
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  id="city"
+                  placeholder="Votre ville"
+                  type="text"
+                  value={address.city}
+                  onChange={(e) =>
+                    setAddress({ ...address, city: e.target.value })
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <label
+                  className="block text-sm font-medium"
+                  htmlFor="postalCode"
+                >
+                  Code postal
+                </label>
+                <input
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                  id="postalCode"
+                  placeholder="Code postal"
+                  type="text"
+                  value={address.postalCode}
+                  onChange={(e) =>
+                    setAddress({ ...address, postalCode: e.target.value })
+                  }
+                />
+              </div>
+            </div>
+
+            <div className="space-y-2">
+              <label className="block text-sm font-medium" htmlFor="country">
+                Pays
+              </label>
+              <select
+                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100"
+                id="country"
+                value={address.country}
+                onChange={(e) =>
+                  setAddress({ ...address, country: e.target.value })
+                }
+              >
+                {countries.map((country) => (
+                  <option key={country} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
+
+          <div className="mt-8">
+            <button
+              className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md disabled:opacity-50 disabled:cursor-not-allowed"
               disabled={saving}
               onClick={handleSaveProfile}
             >
               {saving ? "Enregistrement..." : "Enregistrer"}
-            </Button>
-          </CardFooter>
-        </Card>
+            </button>
+          </div>
+        </div>
+      )}
 
-        {/* Orders Section */}
-        <OrdersSection orders={orders} user={user} />
+      {/* Orders Tab */}
+      {activeTab === "orders" && <OrdersSection orders={orders} user={user} />}
 
-        {/* Activities Section */}
-        <div className="mt-12">
-          <h2 className="text-3xl font-bold mb-6">Vos Activités</h2>
+      {/* Activities Tab */}
+      {activeTab === "activities" && (
+        <div>
+          <h2 className="text-2xl font-bold mb-6">Vos Activités</h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ActivityCard data={mockData.courses} title="Cours Consultés" />
             <ActivityCard
@@ -657,52 +661,19 @@ const ProfilePage = () => {
             <ActivityCard data={mockData.articles} title="Articles Consultés" />
           </div>
 
-          <Card className="mt-8">
-            <CardHeader>
-              <CardTitle>Progression des activités</CardTitle>
-              <CardDescription>
-                Visualisation graphique de votre progression dans les différents
-                cours
-              </CardDescription>
-            </CardHeader>
-            <CardContent>
-              <div className="h-[300px] w-full">
-                <ResponsiveContainer height="100%" width="100%">
-                  <LineChart
-                    data={mockData.courses}
-                    margin={{ top: 5, right: 10, left: 0, bottom: 5 }}
-                  >
-                    <CartesianGrid
-                      stroke="#888"
-                      strokeDasharray="3 3"
-                      strokeOpacity={0.2}
-                    />
-                    <XAxis
-                      dataKey="title"
-                      tick={{ fontSize: 12 }}
-                      tickLine={false}
-                    />
-                    <YAxis
-                      domain={[0, 100]}
-                      tick={{ fontSize: 12 }}
-                      tickLine={false}
-                    />
-                    <Tooltip />
-                    <Line
-                      activeDot={{ r: 6, strokeWidth: 0 }}
-                      dataKey="progress"
-                      dot={{ strokeWidth: 2, r: 4 }}
-                      stroke="hsl(var(--primary))"
-                      strokeWidth={2}
-                      type="monotone"
-                    />
-                  </LineChart>
-                </ResponsiveContainer>
+          <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6">
+            <h3 className="text-xl font-bold mb-4">
+              Progression des activités
+            </h3>
+            <div className="h-[300px] w-full">
+              <div className="text-center text-gray-600 dark:text-gray-400 py-6">
+                [Graphique de progression ici]
+                <p className="mt-2">Fonctionnalité en cours de développement</p>
               </div>
-            </CardContent>
-          </Card>
+            </div>
+          </div>
         </div>
-      </main>
+      )}
     </div>
   );
 };
