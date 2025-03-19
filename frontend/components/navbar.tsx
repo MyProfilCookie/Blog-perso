@@ -389,12 +389,17 @@ export const Navbar = () => {
     if (!user || !user.id || isLoadingOrders) return;
   
     setIsLoadingOrders(true);
+    console.log("Début de la récupération des commandes...");
   
     try {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
+      
+      // Construire l'URL complète et la logger
+      const url = `${apiUrl}/users/${user.id}/orders`;
+      console.log("URL de récupération des commandes:", url);
   
-      const response = await fetch(`${apiUrl}/users/${user.id}/orders`, {
+      const response = await fetch(url, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -402,44 +407,72 @@ export const Navbar = () => {
         },
       });
   
+      console.log("Statut de la réponse:", response.status);
+      
       if (response.ok) {
         const data = await response.json();
+        console.log("Données de commandes brutes:", data);
         
-        // Traiter les données récupérées
+        // Déterminer la structure des données
         let orders = [];
-        
-        // Déterminer la structure des données retournées
         if (Array.isArray(data)) {
           orders = data;
+          console.log("Format des données: tableau direct");
         } else if (data.orders && Array.isArray(data.orders)) {
           orders = data.orders;
+          console.log("Format des données: objet avec propriété orders");
+        } else if (data.data && Array.isArray(data.data)) {
+          orders = data.data;
+          console.log("Format des données: objet avec propriété data");
         } else {
-          console.warn("Format de données de commandes inattendu:", data);
-          orders = [];
+          console.warn("Format de données inattendu, tentative de conversion:", data);
+          // Essayer une dernière approche
+          orders = Object.values(data).filter(value => 
+            typeof value === 'object' && value !== null
+          );
         }
         
-        // Calculer les compteurs
+        console.log("Commandes extraites:", orders);
+        console.log("Nombre de commandes trouvées:", orders.length);
+  
+        // Calculer les compteurs avec plus de tolérance sur les statuts
         let pendingCount = 0;
         let shippedCount = 0;
         
-        orders.forEach((order: Order) => {
-          const status = order.status ? order.status.toLowerCase() : "";
+        orders.forEach((order: { status: any; orderStatus: any; state: any; }) => {
+          console.log("Traitement de la commande:", order);
+          // Vérifier si le statut existe et le normaliser
+          const statusRaw = order.status || order.orderStatus || order.state || '';
+          const status = typeof statusRaw === 'string' ? statusRaw.toLowerCase() : '';
           
-          if (["pending", "processing", "en attente", "en cours"].includes(status)) {
+          console.log("Statut de commande détecté:", status);
+          
+          // Utiliser des conditions plus larges
+          if (status.includes('pend') || status.includes('process') || status.includes('attente') || status.includes('cours') || status === '') {
             pendingCount++;
-          } else if (["shipped", "delivered", "expédié", "livrée", "livraison"].includes(status)) {
+            console.log("→ Classée comme 'en attente'");
+          } else if (status.includes('ship') || status.includes('deliv') || status.includes('exp') || status.includes('livr')) {
             shippedCount++;
+            console.log("→ Classée comme 'expédiée'");
+          } else {
+            // Par défaut, considérer comme en attente
+            pendingCount++;
+            console.log("→ Statut inconnu, classée par défaut comme 'en attente'");
           }
         });
+        
+        console.log("Compteurs finaux:", { pending: pendingCount, shipped: shippedCount, total: orders.length });
         
         setOrderCount({
           pending: pendingCount,
           shipped: shippedCount,
           total: orders.length
         });
+      } else {
+        console.error("Erreur lors de la récupération des commandes:", await response.text());
       }
     } catch (error) {
-      console.error("Error fetching orders:", error);
+      console.error("Exception lors de la récupération des commandes:", error);
     } finally {
       setIsLoadingOrders(false);
     }
