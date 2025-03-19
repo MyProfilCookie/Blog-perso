@@ -398,7 +398,7 @@ const OrdersSection = ({
             className="mr-2 text-blue-600 dark:text-blue-400"
             icon={faShoppingBag}
           />
-          Vos Commandes
+          Vos Commandes ({orders.length})
         </h3>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center">
           <div className="flex flex-col items-center justify-center">
@@ -422,7 +422,7 @@ const OrdersSection = ({
           className="mr-2 text-blue-600 dark:text-blue-400"
           icon={faShoppingBag}
         />
-        Vos Commandes
+        Vos Commandes ({orders.length})
       </h3>
 
       <div className="space-y-4">

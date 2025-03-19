@@ -904,39 +904,31 @@ export const Navbar = () => {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem onClick={() => router.push("/profile")} key={""}>
+                  <DropdownItem key={""} onClick={() => router.push("/profile")}>
                     <FontAwesomeIcon className="mr-2" icon={faUser} />
                     Profil
                   </DropdownItem>
-                  <DropdownItem onClick={() => router.push("/shop")} key={""}>
+                  <DropdownItem key={""} onClick={() => router.push("/shop")}>
                     <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
                     Shop
                   </DropdownItem>
                   <DropdownItem
-                      className="relative"
-                      startContent={<FontAwesomeIcon className="text-blue-500" icon={faNewspaper} />}
-                      onClick={() => {
-                        markOrderUpdatesAsRead();
-                        router.push("/orders");
-                      } } key={""}                  >
+                    key={""}
+                    className="relative"
+                    startContent={<FontAwesomeIcon className="text-blue-500" icon={faNewspaper} />}
+                    onClick={() => {
+                      markOrderUpdatesAsRead();
+                      router.push("/orders");
+                    }}
+                  >
                     <div className="flex items-center w-full justify-between">
                       <div>Mes commandes</div>
-                      {orderCount > 0 ? (
-                        <Badge
-                          className="ml-2 text-xs animate-pulse"
-                          color="danger"
-                          size="sm"
-                        >
-                          {orderCount}
-                        </Badge>
-                      ) : (
-                        <span className="text-xs text-gray-400 ml-2">
-                          {orderCount === 0 ? "(0)" : "..."}
-                        </span>
-                      )}
+                      <span className="text-xs text-gray-400 ml-2">
+                        ({orderCount})
+                      </span>
                     </div>
                   </DropdownItem>
-                  <DropdownItem onClick={() => router.push("/controle")} key={""}>
+                  <DropdownItem key={""} onClick={() => router.push("/controle")}>
                     <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
                     Controle
                   </DropdownItem>
@@ -1014,7 +1006,7 @@ export const Navbar = () => {
                       </DropdownMenu>
                     </Dropdown>
                   </DropdownItem>
-                  <DropdownItem onClick={handleLogout} key={""}>
+                  <DropdownItem key={""} onClick={handleLogout}>
                     <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
                     Déconnexion
                   </DropdownItem>
