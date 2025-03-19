@@ -1,7 +1,3 @@
-/* eslint-disable no-console */
-/* eslint-disable react/no-unescaped-entities */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
-/* eslint-disable jsx-a11y/no-static-element-interactions */
 "use client";
 
 import React, { useState, useEffect } from "react";
@@ -9,7 +5,26 @@ import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import Swal from "sweetalert2";
 import Image from "next/image";
-import clsx from "clsx";
+import { useTheme } from "next-themes";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faUser,
+  faPhone,
+  faMapMarkerAlt,
+  faGlobe,
+  faCity,
+  faMailBulk,
+  faShoppingBag,
+  faCalendarAlt,
+  faClock,
+  faExclamationCircle,
+  faCheck,
+  faSpinner,
+  faBook,
+  faGraduationCap,
+  faNewspaper,
+  faChartBar,
+} from "@fortawesome/free-solid-svg-icons";
 
 // Define TypeScript interfaces
 interface Address {
@@ -98,7 +113,7 @@ const countries = [
 // Loading component
 const Loading = () => (
   <div className="flex justify-center items-center h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600" />
+    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 dark:border-blue-400" />
   </div>
 );
 
@@ -148,35 +163,20 @@ const OrderProgress = ({ status }: { status: string }) => {
       <div className="flex justify-between mb-2">
         <div className="flex flex-col items-center">
           <div
-            className={clsx(
-              "w-10 h-10 rounded-full flex items-center justify-center mb-1",
+            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${
               isRegistered
                 ? "bg-indigo-500 text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400",
-            )}
+                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+            }`}
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5 13l4 4L19 7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
+            <FontAwesomeIcon icon={faCheck} />
           </div>
           <span
-            className={clsx(
-              "text-sm text-center",
+            className={`text-sm text-center ${
               isRegistered
                 ? "text-indigo-500 dark:text-indigo-400"
-                : "text-gray-500 dark:text-gray-400",
-            )}
+                : "text-gray-500 dark:text-gray-400"
+            }`}
           >
             Enregistrement
           </span>
@@ -184,35 +184,24 @@ const OrderProgress = ({ status }: { status: string }) => {
 
         <div className="flex flex-col items-center">
           <div
-            className={clsx(
-              "w-10 h-10 rounded-full flex items-center justify-center mb-1",
+            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${
               isProcessed
                 ? "bg-indigo-500 text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400",
-            )}
+                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+            }`}
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5 13l4 4L19 7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
+            {isProcessed ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faSpinner} />
+            )}
           </div>
           <span
-            className={clsx(
-              "text-sm text-center",
+            className={`text-sm text-center ${
               isProcessed
                 ? "text-indigo-500 dark:text-indigo-400"
-                : "text-gray-500 dark:text-gray-400",
-            )}
+                : "text-gray-500 dark:text-gray-400"
+            }`}
           >
             Préparation
           </span>
@@ -220,35 +209,24 @@ const OrderProgress = ({ status }: { status: string }) => {
 
         <div className="flex flex-col items-center">
           <div
-            className={clsx(
-              "w-10 h-10 rounded-full flex items-center justify-center mb-1",
+            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${
               isShipped
                 ? "bg-pink-500 text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400",
-            )}
+                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+            }`}
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5 13l4 4L19 7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
+            {isShipped ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faSpinner} />
+            )}
           </div>
           <span
-            className={clsx(
-              "text-sm text-center",
+            className={`text-sm text-center ${
               isShipped
                 ? "text-pink-500 dark:text-pink-400"
-                : "text-gray-500 dark:text-gray-400",
-            )}
+                : "text-gray-500 dark:text-gray-400"
+            }`}
           >
             Expédition
           </span>
@@ -256,35 +234,24 @@ const OrderProgress = ({ status }: { status: string }) => {
 
         <div className="flex flex-col items-center">
           <div
-            className={clsx(
-              "w-10 h-10 rounded-full flex items-center justify-center mb-1",
+            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${
               isDelivered
                 ? "bg-emerald-500 text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400",
-            )}
+                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
+            }`}
           >
-            <svg
-              className="w-6 h-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M5 13l4 4L19 7"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-              />
-            </svg>
+            {isDelivered ? (
+              <FontAwesomeIcon icon={faCheck} />
+            ) : (
+              <FontAwesomeIcon icon={faSpinner} />
+            )}
           </div>
           <span
-            className={clsx(
-              "text-sm text-center",
+            className={`text-sm text-center ${
               isDelivered
                 ? "text-emerald-500 dark:text-emerald-400"
-                : "text-gray-500 dark:text-gray-400",
-            )}
+                : "text-gray-500 dark:text-gray-400"
+            }`}
           >
             Livraison
           </span>
@@ -295,24 +262,15 @@ const OrderProgress = ({ status }: { status: string }) => {
       <div className="h-3 flex w-full rounded-full overflow-hidden">
         <div className="bg-indigo-500 h-full" style={{ width: "25%" }} />
         <div
-          className={clsx(
-            "h-full",
-            isProcessed ? "bg-indigo-500" : "bg-gray-200 dark:bg-gray-700",
-          )}
+          className={`h-full ${isProcessed ? "bg-indigo-500" : "bg-gray-200 dark:bg-gray-700"}`}
           style={{ width: "25%" }}
         />
         <div
-          className={clsx(
-            "h-full",
-            isShipped ? "bg-pink-500" : "bg-gray-200 dark:bg-gray-700",
-          )}
+          className={`h-full ${isShipped ? "bg-pink-500" : "bg-gray-200 dark:bg-gray-700"}`}
           style={{ width: "25%" }}
         />
         <div
-          className={clsx(
-            "h-full",
-            isDelivered ? "bg-emerald-500" : "bg-gray-200 dark:bg-gray-700",
-          )}
+          className={`h-full ${isDelivered ? "bg-emerald-500" : "bg-gray-200 dark:bg-gray-700"}`}
           style={{ width: "25%" }}
         />
       </div>
@@ -337,13 +295,19 @@ const ActivityCard = ({
   title,
   data,
   isEvaluation = false,
+  icon,
 }: {
   title: string;
   data: CourseItem[] | EvaluationItem[];
   isEvaluation?: boolean;
+  icon: any;
 }) => (
   <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md h-full overflow-hidden">
-    <div className="p-4 border-b border-gray-100 dark:border-gray-700">
+    <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
+      <FontAwesomeIcon
+        className="mr-2 text-blue-600 dark:text-blue-400"
+        icon={icon}
+      />
       <h3 className="text-lg font-semibold">{title}</h3>
     </div>
     <div className="p-4 space-y-4 max-h-[300px] overflow-y-auto">
@@ -360,19 +324,22 @@ const ActivityCard = ({
                   Score:
                 </span>
                 <span
-                  className={clsx(
-                    "text-sm px-2 py-0.5 rounded-full font-medium",
+                  className={`text-sm px-2 py-0.5 rounded-full font-medium ${
                     (item as EvaluationItem).score >= 75
                       ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
                       : (item as EvaluationItem).score >= 50
                         ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
-                        : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200",
-                  )}
+                        : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200"
+                  }`}
                 >
                   {(item as EvaluationItem).score}%
                 </span>
               </div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center">
+                <FontAwesomeIcon
+                  className="mr-1 text-xs"
+                  icon={faCalendarAlt}
+                />
                 Date: {(item as EvaluationItem).date}
               </p>
             </div>
@@ -384,13 +351,15 @@ const ActivityCard = ({
                   style={{ width: `${(item as CourseItem).progress}%` }}
                 />
               </div>
-              <div className="flex justify-between">
-                <p className="text-xs text-gray-500 dark:text-gray-400">
-                  Progression: {(item as CourseItem).progress}%
-                </p>
-                <p className="text-xs text-gray-500 dark:text-gray-400">
+              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
+                <div className="flex items-center">
+                  <FontAwesomeIcon className="mr-1" icon={faChartBar} />
+                  {(item as CourseItem).progress}%
+                </div>
+                <div className="flex items-center">
+                  <FontAwesomeIcon className="mr-1" icon={faClock} />
                   {(item as CourseItem).lastViewed}
-                </p>
+                </div>
               </div>
             </div>
           )}
@@ -424,11 +393,23 @@ const OrdersSection = ({
   if (!orders || orders.length === 0) {
     return (
       <div className="mt-8">
-        <h3 className="text-2xl font-bold mb-4">Vos Commandes</h3>
+        <h3 className="text-2xl font-bold mb-4 flex items-center">
+          <FontAwesomeIcon
+            className="mr-2 text-blue-600 dark:text-blue-400"
+            icon={faShoppingBag}
+          />
+          Vos Commandes
+        </h3>
         <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center">
-          <p className="text-gray-600 dark:text-gray-400">
-            Vous n'avez pas encore passé de commande.
-          </p>
+          <div className="flex flex-col items-center justify-center">
+            <FontAwesomeIcon
+              className="text-4xl mb-3 text-gray-400 dark:text-gray-500"
+              icon={faExclamationCircle}
+            />
+            <p className="text-gray-600 dark:text-gray-400">
+              Vous n&apos;avez pas encore passé de commande.
+            </p>
+          </div>
         </div>
       </div>
     );
@@ -436,7 +417,13 @@ const OrdersSection = ({
 
   return (
     <div className="mt-8 space-y-6">
-      <h3 className="text-2xl font-bold mb-4">Vos Commandes</h3>
+      <h3 className="text-2xl font-bold mb-4 flex items-center">
+        <FontAwesomeIcon
+          className="mr-2 text-blue-600 dark:text-blue-400"
+          icon={faShoppingBag}
+        />
+        Vos Commandes
+      </h3>
 
       <div className="space-y-4">
         {orders.map((order) => (
@@ -446,27 +433,39 @@ const OrdersSection = ({
           >
             {/* Order Header */}
             <div
-              className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
+              className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300"
               onClick={() => toggleOrderExpansion(order._id)}
+              role="button"
+              tabIndex={0}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter' || e.key === ' ') {
+                  toggleOrderExpansion(order._id);
+                }
+              }}
             >
               <div className="flex flex-col gap-2">
                 <div className="flex justify-between items-center w-full">
-                  <p className="font-semibold text-base">
+                  <p className="font-semibold text-base flex items-center">
+                    <FontAwesomeIcon
+                      className="mr-2 text-blue-600 dark:text-blue-400"
+                      icon={faShoppingBag}
+                    />
                     Commande #{order._id.substring(0, 8)}...
                   </p>
                   <svg
-                    className="w-5 h-5 text-gray-500 dark:text-gray-400"
+                    className="w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-300"
                     fill="none"
                     stroke="currentColor"
+                    style={{
+                      transform: expandedOrders[order._id]
+                        ? "rotate(180deg)"
+                        : "rotate(0deg)",
+                    }}
                     viewBox="0 0 24 24"
                     xmlns="http://www.w3.org/2000/svg"
                   >
                     <path
-                      d={
-                        expandedOrders[order._id]
-                          ? "M4.5 15.75l7.5-7.5 7.5 7.5"
-                          : "M19.5 8.25l-7.5 7.5-7.5-7.5"
-                      }
+                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth={1.5}
@@ -474,7 +473,8 @@ const OrdersSection = ({
                   </svg>
                 </div>
 
-                <p className="text-gray-500 dark:text-gray-400 text-sm">
+                <p className="text-gray-500 dark:text-gray-400 text-sm flex items-center">
+                  <FontAwesomeIcon className="mr-2" icon={faCalendarAlt} />
                   {dayjs(order.date || order.createdAt).format("DD/MM/YYYY")}
                 </p>
 
@@ -510,7 +510,11 @@ const OrdersSection = ({
                 {/* Order Items */}
                 {order.items && order.items.length > 0 && (
                   <>
-                    <h4 className="font-medium text-lg mb-4">
+                    <h4 className="font-medium text-lg mb-4 flex items-center">
+                      <FontAwesomeIcon
+                        className="mr-2 text-blue-600 dark:text-blue-400"
+                        icon={faShoppingBag}
+                      />
                       Articles commandés
                     </h4>
                     <div className="space-y-4">
@@ -552,7 +556,7 @@ const OrdersSection = ({
                                 ) : (
                                   <div className="h-24 w-24 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
                                     <span className="text-xs text-gray-400 dark:text-gray-500">
-                                      Pas d'image
+                                      Pas d&apos;image
                                     </span>
                                   </div>
                                 )}
@@ -672,14 +676,20 @@ const ProfilePage = () => {
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState("profile");
 
-  // For hydration safety
+  // Theme handling
   const [mounted, setMounted] = useState(false);
+  const { theme, setTheme } = useTheme(); // This is still useful for some operations
+  const [isDarkMode, setIsDarkMode] = useState(false);
 
   const router = useRouter();
 
   // Handle hydration
   useEffect(() => {
     setMounted(true);
+    // Check if dark mode is enabled using document.documentElement.classList
+    const isDark = document.documentElement.classList.contains("dark");
+
+    setIsDarkMode(isDark);
   }, []);
 
   // Update current time
@@ -689,6 +699,26 @@ const ProfilePage = () => {
     }, 1000);
 
     return () => clearInterval(interval);
+  }, []);
+
+  // Check for theme changes
+  useEffect(() => {
+    const observer = new MutationObserver((mutations) => {
+      mutations.forEach((mutation) => {
+        if (
+          mutation.attributeName === "class" &&
+          mutation.target === document.documentElement
+        ) {
+          const isDark = document.documentElement.classList.contains("dark");
+
+          setIsDarkMode(isDark);
+        }
+      });
+    });
+
+    observer.observe(document.documentElement, { attributes: true });
+
+    return () => observer.disconnect();
   }, []);
 
   // Fetch user data and orders
@@ -895,16 +925,12 @@ const ProfilePage = () => {
     }
   };
 
-  if (!mounted) {
-    return <Loading />;
-  }
-
-  if (loading) {
+  if (!mounted || loading) {
     return <Loading />;
   }
 
   return (
-    <div className="pb-16">
+    <div className="pb-16 transition-colors duration-300">
       {/* Welcome Banner */}
       <div className="mb-8">
         <div className="flex flex-col md:flex-row md:items-end justify-between">
@@ -914,9 +940,11 @@ const ProfilePage = () => {
                 ? `Bonjour à vous Admin 👑`
                 : `Bonjour ${user?.pseudo || "Utilisateur"} 👋`}
             </h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-400 text-center md:text-left">
-              Il est : {currentTime} | Date de création de ton compte :{" "}
-              {createdAt}
+            <p className="mt-2 text-gray-600 dark:text-gray-400 text-center md:text-left flex items-center justify-center md:justify-start">
+              <FontAwesomeIcon className="mr-2" icon={faClock} />
+              {currentTime} |{" "}
+              <FontAwesomeIcon className="mx-2" icon={faCalendarAlt} /> Compte
+              créé le: {createdAt}
             </p>
           </div>
         </div>
@@ -927,40 +955,40 @@ const ProfilePage = () => {
         <ul className="flex flex-wrap -mb-px">
           <li className="mr-2">
             <button
-              className={clsx(
-                "inline-block p-4 rounded-t-lg border-b-2 transition-colors duration-300",
+              className={`inline-block p-4 rounded-t-lg border-b-2 transition-colors duration-300 ${
                 activeTab === "profile"
                   ? "text-blue-600 dark:text-blue-300 border-blue-600 dark:border-blue-300"
-                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300",
-              )}
+                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              }`}
               onClick={() => setActiveTab("profile")}
             >
+              <FontAwesomeIcon className="mr-2" icon={faUser} />
               Profil
             </button>
           </li>
           <li className="mr-2">
             <button
-              className={clsx(
-                "inline-block p-4 rounded-t-lg border-b-2 transition-colors duration-300",
+              className={`inline-block p-4 rounded-t-lg border-b-2 transition-colors duration-300 ${
                 activeTab === "orders"
                   ? "text-blue-600 dark:text-blue-300 border-blue-600 dark:border-blue-300"
-                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300",
-              )}
+                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              }`}
               onClick={() => setActiveTab("orders")}
             >
+              <FontAwesomeIcon className="mr-2" icon={faShoppingBag} />
               Commandes
             </button>
           </li>
           <li className="mr-2">
             <button
-              className={clsx(
-                "inline-block p-4 rounded-t-lg border-b-2 transition-colors duration-300",
+              className={`inline-block p-4 rounded-t-lg border-b-2 transition-colors duration-300 ${
                 activeTab === "activities"
                   ? "text-blue-600 dark:text-blue-300 border-blue-600 dark:border-blue-300"
-                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300",
-              )}
+                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
+              }`}
               onClick={() => setActiveTab("activities")}
             >
+              <FontAwesomeIcon className="mr-2" icon={faGraduationCap} />
               Activités
             </button>
           </li>
@@ -970,7 +998,13 @@ const ProfilePage = () => {
       {/* Profile Tab */}
       {activeTab === "profile" && (
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 transition-colors duration-300">
-          <h2 className="text-2xl font-bold mb-6">Modifier votre profil</h2>
+          <h2 className="text-2xl font-bold mb-6 flex items-center">
+            <FontAwesomeIcon
+              className="mr-2 text-blue-600 dark:text-blue-400"
+              icon={faUser}
+            />
+            Modifier votre profil
+          </h2>
 
           {/* User info summary */}
           <div className="flex items-start md:items-center gap-4 flex-wrap md:flex-nowrap mb-6">
@@ -1002,9 +1036,13 @@ const ProfilePage = () => {
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
                 <label
-                  className="block text-sm font-medium"
+                  className="block text-sm font-medium flex items-center"
                   htmlFor="firstName"
                 >
+                  <FontAwesomeIcon
+                    className="mr-2 text-blue-600 dark:text-blue-400"
+                    icon={faUser}
+                  />
                   Prénom
                 </label>
                 <input
@@ -1018,7 +1056,14 @@ const ProfilePage = () => {
               </div>
 
               <div className="space-y-2">
-                <label className="block text-sm font-medium" htmlFor="lastName">
+                <label
+                  className="block text-sm font-medium flex items-center"
+                  htmlFor="lastName"
+                >
+                  <FontAwesomeIcon
+                    className="mr-2 text-blue-600 dark:text-blue-400"
+                    icon={faUser}
+                  />
                   Nom
                 </label>
                 <input
@@ -1033,7 +1078,14 @@ const ProfilePage = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium" htmlFor="phone">
+              <label
+                className="block text-sm font-medium flex items-center"
+                htmlFor="phone"
+              >
+                <FontAwesomeIcon
+                  className="mr-2 text-blue-600 dark:text-blue-400"
+                  icon={faPhone}
+                />
                 Numéro de téléphone
               </label>
               <input
@@ -1051,10 +1103,23 @@ const ProfilePage = () => {
 
           {/* Delivery address form */}
           <div className="space-y-4">
-            <h3 className="font-medium text-lg">Adresse de livraison</h3>
+            <h3 className="font-medium text-lg flex items-center">
+              <FontAwesomeIcon
+                className="mr-2 text-blue-600 dark:text-blue-400"
+                icon={faMapMarkerAlt}
+              />
+              Adresse de livraison
+            </h3>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium" htmlFor="street">
+              <label
+                className="block text-sm font-medium flex items-center"
+                htmlFor="street"
+              >
+                <FontAwesomeIcon
+                  className="mr-2 text-blue-600 dark:text-blue-400"
+                  icon={faMapMarkerAlt}
+                />
                 Adresse
               </label>
               <input
@@ -1071,7 +1136,14 @@ const ProfilePage = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <label className="block text-sm font-medium" htmlFor="city">
+                <label
+                  className="block text-sm font-medium flex items-center"
+                  htmlFor="city"
+                >
+                  <FontAwesomeIcon
+                    className="mr-2 text-blue-600 dark:text-blue-400"
+                    icon={faCity}
+                  />
                   Ville
                 </label>
                 <input
@@ -1088,9 +1160,13 @@ const ProfilePage = () => {
 
               <div className="space-y-2">
                 <label
-                  className="block text-sm font-medium"
+                  className="block text-sm font-medium flex items-center"
                   htmlFor="postalCode"
                 >
+                  <FontAwesomeIcon
+                    className="mr-2 text-blue-600 dark:text-blue-400"
+                    icon={faMailBulk}
+                  />
                   Code postal
                 </label>
                 <input
@@ -1107,7 +1183,14 @@ const ProfilePage = () => {
             </div>
 
             <div className="space-y-2">
-              <label className="block text-sm font-medium" htmlFor="country">
+              <label
+                className="block text-sm font-medium flex items-center"
+                htmlFor="country"
+              >
+                <FontAwesomeIcon
+                  className="mr-2 text-blue-600 dark:text-blue-400"
+                  icon={faGlobe}
+                />
                 Pays
               </label>
               <select
@@ -1129,14 +1212,26 @@ const ProfilePage = () => {
 
           <div className="mt-8">
             <button
-              className={clsx(
-                "px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-300",
-                saving && "opacity-50 cursor-not-allowed",
-              )}
+              className={`px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-300 flex items-center ${
+                saving ? "opacity-50 cursor-not-allowed" : ""
+              }`}
               disabled={saving}
               onClick={handleSaveProfile}
             >
-              {saving ? "Enregistrement..." : "Enregistrer"}
+              {saving ? (
+                <>
+                  <FontAwesomeIcon
+                    className="mr-2 animate-spin"
+                    icon={faSpinner}
+                  />
+                  Enregistrement...
+                </>
+              ) : (
+                <>
+                  <FontAwesomeIcon className="mr-2" icon={faCheck} />
+                  Enregistrer
+                </>
+              )}
             </button>
           </div>
         </div>
@@ -1148,24 +1243,47 @@ const ProfilePage = () => {
       {/* Activities Tab */}
       {activeTab === "activities" && (
         <div>
-          <h2 className="text-2xl font-bold mb-6">Vos Activités</h2>
+          <h2 className="text-2xl font-bold mb-6 flex items-center">
+            <FontAwesomeIcon
+              className="mr-2 text-blue-600 dark:text-blue-400"
+              icon={faGraduationCap}
+            />
+            Vos Activités
+          </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ActivityCard data={mockData.courses} title="Cours Consultés" />
+            <ActivityCard
+              data={mockData.courses}
+              icon={faBook}
+              title="Cours Consultés"
+            />
             <ActivityCard
               isEvaluation
               data={mockData.evaluations}
+              icon={faGraduationCap}
               title="Évaluations"
             />
-            <ActivityCard data={mockData.articles} title="Articles Consultés" />
+            <ActivityCard
+              data={mockData.articles}
+              icon={faNewspaper}
+              title="Articles Consultés"
+            />
           </div>
 
           <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
-            <h3 className="text-xl font-bold mb-4">
+            <h3 className="text-xl font-bold mb-4 flex items-center">
+              <FontAwesomeIcon
+                className="mr-2 text-blue-600 dark:text-blue-400"
+                icon={faChartBar}
+              />
               Progression des activités
             </h3>
             <div className="h-[300px] w-full">
-              <div className="text-center text-gray-600 dark:text-gray-400 py-6">
-                [Graphique de progression ici]
+              <div className="text-center text-gray-600 dark:text-gray-400 py-6 flex flex-col items-center justify-center h-full">
+                <FontAwesomeIcon
+                  className="text-5xl mb-4 text-gray-400 dark:text-gray-600"
+                  icon={faChartBar}
+                />
+                <p className="text-lg">[Graphique de progression ici]</p>
                 <p className="mt-2">Fonctionnalité en cours de développement</p>
               </div>
             </div>
