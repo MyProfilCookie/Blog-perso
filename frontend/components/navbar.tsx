@@ -59,6 +59,26 @@ type User = {
   token?: string;
 };
 
+// Type pour les compteurs de commandes
+type OrderCountType = {
+  pending: number;
+  shipped: number;
+  total: number;
+};
+
+// Interface pour le type Order
+interface Order {
+  status: string;
+  _id: string;
+  createdAt: string;
+  total?: number;
+  totalAmount?: number;
+  items?: any[];
+  deliveryCost?: number;
+  paymentMethod?: string;
+  paymentStatus?: string;
+}
+
 // Function to get the appropriate icon for each navigation item
 const getIconForNavItem = (label: string) => {
   const iconMap: Record<string, any> = {
@@ -108,7 +128,11 @@ export const Navbar = () => {
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isVerifyingToken, setIsVerifyingToken] = useState(false);
-  const [orderCount, setOrderCount] = useState<number>(0);
+  const [orderCount, setOrderCount] = useState<OrderCountType>({
+    pending: 0,
+    shipped: 0,
+    total: 0
+  });
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
@@ -125,8 +149,6 @@ export const Navbar = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  // Toggle theme function
 
   // Auto theme updater based on time of day
   useEffect(() => {
@@ -370,9 +392,9 @@ export const Navbar = () => {
   
     try {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, ""); // Supprime le "/" à la fin si présent
+      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
   
-      const response = await fetch(`${apiUrl}/users/${user.id}/orders/count`, {
+      const response = await fetch(`${apiUrl}/users/${user.id}/orders`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -382,25 +404,42 @@ export const Navbar = () => {
   
       if (response.ok) {
         const data = await response.json();
-  
-        // Gestion des différents formats de réponse
-        let count = 0;
-        if (typeof data === "number") {
-          count = data;
-        } else if (data && typeof data.count === "number") {
-          count = data.count;
-        } else if (data && typeof data.updates === "number") {
-          count = data.updates;
-        } else if (Array.isArray(data)) {
-          count = data.length;
-        } else if (typeof data === "string") {
-          count = parseInt(data, 10) || 0;
+        
+        // Traiter les données récupérées
+        let orders = [];
+        
+        // Déterminer la structure des données retournées
+        if (Array.isArray(data)) {
+          orders = data;
+        } else if (data.orders && Array.isArray(data.orders)) {
+          orders = data.orders;
+        } else {
+          console.warn("Format de données de commandes inattendu:", data);
+          orders = [];
         }
-  
-        setOrderCount(count);
+        
+        // Calculer les compteurs
+        let pendingCount = 0;
+        let shippedCount = 0;
+        
+        orders.forEach((order: Order) => {
+          const status = order.status ? order.status.toLowerCase() : "";
+          
+          if (["pending", "processing", "en attente", "en cours"].includes(status)) {
+            pendingCount++;
+          } else if (["shipped", "delivered", "expédié", "livrée", "livraison"].includes(status)) {
+            shippedCount++;
+          }
+        });
+        
+        setOrderCount({
+          pending: pendingCount,
+          shipped: shippedCount,
+          total: orders.length
+        });
       }
     } catch (error) {
-      console.error("Error fetching order count:", error);
+      console.error("Error fetching orders:", error);
     } finally {
       setIsLoadingOrders(false);
     }
@@ -414,7 +453,7 @@ export const Navbar = () => {
   
     try {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, ""); // Supprime le "/" à la fin si présent
+      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
   
       await fetch(`${apiUrl}/users/${user.id}/orders/updates/read`, {
         method: "POST",
@@ -424,7 +463,8 @@ export const Navbar = () => {
         },
       });
   
-      setOrderCount(0);
+      // On ne réinitialise pas les compteurs, on va simplement charger les données à nouveau
+      fetchOrderCount();
     } catch (error) {
       console.error("Error marking updates as read:", error);
     }
@@ -440,6 +480,7 @@ export const Navbar = () => {
       return () => clearInterval(intervalId);
     }
   }, [user]);
+
   return (
     <NextUINavbar
       className="dark:bg-gray-900 bg-cream"
@@ -687,18 +728,21 @@ export const Navbar = () => {
                               icon={faNewspaper}
                             />
                             <span className="flex-1">Mes commandes</span>
-                            {orderCount > 0 ? (
-                              <Badge
-                                className="animate-pulse"
-                                color="danger"
-                              >
-                                {orderCount}
-                              </Badge>
-                            ) : (
+                            <div className="flex items-center space-x-1">
+                              {orderCount.pending > 0 && (
+                                <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
+                                  {orderCount.pending}
+                                </span>
+                              )}
+                              {orderCount.shipped > 0 && (
+                                <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                                  {orderCount.shipped}
+                                </span>
+                              )}
                               <span className="text-xs text-gray-400">
-                                {orderCount === 0 ? "(0)" : "..."}
+                                ({orderCount.total})
                               </span>
-                            )}
+                            </div>
                           </NextLink>
                         </li>
                         <li>
@@ -892,13 +936,13 @@ export const Navbar = () => {
                     <span className="ml-2 hidden xl:inline dark:text-white">
                       {user?.pseudo || "Utilisateur"}
                     </span>
-                    {/* Badge des mises à jour de commandes */}
-                    {orderCount > 0 && (
+                    {/* Badge combiné pour les commandes */}
+                    {(orderCount.pending > 0 || orderCount.shipped > 0) && (
                       <Badge
                         className="absolute -top-2 -right-2"
                         color="danger"
                       >
-                        {orderCount}
+                        {orderCount.total}
                       </Badge>
                     )}
                   </Button>
@@ -923,9 +967,21 @@ export const Navbar = () => {
                   >
                     <div className="flex items-center w-full justify-between">
                       <div>Mes commandes</div>
-                      <span className="text-xs text-gray-400 ml-2">
-                        ({orderCount})
-                      </span>
+                      <div className="flex items-center space-x-1 ml-2">
+                        {orderCount.pending > 0 && (
+                          <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
+                            {orderCount.pending}
+                          </span>
+                        )}
+                        {orderCount.shipped > 0 && (
+                          <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                            {orderCount.shipped}
+                          </span>
+                        )}
+                        <span className="text-xs text-gray-400">
+                          ({orderCount.total})
+                        </span>
+                      </div>
                     </div>
                   </DropdownItem>
                   <DropdownItem key={""} onClick={() => router.push("/controle")}>
