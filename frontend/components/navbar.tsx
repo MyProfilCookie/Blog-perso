@@ -998,21 +998,17 @@ export const Navbar = () => {
                       router.push("/orders");
                     }}
                   >
-                    <div className="flex items-center w-full justify-between">
-                      <div>Mes commandes</div>
-                      <div className="flex items-center space-x-1 ml-2">
-                        {orderCount.pending > 0 && (
-                          <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
-                            {orderCount.pending}
-                          </span>
-                        )}
-                        {orderCount.shipped > 0 && (
-                          <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
-                            {orderCount.shipped}
-                          </span>
-                        )}
-                        <span className="text-xs text-gray-400">
-                          ({orderCount.total})
+                    <div className="flex flex-col w-full space-y-2">
+                      <div className="flex items-center justify-between">
+                        <div>Mes commandes en cours</div>
+                        <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
+                          {orderCount.pending}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>Mes commandes envoyées</div>
+                        <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                          {orderCount.shipped}
                         </span>
                       </div>
                     </div>
