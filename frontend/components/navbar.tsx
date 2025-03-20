@@ -557,8 +557,8 @@ export const Navbar = () => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          "Cache-Control": "no-cache, no-store, must-revalidate",
-          Pragma: "no-cache",
+          // "Cache-Control": "no-cache, no-store, must-revalidate",
+          // Pragma: "no-cache",
         },
       });
 
@@ -662,7 +662,7 @@ export const Navbar = () => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          "Cache-Control": "no-cache",
+          // "Cache-Control": "no-cache",
         },
       });
 
@@ -1480,7 +1480,7 @@ export const Navbar = () => {
                 const response = await fetch(url, {
                   headers: {
                     Authorization: `Bearer ${userData.token}`,
-                    "Cache-Control": "no-cache",
+                    // "Cache-Control": "no-cache",
                   },
                 });
                 const responseText = await response.text();
