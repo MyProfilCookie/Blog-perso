@@ -938,8 +938,9 @@ export const Navbar = () => {
                           </NextLink>
                         </li>
                         <li>
-                          <button
+                          <NextLink
                             className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors cursor-pointer"
+                            href={""}
                             role="menuitem"
                             type="button"
                             onClick={() => {
@@ -971,7 +972,7 @@ export const Navbar = () => {
                                 {orderCount.delivered || 0}
                               </span>
                             </div>
-                          </button>
+                          </NextLink>
                         </li>
                         <li>
                           <button
