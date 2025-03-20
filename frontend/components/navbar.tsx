@@ -1,6 +1,3 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable padding-line-between-statements */
-/* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 "use client";
 import React, { useState, useRef, useEffect } from "react";
@@ -36,6 +33,8 @@ import {
   faGraduationCap,
   faQuestionCircle,
   faMoon,
+  faCode,
+  faSyncAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
@@ -64,8 +63,6 @@ type OrderCountType = {
   pending: number;
   shipped: number;
   total: number;
-  processing: number;
-  delivered: number;
 };
 
 // Interface pour le type Order
@@ -114,13 +111,16 @@ const verifyToken = async (token: string): Promise<boolean> => {
 
     if (!response.ok) {
       console.warn("Token verification failed with status:", response.status);
+
       return false;
     }
 
     const data = await response.json();
+
     return data.valid === true;
   } catch (error) {
     console.error("Error verifying token:", error);
+
     return false;
   }
 };
@@ -133,11 +133,10 @@ export const Navbar = () => {
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
     shipped: 0,
-    processing: 0,
-    delivered: 0,
-    total: 0
+    total: 0,
   });
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
+  const [orderLoadError, setOrderLoadError] = useState<string | null>(null);
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
@@ -149,6 +148,24 @@ export const Navbar = () => {
 
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+
+  // Pour le débogage
+  useEffect(() => {
+    console.log("API URL Configuration:");
+    console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
+    console.log(
+      "API Base URL qui sera utilisée:",
+      (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(
+        /\/$/,
+        "",
+      ),
+    );
+  }, []);
+
+  // Pour le suivi de l'état des compteurs
+  useEffect(() => {
+    console.log("État actuel des compteurs de commandes:", orderCount);
+  }, [orderCount]);
 
   useEffect(() => {
     setMounted(true);
@@ -175,6 +192,7 @@ export const Navbar = () => {
 
     updateThemeByTime();
     const interval = setInterval(updateThemeByTime, 60000);
+
     return () => clearInterval(interval);
   }, [mounted]);
 
@@ -231,6 +249,7 @@ export const Navbar = () => {
         setCartItemsCount(0);
 
         const event = new CustomEvent("userUpdate");
+
         window.dispatchEvent(event);
 
         router.push("/users/login");
@@ -256,6 +275,7 @@ export const Navbar = () => {
         if (!token) {
           console.warn("No token found in user data");
           setIsVerifyingToken(false);
+
           return;
         }
 
@@ -281,9 +301,11 @@ export const Navbar = () => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
+
         setUser(parsedUser);
 
         const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
+
         if (userCart) {
           setCartItemsCount(JSON.parse(userCart).length);
         }
@@ -294,9 +316,14 @@ export const Navbar = () => {
 
     // Check token validity every 30 minutes
     const intervalId = setInterval(checkTokenValidity, 30 * 60 * 1000);
+
     return () => clearInterval(intervalId);
   }, []);
-  console.log("🔍 FRONTEND - NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
+
+  console.log(
+    "🔍 FRONTEND - NEXT_PUBLIC_API_URL:",
+    process.env.NEXT_PUBLIC_API_URL,
+  );
 
   /**
    * Update user and cart when a "userUpdate" event is triggered
@@ -308,9 +335,11 @@ export const Navbar = () => {
       if (storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser);
+
           setUser(parsedUser);
 
           const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
+
           setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
         } catch (error) {
           console.error("Error parsing user data during update:", error);
@@ -322,6 +351,7 @@ export const Navbar = () => {
     };
 
     window.addEventListener("userUpdate", handleUserUpdate);
+
     return () => {
       window.removeEventListener("userUpdate", handleUserUpdate);
     };
@@ -352,6 +382,7 @@ export const Navbar = () => {
         setCartItemsCount(0);
 
         const event = new CustomEvent("userUpdate");
+
         window.dispatchEvent(event);
 
         Swal.fire({
@@ -387,176 +418,247 @@ export const Navbar = () => {
   };
 
   /**
-   * Fetch order count from API
+   * Fetch order count from API - VERSION CORRIGÉE
    */
-  /**
- * Récupérer le compteur de commandes depuis l'API
- */
-const fetchOrderCount = async () => {
-  if (!user || !user.id || isLoadingOrders) return;
+  const fetchOrderCount = async () => {
+    if (!user || !user.id) {
+      console.log(
+        "Pas d'utilisateur connecté, abandon de la récupération des commandes",
+      );
 
-  setIsLoadingOrders(true);
-  try {
-    // 1. Récupérer le token
-    const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-    if (!token) {
-      console.error("Pas de token disponible");
-      setIsLoadingOrders(false);
       return;
     }
-    
-    // 2. Construire l'URL correctement
-    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
-    const endpoint = `/orders/users/${user.id}/order-counts`;
-    const fullUrl = `${apiUrl}${endpoint}`;
-    
-    console.log("URL de récupération des compteurs:", fullUrl);
-    
-    // 3. Faire la requête avec le bon token et les bons en-têtes
-    const response = await fetch(fullUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${token}`,
-        // Éviter les problèmes de cache
-        "Cache-Control": "no-cache, no-store, must-revalidate",
-        "Pragma": "no-cache"
-      }
-    });
-    
-    // 4. Vérifier si la réponse est OK
-    if (!response.ok) {
-      console.error("Erreur API:", response.status, response.statusText);
-      setIsLoadingOrders(false);
+
+    if (isLoadingOrders) {
+      console.log("Récupération des commandes déjà en cours");
+
       return;
     }
-    
-    // 5. Récupérer les données avec .text() d'abord pour le débogage
-    const responseText = await response.text();
-    console.log("Réponse brute de l'API:", responseText);
-    
-    // 6. Parser en JSON
-    let data;
+
+    setIsLoadingOrders(true);
+    setOrderLoadError(null);
+
+    console.log("Début de la récupération des compteurs de commandes");
+
     try {
-      data = JSON.parse(responseText);
-    } catch (err) {
-      console.error("Erreur de parsing JSON:", err);
-      setIsLoadingOrders(false);
-      return;
-    }
-    
-    console.log("Données analysées:", data);
-    
-    // 7. Vérifier la structure et mettre à jour l'état
-    if (data && data.success && data.counts) {
-      console.log("Mise à jour des compteurs avec:", data.counts);
-      
-      // Créer un nouvel objet pour s'assurer que React détecte le changement
-      const newCounts = {
-        pending: parseInt(data.counts.pending) || 0,
-        shipped: parseInt(data.counts.shipped) || 0,
-        total: parseInt(data.counts.total) || 0
-      };
-      
-      console.log("Nouveaux compteurs:", newCounts);
-      
-      // Mettre à jour l'état avec les nouvelles valeurs
-      setOrderCount({
-        pending: parseInt(data.counts.pending) || 0,
-        processing: parseInt(data.counts.processing) || 0,
-        shipped: parseInt(data.counts.shipped) || 0,
-        delivered: parseInt(data.counts.delivered) || 0,
-        total: parseInt(data.counts.total) || 0
+      // Récupérer le token d'authentification
+      const token =
+        user.token ||
+        localStorage.getItem("token") ||
+        localStorage.getItem("userToken");
+
+      if (!token) {
+        console.error("Pas de token disponible pour l'authentification");
+        setOrderLoadError("Authentification manquante");
+
+        return;
+      }
+
+      // Construction de l'URL complète
+      const apiUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+      ).replace(/\/$/, "");
+      const url = `${apiUrl}/orders/users/${user.id}/order-counts`;
+
+      console.log("URL de récupération des compteurs:", url);
+
+      // Exécution de la requête
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          // Éviter les problèmes de cache
+          "Cache-Control": "no-cache, no-store, must-revalidate",
+          Pragma: "no-cache",
+        },
       });
-    } else {
-      console.warn("Format de réponse inattendu:", data);
+
+      // Vérification de la réponse
+      if (!response.ok) {
+        console.error("Erreur API:", response.status, response.statusText);
+        throw new Error(
+          `Erreur HTTP ${response.status}: ${response.statusText}`,
+        );
+      }
+
+      // Récupération du texte brut pour débogage
+      const responseText = await response.text();
+
+      console.log("Réponse brute de l'API:", responseText);
+
+      // Tentative de parsing JSON
+      let data;
+
+      try {
+        data = JSON.parse(responseText);
+      } catch (e) {
+        console.error("Erreur de parsing JSON:", e);
+        throw new Error("Format de réponse invalide");
+      }
+
+      console.log("Données analysées:", data);
+
+      // Traitement de la réponse
+      if (data && data.success && data.counts) {
+        console.log("Mise à jour des compteurs avec:", data.counts);
+
+        // Créer un nouvel objet pour s'assurer que React détecte le changement
+        const newCounts = {
+          pending: parseInt(data.counts.pending) || 0,
+          shipped: parseInt(data.counts.shipped) || 0,
+          total: parseInt(data.counts.total) || 0,
+        };
+
+        console.log("Nouveaux compteurs:", newCounts);
+
+        // Mise à jour de l'état avec forceUpdate pour garantir le rendu
+        setOrderCount((prev) => {
+          if (
+            prev.pending === newCounts.pending &&
+            prev.shipped === newCounts.shipped &&
+            prev.total === newCounts.total
+          ) {
+            // Si identique, créer quand même un nouvel objet pour forcer la mise à jour
+            return { ...newCounts };
+          }
+
+          return newCounts;
+        });
+      } else {
+        console.warn("Format de réponse inattendu:", data);
+        setOrderLoadError("Format de réponse inattendu");
+      }
+    } catch (error: unknown) {
+      console.error("Exception lors de la récupération des compteurs:", error);
+      setOrderLoadError(
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de la récupération",
+      );
+    } finally {
+      console.log("Fin de la récupération des compteurs");
+      setIsLoadingOrders(false);
     }
-  } catch (error) {
-    console.error("Exception lors de la récupération des compteurs:", error);
-  } finally {
-    setIsLoadingOrders(false);
-  }
-};
-
-  // Garder un seul useEffect pour fetchOrderCount
-  useEffect(() => {
-    if (user && user.id) {
-      console.log("Configuration de la récupération des compteurs pour l'utilisateur:", user.id);
-      
-      // Récupération immédiate
-      fetchOrderCount();
-      
-      // Récupération périodique
-      const intervalId = setInterval(() => {
-        console.log("Actualisation périodique des compteurs de commandes");
-        fetchOrderCount();
-      }, 30000);
-      
-      // Forcer une réactualisation lors du focus sur l'onglet
-      const handleVisibilityChange = () => {
-        if (!document.hidden) {
-          console.log("Onglet visible, actualisation des compteurs");
-          fetchOrderCount();
-        }
-      };
-      document.addEventListener("visibilitychange", handleVisibilityChange);
-      
-      return () => {
-        clearInterval(intervalId);
-        document.removeEventListener("visibilitychange", handleVisibilityChange);
-      };
-    }
-    
-  }, [user]);
-
-  
-
-  useEffect(() => {
-    console.log("Configuration de l'URL API:");
-    console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
-    console.log("URL de base API qui sera utilisée:", (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, ""));
-    console.log("Utilisateur actuel:", user);
-  }, [user]);
+  };
 
   /**
-   * Marquer les mises à jour des commandes comme lues
+   * Mark order updates as read
    */
   const markOrderUpdatesAsRead = async () => {
     if (!user || !user.id) return;
-    
+
     try {
-      const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
-      
+      const token =
+        user.token ||
+        localStorage.getItem("token") ||
+        localStorage.getItem("userToken");
+      const apiUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+      ).replace(/\/$/, "");
+
       const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
+
       console.log("URL pour marquer les mises à jour comme lues:", url);
-      
+
       const response = await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache",
         },
       });
-      
+
       if (response.ok) {
-        console.log("Mises à jour des commandes marquées comme lues avec succès");
+        console.log("Mises à jour marquées comme lues avec succès");
         // Rafraîchir les compteurs après avoir marqué comme lus
         fetchOrderCount();
       } else {
-        console.error("Échec du marquage des mises à jour comme lues:", response.status, response.statusText);
-        // Tenter d'obtenir plus d'informations sur l'erreur
-        try {
-          const errorData = await response.json();
-          console.error("Détails de l'erreur:", errorData);
-        } catch (e) {
-          // Si nous ne pouvons pas analyser la réponse, on continue silencieusement
-        }
+        console.error(
+          "Échec du marquage des mises à jour comme lues:",
+          response.status,
+          response.statusText,
+        );
       }
     } catch (error) {
-      console.error("Erreur lors du marquage des mises à jour comme lues:", error);
+      console.error(
+        "Erreur lors du marquage des mises à jour comme lues:",
+        error,
+      );
     }
   };
+
+  // Récupérer le compteur de commandes quand l'utilisateur est chargé ou change
+  useEffect(() => {
+    if (user && user.id) {
+      console.log(
+        "Configuration du suivi des commandes pour l'utilisateur:",
+        user.id,
+      );
+
+      // Vérifier si un token valide est disponible
+      const token =
+        user.token ||
+        localStorage.getItem("token") ||
+        localStorage.getItem("userToken");
+
+      if (!token) {
+        console.warn(
+          "Aucun token d'authentification disponible - récupération des commandes ignorée",
+        );
+
+        return;
+      }
+
+      console.log("Token disponible, longueur:", token.length);
+
+      // Récupération initiale
+      fetchOrderCount();
+
+      // Configurer l'intervalle pour rafraîchir le compteur de commandes
+      const intervalId = setInterval(() => {
+        console.log("Rafraîchissement automatique des compteurs de commandes");
+        fetchOrderCount();
+      }, 30000); // Vérifier toutes les 30 secondes
+
+      // Rafraîchir également lors du focus sur la page
+      const handleVisibilityChange = () => {
+        if (!document.hidden) {
+          console.log("Focus sur l'onglet, rafraîchissement des compteurs");
+          fetchOrderCount();
+        }
+      };
+
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+
+      // Nettoyer l'intervalle lorsque le composant est démonté ou l'utilisateur change
+      return () => {
+        clearInterval(intervalId);
+        document.removeEventListener(
+          "visibilitychange",
+          handleVisibilityChange,
+        );
+      };
+    }
+  }, [user]);
+
+  // Tentative directe de mise à jour des compteurs
+  useEffect(() => {
+    // Force une mise à jour des valeurs statiques pour tester l'affichage
+    if (user && user.id) {
+      const testTimeout = setTimeout(() => {
+        console.log("Test avec des valeurs statiques");
+        setOrderCount({
+          pending: 3,
+          shipped: 2,
+          total: 5,
+        });
+      }, 5000); // 5 secondes après le chargement
+
+      return () => clearTimeout(testTimeout);
+    }
+  }, [user]);
 
   return (
     <NextUINavbar
@@ -609,6 +711,7 @@ const fetchOrderCount = async () => {
                   {cartItemsCount > 0 && (
                     <Badge
                       color="danger"
+                      content={cartItemsCount}
                       style={{
                         position: "absolute",
                         top: "-10px",
@@ -802,7 +905,7 @@ const fetchOrderCount = async () => {
                               router.push("/orders");
                             }}
                             onKeyDown={(e) => {
-                              if (e.key === 'Enter' || e.key === ' ') {
+                              if (e.key === "Enter" || e.key === " ") {
                                 setIsMenuOpen(false);
                                 markOrderUpdatesAsRead();
                                 router.push("/orders");
@@ -815,21 +918,11 @@ const fetchOrderCount = async () => {
                             />
                             <span className="flex-1">Mes commandes</span>
                             <div className="flex items-center space-x-1">
-                             {/* Commandes pending */}
-                             <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
-                              {orderCount.pending || 0}
-                             </span>
-                             {/* Commandes Processing */}
-                             <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
-                              {orderCount.processing || 0}
+                              <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
+                                {orderCount.pending || 0}
                               </span>
-                              {/* Commandes Shipped */}
-                              <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded-full">
-                              {orderCount.shipped || 0}
-                              </span>
-                              {/* Commandes Delivered */}
-                              <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
-                              {orderCount.delivered || 0}
+                              <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                                {orderCount.shipped || 0}
                               </span>
                             </div>
                           </button>
@@ -847,6 +940,42 @@ const fetchOrderCount = async () => {
                               icon={faSignOutAlt}
                             />
                             Déconnexion
+                          </button>
+                        </li>
+
+                        {/* Bouton de test de l'API */}
+                        <li>
+                          <button
+                            className="w-full flex items-center px-3 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded-md transition-colors"
+                            onClick={async () => {
+                              try {
+                                const apiUrl = (
+                                  process.env.NEXT_PUBLIC_API_URL ||
+                                  "http://localhost:3000/api"
+                                ).replace(/\/$/, "");
+                                const response = await fetch(
+                                  `${apiUrl}/orders/users/${user.id}/order-counts`,
+                                  {
+                                    headers: {
+                                      Authorization: `Bearer ${user.token || localStorage.getItem("token")}`,
+                                    },
+                                  },
+                                );
+                                const data = await response.json();
+
+                                console.log("Test direct API:", data);
+                                alert(JSON.stringify(data, null, 2));
+                              } catch (e: unknown) {
+                                console.error("Test échoué:", e);
+                                alert("Erreur: " + (e instanceof Error ? e.message : String(e)));
+                              }
+                            }}
+                          >
+                            <FontAwesomeIcon
+                              className="mr-3 w-5"
+                              icon={faCode}
+                            />
+                            Tester l&apos;API Commandes
                           </button>
                         </li>
                       </ul>
@@ -935,6 +1064,31 @@ const fetchOrderCount = async () => {
           </Dropdown>
         </NavbarItem>
 
+        {/* Bouton de forçage de mise à jour des commandes */}
+        {user && (
+          <NavbarItem className="flex items-center">
+            <button
+              aria-label="Rafraîchir les compteurs"
+              className="p-1 rounded-full text-gray-500 hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700"
+              disabled={isLoadingOrders}
+              onClick={fetchOrderCount}
+            >
+              <FontAwesomeIcon icon={faSyncAlt} spin={isLoadingOrders} />
+            </button>
+          </NavbarItem>
+        )}
+
+        {/* Debug pour les compteurs */}
+        {user && process.env.NODE_ENV !== "production" && (
+          <NavbarItem className="hidden md:flex">
+            <div className="text-xs bg-gray-100 dark:bg-gray-800 p-1 rounded mx-1">
+              {isLoadingOrders
+                ? "..."
+                : `P:${orderCount.pending} S:${orderCount.shipped} T:${orderCount.total}`}
+            </div>
+          </NavbarItem>
+        )}
+
         {user && (
           <NavbarItem className="hidden md:flex">
             <Button
@@ -971,7 +1125,6 @@ const fetchOrderCount = async () => {
             onClick={handleLoginRedirect}
           />
         ) : (
-          // Replace the entire Dropdown component with this conditional rendering
           <>
             {/* For mobile view - direct click to profile */}
             <div className="md:hidden">
@@ -987,10 +1140,11 @@ const fetchOrderCount = async () => {
                       ? adminColors[avatarColorIndex]
                       : userColors[avatarColorIndex],
                   borderWidth: "3px",
-                  boxShadow: `0 0 8px ${user?.role === "admin"
-                    ? adminColors[avatarColorIndex]
-                    : userColors[avatarColorIndex]
-                    }`,
+                  boxShadow: `0 0 8px ${
+                    user?.role === "admin"
+                      ? adminColors[avatarColorIndex]
+                      : userColors[avatarColorIndex]
+                  }`,
                 }}
                 onClick={() => router.push("/profile")}
               />
@@ -1016,15 +1170,17 @@ const fetchOrderCount = async () => {
                             ? adminColors[avatarColorIndex]
                             : userColors[avatarColorIndex],
                         borderWidth: "3px",
-                        boxShadow: `0 0 8px ${user?.role === "admin"
-                          ? adminColors[avatarColorIndex]
-                          : userColors[avatarColorIndex]
-                          }`,
+                        boxShadow: `0 0 8px ${
+                          user?.role === "admin"
+                            ? adminColors[avatarColorIndex]
+                            : userColors[avatarColorIndex]
+                        }`,
                       }}
                     />
                     <span className="ml-2 hidden xl:inline dark:text-white">
                       {user?.pseudo || "Utilisateur"}
                     </span>
+
                     {/* Badge combiné pour les commandes */}
                     {(orderCount.pending > 0 || orderCount.shipped > 0) && (
                       <Badge
@@ -1037,18 +1193,26 @@ const fetchOrderCount = async () => {
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
-                  <DropdownItem key={""} onClick={() => router.push("/profile")}>
+                  <DropdownItem
+                    key="profile"
+                    onClick={() => router.push("/profile")}
+                  >
                     <FontAwesomeIcon className="mr-2" icon={faUser} />
                     Profil
                   </DropdownItem>
-                  <DropdownItem key={""} onClick={() => router.push("/shop")}>
+                  <DropdownItem key="shop" onClick={() => router.push("/shop")}>
                     <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
                     Shop
                   </DropdownItem>
                   <DropdownItem
                     key="orders"
                     className="relative"
-                    startContent={<FontAwesomeIcon className="text-blue-500" icon={faNewspaper} />}
+                    startContent={
+                      <FontAwesomeIcon
+                        className="text-blue-500"
+                        icon={faNewspaper}
+                      />
+                    }
                     onClick={() => {
                       markOrderUpdatesAsRead();
                       router.push("/orders");
@@ -1062,31 +1226,66 @@ const fetchOrderCount = async () => {
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div>Mes commandes en traitement</div>
-                        <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
-                          {orderCount.processing || 0}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
                         <div>Mes commandes envoyées</div>
-                        <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded-full">
+                        <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
                           {orderCount.shipped || 0}
-                        </span>
-                      </div>
-                      <div className="flex items-center justify-between">
-                        <div>Mes commandes livrées</div>
-                        <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
-                          {orderCount.delivered || 0}
                         </span>
                       </div>
                     </div>
                   </DropdownItem>
-                  <DropdownItem key={""} onClick={() => router.push("/controle")}>
+                  <DropdownItem
+                    key="controle"
+                    onClick={() => router.push("/controle")}
+                  >
                     <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
                     Controle
                   </DropdownItem>
+
+                  {/* Bouton de test API */}
+                  <DropdownItem
+                    key="test-api"
+                    onClick={async () => {
+                      try {
+                        const apiUrl = (
+                          process.env.NEXT_PUBLIC_API_URL ||
+                          "http://localhost:3000/api"
+                        ).replace(/\/$/, "");
+                        const response = await fetch(
+                          `${apiUrl}/orders/users/${user.id}/order-counts`,
+                          {
+                            headers: {
+                              Authorization: `Bearer ${user.token || localStorage.getItem("token")}`,
+                            },
+                          },
+                        );
+                        const data = await response.json();
+
+                        console.log("Test direct API:", data);
+                        alert(JSON.stringify(data, null, 2));
+                      } catch (e: unknown) {
+                        console.error("Test échoué:", e);
+                        alert("Erreur: " + (e instanceof Error ? e.message : String(e)));
+                      }
+                    }}
+                  >
+                    <FontAwesomeIcon className="mr-2" icon={faCode} />
+                    Tester l&apos;API
+                  </DropdownItem>
+
+                  {/* Bouton rafraîchir les commandes */}
+                  <DropdownItem key="refresh-orders" onClick={fetchOrderCount}>
+                    <FontAwesomeIcon
+                      className="mr-2"
+                      icon={faSyncAlt}
+                      spin={isLoadingOrders}
+                    />
+                    {isLoadingOrders
+                      ? "Actualisation..."
+                      : "Actualiser commandes"}
+                  </DropdownItem>
+
                   {/* mode */}
-                  <DropdownItem key={""}>
+                  <DropdownItem key="theme">
                     <Dropdown placement="left-start">
                       <DropdownTrigger>
                         <div className="flex items-center w-full cursor-pointer">
@@ -1159,35 +1358,45 @@ const fetchOrderCount = async () => {
                       </DropdownMenu>
                     </Dropdown>
                   </DropdownItem>
-                  <DropdownItem key={""} onClick={handleLogout}>
+                  <DropdownItem key="logout" onClick={handleLogout}>
                     <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
                     Déconnexion
                   </DropdownItem>
                 </DropdownMenu>
-                <button 
-  onClick={async () => {
-    try {
-      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
-      const response = await fetch(`${apiUrl}/orders/users/${user.id}/order-counts`, {
-        headers: { 
-          "Authorization": `Bearer ${user.token || localStorage.getItem("token")}` 
-        }
-      });
-      const data = await response.json();
-      console.log("Test direct API:", data);
-      alert(JSON.stringify(data, null, 2));
-    } catch (e: unknown) {
-      console.error("Test échoué:", e);
-      alert("Erreur: " + (e instanceof Error ? e.message : String(e)));
-    }
-  }}
-  className="p-2 bg-blue-500 text-white rounded"
->
-  Tester API
-</button>
               </Dropdown>
             </div>
           </>
+        )}
+
+        {/* Bouton de test API dans la barre de navigation */}
+        {user && (
+          <button
+            className="ml-2 p-2 bg-blue-500 text-white text-xs rounded"
+            onClick={async () => {
+              try {
+                const apiUrl = (
+                  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+                ).replace(/\/$/, "");
+                const response = await fetch(
+                  `${apiUrl}/orders/users/${user.id}/order-counts`,
+                  {
+                    headers: {
+                      Authorization: `Bearer ${user.token || localStorage.getItem("token")}`,
+                    },
+                  },
+                );
+                const data = await response.json();
+
+                console.log("Test direct API:", data);
+                alert(JSON.stringify(data, null, 2));
+              } catch (e: unknown) {
+                console.error("Test échoué:", e);
+                alert("Erreur: " + (e instanceof Error ? e.message : String(e)));
+              }
+            }}
+          >
+            Test API
+          </button>
         )}
       </NavbarContent>
     </NextUINavbar>
