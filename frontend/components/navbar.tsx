@@ -389,53 +389,39 @@ export const Navbar = () => {
     if (!user || !user.id || isLoadingOrders) return;
   
     setIsLoadingOrders(true);
-    console.log("Début de la récupération des commandes...");
-  
     try {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
       
-      const url = `${apiUrl}/users/${user.id}/orders`;
-      console.log("URL de récupération des commandes:", url);
-  
-      const response = await fetch(url, {
+      const response = await fetch(`${apiUrl}/users/${user.id}/orders`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       });
-  
+      
       if (response.ok) {
         const data = await response.json();
-        console.log("Données reçues:", data);
+        const orders = Array.isArray(data) ? data : (data.orders || data.data || []);
         
-        let orders = [];
-        if (Array.isArray(data)) {
-          orders = data;
-        } else if (data.orders && Array.isArray(data.orders)) {
-          orders = data.orders;
-        }
-        
-        let pendingCount = 0;
-        let shippedCount = 0;
-        
-        orders.forEach((order: Order) => {
-          const status = order.status ? order.status.toLowerCase() : "";
-          if (["pending", "processing", "en attente", "en cours"].includes(status)) {
-            pendingCount++;
-          } else if (["shipped", "delivered", "expédié", "livrée"].includes(status)) {
-            shippedCount++;
-          }
-        });
-        
-        console.log("Compteurs calculés:", { pending: pendingCount, shipped: shippedCount, total: orders.length });
-        
-        setOrderCount({
-          pending: pendingCount,
-          shipped: shippedCount,
+        const counts = {
+          pending: orders.filter((order: Order) => 
+            order.status?.toLowerCase().includes('pend') || 
+            order.status?.toLowerCase().includes('process') || 
+            order.status?.toLowerCase().includes('attente') || 
+            order.status?.toLowerCase().includes('cours')
+          ).length,
+          shipped: orders.filter((order: Order) => 
+            order.status?.toLowerCase().includes('ship') || 
+            order.status?.toLowerCase().includes('deliv') || 
+            order.status?.toLowerCase().includes('exp') || 
+            order.status?.toLowerCase().includes('livr')
+          ).length,
           total: orders.length
-        });
+        };
+        
+        setOrderCount(counts);
       }
     } catch (error) {
       console.error("Erreur lors de la récupération des commandes:", error);
@@ -717,12 +703,21 @@ export const Navbar = () => {
                           </NextLink>
                         </li>
                         <li>
-                          <NextLink
-                            className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                            href="/orders"
+                          <button
+                            type="button"
+                            role="menuitem"
+                            className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors cursor-pointer"
                             onClick={() => {
                               setIsMenuOpen(false);
                               markOrderUpdatesAsRead();
+                              router.push("/orders");
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' || e.key === ' ') {
+                                setIsMenuOpen(false);
+                                markOrderUpdatesAsRead();
+                                router.push("/orders");
+                              }
                             }}
                           >
                             <FontAwesomeIcon
@@ -731,21 +726,14 @@ export const Navbar = () => {
                             />
                             <span className="flex-1">Mes commandes</span>
                             <div className="flex items-center space-x-1">
-                              {orderCount.pending > 0 && (
-                                <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
-                                  {orderCount.pending}
-                                </span>
-                              )}
-                              {orderCount.shipped > 0 && (
-                                <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
-                                  {orderCount.shipped}
-                                </span>
-                              )}
-                              <span className="text-xs text-gray-400">
-                                ({orderCount.total})
+                              <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
+                                {orderCount.pending || 0}
+                              </span>
+                              <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                                {orderCount.shipped || 0}
                               </span>
                             </div>
-                          </NextLink>
+                          </button>
                         </li>
                         <li>
                           <button
@@ -959,7 +947,7 @@ export const Navbar = () => {
                     Shop
                   </DropdownItem>
                   <DropdownItem
-                    key={""}
+                    key="orders"
                     className="relative"
                     startContent={<FontAwesomeIcon className="text-blue-500" icon={faNewspaper} />}
                     onClick={() => {

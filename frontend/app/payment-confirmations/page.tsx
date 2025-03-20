@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 "use client";
 
@@ -13,7 +14,7 @@ import { Separator } from "@/components/ui/separator";
 import LoadingAnimation from "@/components/loading";
 
 // Utility function for API requests with error handling
-const apiRequest = async (url: string, options: RequestInit = {}) => {
+const apiRequest = async (url: RequestInfo | URL, options: RequestInit = {}) => {
   try {
     const token = localStorage.getItem("userToken");
 
@@ -24,7 +25,7 @@ const apiRequest = async (url: string, options: RequestInit = {}) => {
     const headers = {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
-      ...options.headers,
+      ...(options.headers || {}),
     };
 
     const response = await fetch(url, {
@@ -51,14 +52,14 @@ const apiRequest = async (url: string, options: RequestInit = {}) => {
     }
 
     return await response.json();
-  } catch (error: any) {
+  } catch (error) {
     console.error("Erreur API:", error);
     throw error;
   }
 };
 
 // Improved error display function
-const showError = (error: any, title = "Erreur") => {
+const showError = (error: unknown, title = "Erreur") => {
   const errorMessage =
     error instanceof Error
       ? error.message
@@ -72,8 +73,38 @@ const showError = (error: any, title = "Erreur") => {
   });
 };
 
+// Interface pour les items de commande
+interface OrderItem {
+  productId?: string;
+  _id?: string;
+  quantity: number;
+  title: string;
+  price: number;
+}
+
+// Interface pour la commande
+interface Order {
+  items: OrderItem[];
+  status: string;
+  totalAmount: number;
+  deliveryCost: number;
+  paymentMethod: string;
+  paymentStatus: string;
+  deliveryMethod: string;
+  firstName?: string;
+  lastName?: string;
+  email?: string;
+  phone?: string;
+  deliveryAddress?: {
+    street: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
+}
+
 const OrderConfirmationPage = () => {
-  const [order, setOrder] = useState<any>(null);
+  const [order, setOrder] = useState<Order | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
@@ -83,16 +114,15 @@ const OrderConfirmationPage = () => {
       try {
         const orderId = localStorage.getItem("orderId");
 
+        console.log("Récupération de la commande avec ID:", orderId);
+
         if (!orderId) {
           setError(
-            "Aucun ID de commande trouvé. Veuillez passer une commande.",
+            "Aucun ID de commande trouvé. Veuillez passer une commande."
           );
           setLoading(false);
-
           return;
         }
-
-        console.log("Récupération de la commande avec ID:", orderId);
 
         // Use the apiRequest utility function
         const orderData = await apiRequest(
@@ -100,18 +130,13 @@ const OrderConfirmationPage = () => {
         );
 
         console.log("Données de commande récupérées:", orderData);
-        setOrder(orderData);
-
-        // Ne pas supprimer l'orderId pour permettre le rafraîchissement de la page
-        // localStorage.removeItem("orderId");
-      } catch (error: any) {
+        setOrder(orderData as Order);
+      } catch (error) {
         console.error("Erreur lors de la récupération de la commande:", error);
-        setError(
-          error.message ||
-            "Une erreur s'est produite lors de la récupération de la commande.",
-        );
-
-        // Display error using the showError utility
+        const errorMessage = error instanceof Error
+          ? error.message
+          : "Une erreur s'est produite lors de la récupération de la commande.";
+        setError(errorMessage);
         showError(error, "Erreur de récupération");
       } finally {
         setLoading(false);
@@ -131,7 +156,7 @@ const OrderConfirmationPage = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center h-screen">
+      <div className="flex items-center justify-center h-screen">
         <LoadingAnimation />
       </div>
     );
@@ -139,7 +164,7 @@ const OrderConfirmationPage = () => {
 
   if (error || !order) {
     return (
-      <div className="container mx-auto my-12 px-4">
+      <div className="container px-4 mx-auto my-12">
         <Card>
           <CardHeader>
             <CardTitle className="text-center text-red-500">Erreur</CardTitle>
@@ -148,6 +173,7 @@ const OrderConfirmationPage = () => {
             <p className="mb-6">{error || "Commande introuvable."}</p>
             <Button
               className="bg-yellow-500 hover:bg-yellow-600 text-white"
+              variant="default"
               onClick={handleBack}
             >
               Retourner à l&rsquo;accueil
@@ -178,28 +204,39 @@ const OrderConfirmationPage = () => {
   } = order;
 
   const getStatusBadge = (status: string) => {
-    switch (status.toLowerCase()) {
-      case "payé":
-      case "complété":
-      case "paid":
-      case "completed":
-        return <Badge className="ml-2 bg-green-500">✅ {status}</Badge>;
-      case "en attente":
-      case "pending":
-        return <Badge className="ml-2 bg-yellow-500">⏳ {status}</Badge>;
-      case "annulé":
-      case "cancelled":
-      case "canceled":
-        return <Badge className="ml-2 bg-red-500">❌ {status}</Badge>;
-      default:
-        return <Badge className="ml-2 bg-gray-500">{status}</Badge>;
+    const statusLower = status.toLowerCase();
+
+    if (["payé", "complété", "paid", "completed"].includes(statusLower)) {
+      return (
+        <Badge className="ml-2 bg-green-500 text-white" variant="outline">
+          ✅ {status}
+        </Badge>
+      );
+    } else if (["en attente", "pending"].includes(statusLower)) {
+      return (
+        <Badge className="ml-2 bg-yellow-500 text-white" variant="outline">
+          ⏳ {status}
+        </Badge>
+      );
+    } else if (["annulé", "cancelled", "canceled"].includes(statusLower)) {
+      return (
+        <Badge className="ml-2 bg-red-500 text-white" variant="outline">
+          ❌ {status}
+        </Badge>
+      );
+    } else {
+      return (
+        <Badge className="ml-2 bg-gray-500 text-white" variant="outline">
+          {status}
+        </Badge>
+      );
     }
   };
 
   return (
-    <div className="container mx-auto my-12 px-4 md:px-6">
-      <div className="text-center mb-8">
-        <h1 className="text-4xl font-extrabold text-yellow-400 animate-bounce mb-2">
+    <div className="container px-4 mx-auto my-12 md:px-6">
+      <div className="mb-8 text-center">
+        <h1 className="mb-2 text-4xl font-extrabold text-yellow-400 animate-bounce">
           🎉 Confirmation de Commande 🎉
         </h1>
         <p className="text-gray-500 dark:text-gray-400">
@@ -260,12 +297,12 @@ const OrderConfirmationPage = () => {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          {items.length > 0 ? (
+          {order?.items && order.items.length > 0 ? (
             <div className="space-y-4">
-              {items.map((item: any) => (
+              {order.items.map((item: OrderItem) => (
                 <div
                   key={item.productId || item._id}
-                  className="flex justify-between items-center"
+                  className="flex items-center justify-between"
                 >
                   <div className="flex items-center">
                     <Badge className="mr-2" variant="outline">
@@ -274,7 +311,7 @@ const OrderConfirmationPage = () => {
                     <span>{item.title}</span>
                   </div>
                   <span className="font-medium">
-                    {item.price?.toFixed(2)} €
+                    {(item.price || 0).toFixed(2)} €
                   </span>
                 </div>
               ))}
@@ -292,12 +329,12 @@ const OrderConfirmationPage = () => {
                   <span className="font-medium">💳 Méthode de Paiement:</span>
                   <span>{paymentMethod}</span>
                 </div>
-                <div className="flex justify-between items-center">
+                <div className="flex items-center justify-between">
                   <span className="font-medium">✅ Statut du Paiement:</span>
                   {getStatusBadge(paymentStatus)}
                 </div>
                 <Separator className="my-4" />
-                <div className="flex justify-between items-center text-xl font-bold">
+                <div className="flex items-center justify-between text-xl font-bold">
                   <span className="text-yellow-500">Total:</span>
                   <span className="text-yellow-500">
                     {totalAmount.toFixed(2)} € 🎯
@@ -306,7 +343,7 @@ const OrderConfirmationPage = () => {
               </div>
             </div>
           ) : (
-            <p className="text-red-400 text-center">
+            <p className="text-center text-red-400">
               Aucun article trouvé dans la commande.
             </p>
           )}
@@ -315,10 +352,11 @@ const OrderConfirmationPage = () => {
 
       <div className="mt-8 text-center">
         <Button
-          className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-8 rounded-lg transform transition-transform hover:scale-105"
+          className="px-8 py-3 font-bold text-white transform transition-transform bg-yellow-500 rounded-lg hover:bg-yellow-600 hover:scale-105"
+          variant="default"
           onClick={handleBack}
         >
-          🔙 Retourner à l&#39;accueil
+          🔙 Retourner à l&apos;accueil
         </Button>
       </div>
     </div>
