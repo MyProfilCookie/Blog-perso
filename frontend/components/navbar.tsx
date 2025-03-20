@@ -389,19 +389,14 @@ export const Navbar = () => {
     if (!user || !user.id || isLoadingOrders) return;
   
     setIsLoadingOrders(true);
-    console.log("Début de la récupération des compteurs de commandes...");
+    console.log("Début de la récupération des commandes...");
   
     try {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
       
-      // Ajustez ce chemin pour qu'il corresponde à vos routes backend
-      // Si vos routes sont montées avec /api/orders
-      const url = `${apiUrl}/orders/users/${user.id}/order-counts`;
-      // Si vos routes sont montées avec /api
-      // const url = `${apiUrl}/users/${user.id}/order-counts`;
-      
-      console.log("URL de récupération des compteurs de commandes:", url);
+      const url = `${apiUrl}/users/${user.id}/orders`;
+      console.log("URL de récupération des commandes:", url);
   
       const response = await fetch(url, {
         method: "GET",
@@ -411,24 +406,39 @@ export const Navbar = () => {
         },
       });
   
-      console.log("Statut de la réponse:", response.status);
-      
       if (response.ok) {
         const data = await response.json();
-        console.log("Données des compteurs:", data);
+        console.log("Données reçues:", data);
         
-        if (data.counts) {
-          setOrderCount({
-            pending: data.counts.pending,
-            shipped: data.counts.shipped,
-            total: data.counts.total
-          });
+        let orders = [];
+        if (Array.isArray(data)) {
+          orders = data;
+        } else if (data.orders && Array.isArray(data.orders)) {
+          orders = data.orders;
         }
-      } else {
-        console.error("Erreur lors de la récupération des compteurs:", await response.text());
+        
+        let pendingCount = 0;
+        let shippedCount = 0;
+        
+        orders.forEach((order: Order) => {
+          const status = order.status ? order.status.toLowerCase() : "";
+          if (["pending", "processing", "en attente", "en cours"].includes(status)) {
+            pendingCount++;
+          } else if (["shipped", "delivered", "expédié", "livrée"].includes(status)) {
+            shippedCount++;
+          }
+        });
+        
+        console.log("Compteurs calculés:", { pending: pendingCount, shipped: shippedCount, total: orders.length });
+        
+        setOrderCount({
+          pending: pendingCount,
+          shipped: shippedCount,
+          total: orders.length
+        });
       }
     } catch (error) {
-      console.error("Exception lors de la récupération des compteurs:", error);
+      console.error("Erreur lors de la récupération des commandes:", error);
     } finally {
       setIsLoadingOrders(false);
     }
@@ -966,13 +976,13 @@ export const Navbar = () => {
                       <div className="flex items-center justify-between">
                         <div>Mes commandes en cours</div>
                         <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
-                          {orderCount.pending}
+                          {orderCount.pending || 0}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
                         <div>Mes commandes envoyées</div>
                         <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
-                          {orderCount.shipped}
+                          {orderCount.shipped || 0}
                         </span>
                       </div>
                     </div>
