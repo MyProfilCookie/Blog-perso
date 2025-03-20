@@ -454,12 +454,7 @@ export const Navbar = () => {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
   
-      // Ajustez ce chemin également
-      // Si vos routes sont montées avec /api/orders
-      const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
-      // Si vos routes sont montées avec /api
-      // const url = `${apiUrl}/users/${user.id}/orders/updates/read`;
-  
+      const url = `${apiUrl}/users/${user.id}/orders/updates/read`;
       console.log("URL pour marquer les mises à jour comme lues:", url);
   
       await fetch(url, {
