@@ -2,52 +2,80 @@ const Order = require("../models/order");
 const PaymentConfirmation = require('../models/paymentConfirmation');
 const Product = require("../models/products");
 
+// Constantes pour les statuts de commande valides
+const VALID_ORDER_STATUSES = [
+  "Pending",    // Commande enregistrée dans le système
+  "Processing", // Commande en cours de préparation
+  "Shipped",    // Commande expédiée
+  "Delivered",  // Commande livrée
+  "Cancelled"   // Commande annulée
+];
 
-exports.checkout = async (req, res) => {
-    try {
-        const { orderId, paymentMethod, transactionId } = req.body;
-
-        // 1. Trouver la commande
-        const order = await Order.findById(orderId);
-        if (!order) {
-            return res.status(404).json({ message: "Commande non trouvée" });
-        }
-
-        // 2. Vérifier si la commande a déjà été payée
-        if (order.paymentStatus === "Completed") {
-            return res.status(400).json({ message: "Commande déjà payée" });
-        }
-
-        // 3. Mettre à jour la commande
-        order.paymentStatus = "Completed";
-        order.status = "Processed";
-        order.updatedAt = Date.now();
-
-        // 4. Enregistrer la confirmation de paiement
-        const paymentConfirmation = new PaymentConfirmation({
-            orderId: order._id,
-            userId: order.userId, // Assurez-vous que l'objet `Order` contient `userId`
-            transactionId,
-            paymentStatus: "Completed",
-            amount: order.totalAmount,
-            paymentMethod,
-        });
-
-        await paymentConfirmation.save();
-        await order.save();
-
-        res.status(200).json({
-            message: "Paiement validé et confirmation enregistrée.",
-            order,
-            paymentConfirmation,
-        });
-    } catch (error) {
-        console.error("Erreur lors de la validation du paiement :", error);
-        res.status(500).json({ message: "Erreur serveur lors de la validation du paiement.", error });
-    }
+// Mapping des statuts du frontend vers le backend
+const STATUS_MAPPING = {
+  "Enregistree": "Pending",
+  "Validee": "Processing",
+  "Preparation": "Processing",
+  "Expedition": "Shipped",
+  "Livree": "Delivered"
 };
 
-// Créer une nouvelle commande
+/**
+ * Valider le paiement d'une commande
+ */
+exports.checkout = async (req, res) => {
+  try {
+    const { orderId, paymentMethod, transactionId } = req.body;
+
+    // 1. Trouver la commande
+    const order = await Order.findById(orderId);
+    if (!order) {
+      return res.status(404).json({ message: "Commande non trouvée" });
+    }
+
+    // 2. Vérifier si la commande a déjà été payée
+    if (order.paymentStatus === "Paid") {
+      return res.status(400).json({ message: "Commande déjà payée" });
+    }
+
+    // 3. Mettre à jour la commande
+    order.paymentStatus = "Paid";
+    order.status = "Validee"; // Utilisation du nouveau système de statut
+    order.paymentId = transactionId;
+
+    // 4. Enregistrer la confirmation de paiement
+    const paymentConfirmation = new PaymentConfirmation({
+      orderId: order._id,
+      userId: order.userId,
+      transactionId,
+      paymentStatus: "Paid",
+      amount: order.totalAmount,
+      paymentMethod,
+    });
+
+    await paymentConfirmation.save();
+    
+    // Ajouter la référence à la confirmation de paiement
+    order.paymentConfirmation = paymentConfirmation._id;
+    await order.save();
+
+    res.status(200).json({
+      message: "Paiement validé et confirmation enregistrée.",
+      order,
+      paymentConfirmation,
+    });
+  } catch (error) {
+    console.error("Erreur lors de la validation du paiement :", error);
+    res.status(500).json({ 
+      message: "Erreur serveur lors de la validation du paiement.", 
+      error: error.message || error 
+    });
+  }
+};
+
+/**
+ * Créer une nouvelle commande
+ */
 exports.createOrder = async (req, res) => {
   try {
     const { userId, ...orderData } = req.body;
@@ -81,11 +109,16 @@ exports.createOrder = async (req, res) => {
   }
 };
 
-// Obtenir toutes les commandes
+/**
+ * Obtenir toutes les commandes
+ */
 exports.getAllOrders = async (req, res) => {
   try {
     const orders = await Order.find();
-    res.status(200).json({ message: "Liste des commandes récupérée avec succès", orders });
+    res.status(200).json({ 
+      message: "Liste des commandes récupérée avec succès", 
+      orders 
+    });
   } catch (error) {
     res.status(500).json({
       message: "Erreur lors de la récupération des commandes",
@@ -94,13 +127,15 @@ exports.getAllOrders = async (req, res) => {
   }
 };
 
-// Obtenir les commandes d'un utilisateur spécifique
+/**
+ * Obtenir les commandes d'un utilisateur spécifique
+ */
 exports.getUserOrders = async (req, res) => {
   try {
     const userId = req.params.userId;
     
-    // Log for debugging server-side
-    console.log(`Fetching orders for user: ${userId}`);
+    // Log pour le débogage côté serveur
+    console.log(`Récupération des commandes pour l'utilisateur: ${userId}`);
     
     // Vérification de la validité de l'ID utilisateur
     if (!userId) {
@@ -110,9 +145,9 @@ exports.getUserOrders = async (req, res) => {
     // Récupération des commandes de l'utilisateur
     const orders = await Order.find({ userId })
       .sort({ createdAt: -1 })
-      .lean(); // Use lean() for better performance
+      .lean(); // Utiliser lean() pour de meilleures performances
     
-    console.log(`Found ${orders.length} orders for user ${userId}`);
+    console.log(`Trouvé ${orders.length} commandes pour l'utilisateur ${userId}`);
     
     // Enrichir les commandes avec les informations d'images des produits
     const enrichedOrders = await Promise.all(orders.map(async (order) => {
@@ -146,7 +181,7 @@ exports.getUserOrders = async (req, res) => {
       return order;
     }));
     
-    // Send response with enriched orders
+    // Envoyer la réponse avec les commandes enrichies
     res.status(200).json({ 
       message: enrichedOrders.length ? "Commandes récupérées avec succès" : "Aucune commande trouvée", 
       orders: enrichedOrders
@@ -160,22 +195,29 @@ exports.getUserOrders = async (req, res) => {
   }
 };
 
-// Obtenir une commande spécifique par ID
+/**
+ * Obtenir une commande spécifique par ID
+ */
 exports.getOrderById = async (req, res) => {
   try {
-      const order = await Order.findById(req.params.id).populate('paymentConfirmation');
+    const order = await Order.findById(req.params.id).populate('paymentConfirmation');
 
-      if (!order) {
-          return res.status(404).json({ message: "Commande non trouvée" });
-      }
+    if (!order) {
+      return res.status(404).json({ message: "Commande non trouvée" });
+    }
 
-      res.status(200).json(order);
+    res.status(200).json(order);
   } catch (error) {
-      res.status(500).json({ message: "Erreur lors de la récupération de la commande", error });
+    res.status(500).json({ 
+      message: "Erreur lors de la récupération de la commande", 
+      error: error.message || error 
+    });
   }
 };
 
-// Mettre à jour une commande par ID
+/**
+ * Mettre à jour une commande par ID
+ */
 exports.updateOrder = async (req, res) => {
   try {
     const updatedOrder = await Order.findByIdAndUpdate(req.params.id, req.body, {
@@ -187,7 +229,10 @@ exports.updateOrder = async (req, res) => {
       return res.status(404).json({ message: "Commande non trouvée" });
     }
 
-    res.status(200).json({ message: "Commande mise à jour avec succès", order: updatedOrder });
+    res.status(200).json({ 
+      message: "Commande mise à jour avec succès", 
+      order: updatedOrder 
+    });
   } catch (error) {
     res.status(500).json({
       message: "Erreur lors de la mise à jour de la commande",
@@ -196,7 +241,9 @@ exports.updateOrder = async (req, res) => {
   }
 };
 
-// Supprimer une commande par ID
+/**
+ * Supprimer une commande par ID
+ */
 exports.deleteOrder = async (req, res) => {
   try {
     const deletedOrder = await Order.findByIdAndDelete(req.params.id);
@@ -214,29 +261,11 @@ exports.deleteOrder = async (req, res) => {
   }
 };
 
-// Dans le contrôleur, modifier les constantes pour qu'elles correspondent
-const VALID_ORDER_STATUSES = [
-"Pending",     // Commande enregistrée dans le système
-"Processing",  // Commande en cours de préparation
-"Shipped",     // Commande expédiée
-"Delivered",   // Commande livrée
-"Cancelled"    // Commande annulée
-];
-
-// Et le mapping des statuts
-const STATUS_MAPPING = {
-"Enregistree": "Pending",
-"Validee": "Processing",
-"Preparation": "Processing",
-"Expedition": "Shipped",
-"Livree": "Delivered"
-};
-// Mettre à jour le statut d'une commande
+/**
+ * Mettre à jour le statut d'une commande
+ */
 exports.updateOrderStatus = async (req, res) => {
   try {
-    // S'assurer que les modèles nécessaires sont importés
-    const Order = require('../models/order');
-
     const { id } = req.params;
     let { status, notes } = req.body;
 
@@ -244,28 +273,12 @@ exports.updateOrderStatus = async (req, res) => {
     console.log(`Mise à jour du statut pour la commande ${id} : ${status}`);
     
     // Convertir du frontend vers le backend
-    const STATUS_MAPPING = {
-      "Enregistree": "Pending",
-      "Validee": "Processing",
-      "Preparation": "Processing",
-      "Expedition": "Shipped",
-      "Livree": "Delivered"
-    };
-    
     if (STATUS_MAPPING[status]) {
       console.log(`Conversion du statut ${status} vers ${STATUS_MAPPING[status]}`);
       status = STATUS_MAPPING[status];
     }
 
     // Vérifier si le statut est valide
-    const VALID_ORDER_STATUSES = [
-      "Pending",     // Commande enregistrée dans le système
-      "Processing",  // Commande en cours de préparation
-      "Shipped",     // Commande expédiée
-      "Delivered",   // Commande livrée
-      "Cancelled"    // Commande annulée
-    ];
-    
     if (!status || !VALID_ORDER_STATUSES.includes(status)) {
       console.log(`Statut invalide: ${status}`);
       return res.status(400).json({ 
@@ -285,293 +298,7 @@ exports.updateOrderStatus = async (req, res) => {
     
     console.log(`Commande trouvée: ${order._id}, statut actuel: ${order.status}`);
     
-    // ⚠️ SOLUTION - Utiliser updateOne au lieu de save pour éviter la validation complète
-    const updateResult = await Order.updateOne(
-      { _id: id },
-      { 
-        $set: { status: status },
-        $push: { 
-          statusHistory: {
-            status: status,
-            date: new Date(),
-            notes: notes || ""
-          }
-        }
-      }
-    );
-    
-    console.log(`Résultat de la mise à jour:`, updateResult);
-    
-    // Mettre à jour les dates en fonction du statut
-    if (status === "Shipped" || status === "Delivered") {
-      const dateUpdate = {};
-      
-      if (status === "Shipped") {
-        dateUpdate.shippingDate = new Date();
-        console.log("Date d'expédition ajoutée");
-      } else if (status === "Delivered") {
-        dateUpdate.deliveryDate = new Date();
-        console.log("Date de livraison ajoutée");
-      }
-      
-      // Mise à jour distincte pour les dates
-      if (Object.keys(dateUpdate).length > 0) {
-        await Order.updateOne({ _id: id }, { $set: dateUpdate });
-      }
-    }
-    
-    // Récupérer la commande mise à jour
-    const updatedOrder = await Order.findById(id);
-    console.log(`Commande ${id} mise à jour avec succès, nouveau statut: ${status}`);
-
-    res.status(200).json({ 
-      message: "Statut de la commande mis à jour avec succès", 
-      order: updatedOrder 
-    });
-  } catch (error) {
-    console.error("Erreur détaillée lors de la mise à jour du statut de la commande:", error);
-    res.status(500).json({
-      message: "Erreur lors de la mise à jour du statut de la commande",
-      error: error.message || error,
-      stack: error.stack
-    });
-  }
-};
-
-// Récupérer l'historique des statuts d'une commande
-exports.getOrderStatusHistory = async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    console.log(`Récupération de l'historique pour la commande ${id}`);
-    
-    // Vérifier que l'ID est fourni
-    if (!id) {
-      return res.status(400).json({ message: "ID de commande requis" });
-    }
-    
-    // Récupérer la commande
-    const order = await Order.findById(id);
-    
-    if (!order) {
-      console.log(`Commande non trouvée: ${id}`);
-      return res.status(404).json({ message: "Commande non trouvée" });
-    }
-    
-    // Récupérer l'historique des statuts
-    const statusHistory = order.statusHistory || [];
-    
-    console.log(`Historique récupéré pour la commande ${id}: ${statusHistory.length} entrées`);
-    
-    // Renvoyer l'historique des statuts
-    res.status(200).json({
-      success: true,
-      statusHistory: statusHistory
-    });
-  } catch (error) {
-    console.error("Erreur lors de la récupération de l'historique:", error);
-    res.status(500).json({
-      message: "Erreur lors de la récupération de l'historique des statuts",
-      error: error.message || error
-    });
-  }
-};
-
-// Mise à jour de la fonction checkout pour gérer le nouveau système de statut
-exports.checkout = async (req, res) => {
-    try {
-        const { orderId, paymentMethod, transactionId } = req.body;
-
-        // 1. Trouver la commande
-        const order = await Order.findById(orderId);
-        if (!order) {
-            return res.status(404).json({ message: "Commande non trouvée" });
-        }
-
-        // 2. Vérifier si la commande a déjà été payée
-        if (order.paymentStatus === "Paid") {
-            return res.status(400).json({ message: "Commande déjà payée" });
-        }
-
-        // 3. Mettre à jour la commande
-        order.paymentStatus = "Paid";
-        order.status = "Validee"; // Utilisation du nouveau système de statut
-        order.paymentId = transactionId;
-
-        // 4. Enregistrer la confirmation de paiement
-        const paymentConfirmation = new PaymentConfirmation({
-            orderId: order._id,
-            userId: order.userId,
-            transactionId,
-            paymentStatus: "Paid",
-            amount: order.totalAmount,
-            paymentMethod,
-        });
-
-        await paymentConfirmation.save();
-        
-        // Ajouter la référence à la confirmation de paiement
-        order.paymentConfirmation = paymentConfirmation._id;
-        await order.save();
-
-        res.status(200).json({
-            message: "Paiement validé et confirmation enregistrée.",
-            order,
-            paymentConfirmation,
-        });
-    } catch (error) {
-        console.error("Erreur lors de la validation du paiement :", error);
-        res.status(500).json({ message: "Erreur serveur lors de la validation du paiement.", error });
-    }
-};
-// Ajouter ces nouvelles fonctions à votre fichier orderController.js
-
-/**
- * Récupérer le nombre de mises à jour non lues pour un utilisateur
- * @param {Object} req - Requête Express
- * @param {Object} res - Réponse Express
- */
-exports.getUnreadStatusUpdates = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    
-    // Vérification de la validité de l'ID utilisateur
-    if (!userId) {
-      return res.status(400).json({ message: "ID utilisateur requis" });
-    }
-
-    // Utilisation de la méthode statique pour compter les updates non lues
-    const Order = require('../models/order');
-    const count = await Order.countUnreadUpdates(userId);
-    
-    console.log(`Mises à jour non lues pour l'utilisateur ${userId}: ${count}`);
-    
-    // Renvoie le nombre de mises à jour non lues
-    res.status(200).json({
-      success: true,
-      count
-    });
-  } catch (error) {
-    console.error("Erreur lors de la récupération des mises à jour non lues:", error);
-    res.status(500).json({
-      message: "Erreur lors de la récupération des mises à jour non lues",
-      error: error.message || error
-    });
-  }
-};
-
-/**
- * Marquer toutes les mises à jour comme lues pour un utilisateur
- * @param {Object} req - Requête Express
- * @param {Object} res - Réponse Express
- */
-exports.markStatusUpdatesAsRead = async (req, res) => {
-  try {
-    const { userId } = req.params;
-    const { orderId } = req.body; // Optionnel: pour marquer seulement les mises à jour d'une commande spécifique
-    
-    // Vérification de la validité de l'ID utilisateur
-    if (!userId) {
-      return res.status(400).json({ message: "ID utilisateur requis" });
-    }
-
-    const Order = require('../models/order');
-    let updateQuery = { userId };
-    
-    // Si un ID de commande est fourni, ne marquer que les mises à jour de cette commande
-    if (orderId) {
-      updateQuery._id = orderId;
-    }
-    
-    const now = new Date();
-    
-    // Utiliser l'opérateur $[] pour mettre à jour tous les éléments du tableau
-    // Ou filtrer avec $[element] pour ne mettre à jour que les éléments non lus
-    const updateResult = await Order.updateMany(
-      updateQuery,
-      {
-        $set: {
-          "statusHistory.$[element].read": true,
-          "statusHistory.$[element].readDate": now
-        }
-      },
-      {
-        arrayFilters: [{ "element.read": false }],
-        multi: true
-      }
-    );
-    
-    console.log(`Mises à jour marquées comme lues pour l'utilisateur ${userId}:`, updateResult);
-    
-    res.status(200).json({
-      success: true,
-      message: "Mises à jour marquées comme lues",
-      modifiedCount: updateResult.modifiedCount || 0
-    });
-  } catch (error) {
-    console.error("Erreur lors du marquage des mises à jour comme lues:", error);
-    res.status(500).json({
-      message: "Erreur lors du marquage des mises à jour comme lues",
-      error: error.message || error
-    });
-  }
-};
-
-// Modification de la fonction updateOrderStatus existante pour gérer le statut de lecture
-exports.updateOrderStatus = async (req, res) => {
-  try {
-    // S'assurer que les modèles nécessaires sont importés
-    const Order = require('../models/order');
-
-    const { id } = req.params;
-    let { status, notes } = req.body;
-
-    // Ajouter des logs de débogage
-    console.log(`Mise à jour du statut pour la commande ${id} : ${status}`);
-    
-    // Convertir du frontend vers le backend
-    const STATUS_MAPPING = {
-      "Enregistree": "Pending",
-      "Validee": "Processing",
-      "Preparation": "Processing",
-      "Expedition": "Shipped",
-      "Livree": "Delivered"
-    };
-    
-    if (STATUS_MAPPING[status]) {
-      console.log(`Conversion du statut ${status} vers ${STATUS_MAPPING[status]}`);
-      status = STATUS_MAPPING[status];
-    }
-
-    // Vérifier si le statut est valide
-    const VALID_ORDER_STATUSES = [
-      "Pending",     // Commande enregistrée dans le système
-      "Processing",  // Commande en cours de préparation
-      "Shipped",     // Commande expédiée
-      "Delivered",   // Commande livrée
-      "Cancelled"    // Commande annulée
-    ];
-    
-    if (!status || !VALID_ORDER_STATUSES.includes(status)) {
-      console.log(`Statut invalide: ${status}`);
-      return res.status(400).json({ 
-        message: "Statut de commande invalide", 
-        validStatuses: VALID_ORDER_STATUSES,
-        providedStatus: status
-      });
-    }
-
-    // Récupérer la commande
-    const order = await Order.findById(id);
-    
-    if (!order) {
-      console.log(`Commande non trouvée: ${id}`);
-      return res.status(404).json({ message: "Commande non trouvée" });
-    }
-    
-    console.log(`Commande trouvée: ${order._id}, statut actuel: ${order.status}`);
-    
-    // ⚠️ Utiliser updateOne au lieu de save pour éviter la validation complète
+    // Utiliser updateOne au lieu de save pour éviter la validation complète
     const updateResult = await Order.updateOne(
       { _id: id },
       { 
@@ -581,7 +308,7 @@ exports.updateOrderStatus = async (req, res) => {
             status: status,
             date: new Date(),
             notes: notes || "",
-            read: false // MODIFIÉ: Assurer que la nouvelle mise à jour est marquée comme non lue
+            read: false // Assurer que la nouvelle mise à jour est marquée comme non lue
           }
         }
       }
@@ -625,7 +352,9 @@ exports.updateOrderStatus = async (req, res) => {
   }
 };
 
-// Modification de la fonction getOrderStatusHistory pour gérer le marquage comme lu
+/**
+ * Récupérer l'historique des statuts d'une commande
+ */
 exports.getOrderStatusHistory = async (req, res) => {
   try {
     const { id } = req.params;
@@ -639,7 +368,6 @@ exports.getOrderStatusHistory = async (req, res) => {
     }
     
     // Récupérer la commande
-    const Order = require('../models/order');
     const order = await Order.findById(id);
     
     if (!order) {
@@ -680,6 +408,149 @@ exports.getOrderStatusHistory = async (req, res) => {
     console.error("Erreur lors de la récupération de l'historique:", error);
     res.status(500).json({
       message: "Erreur lors de la récupération de l'historique des statuts",
+      error: error.message || error
+    });
+  }
+};
+
+/**
+ * Obtenir le nombre de commandes par statut pour un utilisateur spécifique
+ */
+exports.getUserOrderCounts = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Vérification de la validité de l'ID utilisateur
+    if (!userId) {
+      return res.status(400).json({ message: "ID utilisateur requis" });
+    }
+
+    // Récupérer toutes les commandes de l'utilisateur
+    const orders = await Order.find({ userId });
+    
+    // Compteurs pour chaque type de commande
+    let pendingCount = 0;
+    let shippedCount = 0;
+    
+    orders.forEach(order => {
+      const statusRaw = order.status || '';
+      const status = typeof statusRaw === 'string' ? statusRaw.toLowerCase() : '';
+      
+      // Utiliser des conditions plus larges pour la classification
+      if (status.includes('pend') || status.includes('process') || 
+          status.includes('validee') || status.includes('preparation') || 
+          status === '') {
+        pendingCount++;
+      } else if (status.includes('ship') || status.includes('deliv') || 
+                 status.includes('expedition') || status.includes('livree')) {
+        shippedCount++;
+      }
+    });
+    
+    // Réponse avec les compteurs
+    res.status(200).json({
+      success: true,
+      counts: {
+        pending: pendingCount,
+        shipped: shippedCount,
+        total: orders.length
+      }
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des compteurs de commandes:", error);
+    res.status(500).json({
+      message: "Erreur lors de la récupération des compteurs de commandes",
+      error: error.message || error
+    });
+  }
+};
+
+/**
+ * Récupérer le nombre de mises à jour non lues pour un utilisateur
+ */
+exports.getUnreadStatusUpdates = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Vérification de la validité de l'ID utilisateur
+    if (!userId) {
+      return res.status(400).json({ message: "ID utilisateur requis" });
+    }
+
+    // Utiliser la méthode agrégat pour compter les mises à jour non lues
+    const orders = await Order.find({ userId });
+    let unreadCount = 0;
+    
+    // Parcourir toutes les commandes et compter les mises à jour non lues
+    orders.forEach(order => {
+      if (order.statusHistory && Array.isArray(order.statusHistory)) {
+        unreadCount += order.statusHistory.filter(update => !update.read).length;
+      }
+    });
+    
+    console.log(`Mises à jour non lues pour l'utilisateur ${userId}: ${unreadCount}`);
+    
+    // Renvoie le nombre de mises à jour non lues
+    res.status(200).json({
+      success: true,
+      count: unreadCount
+    });
+  } catch (error) {
+    console.error("Erreur lors de la récupération des mises à jour non lues:", error);
+    res.status(500).json({
+      message: "Erreur lors de la récupération des mises à jour non lues",
+      error: error.message || error
+    });
+  }
+};
+
+/**
+ * Marquer toutes les mises à jour de commandes comme lues pour un utilisateur
+ */
+exports.markOrderUpdatesAsRead = async (req, res) => {
+  try {
+    const { userId } = req.params;
+    
+    // Vérification de la validité de l'ID utilisateur
+    if (!userId) {
+      return res.status(400).json({ message: "ID utilisateur requis" });
+    }
+
+    // Trouver toutes les commandes de l'utilisateur
+    const orders = await Order.find({ userId });
+    
+    let totalUpdatedCount = 0;
+    
+    // Mettre à jour chaque commande
+    for (const order of orders) {
+      if (order.statusHistory && order.statusHistory.length > 0) {
+        let updated = false;
+        const now = new Date();
+        
+        for (const historyItem of order.statusHistory) {
+          if (!historyItem.read) {
+            historyItem.read = true;
+            historyItem.readDate = now;
+            updated = true;
+            totalUpdatedCount++;
+          }
+        }
+        
+        if (updated) {
+          await order.save();
+        }
+      }
+    }
+    
+    res.status(200).json({
+      success: true,
+      message: "Toutes les mises à jour ont été marquées comme lues",
+      updatedCount: totalUpdatedCount
+    });
+  } catch (error) {
+    console.error("Erreur lors du marquage des mises à jour comme lues:", error);
+    res.status(500).json({
+      message: "Erreur lors du marquage des mises à jour comme lues",
       error: error.message || error
     });
   }

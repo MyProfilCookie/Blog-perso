@@ -29,10 +29,16 @@ router.get('/user/:userId', orderController.getUserOrders);
 // Route pour obtenir l'historique des statuts d'une commande
 router.get('/:id/status-history', orderController.getOrderStatusHistory);
 
-// NOUVELLE ROUTE: Récupérer le nombre de mises à jour non lues pour un utilisateur
-router.get('/users/:userId/orders/status-history', orderController.getUnreadStatusUpdates);
+// Route pour obtenir les commandes d'un utilisateur (compatible avec le frontend)
+router.get('/users/:userId/orders', orderController.getUserOrders);
 
-// NOUVELLE ROUTE: Marquer les mises à jour comme lues pour un utilisateur
-router.put('/users/:userId/orders/status-history/read', orderController.markStatusUpdatesAsRead);
+// Route pour obtenir les compteurs de commandes (en attente, expédiées, total)
+router.get('/users/:userId/order-counts', orderController.getUserOrderCounts);
+
+// Route pour récupérer le nombre de mises à jour non lues pour un utilisateur
+router.get('/users/:userId/orders/status-updates', orderController.getUnreadStatusUpdates);
+
+// Route pour marquer les mises à jour comme lues pour un utilisateur
+router.post('/users/:userId/orders/updates/read', orderController.markOrderUpdatesAsRead);
 
 module.exports = router;

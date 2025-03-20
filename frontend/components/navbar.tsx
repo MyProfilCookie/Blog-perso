@@ -395,9 +395,9 @@ export const Navbar = () => {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
       
-      // Construire l'URL complète et la logger
-      const url = `${apiUrl}/users/${user.id}/orders`;
-      console.log("URL de récupération des commandes:", url);
+      // Utiliser le point de terminaison order-counts
+      const url = `${apiUrl}/users/${user.id}/order-counts`;
+      console.log("URL de récupération des compteurs de commandes:", url);
   
       const response = await fetch(url, {
         method: "GET",
@@ -411,68 +411,20 @@ export const Navbar = () => {
       
       if (response.ok) {
         const data = await response.json();
-        console.log("Données de commandes brutes:", data);
+        console.log("Données des compteurs:", data);
         
-        // Déterminer la structure des données
-        let orders = [];
-        if (Array.isArray(data)) {
-          orders = data;
-          console.log("Format des données: tableau direct");
-        } else if (data.orders && Array.isArray(data.orders)) {
-          orders = data.orders;
-          console.log("Format des données: objet avec propriété orders");
-        } else if (data.data && Array.isArray(data.data)) {
-          orders = data.data;
-          console.log("Format des données: objet avec propriété data");
-        } else {
-          console.warn("Format de données inattendu, tentative de conversion:", data);
-          // Essayer une dernière approche
-          orders = Object.values(data).filter(value => 
-            typeof value === 'object' && value !== null
-          );
+        if (data.counts) {
+          setOrderCount({
+            pending: data.counts.pending,
+            shipped: data.counts.shipped,
+            total: data.counts.total
+          });
         }
-        
-        console.log("Commandes extraites:", orders);
-        console.log("Nombre de commandes trouvées:", orders.length);
-  
-        // Calculer les compteurs avec plus de tolérance sur les statuts
-        let pendingCount = 0;
-        let shippedCount = 0;
-        
-        orders.forEach((order: { status: any; orderStatus: any; state: any; }) => {
-          console.log("Traitement de la commande:", order);
-          // Vérifier si le statut existe et le normaliser
-          const statusRaw = order.status || order.orderStatus || order.state || '';
-          const status = typeof statusRaw === 'string' ? statusRaw.toLowerCase() : '';
-          
-          console.log("Statut de commande détecté:", status);
-          
-          // Utiliser des conditions plus larges
-          if (status.includes('pend') || status.includes('process') || status.includes('attente') || status.includes('cours') || status === '') {
-            pendingCount++;
-            console.log("→ Classée comme 'en attente'");
-          } else if (status.includes('ship') || status.includes('deliv') || status.includes('exp') || status.includes('livr')) {
-            shippedCount++;
-            console.log("→ Classée comme 'expédiée'");
-          } else {
-            // Par défaut, considérer comme en attente
-            pendingCount++;
-            console.log("→ Statut inconnu, classée par défaut comme 'en attente'");
-          }
-        });
-        
-        console.log("Compteurs finaux:", { pending: pendingCount, shipped: shippedCount, total: orders.length });
-        
-        setOrderCount({
-          pending: pendingCount,
-          shipped: shippedCount,
-          total: orders.length
-        });
       } else {
-        console.error("Erreur lors de la récupération des commandes:", await response.text());
+        console.error("Erreur lors de la récupération des compteurs:", await response.text());
       }
     } catch (error) {
-      console.error("Exception lors de la récupération des commandes:", error);
+      console.error("Exception lors de la récupération des compteurs:", error);
     } finally {
       setIsLoadingOrders(false);
     }
@@ -496,10 +448,10 @@ export const Navbar = () => {
         },
       });
   
-      // On ne réinitialise pas les compteurs, on va simplement charger les données à nouveau
+      // Rafraîchir les compteurs de commandes après les avoir marqués comme lus
       fetchOrderCount();
     } catch (error) {
-      console.error("Error marking updates as read:", error);
+      console.error("Erreur lors du marquage des mises à jour comme lues:", error);
     }
   };
 
