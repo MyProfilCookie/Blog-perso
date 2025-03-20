@@ -505,8 +505,6 @@ export const Navbar = () => {
     setIsLoadingOrders(true);
     setOrderLoadError(null);
 
-    console.log("Début de la récupération des compteurs de commandes");
-
     try {
       // Récupération des données utilisateur
       const userData = getUserData();
@@ -521,145 +519,69 @@ export const Navbar = () => {
       const userId = userData.id;
       const token = userData.token;
 
-      console.log("Récupération des compteurs pour l'utilisateur:", userId);
+      // Utiliser directement l'URL qui fonctionne
+      const apiUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+      ).replace(/\/$/, "");
+      const url = `${apiUrl}/orders/user/${userId}`;
 
-      // Construction de l'URL de base
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-      // Supprimer les slashes en fin d'URL
-      const cleanApiUrl = apiBaseUrl.replace(/\/+$/, "");
+      console.log("Récupération des commandes via:", url);
 
-      // Essayer de récupérer les commandes complètes pour construire les compteurs
-      try {
-        // Tester différentes URLs pour récupérer les commandes
-        const possibleUrls = [
-          `${cleanApiUrl}/orders/users/${userId}`,
-          `${cleanApiUrl}/orders/user/${userId}`,
-          `${cleanApiUrl}/users/${userId}/orders`,
-          `${cleanApiUrl}/user/${userId}/orders`,
-          `${cleanApiUrl.replace("/api", "")}/orders/users/${userId}`,
-          `${cleanApiUrl.replace("/api", "")}/orders/user/${userId}`,
-        ];
+      const response = await fetch(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-        let ordersResponse = null;
-        let successUrl = "";
-
-        for (const url of possibleUrls) {
-          try {
-            console.log("Essai de récupération des commandes via:", url);
-            const tempResponse = await fetch(url, {
-              headers: {
-                Authorization: `Bearer ${token}`,
-                "Content-Type": "application/json",
-              },
-            });
-
-            if (tempResponse.ok) {
-              ordersResponse = tempResponse;
-              successUrl = url;
-              console.log(
-                "✅ URL fonctionnelle trouvée pour les commandes:",
-                url,
-              );
-              break;
-            }
-          } catch (e) {
-            // Continuer avec l'URL suivante
-          }
-        }
-
-        if (ordersResponse) {
-          const data = await ordersResponse.json();
-
-          console.log("Commandes récupérées via:", successUrl, data);
-
-          // Extraire les commandes selon le format de réponse
-          let orders = [];
-
-          if (data && Array.isArray(data)) {
-            orders = data;
-          } else if (data && data.orders && Array.isArray(data.orders)) {
-            orders = data.orders;
-          } else if (data && data.data && Array.isArray(data.data)) {
-            orders = data.data;
-          }
-
-          if (orders.length > 0) {
-            // Calculer les compteurs
-            const pending = orders.filter(
-              (order: { status: string }) =>
-                order.status?.toLowerCase().includes("pend") ||
-                order.status?.toLowerCase().includes("process") ||
-                order.status?.toLowerCase().includes("valid") ||
-                order.status?.toLowerCase().includes("cours") ||
-                order.status?.toLowerCase().includes("enregistr"),
-            ).length;
-
-            const shipped = orders.filter(
-              (order: { status: string }) =>
-                order.status?.toLowerCase().includes("ship") ||
-                order.status?.toLowerCase().includes("exped") ||
-                order.status?.toLowerCase().includes("livr"),
-            ).length;
-
-            setOrderCount({
-              pending,
-              shipped,
-              total: orders.length,
-            });
-
-            console.log("Compteurs calculés à partir des commandes:", {
-              pending,
-              shipped,
-              total: orders.length,
-            });
-            setIsLoadingOrders(false);
-
-            return;
-          }
-        }
-      } catch (e) {
-        console.warn("Impossible de récupérer les commandes:", e);
+      if (!response.ok) {
+        throw new Error(
+          `Erreur HTTP ${response.status}: ${response.statusText}`,
+        );
       }
 
-      // Si nous arrivons ici, aucune méthode n'a fonctionné
-      // Utiliser des valeurs simulées depuis localStorage ou des valeurs par défaut
-      try {
-        // Essayer de récupérer des valeurs stockées
-        const storedCounts = localStorage.getItem(`order_counts_${userId}`);
+      const data = await response.json();
 
-        if (storedCounts) {
-          const counts = JSON.parse(storedCounts);
+      // Extraire les commandes selon le format de réponse
+      let orders = [];
 
-          console.log("Utilisation des compteurs stockés:", counts);
-          setOrderCount(counts);
-        } else {
-          // Générer des valeurs aléatoires ou par défaut
-          const simulatedCounts = {
-            pending: 2,
-            shipped: 3,
-            total: 5,
-          };
-
-          console.log("Utilisation de compteurs simulés:", simulatedCounts);
-          setOrderCount(simulatedCounts);
-
-          // Stocker pour la prochaine fois
-          localStorage.setItem(
-            `order_counts_${userId}`,
-            JSON.stringify(simulatedCounts),
-          );
-        }
-      } catch (e) {
-        console.error("Erreur lors de la simulation des compteurs:", e);
-        // Valeurs par défaut en cas d'erreur
-        setOrderCount({
-          pending: 1,
-          shipped: 1,
-          total: 2,
-        });
+      if (data && Array.isArray(data)) {
+        orders = data;
+      } else if (data && data.orders && Array.isArray(data.orders)) {
+        orders = data.orders;
+      } else if (data && data.data && Array.isArray(data.data)) {
+        orders = data.data;
       }
-    } catch (error: unknown) {
+
+      // Calculer les compteurs
+      const pending = orders.filter(
+        (order: Order) =>
+          order.status?.toLowerCase().includes("pend") ||
+          order.status?.toLowerCase().includes("process") ||
+          order.status?.toLowerCase().includes("valid") ||
+          order.status?.toLowerCase().includes("cours") ||
+          order.status?.toLowerCase().includes("enregistr"),
+      ).length;
+
+      const shipped = orders.filter(
+        (order: Order) =>
+          order.status?.toLowerCase().includes("ship") ||
+          order.status?.toLowerCase().includes("exped") ||
+          order.status?.toLowerCase().includes("livr"),
+      ).length;
+
+      setOrderCount({
+        pending,
+        shipped,
+        total: orders.length,
+      });
+
+      console.log("Compteurs calculés:", {
+        pending,
+        shipped,
+        total: orders.length,
+      });
+    } catch (error) {
       console.error("Exception lors de la récupération des compteurs:", error);
       setOrderLoadError(
         error instanceof Error
@@ -687,74 +609,34 @@ export const Navbar = () => {
       const userId = userData.id;
       const token = userData.token;
 
-      // Construction de l'URL de base
-      const apiBaseUrl =
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-      // Supprimer les slashes en fin d'URL
-      const cleanApiUrl = apiBaseUrl.replace(/\/+$/, "");
+      const apiUrl = (
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+      ).replace(/\/$/, "");
+      const url = `${apiUrl}/orders/user/${userId}/orders/updates/read`;
 
-      // Construire l'URL sans double /api
-      const baseUrl = cleanApiUrl.endsWith("/api")
-        ? cleanApiUrl.substring(0, cleanApiUrl.length - 4)
-        : cleanApiUrl;
+      console.log("Marquage des mises à jour comme lues via:", url);
 
-      // Liste de formats d'URL possibles à tester
-      const urlFormats = [
-        `${cleanApiUrl}/orders/users/${userId}/orders/updates/read`,
-        `${baseUrl}/orders/users/${userId}/orders/updates/read`,
-        `${cleanApiUrl}/orders/user/${userId}/orders/updates/read`,
-        `${baseUrl}/orders/user/${userId}/orders/updates/read`,
-        `${cleanApiUrl}/users/${userId}/orders/updates/read`,
-        `${baseUrl}/users/${userId}/orders/updates/read`,
-      ];
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "application/json",
+        },
+      });
 
-      let response = null;
-      let successUrl = "";
-
-      // Tester chaque format d'URL jusqu'à ce qu'un fonctionne
-      for (const url of urlFormats) {
-        try {
-          console.log("Essai de l'URL pour marquer comme lu:", url);
-          const tempResponse = await fetch(url, {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (tempResponse.ok) {
-            response = tempResponse;
-            successUrl = url;
-            console.log(
-              "✅ URL fonctionnelle trouvée pour marquer comme lu:",
-              url,
-            );
-            break;
-          }
-        } catch (e) {
-          // Continuer avec la prochaine URL
-        }
+      if (response.ok) {
+        console.log("Mises à jour marquées comme lues avec succès");
+        // Rafraîchir les compteurs après avoir marqué comme lus
+        fetchOrderCount();
+      } else {
+        console.error(
+          "Échec du marquage des mises à jour:",
+          response.status,
+          response.statusText,
+        );
       }
-
-      if (!response) {
-        console.error("Aucune URL n'a fonctionné pour marquer comme lu");
-
-        return;
-      }
-
-      console.log(
-        "Mises à jour marquées comme lues avec succès via:",
-        successUrl,
-      );
-
-      // Rafraîchir les compteurs après avoir marqué comme lus
-      fetchOrderCount();
     } catch (error) {
-      console.error(
-        "Erreur lors du marquage des mises à jour comme lues:",
-        error,
-      );
+      console.error("Erreur lors du marquage des mises à jour:", error);
     }
   };
 
