@@ -393,7 +393,7 @@ export const Navbar = () => {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
       
-      const response = await fetch(`${apiUrl}/users/${user.id}/orders`, {
+      const response = await fetch(`${apiUrl}/orders/users/${user.id}/orders`, {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
@@ -440,7 +440,7 @@ export const Navbar = () => {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
   
-      const url = `${apiUrl}/users/${user.id}/orders/updates/read`;
+      const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
       console.log("URL pour marquer les mises à jour comme lues:", url);
   
       await fetch(url, {
