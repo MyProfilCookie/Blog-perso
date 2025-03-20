@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import {
@@ -421,19 +420,7 @@ export const Navbar = () => {
    * Fetch order count from API - VERSION CORRIGÉE
    */
   const fetchOrderCount = async () => {
-    if (!user || !user.id) {
-      console.log(
-        "Pas d'utilisateur connecté, abandon de la récupération des commandes",
-      );
-
-      return;
-    }
-
-    if (isLoadingOrders) {
-      console.log("Récupération des commandes déjà en cours");
-
-      return;
-    }
+    if (!user || !user.id || isLoadingOrders) return;
 
     setIsLoadingOrders(true);
     setOrderLoadError(null);
@@ -450,11 +437,12 @@ export const Navbar = () => {
       if (!token) {
         console.error("Pas de token disponible pour l'authentification");
         setOrderLoadError("Authentification manquante");
+        setIsLoadingOrders(false);
 
         return;
       }
 
-      // Construction de l'URL complète
+      // Construction de l'URL CORRECTE avec 'orders/users/'
       const apiUrl = (
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
       ).replace(/\/$/, "");
@@ -468,7 +456,6 @@ export const Navbar = () => {
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
-          // Éviter les problèmes de cache
           "Cache-Control": "no-cache, no-store, must-revalidate",
           Pragma: "no-cache",
         },
@@ -531,11 +518,7 @@ export const Navbar = () => {
       }
     } catch (error: unknown) {
       console.error("Exception lors de la récupération des compteurs:", error);
-      setOrderLoadError(
-        error instanceof Error
-          ? error.message
-          : "Erreur lors de la récupération",
-      );
+      setOrderLoadError(error instanceof Error ? error.message : "Erreur lors de la récupération");
     } finally {
       console.log("Fin de la récupération des compteurs");
       setIsLoadingOrders(false);
@@ -543,7 +526,7 @@ export const Navbar = () => {
   };
 
   /**
-   * Mark order updates as read
+   * Mark order updates as read - VERSION CORRIGÉE
    */
   const markOrderUpdatesAsRead = async () => {
     if (!user || !user.id) return;
@@ -557,6 +540,7 @@ export const Navbar = () => {
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
       ).replace(/\/$/, "");
 
+      // Utiliser la route correcte avec 'orders/users/'
       const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
 
       console.log("URL pour marquer les mises à jour comme lues:", url);
@@ -640,23 +624,6 @@ export const Navbar = () => {
           handleVisibilityChange,
         );
       };
-    }
-  }, [user]);
-
-  // Tentative directe de mise à jour des compteurs
-  useEffect(() => {
-    // Force une mise à jour des valeurs statiques pour tester l'affichage
-    if (user && user.id) {
-      const testTimeout = setTimeout(() => {
-        console.log("Test avec des valeurs statiques");
-        setOrderCount({
-          pending: 3,
-          shipped: 2,
-          total: 5,
-        });
-      }, 5000); // 5 secondes après le chargement
-
-      return () => clearTimeout(testTimeout);
     }
   }, [user]);
 
@@ -953,6 +920,7 @@ export const Navbar = () => {
                                   process.env.NEXT_PUBLIC_API_URL ||
                                   "http://localhost:3000/api"
                                 ).replace(/\/$/, "");
+                                // Utiliser la route correcte
                                 const response = await fetch(
                                   `${apiUrl}/orders/users/${user.id}/order-counts`,
                                   {
