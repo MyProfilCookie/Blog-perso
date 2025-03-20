@@ -508,105 +508,148 @@ export const Navbar = () => {
     console.log("Début de la récupération des compteurs de commandes");
 
     try {
-      // Utiliser la fonction robuste pour récupérer les données utilisateur
+      // Récupération des données utilisateur
       const userData = getUserData();
 
-      if (!userData) {
-        console.error("Pas d'utilisateur connecté");
-        setOrderLoadError("Utilisateur non connecté");
+      if (!userData || !userData.id || !userData.token) {
+        console.error("Données utilisateur insuffisantes");
         setIsLoadingOrders(false);
 
         return;
       }
 
-      // Récupérer le token d'authentification
-      const token = userData.token;
-
-      if (!token) {
-        console.error("Pas de token disponible pour l'authentification");
-        setOrderLoadError("Authentification manquante");
-        setIsLoadingOrders(false);
-
-        return;
-      }
-
-      // Récupérer l'ID utilisateur
       const userId = userData.id;
-
-      if (!userId) {
-        console.error("ID utilisateur manquant dans les données utilisateur");
-        setOrderLoadError("ID utilisateur manquant");
-        setIsLoadingOrders(false);
-
-        return;
-      }
+      const token = userData.token;
 
       console.log("Récupération des compteurs pour l'utilisateur:", userId);
 
-      // Construction de l'URL CORRECTE avec 'orders/users/' et l'ID utilisateur confirmé
-      const apiUrl = (
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
-      ).replace(/\/$/, "");
-      const url = `${apiUrl}/orders/users/${userId}/order-counts`;
+      // Construction de l'URL de base
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+      // Supprimer les slashes en fin d'URL
+      const cleanApiUrl = apiBaseUrl.replace(/\/+$/, "");
 
-      console.log("URL de récupération des compteurs:", url);
+      // Construire l'URL sans double /api
+      const baseUrl = cleanApiUrl.endsWith("/api")
+        ? cleanApiUrl.substring(0, cleanApiUrl.length - 4)
+        : cleanApiUrl;
 
-      // Exécution de la requête
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          // "Cache-Control": "no-cache, no-store, must-revalidate",
-          // Pragma: "no-cache",
-        },
-      });
+      console.log("Base URL nettoyée:", baseUrl);
 
-      // Vérification de la réponse
-      if (!response.ok) {
-        console.error("Erreur API:", response.status, response.statusText);
+      // Liste de tous les formats d'URL possibles à tester
+      const urlFormats = [
+        `${cleanApiUrl}/orders/users/${userId}/order-counts`, // Avec /api inclus
+        `${baseUrl}/orders/users/${userId}/order-counts`, // Sans /api
+        `${cleanApiUrl}/orders/user/${userId}/order-counts`, // Singular
+        `${baseUrl}/orders/user/${userId}/order-counts`, // Sans /api, singular
+        `${cleanApiUrl}/users/${userId}/order-counts`, // Direct user
+        `${baseUrl}/users/${userId}/order-counts`, // Sans /api, direct user
+        `${cleanApiUrl}/orders/users/${userId}/counts`, // Simplified
+        `${baseUrl}/orders/users/${userId}/counts`, // Sans /api, simplified
+      ];
+
+      let response = null;
+      let successUrl = "";
+
+      // Tester chaque format d'URL jusqu'à ce qu'un fonctionne
+      for (const url of urlFormats) {
+        try {
+          console.log("Essai de l'URL:", url);
+          const tempResponse = await fetch(url, {
+            method: "GET",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          // Si réponse 200, on a trouvé la bonne URL
+          if (tempResponse.ok) {
+            response = tempResponse;
+            successUrl = url;
+            console.log("✅ URL fonctionnelle trouvée:", url);
+            break;
+          } else {
+            console.log(
+              `❌ URL ${url} a échoué avec statut: ${tempResponse.status}`,
+            );
+          }
+        } catch (e: unknown) {
+          console.log(
+            `❌ URL ${url} a échoué avec erreur:`,
+            e instanceof Error ? e.message : String(e),
+          );
+        }
+      }
+
+      // Si aucune URL n'a fonctionné
+      if (!response) {
         throw new Error(
-          `Erreur HTTP ${response.status}: ${response.statusText}`,
+          "Aucune URL n'a fonctionné. Vérifiez la configuration de l'API.",
         );
       }
 
-      // Récupération du texte brut pour débogage
-      const responseText = await response.text();
+      // Traiter la réponse de l'URL qui a fonctionné
+      const data = await response.json();
 
-      console.log("Réponse brute de l'API:", responseText);
+      console.log("Données reçues de:", successUrl, data);
 
-      // Tentative de parsing JSON
-      let data;
-
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.error("Erreur de parsing JSON:", e);
-        throw new Error("Format de réponse invalide");
-      }
-
-      console.log("Données analysées:", data);
-
-      // Traitement de la réponse
+      // Mettre à jour l'état basé sur le format de réponse
       if (data && data.success && data.counts) {
-        console.log("Mise à jour des compteurs avec:", data.counts);
-
-        // Créer un nouvel objet pour s'assurer que React détecte le changement
-        const newCounts = {
+        // Format 1: {success: true, counts: {pending, shipped, total}}
+        setOrderCount({
           pending: parseInt(data.counts.pending) || 0,
           shipped: parseInt(data.counts.shipped) || 0,
           total: parseInt(data.counts.total) || 0,
-        };
+        });
+      } else if (data && Array.isArray(data)) {
+        // Format 2: Array of orders
+        const pending = data.filter(
+          (order) =>
+            order.status?.toLowerCase().includes("pending") ||
+            order.status?.toLowerCase().includes("process") ||
+            order.status?.toLowerCase().includes("enregistree") ||
+            order.status?.toLowerCase().includes("validee"),
+        ).length;
 
-        console.log("Nouveaux compteurs:", newCounts);
+        const shipped = data.filter(
+          (order) =>
+            order.status?.toLowerCase().includes("ship") ||
+            order.status?.toLowerCase().includes("livr") ||
+            order.status?.toLowerCase().includes("expedition"),
+        ).length;
 
-        // Mise à jour de l'état
-        setOrderCount(newCounts);
+        setOrderCount({
+          pending,
+          shipped,
+          total: data.length,
+        });
+      } else if (data && data.orders && Array.isArray(data.orders)) {
+        // Format 3: {orders: Array}
+        const pending = data.orders.filter(
+          (order: { status: string }) =>
+            order.status?.toLowerCase().includes("pending") ||
+            order.status?.toLowerCase().includes("process") ||
+            order.status?.toLowerCase().includes("enregistree") ||
+            order.status?.toLowerCase().includes("validee"),
+        ).length;
+
+        const shipped = data.orders.filter(
+          (order: { status: string }) =>
+            order.status?.toLowerCase().includes("ship") ||
+            order.status?.toLowerCase().includes("livr") ||
+            order.status?.toLowerCase().includes("expedition"),
+        ).length;
+
+        setOrderCount({
+          pending,
+          shipped,
+          total: data.orders.length,
+        });
       } else {
-        console.warn("Format de réponse inattendu:", data);
-        setOrderLoadError("Format de réponse inattendu");
+        console.warn("Format de réponse non reconnu:", data);
       }
-    } catch (error) {
+    } catch (error: unknown) {
       console.error("Exception lors de la récupération des compteurs:", error);
       setOrderLoadError(
         error instanceof Error
@@ -623,60 +666,80 @@ export const Navbar = () => {
    */
   const markOrderUpdatesAsRead = async () => {
     try {
-      // Utiliser la fonction robuste pour récupérer les données utilisateur
       const userData = getUserData();
 
-      if (!userData) {
-        console.error("Pas d'utilisateur connecté");
+      if (!userData || !userData.id || !userData.token) {
+        console.error("Données utilisateur insuffisantes");
 
         return;
       }
 
-      // Récupérer le token d'authentification
+      const userId = userData.id;
       const token = userData.token;
 
-      if (!token) {
-        console.error("Pas de token disponible pour l'authentification");
+      // Construction de l'URL de base
+      const apiBaseUrl =
+        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+      // Supprimer les slashes en fin d'URL
+      const cleanApiUrl = apiBaseUrl.replace(/\/+$/, "");
+
+      // Construire l'URL sans double /api
+      const baseUrl = cleanApiUrl.endsWith("/api")
+        ? cleanApiUrl.substring(0, cleanApiUrl.length - 4)
+        : cleanApiUrl;
+
+      // Liste de formats d'URL possibles à tester
+      const urlFormats = [
+        `${cleanApiUrl}/orders/users/${userId}/orders/updates/read`,
+        `${baseUrl}/orders/users/${userId}/orders/updates/read`,
+        `${cleanApiUrl}/orders/user/${userId}/orders/updates/read`,
+        `${baseUrl}/orders/user/${userId}/orders/updates/read`,
+        `${cleanApiUrl}/users/${userId}/orders/updates/read`,
+        `${baseUrl}/users/${userId}/orders/updates/read`,
+      ];
+
+      let response = null;
+      let successUrl = "";
+
+      // Tester chaque format d'URL jusqu'à ce qu'un fonctionne
+      for (const url of urlFormats) {
+        try {
+          console.log("Essai de l'URL pour marquer comme lu:", url);
+          const tempResponse = await fetch(url, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${token}`,
+            },
+          });
+
+          if (tempResponse.ok) {
+            response = tempResponse;
+            successUrl = url;
+            console.log(
+              "✅ URL fonctionnelle trouvée pour marquer comme lu:",
+              url,
+            );
+            break;
+          }
+        } catch (e) {
+          // Continuer avec la prochaine URL
+        }
+      }
+
+      if (!response) {
+        console.error("Aucune URL n'a fonctionné pour marquer comme lu");
 
         return;
       }
 
-      // Récupérer l'ID utilisateur
-      const userId = userData.id;
+      console.log(
+        "Mises à jour marquées comme lues avec succès via:",
+        successUrl,
+      );
 
-      if (!userId) {
-        console.error("ID utilisateur manquant dans les données utilisateur");
-
-        return;
-      }
-
-      const apiUrl = (
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
-      ).replace(/\/$/, "");
-      const url = `${apiUrl}/orders/users/${userId}/orders/updates/read`;
-
-      console.log("URL pour marquer les mises à jour comme lues:", url);
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          // "Cache-Control": "no-cache",
-        },
-      });
-
-      if (response.ok) {
-        console.log("Mises à jour marquées comme lues avec succès");
-        // Rafraîchir les compteurs après avoir marqué comme lus
-        fetchOrderCount();
-      } else {
-        console.error(
-          "Échec du marquage des mises à jour comme lues:",
-          response.status,
-          response.statusText,
-        );
-      }
+      // Rafraîchir les compteurs après avoir marqué comme lus
+      fetchOrderCount();
     } catch (error) {
       console.error(
         "Erreur lors du marquage des mises à jour comme lues:",
@@ -1464,41 +1527,81 @@ export const Navbar = () => {
                 const userData = getUserData();
 
                 if (!userData || !userData.id || !userData.token) {
-                  alert("Données utilisateur insuffisantes pour le test");
+                  alert("Données utilisateur insuffisantes");
 
                   return;
                 }
 
-                const apiUrl = (
-                  process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
-                ).replace(/\/$/, "");
-                // Utiliser la route correcte avec l'ID utilisateur confirmé
-                const url = `${apiUrl}/orders/users/${userData.id}/order-counts`;
+                // Construction de l'URL de base
+                const apiBaseUrl =
+                  process.env.NEXT_PUBLIC_API_URL ||
+                  "http://localhost:3000/api";
+                const cleanApiUrl = apiBaseUrl.replace(/\/+$/, "");
+                const baseUrl = cleanApiUrl.endsWith("/api")
+                  ? cleanApiUrl.substring(0, cleanApiUrl.length - 4)
+                  : cleanApiUrl;
 
-                console.log("Test API URL:", url);
+                // Créer un élément de diagnostic
+                const diagDiv = document.createElement("div");
 
-                const response = await fetch(url, {
-                  headers: {
-                    Authorization: `Bearer ${userData.token}`,
-                    // "Cache-Control": "no-cache",
-                  },
-                });
-                const responseText = await response.text();
+                diagDiv.style.position = "fixed";
+                diagDiv.style.top = "50%";
+                diagDiv.style.left = "50%";
+                diagDiv.style.transform = "translate(-50%, -50%)";
+                diagDiv.style.background = "white";
+                diagDiv.style.padding = "20px";
+                diagDiv.style.border = "1px solid #ccc";
+                diagDiv.style.borderRadius = "8px";
+                diagDiv.style.zIndex = "9999";
+                diagDiv.style.maxHeight = "80vh";
+                diagDiv.style.maxWidth = "90vw";
+                diagDiv.style.overflow = "auto";
+                diagDiv.innerHTML = "<h3>Test d'URLs API</h3>";
 
-                console.log("Réponse brute:", responseText);
+                document.body.appendChild(diagDiv);
 
-                let data;
+                // Tester toutes les URLs possibles
+                const urlFormats = [
+                  `${cleanApiUrl}/orders/users/${userData.id}/order-counts`,
+                  `${baseUrl}/orders/users/${userData.id}/order-counts`,
+                  `${cleanApiUrl}/orders/user/${userData.id}/order-counts`,
+                  `${baseUrl}/orders/user/${userData.id}/order-counts`,
+                  `${cleanApiUrl}/users/${userData.id}/order-counts`,
+                  `${baseUrl}/users/${userData.id}/order-counts`,
+                  `${cleanApiUrl}/orders/users/${userData.id}/counts`,
+                  `${baseUrl}/orders/users/${userData.id}/counts`,
+                ];
 
-                try {
-                  data = JSON.parse(responseText);
-                } catch (e) {
-                  alert("Erreur de parsing: " + responseText);
+                for (const url of urlFormats) {
+                  try {
+                    diagDiv.innerHTML += `<p>Test URL: ${url}... </p>`;
 
-                  return;
+                    const response = await fetch(url, {
+                      headers: {
+                        Authorization: `Bearer ${userData.token}`,
+                      },
+                    });
+
+                    if (response.ok) {
+                      const data = await response.json();
+
+                      diagDiv.innerHTML += `<p style="color:green">✅ SUCCÈS (${response.status})</p>`;
+                      diagDiv.innerHTML += `<pre style="background:#f5f5f5;padding:10px">${JSON.stringify(data, null, 2)}</pre>`;
+                    } else {
+                      diagDiv.innerHTML += `<p style="color:red">❌ ÉCHEC (${response.status})</p>`;
+                    }
+                  } catch (e: unknown) {
+                    diagDiv.innerHTML += `<p style="color:red">⚠️ ERREUR: ${e instanceof Error ? e.message : String(e)}</p>`;
+                  }
                 }
+                diagDiv.innerHTML += `<button id="close-diag" style="margin-top:10px;padding:8px 16px;background:#f44336;color:white;border:none;border-radius:4px">Fermer</button>`;
+                const closeButton = document.getElementById("close-diag");
 
-                console.log("Test direct API:", data);
-                alert(JSON.stringify(data, null, 2));
+                if (closeButton) {
+                  closeButton.addEventListener("click", () => {
+                    document.body.removeChild(diagDiv);
+                  });
+                }
               } catch (e: unknown) {
                 console.error("Test échoué:", e);
                 alert(
@@ -1507,7 +1610,7 @@ export const Navbar = () => {
               }
             }}
           >
-            Test API
+            Test complet API
           </button>
         )}
       </NavbarContent>
