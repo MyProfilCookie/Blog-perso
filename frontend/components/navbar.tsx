@@ -62,6 +62,7 @@ type User = {
 type OrderCountType = {
   pending: number;
   shipped: number;
+  delivered: number;
   total: number;
 };
 
@@ -133,6 +134,7 @@ export const Navbar = () => {
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
     shipped: 0,
+    delivered: 0,
     total: 0,
   });
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
@@ -570,15 +572,23 @@ export const Navbar = () => {
           order.status?.toLowerCase().includes("livr"),
       ).length;
 
+      const delivered = orders.filter(
+        (order: Order) =>
+          order.status?.toLowerCase().includes("livr") ||
+          order.status?.toLowerCase().includes("deliv"),
+      ).length;
+
       setOrderCount({
         pending,
         shipped,
+        delivered,
         total: orders.length,
       });
 
       console.log("Compteurs calculés:", {
         pending,
         shipped,
+        delivered,
         total: orders.length,
       });
     } catch (error) {
