@@ -86,20 +86,24 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             // Create order and capture the returned order data with ID
             const orderData = await saveOrder(cartItems, totalToPay, paymentMethod?.id);
             
-            // Store order ID in localStorage for confirmation page
-            if (orderData && orderData._id) {
-                localStorage.setItem("orderId", orderData._id);
-                
-                // Record payment confirmation if user is available
-                if (user) {
-                    await confirmPayment(
-                        user,
-                        orderData._id,
-                        paymentMethod?.id || "unknown",
-                        totalToPay,
-                        "card"
-                    );
-                }
+            // Vérifier que l'ID a bien été stocké après saveOrder
+            const storedId = localStorage.getItem("orderId");
+            console.log("Vérification après saveOrder - ID stocké dans localStorage:", storedId);
+            
+            if (!storedId) {
+                console.error("ALERTE: ID de commande non trouvé dans localStorage après saveOrder");
+            }
+            
+            // Record payment confirmation if user is available
+            if (user && orderData && (orderData._id || orderData.id || (orderData.order && orderData.order._id))) {
+                const orderId = orderData._id || orderData.id || orderData.order._id;
+                await confirmPayment(
+                    user,
+                    orderId,
+                    paymentMethod?.id || "unknown",
+                    totalToPay,
+                    "card"
+                );
             }
     
             // Show success message and redirect
@@ -109,6 +113,10 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 icon: "success",
                 confirmButtonText: "OK",
             }).then(() => {
+                // Dernière vérification avant redirection
+                const finalStoredId = localStorage.getItem("orderId");
+                console.log("Vérification avant redirection - ID stocké:", finalStoredId);
+                
                 onPaymentSuccess(); // Update cart immediately
                 router.push("/payment-confirmations");
             });
@@ -207,18 +215,40 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 },
                 body: JSON.stringify(orderData),
             });
-            
+    
             if (!orderResponse.ok) {
                 throw new Error("Erreur lors de la création de la commande.");
             }
-            
+    
             // Parse response to get the order with its ID
             const createdOrder = await orderResponse.json();
             console.log("✅ Commande créée avec succès:", createdOrder);
             
-            // Stocker l'ID de commande dans localStorage
-            localStorage.setItem("orderId", createdOrder._id);
+            // Vérifier et stocker l'ID de commande dans localStorage avec journalisation détaillée
+            console.log("Structure complète de la réponse:", JSON.stringify(createdOrder, null, 2));
             
+            // Vérifier toutes les possibilités pour l'emplacement de l'ID
+            let orderId = null;
+            if (createdOrder._id) {
+                console.log("ID trouvé sous _id:", createdOrder._id);
+                orderId = createdOrder._id;
+            } else if (createdOrder.id) {
+                console.log("ID trouvé sous id:", createdOrder.id);
+                orderId = createdOrder.id;
+            } else if (createdOrder.order && createdOrder.order._id) {
+                console.log("ID trouvé sous order._id:", createdOrder.order._id);
+                orderId = createdOrder.order._id;
+            } else {
+                console.error("Aucun ID trouvé dans la réponse:", createdOrder);
+            }
+            
+            if (orderId) {
+                localStorage.setItem("orderId", orderId);
+                console.log("ID de commande stocké dans localStorage:", localStorage.getItem("orderId"));
+            } else {
+                console.error("Impossible de stocker l'ID de commande: ID non trouvé");
+            }
+    
             // Clear cart data
             localStorage.removeItem(`cartItems_${userData.user.pseudo}`);
             localStorage.removeItem("totalPrice");
@@ -228,21 +258,21 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             
             // Update React state
             setCartItems([]);
-            
-            return createdOrder; // Return created order with its ID
-            } catch (error) {
-                console.error("❌ Erreur lors de l'enregistrement de la commande :", error);
-                Swal.fire({
-                    title: "Erreur",
-                    text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
-                    icon: "error",
-                    confirmButtonText: "OK",
-                });
-                return null;
-            }
-            };
     
-    // Cart update event listener
+            return createdOrder; // Return created order with its ID
+        } catch (error) {
+            console.error("❌ Erreur lors de l'enregistrement de la commande :", error);
+            Swal.fire({
+                title: "Erreur",
+                text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
+                icon: "error",
+                confirmButtonText: "OK",
+            });
+            return null;
+        }
+    };
+    
+    // Reste du composant inchangé...
     useEffect(() => {
         if (!user) return; // Prevent execution if user isn't defined yet
     
