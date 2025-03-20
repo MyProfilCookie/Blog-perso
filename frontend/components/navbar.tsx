@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 import {
@@ -419,20 +420,107 @@ export const Navbar = () => {
   /**
    * Fetch order count from API - VERSION CORRIGÉE
    */
-  const fetchOrderCount = async () => {
-    if (!user || !user.id || isLoadingOrders) return;
+  /**
+   * Fonction robuste pour récupérer les données utilisateur et l'ID
+   * Basée sur la version qui fonctionne dans votre page Orders
+   */
+  const getUserData = () => {
+    if (typeof window === "undefined") return null;
 
+    try {
+      // Essayer toutes les sources possibles de token
+      const userStr = localStorage.getItem("user");
+      const directToken = localStorage.getItem("token");
+      const userToken = localStorage.getItem("userToken");
+
+      let userData = null;
+      let token = directToken || userToken;
+
+      // Analyser les données utilisateur si disponibles
+      if (userStr) {
+        try {
+          userData = JSON.parse(userStr);
+          // Si les données utilisateur ont un token, l'utiliser (priorité)
+          if (userData.token) {
+            token = userData.token;
+          }
+        } catch (e) {
+          console.error("Erreur lors de l'analyse des données utilisateur:", e);
+        }
+      }
+
+      // Si pas de données utilisateur mais nous avons un token, créer un objet utilisateur minimal
+      if (!userData && token) {
+        userData = { token };
+      }
+
+      // Si nous avons des données utilisateur mais pas de token, ajouter le token
+      if (userData && !userData.token && token) {
+        userData.token = token;
+      }
+
+      // Extraire l'ID utilisateur de diverses sources
+      let userId = userData?.id || userData?._id || userData?.userId;
+
+      // Essayer d'obtenir l'ID utilisateur du JWT si non trouvé dans les données utilisateur
+      if (!userId && token && token.split(".").length === 3) {
+        try {
+          const payload = JSON.parse(atob(token.split(".")[1]));
+
+          userId = payload.id || payload.userId || payload.sub || payload._id;
+
+          if (userId && userData) {
+            userData.id = userId;
+          }
+        } catch (e) {
+          console.error("Erreur lors de l'extraction de l'ID du JWT:", e);
+        }
+      }
+
+      // S'assurer que l'ID est correctement attaché aux données utilisateur
+      if (userId && userData) {
+        userData.id = userId;
+      }
+
+      console.log(
+        "Données utilisateur récupérées:",
+        userData?.id ? "ID trouvé: " + userData.id : "ID non trouvé",
+      );
+
+      return userData;
+    } catch (e) {
+      console.error(
+        "Erreur lors de la récupération des données utilisateur:",
+        e,
+      );
+
+      return null;
+    }
+  };
+
+  /**
+   * Fetch order count from API - VERSION CORRIGÉE
+   */
+  const fetchOrderCount = async () => {
     setIsLoadingOrders(true);
     setOrderLoadError(null);
 
     console.log("Début de la récupération des compteurs de commandes");
 
     try {
+      // Utiliser la fonction robuste pour récupérer les données utilisateur
+      const userData = getUserData();
+
+      if (!userData) {
+        console.error("Pas d'utilisateur connecté");
+        setOrderLoadError("Utilisateur non connecté");
+        setIsLoadingOrders(false);
+
+        return;
+      }
+
       // Récupérer le token d'authentification
-      const token =
-        user.token ||
-        localStorage.getItem("token") ||
-        localStorage.getItem("userToken");
+      const token = userData.token;
 
       if (!token) {
         console.error("Pas de token disponible pour l'authentification");
@@ -442,11 +530,24 @@ export const Navbar = () => {
         return;
       }
 
-      // Construction de l'URL CORRECTE avec 'orders/users/'
+      // Récupérer l'ID utilisateur
+      const userId = userData.id;
+
+      if (!userId) {
+        console.error("ID utilisateur manquant dans les données utilisateur");
+        setOrderLoadError("ID utilisateur manquant");
+        setIsLoadingOrders(false);
+
+        return;
+      }
+
+      console.log("Récupération des compteurs pour l'utilisateur:", userId);
+
+      // Construction de l'URL CORRECTE avec 'orders/users/' et l'ID utilisateur confirmé
       const apiUrl = (
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
       ).replace(/\/$/, "");
-      const url = `${apiUrl}/orders/users/${user.id}/order-counts`;
+      const url = `${apiUrl}/orders/users/${userId}/order-counts`;
 
       console.log("URL de récupération des compteurs:", url);
 
@@ -499,28 +600,20 @@ export const Navbar = () => {
 
         console.log("Nouveaux compteurs:", newCounts);
 
-        // Mise à jour de l'état avec forceUpdate pour garantir le rendu
-        setOrderCount((prev) => {
-          if (
-            prev.pending === newCounts.pending &&
-            prev.shipped === newCounts.shipped &&
-            prev.total === newCounts.total
-          ) {
-            // Si identique, créer quand même un nouvel objet pour forcer la mise à jour
-            return { ...newCounts };
-          }
-
-          return newCounts;
-        });
+        // Mise à jour de l'état
+        setOrderCount(newCounts);
       } else {
         console.warn("Format de réponse inattendu:", data);
         setOrderLoadError("Format de réponse inattendu");
       }
-    } catch (error: unknown) {
+    } catch (error) {
       console.error("Exception lors de la récupération des compteurs:", error);
-      setOrderLoadError(error instanceof Error ? error.message : "Erreur lors de la récupération");
+      setOrderLoadError(
+        error instanceof Error
+          ? error.message
+          : "Erreur lors de la récupération",
+      );
     } finally {
-      console.log("Fin de la récupération des compteurs");
       setIsLoadingOrders(false);
     }
   };
@@ -529,19 +622,38 @@ export const Navbar = () => {
    * Mark order updates as read - VERSION CORRIGÉE
    */
   const markOrderUpdatesAsRead = async () => {
-    if (!user || !user.id) return;
-
     try {
-      const token =
-        user.token ||
-        localStorage.getItem("token") ||
-        localStorage.getItem("userToken");
+      // Utiliser la fonction robuste pour récupérer les données utilisateur
+      const userData = getUserData();
+
+      if (!userData) {
+        console.error("Pas d'utilisateur connecté");
+
+        return;
+      }
+
+      // Récupérer le token d'authentification
+      const token = userData.token;
+
+      if (!token) {
+        console.error("Pas de token disponible pour l'authentification");
+
+        return;
+      }
+
+      // Récupérer l'ID utilisateur
+      const userId = userData.id;
+
+      if (!userId) {
+        console.error("ID utilisateur manquant dans les données utilisateur");
+
+        return;
+      }
+
       const apiUrl = (
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
       ).replace(/\/$/, "");
-
-      // Utiliser la route correcte avec 'orders/users/'
-      const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
+      const url = `${apiUrl}/orders/users/${userId}/orders/updates/read`;
 
       console.log("URL pour marquer les mises à jour comme lues:", url);
 
@@ -573,29 +685,26 @@ export const Navbar = () => {
     }
   };
 
-  // Récupérer le compteur de commandes quand l'utilisateur est chargé ou change
+  // Récupérer le compteur de commandes au chargement
   useEffect(() => {
-    if (user && user.id) {
-      console.log(
-        "Configuration du suivi des commandes pour l'utilisateur:",
-        user.id,
-      );
+    console.log("Configuration du suivi des commandes");
 
-      // Vérifier si un token valide est disponible
-      const token =
-        user.token ||
-        localStorage.getItem("token") ||
-        localStorage.getItem("userToken");
+    // Utiliser la fonction robuste pour configurer le suivi des commandes
+    const setupOrderTracking = () => {
+      const userData = getUserData();
 
-      if (!token) {
+      if (!userData || !userData.id || !userData.token) {
         console.warn(
-          "Aucun token d'authentification disponible - récupération des commandes ignorée",
+          "Données utilisateur insuffisantes pour le suivi des commandes",
         );
 
         return;
       }
 
-      console.log("Token disponible, longueur:", token.length);
+      console.log(
+        "Suivi des commandes configuré pour l'utilisateur:",
+        userData.id,
+      );
 
       // Récupération initiale
       fetchOrderCount();
@@ -616,7 +725,7 @@ export const Navbar = () => {
 
       document.addEventListener("visibilitychange", handleVisibilityChange);
 
-      // Nettoyer l'intervalle lorsque le composant est démonté ou l'utilisateur change
+      // Nettoyer l'intervalle lorsque le composant est démonté
       return () => {
         clearInterval(intervalId);
         document.removeEventListener(
@@ -624,8 +733,10 @@ export const Navbar = () => {
           handleVisibilityChange,
         );
       };
-    }
-  }, [user]);
+    };
+
+    setupOrderTracking();
+  }, []); // Exécuter une fois au montage
 
   return (
     <NextUINavbar
@@ -935,7 +1046,12 @@ export const Navbar = () => {
                                 alert(JSON.stringify(data, null, 2));
                               } catch (e: unknown) {
                                 console.error("Test échoué:", e);
-                                alert("Erreur: " + (e instanceof Error ? e.message : String(e)));
+                                alert(
+                                  "Erreur: " +
+                                    (e instanceof Error
+                                      ? e.message
+                                      : String(e)),
+                                );
                               }
                             }}
                           >
@@ -1232,7 +1348,10 @@ export const Navbar = () => {
                         alert(JSON.stringify(data, null, 2));
                       } catch (e: unknown) {
                         console.error("Test échoué:", e);
-                        alert("Erreur: " + (e instanceof Error ? e.message : String(e)));
+                        alert(
+                          "Erreur: " +
+                            (e instanceof Error ? e.message : String(e)),
+                        );
                       }
                     }}
                   >
@@ -1342,24 +1461,49 @@ export const Navbar = () => {
             className="ml-2 p-2 bg-blue-500 text-white text-xs rounded"
             onClick={async () => {
               try {
+                const userData = getUserData();
+
+                if (!userData || !userData.id || !userData.token) {
+                  alert("Données utilisateur insuffisantes pour le test");
+
+                  return;
+                }
+
                 const apiUrl = (
                   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
                 ).replace(/\/$/, "");
-                const response = await fetch(
-                  `${apiUrl}/orders/users/${user.id}/order-counts`,
-                  {
-                    headers: {
-                      Authorization: `Bearer ${user.token || localStorage.getItem("token")}`,
-                    },
+                // Utiliser la route correcte avec l'ID utilisateur confirmé
+                const url = `${apiUrl}/orders/users/${userData.id}/order-counts`;
+
+                console.log("Test API URL:", url);
+
+                const response = await fetch(url, {
+                  headers: {
+                    Authorization: `Bearer ${userData.token}`,
+                    "Cache-Control": "no-cache",
                   },
-                );
-                const data = await response.json();
+                });
+                const responseText = await response.text();
+
+                console.log("Réponse brute:", responseText);
+
+                let data;
+
+                try {
+                  data = JSON.parse(responseText);
+                } catch (e) {
+                  alert("Erreur de parsing: " + responseText);
+
+                  return;
+                }
 
                 console.log("Test direct API:", data);
                 alert(JSON.stringify(data, null, 2));
               } catch (e: unknown) {
                 console.error("Test échoué:", e);
-                alert("Erreur: " + (e instanceof Error ? e.message : String(e)));
+                alert(
+                  "Erreur: " + (e instanceof Error ? e.message : String(e)),
+                );
               }
             }}
           >
