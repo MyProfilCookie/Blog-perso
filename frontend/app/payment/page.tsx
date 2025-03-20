@@ -207,15 +207,18 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 },
                 body: JSON.stringify(orderData),
             });
-    
+            
             if (!orderResponse.ok) {
                 throw new Error("Erreur lors de la création de la commande.");
             }
-    
+            
             // Parse response to get the order with its ID
             const createdOrder = await orderResponse.json();
             console.log("✅ Commande créée avec succès:", createdOrder);
-    
+            
+            // Stocker l'ID de commande dans localStorage
+            localStorage.setItem("orderId", createdOrder._id);
+            
             // Clear cart data
             localStorage.removeItem(`cartItems_${userData.user.pseudo}`);
             localStorage.removeItem("totalPrice");
@@ -225,19 +228,19 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             
             // Update React state
             setCartItems([]);
-    
+            
             return createdOrder; // Return created order with its ID
-        } catch (error) {
-            console.error("❌ Erreur lors de l'enregistrement de la commande :", error);
-            Swal.fire({
-                title: "Erreur",
-                text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-            return null;
-        }
-    };
+            } catch (error) {
+                console.error("❌ Erreur lors de l'enregistrement de la commande :", error);
+                Swal.fire({
+                    title: "Erreur",
+                    text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
+                return null;
+            }
+            };
     
     // Cart update event listener
     useEffect(() => {
