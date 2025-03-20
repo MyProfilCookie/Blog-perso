@@ -389,14 +389,18 @@ export const Navbar = () => {
     if (!user || !user.id || isLoadingOrders) return;
   
     setIsLoadingOrders(true);
-    console.log("Début de la récupération des commandes...");
+    console.log("Début de la récupération des compteurs de commandes...");
   
     try {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
       
-      // Utiliser le point de terminaison order-counts
-      const url = `${apiUrl}/users/${user.id}/order-counts`;
+      // Ajustez ce chemin pour qu'il corresponde à vos routes backend
+      // Si vos routes sont montées avec /api/orders
+      const url = `${apiUrl}/orders/users/${user.id}/order-counts`;
+      // Si vos routes sont montées avec /api
+      // const url = `${apiUrl}/users/${user.id}/order-counts`;
+      
       console.log("URL de récupération des compteurs de commandes:", url);
   
       const response = await fetch(url, {
@@ -440,7 +444,15 @@ export const Navbar = () => {
       const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
       const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
   
-      await fetch(`${apiUrl}/users/${user.id}/orders/updates/read`, {
+      // Ajustez ce chemin également
+      // Si vos routes sont montées avec /api/orders
+      const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
+      // Si vos routes sont montées avec /api
+      // const url = `${apiUrl}/users/${user.id}/orders/updates/read`;
+  
+      console.log("URL pour marquer les mises à jour comme lues:", url);
+  
+      await fetch(url, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -448,7 +460,7 @@ export const Navbar = () => {
         },
       });
   
-      // Rafraîchir les compteurs de commandes après les avoir marqués comme lus
+      // Rafraîchir les compteurs après avoir marqué comme lus
       fetchOrderCount();
     } catch (error) {
       console.error("Erreur lors du marquage des mises à jour comme lues:", error);

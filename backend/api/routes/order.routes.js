@@ -38,7 +38,10 @@ router.get('/users/:userId/order-counts', orderController.getUserOrderCounts);
 // Route pour récupérer le nombre de mises à jour non lues pour un utilisateur
 router.get('/users/:userId/orders/status-updates', orderController.getUnreadStatusUpdates);
 
-// Route pour marquer les mises à jour comme lues pour un utilisateur
+// Route pour obtenir les compteurs de commandes (en attente, expédiées, total)
+router.get('/users/:userId/order-counts', orderController.getUserOrderCounts);
+
+// Route pour marquer les mises à jour comme lues
 router.post('/users/:userId/orders/updates/read', orderController.markOrderUpdatesAsRead);
 
 module.exports = router;

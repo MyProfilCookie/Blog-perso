@@ -420,13 +420,18 @@ exports.getUserOrderCounts = async (req, res) => {
   try {
     const { userId } = req.params;
     
+    console.log("==== getUserOrderCounts ====");
+    console.log("UserId reçu:", userId);
+    
     // Vérification de la validité de l'ID utilisateur
     if (!userId) {
+      console.log("ID utilisateur manquant");
       return res.status(400).json({ message: "ID utilisateur requis" });
     }
 
     // Récupérer toutes les commandes de l'utilisateur
     const orders = await Order.find({ userId });
+    console.log(`Nombre de commandes trouvées: ${orders.length}`);
     
     // Compteurs pour chaque type de commande
     let pendingCount = 0;
@@ -435,17 +440,22 @@ exports.getUserOrderCounts = async (req, res) => {
     orders.forEach(order => {
       const statusRaw = order.status || '';
       const status = typeof statusRaw === 'string' ? statusRaw.toLowerCase() : '';
+      console.log(`Traitement de la commande ${order._id}, statut: ${status}`);
       
-      // Utiliser des conditions plus larges pour la classification
+      // Classification des commandes par statut
       if (status.includes('pend') || status.includes('process') || 
           status.includes('validee') || status.includes('preparation') || 
           status === '') {
         pendingCount++;
+        console.log(`→ Classée comme 'en attente'`);
       } else if (status.includes('ship') || status.includes('deliv') || 
                  status.includes('expedition') || status.includes('livree')) {
         shippedCount++;
+        console.log(`→ Classée comme 'expédiée'`);
       }
     });
+    
+    console.log(`Résultats finaux: ${pendingCount} en attente, ${shippedCount} expédiées, ${orders.length} total`);
     
     // Réponse avec les compteurs
     res.status(200).json({
@@ -511,13 +521,18 @@ exports.markOrderUpdatesAsRead = async (req, res) => {
   try {
     const { userId } = req.params;
     
+    console.log("==== markOrderUpdatesAsRead ====");
+    console.log("UserId reçu:", userId);
+    
     // Vérification de la validité de l'ID utilisateur
     if (!userId) {
+      console.log("ID utilisateur manquant");
       return res.status(400).json({ message: "ID utilisateur requis" });
     }
 
     // Trouver toutes les commandes de l'utilisateur
     const orders = await Order.find({ userId });
+    console.log(`Nombre de commandes trouvées: ${orders.length}`);
     
     let totalUpdatedCount = 0;
     
@@ -538,9 +553,12 @@ exports.markOrderUpdatesAsRead = async (req, res) => {
         
         if (updated) {
           await order.save();
+          console.log(`Mise à jour de la commande ${order._id} avec ${totalUpdatedCount} entrées marquées comme lues`);
         }
       }
     }
+    
+    console.log(`Total des mises à jour marquées comme lues: ${totalUpdatedCount}`);
     
     res.status(200).json({
       success: true,
