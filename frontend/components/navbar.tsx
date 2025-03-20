@@ -961,11 +961,14 @@ export const Navbar = () => {
                             />
                             <span className="flex-1">Mes commandes</span>
                             <div className="flex items-center space-x-1">
-                              <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
+                              <span className="text-xs bg-green-800 text-white px-1.5 py-0.5 rounded-full">
                                 {orderCount.pending || 0}
                               </span>
-                              <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                              <span className="text-xs bg-blue-400 text-white px-1.5 py-0.5 rounded-full">
                                 {orderCount.shipped || 0}
+                              </span>
+                              <span className="text-xs bg-red-400 text-white px-1.5 py-0.5 rounded-full">
+                                {orderCount.delivered || 0}
                               </span>
                             </div>
                           </button>
