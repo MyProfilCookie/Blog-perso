@@ -385,34 +385,49 @@ export const Navbar = () => {
   /**
    * Fetch order count from API
    */
-  const fetchOrderCount = async () => {
-    if (!user || !user.id || isLoadingOrders) return;
-  
-    setIsLoadingOrders(true);
-    try {
-      const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
+  /**
+ * Récupérer le compteur de commandes depuis l'API
+ */
+const fetchOrderCount = async () => {
+  if (!user || !user.id || isLoadingOrders) return;
+
+  setIsLoadingOrders(true);
+  try {
+    const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
+    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
+    
+    console.log(`Récupération des compteurs de commandes depuis: ${apiUrl}/orders/users/${user.id}/order-counts`);
+    
+    const response = await fetch(`${apiUrl}/orders/users/${user.id}/order-counts`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    
+    if (response.ok) {
+      const data = await response.json();
+      console.log("Réponse API des compteurs de commandes:", data);
       
-      const response = await fetch(`${apiUrl}/orders/users/${user.id}/order-counts`, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        const orders = Array.isArray(data) ? data : (data.orders || data.data || []);
-        
-        const counts: OrderCountType = {
-          pending: orders.filter((order: Order) => 
+      // Utiliser directement l'objet counts de la structure de réponse
+      if (data.success && data.counts) {
+        setOrderCount({
+          pending: data.counts.pending || 0,
+          shipped: data.counts.shipped || 0,
+          total: data.counts.total || 0
+        });
+      } else if (Array.isArray(data)) {
+        // Revenir à l'ancienne logique si l'API renvoie un tableau
+        const orders = data;
+        const counts = {
+          pending: orders.filter((order) => 
             order.status?.toLowerCase().includes('pend') || 
             order.status?.toLowerCase().includes('process') || 
             order.status?.toLowerCase().includes('attente') || 
             order.status?.toLowerCase().includes('cours')
           ).length,
-          shipped: orders.filter((order: Order) => 
+          shipped: orders.filter((order) => 
             order.status?.toLowerCase().includes('ship') || 
             order.status?.toLowerCase().includes('deliv') || 
             order.status?.toLowerCase().includes('exp') || 
@@ -423,51 +438,97 @@ export const Navbar = () => {
         
         setOrderCount(counts);
       }
-    } catch (error) {
-      console.error("Erreur lors de la récupération des commandes:", error);
-    } finally {
-      setIsLoadingOrders(false);
+    } else {
+      console.error("Erreur lors de la récupération des compteurs de commandes:", response.status, response.statusText);
+      // Tentative d'analyse de la réponse d'erreur
+      try {
+        const errorData = await response.json();
+        console.error("Détails de l'erreur API:", errorData);
+      } catch (e) {
+        // Échec silencieux si nous ne pouvons pas analyser la réponse d'erreur
+      }
     }
-  };
+  } catch (error) {
+    console.error("Exception lors de la récupération des compteurs de commandes:", error);
+  } finally {
+    setIsLoadingOrders(false);
+  }
+};
+useEffect(() => {
+  console.log("Configuration de l'URL API:");
+  console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
+  console.log("URL de base API qui sera utilisée:", (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, ""));
+  console.log("Utilisateur actuel:", user);
+}, [user]);
 
-  /**
-   * Mark order updates as read
-   */
-  const markOrderUpdatesAsRead = async () => {
-    if (!user || !user.id) return;
+/**
+ * Marquer les mises à jour des commandes comme lues
+ */
+const markOrderUpdatesAsRead = async () => {
+  if (!user || !user.id) return;
   
-    try {
-      const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
-  
-      const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
-      console.log("URL pour marquer les mises à jour comme lues:", url);
-  
-      await fetch(url, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
-  
+  try {
+    const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
+    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
+    
+    const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
+    console.log("URL pour marquer les mises à jour comme lues:", url);
+    
+    const response = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    
+    if (response.ok) {
+      console.log("Mises à jour des commandes marquées comme lues avec succès");
       // Rafraîchir les compteurs après avoir marqué comme lus
       fetchOrderCount();
-    } catch (error) {
-      console.error("Erreur lors du marquage des mises à jour comme lues:", error);
+    } else {
+      console.error("Échec du marquage des mises à jour comme lues:", response.status, response.statusText);
+      // Tenter d'obtenir plus d'informations sur l'erreur
+      try {
+        const errorData = await response.json();
+        console.error("Détails de l'erreur:", errorData);
+      } catch (e) {
+        // Si nous ne pouvons pas analyser la réponse, on continue silencieusement
+      }
     }
-  };
+  } catch (error) {
+    console.error("Erreur lors du marquage des mises à jour comme lues:", error);
+  }
+};
 
-  // Fetch order count when user is loaded or changes
-  useEffect(() => {
-    if (user && user.id) {
+// Récupérer le compteur de commandes lorsque l'utilisateur est chargé ou change
+useEffect(() => {
+  if (user && user.id) {
+    // Vérifier si un token valide est disponible
+    const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
+    if (!token) {
+      console.warn("Aucun token d'authentification disponible - récupération des commandes ignorée");
+      return;
+    }
+    
+    console.log("Initialisation du suivi des commandes pour l'utilisateur:", user.id);
+    
+    // Récupération initiale
+    fetchOrderCount();
+    
+    // Configurer l'intervalle pour rafraîchir le compteur de commandes
+    const intervalId = setInterval(() => {
+      console.log("Rafraîchissement automatique des compteurs de commandes");
       fetchOrderCount();
-
-      // Set up interval to refresh order count
-      const intervalId = setInterval(fetchOrderCount, 60000); // Check every minute
-      return () => clearInterval(intervalId);
+    }, 60000); // Vérifier toutes les minutes
+    
+    // Nettoyer l'intervalle lorsque le composant est démonté ou l'utilisateur change
+    return () => {
+      console.log("Nettoyage de l'intervalle de rafraîchissement des commandes");
+      clearInterval(intervalId);
     }
-  }, [user]);
+  }
+}, [user]);
 
   return (
     <NextUINavbar
