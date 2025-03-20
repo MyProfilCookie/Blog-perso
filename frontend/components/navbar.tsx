@@ -389,224 +389,185 @@ export const Navbar = () => {
   /**
    * Fetch order count from API
    */
-  /**
- * Récupérer le compteur de commandes depuis l'API
- */
-
-// Fonction complètement réécrite pour la récupération des compteurs
-const fetchOrderCount = async () => {
-  if (!user || !user.id) {
-    console.log("Pas d'utilisateur ou d'ID utilisateur, impossible de récupérer les commandes");
-    return;
-  }
-  
-  if (isLoadingOrders) {
-    console.log("Récupération des commandes déjà en cours");
-    return;
-  }
-  
-  setIsLoadingOrders(true);
-  console.log("Début de la récupération des compteurs de commandes");
-  
-  try {
-    // 1. Récupérer le token de toutes les sources possibles
-    const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-    if (!token) {
-      console.error("Pas de token disponible pour l'authentification");
+  const fetchOrderCount = async () => {
+    if (!user || !user.id) {
+      console.log("Pas d'utilisateur ou d'ID utilisateur, impossible de récupérer les commandes");
       return;
     }
     
-    // 2. Construire l'URL proprement
-    let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-    apiUrl = apiUrl.replace(/\/$/, ""); // Supprimer le slash final s'il existe
-    const endpoint = `/orders/users/${user.id}/order-counts`;
-    const fullUrl = `${apiUrl}${endpoint}`;
-    
-    console.log("Récupération des compteurs depuis:", fullUrl);
-    
-    // 3. Faire la requête avec un timeout
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 secondes timeout
-    
-    const response = await fetch(fullUrl, {
-      method: "GET",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-        "Cache-Control": "no-cache, no-store"
-      },
-      signal: controller.signal
-    });
-    
-    clearTimeout(timeoutId);
-    
-    // 4. Traiter la réponse
-    if (!response.ok) {
-      throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
+    if (isLoadingOrders) {
+      console.log("Récupération des commandes déjà en cours");
+      return;
     }
     
-    const responseText = await response.text();
-    console.log("Réponse brute:", responseText);
+    setIsLoadingOrders(true);
+    console.log("Début de la récupération des compteurs de commandes");
     
-    // 5. Analyser la réponse JSON
-    let data;
     try {
-      data = JSON.parse(responseText);
-    } catch (e) {
-      console.error("Erreur lors de l'analyse JSON:", e);
-      console.error("Texte brut reçu:", responseText);
-      throw new Error("Format de réponse invalide");
-    }
-    
-    console.log("Données reçues:", data);
-    
-    // 6. Mettre à jour l'état avec les nouvelles données
-    if (data.success && data.counts) {
-      console.log("Mise à jour des compteurs avec:", data.counts);
-      // Forcer React à reconnaître le changement d'état avec un nouvel objet
-      setOrderCount({
-        pending: data.counts.pending || 0,
-        shipped: data.counts.shipped || 0,
-        total: data.counts.total || 0,
-        processing: data.counts.processing || 0,
-        delivered: data.counts.delivered || 0
-      });
-    } else if (Array.isArray(data)) {
-      console.log("Format ancien (tableau), calcul manuel des compteurs");
-      const orders = data;
-      const counts = {
-        pending: orders.filter(order => 
-          order.status?.toLowerCase().includes('pend') || 
-          order.status?.toLowerCase().includes('attente')
-        ).length,
-        shipped: orders.filter(order => 
-          order.status?.toLowerCase().includes('ship') || 
-          order.status?.toLowerCase().includes('livr')
-        ).length,
-        total: orders.length
-      };
-      console.log("Compteurs calculés:", counts);
-      // Ajouter les propriétés manquantes pour correspondre à OrderCountType
-      setOrderCount({
-        ...counts,
-        processing: 0,
-        delivered: 0,
-      });
-    } else {
-      console.warn("Format de réponse inattendu:", data);
-    }
-  } catch (error) {
-    console.error("Exception lors de la récupération des compteurs:", error);
-  } finally {
-    console.log("Fin de la récupération des compteurs");
-    setIsLoadingOrders(false);
-  }
-};
-
-// Dans le useEffect, forcez une re-récupération
-useEffect(() => {
-  if (user && user.id) {
-    console.log("Configuration de la récupération des compteurs pour l'utilisateur:", user.id);
-    
-    // Récupération immédiate
-    fetchOrderCount();
-    
-    // Récupération périodique
-    const intervalId = setInterval(() => {
-      console.log("Actualisation périodique des compteurs de commandes");
-      fetchOrderCount();
-    }, 30000); // Toutes les 30 secondes
-    
-    // Forcer une réactualisation lors du focus sur l'onglet
-    const handleVisibilityChange = () => {
-      if (!document.hidden) {
-        console.log("Onglet visible, actualisation des compteurs");
-        fetchOrderCount();
+      const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
+      if (!token) {
+        console.error("Pas de token disponible pour l'authentification");
+        return;
       }
-    };
-    document.addEventListener("visibilitychange", handleVisibilityChange);
-    
-    return () => {
-      clearInterval(intervalId);
-      document.removeEventListener("visibilitychange", handleVisibilityChange);
-    };
-  }
-}, [user]);
-
-useEffect(() => {
-  console.log("Configuration de l'URL API:");
-  console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
-  console.log("URL de base API qui sera utilisée:", (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, ""));
-  console.log("Utilisateur actuel:", user);
-}, [user]);
-/**
- * Marquer les mises à jour des commandes comme lues
- */
-const markOrderUpdatesAsRead = async () => {
-  if (!user || !user.id) return;
-  
-  try {
-    const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
-    
-    const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
-    console.log("URL pour marquer les mises à jour comme lues:", url);
-    
-    const response = await fetch(url, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-    });
-    
-    if (response.ok) {
-      console.log("Mises à jour des commandes marquées comme lues avec succès");
-      // Rafraîchir les compteurs après avoir marqué comme lus
-      fetchOrderCount();
-    } else {
-      console.error("Échec du marquage des mises à jour comme lues:", response.status, response.statusText);
-      // Tenter d'obtenir plus d'informations sur l'erreur
+      
+      let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+      apiUrl = apiUrl.replace(/\/$/, "");
+      const endpoint = `/orders/users/${user.id}/order-counts`;
+      const fullUrl = `${apiUrl}${endpoint}`;
+      
+      console.log("Récupération des compteurs depuis:", fullUrl);
+      
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 10000);
+      
+      const response = await fetch(fullUrl, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+          "Cache-Control": "no-cache, no-store"
+        },
+        signal: controller.signal
+      });
+      
+      clearTimeout(timeoutId);
+      
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
+      }
+      
+      const responseText = await response.text();
+      console.log("Réponse brute:", responseText);
+      
+      let data;
       try {
-        const errorData = await response.json();
-        console.error("Détails de l'erreur:", errorData);
+        data = JSON.parse(responseText);
       } catch (e) {
-        // Si nous ne pouvons pas analyser la réponse, on continue silencieusement
+        console.error("Erreur lors de l'analyse JSON:", e);
+        console.error("Texte brut reçu:", responseText);
+        throw new Error("Format de réponse invalide");
       }
+      
+      console.log("Données reçues:", data);
+      
+      if (data.success && data.counts) {
+        console.log("Mise à jour des compteurs avec:", data.counts);
+        setOrderCount({
+          pending: data.counts.pending || 0,
+          shipped: data.counts.shipped || 0,
+          total: data.counts.total || 0,
+          processing: data.counts.processing || 0,
+          delivered: data.counts.delivered || 0
+        });
+      } else if (Array.isArray(data)) {
+        console.log("Format ancien (tableau), calcul manuel des compteurs");
+        const orders = data;
+        const counts = {
+          pending: orders.filter(order => 
+            order.status?.toLowerCase().includes('pend') || 
+            order.status?.toLowerCase().includes('attente')
+          ).length,
+          shipped: orders.filter(order => 
+            order.status?.toLowerCase().includes('ship') || 
+            order.status?.toLowerCase().includes('livr')
+          ).length,
+          total: orders.length,
+          processing: orders.filter(order => 
+            order.status?.toLowerCase().includes('process')
+          ).length,
+          delivered: orders.filter(order => 
+            order.status?.toLowerCase().includes('deliv')
+          ).length
+        };
+        console.log("Compteurs calculés:", counts);
+        setOrderCount(counts);
+      } else {
+        console.warn("Format de réponse inattendu:", data);
+      }
+    } catch (error) {
+      console.error("Exception lors de la récupération des compteurs:", error);
+    } finally {
+      console.log("Fin de la récupération des compteurs");
+      setIsLoadingOrders(false);
     }
-  } catch (error) {
-    console.error("Erreur lors du marquage des mises à jour comme lues:", error);
-  }
-};
+  };
 
-// Récupérer le compteur de commandes lorsque l'utilisateur est chargé ou change
-useEffect(() => {
-  if (user && user.id) {
-    // Vérifier si un token valide est disponible
-    const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-    if (!token) {
-      console.warn("Aucun token d'authentification disponible - récupération des commandes ignorée");
-      return;
-    }
-    
-    console.log("Initialisation du suivi des commandes pour l'utilisateur:", user.id);
-    
-    // Récupération initiale
-    fetchOrderCount();
-    
-    // Configurer l'intervalle pour rafraîchir le compteur de commandes
-    const intervalId = setInterval(() => {
-      console.log("Rafraîchissement automatique des compteurs de commandes");
+  // Garder un seul useEffect pour fetchOrderCount
+  useEffect(() => {
+    if (user && user.id) {
+      console.log("Configuration de la récupération des compteurs pour l'utilisateur:", user.id);
+      
+      // Récupération immédiate
       fetchOrderCount();
-    }, 60000); // Vérifier toutes les minutes
-    
-    // Nettoyer l'intervalle lorsque le composant est démonté ou l'utilisateur change
-    return () => {
-      console.log("Nettoyage de l'intervalle de rafraîchissement des commandes");
-      clearInterval(intervalId);
+      
+      // Récupération périodique
+      const intervalId = setInterval(() => {
+        console.log("Actualisation périodique des compteurs de commandes");
+        fetchOrderCount();
+      }, 30000);
+      
+      // Forcer une réactualisation lors du focus sur l'onglet
+      const handleVisibilityChange = () => {
+        if (!document.hidden) {
+          console.log("Onglet visible, actualisation des compteurs");
+          fetchOrderCount();
+        }
+      };
+      document.addEventListener("visibilitychange", handleVisibilityChange);
+      
+      return () => {
+        clearInterval(intervalId);
+        document.removeEventListener("visibilitychange", handleVisibilityChange);
+      };
     }
-  }
-}, [user]);
+  }, [user]);
+
+  useEffect(() => {
+    console.log("Configuration de l'URL API:");
+    console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
+    console.log("URL de base API qui sera utilisée:", (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, ""));
+    console.log("Utilisateur actuel:", user);
+  }, [user]);
+
+  /**
+   * Marquer les mises à jour des commandes comme lues
+   */
+  const markOrderUpdatesAsRead = async () => {
+    if (!user || !user.id) return;
+    
+    try {
+      const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
+      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
+      
+      const url = `${apiUrl}/orders/users/${user.id}/orders/updates/read`;
+      console.log("URL pour marquer les mises à jour comme lues:", url);
+      
+      const response = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      
+      if (response.ok) {
+        console.log("Mises à jour des commandes marquées comme lues avec succès");
+        // Rafraîchir les compteurs après avoir marqué comme lus
+        fetchOrderCount();
+      } else {
+        console.error("Échec du marquage des mises à jour comme lues:", response.status, response.statusText);
+        // Tenter d'obtenir plus d'informations sur l'erreur
+        try {
+          const errorData = await response.json();
+          console.error("Détails de l'erreur:", errorData);
+        } catch (e) {
+          // Si nous ne pouvons pas analyser la réponse, on continue silencieusement
+        }
+      }
+    } catch (error) {
+      console.error("Erreur lors du marquage des mises à jour comme lues:", error);
+    }
+  };
 
   return (
     <NextUINavbar
@@ -1112,9 +1073,21 @@ useEffect(() => {
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div>Mes commandes envoyées</div>
+                        <div>Mes commandes en traitement</div>
                         <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                          {orderCount.processing || 0}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>Mes commandes envoyées</div>
+                        <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded-full">
                           {orderCount.shipped || 0}
+                        </span>
+                      </div>
+                      <div className="flex items-center justify-between">
+                        <div>Mes commandes livrées</div>
+                        <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
+                          {orderCount.delivered || 0}
                         </span>
                       </div>
                     </div>
