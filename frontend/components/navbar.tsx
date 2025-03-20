@@ -405,7 +405,7 @@ export const Navbar = () => {
         const data = await response.json();
         const orders = Array.isArray(data) ? data : (data.orders || data.data || []);
         
-        const counts = {
+        const counts: OrderCountType = {
           pending: orders.filter((order: Order) => 
             order.status?.toLowerCase().includes('pend') || 
             order.status?.toLowerCase().includes('process') || 
