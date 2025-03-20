@@ -61,6 +61,7 @@ type User = {
 
 // Type pour les compteurs de commandes
 type OrderCountType = {
+  [x: string]: number;
   pending: number;
   shipped: number;
   total: number;
@@ -765,9 +766,9 @@ useEffect(() => {
                         </li>
                         <li>
                           <button
-                            type="button"
-                            role="menuitem"
                             className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors cursor-pointer"
+                            role="menuitem"
+                            type="button"
                             onClick={() => {
                               setIsMenuOpen(false);
                               markOrderUpdatesAsRead();
@@ -787,11 +788,21 @@ useEffect(() => {
                             />
                             <span className="flex-1">Mes commandes</span>
                             <div className="flex items-center space-x-1">
-                              <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
-                                {orderCount.pending || 0}
+                             {/* Commandes pending */}
+                             <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
+                              {orderCount.pending || 0}
+                             </span>
+                             {/* Commandes Processing */}
+                             <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                              {orderCount.processing || 0}
                               </span>
-                              <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
-                                {orderCount.shipped || 0}
+                              {/* Commandes Shipped */}
+                              <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded-full">
+                              {orderCount.shipped || 0}
+                              </span>
+                              {/* Commandes Delivered */}
+                              <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded-full">
+                              {orderCount.delivered || 0}
                               </span>
                             </div>
                           </button>
