@@ -389,108 +389,94 @@ export const Navbar = () => {
   /**
    * Fetch order count from API
    */
-  const fetchOrderCount = async () => {
-    if (!user || !user.id) {
-      console.log("Pas d'utilisateur ou d'ID utilisateur, impossible de récupérer les commandes");
-      return;
-    }
-    
-    if (isLoadingOrders) {
-      console.log("Récupération des commandes déjà en cours");
-      return;
-    }
-    
-    setIsLoadingOrders(true);
-    console.log("Début de la récupération des compteurs de commandes");
-    
-    try {
-      const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-      if (!token) {
-        console.error("Pas de token disponible pour l'authentification");
-        return;
-      }
-      
-      let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
-      apiUrl = apiUrl.replace(/\/$/, "");
-      const endpoint = `/orders/users/${user.id}/order-counts`;
-      const fullUrl = `${apiUrl}${endpoint}`;
-      
-      console.log("Récupération des compteurs depuis:", fullUrl);
-      
-      const controller = new AbortController();
-      const timeoutId = setTimeout(() => controller.abort(), 10000);
-      
-      const response = await fetch(fullUrl, {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-          "Cache-Control": "no-cache, no-store"
-        },
-        signal: controller.signal
-      });
-      
-      clearTimeout(timeoutId);
-      
-      if (!response.ok) {
-        throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
-      }
-      
-      const responseText = await response.text();
-      console.log("Réponse brute:", responseText);
-      
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (e) {
-        console.error("Erreur lors de l'analyse JSON:", e);
-        console.error("Texte brut reçu:", responseText);
-        throw new Error("Format de réponse invalide");
-      }
-      
-      console.log("Données reçues:", data);
-      
-      if (data.success && data.counts) {
-        console.log("Mise à jour des compteurs avec:", data.counts);
-        setOrderCount({
-          pending: data.counts.pending || 0,
-          shipped: data.counts.shipped || 0,
-          total: data.counts.total || 0,
-          processing: data.counts.processing || 0,
-          delivered: data.counts.delivered || 0
-        });
-      } else if (Array.isArray(data)) {
-        console.log("Format ancien (tableau), calcul manuel des compteurs");
-        const orders = data;
-        const counts = {
-          pending: orders.filter(order => 
-            order.status?.toLowerCase().includes('pend') || 
-            order.status?.toLowerCase().includes('attente')
-          ).length,
-          shipped: orders.filter(order => 
-            order.status?.toLowerCase().includes('ship') || 
-            order.status?.toLowerCase().includes('livr')
-          ).length,
-          total: orders.length,
-          processing: orders.filter(order => 
-            order.status?.toLowerCase().includes('process')
-          ).length,
-          delivered: orders.filter(order => 
-            order.status?.toLowerCase().includes('deliv')
-          ).length
-        };
-        console.log("Compteurs calculés:", counts);
-        setOrderCount(counts);
-      } else {
-        console.warn("Format de réponse inattendu:", data);
-      }
-    } catch (error) {
-      console.error("Exception lors de la récupération des compteurs:", error);
-    } finally {
-      console.log("Fin de la récupération des compteurs");
+  /**
+ * Récupérer le compteur de commandes depuis l'API
+ */
+const fetchOrderCount = async () => {
+  if (!user || !user.id || isLoadingOrders) return;
+
+  setIsLoadingOrders(true);
+  try {
+    // 1. Récupérer le token
+    const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
+    if (!token) {
+      console.error("Pas de token disponible");
       setIsLoadingOrders(false);
+      return;
     }
-  };
+    
+    // 2. Construire l'URL correctement
+    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
+    const endpoint = `/orders/users/${user.id}/order-counts`;
+    const fullUrl = `${apiUrl}${endpoint}`;
+    
+    console.log("URL de récupération des compteurs:", fullUrl);
+    
+    // 3. Faire la requête avec le bon token et les bons en-têtes
+    const response = await fetch(fullUrl, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${token}`,
+        // Éviter les problèmes de cache
+        "Cache-Control": "no-cache, no-store, must-revalidate",
+        "Pragma": "no-cache"
+      }
+    });
+    
+    // 4. Vérifier si la réponse est OK
+    if (!response.ok) {
+      console.error("Erreur API:", response.status, response.statusText);
+      setIsLoadingOrders(false);
+      return;
+    }
+    
+    // 5. Récupérer les données avec .text() d'abord pour le débogage
+    const responseText = await response.text();
+    console.log("Réponse brute de l'API:", responseText);
+    
+    // 6. Parser en JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (err) {
+      console.error("Erreur de parsing JSON:", err);
+      setIsLoadingOrders(false);
+      return;
+    }
+    
+    console.log("Données analysées:", data);
+    
+    // 7. Vérifier la structure et mettre à jour l'état
+    if (data && data.success && data.counts) {
+      console.log("Mise à jour des compteurs avec:", data.counts);
+      
+      // Créer un nouvel objet pour s'assurer que React détecte le changement
+      const newCounts = {
+        pending: parseInt(data.counts.pending) || 0,
+        shipped: parseInt(data.counts.shipped) || 0,
+        total: parseInt(data.counts.total) || 0
+      };
+      
+      console.log("Nouveaux compteurs:", newCounts);
+      
+      // Mettre à jour l'état avec les nouvelles valeurs
+      setOrderCount({
+        pending: parseInt(data.counts.pending) || 0,
+        processing: parseInt(data.counts.processing) || 0,
+        shipped: parseInt(data.counts.shipped) || 0,
+        delivered: parseInt(data.counts.delivered) || 0,
+        total: parseInt(data.counts.total) || 0
+      });
+    } else {
+      console.warn("Format de réponse inattendu:", data);
+    }
+  } catch (error) {
+    console.error("Exception lors de la récupération des compteurs:", error);
+  } finally {
+    setIsLoadingOrders(false);
+  }
+};
 
   // Garder un seul useEffect pour fetchOrderCount
   useEffect(() => {
@@ -520,7 +506,10 @@ export const Navbar = () => {
         document.removeEventListener("visibilitychange", handleVisibilityChange);
       };
     }
+    
   }, [user]);
+
+  
 
   useEffect(() => {
     console.log("Configuration de l'URL API:");
@@ -1175,6 +1164,27 @@ export const Navbar = () => {
                     Déconnexion
                   </DropdownItem>
                 </DropdownMenu>
+                <button 
+  onClick={async () => {
+    try {
+      const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
+      const response = await fetch(`${apiUrl}/orders/users/${user.id}/order-counts`, {
+        headers: { 
+          "Authorization": `Bearer ${user.token || localStorage.getItem("token")}` 
+        }
+      });
+      const data = await response.json();
+      console.log("Test direct API:", data);
+      alert(JSON.stringify(data, null, 2));
+    } catch (e: unknown) {
+      console.error("Test échoué:", e);
+      alert("Erreur: " + (e instanceof Error ? e.message : String(e)));
+    }
+  }}
+  className="p-2 bg-blue-500 text-white rounded"
+>
+  Tester API
+</button>
               </Dropdown>
             </div>
           </>
