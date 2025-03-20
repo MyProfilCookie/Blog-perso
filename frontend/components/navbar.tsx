@@ -61,10 +61,11 @@ type User = {
 
 // Type pour les compteurs de commandes
 type OrderCountType = {
-  [x: string]: number;
   pending: number;
   shipped: number;
   total: number;
+  processing: number;
+  delivered: number;
 };
 
 // Interface pour le type Order
@@ -132,6 +133,8 @@ export const Navbar = () => {
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
     shipped: 0,
+    processing: 0,
+    delivered: 0,
     total: 0
   });
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
@@ -389,79 +392,153 @@ export const Navbar = () => {
   /**
  * Récupérer le compteur de commandes depuis l'API
  */
-const fetchOrderCount = async () => {
-  if (!user || !user.id || isLoadingOrders) return;
 
+// Fonction complètement réécrite pour la récupération des compteurs
+const fetchOrderCount = async () => {
+  if (!user || !user.id) {
+    console.log("Pas d'utilisateur ou d'ID utilisateur, impossible de récupérer les commandes");
+    return;
+  }
+  
+  if (isLoadingOrders) {
+    console.log("Récupération des commandes déjà en cours");
+    return;
+  }
+  
   setIsLoadingOrders(true);
+  console.log("Début de la récupération des compteurs de commandes");
+  
   try {
+    // 1. Récupérer le token de toutes les sources possibles
     const token = user.token || localStorage.getItem("token") || localStorage.getItem("userToken");
-    const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
+    if (!token) {
+      console.error("Pas de token disponible pour l'authentification");
+      return;
+    }
     
-    console.log(`Récupération des compteurs de commandes depuis: ${apiUrl}/orders/users/${user.id}/order-counts`);
+    // 2. Construire l'URL proprement
+    let apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api";
+    apiUrl = apiUrl.replace(/\/$/, ""); // Supprimer le slash final s'il existe
+    const endpoint = `/orders/users/${user.id}/order-counts`;
+    const fullUrl = `${apiUrl}${endpoint}`;
     
-    const response = await fetch(`${apiUrl}/orders/users/${user.id}/order-counts`, {
+    console.log("Récupération des compteurs depuis:", fullUrl);
+    
+    // 3. Faire la requête avec un timeout
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 10000); // 10 secondes timeout
+    
+    const response = await fetch(fullUrl, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
         Authorization: `Bearer ${token}`,
+        "Cache-Control": "no-cache, no-store"
       },
+      signal: controller.signal
     });
     
-    if (response.ok) {
-      const data = await response.json();
-      console.log("Réponse API des compteurs de commandes:", data);
-      
-      // Utiliser directement l'objet counts de la structure de réponse
-      if (data.success && data.counts) {
-        setOrderCount({
-          pending: data.counts.pending || 0,
-          shipped: data.counts.shipped || 0,
-          total: data.counts.total || 0
-        });
-      } else if (Array.isArray(data)) {
-        // Revenir à l'ancienne logique si l'API renvoie un tableau
-        const orders = data;
-        const counts = {
-          pending: orders.filter((order) => 
-            order.status?.toLowerCase().includes('pend') || 
-            order.status?.toLowerCase().includes('process') || 
-            order.status?.toLowerCase().includes('attente') || 
-            order.status?.toLowerCase().includes('cours')
-          ).length,
-          shipped: orders.filter((order) => 
-            order.status?.toLowerCase().includes('ship') || 
-            order.status?.toLowerCase().includes('deliv') || 
-            order.status?.toLowerCase().includes('exp') || 
-            order.status?.toLowerCase().includes('livr')
-          ).length,
-          total: orders.length
-        };
-        
-        setOrderCount(counts);
-      }
+    clearTimeout(timeoutId);
+    
+    // 4. Traiter la réponse
+    if (!response.ok) {
+      throw new Error(`Erreur HTTP: ${response.status} ${response.statusText}`);
+    }
+    
+    const responseText = await response.text();
+    console.log("Réponse brute:", responseText);
+    
+    // 5. Analyser la réponse JSON
+    let data;
+    try {
+      data = JSON.parse(responseText);
+    } catch (e) {
+      console.error("Erreur lors de l'analyse JSON:", e);
+      console.error("Texte brut reçu:", responseText);
+      throw new Error("Format de réponse invalide");
+    }
+    
+    console.log("Données reçues:", data);
+    
+    // 6. Mettre à jour l'état avec les nouvelles données
+    if (data.success && data.counts) {
+      console.log("Mise à jour des compteurs avec:", data.counts);
+      // Forcer React à reconnaître le changement d'état avec un nouvel objet
+      setOrderCount({
+        pending: data.counts.pending || 0,
+        shipped: data.counts.shipped || 0,
+        total: data.counts.total || 0,
+        processing: data.counts.processing || 0,
+        delivered: data.counts.delivered || 0
+      });
+    } else if (Array.isArray(data)) {
+      console.log("Format ancien (tableau), calcul manuel des compteurs");
+      const orders = data;
+      const counts = {
+        pending: orders.filter(order => 
+          order.status?.toLowerCase().includes('pend') || 
+          order.status?.toLowerCase().includes('attente')
+        ).length,
+        shipped: orders.filter(order => 
+          order.status?.toLowerCase().includes('ship') || 
+          order.status?.toLowerCase().includes('livr')
+        ).length,
+        total: orders.length
+      };
+      console.log("Compteurs calculés:", counts);
+      // Ajouter les propriétés manquantes pour correspondre à OrderCountType
+      setOrderCount({
+        ...counts,
+        processing: 0,
+        delivered: 0,
+      });
     } else {
-      console.error("Erreur lors de la récupération des compteurs de commandes:", response.status, response.statusText);
-      // Tentative d'analyse de la réponse d'erreur
-      try {
-        const errorData = await response.json();
-        console.error("Détails de l'erreur API:", errorData);
-      } catch (e) {
-        // Échec silencieux si nous ne pouvons pas analyser la réponse d'erreur
-      }
+      console.warn("Format de réponse inattendu:", data);
     }
   } catch (error) {
-    console.error("Exception lors de la récupération des compteurs de commandes:", error);
+    console.error("Exception lors de la récupération des compteurs:", error);
   } finally {
+    console.log("Fin de la récupération des compteurs");
     setIsLoadingOrders(false);
   }
 };
+
+// Dans le useEffect, forcez une re-récupération
+useEffect(() => {
+  if (user && user.id) {
+    console.log("Configuration de la récupération des compteurs pour l'utilisateur:", user.id);
+    
+    // Récupération immédiate
+    fetchOrderCount();
+    
+    // Récupération périodique
+    const intervalId = setInterval(() => {
+      console.log("Actualisation périodique des compteurs de commandes");
+      fetchOrderCount();
+    }, 30000); // Toutes les 30 secondes
+    
+    // Forcer une réactualisation lors du focus sur l'onglet
+    const handleVisibilityChange = () => {
+      if (!document.hidden) {
+        console.log("Onglet visible, actualisation des compteurs");
+        fetchOrderCount();
+      }
+    };
+    document.addEventListener("visibilitychange", handleVisibilityChange);
+    
+    return () => {
+      clearInterval(intervalId);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
+    };
+  }
+}, [user]);
+
 useEffect(() => {
   console.log("Configuration de l'URL API:");
   console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
   console.log("URL de base API qui sera utilisée:", (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, ""));
   console.log("Utilisateur actuel:", user);
 }, [user]);
-
 /**
  * Marquer les mises à jour des commandes comme lues
  */
@@ -801,7 +878,7 @@ useEffect(() => {
                               {orderCount.shipped || 0}
                               </span>
                               {/* Commandes Delivered */}
-                              <span className="text-xs bg-green-500 text-white px-1.5 py-0.5 rounded-full">
+                              <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
                               {orderCount.delivered || 0}
                               </span>
                             </div>
