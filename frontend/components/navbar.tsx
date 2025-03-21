@@ -82,17 +82,17 @@ interface Order {
 // Function to get the appropriate icon for each navigation item
 const getIconForNavItem = (label: string) => {
   const iconMap: Record<string, any> = {
-    Accueil: faHome,
-    "À propos": faInfoCircle,
-    Contact: faPhone,
-    Services: faInfoCircle,
-    Équipe: faUserGroup,
-    Blog: faNewspaper,
-    Cours: faGraduationCap,
-    FAQ: faQuestionCircle,
+    Accueil: "🏠",
+    "À propos": "ℹ️",
+    Services: "⚡",
+    Équipe: "👥",
+    Articles: "📚",
+    Cours: "🎓",
+    FAQ: "❓",
+    Controle: "🎮"
   };
 
-  return iconMap[label] || faInfoCircle; // Default icon if no match
+  return iconMap[label] || "ℹ️"; // Default icon if no match
 };
 
 // Function to verify token validity
@@ -747,16 +747,20 @@ export const Navbar = () => {
           <div className="flex items-center">
             {/* Onglets visibles dans la barre de navigation */}
             <ul className="flex gap-4 items-center">
-              {siteConfig.navItems.map((item) => (
-                <NavbarItem key={item.label}>
-                  <NextLink
-                    className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
-                    href={String(item.href)}
-                  >
-                    {item.label}
-                  </NextLink>
-                </NavbarItem>
-              ))}
+              {siteConfig.navItems
+                .filter((item) =>
+                  ["Accueil", "À propos", "Services", "Controle"].includes(item.label)
+                )
+                .map((item) => (
+                  <NavbarItem key={item.label}>
+                    <NextLink
+                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
+                      href={String(item.href)}
+                    >
+                      {getIconForNavItem(item.label)} {item.label}
+                    </NextLink>
+                  </NavbarItem>
+                ))}
 
               <NavbarItem key="shop" className="relative">
                 <NextLink
@@ -835,11 +839,7 @@ export const Navbar = () => {
                     <ul className="grid gap-1">
                       {siteConfig.navItems
                         .filter((item) =>
-                          [
-                            "Accueil",
-                            "À propos",
-                            "Services",
-                          ].includes(item.label),
+                          ["Accueil", "À propos", "Services", "Controle"].includes(item.label)
                         )
                         .map((item) => (
                           <li key={item.label}>
@@ -848,10 +848,7 @@ export const Navbar = () => {
                               href={String(item.href)}
                               onClick={() => setIsMenuOpen(false)}
                             >
-                              <FontAwesomeIcon
-                                className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                                icon={getIconForNavItem(item.label)}
-                              />
+                              <span className="mr-3 text-xl">{getIconForNavItem(item.label)}</span>
                               {item.label}
                             </NextLink>
                           </li>
@@ -859,33 +856,32 @@ export const Navbar = () => {
                     </ul>
                   </div>
 
-                  {/* Sections secondaires */}
+                  {/* Sous-menus */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                      Découvrir
+                      Informations
                     </h3>
                     <ul className="grid gap-1">
-                      {siteConfig.navItems
-                        .filter((item) =>
-                          ["Équipe", "Cours", "FAQ"].includes(
-                            item.label,
-                          ),
-                        )
-                        .map((item) => (
-                          <li key={item.label}>
-                            <NextLink
-                              className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                              href={String(item.href)}
-                              onClick={() => setIsMenuOpen(false)}
-                            >
-                              <FontAwesomeIcon
-                                className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                                icon={getIconForNavItem(item.label)}
-                              />
-                              {item.label}
-                            </NextLink>
-                          </li>
-                        ))}
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/about#contact"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-xl">📞</span>
+                          Contact
+                        </NextLink>
+                      </li>
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/blog"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-xl">📝</span>
+                          Articles
+                        </NextLink>
+                      </li>
                     </ul>
                   </div>
 
@@ -942,17 +938,34 @@ export const Navbar = () => {
                               className="mr-3 text-blue-600 dark:text-blue-400 w-5"
                               icon={faNewspaper}
                             />
-                            <span className="flex-1">📦 Mes commandes</span>
-                            <div className="flex items-center space-x-1">
-                              <span className="text-xs bg-green-800 text-white px-1.5 py-0.5 rounded-full">
-                                ⏳ {orderCount.pending || 0}
-                              </span>
-                              <span className="text-xs bg-blue-400 text-white px-1.5 py-0.5 rounded-full">
-                                🚚 {orderCount.shipped || 0}
-                              </span>
-                              <span className="text-xs bg-red-400 text-white px-1.5 py-0.5 rounded-full">
-                                ✅ {orderCount.delivered || 0}
-                              </span>
+                            <div className="flex flex-col w-full space-y-2">
+                              <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
+                                <div className="flex items-center">
+                                  <span className="text-xl mr-2">⏳</span>
+                                  <div>Mes commandes en cours</div>
+                                </div>
+                                <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
+                                  {orderCount.pending || 0}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
+                                <div className="flex items-center">
+                                  <span className="text-xl mr-2">🚚</span>
+                                  <div>Mes commandes envoyées</div>
+                                </div>
+                                <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                                  {orderCount.shipped || 0}
+                                </span>
+                              </div>
+                              <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
+                                <div className="flex items-center">
+                                  <span className="text-xl mr-2">✅</span>
+                                  <div>Mes commandes livrées</div>
+                                </div>
+                                <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                                  {orderCount.delivered || 0}
+                                </span>
+                              </div>
                             </div>
                           </NextLink>
                         </li>
@@ -1221,21 +1234,30 @@ export const Navbar = () => {
                     }}
                   >
                     <div className="flex flex-col w-full space-y-2">
-                      <div className="flex items-center justify-between">
-                        <div>⏳ Mes commandes en cours</div>
-                        <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
+                      <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
+                        <div className="flex items-center">
+                          <span className="text-xl mr-2">⏳</span>
+                          <div>Mes commandes en cours</div>
+                        </div>
+                        <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
                           {orderCount.pending || 0}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div>🚚 Mes commandes envoyées</div>
-                        <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
+                      <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
+                        <div className="flex items-center">
+                          <span className="text-xl mr-2">🚚</span>
+                          <div>Mes commandes envoyées</div>
+                        </div>
+                        <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
                           {orderCount.shipped || 0}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between">
-                        <div>✅ Mes commandes livrées</div>
-                        <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
+                      <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
+                        <div className="flex items-center">
+                          <span className="text-xl mr-2">✅</span>
+                          <div>Mes commandes livrées</div>
+                        </div>
+                        <span className="text-sm font-semibold text-green-600 dark:text-green-400">
                           {orderCount.delivered || 0}
                         </span>
                       </div>
