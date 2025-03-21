@@ -753,47 +753,57 @@ export const Navbar = () => {
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
                   href="/"
                 >
-                  🏠 Accueil
+                  Accueil
                 </NextLink>
               </NavbarItem>
               <NavbarItem>
-                <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
-                  href="/about"
-                >
-                  ℹ️ À propos
-                </NextLink>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button
+                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500 bg-transparent"
+                      radius="sm"
+                      variant="light"
+                    >
+                      À propos
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu>
+                    <DropdownItem key="about">
+                      <NextLink href="/about">À propos de nous</NextLink>
+                    </DropdownItem>
+                    <DropdownItem key="contact">
+                      <NextLink href="/about#contact">Contact</NextLink>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </NavbarItem>
               <NavbarItem>
-                <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
-                  href="/services"
-                >
-                  ⚡ Services
-                </NextLink>
-              </NavbarItem>
-              <NavbarItem>
-                <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
-                  href="/articles"
-                >
-                  📚 Articles
-                </NextLink>
+                <Dropdown>
+                  <DropdownTrigger>
+                    <Button
+                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500 bg-transparent"
+                      radius="sm"
+                      variant="light"
+                    >
+                      Articles
+                    </Button>
+                  </DropdownTrigger>
+                  <DropdownMenu>
+                    <DropdownItem key="articles">
+                      <NextLink href="/articles">Tous les articles</NextLink>
+                    </DropdownItem>
+                    <DropdownItem key="blog">
+                      <NextLink href="/blog">Blog</NextLink>
+                    </DropdownItem>
+                  </DropdownMenu>
+                </Dropdown>
               </NavbarItem>
               <NavbarItem>
                 <NextLink
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
                   href="/controle"
                 >
-                  🎮 Controle
-                </NextLink>
-              </NavbarItem>
-              <NavbarItem>
-                <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
-                  href="/manuel"
-                >
-                  📖 Manuel
+                  Controle
                 </NextLink>
               </NavbarItem>
 
@@ -802,7 +812,7 @@ export const Navbar = () => {
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-500 flex items-center relative"
                   href="/shop"
                 >
-                  🛒 Shop
+                  Shop
                   {cartItemsCount > 0 && (
                     <Badge
                       color="danger"
@@ -919,16 +929,6 @@ export const Navbar = () => {
                         >
                           <span className="mr-3 text-xl">🎮</span>
                           Controle
-                        </NextLink>
-                      </li>
-                      <li>
-                        <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/manuel"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <span className="mr-3 text-xl">📖</span>
-                          Manuel
                         </NextLink>
                       </li>
                       <li>
