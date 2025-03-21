@@ -750,7 +750,7 @@ export const Navbar = () => {
             <ul className="flex gap-4 items-center font-sans">
               <NavbarItem>
                 <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 text-base"
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 text-base font-medium"
                   href="/"
                 >
                   Accueil
@@ -760,7 +760,7 @@ export const Navbar = () => {
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500 bg-transparent p-0 text-base font-normal"
+                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500 bg-transparent p-0 text-base font-medium"
                       radius="sm"
                       variant="light"
                     >
@@ -781,7 +781,7 @@ export const Navbar = () => {
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500 bg-transparent p-0 text-base font-normal"
+                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500 bg-transparent p-0 text-base font-medium"
                       radius="sm"
                       variant="light"
                     >
@@ -800,7 +800,7 @@ export const Navbar = () => {
               </NavbarItem>
               <NavbarItem>
                 <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 text-base"
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 text-base font-medium"
                   href="/controle"
                 >
                   Controle
@@ -809,7 +809,7 @@ export const Navbar = () => {
 
               <NavbarItem key="shop" className="relative">
                 <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 flex items-center relative text-base"
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 flex items-center relative text-base font-medium"
                   href="/shop"
                 >
                   Shop
