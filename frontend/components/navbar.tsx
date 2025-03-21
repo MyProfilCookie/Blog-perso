@@ -904,19 +904,6 @@ export const Navbar = () => {
                         <li>
                           <NextLink
                             className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                            href="/profile"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            <FontAwesomeIcon
-                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                              icon={faUser}
-                            />
-                            Profil
-                          </NextLink>
-                        </li>
-                        <li>
-                          <NextLink
-                            className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
                             href={
                               user.role === "admin"
                                 ? "/admin/dashboard"
@@ -975,6 +962,19 @@ export const Navbar = () => {
                           </NextLink>
                         </li>
                         <li>
+                          <NextLink
+                            className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                            href="/controle"
+                            onClick={() => setIsMenuOpen(false)}
+                          >
+                            <FontAwesomeIcon
+                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                              icon={faNewspaper}
+                            />
+                            Controle
+                          </NextLink>
+                        </li>
+                        <li>
                           <button
                             className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
                             onClick={() => {
@@ -987,48 +987,6 @@ export const Navbar = () => {
                               icon={faSignOutAlt}
                             />
                             Déconnexion
-                          </button>
-                        </li>
-
-                        {/* Bouton de test de l'API */}
-                        <li>
-                          <button
-                            className="w-full flex items-center px-3 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded-md transition-colors"
-                            onClick={async () => {
-                              try {
-                                const apiUrl = (
-                                  process.env.NEXT_PUBLIC_API_URL ||
-                                  "http://localhost:3000/api"
-                                ).replace(/\/$/, "");
-                                // Utiliser la route correcte
-                                const response = await fetch(
-                                  `${apiUrl}/orders/users/${user.id}/order-counts`,
-                                  {
-                                    headers: {
-                                      Authorization: `Bearer ${user.token || localStorage.getItem("token")}`,
-                                    },
-                                  },
-                                );
-                                const data = await response.json();
-
-                                console.log("Test direct API:", data);
-                                alert(JSON.stringify(data, null, 2));
-                              } catch (e: unknown) {
-                                console.error("Test échoué:", e);
-                                alert(
-                                  "Erreur: " +
-                                    (e instanceof Error
-                                      ? e.message
-                                      : String(e)),
-                                );
-                              }
-                            }}
-                          >
-                            <FontAwesomeIcon
-                              className="mr-3 w-5"
-                              icon={faCode}
-                            />
-                            Tester l&apos;API Commandes
                           </button>
                         </li>
                       </ul>
