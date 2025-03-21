@@ -662,7 +662,7 @@ export const Navbar = () => {
         console.warn(
           "Données utilisateur insuffisantes pour le suivi des commandes",
         );
-
+        handleTokenInvalid();
         return;
       }
 
@@ -678,7 +678,7 @@ export const Navbar = () => {
       const intervalId = setInterval(() => {
         console.log("Rafraîchissement automatique des compteurs de commandes");
         fetchOrderCount();
-      }, 30000); // Vérifier toutes les 30 secondes
+      }, 15000); // Vérifier toutes les 15 secondes
 
       // Rafraîchir également lors du focus sur la page
       const handleVisibilityChange = () => {
@@ -702,6 +702,20 @@ export const Navbar = () => {
 
     setupOrderTracking();
   }, []); // Exécuter une fois au montage
+
+  // Vérifier la validité du token toutes les 5 minutes
+  useEffect(() => {
+    const tokenCheckInterval = setInterval(() => {
+      checkTokenValidity();
+    }, 5 * 60 * 1000); // 5 minutes
+
+    return () => clearInterval(tokenCheckInterval);
+  }, []);
+
+  // Vérifier le token au montage du composant
+  useEffect(() => {
+    checkTokenValidity();
+  }, []);
 
   return (
     <NextUINavbar
@@ -825,7 +839,6 @@ export const Navbar = () => {
                             "Accueil",
                             "À propos",
                             "Services",
-                            "Contact",
                           ].includes(item.label),
                         )
                         .map((item) => (
@@ -854,7 +867,7 @@ export const Navbar = () => {
                     <ul className="grid gap-1">
                       {siteConfig.navItems
                         .filter((item) =>
-                          ["Blog", "Équipe", "Cours", "FAQ"].includes(
+                          ["Équipe", "Cours", "FAQ"].includes(
                             item.label,
                           ),
                         )
@@ -873,24 +886,6 @@ export const Navbar = () => {
                             </NextLink>
                           </li>
                         ))}
-
-                      {/* Shop avec badge */}
-                      <li>
-                        <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/shop"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <FontAwesomeIcon
-                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                            icon={faShoppingCart}
-                          />
-                          <span className="flex-1">Shop</span>
-                          {cartItemsCount > 0 && (
-                            <Badge color="danger">{cartItemsCount}</Badge>
-                          )}
-                        </NextLink>
-                      </li>
                     </ul>
                   </div>
 
@@ -1211,10 +1206,6 @@ export const Navbar = () => {
                     <FontAwesomeIcon className="mr-2" icon={faUser} />
                     Profil
                   </DropdownItem>
-                  <DropdownItem key="shop" onClick={() => router.push("/shop")}>
-                    <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
-                    Shop
-                  </DropdownItem>
                   <DropdownItem
                     key="orders"
                     className="relative"
@@ -1242,6 +1233,12 @@ export const Navbar = () => {
                           {orderCount.shipped || 0}
                         </span>
                       </div>
+                      <div className="flex items-center justify-between">
+                        <div>Mes commandes livrées</div>
+                        <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
+                          {orderCount.delivered || 0}
+                        </span>
+                      </div>
                     </div>
                   </DropdownItem>
                   <DropdownItem
@@ -1250,52 +1247,6 @@ export const Navbar = () => {
                   >
                     <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
                     Controle
-                  </DropdownItem>
-
-                  {/* Bouton de test API */}
-                  <DropdownItem
-                    key="test-api"
-                    onClick={async () => {
-                      try {
-                        const apiUrl = (
-                          process.env.NEXT_PUBLIC_API_URL ||
-                          "http://localhost:3000/api"
-                        ).replace(/\/$/, "");
-                        const response = await fetch(
-                          `${apiUrl}/orders/users/${user.id}/order-counts`,
-                          {
-                            headers: {
-                              Authorization: `Bearer ${user.token || localStorage.getItem("token")}`,
-                            },
-                          },
-                        );
-                        const data = await response.json();
-
-                        console.log("Test direct API:", data);
-                        alert(JSON.stringify(data, null, 2));
-                      } catch (e: unknown) {
-                        console.error("Test échoué:", e);
-                        alert(
-                          "Erreur: " +
-                            (e instanceof Error ? e.message : String(e)),
-                        );
-                      }
-                    }}
-                  >
-                    <FontAwesomeIcon className="mr-2" icon={faCode} />
-                    Tester l&apos;API
-                  </DropdownItem>
-
-                  {/* Bouton rafraîchir les commandes */}
-                  <DropdownItem key="refresh-orders" onClick={fetchOrderCount}>
-                    <FontAwesomeIcon
-                      className="mr-2"
-                      icon={faSyncAlt}
-                      spin={isLoadingOrders}
-                    />
-                    {isLoadingOrders
-                      ? "Actualisation..."
-                      : "Actualiser commandes"}
                   </DropdownItem>
 
                   {/* mode */}
@@ -1380,102 +1331,6 @@ export const Navbar = () => {
               </Dropdown>
             </div>
           </>
-        )}
-
-        {/* Bouton de test API dans la barre de navigation */}
-        {user && (
-          <button
-            className="ml-2 p-2 bg-blue-500 text-white text-xs rounded"
-            onClick={async () => {
-              try {
-                const userData = getUserData();
-
-                if (!userData || !userData.id || !userData.token) {
-                  alert("Données utilisateur insuffisantes");
-
-                  return;
-                }
-
-                // Construction de l'URL de base
-                const apiBaseUrl =
-                  process.env.NEXT_PUBLIC_API_URL ||
-                  "http://localhost:3000/api";
-                const cleanApiUrl = apiBaseUrl.replace(/\/+$/, "");
-                const baseUrl = cleanApiUrl.endsWith("/api")
-                  ? cleanApiUrl.substring(0, cleanApiUrl.length - 4)
-                  : cleanApiUrl;
-
-                // Créer un élément de diagnostic
-                const diagDiv = document.createElement("div");
-
-                diagDiv.style.position = "fixed";
-                diagDiv.style.top = "50%";
-                diagDiv.style.left = "50%";
-                diagDiv.style.transform = "translate(-50%, -50%)";
-                diagDiv.style.background = "white";
-                diagDiv.style.padding = "20px";
-                diagDiv.style.border = "1px solid #ccc";
-                diagDiv.style.borderRadius = "8px";
-                diagDiv.style.zIndex = "9999";
-                diagDiv.style.maxHeight = "80vh";
-                diagDiv.style.maxWidth = "90vw";
-                diagDiv.style.overflow = "auto";
-                diagDiv.innerHTML = "<h3>Test d'URLs API</h3>";
-
-                document.body.appendChild(diagDiv);
-
-                // Tester toutes les URLs possibles
-                const urlFormats = [
-                  `${cleanApiUrl}/orders/users/${userData.id}/order-counts`,
-                  `${baseUrl}/orders/users/${userData.id}/order-counts`,
-                  `${cleanApiUrl}/orders/user/${userData.id}/order-counts`,
-                  `${baseUrl}/orders/user/${userData.id}/order-counts`,
-                  `${cleanApiUrl}/users/${userData.id}/order-counts`,
-                  `${baseUrl}/users/${userData.id}/order-counts`,
-                  `${cleanApiUrl}/orders/users/${userData.id}/counts`,
-                  `${baseUrl}/orders/users/${userData.id}/counts`,
-                ];
-
-                for (const url of urlFormats) {
-                  try {
-                    diagDiv.innerHTML += `<p>Test URL: ${url}... </p>`;
-
-                    const response = await fetch(url, {
-                      headers: {
-                        Authorization: `Bearer ${userData.token}`,
-                      },
-                    });
-
-                    if (response.ok) {
-                      const data = await response.json();
-
-                      diagDiv.innerHTML += `<p style="color:green">✅ SUCCÈS (${response.status})</p>`;
-                      diagDiv.innerHTML += `<pre style="background:#f5f5f5;padding:10px">${JSON.stringify(data, null, 2)}</pre>`;
-                    } else {
-                      diagDiv.innerHTML += `<p style="color:red">❌ ÉCHEC (${response.status})</p>`;
-                    }
-                  } catch (e: unknown) {
-                    diagDiv.innerHTML += `<p style="color:red">⚠️ ERREUR: ${e instanceof Error ? e.message : String(e)}</p>`;
-                  }
-                }
-                diagDiv.innerHTML += `<button id="close-diag" style="margin-top:10px;padding:8px 16px;background:#f44336;color:white;border:none;border-radius:4px">Fermer</button>`;
-                const closeButton = document.getElementById("close-diag");
-
-                if (closeButton) {
-                  closeButton.addEventListener("click", () => {
-                    document.body.removeChild(diagDiv);
-                  });
-                }
-              } catch (e: unknown) {
-                console.error("Test échoué:", e);
-                alert(
-                  "Erreur: " + (e instanceof Error ? e.message : String(e)),
-                );
-              }
-            }}
-          >
-            Test complet API
-          </button>
         )}
       </NavbarContent>
     </NextUINavbar>
