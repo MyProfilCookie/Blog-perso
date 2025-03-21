@@ -89,7 +89,8 @@ const getIconForNavItem = (label: string) => {
     Articles: "📚",
     Cours: "🎓",
     FAQ: "❓",
-    Controle: "🎮"
+    Controle: "🎮",
+    Manuel: "📖"
   };
 
   return iconMap[label] || "ℹ️"; // Default icon if no match
@@ -747,28 +748,61 @@ export const Navbar = () => {
           <div className="flex items-center">
             {/* Onglets visibles dans la barre de navigation */}
             <ul className="flex gap-4 items-center">
-              {siteConfig.navItems
-                .filter((item) =>
-                  ["Accueil", "À propos", "Services", "Controle"].includes(item.label)
-                )
-                .map((item) => (
-                  <NavbarItem key={item.label}>
-                    <NextLink
-                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
-                      href={String(item.href)}
-                    >
-                      {getIconForNavItem(item.label)} {item.label}
-                    </NextLink>
-                  </NavbarItem>
-                ))}
+              <NavbarItem>
+                <NextLink
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
+                  href="/"
+                >
+                  🏠 Accueil
+                </NextLink>
+              </NavbarItem>
+              <NavbarItem>
+                <NextLink
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
+                  href="/about"
+                >
+                  ℹ️ À propos
+                </NextLink>
+              </NavbarItem>
+              <NavbarItem>
+                <NextLink
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
+                  href="/services"
+                >
+                  ⚡ Services
+                </NextLink>
+              </NavbarItem>
+              <NavbarItem>
+                <NextLink
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
+                  href="/articles"
+                >
+                  📚 Articles
+                </NextLink>
+              </NavbarItem>
+              <NavbarItem>
+                <NextLink
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
+                  href="/controle"
+                >
+                  🎮 Controle
+                </NextLink>
+              </NavbarItem>
+              <NavbarItem>
+                <NextLink
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
+                  href="/manuel"
+                >
+                  📖 Manuel
+                </NextLink>
+              </NavbarItem>
 
               <NavbarItem key="shop" className="relative">
                 <NextLink
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-500 flex items-center relative"
                   href="/shop"
                 >
-                  <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
-                  Shop
+                  🛒 Shop
                   {cartItemsCount > 0 && (
                     <Badge
                       color="danger"
@@ -837,29 +871,96 @@ export const Navbar = () => {
                       Pages principales
                     </h3>
                     <ul className="grid gap-1">
-                      {siteConfig.navItems
-                        .filter((item) =>
-                          ["Accueil", "À propos", "Services", "Controle"].includes(item.label)
-                        )
-                        .map((item) => (
-                          <li key={item.label}>
-                            <NextLink
-                              className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                              href={String(item.href)}
-                              onClick={() => setIsMenuOpen(false)}
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-xl">🏠</span>
+                          Accueil
+                        </NextLink>
+                      </li>
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/about"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-xl">ℹ️</span>
+                          À propos
+                        </NextLink>
+                      </li>
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/services"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-xl">⚡</span>
+                          Services
+                        </NextLink>
+                      </li>
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/articles"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-xl">📚</span>
+                          Articles
+                        </NextLink>
+                      </li>
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/controle"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-xl">🎮</span>
+                          Controle
+                        </NextLink>
+                      </li>
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/manuel"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-xl">📖</span>
+                          Manuel
+                        </NextLink>
+                      </li>
+                      <li>
+                        <NextLink
+                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          href="/shop"
+                          onClick={() => setIsMenuOpen(false)}
+                        >
+                          <span className="mr-3 text-xl">🛒</span>
+                          Shop
+                          {cartItemsCount > 0 && (
+                            <Badge
+                              color="danger"
+                              content={cartItemsCount}
+                              style={{
+                                position: "absolute",
+                                top: "-10px",
+                                right: "-10px",
+                              }}
                             >
-                              <span className="mr-3 text-xl">{getIconForNavItem(item.label)}</span>
-                              {item.label}
-                            </NextLink>
-                          </li>
-                        ))}
+                              {cartItemsCount}
+                            </Badge>
+                          )}
+                        </NextLink>
+                      </li>
                     </ul>
                   </div>
 
                   {/* Sous-menus */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                      Informations
+                      Informations supplémentaires
                     </h3>
                     <ul className="grid gap-1">
                       <li>
@@ -875,11 +976,11 @@ export const Navbar = () => {
                       <li>
                         <NextLink
                           className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/blog"
+                          href="/faq"
                           onClick={() => setIsMenuOpen(false)}
                         >
-                          <span className="mr-3 text-xl">📝</span>
-                          Articles
+                          <span className="mr-3 text-xl">❓</span>
+                          FAQ
                         </NextLink>
                       </li>
                     </ul>
