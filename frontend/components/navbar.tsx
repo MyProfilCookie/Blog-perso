@@ -942,16 +942,16 @@ export const Navbar = () => {
                               className="mr-3 text-blue-600 dark:text-blue-400 w-5"
                               icon={faNewspaper}
                             />
-                            <span className="flex-1">Mes commandes</span>
+                            <span className="flex-1">📦 Mes commandes</span>
                             <div className="flex items-center space-x-1">
                               <span className="text-xs bg-green-800 text-white px-1.5 py-0.5 rounded-full">
-                                {orderCount.pending || 0}
+                                ⏳ {orderCount.pending || 0}
                               </span>
                               <span className="text-xs bg-blue-400 text-white px-1.5 py-0.5 rounded-full">
-                                {orderCount.shipped || 0}
+                                🚚 {orderCount.shipped || 0}
                               </span>
                               <span className="text-xs bg-red-400 text-white px-1.5 py-0.5 rounded-full">
-                                {orderCount.delivered || 0}
+                                ✅ {orderCount.delivered || 0}
                               </span>
                             </div>
                           </NextLink>
@@ -1222,19 +1222,19 @@ export const Navbar = () => {
                   >
                     <div className="flex flex-col w-full space-y-2">
                       <div className="flex items-center justify-between">
-                        <div>Mes commandes en cours</div>
+                        <div>⏳ Mes commandes en cours</div>
                         <span className="text-xs bg-yellow-500 text-white px-1.5 py-0.5 rounded-full">
                           {orderCount.pending || 0}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div>Mes commandes envoyées</div>
+                        <div>🚚 Mes commandes envoyées</div>
                         <span className="text-xs bg-blue-500 text-white px-1.5 py-0.5 rounded-full">
                           {orderCount.shipped || 0}
                         </span>
                       </div>
                       <div className="flex items-center justify-between">
-                        <div>Mes commandes livrées</div>
+                        <div>✅ Mes commandes livrées</div>
                         <span className="text-xs bg-red-500 text-white px-1.5 py-0.5 rounded-full">
                           {orderCount.delivered || 0}
                         </span>
