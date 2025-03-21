@@ -720,7 +720,7 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar
-      className="dark:bg-gray-900 bg-cream"
+      className="dark:bg-gray-900 bg-cream font-sans"
       maxWidth="xl"
       position="sticky"
       style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
@@ -730,7 +730,7 @@ export const Navbar = () => {
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex items-center justify-start gap-1" href="/">
             <AutismLogo />
-            <p className="font-bold text-blue-800 dark:text-white">AutiStudy</p>
+            <p className="font-bold text-blue-800 dark:text-white font-sans">AutiStudy</p>
           </NextLink>
         </NavbarBrand>
 
@@ -747,7 +747,7 @@ export const Navbar = () => {
         <div className="hidden lg:flex flex-grow justify-center">
           <div className="flex items-center">
             {/* Onglets visibles dans la barre de navigation */}
-            <ul className="flex gap-4 items-center">
+            <ul className="flex gap-4 items-center font-sans">
               <NavbarItem>
                 <NextLink
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-500"
@@ -874,7 +874,7 @@ export const Navbar = () => {
                 </div>
 
                 {/* Sections principales */}
-                <div className="grid gap-4">
+                <div className="grid gap-4 font-sans">
                   {/* Navigation principale */}
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
