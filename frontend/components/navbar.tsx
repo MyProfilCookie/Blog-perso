@@ -750,7 +750,7 @@ export const Navbar = () => {
             <ul className="flex gap-4 items-center font-sans">
               <NavbarItem>
                 <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 text-base font-medium"
+                  className="text-blue-800 dark:text-white hover:text-blue-500 text-lg font-medium uppercase tracking-wide"
                   href="/"
                 >
                   Accueil
@@ -760,14 +760,17 @@ export const Navbar = () => {
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500 bg-transparent p-0 text-base font-medium"
+                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium uppercase tracking-wide"
                       radius="sm"
                       variant="light"
                     >
                       À propos
                     </Button>
                   </DropdownTrigger>
-                  <DropdownMenu>
+                  <DropdownMenu 
+                    className="animate-in fade-in-80 zoom-in-95 duration-200"
+                    aria-label="À propos menu"
+                  >
                     <DropdownItem key="about">
                       <NextLink href="/about">À propos de nous</NextLink>
                     </DropdownItem>
@@ -781,14 +784,17 @@ export const Navbar = () => {
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-gray-700 dark:text-gray-300 hover:text-blue-500 bg-transparent p-0 text-base font-medium"
+                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium uppercase tracking-wide"
                       radius="sm"
                       variant="light"
                     >
                       Articles
                     </Button>
                   </DropdownTrigger>
-                  <DropdownMenu>
+                  <DropdownMenu 
+                    className="animate-in fade-in-80 zoom-in-95 duration-200"
+                    aria-label="Articles menu"
+                  >
                     <DropdownItem key="articles">
                       <NextLink href="/articles">Tous les articles</NextLink>
                     </DropdownItem>
@@ -800,7 +806,7 @@ export const Navbar = () => {
               </NavbarItem>
               <NavbarItem>
                 <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 text-base font-medium"
+                  className="text-blue-800 dark:text-white hover:text-blue-500 text-lg font-medium uppercase tracking-wide"
                   href="/controle"
                 >
                   Controle
@@ -809,7 +815,7 @@ export const Navbar = () => {
 
               <NavbarItem key="shop" className="relative">
                 <NextLink
-                  className="text-gray-700 dark:text-gray-300 hover:text-blue-500 flex items-center relative text-base font-medium"
+                  className="text-blue-800 dark:text-white hover:text-blue-500 flex items-center relative text-lg font-medium uppercase tracking-wide"
                   href="/shop"
                 >
                   Shop
