@@ -435,11 +435,15 @@ export default function Home() {
                     }}
                   >
                     <CardBody className="text-center">
-                      <div className="w-24 h-24 mx-auto mb-4 rounded-full p-1 bg-gradient-to-r from-violet-500 to-purple-500 dark:from-violet-400 dark:to-purple-400">
+                      <div className="relative w-32 h-32 mx-auto mb-4 overflow-hidden rounded-full">
                         <Image
                           src={member.img}
                           alt={member.name}
-                          className="w-full h-full object-cover rounded-full transition-all duration-300"
+                          className="object-cover w-full h-full"
+                          style={{
+                            width: '100%',
+                            height: '100%',
+                          }}
                         />
                       </div>
                       <h4 className="font-bold text-gray-800 dark:text-white">{member.name}</h4>
