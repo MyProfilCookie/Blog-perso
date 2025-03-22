@@ -171,12 +171,12 @@ const WeeklyReport = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-violet-50 to-blue-50 dark:from-gray-900 dark:to-violet-900">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="container mx-auto px-6 py-8">
         {/* En-tête */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-12"
+          className="text-center mb-16"
           initial={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.5 }}
         >
@@ -220,7 +220,7 @@ const WeeklyReport = () => {
         </motion.div>
 
         {/* Grille des matières */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-[1400px] mx-auto">
           {report.map((item, index) => (
             <motion.div
               key={item.subject}
