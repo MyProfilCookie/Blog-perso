@@ -933,10 +933,10 @@ export const Navbar = () => {
                             }
                           }}
                         >
-                          <FontAwesomeIcon
+                          {/* <FontAwesomeIcon
                             className="mr-3 text-blue-600 dark:text-blue-400 w-5"
                             icon={faNewspaper}
-                          />
+                          /> */}
                           <div className="flex flex-col w-full space-y-4">
                             <div className="flex items-center justify-between bg-yellow-50 dark:bg-gray-800 p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors">
                               <div className="flex items-center gap-3">
