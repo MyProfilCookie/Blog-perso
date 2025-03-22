@@ -82,12 +82,16 @@ const WeeklyReport = () => {
           const token = localStorage.getItem("token");
 
           if (!token) {
-            console.log("Pas de token trouvé, redirection vers la connexion...");
+            console.log(
+              "Pas de token trouvé, redirection vers la connexion...",
+            );
             router.push("/auth/login");
+
             return;
           }
 
           const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+
           console.log("URL de l'API:", apiUrl); // Pour déboguer
 
           const response = await fetch(`${apiUrl}/api/users/me`, {
@@ -95,44 +99,63 @@ const WeeklyReport = () => {
             credentials: "include",
             headers: {
               "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
+              Authorization: `Bearer ${token}`,
             },
           });
 
           if (response.ok) {
             const userData = await response.json();
+
             console.log("Données utilisateur reçues:", userData);
-            
+
             if (userData.data) {
               // Si les données sont dans data.user
               if (userData.data.user) {
-                setUserName(userData.data.user.firstName || userData.data.user.name?.split(" ")[0] || "");
+                setUserName(
+                  userData.data.user.firstName ||
+                    userData.data.user.name?.split(" ")[0] ||
+                    "",
+                );
               }
               // Si les données sont directement dans data
               else {
-                setUserName(userData.data.firstName || userData.data.name?.split(" ")[0] || "");
+                setUserName(
+                  userData.data.firstName ||
+                    userData.data.name?.split(" ")[0] ||
+                    "",
+                );
               }
             } else {
               // Si les données sont à la racine
-              setUserName(userData.firstName || userData.name?.split(" ")[0] || "");
+              setUserName(
+                userData.firstName || userData.name?.split(" ")[0] || "",
+              );
             }
           } else if (response.status === 401 || response.status === 403) {
-            console.log("Session expirée ou invalide, redirection vers la connexion...");
+            console.log(
+              "Session expirée ou invalide, redirection vers la connexion...",
+            );
             localStorage.removeItem("token");
             router.push("/auth/login");
           } else {
             console.error("Erreur de réponse API:", response.status);
             const errorData = await response.text();
+
             console.error("Détails de l'erreur:", errorData);
-            
+
             // En cas d'erreur 404, vérifier si c'est un problème de chemin d'API
             if (response.status === 404) {
-              console.error("L'endpoint de l'API n'a pas été trouvé. Vérifiez le chemin de l'API.");
+              console.error(
+                "L'endpoint de l'API n'a pas été trouvé. Vérifiez le chemin de l'API.",
+              );
             }
           }
         }
       } catch (error) {
-        console.error("Erreur lors de la vérification de l'authentification:", error);
+        console.error(
+          "Erreur lors de la vérification de l'authentification:",
+          error,
+        );
         router.push("/auth/login"); // Utilisation du chemin cohérent
       }
     };
