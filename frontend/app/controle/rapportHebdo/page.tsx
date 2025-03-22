@@ -253,10 +253,10 @@ const WeeklyReport = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             {userName ? (
-              <>
+              <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
                 Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine
                 ?
-              </>
+              </h2>
             ) : (
               <>Chargement de ton profil...</>
             )}
