@@ -39,6 +39,7 @@ const EnglishPage: React.FC = () => {
   const [results, setResults] = useState<{ [key: number]: boolean }>({});
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [emoji, setEmoji] = useState<string>("");
+  const [encouragementMessage, setEncouragementMessage] = useState<string>("");
 
   useEffect(() => {
     // Récupération des données du fichier JSON
@@ -78,6 +79,45 @@ const EnglishPage: React.FC = () => {
     setResults({ ...results, [id]: isCorrect });
   };
 
+  const getEncouragementMessage = (score: number) => {
+    const messages = {
+      perfect: [
+        "🌟 Incroyable ! Tu as tout réussi ! Tu es vraiment doué(e) en anglais !",
+        "✨ Parfait ! Quel talent ! Continue comme ça, tu es extraordinaire !",
+        "🎉 100% ! Tu peux être très fier(e) de toi, c'est excellent !"
+      ],
+      excellent: [
+        "🌈 Quel beau travail ! Tu as presque tout réussi !",
+        "⭐ Super score ! Tu progresses vraiment bien en anglais !",
+        "💫 Bravo ! Tu as fait un travail remarquable !"
+      ],
+      good: [
+        "💪 Tu es sur la bonne voie ! Continue tes efforts !",
+        "�� Chaque exercice te fait progresser, continue ainsi !",
+        "🎈 Tu t'améliores à chaque fois, c'est super !"
+      ],
+      needsWork: [
+        "🤗 N'abandonne pas ! L'anglais demande de la pratique !",
+        "💝 Tu as osé essayer, c'est déjà une belle victoire !",
+        "🌟 Chaque erreur est une chance d'apprendre, continue d'essayer !"
+      ]
+    };
+
+    const getRandomMessage = (messageArray: string[]) => {
+      return messageArray[Math.floor(Math.random() * messageArray.length)];
+    };
+
+    if (score === 100) {
+      return getRandomMessage(messages.perfect);
+    } else if (score >= 80) {
+      return getRandomMessage(messages.excellent);
+    } else if (score >= 50) {
+      return getRandomMessage(messages.good);
+    } else {
+      return getRandomMessage(messages.needsWork);
+    }
+  };
+
   const calculateFinalScore = () => {
     if (!exercises) return;
     const total = exercises.length;
@@ -85,6 +125,7 @@ const EnglishPage: React.FC = () => {
     const score = (correct / total) * 100;
 
     setFinalScore(score);
+    setEncouragementMessage(getEncouragementMessage(score));
 
     if (score === 100) {
       setEmoji("🌟");
@@ -200,11 +241,28 @@ const EnglishPage: React.FC = () => {
       </motion.div>
 
       {finalScore !== null && (
-        <div className="mt-8 text-center">
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="mt-8 text-center space-y-4"
+        >
           <h2 className="text-2xl font-bold">
-            Votre score final: {finalScore.toFixed(2)}% {emoji}
+            Ton score final: {finalScore.toFixed(2)}% {emoji}
           </h2>
-        </div>
+          {encouragementMessage && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="p-4 bg-violet-50 dark:bg-violet-900/30 rounded-xl"
+            >
+              <p className="text-lg font-medium text-violet-700 dark:text-violet-300">
+                {encouragementMessage}
+              </p>
+            </motion.div>
+          )}
+        </motion.div>
       )}
 
       <div className="mt-4">
