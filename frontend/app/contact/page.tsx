@@ -31,7 +31,7 @@ export default function ContactPage() {
 
       try {
         const response = await fetch(
-          "${process.env.NEXT_PUBLIC_API_URL}/users/me",
+          `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
           {
             method: "GET",
             headers: {
