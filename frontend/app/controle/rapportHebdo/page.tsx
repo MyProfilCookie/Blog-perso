@@ -76,63 +76,93 @@ const WeeklyReport = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      const token = localStorage.getItem("token");
-      
-      if (!token) {
-        console.log("Pas de token trouvé, redirection vers la connexion...");
-        router.push("/login");
-        return;
-      }
-
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-          credentials: "include",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
+        // Vérifier si nous sommes sur le client
+        if (typeof window !== "undefined") {
+          const token = localStorage.getItem("token");
 
-        if (response.ok) {
-          const userData = await response.json();
-          console.log("Données utilisateur reçues:", userData);
-          
-          if (userData.firstName) {
-            setUserName(userData.firstName);
-          } else if (userData.name) {
-            setUserName(userData.name.split(" ")[0]); // Prend le premier mot du nom
-          } else if (userData.email) {
-            setUserName(userData.email.split("@")[0]); // Utilise la partie avant @ de l'email
+          if (!token) {
+            console.log(
+              "Pas de token trouvé, redirection vers la connexion...",
+            );
+            router.push("/auth/login");
+
+            return;
           }
-        } else if (response.status === 401) {
-          console.log("Token expiré, redirection vers la connexion...");
-          localStorage.removeItem("token"); // Supprime le token invalide
-          router.push("/login");
-        } else {
-          console.error("Erreur de réponse API:", response.status);
-          const errorData = await response.text();
-          console.error("Détails de l'erreur:", errorData);
+
+          const response = await fetch(
+            `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+            {
+              method: "GET",
+              credentials: "include",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            },
+          );
+
+          if (response.ok) {
+            const userData = await response.json();
+
+            console.log("Données utilisateur reçues:", userData);
+
+            // Si les données sont dans user
+            if (userData.user) {
+              if (userData.user.firstName) {
+                setUserName(userData.user.firstName);
+              } else if (userData.user.name) {
+                setUserName(userData.user.name.split(" ")[0]);
+              }
+            }
+            // Si les données sont directement dans userData
+            else if (userData.firstName) {
+              setUserName(userData.firstName);
+            } else if (userData.name) {
+              setUserName(userData.name.split(" ")[0]);
+            }
+          } else if (response.status === 401 || response.status === 403) {
+            console.log(
+              "Session expirée ou invalide, redirection vers la connexion...",
+            );
+            localStorage.removeItem("token");
+            router.push("/auth/login");
+          } else {
+            console.error("Erreur de réponse API:", response.status);
+            const errorData = await response.text();
+
+            console.error("Détails de l'erreur:", errorData);
+          }
         }
       } catch (error) {
-        console.error("Erreur lors de la vérification de l'authentification:", error);
+        console.error(
+          "Erreur lors de la vérification de l'authentification:",
+          error,
+        );
+        router.push("/users/login");
       }
     };
 
     checkAuth();
 
-    // Chargement du rapport sauvegardé
-    const savedReport = JSON.parse(localStorage.getItem(selectedWeek) || "[]");
-    if (savedReport.length) {
-      setReport(savedReport);
-    } else {
-      setReport(
-        subjects.map((subject) => ({
-          subject: subject.name,
-          activity: "",
-          hours: "",
-          progress: "not-started",
-        })),
+    // Chargement du rapport sauvegardé seulement si nous avons un token
+    if (localStorage.getItem("token")) {
+      const savedReport = JSON.parse(
+        localStorage.getItem(selectedWeek) || "[]",
       );
+
+      if (savedReport.length) {
+        setReport(savedReport);
+      } else {
+        setReport(
+          subjects.map((subject) => ({
+            subject: subject.name,
+            activity: "",
+            hours: "",
+            progress: "not-started",
+          })),
+        );
+      }
     }
   }, [selectedWeek, router]);
 
