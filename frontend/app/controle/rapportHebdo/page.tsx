@@ -220,7 +220,7 @@ const WeeklyReport = () => {
         </motion.div>
 
         {/* Grille des matières */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-[1400px] mx-auto bg-slate-400">
           {report.map((item, index) => (
             <motion.div
               key={item.subject}
