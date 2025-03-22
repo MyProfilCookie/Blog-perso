@@ -854,7 +854,7 @@ export const Navbar = () => {
             <motion.div
               ref={menuRef}
               animate={{ height: "auto", opacity: 1, y: 0, scale: 1 }}
-              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-lg absolute top-full left-0 z-20 max-h-[80vh] overflow-y-auto rounded-b-lg border-t-2 border-blue-500 dark:border-blue-400"
+              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-lg absolute top-full left-0 z-20 max-h-[80vh] overflow-y-auto rounded-b-lg border-t border-gray-200 dark:border-gray-700"
               exit={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
               initial={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
@@ -953,15 +953,23 @@ export const Navbar = () => {
                       {/* Dashboard */}
                       <NextLink
                         className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
-                        href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
+                        href={
+                          user.role === "admin"
+                            ? "/admin/dashboard"
+                            : "/dashboard"
+                        }
                         onClick={() => setIsMenuOpen(false)}
                       >
                         <FontAwesomeIcon
                           className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                          icon={user.role === "admin" ? faCrown : faTachometerAlt}
+                          icon={
+                            user.role === "admin" ? faCrown : faTachometerAlt
+                          }
                         />
                         <span className="font-medium">
-                          {user.role === "admin" ? "Dashboard Admin" : "Dashboard"}
+                          {user.role === "admin"
+                            ? "Dashboard Admin"
+                            : "Dashboard"}
                         </span>
                       </NextLink>
 
