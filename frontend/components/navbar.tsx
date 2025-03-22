@@ -800,66 +800,47 @@ export const Navbar = () => {
                     aria-label="Articles menu"
                     className="animate-in fade-in-80 zoom-in-95 duration-200"
                   >
-                    <DropdownItem
-                      key="articles"
+                    <DropdownItem 
+                      key="articles" 
                       textValue="Tous les articles"
                       onClick={() => router.push("/articles")}
                     >
                       Tous les articles
                     </DropdownItem>
-                    <DropdownItem key="blog" textValue="Blog">
-                      <Dropdown placement="right-start">
-                        <DropdownTrigger>
-                          <div className="flex items-center w-full cursor-pointer">
-                            Blog
-                          </div>
-                        </DropdownTrigger>
-                        <DropdownMenu aria-label="Catégories du blog">
-                          <DropdownItem
-                            key="blog-all"
-                            textValue="Tous les articles"
-                            onClick={() => router.push("/blog")}
-                          >
-                            Tous les articles
-                          </DropdownItem>
-                          <DropdownItem
-                            key="blog-sensibilisation"
-                            textValue="Sensibilisation"
-                            onClick={() =>
-                              router.push("/blog?category=Sensibilisation")
-                            }
-                          >
-                            Sensibilisation
-                          </DropdownItem>
-                          <DropdownItem
-                            key="blog-temoignages"
-                            textValue="Témoignages"
-                            onClick={() =>
-                              router.push("/blog?category=Témoignages")
-                            }
-                          >
-                            Témoignages
-                          </DropdownItem>
-                          <DropdownItem
-                            key="blog-conseils"
-                            textValue="Conseils"
-                            onClick={() =>
-                              router.push("/blog?category=Conseils")
-                            }
-                          >
-                            Conseils
-                          </DropdownItem>
-                          <DropdownItem
-                            key="blog-recherche"
-                            textValue="Recherche"
-                            onClick={() =>
-                              router.push("/blog?category=Recherche")
-                            }
-                          >
-                            Recherche
-                          </DropdownItem>
-                        </DropdownMenu>
-                      </Dropdown>
+                    <DropdownItem
+                      key="blog-all"
+                      textValue="Tous les articles du blog"
+                      onClick={() => router.push("/blog")}
+                    >
+                      Blog - Tous les articles
+                    </DropdownItem>
+                    <DropdownItem
+                      key="blog-sensibilisation"
+                      textValue="Sensibilisation"
+                      onClick={() => router.push("/blog?category=Sensibilisation")}
+                    >
+                      Blog - Sensibilisation
+                    </DropdownItem>
+                    <DropdownItem
+                      key="blog-temoignages"
+                      textValue="Témoignages"
+                      onClick={() => router.push("/blog?category=Témoignages")}
+                    >
+                      Blog - Témoignages
+                    </DropdownItem>
+                    <DropdownItem
+                      key="blog-conseils"
+                      textValue="Conseils"
+                      onClick={() => router.push("/blog?category=Conseils")}
+                    >
+                      Blog - Conseils
+                    </DropdownItem>
+                    <DropdownItem
+                      key="blog-recherche"
+                      textValue="Recherche"
+                      onClick={() => router.push("/blog?category=Recherche")}
+                    >
+                      Blog - Recherche
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
