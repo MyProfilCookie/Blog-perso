@@ -11,7 +11,11 @@ const subjects = [
   { name: "Histoire", color: "from-yellow-400 to-yellow-300", icon: "⏳" },
   { name: "Géographie", color: "from-purple-400 to-purple-300", icon: "🌍" },
   { name: "Langues", color: "from-pink-400 to-pink-300", icon: "🗣️" },
-  { name: "Arts Plastiques", color: "from-indigo-400 to-indigo-300", icon: "🎨" },
+  {
+    name: "Arts Plastiques",
+    color: "from-indigo-400 to-indigo-300",
+    icon: "🎨",
+  },
   { name: "Leçons du jour", color: "from-teal-400 to-teal-300", icon: "📖" },
 ];
 
@@ -52,7 +56,9 @@ interface ReportItem {
 type ReportList = ReportItem[];
 
 const WeeklyReport = () => {
-  const [selectedWeek, setSelectedWeek] = useState(`Semaine ${new Date().getWeekNumber()}`);
+  const [selectedWeek, setSelectedWeek] = useState(
+    `Semaine ${new Date().getWeekNumber()}`,
+  );
   const [weeks] = useState(generateWeeksOfYear);
   const [showWeeks, setShowWeeks] = useState(false);
   const [report, setReport] = useState<ReportList>(
@@ -61,11 +67,12 @@ const WeeklyReport = () => {
       activity: "",
       hours: "",
       progress: "not-started",
-    }))
+    })),
   );
 
   useEffect(() => {
     const savedReport = JSON.parse(localStorage.getItem(selectedWeek) || "[]");
+
     if (savedReport.length) {
       setReport(savedReport);
     } else {
@@ -75,23 +82,32 @@ const WeeklyReport = () => {
           activity: "",
           hours: "",
           progress: "not-started",
-        }))
+        })),
       );
     }
   }, [selectedWeek]);
 
-  const handleInputChange = (index: number, field: keyof ReportItem, value: string) => {
+  const handleInputChange = (
+    index: number,
+    field: keyof ReportItem,
+    value: string,
+  ) => {
     const updatedReport = [...report];
+
     updatedReport[index] = { ...updatedReport[index], [field]: value };
     setReport(updatedReport);
   };
 
   const getProgressEmoji = (progress: string) => {
     switch (progress) {
-      case "completed": return "🌟";
-      case "in-progress": return "💪";
-      case "not-acquired": return "📚";
-      default: return "⭐";
+      case "completed":
+        return "🌟";
+      case "in-progress":
+        return "💪";
+      case "not-acquired":
+        return "📚";
+      default:
+        return "⭐";
     }
   };
 
@@ -105,6 +121,7 @@ const WeeklyReport = () => {
         background: "#fff",
         confirmButtonColor: "#6366f1",
       });
+
       return;
     }
 
@@ -127,6 +144,7 @@ const WeeklyReport = () => {
         text: "Le rapport est incomplet. Veuillez remplir toutes les informations avant de le télécharger.",
         confirmButtonText: "Ok",
       });
+
       return;
     }
 
@@ -135,6 +153,7 @@ const WeeklyReport = () => {
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
+
     a.href = url;
     a.download = `${selectedWeek}-weeklyReport.json`;
     a.click();
@@ -147,6 +166,7 @@ const WeeklyReport = () => {
         return false;
       }
     }
+
     return true;
   };
 
@@ -155,15 +175,15 @@ const WeeklyReport = () => {
       <div className="container mx-auto px-4 py-8">
         {/* En-tête */}
         <motion.div
-          initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
           className="text-center mb-12"
+          initial={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.5 }}
         >
           <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
             📝 Mon Rapport de la Semaine
           </h1>
-          
+
           {/* Sélecteur de semaine */}
           <div className="relative inline-block">
             <Button
@@ -173,13 +193,13 @@ const WeeklyReport = () => {
             >
               {selectedWeek} 📅
             </Button>
-            
+
             {showWeeks && (
               <motion.div
-                initial={{ opacity: 0, y: 10 }}
                 animate={{ opacity: 1, y: 0 }}
                 className="absolute z-50 mt-2 py-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl
                           border-2 border-violet-200 dark:border-violet-700 max-h-60 overflow-y-auto"
+                initial={{ opacity: 0, y: 10 }}
               >
                 {weeks.map((week) => (
                   <button
@@ -204,14 +224,16 @@ const WeeklyReport = () => {
           {report.map((item, index) => (
             <motion.div
               key={item.subject}
-              initial={{ opacity: 0, scale: 0.9 }}
               animate={{ opacity: 1, scale: 1 }}
+              initial={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               <Card className="border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300">
                 <CardBody className="p-6">
                   {/* En-tête de la matière */}
-                  <div className={`bg-gradient-to-r ${subjects[index].color} -mx-6 -mt-6 p-4 mb-6`}>
+                  <div
+                    className={`bg-gradient-to-r ${subjects[index].color} -mx-6 -mt-6 p-4 mb-6`}
+                  >
                     <h3 className="text-xl font-bold text-white text-center flex items-center justify-center gap-2">
                       {subjects[index].icon} {item.subject}
                     </h3>
@@ -220,67 +242,91 @@ const WeeklyReport = () => {
                   {/* Contenu */}
                   <div className="space-y-4">
                     <div>
-                      <label htmlFor={`activity-${index}`} className="text-sm text-gray-600 dark:text-gray-400 mb-1 block">
+                      <label
+                        className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                        htmlFor={`activity-${index}`}
+                      >
                         Qu&apos;as-tu fait aujourd&apos;hui ?
                       </label>
                       <Input
-                        id={`activity-${index}`}
                         className="w-full"
+                        id={`activity-${index}`}
                         placeholder="Décris ton activité..."
                         value={item.activity}
-                        onChange={(e) => handleInputChange(index, "activity", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(index, "activity", e.target.value)
+                        }
                       />
                     </div>
 
                     <div>
-                      <label htmlFor={`hours-${index}`} className="text-sm text-gray-600 dark:text-gray-400 mb-1 block">
+                      <label
+                        className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                        htmlFor={`hours-${index}`}
+                      >
                         Combien de temps y as-tu passé ?
                       </label>
                       <Input
-                        id={`hours-${index}`}
                         className="w-full"
-                        type="number"
+                        id={`hours-${index}`}
                         placeholder="Temps en heures"
+                        type="number"
                         value={item.hours}
-                        onChange={(e) => handleInputChange(index, "hours", e.target.value)}
+                        onChange={(e) =>
+                          handleInputChange(index, "hours", e.target.value)
+                        }
                       />
                     </div>
 
                     <div>
-                      <label htmlFor={`progress-${index}`} className="text-sm text-gray-600 dark:text-gray-400 mb-1 block">
+                      <label
+                        className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                        htmlFor={`progress-${index}`}
+                      >
                         Comment ça s&apos;est passé ?
                       </label>
-                      <div className="grid grid-cols-3 gap-2" id={`progress-${index}`} role="group" aria-label="Progression">
+                      <div
+                        aria-label="Progression"
+                        className="grid grid-cols-1 gap-3 mt-2"
+                        id={`progress-${index}`}
+                        role="group"
+                      >
                         <Button
                           key="in-progress"
-                          className={`p-2 rounded-lg transition-all duration-300 ${
+                          className={`p-3 rounded-lg transition-all duration-300 text-base ${
                             item.progress === "in-progress"
                               ? "bg-violet-500 text-white"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
                           }`}
-                          onClick={() => handleInputChange(index, "progress", "in-progress")}
+                          onClick={() =>
+                            handleInputChange(index, "progress", "in-progress")
+                          }
                         >
                           Je progresse 💪
                         </Button>
                         <Button
                           key="completed"
-                          className={`p-2 rounded-lg transition-all duration-300 ${
+                          className={`p-3 rounded-lg transition-all duration-300 text-base ${
                             item.progress === "completed"
                               ? "bg-violet-500 text-white"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
                           }`}
-                          onClick={() => handleInputChange(index, "progress", "completed")}
+                          onClick={() =>
+                            handleInputChange(index, "progress", "completed")
+                          }
                         >
                           J&apos;ai réussi ! 🌟
                         </Button>
                         <Button
                           key="not-acquired"
-                          className={`p-2 rounded-lg transition-all duration-300 ${
+                          className={`p-3 rounded-lg transition-all duration-300 text-base ${
                             item.progress === "not-acquired"
                               ? "bg-violet-500 text-white"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
                           }`}
-                          onClick={() => handleInputChange(index, "progress", "not-acquired")}
+                          onClick={() =>
+                            handleInputChange(index, "progress", "not-acquired")
+                          }
                         >
                           Besoin d&apos;aide 🤔
                         </Button>
@@ -295,10 +341,10 @@ const WeeklyReport = () => {
 
         {/* Boutons d'action */}
         <motion.div
+          animate={{ y: 0 }}
           className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg border-t-2 
                     border-violet-200 dark:border-violet-700 p-6"
           initial={{ y: 100 }}
-          animate={{ y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <div className="container mx-auto flex justify-center gap-4">
