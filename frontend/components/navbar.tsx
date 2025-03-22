@@ -937,31 +937,42 @@ export const Navbar = () => {
                             className="mr-3 text-blue-600 dark:text-blue-400 w-5"
                             icon={faNewspaper}
                           />
-                          <div className="flex flex-col w-full space-y-2">
-                            <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
-                              <div className="flex items-center">
-                                <span className="text-xl mr-2">⏳</span>
-                                <div>Mes commandes en cours</div>
+                          <div className="flex flex-col w-full space-y-4">
+                            <div className="flex items-center justify-between bg-yellow-50 dark:bg-gray-800 p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors">
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl">⏳</span>
+                                <div className="flex flex-col">
+                                  <div className="font-medium">En cours</div>
+                                  <div className="text-xs text-gray-500 dark:text-gray-400">Commandes en traitement</div>
+                                </div>
                               </div>
-                              <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
+                              <span className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 min-w-[2rem] text-center">
                                 {orderCount.pending || 0}
                               </span>
                             </div>
-                            <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
-                              <div className="flex items-center">
-                                <span className="text-xl mr-2">🚚</span>
-                                <div>Mes commandes envoyées</div>
+
+                            <div className="flex items-center justify-between bg-blue-50 dark:bg-gray-800 p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors">
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl">🚚</span>
+                                <div className="flex flex-col">
+                                  <div className="font-medium">Envoyées</div>
+                                  <div className="text-xs text-gray-500 dark:text-gray-400">En cours de livraison</div>
+                                </div>
                               </div>
-                              <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                              <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
                                 {orderCount.shipped || 0}
                               </span>
                             </div>
-                            <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
-                              <div className="flex items-center">
-                                <span className="text-xl mr-2">✅</span>
-                                <div>Mes commandes livrées</div>
+
+                            <div className="flex items-center justify-between bg-green-50 dark:bg-gray-800 p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-gray-700 transition-colors">
+                              <div className="flex items-center gap-3">
+                                <span className="text-xl">✅</span>
+                                <div className="flex flex-col">
+                                  <div className="font-medium">Livrées</div>
+                                  <div className="text-xs text-gray-500 dark:text-gray-400">Commandes terminées</div>
+                                </div>
                               </div>
-                              <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                              <span className="text-lg font-semibold text-green-600 dark:text-green-400 min-w-[2rem] text-center">
                                 {orderCount.delivered || 0}
                               </span>
                             </div>
@@ -1232,31 +1243,42 @@ export const Navbar = () => {
                       router.push("/orders");
                     }}
                   >
-                    <div className="flex flex-col w-full space-y-2">
-                      <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
-                        <div className="flex items-center">
-                          <span className="text-xl mr-2">⏳</span>
-                          <div>Mes commandes en cours</div>
+                    <div className="flex flex-col w-full space-y-4">
+                      <div className="flex items-center justify-between bg-yellow-50 dark:bg-gray-800 p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl">⏳</span>
+                          <div className="flex flex-col">
+                            <div className="font-medium">En cours</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">Commandes en traitement</div>
+                          </div>
                         </div>
-                        <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
+                        <span className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 min-w-[2rem] text-center">
                           {orderCount.pending || 0}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
-                        <div className="flex items-center">
-                          <span className="text-xl mr-2">🚚</span>
-                          <div>Mes commandes envoyées</div>
+
+                      <div className="flex items-center justify-between bg-blue-50 dark:bg-gray-800 p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl">🚚</span>
+                          <div className="flex flex-col">
+                            <div className="font-medium">Envoyées</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">En cours de livraison</div>
+                          </div>
                         </div>
-                        <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                        <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
                           {orderCount.shipped || 0}
                         </span>
                       </div>
-                      <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
-                        <div className="flex items-center">
-                          <span className="text-xl mr-2">✅</span>
-                          <div>Mes commandes livrées</div>
+
+                      <div className="flex items-center justify-between bg-green-50 dark:bg-gray-800 p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-gray-700 transition-colors">
+                        <div className="flex items-center gap-3">
+                          <span className="text-xl">✅</span>
+                          <div className="flex flex-col">
+                            <div className="font-medium">Livrées</div>
+                            <div className="text-xs text-gray-500 dark:text-gray-400">Commandes terminées</div>
+                          </div>
                         </div>
-                        <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                        <span className="text-lg font-semibold text-green-600 dark:text-green-400 min-w-[2rem] text-center">
                           {orderCount.delivered || 0}
                         </span>
                       </div>
