@@ -123,7 +123,7 @@ export default function LessonOfTheDay() {
     if (isLoggedIn) fetchLessonOfTheDay(selectedDate);
   }, [selectedDate, isLoggedIn]);
 
-  const [, setRatings] = useState<{
+  const [ratings, setRatings] = useState<{
     Facile: number;
     Moyen: number;
     Difficile: number;
@@ -133,11 +133,36 @@ export default function LessonOfTheDay() {
     Difficile: 0,
   });
 
+  const [encouragementMessage, setEncouragementMessage] = useState<string>("");
+
   const handleLessonRating = (rating: "Facile" | "Moyen" | "Difficile") => {
     setRatings((prevRatings) => ({
       ...prevRatings,
       [rating]: prevRatings[rating] + 1,
     }));
+
+    // Messages d'encouragement personnalisés selon la difficulté
+    const messages = {
+      Facile: [
+        "🌟 Bravo ! Tu as très bien réussi cette leçon ! Continue comme ça !",
+        "✨ Excellent travail ! Tu peux être fier(e) de toi !",
+        "🎉 Super ! Tu as tout compris ! Tu es sur la bonne voie !"
+      ],
+      Moyen: [
+        "💪 Tu as fait de beaux efforts ! Chaque pas compte !",
+        "🌈 Continue d'essayer, tu progresses très bien !",
+        "⭐ Tu t'améliores chaque jour, c'est super !"
+      ],
+      Difficile: [
+        "🤗 N'abandonne pas ! Tu es courageux(se) d'avoir essayé !",
+        "🌱 Chaque difficulté te rend plus fort(e) ! On continue ensemble !",
+        "💝 Tu as osé essayer, c'est déjà une belle victoire !"
+      ]
+    };
+
+    // Sélection aléatoire d'un message d'encouragement
+    const randomMessage = messages[rating][Math.floor(Math.random() * messages[rating].length)];
+    setEncouragementMessage(randomMessage);
   };
 
   if (!isLoggedIn) {
@@ -324,7 +349,7 @@ export default function LessonOfTheDay() {
 
                       {/* Évaluation de la leçon */}
                       <div className="mt-8 border-t pt-6 border-violet-200">
-                        <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-4">Comment avez-vous trouvé cette leçon ?</h4>
+                        <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-4">Comment as-tu trouvé cette leçon ?</h4>
                         <div className="flex flex-wrap gap-4">
                           <Button
                             className="bg-green-100 hover:bg-green-200 text-green-700 px-6 py-3 rounded-xl flex items-center gap-2 transition-all duration-200"
@@ -345,6 +370,20 @@ export default function LessonOfTheDay() {
                             <span>😓</span> Difficile
                           </Button>
                         </div>
+                        
+                        {/* Message d'encouragement */}
+                        {encouragementMessage && (
+                          <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5 }}
+                            className="mt-6 p-4 bg-violet-50 dark:bg-violet-900/30 rounded-xl text-center"
+                          >
+                            <p className="text-lg font-medium text-violet-700 dark:text-violet-300">
+                              {encouragementMessage}
+                            </p>
+                          </motion.div>
+                        )}
                       </div>
                     </div>
                   </div>
