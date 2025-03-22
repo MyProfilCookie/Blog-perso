@@ -922,23 +922,24 @@ export const Navbar = () => {
                           type="button"
                           onClick={() => {
                             setIsMenuOpen(false);
-                            markOrderUpdatesAsRead();
                             router.push("/orders");
                           }}
                           onKeyDown={(e) => {
                             if (e.key === "Enter" || e.key === " ") {
-                              setIsMenuOpen(false);
-                              markOrderUpdatesAsRead();
                               router.push("/orders");
                             }
                           }}
                         >
-                          {/* <FontAwesomeIcon
-                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                            icon={faNewspaper}
-                          /> */}
                           <div className="flex flex-col w-full space-y-4">
-                            <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                            <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
+                                 onClick={() => router.push("/orders")}
+                                 role="button"
+                                 tabIndex={0}
+                                 onKeyDown={(e) => {
+                                   if (e.key === "Enter" || e.key === " ") {
+                                     router.push("/orders");
+                                   }
+                                 }}>
                               <div className="flex items-center gap-3">
                                 <span className="text-xl">⏳</span>
                                 <div className="flex flex-col">
@@ -955,7 +956,15 @@ export const Navbar = () => {
                               </span>
                             </div>
 
-                            <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                            <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
+                                 onClick={() => router.push("/orders")}
+                                 role="button"
+                                 tabIndex={0}
+                                 onKeyDown={(e) => {
+                                   if (e.key === "Enter" || e.key === " ") {
+                                     router.push("/orders");
+                                   }
+                                 }}>
                               <div className="flex items-center gap-3">
                                 <span className="text-xl">🚚</span>
                                 <div className="flex flex-col">
@@ -972,7 +981,15 @@ export const Navbar = () => {
                               </span>
                             </div>
 
-                            <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                            <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
+                                 onClick={() => router.push("/orders")}
+                                 role="button"
+                                 tabIndex={0}
+                                 onKeyDown={(e) => {
+                                   if (e.key === "Enter" || e.key === " ") {
+                                     router.push("/orders");
+                                   }
+                                 }}>
                               <div className="flex items-center gap-3">
                                 <span className="text-xl">✅</span>
                                 <div className="flex flex-col">
@@ -1253,7 +1270,6 @@ export const Navbar = () => {
                     key="orders-pending"
                     className="relative"
                     onClick={() => {
-                      markOrderUpdatesAsRead();
                       router.push("/orders?status=pending");
                     }}
                   >
@@ -1279,7 +1295,6 @@ export const Navbar = () => {
                     key="orders-shipped"
                     className="relative"
                     onClick={() => {
-                      markOrderUpdatesAsRead();
                       router.push("/orders?status=shipped");
                     }}
                   >
@@ -1305,7 +1320,6 @@ export const Navbar = () => {
                     key="orders-delivered"
                     className="relative"
                     onClick={() => {
-                      markOrderUpdatesAsRead();
                       router.push("/orders?status=delivered");
                     }}
                   >
@@ -1332,7 +1346,6 @@ export const Navbar = () => {
                     showDivider
                     className="relative"
                     onClick={() => {
-                      markOrderUpdatesAsRead();
                       router.push("/orders");
                     }}
                   >
