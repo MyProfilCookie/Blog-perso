@@ -162,158 +162,208 @@ export default function LessonOfTheDay() {
   return (
     <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10">
       <BackButton />
-      <motion.h1 className="text-4xl font-extrabold text-violet-600 text-center">
-        ✨ Bonjour, <span className="text-indigo-500">{userName}</span> ! ✨
-      </motion.h1>
-
-      <motion.div className="p-6 border bg-violet-100 border-violet-300 rounded-lg shadow-md text-center w-full md:w-3/4">
-        <h2 className="text-3xl font-bold text-violet-700">📚 Leçon du jour</h2>
-        <p className="mt-2 text-lg font-semibold text-gray-700">
-          Nous sommes le {dayjs().format("dddd DD MMMM YYYY")}
-        </p>
-        <div className="flex justify-center gap-4 mt-4">
-          <input
-            className="px-4 py-2 rounded-md border border-gray-200"
-            type="date"
-            value={selectedDate}
-            onChange={(e) => setSelectedDate(e.target.value)}
-          />
-          <Button
-            className="px-4 py-2 rounded-md bg-violet-600 text-white"
-            onClick={() => fetchLessonOfTheDay(selectedDate)}
+      <motion.div 
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        className="w-full max-w-7xl mx-auto px-4"
+      >
+        {/* En-tête avec les informations de l'utilisateur */}
+        <div className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-8 mb-8 text-white shadow-xl">
+          <motion.h1 
+            className="text-4xl font-extrabold text-center mb-4"
+            initial={{ scale: 0.9 }}
+            animate={{ scale: 1 }}
+            transition={{ duration: 0.5 }}
           >
-            🔄 Changer la date
-          </Button>
+            ✨ Bienvenue sur votre espace d&apos;apprentissage, <span className="text-yellow-300">{userName}</span> ! ✨
+          </motion.h1>
+          <p className="text-center text-lg opacity-90">Découvrez votre programme personnalisé du jour</p>
         </div>
-      </motion.div>
 
-      {lessonOfTheDay ? (
-        <motion.div className="w-full md:w-3/4">
-          {lessonOfTheDay.lessons.map((lesson, lessonIndex) => (
-            <Card
-              key={lessonIndex}
-              className="w-full p-4 mt-6 rounded-md shadow-md bg-cream border border-gray-200"
-            >
-              <CardBody>
-                <h3 className="text-3xl font-bold text-violet-600">
-                  {lesson.subject}: {lesson.lesson.title}
-                </h3>
+        {/* Sélecteur de date et statistiques */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+          <motion.div 
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-violet-200"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
+          >
+            <h2 className="text-2xl font-bold text-violet-700 dark:text-violet-400 mb-4">📅 Sélection de la date</h2>
+            <div className="flex flex-col sm:flex-row gap-4">
+              <input
+                className="px-4 py-2 rounded-lg border-2 border-violet-200 focus:border-violet-500 focus:outline-none flex-grow"
+                type="date"
+                value={selectedDate}
+                onChange={(e) => setSelectedDate(e.target.value)}
+              />
+              <Button
+                className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2 rounded-lg transition-all duration-200 flex items-center gap-2"
+                onClick={() => fetchLessonOfTheDay(selectedDate)}
+              >
+                <span>🔄</span> Actualiser
+              </Button>
+            </div>
+            <p className="mt-4 text-gray-600 dark:text-gray-300">
+              Nous sommes le {dayjs().format("dddd DD MMMM YYYY")}
+            </p>
+          </motion.div>
 
-                <motion.div className="flex justify-center my-4">
-                  <Image
-                    alt={`Leçon ${lesson.lesson.title}`}
-                    className="object-cover rounded-md shadow-md w-80 h-60"
-                    src={`/assets/${lesson.subject.toLowerCase()}.jpg`}
-                    onError={(e) =>
-                      (e.currentTarget.src = "/assets/lessons.jpg")
-                    }
-                  />
-                </motion.div>
+          <motion.div 
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-violet-200"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
+          >
+            <h2 className="text-2xl font-bold text-violet-700 dark:text-violet-400 mb-4">📊 Votre progression</h2>
+            <div className="grid grid-cols-3 gap-4">
+              <div className="text-center p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <p className="text-2xl font-bold text-green-600 dark:text-green-400">😊</p>
+                <p className="text-sm text-green-700 dark:text-green-300">Facile</p>
+              </div>
+              <div className="text-center p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">😐</p>
+                <p className="text-sm text-yellow-700 dark:text-yellow-300">Moyen</p>
+              </div>
+              <div className="text-center p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                <p className="text-2xl font-bold text-red-600 dark:text-red-400">😓</p>
+                <p className="text-sm text-red-700 dark:text-red-300">Difficile</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
 
-                <p className="mt-4 text-gray-600">
-                  {lesson.lesson.description}
-                </p>
+        {/* Contenu des leçons */}
+        {lessonOfTheDay ? (
+          <motion.div 
+            className="space-y-8"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            {lessonOfTheDay.lessons.map((lesson, lessonIndex) => (
+              <Card
+                key={lessonIndex}
+                className="w-full overflow-hidden bg-white dark:bg-gray-800 border-2 border-violet-200 rounded-xl shadow-xl"
+              >
+                <CardBody className="p-6">
+                  <div className="flex flex-col md:flex-row gap-6">
+                    <div className="md:w-1/3">
+                      <motion.div 
+                        className="relative h-60 rounded-xl overflow-hidden"
+                        whileHover={{ scale: 1.05 }}
+                        transition={{ duration: 0.2 }}
+                      >
+                        <Image
+                          alt={`Leçon ${lesson.lesson.title}`}
+                          src={`/assets/${lesson.subject.toLowerCase()}.jpg`}
+                          className="object-cover"
+                          fill
+                          onError={(e) => (e.currentTarget.src = "/assets/lessons.jpg")}
+                        />
+                      </motion.div>
+                    </div>
+                    
+                    <div className="md:w-2/3">
+                      <h3 className="text-3xl font-bold text-violet-600 dark:text-violet-400 mb-4">
+                        {lesson.subject}: {lesson.lesson.title}
+                      </h3>
+                      
+                      <p className="text-gray-600 dark:text-gray-300 mb-6">
+                        {lesson.lesson.description}
+                      </p>
 
-                {lesson.lesson.objectives &&
-                  lesson.lesson.objectives.length > 0 && (
-                    <>
-                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
-                        🌟 Objectifs
-                      </h4>
-                      <ul className="mt-2 text-gray-700 list-disc list-inside">
-                        {lesson.lesson.objectives.map((objective, i) => (
-                          <li key={i}>{objective}</li>
-                        ))}
-                      </ul>
-                    </>
-                  )}
-
-                {/* Step */}
-                {lesson.lesson.steps && lesson.lesson.steps.length > 0 && (
-                  <>
-                    <h4 className="mt-4 text-lg font-semibold text-violet-600">
-                      🌟 Étapes
-                    </h4>
-                    <ul className="mt-2 text-gray-700 list-disc list-inside">
-                      {lesson.lesson.steps.map(
-                        (
-                          step:
-                            | string
-                            | number
-                            | bigint
-                            | boolean
-                            | ReactElement<
-                              any,
-                              string | JSXElementConstructor<any>
-                            >
-                            | Iterable<ReactNode>
-                            | ReactPortal
-                            | Promise<AwaitedReactNode>
-                            | null
-                            | undefined,
-                          i: Key | null | undefined,
-                        ) => (
-                          <li key={i}>{step}</li>
-                        ),
+                      {lesson.lesson.objectives && lesson.lesson.objectives.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-3 flex items-center gap-2">
+                            <span>🎯</span> Objectifs
+                          </h4>
+                          <ul className="space-y-2">
+                            {lesson.lesson.objectives.map((objective, i) => (
+                              <li key={i} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                <span className="text-violet-500">•</span> {objective}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       )}
-                    </ul>
-                  </>
-                )}
 
-                {/* Activités */}
-                {lesson.lesson.activities &&
-                  lesson.lesson.activities.length > 0 && (
-                    <>
-                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
-                        🌟 Activités
-                      </h4>
-                    </>
-                  )}
-                {/* Explications */}
-                {lesson.lesson.explanation &&
-                  lesson.lesson.explanation.length > 0 && (
-                    <>
-                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
-                        🌟 Explications
-                      </h4>
-                    </>
-                  )}
-                {/* Final activity */}
-                {lesson.lesson.final_activity &&
-                  lesson.lesson.final_activity.length > 0 && (
-                    <>
-                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
-                        🌟 Activité finale
-                      </h4>
-                    </>
-                  )}
-                {/* Conclusion */}
-                {lesson.lesson.conclusion &&
-                  lesson.lesson.conclusion.length > 0 && (
-                    <>
-                      <h4 className="mt-4 text-lg font-semibold text-violet-600">
-                        🌟 Conclusion
-                      </h4>
-                    </>
-                  )}
-                <div className="mt-6 flex justify-center gap-4">
-                  <Button onClick={() => handleLessonRating("Facile")}>
-                    😊 Facile
-                  </Button>
-                  <Button onClick={() => handleLessonRating("Moyen")}>
-                    😐 Moyen
-                  </Button>
-                  <Button onClick={() => handleLessonRating("Difficile")}>
-                    😓 Difficile
-                  </Button>
-                </div>
-              </CardBody>
-            </Card>
-          ))}
-        </motion.div>
-      ) : (
-        <h3 className="text-lg text-gray-600">Chargement de la leçon...</h3>
-      )}
+                      {lesson.lesson.steps && lesson.lesson.steps.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-3 flex items-center gap-2">
+                            <span>📝</span> Étapes
+                          </h4>
+                          <ul className="space-y-2">
+                            {lesson.lesson.steps.map((step: string, i: number) => (
+                              <li key={i} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                <span className="text-violet-500">{i + 1}.</span> {step}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
+                      )}
+
+                      {lesson.lesson.activities && lesson.lesson.activities.length > 0 && (
+                        <div className="mb-6">
+                          <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-3 flex items-center gap-2">
+                            <span>🎮</span> Activités
+                          </h4>
+                          <div className="space-y-4">
+                            {lesson.lesson.activities.map((activity, i) => (
+                              <div key={i} className="bg-violet-50 dark:bg-violet-900/30 p-4 rounded-lg">
+                                <h5 className="font-semibold text-violet-700 dark:text-violet-300 mb-2">{activity.title}</h5>
+                                <p className="text-sm text-gray-600 dark:text-gray-400">⏱️ Durée: {activity.duration}</p>
+                                <ul className="mt-2 space-y-1">
+                                  {activity.steps.map((step, j) => (
+                                    <li key={j} className="text-gray-700 dark:text-gray-300 text-sm">• {step}</li>
+                                  ))}
+                                </ul>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      {/* Évaluation de la leçon */}
+                      <div className="mt-8 border-t pt-6 border-violet-200">
+                        <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-4">Comment avez-vous trouvé cette leçon ?</h4>
+                        <div className="flex flex-wrap gap-4">
+                          <Button
+                            className="bg-green-100 hover:bg-green-200 text-green-700 px-6 py-3 rounded-xl flex items-center gap-2 transition-all duration-200"
+                            onClick={() => handleLessonRating("Facile")}
+                          >
+                            <span>😊</span> Facile
+                          </Button>
+                          <Button
+                            className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-6 py-3 rounded-xl flex items-center gap-2 transition-all duration-200"
+                            onClick={() => handleLessonRating("Moyen")}
+                          >
+                            <span>😐</span> Moyen
+                          </Button>
+                          <Button
+                            className="bg-red-100 hover:bg-red-200 text-red-700 px-6 py-3 rounded-xl flex items-center gap-2 transition-all duration-200"
+                            onClick={() => handleLessonRating("Difficile")}
+                          >
+                            <span>😓</span> Difficile
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            ))}
+          </motion.div>
+        ) : (
+          <motion.div 
+            className="text-center py-12"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ duration: 0.5 }}
+          >
+            <div className="animate-spin text-4xl mb-4">🔄</div>
+            <h3 className="text-xl text-gray-600 dark:text-gray-400">Chargement de votre leçon...</h3>
+          </motion.div>
+        )}
+      </motion.div>
     </section>
   );
 }
