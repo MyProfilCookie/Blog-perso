@@ -46,7 +46,7 @@ const Footer = () => {
   }, [mounted]);
 
   return (
-    <footer className="border-t dark:bg-gray-900 border-violet-200 dark:border-violet-800">
+    <footer className="border-t dark:bg-gray-900 border-violet-200 dark:border-violet-800 mt-16">
       <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Logo et Description */}
