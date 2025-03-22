@@ -47,21 +47,21 @@ const Footer = () => {
 
   return (
     <footer className="border-t dark:bg-gray-900 border-violet-200 dark:border-violet-800">
-      <div className="container mx-auto px-6 py-12">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8">
           {/* Logo et Description */}
-          <div className="col-span-1 lg:col-span-2">
-            <h3 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
+          <div className="col-span-1 lg:col-span-2 text-center sm:text-left">
+            <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-3">
               AutiStudy
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md">
+            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md mx-auto sm:mx-0">
               Une plateforme éducative adaptée, favorisant l&apos;apprentissage et l&apos;épanouissement des enfants autistes.
             </p>
           </div>
 
           {/* Navigation */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <div className="space-y-3 text-center sm:text-left">
+            <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
               Navigation
             </h4>
             <nav className="flex flex-col space-y-2">
@@ -78,11 +78,11 @@ const Footer = () => {
           </div>
 
           {/* Thème et Paramètres */}
-          <div className="space-y-4">
-            <h4 className="text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <div className="space-y-3 text-center sm:text-left">
+            <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
               Paramètres
             </h4>
-            <div className="space-y-4">
+            <div className="flex justify-center sm:justify-start">
               <Dropdown>
                 <DropdownTrigger>
                   <Button
@@ -158,8 +158,8 @@ const Footer = () => {
         </div>
 
         {/* Copyright - Séparé en bas */}
-        <div className="border-t border-gray-200 dark:border-gray-800 mt-12 pt-8 text-center">
-          <p className="text-sm text-gray-500 dark:text-gray-400">
+        <div className="border-t border-gray-200 dark:border-gray-800 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
             © {new Date().getFullYear()} AutiStudy | Tous droits réservés
           </p>
         </div>
