@@ -1245,7 +1245,7 @@ export const Navbar = () => {
                       router.push("/orders?status=pending");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/50 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 w-full">
                       <div className="flex items-center gap-3">
                         <span className="text-xl">⏳</span>
                         <div className="flex flex-col">
@@ -1267,7 +1267,7 @@ export const Navbar = () => {
                       router.push("/orders?status=shipped");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 w-full">
                       <div className="flex items-center gap-3">
                         <span className="text-xl">🚚</span>
                         <div className="flex flex-col">
@@ -1289,7 +1289,7 @@ export const Navbar = () => {
                       router.push("/orders?status=delivered");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/50 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 w-full">
                       <div className="flex items-center gap-3">
                         <span className="text-xl">✅</span>
                         <div className="flex flex-col">
