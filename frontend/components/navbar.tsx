@@ -23,17 +23,9 @@ import {
   faNewspaper,
   faCrown,
   faTachometerAlt,
-  faShoppingCart,
   faBars,
   faUser,
-  faHome,
-  faInfoCircle,
-  faPhone,
-  faUserGroup,
-  faGraduationCap,
-  faQuestionCircle,
   faMoon,
-  faCode,
   faSyncAlt,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
@@ -44,7 +36,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
-import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
 import { AutismLogo } from "@/components/icons";
 
@@ -90,7 +81,7 @@ const getIconForNavItem = (label: string) => {
     Cours: "🎓",
     FAQ: "❓",
     Controle: "🎮",
-    Manuel: "📖"
+    Manuel: "📖",
   };
 
   return iconMap[label] || "ℹ️"; // Default icon if no match
@@ -664,6 +655,7 @@ export const Navbar = () => {
           "Données utilisateur insuffisantes pour le suivi des commandes",
         );
         handleTokenInvalid();
+
         return;
       }
 
@@ -706,9 +698,12 @@ export const Navbar = () => {
 
   // Vérifier la validité du token toutes les 5 minutes
   useEffect(() => {
-    const tokenCheckInterval = setInterval(() => {
-      checkTokenValidity();
-    }, 5 * 60 * 1000); // 5 minutes
+    const tokenCheckInterval = setInterval(
+      () => {
+        checkTokenValidity();
+      },
+      5 * 60 * 1000,
+    ); // 5 minutes
 
     return () => clearInterval(tokenCheckInterval);
   }, []);
@@ -730,7 +725,9 @@ export const Navbar = () => {
         <NavbarBrand as="li" className="gap-3 max-w-fit">
           <NextLink className="flex items-center justify-start gap-1" href="/">
             <AutismLogo />
-            <p className="font-bold text-blue-800 dark:text-white font-sans">AutiStudy</p>
+            <p className="font-bold text-blue-800 dark:text-white font-sans">
+              AutiStudy
+            </p>
           </NextLink>
         </NavbarBrand>
 
@@ -767,15 +764,15 @@ export const Navbar = () => {
                       À propos
                     </Button>
                   </DropdownTrigger>
-                  <DropdownMenu 
-                    className="animate-in fade-in-80 zoom-in-95 duration-200"
+                  <DropdownMenu
                     aria-label="À propos menu"
+                    className="animate-in fade-in-80 zoom-in-95 duration-200"
                   >
                     <DropdownItem key="about">
                       <NextLink href="/about">À propos de nous</NextLink>
                     </DropdownItem>
                     <DropdownItem key="contact">
-                      <NextLink href="/about#contact">Contact</NextLink>
+                      <NextLink href="/contact">Contact</NextLink>
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
@@ -791,9 +788,9 @@ export const Navbar = () => {
                       Articles
                     </Button>
                   </DropdownTrigger>
-                  <DropdownMenu 
-                    className="animate-in fade-in-80 zoom-in-95 duration-200"
+                  <DropdownMenu
                     aria-label="Articles menu"
+                    className="animate-in fade-in-80 zoom-in-95 duration-200"
                   >
                     <DropdownItem key="articles">
                       <NextLink href="/articles">Tous les articles</NextLink>
@@ -899,9 +896,7 @@ export const Navbar = () => {
                           <FontAwesomeIcon
                             className="mr-3 text-blue-600 dark:text-blue-400 w-5"
                             icon={
-                              user.role === "admin"
-                                ? faCrown
-                                : faTachometerAlt
+                              user.role === "admin" ? faCrown : faTachometerAlt
                             }
                           />
                           {user.role === "admin"
