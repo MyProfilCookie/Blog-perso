@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
+import { useRouter } from "next/navigation";
 
 const subjects = [
   { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
@@ -57,7 +58,8 @@ interface ReportItem {
 type ReportList = ReportItem[];
 
 const WeeklyReport = () => {
-  const [selectedWeek, setSelectedWeek] = useState(
+  const router = useRouter();
+  const [selectedWeek, setSelectedWeek] = useState<string>(
     `Semaine ${new Date().getWeekNumber()}`,
   );
   const [weeks] = useState(generateWeeksOfYear);
@@ -73,48 +75,53 @@ const WeeklyReport = () => {
   );
 
   useEffect(() => {
-    // Récupérer le nom de l'utilisateur
-    const fetchUserName = async () => {
+    const checkAuth = async () => {
+      const token = localStorage.getItem("token");
+      
+      if (!token) {
+        console.log("Pas de token trouvé, redirection vers la connexion...");
+        router.push("/login");
+        return;
+      }
+
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
-            "Authorization": `Bearer ${localStorage.getItem("token")}`,
+            "Authorization": `Bearer ${token}`,
           },
         });
 
         if (response.ok) {
           const userData = await response.json();
-          console.log("Données utilisateur complètes:", userData);
+          console.log("Données utilisateur reçues:", userData);
           
-          // Vérification plus précise de la structure des données
-          if (userData.user && userData.user.firstName) {
-            setUserName(userData.user.firstName);
-          } else if (userData.firstName) {
+          if (userData.firstName) {
             setUserName(userData.firstName);
-          } else if (userData.user && userData.user.name) {
-            setUserName(userData.user.name);
           } else if (userData.name) {
-            setUserName(userData.name);
-          } else {
-            console.warn("Structure de données utilisateur inattendue:", userData);
-            // Ne pas définir de nom par défaut si l'utilisateur est connecté mais que la structure est inattendue
+            setUserName(userData.name.split(" ")[0]); // Prend le premier mot du nom
+          } else if (userData.email) {
+            setUserName(userData.email.split("@")[0]); // Utilise la partie avant @ de l'email
           }
+        } else if (response.status === 401) {
+          console.log("Token expiré, redirection vers la connexion...");
+          localStorage.removeItem("token"); // Supprime le token invalide
+          router.push("/login");
         } else {
           console.error("Erreur de réponse API:", response.status);
           const errorData = await response.text();
           console.error("Détails de l'erreur:", errorData);
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération du nom:", error);
+        console.error("Erreur lors de la vérification de l'authentification:", error);
       }
     };
 
-    fetchUserName();
+    checkAuth();
 
+    // Chargement du rapport sauvegardé
     const savedReport = JSON.parse(localStorage.getItem(selectedWeek) || "[]");
-
     if (savedReport.length) {
       setReport(savedReport);
     } else {
@@ -127,7 +134,7 @@ const WeeklyReport = () => {
         })),
       );
     }
-  }, [selectedWeek]);
+  }, [selectedWeek, router]);
 
   const handleInputChange = (
     index: number,
