@@ -57,6 +57,25 @@ interface ReportItem {
 
 type ReportList = ReportItem[];
 
+// Fonction pour vérifier si le token est expiré
+const isTokenExpired = (token: string) => {
+  try {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
+      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+    }).join(''));
+
+    const { exp } = JSON.parse(jsonPayload);
+    const currentTime = Math.floor(Date.now() / 1000);
+    
+    return exp < currentTime;
+  } catch (error) {
+    console.error("Erreur lors de la vérification du token:", error);
+    return true; // En cas d'erreur, on considère le token comme expiré
+  }
+};
+
 const WeeklyReport = () => {
   const router = useRouter();
   const [selectedWeek, setSelectedWeek] = useState<string>(
@@ -87,6 +106,14 @@ const WeeklyReport = () => {
             return;
           }
 
+          // Vérifier si le token est expiré
+          if (isTokenExpired(token)) {
+            console.log("Token expiré, redirection vers la connexion...");
+            localStorage.removeItem("token");
+            router.push("/users/login");
+            return;
+          }
+
           try {
             const userData = JSON.parse(userDataStr);
             if (userData && (userData.prenom || userData.nom)) {
@@ -94,19 +121,18 @@ const WeeklyReport = () => {
             }
           } catch (error) {
             console.error("Erreur lors de la lecture des données utilisateur:", error);
-            router.push("/users/login");
           }
         }
       } catch (error) {
         console.error("Erreur lors de la vérification de l'authentification:", error);
-        router.push("/users/login");
       }
     };
 
     checkAuth();
 
-    // Chargement du rapport sauvegardé seulement si nous avons un token
-    if (localStorage.getItem("token")) {
+    // Chargement du rapport sauvegardé seulement si nous avons un token valide
+    const token = localStorage.getItem("token");
+    if (token && !isTokenExpired(token)) {
       const savedReport = JSON.parse(localStorage.getItem(selectedWeek) || "[]");
       if (savedReport.length) {
         setReport(savedReport);
