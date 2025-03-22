@@ -1245,11 +1245,11 @@ export const Navbar = () => {
                       router.push("/orders?status=pending");
                     }}
                   >
-                    <div className="flex items-center justify-between bg-yellow-50 dark:bg-gray-800 p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors w-full">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full">
                       <div className="flex items-center gap-3">
                         <span className="text-xl">⏳</span>
                         <div className="flex flex-col">
-                          <div className="font-medium">En cours</div>
+                          <div className="font-medium text-yellow-600 dark:text-yellow-400">En cours</div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">Commandes en traitement</div>
                         </div>
                       </div>
@@ -1267,11 +1267,11 @@ export const Navbar = () => {
                       router.push("/orders?status=shipped");
                     }}
                   >
-                    <div className="flex items-center justify-between bg-blue-50 dark:bg-gray-800 p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors w-full">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full">
                       <div className="flex items-center gap-3">
                         <span className="text-xl">🚚</span>
                         <div className="flex flex-col">
-                          <div className="font-medium">Envoyées</div>
+                          <div className="font-medium text-blue-600 dark:text-blue-400">Envoyées</div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">En cours de livraison</div>
                         </div>
                       </div>
@@ -1289,11 +1289,11 @@ export const Navbar = () => {
                       router.push("/orders?status=delivered");
                     }}
                   >
-                    <div className="flex items-center justify-between bg-green-50 dark:bg-gray-800 p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-gray-700 transition-colors w-full">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors w-full">
                       <div className="flex items-center gap-3">
                         <span className="text-xl">✅</span>
                         <div className="flex flex-col">
-                          <div className="font-medium">Livrées</div>
+                          <div className="font-medium text-green-600 dark:text-green-400">Livrées</div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">Commandes terminées</div>
                         </div>
                       </div>
