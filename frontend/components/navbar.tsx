@@ -768,10 +768,10 @@ export const Navbar = () => {
                     aria-label="À propos menu"
                     className="animate-in fade-in-80 zoom-in-95 duration-200"
                   >
-                    <DropdownItem key="about">
+                    <DropdownItem key="about" textValue="À propos de nous">
                       <NextLink href="/about">À propos de nous</NextLink>
                     </DropdownItem>
-                    <DropdownItem key="contact">
+                    <DropdownItem key="contact" textValue="Contact">
                       <NextLink href="/contact">Contact</NextLink>
                     </DropdownItem>
                   </DropdownMenu>
@@ -792,10 +792,10 @@ export const Navbar = () => {
                     aria-label="Articles menu"
                     className="animate-in fade-in-80 zoom-in-95 duration-200"
                   >
-                    <DropdownItem key="articles">
+                    <DropdownItem key="articles" textValue="Tous les articles">
                       <NextLink href="/articles">Tous les articles</NextLink>
                     </DropdownItem>
-                    <DropdownItem key="blog">
+                    <DropdownItem key="blog" textValue="Blog">
                       <NextLink href="/blog">Blog</NextLink>
                     </DropdownItem>
                   </DropdownMenu>
@@ -1216,6 +1216,7 @@ export const Navbar = () => {
                         icon={faNewspaper}
                       />
                     }
+                    textValue="Mes commandes"
                     onClick={() => {
                       markOrderUpdatesAsRead();
                       router.push("/orders");
@@ -1260,7 +1261,7 @@ export const Navbar = () => {
                   </DropdownItem>
 
                   {/* mode */}
-                  <DropdownItem key="theme">
+                  <DropdownItem key="theme" textValue="Thème">
                     <Dropdown placement="left-start">
                       <DropdownTrigger>
                         <div className="flex items-center w-full cursor-pointer">
@@ -1271,6 +1272,7 @@ export const Navbar = () => {
                       <DropdownMenu aria-label="Options de thème">
                         <DropdownItem
                           key="light"
+                          textValue="Mode clair"
                           onClick={() => {
                             document.documentElement.classList.remove("dark");
                             localStorage.setItem("theme", "light");
@@ -1288,6 +1290,7 @@ export const Navbar = () => {
                         </DropdownItem>
                         <DropdownItem
                           key="dark"
+                          textValue="Mode sombre"
                           onClick={() => {
                             document.documentElement.classList.add("dark");
                             localStorage.setItem("theme", "dark");
@@ -1305,6 +1308,7 @@ export const Navbar = () => {
                         </DropdownItem>
                         <DropdownItem
                           key="auto"
+                          textValue="Mode automatique"
                           onClick={() => {
                             localStorage.setItem("themeMode", "auto");
                             // Apply theme based on current time
