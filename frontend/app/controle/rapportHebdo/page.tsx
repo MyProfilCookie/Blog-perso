@@ -97,20 +97,20 @@ const WeeklyReport = () => {
     const checkAuth = async () => {
       try {
         if (typeof window !== "undefined") {
-          const token = localStorage.getItem("token");
+          const token = localStorage.getItem("userToken");
           const userDataStr = localStorage.getItem("user");
 
           if (!token || !userDataStr) {
             console.log("Informations de connexion manquantes, redirection...");
-            router.push("/users/login");
+            router.push("/auth/signin");
             return;
           }
 
           // Vérifier si le token est expiré
           if (isTokenExpired(token)) {
             console.log("Token expiré, redirection vers la connexion...");
-            localStorage.removeItem("token");
-            router.push("/users/login");
+            localStorage.removeItem("userToken");
+            router.push("/auth/signin");
             return;
           }
 
@@ -131,7 +131,7 @@ const WeeklyReport = () => {
     checkAuth();
 
     // Chargement du rapport sauvegardé seulement si nous avons un token valide
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("userToken");
     if (token && !isTokenExpired(token)) {
       const savedReport = JSON.parse(localStorage.getItem(selectedWeek) || "[]");
       if (savedReport.length) {
