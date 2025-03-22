@@ -61,6 +61,7 @@ const WeeklyReport = () => {
   );
   const [weeks] = useState(generateWeeksOfYear);
   const [showWeeks, setShowWeeks] = useState(false);
+  const [userName, setUserName] = useState("");
   const [report, setReport] = useState<ReportList>(
     subjects.map((subject) => ({
       subject: subject.name,
@@ -71,6 +72,23 @@ const WeeklyReport = () => {
   );
 
   useEffect(() => {
+    // Récupérer le nom de l'utilisateur
+    const fetchUserName = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+          credentials: "include",
+        });
+        if (response.ok) {
+          const userData = await response.json();
+          setUserName(userData.firstName ? userData.firstName : "");
+        }
+      } catch (error) {
+        console.error("Erreur lors de la récupération du nom:", error);
+      }
+    };
+
+    fetchUserName();
+
     const savedReport = JSON.parse(localStorage.getItem(selectedWeek) || "[]");
 
     if (savedReport.length) {
@@ -183,6 +201,17 @@ const WeeklyReport = () => {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
             📝 Mon Rapport de la Semaine
           </h1>
+          
+          {userName && (
+            <motion.p
+              animate={{ opacity: 1, y: 0 }}
+              className="text-lg text-gray-600 dark:text-gray-300 mb-6"
+              initial={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
+              Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine ?
+            </motion.p>
+          )}
 
           {/* Sélecteur de semaine */}
           <div className="relative inline-block">
