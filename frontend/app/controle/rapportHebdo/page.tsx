@@ -171,7 +171,7 @@ const WeeklyReport = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen dark:bg-gray-900">
       <div className="container mx-auto px-6 py-8">
         {/* En-tête */}
         <motion.div
@@ -220,7 +220,7 @@ const WeeklyReport = () => {
         </motion.div>
 
         {/* Grille des matières */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-[1400px] mx-auto bg-slate-400">
+        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-[1400px] mx-auto">
           {report.map((item, index) => (
             <motion.div
               key={item.subject}
