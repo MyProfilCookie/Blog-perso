@@ -77,86 +77,29 @@ const WeeklyReport = () => {
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Vérifier si nous sommes sur le client
         if (typeof window !== "undefined") {
           const token = localStorage.getItem("token");
+          const userDataStr = localStorage.getItem("user");
 
-          if (!token) {
-            console.log(
-              "Pas de token trouvé, redirection vers la connexion...",
-            );
+          if (!token || !userDataStr) {
+            console.log("Informations de connexion manquantes, redirection...");
             router.push("/users/login");
-
             return;
           }
 
-          const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-
-          console.log("URL de l'API:", apiUrl); // Pour déboguer
-
-          const response = await fetch(`${apiUrl}/users/me`, {
-            method: "GET",
-            credentials: "include",
-            headers: {
-              "Content-Type": "application/json",
-              Authorization: `Bearer ${token}`,
-            },
-          });
-
-          if (response.ok) {
-            const userData = await response.json();
-
-            console.log("Données utilisateur reçues:", userData);
-
-            if (userData.data) {
-              // Si les données sont dans data.user
-              if (userData.data.user) {
-                setUserName(
-                  userData.data.user.firstName ||
-                    userData.data.user.name?.split(" ")[0] ||
-                    "",
-                );
-              }
-              // Si les données sont directement dans data
-              else {
-                setUserName(
-                  userData.data.firstName ||
-                    userData.data.name?.split(" ")[0] ||
-                    "",
-                );
-              }
-            } else {
-              // Si les données sont à la racine
-              setUserName(
-                userData.firstName || userData.name?.split(" ")[0] || "",
-              );
+          try {
+            const userData = JSON.parse(userDataStr);
+            if (userData && (userData.prenom || userData.nom)) {
+              setUserName(userData.prenom || userData.nom.split(" ")[0]);
             }
-          } else if (response.status === 401 || response.status === 403) {
-            console.log(
-              "Session expirée ou invalide, redirection vers la connexion...",
-            );
-            localStorage.removeItem("token");
+          } catch (error) {
+            console.error("Erreur lors de la lecture des données utilisateur:", error);
             router.push("/users/login");
-          } else {
-            console.error("Erreur de réponse API:", response.status);
-            const errorData = await response.text();
-
-            console.error("Détails de l'erreur:", errorData);
-
-            // En cas d'erreur 404, vérifier si c'est un problème de chemin d'API
-            if (response.status === 404) {
-              console.error(
-                "L'endpoint de l'API n'a pas été trouvé. Vérifiez le chemin de l'API.",
-              );
-            }
           }
         }
       } catch (error) {
-        console.error(
-          "Erreur lors de la vérification de l'authentification:",
-          error,
-        );
-        router.push("/users/login"); // Utilisation du chemin cohérent
+        console.error("Erreur lors de la vérification de l'authentification:", error);
+        router.push("/users/login");
       }
     };
 
@@ -164,10 +107,7 @@ const WeeklyReport = () => {
 
     // Chargement du rapport sauvegardé seulement si nous avons un token
     if (localStorage.getItem("token")) {
-      const savedReport = JSON.parse(
-        localStorage.getItem(selectedWeek) || "[]",
-      );
-
+      const savedReport = JSON.parse(localStorage.getItem(selectedWeek) || "[]");
       if (savedReport.length) {
         setReport(savedReport);
       } else {
