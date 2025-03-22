@@ -448,7 +448,7 @@ const WeeklyReport = () => {
           </div>
 
           {/* Boutons d'action */}
-          <div className="flex justify-center gap-4 py-6 bg-white dark:bg-gray-900 mt-auto">
+          <div className="flex justify-center gap-4 py-6 dark:bg-gray-900 mt-auto">
             <Button
               className="bg-violet-500 hover:bg-violet-600 text-white px-6 py-2 rounded-lg flex items-center gap-2"
               onClick={saveReport}
