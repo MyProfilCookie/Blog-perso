@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 import React, { useState, useEffect } from "react";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
@@ -75,20 +76,32 @@ const WeeklyReport = () => {
     // Récupérer le nom de l'utilisateur
     const fetchUserName = async () => {
       try {
-        const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
-          {
-            credentials: "include",
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+          credentials: "include",
+          headers: {
+            "Content-Type": "application/json",
           },
-        );
+        });
 
         if (response.ok) {
           const userData = await response.json();
-
-          setUserName(userData.firstName ? userData.firstName : "");
+          console.log("Données utilisateur reçues:", userData);
+          if (userData.firstName) {
+            setUserName(userData.firstName);
+          } else if (userData.name) {
+            setUserName(userData.name);
+          } else if (userData.username) {
+            setUserName(userData.username);
+          }
+        } else {
+          console.error("Erreur de réponse:", response.status);
+          // Utiliser un nom par défaut pour le développement
+          setUserName("Élève");
         }
       } catch (error) {
         console.error("Erreur lors de la récupération du nom:", error);
+        // Utiliser un nom par défaut en cas d'erreur
+        setUserName("Élève");
       }
     };
 
@@ -207,16 +220,18 @@ const WeeklyReport = () => {
             📝 Mon Rapport de la Semaine
           </h1>
 
-          {userName && (
-            <motion.p
-              animate={{ opacity: 1, y: 0 }}
-              className="text-lg text-gray-600 dark:text-gray-300 mb-6"
-              initial={{ opacity: 0, y: -10 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
-            >
-              Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine ?
-            </motion.p>
-          )}
+          <motion.p
+            animate={{ opacity: 1, y: 0 }}
+            className="text-lg text-gray-600 dark:text-gray-300 mb-6"
+            initial={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            {userName ? (
+              <>Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine ?</>
+            ) : (
+              <>Chargement de ton profil...</>
+            )}
+          </motion.p>
 
           {/* Sélecteur de semaine */}
           <div className="relative inline-block">
@@ -336,7 +351,7 @@ const WeeklyReport = () => {
                             handleInputChange(index, "progress", "in-progress")
                           }
                         >
-                          Je progresse 💪
+                          Je progresse {getProgressEmoji("in-progress")}
                         </Button>
                         <Button
                           key="completed"
@@ -349,7 +364,7 @@ const WeeklyReport = () => {
                             handleInputChange(index, "progress", "completed")
                           }
                         >
-                          J&apos;ai réussi ! 🌟
+                          J&apos;ai réussi ! {getProgressEmoji("completed")}
                         </Button>
                         <Button
                           key="not-acquired"
@@ -362,7 +377,7 @@ const WeeklyReport = () => {
                             handleInputChange(index, "progress", "not-acquired")
                           }
                         >
-                          Besoin d&apos;aide 🤔
+                          Besoin d&apos;aide {getProgressEmoji("not-acquired")}
                         </Button>
                       </div>
                     </div>
