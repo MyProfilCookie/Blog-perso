@@ -252,7 +252,7 @@ const WeeklyReport = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen dark:bg-gray-900">
       <div className="container mx-auto px-6 py-8 flex flex-col min-h-screen">
         {/* Contenu principal */}
         <div className="flex-grow">
@@ -465,7 +465,7 @@ const WeeklyReport = () => {
         </div>
 
         {/* Footer */}
-        <footer className="mt-auto pt-8">
+        {/* <footer className="mt-auto pt-8">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-200 dark:border-gray-700 pt-8">
             <div>
               <h3 className="text-lg font-semibold mb-4">À propos</h3>
@@ -526,7 +526,7 @@ const WeeklyReport = () => {
               </ul>
             </div>
           </div>
-        </footer>
+        </footer> */}
       </div>
     </div>
   );
