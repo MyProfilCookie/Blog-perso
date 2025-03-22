@@ -854,31 +854,29 @@ export const Navbar = () => {
             <motion.div
               ref={menuRef}
               animate={{ height: "auto", opacity: 1, y: 0, scale: 1 }}
-              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-md absolute top-full left-0 z-20 max-h-[80vh] overflow-y-auto rounded-b-lg border-t border-gray-200 dark:border-gray-800"
+              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-lg absolute top-full left-0 z-20 max-h-[80vh] overflow-y-auto rounded-b-lg border-t-2 border-blue-500 dark:border-blue-400"
               exit={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
               initial={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
               transition={{ duration: 0.4, ease: "easeInOut" }}
             >
-              <div className="p-4">
+              <div className="p-4 space-y-4">
                 {/* En-tête du menu */}
-                <div className="flex items-center justify-between mb-4 pb-2 border-b border-gray-200 dark:border-gray-700">
-                  <p className="font-bold text-blue-700 dark:text-blue-400">
+                <div className="flex items-center justify-between pb-3 border-b-2 border-gray-200 dark:border-gray-700">
+                  <p className="font-bold text-lg text-blue-700 dark:text-blue-400">
                     Navigation
                   </p>
                   <button
-                    className="p-1 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
+                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
                     onClick={() => setIsMenuOpen(false)}
                   >
                     <svg
+                      className="w-6 h-6"
                       fill="none"
-                      height="20"
                       stroke="currentColor"
                       strokeLinecap="round"
                       strokeLinejoin="round"
                       strokeWidth="2"
                       viewBox="0 0 24 24"
-                      width="20"
-                      xmlns="http://www.w3.org/2000/svg"
                     >
                       <line x1="18" x2="6" y1="6" y2="18" />
                       <line x1="6" x2="18" y1="6" y2="18" />
@@ -888,155 +886,70 @@ export const Navbar = () => {
 
                 {/* Section utilisateur */}
                 {user && (
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
+                  <div className="space-y-4">
+                    <h3 className="text-md font-semibold text-gray-600 dark:text-gray-300 px-2">
                       Mon compte
                     </h3>
-                    <ul className="grid gap-1">
-                      <li>
-                        <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href={
-                            user.role === "admin"
-                              ? "/admin/dashboard"
-                              : "/dashboard"
-                          }
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <FontAwesomeIcon
-                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                            icon={
-                              user.role === "admin" ? faCrown : faTachometerAlt
-                            }
-                          />
-                          {user.role === "admin"
-                            ? "Dashboard Admin"
-                            : "Dashboard"}
-                        </NextLink>
-                      </li>
-                      <li>
-                        <NextLink
-                          className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors cursor-pointer"
-                          href={""}
-                          role="menuitem"
-                          type="button"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            router.push("/orders");
-                          }}
-                          onKeyDown={(e) => {
-                            if (e.key === "Enter" || e.key === " ") {
-                              router.push("/orders");
-                            }
-                          }}
-                        >
-                          <div className="flex flex-col w-full space-y-4">
-                            <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
-                                 onClick={() => router.push("/orders")}
-                                 role="button"
-                                 tabIndex={0}
-                                 onKeyDown={(e) => {
-                                   if (e.key === "Enter" || e.key === " ") {
-                                     router.push("/orders");
-                                   }
-                                 }}>
-                              <div className="flex items-center gap-3">
-                                <span className="text-xl">⏳</span>
-                                <div className="flex flex-col">
-                                  <div className="font-medium text-yellow-600 dark:text-yellow-400">
-                                    En cours
-                                  </div>
-                                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                                    Commandes en traitement
-                                  </div>
+                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
+                      <NextLink
+                        className="block w-full"
+                        href="/orders"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <div className="space-y-3">
+                          <div className="flex items-center justify-between p-3 rounded-lg border-2 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl">⏳</span>
+                              <div className="flex flex-col">
+                                <div className="font-medium text-yellow-600 dark:text-yellow-400">
+                                  En cours
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  Commandes en traitement
                                 </div>
                               </div>
-                              <span className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 min-w-[2rem] text-center">
-                                {orderCount.pending || 0}
-                              </span>
                             </div>
-
-                            <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
-                                 onClick={() => router.push("/orders")}
-                                 role="button"
-                                 tabIndex={0}
-                                 onKeyDown={(e) => {
-                                   if (e.key === "Enter" || e.key === " ") {
-                                     router.push("/orders");
-                                   }
-                                 }}>
-                              <div className="flex items-center gap-3">
-                                <span className="text-xl">🚚</span>
-                                <div className="flex flex-col">
-                                  <div className="font-medium text-blue-600 dark:text-blue-400">
-                                    Envoyées
-                                  </div>
-                                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                                    En cours de livraison
-                                  </div>
-                                </div>
-                              </div>
-                              <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
-                                {orderCount.shipped || 0}
-                              </span>
-                            </div>
-
-                            <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5"
-                                 onClick={() => router.push("/orders")}
-                                 role="button"
-                                 tabIndex={0}
-                                 onKeyDown={(e) => {
-                                   if (e.key === "Enter" || e.key === " ") {
-                                     router.push("/orders");
-                                   }
-                                 }}>
-                              <div className="flex items-center gap-3">
-                                <span className="text-xl">✅</span>
-                                <div className="flex flex-col">
-                                  <div className="font-medium text-green-600 dark:text-green-400">
-                                    Livrées
-                                  </div>
-                                  <div className="text-xs text-gray-500 dark:text-gray-400">
-                                    Commandes terminées
-                                  </div>
-                                </div>
-                              </div>
-                              <span className="text-lg font-semibold text-green-600 dark:text-green-400 min-w-[2rem] text-center">
-                                {orderCount.delivered || 0}
-                              </span>
-                            </div>
+                            <span className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 min-w-[2rem] text-center">
+                              {orderCount.pending || 0}
+                            </span>
                           </div>
-                        </NextLink>
-                      </li>
-                      <li>
-                        <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/controle"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <FontAwesomeIcon
-                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                            icon={faNewspaper}
-                          />
-                          Controle
-                        </NextLink>
-                      </li>
-                      <li>
-                        <button
-                          className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          onClick={() => {
-                            setIsMenuOpen(false);
-                            handleLogout();
-                          }}
-                        >
-                          <FontAwesomeIcon
-                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                            icon={faSignOutAlt}
-                          />
-                          Déconnexion
-                        </button>
-                      </li>
-                    </ul>
+
+                          <div className="flex items-center justify-between p-3 rounded-lg border-2 border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl">🚚</span>
+                              <div className="flex flex-col">
+                                <div className="font-medium text-blue-600 dark:text-blue-400">
+                                  Envoyées
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  En cours de livraison
+                                </div>
+                              </div>
+                            </div>
+                            <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
+                              {orderCount.shipped || 0}
+                            </span>
+                          </div>
+
+                          <div className="flex items-center justify-between p-3 rounded-lg border-2 border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                            <div className="flex items-center gap-3">
+                              <span className="text-xl">✅</span>
+                              <div className="flex flex-col">
+                                <div className="font-medium text-green-600 dark:text-green-400">
+                                  Livrées
+                                </div>
+                                <div className="text-xs text-gray-500 dark:text-gray-400">
+                                  Commandes terminées
+                                </div>
+                              </div>
+                            </div>
+                            <span className="text-lg font-semibold text-green-600 dark:text-green-400 min-w-[2rem] text-center">
+                              {orderCount.delivered || 0}
+                            </span>
+                          </div>
+                        </div>
+                      </NextLink>
+                    </div>
                   </div>
                 )}
               </div>
