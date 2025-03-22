@@ -949,6 +949,49 @@ export const Navbar = () => {
                           </div>
                         </div>
                       </NextLink>
+
+                      {/* Dashboard */}
+                      <NextLink
+                        className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                        href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <FontAwesomeIcon
+                          className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                          icon={user.role === "admin" ? faCrown : faTachometerAlt}
+                        />
+                        <span className="font-medium">
+                          {user.role === "admin" ? "Dashboard Admin" : "Dashboard"}
+                        </span>
+                      </NextLink>
+
+                      {/* Contrôle */}
+                      <NextLink
+                        className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                        href="/controle"
+                        onClick={() => setIsMenuOpen(false)}
+                      >
+                        <FontAwesomeIcon
+                          className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                          icon={faNewspaper}
+                        />
+                        <span className="font-medium">Contrôle</span>
+                      </NextLink>
+
+                      {/* Déconnexion */}
+                      <button
+                        className="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                        onClick={() => {
+                          setIsMenuOpen(false);
+                          handleLogout();
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                          icon={faSignOutAlt}
+                        />
+                        <span className="font-medium">Déconnexion</span>
+                      </button>
                     </div>
                   </div>
                 )}
