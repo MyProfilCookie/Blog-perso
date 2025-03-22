@@ -250,22 +250,40 @@ const WeeklyReport = () => {
                       <label htmlFor={`progress-${index}`} className="text-sm text-gray-600 dark:text-gray-400 mb-1 block">
                         Comment ça s&apos;est passé ?
                       </label>
-                      <div className="grid grid-cols-2 gap-2" id={`progress-${index}`} role="group" aria-label="Progression">
-                        {["in-progress", "completed", "not-acquired"].map((status) => (
-                          <Button
-                            key={status}
-                            className={`p-2 rounded-lg transition-all duration-300 ${
-                              item.progress === status
-                                ? "bg-violet-500 text-white"
-                                : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
-                            }`}
-                            onClick={() => handleInputChange(index, "progress", status)}
-                          >
-                            {status === "completed" && "J&apos;ai réussi ! 🌟"}
-                            {status === "in-progress" && "Je progresse 💪"}
-                            {status === "not-acquired" && "J&apos;ai besoin d&apos;aide 🤔"}
-                          </Button>
-                        ))}
+                      <div className="grid grid-cols-3 gap-2" id={`progress-${index}`} role="group" aria-label="Progression">
+                        <Button
+                          key="in-progress"
+                          className={`p-2 rounded-lg transition-all duration-300 ${
+                            item.progress === "in-progress"
+                              ? "bg-violet-500 text-white"
+                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                          }`}
+                          onClick={() => handleInputChange(index, "progress", "in-progress")}
+                        >
+                          Je progresse 💪
+                        </Button>
+                        <Button
+                          key="completed"
+                          className={`p-2 rounded-lg transition-all duration-300 ${
+                            item.progress === "completed"
+                              ? "bg-violet-500 text-white"
+                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                          }`}
+                          onClick={() => handleInputChange(index, "progress", "completed")}
+                        >
+                          J&apos;ai réussi ! 🌟
+                        </Button>
+                        <Button
+                          key="not-acquired"
+                          className={`p-2 rounded-lg transition-all duration-300 ${
+                            item.progress === "not-acquired"
+                              ? "bg-violet-500 text-white"
+                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                          }`}
+                          onClick={() => handleInputChange(index, "progress", "not-acquired")}
+                        >
+                          Besoin d&apos;aide 🤔
+                        </Button>
                       </div>
                     </div>
                   </div>
