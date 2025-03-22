@@ -85,7 +85,7 @@ const WeeklyReport = () => {
             console.log(
               "Pas de token trouvé, redirection vers la connexion...",
             );
-            router.push("/auth/login");
+            router.push("/users/login");
 
             return;
           }
@@ -94,7 +94,7 @@ const WeeklyReport = () => {
 
           console.log("URL de l'API:", apiUrl); // Pour déboguer
 
-          const response = await fetch(`${apiUrl}/api/users/me`, {
+          const response = await fetch(`${apiUrl}/users/me`, {
             method: "GET",
             credentials: "include",
             headers: {
@@ -136,7 +136,7 @@ const WeeklyReport = () => {
               "Session expirée ou invalide, redirection vers la connexion...",
             );
             localStorage.removeItem("token");
-            router.push("/auth/login");
+            router.push("/users/login");
           } else {
             console.error("Erreur de réponse API:", response.status);
             const errorData = await response.text();
@@ -156,7 +156,7 @@ const WeeklyReport = () => {
           "Erreur lors de la vérification de l'authentification:",
           error,
         );
-        router.push("/auth/login"); // Utilisation du chemin cohérent
+        router.push("/users/login"); // Utilisation du chemin cohérent
       }
     };
 
