@@ -80,28 +80,34 @@ const WeeklyReport = () => {
           credentials: "include",
           headers: {
             "Content-Type": "application/json",
+            "Authorization": `Bearer ${localStorage.getItem("token")}`,
           },
         });
 
         if (response.ok) {
           const userData = await response.json();
-          console.log("Données utilisateur reçues:", userData);
-          if (userData.firstName) {
+          console.log("Données utilisateur complètes:", userData);
+          
+          // Vérification plus précise de la structure des données
+          if (userData.user && userData.user.firstName) {
+            setUserName(userData.user.firstName);
+          } else if (userData.firstName) {
             setUserName(userData.firstName);
+          } else if (userData.user && userData.user.name) {
+            setUserName(userData.user.name);
           } else if (userData.name) {
             setUserName(userData.name);
-          } else if (userData.username) {
-            setUserName(userData.username);
+          } else {
+            console.warn("Structure de données utilisateur inattendue:", userData);
+            // Ne pas définir de nom par défaut si l'utilisateur est connecté mais que la structure est inattendue
           }
         } else {
-          console.error("Erreur de réponse:", response.status);
-          // Utiliser un nom par défaut pour le développement
-          setUserName("Élève");
+          console.error("Erreur de réponse API:", response.status);
+          const errorData = await response.text();
+          console.error("Détails de l'erreur:", errorData);
         }
       } catch (error) {
         console.error("Erreur lors de la récupération du nom:", error);
-        // Utiliser un nom par défaut en cas d'erreur
-        setUserName("Élève");
       }
     };
 
@@ -227,7 +233,10 @@ const WeeklyReport = () => {
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             {userName ? (
-              <>Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine ?</>
+              <>
+                Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine
+                ?
+              </>
             ) : (
               <>Chargement de ton profil...</>
             )}
