@@ -938,12 +938,16 @@ export const Navbar = () => {
                             icon={faNewspaper}
                           /> */}
                           <div className="flex flex-col w-full space-y-4">
-                            <div className="flex items-center justify-between bg-yellow-50 dark:bg-gray-800 p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-100 dark:hover:bg-gray-700 transition-colors">
+                            <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                               <div className="flex items-center gap-3">
                                 <span className="text-xl">⏳</span>
                                 <div className="flex flex-col">
-                                  <div className="font-medium">En cours</div>
-                                  <div className="text-xs text-gray-500 dark:text-gray-400">Commandes en traitement</div>
+                                  <div className="font-medium text-yellow-600 dark:text-yellow-400">
+                                    En cours
+                                  </div>
+                                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                                    Commandes en traitement
+                                  </div>
                                 </div>
                               </div>
                               <span className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 min-w-[2rem] text-center">
@@ -951,12 +955,16 @@ export const Navbar = () => {
                               </span>
                             </div>
 
-                            <div className="flex items-center justify-between bg-blue-50 dark:bg-gray-800 p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-100 dark:hover:bg-gray-700 transition-colors">
+                            <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                               <div className="flex items-center gap-3">
                                 <span className="text-xl">🚚</span>
                                 <div className="flex flex-col">
-                                  <div className="font-medium">Envoyées</div>
-                                  <div className="text-xs text-gray-500 dark:text-gray-400">En cours de livraison</div>
+                                  <div className="font-medium text-blue-600 dark:text-blue-400">
+                                    Envoyées
+                                  </div>
+                                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                                    En cours de livraison
+                                  </div>
                                 </div>
                               </div>
                               <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
@@ -964,12 +972,16 @@ export const Navbar = () => {
                               </span>
                             </div>
 
-                            <div className="flex items-center justify-between bg-green-50 dark:bg-gray-800 p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-100 dark:hover:bg-gray-700 transition-colors">
+                            <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                               <div className="flex items-center gap-3">
                                 <span className="text-xl">✅</span>
                                 <div className="flex flex-col">
-                                  <div className="font-medium">Livrées</div>
-                                  <div className="text-xs text-gray-500 dark:text-gray-400">Commandes terminées</div>
+                                  <div className="font-medium text-green-600 dark:text-green-400">
+                                    Livrées
+                                  </div>
+                                  <div className="text-xs text-gray-500 dark:text-gray-400">
+                                    Commandes terminées
+                                  </div>
                                 </div>
                               </div>
                               <span className="text-lg font-semibold text-green-600 dark:text-green-400 min-w-[2rem] text-center">
@@ -1230,8 +1242,8 @@ export const Navbar = () => {
                   </DropdownItem>
                   <DropdownItem
                     key="orders-title"
-                    className="font-medium"
                     showDivider
+                    className="font-medium"
                     textValue="Mes commandes"
                   >
                     Mes commandes
@@ -1245,12 +1257,16 @@ export const Navbar = () => {
                       router.push("/orders?status=pending");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/50 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 w-full">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-3">
                         <span className="text-xl">⏳</span>
                         <div className="flex flex-col">
-                          <div className="font-medium text-yellow-600 dark:text-yellow-400">En cours</div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">Commandes en traitement</div>
+                          <div className="font-medium text-yellow-600 dark:text-yellow-400">
+                            En cours
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            Commandes en traitement
+                          </div>
                         </div>
                       </div>
                       <span className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 min-w-[2rem] text-center">
@@ -1267,12 +1283,16 @@ export const Navbar = () => {
                       router.push("/orders?status=shipped");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/50 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 w-full">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-3">
                         <span className="text-xl">🚚</span>
                         <div className="flex flex-col">
-                          <div className="font-medium text-blue-600 dark:text-blue-400">Envoyées</div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">En cours de livraison</div>
+                          <div className="font-medium text-blue-600 dark:text-blue-400">
+                            Envoyées
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            En cours de livraison
+                          </div>
                         </div>
                       </div>
                       <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
@@ -1289,12 +1309,16 @@ export const Navbar = () => {
                       router.push("/orders?status=delivered");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/50 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5 w-full">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-3">
                         <span className="text-xl">✅</span>
                         <div className="flex flex-col">
-                          <div className="font-medium text-green-600 dark:text-green-400">Livrées</div>
-                          <div className="text-xs text-gray-500 dark:text-gray-400">Commandes terminées</div>
+                          <div className="font-medium text-green-600 dark:text-green-400">
+                            Livrées
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            Commandes terminées
+                          </div>
                         </div>
                       </div>
                       <span className="text-lg font-semibold text-green-600 dark:text-green-400 min-w-[2rem] text-center">
@@ -1305,8 +1329,8 @@ export const Navbar = () => {
 
                   <DropdownItem
                     key="orders-all"
-                    className="relative"
                     showDivider
+                    className="relative"
                     onClick={() => {
                       markOrderUpdatesAsRead();
                       router.push("/orders");
