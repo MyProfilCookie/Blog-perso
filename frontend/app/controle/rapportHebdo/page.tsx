@@ -5,7 +5,6 @@ import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
-import Footer from "@/components/footer";
 
 const subjects = [
   { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
@@ -253,7 +252,7 @@ const WeeklyReport = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col bg-white dark:bg-gray-900">
+    <div className="min-h-screen flex flex-col dark:bg-gray-900">
       <div className="container mx-auto px-6 py-8 flex-grow">
         {/* En-tête */}
         <motion.div
@@ -266,18 +265,21 @@ const WeeklyReport = () => {
             📝 Mon Rapport de la Semaine
           </h1>
 
-          <motion.p
+          <motion.h2
             animate={{ opacity: 1, y: 0 }}
             className="text-lg text-gray-600 dark:text-gray-300 mb-6"
             initial={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
             {userName ? (
-              <>Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine ?</>
+              <>
+                Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine
+                ?
+              </>
             ) : (
               <>Chargement de ton profil...</>
             )}
-          </motion.p>
+          </motion.h2>
 
           {/* Sélecteur de semaine */}
           <div className="relative inline-block">
@@ -394,11 +396,7 @@ const WeeklyReport = () => {
                               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
                           }`}
                           onClick={() =>
-                            handleInputChange(
-                              index,
-                              "progress",
-                              "in-progress",
-                            )
+                            handleInputChange(index, "progress", "in-progress")
                           }
                         >
                           Je progresse {getProgressEmoji("in-progress")}
@@ -424,15 +422,10 @@ const WeeklyReport = () => {
                               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
                           }`}
                           onClick={() =>
-                            handleInputChange(
-                              index,
-                              "progress",
-                              "not-acquired",
-                            )
+                            handleInputChange(index, "progress", "not-acquired")
                           }
                         >
-                          Besoin d&apos;aide{" "}
-                          {getProgressEmoji("not-acquired")}
+                          Besoin d&apos;aide {getProgressEmoji("not-acquired")}
                         </Button>
                       </div>
                     </div>
@@ -461,7 +454,6 @@ const WeeklyReport = () => {
       </div>
 
       {/* Footer */}
-      <Footer />
     </div>
   );
 };
