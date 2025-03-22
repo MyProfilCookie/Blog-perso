@@ -1,17 +1,18 @@
 "use client";
 import React, { useState, useEffect } from "react";
-import { Card, CardBody, Input, Checkbox, Button } from "@nextui-org/react";
-import Swal from "sweetalert2"; // Importation de sweetalert2
+import { Card, CardBody, Input, Button } from "@nextui-org/react";
+import { motion } from "framer-motion";
+import Swal from "sweetalert2";
 
 const subjects = [
-  { name: "Mathématiques", color: "bg-red-200" },
-  { name: "Sciences", color: "bg-green-200" },
-  { name: "Français", color: "bg-blue-200" },
-  { name: "Histoire", color: "bg-yellow-200" },
-  { name: "Géographie", color: "bg-purple-200" },
-  { name: "Langues", color: "bg-pink-200" },
-  { name: "Arts Plastiques", color: "bg-indigo-200" },
-  { name: "Leçons du jour", color: "bg-teal-200" },
+  { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
+  { name: "Sciences", color: "from-green-400 to-green-300", icon: "🔬" },
+  { name: "Français", color: "from-blue-400 to-blue-300", icon: "📚" },
+  { name: "Histoire", color: "from-yellow-400 to-yellow-300", icon: "⏳" },
+  { name: "Géographie", color: "from-purple-400 to-purple-300", icon: "🌍" },
+  { name: "Langues", color: "from-pink-400 to-pink-300", icon: "🗣️" },
+  { name: "Arts Plastiques", color: "from-indigo-400 to-indigo-300", icon: "🎨" },
+  { name: "Leçons du jour", color: "from-teal-400 to-teal-300", icon: "📖" },
 ];
 
 // Méthode pour obtenir le numéro de la semaine actuelle
@@ -45,91 +46,79 @@ interface ReportItem {
   subject: string;
   activity: string;
   hours: string;
-  progress: string;
+  progress: "not-started" | "in-progress" | "completed" | "not-acquired";
 }
 
 type ReportList = ReportItem[];
 
 const WeeklyReport = () => {
-  const [selectedWeek, setSelectedWeek] = useState(
-    `Semaine ${new Date().getWeekNumber()}`,
-  );
-  const [weeks] = useState(generateWeeksOfYear); // Générer les semaines de l'année
-  const [showWeeks, setShowWeeks] = useState(false); // État pour afficher ou masquer la liste des semaines
+  const [selectedWeek, setSelectedWeek] = useState(`Semaine ${new Date().getWeekNumber()}`);
+  const [weeks] = useState(generateWeeksOfYear);
+  const [showWeeks, setShowWeeks] = useState(false);
   const [report, setReport] = useState<ReportList>(
     subjects.map((subject) => ({
       subject: subject.name,
       activity: "",
       hours: "",
-      progress: "",
-    })),
+      progress: "not-started",
+    }))
   );
 
-  // Charger le rapport pour la semaine sélectionnée depuis localStorage lors du chargement du composant
   useEffect(() => {
     const savedReport = JSON.parse(localStorage.getItem(selectedWeek) || "[]");
-
     if (savedReport.length) {
       setReport(savedReport);
     } else {
-      // Réinitialiser si aucun rapport n'est trouvé
       setReport(
         subjects.map((subject) => ({
           subject: subject.name,
           activity: "",
           hours: "",
-          progress: "",
-        })),
+          progress: "not-started",
+        }))
       );
     }
-  }, [selectedWeek]); // Charger les données chaque fois que la semaine sélectionnée change
+  }, [selectedWeek]);
 
-  // Fonction pour gérer les changements dans les champs du formulaire
-  const handleInputChange = (
-    index: number,
-    field: keyof ReportItem,
-    value: string,
-  ) => {
+  const handleInputChange = (index: number, field: keyof ReportItem, value: string) => {
     const updatedReport = [...report];
-
-    updatedReport[index][field] = value;
+    updatedReport[index] = { ...updatedReport[index], [field]: value };
     setReport(updatedReport);
   };
 
-  // Fonction pour vérifier si le rapport est complet
-  const isReportComplete = () => {
-    for (let item of report) {
-      if (!item.activity || !item.hours || !item.progress) {
-        return false;
-      }
+  const getProgressEmoji = (progress: string) => {
+    switch (progress) {
+      case "completed": return "🌟";
+      case "in-progress": return "💪";
+      case "not-acquired": return "📚";
+      default: return "⭐";
     }
-
-    return true;
   };
 
-  // Fonction pour sauvegarder le rapport dans localStorage
   const saveReport = () => {
     if (!isReportComplete()) {
       Swal.fire({
         icon: "warning",
-        title: "Rapport incomplet",
-        text: "Veuillez remplir toutes les activités, les heures et les statuts de progression pour chaque matière.",
-        confirmButtonText: "Ok",
+        title: "Oups ! Il manque des informations",
+        text: "N'oublie pas de remplir toutes les activités pour chaque matière !",
+        confirmButtonText: "Je complète !",
+        background: "#fff",
+        confirmButtonColor: "#6366f1",
       });
-
       return;
     }
 
     localStorage.setItem(selectedWeek, JSON.stringify(report));
     Swal.fire({
       icon: "success",
-      title: "Sauvegarde réussie",
-      text: `Le rapport pour ${selectedWeek} a été sauvegardé avec succès !`,
-      confirmButtonText: "Super",
+      title: "Bravo ! 🎉",
+      text: `Tu as bien sauvegardé ton rapport pour ${selectedWeek} !`,
+      confirmButtonText: "Super !",
+      background: "#fff",
+      confirmButtonColor: "#6366f1",
     });
   };
 
-  // Fonction pour télécharger le rapport en tant que fichier JSON
   const downloadReport = () => {
     if (!isReportComplete()) {
       Swal.fire({
@@ -138,130 +127,180 @@ const WeeklyReport = () => {
         text: "Le rapport est incomplet. Veuillez remplir toutes les informations avant de le télécharger.",
         confirmButtonText: "Ok",
       });
-
       return;
     }
 
-    const dataStr = JSON.stringify(report, null, 2); // Convertir le rapport en JSON
+    const dataStr = JSON.stringify(report, null, 2);
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
-
     a.href = url;
-    a.download = `${selectedWeek}-weeklyReport.json`; // Nom du fichier basé sur la semaine
+    a.download = `${selectedWeek}-weeklyReport.json`;
     a.click();
-    URL.revokeObjectURL(url); // Libérer la mémoire
+    URL.revokeObjectURL(url);
+  };
+
+  const isReportComplete = () => {
+    for (let item of report) {
+      if (!item.activity || !item.hours || !item.progress) {
+        return false;
+      }
+    }
+    return true;
   };
 
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen gap-6 py-8 md:py-10">
-      <h1 className="mb-4 text-4xl font-bold text-center text-blue-700">
-        Rapport Hebdomadaire
-      </h1>
-
-      {/* Sélecteur de semaine */}
-      <div className="relative mb-4">
-        <Button onClick={() => setShowWeeks((prev) => !prev)}>
-          {selectedWeek}
-        </Button>
-        {showWeeks && (
-          <div className="absolute z-10 mt-2 bg-cream border border-gray-300 rounded-md shadow-lg">
-            {weeks.map((week) => (
-              <div
-                key={week}
-                className="px-4 py-2 cursor-pointer hover:bg-blue-100"
-                role="button"
-                tabIndex={0}
-                onClick={() => {
-                  setSelectedWeek(week);
-                  setShowWeeks(false); // Masquer la liste après sélection
-                }}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" || e.key === " ") {
-                    setSelectedWeek(week);
-                    setShowWeeks(false); // Masquer la liste après sélection
-                  }
-                }}
+    <div className="min-h-screen bg-gradient-to-b from-violet-50 to-blue-50 dark:from-gray-900 dark:to-violet-900">
+      <div className="container mx-auto px-4 py-8">
+        {/* En-tête */}
+        <motion.div
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="text-center mb-12"
+        >
+          <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
+            📝 Mon Rapport de la Semaine
+          </h1>
+          
+          {/* Sélecteur de semaine */}
+          <div className="relative inline-block">
+            <Button
+              className="px-6 py-2 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-full
+                        hover:from-violet-600 hover:to-blue-600 transition-all duration-300"
+              onClick={() => setShowWeeks(!showWeeks)}
+            >
+              {selectedWeek} 📅
+            </Button>
+            
+            {showWeeks && (
+              <motion.div
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="absolute z-50 mt-2 py-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl
+                          border-2 border-violet-200 dark:border-violet-700 max-h-60 overflow-y-auto"
               >
-                {week}
-              </div>
-            ))}
+                {weeks.map((week) => (
+                  <button
+                    key={week}
+                    className="w-full text-left px-4 py-2 cursor-pointer hover:bg-violet-50 dark:hover:bg-violet-900/30
+                              text-gray-700 dark:text-gray-300"
+                    onClick={() => {
+                      setSelectedWeek(week);
+                      setShowWeeks(false);
+                    }}
+                  >
+                    {week}
+                  </button>
+                ))}
+              </motion.div>
+            )}
           </div>
-        )}
-      </div>
+        </motion.div>
 
-      <div className="grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-3">
-        {report.map((item, index) => (
-          <Card
-            key={index}
-            className={`p-6 w-full max-w-[400px] ${subjects[index].color} rounded-lg shadow-md hover:shadow-lg`}
-          >
-            <CardBody>
-              <h4 className="mb-4 text-xl font-bold text-center text-gray-800">
-                {item.subject}
-              </h4>
-              <Input
-                fullWidth
-                className="mb-4"
-                placeholder="Activité réalisée"
-                value={item.activity}
-                onChange={(e) =>
-                  handleInputChange(index, "activity", e.target.value)
-                }
-              />
-              <Input
-                fullWidth
-                className="mb-4"
-                placeholder="Heures passées"
-                type="number"
-                value={item.hours}
-                onChange={(e) =>
-                  handleInputChange(index, "hours", e.target.value)
-                }
-              />
-              <div className="flex flex-col gap-2 mt-4">
-                <Checkbox
-                  isSelected={item.progress === "in-progress"}
-                  onChange={() =>
-                    handleInputChange(index, "progress", "in-progress")
-                  }
-                >
-                  En cours d&apos;apprentissage
-                </Checkbox>
-                <Checkbox
-                  isSelected={item.progress === "completed"}
-                  onChange={() =>
-                    handleInputChange(index, "progress", "completed")
-                  }
-                >
-                  Apprentissage fait
-                </Checkbox>
-                <Checkbox
-                  isSelected={item.progress === "not-acquired"}
-                  onChange={() =>
-                    handleInputChange(index, "progress", "not-acquired")
-                  }
-                >
-                  Pas acquis
-                </Checkbox>
-              </div>
-            </CardBody>
-          </Card>
-        ))}
+        {/* Grille des matières */}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {report.map((item, index) => (
+            <motion.div
+              key={item.subject}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3, delay: index * 0.1 }}
+            >
+              <Card className="border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300">
+                <CardBody className="p-6">
+                  {/* En-tête de la matière */}
+                  <div className={`bg-gradient-to-r ${subjects[index].color} -mx-6 -mt-6 p-4 mb-6`}>
+                    <h3 className="text-xl font-bold text-white text-center flex items-center justify-center gap-2">
+                      {subjects[index].icon} {item.subject}
+                    </h3>
+                  </div>
+
+                  {/* Contenu */}
+                  <div className="space-y-4">
+                    <div>
+                      <label htmlFor={`activity-${index}`} className="text-sm text-gray-600 dark:text-gray-400 mb-1 block">
+                        Qu&apos;as-tu fait aujourd&apos;hui ?
+                      </label>
+                      <Input
+                        id={`activity-${index}`}
+                        className="w-full"
+                        placeholder="Décris ton activité..."
+                        value={item.activity}
+                        onChange={(e) => handleInputChange(index, "activity", e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor={`hours-${index}`} className="text-sm text-gray-600 dark:text-gray-400 mb-1 block">
+                        Combien de temps y as-tu passé ?
+                      </label>
+                      <Input
+                        id={`hours-${index}`}
+                        className="w-full"
+                        type="number"
+                        placeholder="Temps en heures"
+                        value={item.hours}
+                        onChange={(e) => handleInputChange(index, "hours", e.target.value)}
+                      />
+                    </div>
+
+                    <div>
+                      <label htmlFor={`progress-${index}`} className="text-sm text-gray-600 dark:text-gray-400 mb-1 block">
+                        Comment ça s&apos;est passé ?
+                      </label>
+                      <div className="grid grid-cols-2 gap-2" id={`progress-${index}`} role="group" aria-label="Progression">
+                        {["in-progress", "completed", "not-acquired"].map((status) => (
+                          <Button
+                            key={status}
+                            className={`p-2 rounded-lg transition-all duration-300 ${
+                              item.progress === status
+                                ? "bg-violet-500 text-white"
+                                : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300"
+                            }`}
+                            onClick={() => handleInputChange(index, "progress", status)}
+                          >
+                            {status === "completed" && "J&apos;ai réussi ! 🌟"}
+                            {status === "in-progress" && "Je progresse 💪"}
+                            {status === "not-acquired" && "J&apos;ai besoin d&apos;aide 🤔"}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Boutons d'action */}
+        <motion.div
+          className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg border-t-2 
+                    border-violet-200 dark:border-violet-700 p-6"
+          initial={{ y: 100 }}
+          animate={{ y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <div className="container mx-auto flex justify-center gap-4">
+            <Button
+              className="px-8 py-3 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-full
+                        hover:from-violet-600 hover:to-blue-600 transition-all duration-300"
+              onClick={saveReport}
+            >
+              Sauvegarder mon rapport 💾
+            </Button>
+            <Button
+              className="px-8 py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-full
+                        hover:from-green-600 hover:to-teal-600 transition-all duration-300"
+              onClick={downloadReport}
+            >
+              Télécharger mon rapport 📥
+            </Button>
+          </div>
+        </motion.div>
       </div>
-      <Button
-        className="px-6 py-2 mt-8 text-white bg-blue-600 rounded-md hover:bg-blue-700"
-        onClick={saveReport}
-      >
-        Enregistrer le rapport
-      </Button>
-      <Button
-        className="px-6 py-2 mt-4 text-white bg-green-600 rounded-md hover:bg-green-700"
-        onClick={downloadReport}
-      >
-        Télécharger le rapport
-      </Button>
     </div>
   );
 };

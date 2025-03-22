@@ -122,7 +122,7 @@ const ExercisesPage = () => {
             initial={{ opacity: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {exercises?.map((exercise, index) => (
+            {exercises?.map((exercise: Exercise, index: number) => (
               <motion.div
                 key={exercise.id}
                 initial={{ opacity: 0, scale: 0.9 }}
@@ -173,7 +173,7 @@ const ExercisesPage = () => {
                             onChange={(e) => handleChange(e, exercise.id)}
                           >
                             <option value="">Choisis ta réponse...</option>
-                            {exercise.options.map((option, index) => (
+                            {exercise.options.map((option: string, index: number) => (
                               <option key={index} value={option}>
                                 {option}
                               </option>
