@@ -768,11 +768,19 @@ export const Navbar = () => {
                     aria-label="À propos menu"
                     className="animate-in fade-in-80 zoom-in-95 duration-200"
                   >
-                    <DropdownItem key="about" textValue="À propos de nous">
-                      <NextLink href="/about">À propos de nous</NextLink>
+                    <DropdownItem 
+                      key="about" 
+                      textValue="À propos de nous"
+                      onClick={() => router.push("/about")}
+                    >
+                      À propos de nous
                     </DropdownItem>
-                    <DropdownItem key="contact" textValue="Contact">
-                      <NextLink href="/contact">Contact</NextLink>
+                    <DropdownItem 
+                      key="contact" 
+                      textValue="Contact"
+                      onClick={() => router.push("/contact")}
+                    >
+                      Contact
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
@@ -792,11 +800,19 @@ export const Navbar = () => {
                     aria-label="Articles menu"
                     className="animate-in fade-in-80 zoom-in-95 duration-200"
                   >
-                    <DropdownItem key="articles" textValue="Tous les articles">
-                      <NextLink href="/articles">Tous les articles</NextLink>
+                    <DropdownItem 
+                      key="articles" 
+                      textValue="Tous les articles"
+                      onClick={() => router.push("/articles")}
+                    >
+                      Tous les articles
                     </DropdownItem>
-                    <DropdownItem key="blog" textValue="Blog">
-                      <NextLink href="/blog">Blog</NextLink>
+                    <DropdownItem 
+                      key="blog" 
+                      textValue="Blog"
+                      onClick={() => router.push("/blog")}
+                    >
+                      Blog
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
