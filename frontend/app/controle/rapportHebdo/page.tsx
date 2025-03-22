@@ -75,11 +75,16 @@ const WeeklyReport = () => {
     // Récupérer le nom de l'utilisateur
     const fetchUserName = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-          credentials: "include",
-        });
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/users/me`,
+          {
+            credentials: "include",
+          },
+        );
+
         if (response.ok) {
           const userData = await response.json();
+
           setUserName(userData.firstName ? userData.firstName : "");
         }
       } catch (error) {
@@ -201,7 +206,7 @@ const WeeklyReport = () => {
           <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
             📝 Mon Rapport de la Semaine
           </h1>
-          
+
           {userName && (
             <motion.p
               animate={{ opacity: 1, y: 0 }}
