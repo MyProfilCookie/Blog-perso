@@ -879,52 +879,88 @@ export const Navbar = () => {
                   </button>
                 </div>
 
-                {/* Sections principales */}
-                <div className="grid gap-4 font-sans">
-                  {/* Navigation principale */}
+                {/* Section utilisateur */}
+                {user && (
                   <div>
                     <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                      Pages principales
+                      Mon compte
                     </h3>
                     <ul className="grid gap-1">
                       <li>
                         <NextLink
                           className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/"
+                          href={
+                            user.role === "admin"
+                              ? "/admin/dashboard"
+                              : "/dashboard"
+                          }
                           onClick={() => setIsMenuOpen(false)}
                         >
-                          <span className="mr-3 text-xl">🏠</span>
-                          Accueil
+                          <FontAwesomeIcon
+                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                            icon={
+                              user.role === "admin"
+                                ? faCrown
+                                : faTachometerAlt
+                            }
+                          />
+                          {user.role === "admin"
+                            ? "Dashboard Admin"
+                            : "Dashboard"}
                         </NextLink>
                       </li>
                       <li>
                         <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/about"
-                          onClick={() => setIsMenuOpen(false)}
+                          className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors cursor-pointer"
+                          href={""}
+                          role="menuitem"
+                          type="button"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            markOrderUpdatesAsRead();
+                            router.push("/orders");
+                          }}
+                          onKeyDown={(e) => {
+                            if (e.key === "Enter" || e.key === " ") {
+                              setIsMenuOpen(false);
+                              markOrderUpdatesAsRead();
+                              router.push("/orders");
+                            }
+                          }}
                         >
-                          <span className="mr-3 text-xl">ℹ️</span>
-                          À propos
-                        </NextLink>
-                      </li>
-                      <li>
-                        <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/services"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <span className="mr-3 text-xl">⚡</span>
-                          Services
-                        </NextLink>
-                      </li>
-                      <li>
-                        <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/articles"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <span className="mr-3 text-xl">📚</span>
-                          Articles
+                          <FontAwesomeIcon
+                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                            icon={faNewspaper}
+                          />
+                          <div className="flex flex-col w-full space-y-2">
+                            <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
+                              <div className="flex items-center">
+                                <span className="text-xl mr-2">⏳</span>
+                                <div>Mes commandes en cours</div>
+                              </div>
+                              <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
+                                {orderCount.pending || 0}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
+                              <div className="flex items-center">
+                                <span className="text-xl mr-2">🚚</span>
+                                <div>Mes commandes envoyées</div>
+                              </div>
+                              <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
+                                {orderCount.shipped || 0}
+                              </span>
+                            </div>
+                            <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
+                              <div className="flex items-center">
+                                <span className="text-xl mr-2">✅</span>
+                                <div>Mes commandes livrées</div>
+                              </div>
+                              <span className="text-sm font-semibold text-green-600 dark:text-green-400">
+                                {orderCount.delivered || 0}
+                              </span>
+                            </div>
+                          </div>
                         </NextLink>
                       </li>
                       <li>
@@ -933,181 +969,31 @@ export const Navbar = () => {
                           href="/controle"
                           onClick={() => setIsMenuOpen(false)}
                         >
-                          <span className="mr-3 text-xl">🎮</span>
+                          <FontAwesomeIcon
+                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                            icon={faNewspaper}
+                          />
                           Controle
                         </NextLink>
                       </li>
                       <li>
-                        <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/shop"
-                          onClick={() => setIsMenuOpen(false)}
+                        <button
+                          className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
+                          onClick={() => {
+                            setIsMenuOpen(false);
+                            handleLogout();
+                          }}
                         >
-                          <span className="mr-3 text-xl">🛒</span>
-                          Shop
-                          {cartItemsCount > 0 && (
-                            <Badge
-                              color="danger"
-                              content={cartItemsCount}
-                              style={{
-                                position: "absolute",
-                                top: "-10px",
-                                right: "-10px",
-                              }}
-                            >
-                              {cartItemsCount}
-                            </Badge>
-                          )}
-                        </NextLink>
+                          <FontAwesomeIcon
+                            className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                            icon={faSignOutAlt}
+                          />
+                          Déconnexion
+                        </button>
                       </li>
                     </ul>
                   </div>
-
-                  {/* Sous-menus */}
-                  <div>
-                    <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                      Informations supplémentaires
-                    </h3>
-                    <ul className="grid gap-1">
-                      <li>
-                        <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/about#contact"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <span className="mr-3 text-xl">📞</span>
-                          Contact
-                        </NextLink>
-                      </li>
-                      <li>
-                        <NextLink
-                          className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                          href="/faq"
-                          onClick={() => setIsMenuOpen(false)}
-                        >
-                          <span className="mr-3 text-xl">❓</span>
-                          FAQ
-                        </NextLink>
-                      </li>
-                    </ul>
-                  </div>
-
-                  {/* Section utilisateur */}
-                  {user && (
-                    <div>
-                      <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400 mb-2">
-                        Mon compte
-                      </h3>
-                      <ul className="grid gap-1">
-                        <li>
-                          <NextLink
-                            className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                            href={
-                              user.role === "admin"
-                                ? "/admin/dashboard"
-                                : "/dashboard"
-                            }
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            <FontAwesomeIcon
-                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                              icon={
-                                user.role === "admin"
-                                  ? faCrown
-                                  : faTachometerAlt
-                              }
-                            />
-                            {user.role === "admin"
-                              ? "Dashboard Admin"
-                              : "Dashboard"}
-                          </NextLink>
-                        </li>
-                        <li>
-                          <NextLink
-                            className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors cursor-pointer"
-                            href={""}
-                            role="menuitem"
-                            type="button"
-                            onClick={() => {
-                              setIsMenuOpen(false);
-                              markOrderUpdatesAsRead();
-                              router.push("/orders");
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === "Enter" || e.key === " ") {
-                                setIsMenuOpen(false);
-                                markOrderUpdatesAsRead();
-                                router.push("/orders");
-                              }
-                            }}
-                          >
-                            <FontAwesomeIcon
-                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                              icon={faNewspaper}
-                            />
-                            <div className="flex flex-col w-full space-y-2">
-                              <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
-                                <div className="flex items-center">
-                                  <span className="text-xl mr-2">⏳</span>
-                                  <div>Mes commandes en cours</div>
-                                </div>
-                                <span className="text-sm font-semibold text-yellow-600 dark:text-yellow-400">
-                                  {orderCount.pending || 0}
-                                </span>
-                              </div>
-                              <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
-                                <div className="flex items-center">
-                                  <span className="text-xl mr-2">🚚</span>
-                                  <div>Mes commandes envoyées</div>
-                                </div>
-                                <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
-                                  {orderCount.shipped || 0}
-                                </span>
-                              </div>
-                              <div className="flex items-center justify-between bg-gray-50 dark:bg-gray-800 p-2 rounded-lg">
-                                <div className="flex items-center">
-                                  <span className="text-xl mr-2">✅</span>
-                                  <div>Mes commandes livrées</div>
-                                </div>
-                                <span className="text-sm font-semibold text-green-600 dark:text-green-400">
-                                  {orderCount.delivered || 0}
-                                </span>
-                              </div>
-                            </div>
-                          </NextLink>
-                        </li>
-                        <li>
-                          <NextLink
-                            className="flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                            href="/controle"
-                            onClick={() => setIsMenuOpen(false)}
-                          >
-                            <FontAwesomeIcon
-                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                              icon={faNewspaper}
-                            />
-                            Controle
-                          </NextLink>
-                        </li>
-                        <li>
-                          <button
-                            className="w-full flex items-center px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 rounded-md transition-colors"
-                            onClick={() => {
-                              setIsMenuOpen(false);
-                              handleLogout();
-                            }}
-                          >
-                            <FontAwesomeIcon
-                              className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                              icon={faSignOutAlt}
-                            />
-                            Déconnexion
-                          </button>
-                        </li>
-                      </ul>
-                    </div>
-                  )}
-                </div>
+                )}
               </div>
             </motion.div>
           )}
