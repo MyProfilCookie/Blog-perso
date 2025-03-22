@@ -60,18 +60,24 @@ type ReportList = ReportItem[];
 // Fonction pour vérifier si le token est expiré
 const isTokenExpired = (token: string) => {
   try {
-    const base64Url = token.split('.')[1];
-    const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-    const jsonPayload = decodeURIComponent(atob(base64).split('').map(function(c) {
-      return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
-    }).join(''));
+    const base64Url = token.split(".")[1];
+    const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split("")
+        .map(function (c) {
+          return "%" + ("00" + c.charCodeAt(0).toString(16)).slice(-2);
+        })
+        .join(""),
+    );
 
     const { exp } = JSON.parse(jsonPayload);
     const currentTime = Math.floor(Date.now() / 1000);
-    
+
     return exp < currentTime;
   } catch (error) {
     console.error("Erreur lors de la vérification du token:", error);
+
     return true; // En cas d'erreur, on considère le token comme expiré
   }
 };
@@ -103,6 +109,7 @@ const WeeklyReport = () => {
           if (!token || !userDataStr) {
             console.log("Informations de connexion manquantes, redirection...");
             router.push("/auth/signin");
+
             return;
           }
 
@@ -111,20 +118,28 @@ const WeeklyReport = () => {
             console.log("Token expiré, redirection vers la connexion...");
             localStorage.removeItem("userToken");
             router.push("/auth/signin");
+
             return;
           }
 
           try {
             const userData = JSON.parse(userDataStr);
+
             if (userData && (userData.prenom || userData.nom)) {
               setUserName(userData.prenom || userData.nom.split(" ")[0]);
             }
           } catch (error) {
-            console.error("Erreur lors de la lecture des données utilisateur:", error);
+            console.error(
+              "Erreur lors de la lecture des données utilisateur:",
+              error,
+            );
           }
         }
       } catch (error) {
-        console.error("Erreur lors de la vérification de l'authentification:", error);
+        console.error(
+          "Erreur lors de la vérification de l'authentification:",
+          error,
+        );
       }
     };
 
@@ -132,8 +147,12 @@ const WeeklyReport = () => {
 
     // Chargement du rapport sauvegardé seulement si nous avons un token valide
     const token = localStorage.getItem("userToken");
+
     if (token && !isTokenExpired(token)) {
-      const savedReport = JSON.parse(localStorage.getItem(selectedWeek) || "[]");
+      const savedReport = JSON.parse(
+        localStorage.getItem(selectedWeek) || "[]",
+      );
+
       if (savedReport.length) {
         setReport(savedReport);
       } else {
@@ -233,215 +252,281 @@ const WeeklyReport = () => {
   };
 
   return (
-    <div className="min-h-screen dark:bg-gray-900">
-      <div className="container mx-auto px-6 py-8">
-        {/* En-tête */}
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
-            📝 Mon Rapport de la Semaine
-          </h1>
-
-          <motion.p
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      <div className="container mx-auto px-6 py-8 flex flex-col min-h-screen">
+        {/* Contenu principal */}
+        <div className="flex-grow">
+          {/* En-tête */}
+          <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="text-lg text-gray-600 dark:text-gray-300 mb-6"
-            initial={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            className="text-center mb-16"
+            initial={{ opacity: 0, y: -20 }}
+            transition={{ duration: 0.5 }}
           >
-            {userName ? (
-              <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
-                Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine
-                ?
-              </h2>
-            ) : (
-              <>Chargement de ton profil...</>
-            )}
-          </motion.p>
+            <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
+              📝 Mon Rapport de la Semaine
+            </h1>
 
-          {/* Sélecteur de semaine */}
-          <div className="relative inline-block">
-            <Button
-              className="px-6 py-2 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-full
-                        hover:from-violet-600 hover:to-blue-600 transition-all duration-300"
-              onClick={() => setShowWeeks(!showWeeks)}
+            <motion.p
+              animate={{ opacity: 1, y: 0 }}
+              className="text-lg text-gray-600 dark:text-gray-300 mb-6"
+              initial={{ opacity: 0, y: -10 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
             >
-              {selectedWeek} 📅
-            </Button>
+              {userName ? (
+                <>
+                  Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la
+                  semaine ?
+                </>
+              ) : (
+                <>Chargement de ton profil...</>
+              )}
+            </motion.p>
 
-            {showWeeks && (
-              <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                className="absolute z-50 mt-2 py-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl
-                          border-2 border-violet-200 dark:border-violet-700 max-h-60 overflow-y-auto"
-                initial={{ opacity: 0, y: 10 }}
+            {/* Sélecteur de semaine */}
+            <div className="relative inline-block">
+              <Button
+                className="px-6 py-2 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-full
+                          hover:from-violet-600 hover:to-blue-600 transition-all duration-300"
+                onClick={() => setShowWeeks(!showWeeks)}
               >
-                {weeks.map((week) => (
-                  <button
-                    key={week}
-                    className="w-full text-left px-4 py-2 cursor-pointer hover:bg-violet-50 dark:hover:bg-violet-900/30
-                              text-gray-700 dark:text-gray-300"
-                    onClick={() => {
-                      setSelectedWeek(week);
-                      setShowWeeks(false);
-                    }}
-                  >
-                    {week}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
+                {selectedWeek} 📅
+              </Button>
 
-        {/* Grille des matières */}
-        <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-[1400px] mx-auto">
-          {report.map((item, index) => (
-            <motion.div
-              key={item.subject}
-              animate={{ opacity: 1, scale: 1 }}
-              initial={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-            >
-              <Card className="border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300">
-                <CardBody className="p-6">
-                  {/* En-tête de la matière */}
-                  <div
-                    className={`bg-gradient-to-r ${subjects[index].color} -mx-6 -mt-6 p-4 mb-6`}
-                  >
-                    <h3 className="text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                      {subjects[index].icon} {item.subject}
-                    </h3>
-                  </div>
+              {showWeeks && (
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className="absolute z-50 mt-2 py-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl
+                            border-2 border-violet-200 dark:border-violet-700 max-h-60 overflow-y-auto"
+                  initial={{ opacity: 0, y: 10 }}
+                >
+                  {weeks.map((week) => (
+                    <button
+                      key={week}
+                      className="w-full text-left px-4 py-2 cursor-pointer hover:bg-violet-50 dark:hover:bg-violet-900/30
+                                text-gray-700 dark:text-gray-300"
+                      onClick={() => {
+                        setSelectedWeek(week);
+                        setShowWeeks(false);
+                      }}
+                    >
+                      {week}
+                    </button>
+                  ))}
+                </motion.div>
+              )}
+            </div>
+          </motion.div>
 
-                  {/* Contenu */}
-                  <div className="space-y-4">
-                    <div>
-                      <label
-                        className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                        htmlFor={`activity-${index}`}
-                      >
-                        Qu&apos;as-tu fait aujourd&apos;hui ?
-                      </label>
-                      <Input
-                        className="w-full"
-                        id={`activity-${index}`}
-                        placeholder="Décris ton activité..."
-                        value={item.activity}
-                        onChange={(e) =>
-                          handleInputChange(index, "activity", e.target.value)
-                        }
-                      />
+          {/* Grille des matières */}
+          <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-8 max-w-[1400px] mx-auto mb-8">
+            {report.map((item, index) => (
+              <motion.div
+                key={item.subject}
+                animate={{ opacity: 1, scale: 1 }}
+                initial={{ opacity: 0, scale: 0.9 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <Card className="border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300">
+                  <CardBody className="p-6">
+                    {/* En-tête de la matière */}
+                    <div
+                      className={`bg-gradient-to-r ${subjects[index].color} -mx-6 -mt-6 p-4 mb-6`}
+                    >
+                      <h3 className="text-xl font-bold text-white text-center flex items-center justify-center gap-2">
+                        {subjects[index].icon} {item.subject}
+                      </h3>
                     </div>
 
-                    <div>
-                      <label
-                        className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                        htmlFor={`hours-${index}`}
-                      >
-                        Combien de temps y as-tu passé ?
-                      </label>
-                      <Input
-                        className="w-full"
-                        id={`hours-${index}`}
-                        placeholder="Temps en heures"
-                        type="number"
-                        value={item.hours}
-                        onChange={(e) =>
-                          handleInputChange(index, "hours", e.target.value)
-                        }
-                      />
-                    </div>
+                    {/* Contenu */}
+                    <div className="space-y-4">
+                      <div>
+                        <label
+                          className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                          htmlFor={`activity-${index}`}
+                        >
+                          Qu&apos;as-tu fait aujourd&apos;hui ?
+                        </label>
+                        <Input
+                          className="w-full"
+                          id={`activity-${index}`}
+                          placeholder="Décris ton activité..."
+                          value={item.activity}
+                          onChange={(e) =>
+                            handleInputChange(index, "activity", e.target.value)
+                          }
+                        />
+                      </div>
 
-                    <div>
-                      <label
-                        className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                        htmlFor={`progress-${index}`}
-                      >
-                        Comment ça s&apos;est passé ?
-                      </label>
-                      <div
-                        aria-label="Progression"
-                        className="grid grid-cols-1 gap-3 mt-2"
-                        id={`progress-${index}`}
-                        role="group"
-                      >
-                        <Button
-                          key="in-progress"
-                          className={`p-3 rounded-lg transition-all duration-300 text-base ${
-                            item.progress === "in-progress"
-                              ? "bg-violet-500 text-white"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                          }`}
-                          onClick={() =>
-                            handleInputChange(index, "progress", "in-progress")
-                          }
+                      <div>
+                        <label
+                          className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                          htmlFor={`hours-${index}`}
                         >
-                          Je progresse {getProgressEmoji("in-progress")}
-                        </Button>
-                        <Button
-                          key="completed"
-                          className={`p-3 rounded-lg transition-all duration-300 text-base ${
-                            item.progress === "completed"
-                              ? "bg-violet-500 text-white"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                          }`}
-                          onClick={() =>
-                            handleInputChange(index, "progress", "completed")
+                          Combien de temps y as-tu passé ?
+                        </label>
+                        <Input
+                          className="w-full"
+                          id={`hours-${index}`}
+                          placeholder="Temps en heures"
+                          type="number"
+                          value={item.hours}
+                          onChange={(e) =>
+                            handleInputChange(index, "hours", e.target.value)
                           }
+                        />
+                      </div>
+
+                      <div>
+                        <label
+                          className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                          htmlFor={`progress-${index}`}
                         >
-                          J&apos;ai réussi ! {getProgressEmoji("completed")}
-                        </Button>
-                        <Button
-                          key="not-acquired"
-                          className={`p-3 rounded-lg transition-all duration-300 text-base ${
-                            item.progress === "not-acquired"
-                              ? "bg-violet-500 text-white"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                          }`}
-                          onClick={() =>
-                            handleInputChange(index, "progress", "not-acquired")
-                          }
+                          Comment ça s&apos;est passé ?
+                        </label>
+                        <div
+                          aria-label="Progression"
+                          className="grid grid-cols-1 gap-3 mt-2"
+                          id={`progress-${index}`}
+                          role="group"
                         >
-                          Besoin d&apos;aide {getProgressEmoji("not-acquired")}
-                        </Button>
+                          <Button
+                            key="in-progress"
+                            className={`p-3 rounded-lg transition-all duration-300 text-base ${
+                              item.progress === "in-progress"
+                                ? "bg-violet-500 text-white"
+                                : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                            }`}
+                            onClick={() =>
+                              handleInputChange(
+                                index,
+                                "progress",
+                                "in-progress",
+                              )
+                            }
+                          >
+                            Je progresse {getProgressEmoji("in-progress")}
+                          </Button>
+                          <Button
+                            key="completed"
+                            className={`p-3 rounded-lg transition-all duration-300 text-base ${
+                              item.progress === "completed"
+                                ? "bg-violet-500 text-white"
+                                : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                            }`}
+                            onClick={() =>
+                              handleInputChange(index, "progress", "completed")
+                            }
+                          >
+                            J&apos;ai réussi ! {getProgressEmoji("completed")}
+                          </Button>
+                          <Button
+                            key="not-acquired"
+                            className={`p-3 rounded-lg transition-all duration-300 text-base ${
+                              item.progress === "not-acquired"
+                                ? "bg-violet-500 text-white"
+                                : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                            }`}
+                            onClick={() =>
+                              handleInputChange(
+                                index,
+                                "progress",
+                                "not-acquired",
+                              )
+                            }
+                          >
+                            Besoin d&apos;aide{" "}
+                            {getProgressEmoji("not-acquired")}
+                          </Button>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
+                  </CardBody>
+                </Card>
+              </motion.div>
+            ))}
+          </div>
 
-        {/* Boutons d'action */}
-        <motion.div
-          animate={{ y: 0 }}
-          className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 shadow-lg border-t-2 
-                    border-violet-200 dark:border-violet-700 p-6"
-          initial={{ y: 100 }}
-          transition={{ duration: 0.5 }}
-        >
-          <div className="container mx-auto flex justify-center gap-4">
+          {/* Boutons d'action */}
+          <div className="flex justify-center gap-4 py-6 bg-white dark:bg-gray-900 mt-auto">
             <Button
-              className="px-8 py-3 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-full
-                        hover:from-violet-600 hover:to-blue-600 transition-all duration-300"
+              className="bg-violet-500 hover:bg-violet-600 text-white px-6 py-2 rounded-lg flex items-center gap-2"
               onClick={saveReport}
             >
-              Sauvegarder mon rapport 💾
+              Sauvegarder mon rapport 📝
             </Button>
             <Button
-              className="px-8 py-3 bg-gradient-to-r from-green-500 to-teal-500 text-white rounded-full
-                        hover:from-green-600 hover:to-teal-600 transition-all duration-300"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-2 rounded-lg flex items-center gap-2"
               onClick={downloadReport}
             >
-              Télécharger mon rapport 📥
+              Télécharger mon rapport 💾
             </Button>
           </div>
-        </motion.div>
+        </div>
+
+        {/* Footer */}
+        <footer className="mt-auto pt-8">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8 border-t border-gray-200 dark:border-gray-700 pt-8">
+            <div>
+              <h3 className="text-lg font-semibold mb-4">À propos</h3>
+              <p className="text-gray-600 dark:text-gray-400">
+                Découvrez notre plateforme dédiée à l&apos;apprentissage et au
+                partage de connaissances.
+              </p>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Liens rapides</h3>
+              <ul className="space-y-2">
+                <li>
+                  <a
+                    className="text-violet-600 hover:text-violet-700 dark:text-violet-400"
+                    href="/blog"
+                  >
+                    Blog
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="text-violet-600 hover:text-violet-700 dark:text-violet-400"
+                    href="/courses"
+                  >
+                    Courses
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="text-violet-600 hover:text-violet-700 dark:text-violet-400"
+                    href="/shop"
+                  >
+                    Shop
+                  </a>
+                </li>
+                <li>
+                  <a
+                    className="text-violet-600 hover:text-violet-700 dark:text-violet-400"
+                    href="/contact"
+                  >
+                    Contact
+                  </a>
+                </li>
+              </ul>
+            </div>
+            <div>
+              <h3 className="text-lg font-semibold mb-4">Contact</h3>
+              <ul className="space-y-2 text-gray-600 dark:text-gray-400">
+                <li className="flex items-center gap-2">
+                  <span>📍</span> Paris, France
+                </li>
+                <li className="flex items-center gap-2">
+                  <span>📞</span> +33 1 23 45 67 89
+                </li>
+                <li className="flex items-center gap-2">
+                  <span>📧</span> contact@notreplateforme.com
+                </li>
+              </ul>
+            </div>
+          </div>
+        </footer>
       </div>
     </div>
   );
