@@ -404,18 +404,18 @@ export default function Home() {
           Une équipe dédiée à offrir un apprentissage adapté à tous.
         </p>
 
-        <div className="relative flex items-center justify-center mt-10">
+        <div className="relative flex items-center justify-center mt-10 px-12 md:px-20">
           {/* 🔙 Bouton précédent */}
           <Button
             isIconOnly
-            className="absolute left-2 md:left-4 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all"
+            className="absolute left-0 md:left-8 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all flex items-center justify-center"
             onClick={previousTeamSlide}
           >
-            {"<"}
+            <span className="text-xl">&lt;</span>
           </Button>
 
           {/* 👥 Contenu des membres */}
-          <div className="w-full max-w-3xl">
+          <div className="w-full max-w-4xl mx-8">
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentTeamIndex}
@@ -423,7 +423,7 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.6 }}
-                className="grid grid-cols-1 gap-6 sm:grid-cols-2"
+                className="grid grid-cols-1 gap-8 sm:grid-cols-2"
               >
                 {teamGroups[currentTeamIndex].map((member, index) => (
                   <Card
@@ -435,18 +435,16 @@ export default function Home() {
                     }}
                   >
                     <CardBody className="text-center">
-                      <div className="relative w-32 h-32 mx-auto mb-4 overflow-hidden rounded-full">
+                      <div className="relative w-40 h-40 mx-auto mb-6 overflow-hidden rounded-full border-4 border-violet-200 dark:border-violet-700">
                         <Image
                           src={member.img}
                           alt={member.name}
                           className="object-cover w-full h-full"
-                          style={{
-                            width: '100%',
-                            height: '100%',
-                          }}
+                          width={160}
+                          height={160}
                         />
                       </div>
-                      <h4 className="font-bold text-gray-800 dark:text-white">{member.name}</h4>
+                      <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{member.name}</h4>
                       <p className="text-gray-500 dark:text-gray-300">{member.role}</p>
                     </CardBody>
                   </Card>
@@ -458,10 +456,10 @@ export default function Home() {
           {/* 🔜 Bouton suivant */}
           <Button
             isIconOnly
-            className="absolute right-2 md:right-4 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all"
+            className="absolute right-0 md:right-8 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all flex items-center justify-center"
             onClick={nextTeamSlide}
           >
-            {">"}
+            <span className="text-xl">&gt;</span>
           </Button>
         </div>
       </motion.div>
