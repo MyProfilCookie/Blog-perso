@@ -750,7 +750,7 @@ export const Navbar = () => {
             <ul className="flex gap-4 items-center font-sans">
               <NavbarItem>
                 <NextLink
-                  className="text-blue-800 dark:text-white hover:text-blue-500 text-lg font-medium uppercase tracking-wide"
+                  className="text-blue-800 dark:text-white hover:text-blue-500 text-lg font-medium tracking-wide"
                   href="/"
                 >
                   Accueil
@@ -760,7 +760,7 @@ export const Navbar = () => {
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium uppercase tracking-wide"
+                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium tracking-wide"
                       radius="sm"
                       variant="light"
                     >
@@ -784,7 +784,7 @@ export const Navbar = () => {
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium uppercase tracking-wide"
+                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium tracking-wide"
                       radius="sm"
                       variant="light"
                     >
@@ -806,7 +806,7 @@ export const Navbar = () => {
               </NavbarItem>
               <NavbarItem>
                 <NextLink
-                  className="text-blue-800 dark:text-white hover:text-blue-500 text-lg font-medium uppercase tracking-wide"
+                  className="text-blue-800 dark:text-white hover:text-blue-500 text-lg font-medium tracking-wide"
                   href="/controle"
                 >
                   Controle
@@ -815,7 +815,7 @@ export const Navbar = () => {
 
               <NavbarItem key="shop" className="relative">
                 <NextLink
-                  className="text-blue-800 dark:text-white hover:text-blue-500 flex items-center relative text-lg font-medium uppercase tracking-wide"
+                  className="text-blue-800 dark:text-white hover:text-blue-500 flex items-center relative text-lg font-medium tracking-wide"
                   href="/shop"
                 >
                   Shop
