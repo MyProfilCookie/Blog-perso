@@ -108,7 +108,7 @@ const WeeklyReport = () => {
 
           if (!token || !userDataStr) {
             console.log("Informations de connexion manquantes, redirection...");
-            router.push("/auth/signin");
+            router.push("/users/login");
 
             return;
           }
@@ -117,7 +117,7 @@ const WeeklyReport = () => {
           if (isTokenExpired(token)) {
             console.log("Token expiré, redirection vers la connexion...");
             localStorage.removeItem("userToken");
-            router.push("/auth/signin");
+            router.push("/users/login");
 
             return;
           }
