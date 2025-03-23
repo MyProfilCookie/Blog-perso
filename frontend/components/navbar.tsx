@@ -715,7 +715,7 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar
-      className="dark:bg-gray-900 bg-cream font-sans"
+      className="dark:bg-gray-900 bg-white/70 backdrop-blur-sm font-sans"
       maxWidth="xl"
       position="sticky"
       style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
