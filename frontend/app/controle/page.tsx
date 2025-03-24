@@ -183,20 +183,17 @@ const BlogPage = () => {
     router.push(route);
   };
 
-  const filteredThemes = courseThemes.filter(theme => {
-    if (searchQuery === "" && !selectedCategory) {
-      return true; // Afficher tous les cours si aucun filtre n'est appliqué
-    }
-    
-    const matchesSearch = searchQuery === "" || 
-      theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      theme.description.toLowerCase().includes(searchQuery.toLowerCase());
-      
-    const matchesCategory = !selectedCategory || 
-      theme.bgColor.toLowerCase().includes(selectedCategory.toLowerCase());
-      
-    return matchesSearch && matchesCategory;
-  });
+  const filteredThemes = searchQuery === "" && !selectedCategory 
+    ? courseThemes 
+    : courseThemes.filter(theme => {
+        const matchesSearch = theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+                            theme.description.toLowerCase().includes(searchQuery.toLowerCase());
+                            
+        const matchesCategory = !selectedCategory || 
+                              theme.bgColor.startsWith(`bg-${selectedCategory}-`);
+                              
+        return matchesSearch && matchesCategory;
+    });
 
   if (!mounted) {
     return null;
