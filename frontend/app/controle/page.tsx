@@ -184,10 +184,17 @@ const BlogPage = () => {
   };
 
   const filteredThemes = courseThemes.filter(theme => {
-    const matchesSearch = theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         theme.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const baseColor = theme.bgColor.split(' ')[0].replace('bg-', '').split('-')[0];
-    const matchesCategory = !selectedCategory || baseColor === selectedCategory;
+    if (searchQuery === "" && !selectedCategory) {
+      return true; // Afficher tous les cours si aucun filtre n'est appliqué
+    }
+    
+    const matchesSearch = searchQuery === "" || 
+      theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      theme.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+    const matchesCategory = !selectedCategory || 
+      theme.bgColor.toLowerCase().includes(selectedCategory.toLowerCase());
+      
     return matchesSearch && matchesCategory;
   });
 
