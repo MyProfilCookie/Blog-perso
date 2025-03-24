@@ -1,21 +1,21 @@
 "use client";
-import { Card, CardBody, Badge, Progress } from "@nextui-org/react";
+import { Card, CardBody, Badge } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { 
-  faGraduationCap, 
-  faBookOpen, 
-  faFlask, 
-  faCalculator, 
-  faLanguage, 
-  faPalette, 
-  faLandmark, 
-  faGlobe, 
-  faTrophy, 
-  faClipboardList, 
+import {
+  faGraduationCap,
+  faBookOpen,
+  faFlask,
+  faCalculator,
+  faLanguage,
+  faPalette,
+  faLandmark,
+  faGlobe,
+  faTrophy,
+  faClipboardList,
   faMicrochip,
   faStar,
   faClock,
@@ -24,7 +24,7 @@ import {
   faCheckCircle,
   faLock,
   faCrown,
-  faFire
+  faFire,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { title } from "@/components/primitives";
@@ -35,7 +35,7 @@ const courseThemes = [
     id: 1,
     title: "Leçons du jour",
     description: "Apprends les leçons du jour.",
-    image: "/assets/lessons.jpg",
+    image: "https://placehold.co/600x400/blue/white?text=Leçons",
     route: "/controle/lessons",
     bgColor: "bg-blue-200 dark:bg-blue-900/30",
     icon: faBookOpen,
@@ -45,7 +45,7 @@ const courseThemes = [
     id: 2,
     title: "Sciences",
     description: "Explore le monde des sciences.",
-    image: "/assets/sciences.jpg",
+    image: "https://placehold.co/600x400/green/white?text=Sciences",
     route: "/controle/sciences",
     bgColor: "bg-green-200 dark:bg-green-900/30",
     icon: faFlask,
@@ -55,7 +55,7 @@ const courseThemes = [
     id: 3,
     title: "Mathématiques",
     description: "Apprends les bases des mathématiques.",
-    image: "/assets/math.jpg",
+    image: "https://placehold.co/600x400/yellow/white?text=Maths",
     route: "/controle/math",
     bgColor: "bg-yellow-200 dark:bg-yellow-900/30",
     icon: faCalculator,
@@ -65,7 +65,7 @@ const courseThemes = [
     id: 4,
     title: "Français",
     description: "Améliore ton français avec des exercices adaptés.",
-    image: "/assets/french.jpg",
+    image: "https://placehold.co/600x400/red/white?text=Français",
     route: "/controle/french",
     bgColor: "bg-red-200 dark:bg-red-900/30",
     icon: faLanguage,
@@ -75,7 +75,7 @@ const courseThemes = [
     id: 5,
     title: "Arts Plastiques",
     description: "Découvre l'art et exprime ta créativité.",
-    image: "/assets/art.jpg",
+    image: "https://placehold.co/600x400/purple/white?text=Arts",
     route: "/controle/art",
     bgColor: "bg-purple-200 dark:bg-purple-900/30",
     icon: faPalette,
@@ -85,7 +85,7 @@ const courseThemes = [
     id: 6,
     title: "Langues",
     description: "Apprends les langues.",
-    image: "/assets/language.jpg",
+    image: "https://placehold.co/600x400/pink/white?text=Langues",
     route: "/controle/language",
     bgColor: "bg-pink-200 dark:bg-pink-900/30",
     icon: faLanguage,
@@ -95,7 +95,7 @@ const courseThemes = [
     id: 7,
     title: "Histoire",
     description: "Apprends l'histoire.",
-    image: "/assets/history.jpg",
+    image: "https://placehold.co/600x400/indigo/white?text=Histoire",
     route: "/controle/history",
     bgColor: "bg-indigo-200 dark:bg-indigo-900/30",
     icon: faLandmark,
@@ -105,7 +105,7 @@ const courseThemes = [
     id: 8,
     title: "Geographie",
     description: "Apprends la geographie.",
-    image: "/assets/geography.jpg",
+    image: "https://placehold.co/600x400/teal/white?text=Géographie",
     route: "/controle/geography",
     bgColor: "bg-teal-200 dark:bg-teal-900/30",
     icon: faGlobe,
@@ -115,7 +115,7 @@ const courseThemes = [
     id: 9,
     title: "Trimestres",
     description: "Résultat de l'examen de fin d'étude.",
-    image: "/assets/trimestres.webp",
+    image: "https://placehold.co/600x400/orange/white?text=Trimestres",
     route: "/controle/trimestres",
     bgColor: "bg-orange-200 dark:bg-orange-900/30",
     icon: faTrophy,
@@ -125,7 +125,7 @@ const courseThemes = [
     id: 10,
     title: "Rapport Hebdo",
     description: "Rapport hebdomadaire.",
-    image: "/assets/rapport_hebdo.webp",
+    image: "https://placehold.co/600x400/gray/white?text=Rapport",
     route: "/controle/rapportHebdo",
     bgColor: "bg-gray-200 dark:bg-gray-900/30",
     icon: faClipboardList,
@@ -135,7 +135,7 @@ const courseThemes = [
     id: 11,
     title: "Technologie",
     description: "Apprends la technologie.",
-    image: "/assets/technology.jpg",
+    image: "https://placehold.co/600x400/cyan/white?text=Technologie",
     route: "/controle/technology",
     bgColor: "bg-cyan-200 dark:bg-cyan-900/30",
     icon: faMicrochip,
@@ -208,9 +208,11 @@ const BlogPage = () => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "completed":
-        return <FontAwesomeIcon icon={faCheckCircle} className="text-green-500" />;
+        return (
+          <FontAwesomeIcon className="text-green-500" icon={faCheckCircle} />
+        );
       case "locked":
-        return <FontAwesomeIcon icon={faLock} className="text-gray-500" />;
+        return <FontAwesomeIcon className="text-gray-500" icon={faLock} />;
       default:
         return null;
     }
@@ -227,18 +229,18 @@ const BlogPage = () => {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-8 md:py-10 px-4 min-h-screen bg-gradient-to-b from-background to-background/80">
       <motion.div
-        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         className="absolute top-0 left-0 w-full h-64 bg-gradient-to-b from-primary-500/20 to-transparent pointer-events-none"
+        initial={{ opacity: 0, y: -20 }}
       />
-      
+
       <BackButton />
-      
+
       {/* Header Section avec animation améliorée */}
-      <motion.div 
+      <motion.div
+        animate={{ opacity: 1, scale: 1 }}
         className="flex flex-col items-center gap-6 mb-8"
         initial={{ opacity: 0, scale: 0.9 }}
-        animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div className="flex items-center gap-3">
@@ -246,41 +248,44 @@ const BlogPage = () => {
             animate={{ rotate: 360 }}
             transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
           >
-            <FontAwesomeIcon 
-              icon={faGraduationCap} 
-              className="text-4xl text-primary-500 dark:text-primary-400" 
+            <FontAwesomeIcon
+              className="text-4xl text-primary-500 dark:text-primary-400"
+              icon={faGraduationCap}
             />
           </motion.div>
           <h1 className={`${title()} text-center`}>Les contrôles</h1>
         </div>
-        
+
         {/* Stats Section avec hover effects */}
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
           {stats.map((stat, index) => (
             <motion.div
               key={stat.label}
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg text-center relative overflow-hidden group"
+              initial={{ opacity: 0, y: 20 }}
               transition={{ delay: index * 0.1 }}
               whileHover={{ scale: 1.05 }}
-              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg text-center relative overflow-hidden group"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-              <FontAwesomeIcon 
-                icon={stat.icon} 
+              <FontAwesomeIcon
                 className={`text-2xl mb-2 ${stat.color}`}
+                icon={stat.icon}
               />
               <h3 className="text-lg font-semibold">{stat.value}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</p>
+              <p className="text-sm text-gray-600 dark:text-gray-400">
+                {stat.label}
+              </p>
             </motion.div>
           ))}
         </div>
       </motion.div>
-      
+
       {/* Cards Grid avec effets améliorés */}
       <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
         {courseThemes.map((theme, index) => {
           const progress = courseProgress[theme.id];
+
           return (
             <motion.div
               key={theme.id}
@@ -292,61 +297,64 @@ const BlogPage = () => {
               onClick={() => handleCardClick(theme.route)}
             >
               <Card
-                className={`w-full transition-all duration-300 ${theme.bgColor} backdrop-blur-sm`}
                 isPressable
+                className={`w-full transition-all duration-300 ${theme.bgColor} backdrop-blur-sm`}
               >
                 <CardBody className="flex flex-col items-center p-0 overflow-hidden">
                   <div className="relative w-full h-[200px]">
                     <Image
+                      fill
                       alt={theme.title}
                       className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      fill
                       src={theme.image}
                       onPointerDown={(e) => e.preventDefault()}
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-                    
+
                     {/* Badge de statut */}
                     {progress.status === "completed" && (
                       <div className="absolute top-2 right-2">
-                        <Badge 
-                          color="warning"
-                          className="text-white"
-                        >
+                        <Badge className="text-white" color="warning">
                           <FontAwesomeIcon icon={faCrown} />
                         </Badge>
                       </div>
                     )}
-                    
+
                     {/* Streak indicator */}
                     {progress.progress > 80 && (
                       <div className="absolute top-2 left-2 flex items-center gap-1 bg-red-500/80 text-white px-2 py-1 rounded-full text-xs">
-                        <FontAwesomeIcon icon={faFire} className="text-yellow-300" />
+                        <FontAwesomeIcon
+                          className="text-yellow-300"
+                          icon={faFire}
+                        />
                         <span>En feu!</span>
                       </div>
                     )}
-                    
+
                     <div className="absolute bottom-4 left-4 right-4">
                       <div className="flex items-center gap-2 mb-2">
-                        <FontAwesomeIcon 
-                          icon={theme.icon} 
+                        <FontAwesomeIcon
                           className={`text-2xl ${theme.iconColor}`}
+                          icon={theme.icon}
                         />
                         {getStatusIcon(progress.status)}
                       </div>
-                      <h4 className="font-bold text-xl text-white mb-1">{theme.title}</h4>
+                      <h4 className="font-bold text-xl text-white mb-1">
+                        {theme.title}
+                      </h4>
                       <small className="text-white/80 block mb-2">
                         {theme.description}
                       </small>
-                      
+
                       {/* Barre de progression */}
                       <div className="w-full bg-black/30 rounded-full h-2 overflow-hidden">
                         <motion.div
+                          animate={{ width: `${progress.progress}%` }}
                           className={`h-full rounded-full ${
+                            // eslint-disable-next-line prettier/prettier
                             progress.status === "completed" ? "bg-green-500" : "bg-blue-500"
                           }`}
                           initial={{ width: 0 }}
-                          animate={{ width: `${progress.progress}%` }}
                           transition={{ duration: 1, delay: index * 0.1 }}
                         />
                       </div>
