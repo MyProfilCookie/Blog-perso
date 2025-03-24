@@ -132,31 +132,27 @@ export default function Home() {
 
 
   return (
-    <section className="flex flex-col items-center justify-center w-full gap-8 py-12 md:py-16">
+    <section className="flex flex-col items-center justify-center w-full gap-4 sm:gap-8 py-4 sm:py-12 px-2 sm:px-4">
       {/* Header Title Section */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="text-center"
+        className="text-center w-full max-w-full px-2 sm:px-4"
         initial={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className={`${title()} text-violet-600 dark:text-violet-300 text-4xl`}>
+        <h1 className={`${title()} text-violet-600 dark:text-violet-300 text-2xl sm:text-4xl`}>
           Bienvenue sur AutiStudy
         </h1>
-        <h2 className={subtitle({ class: "mt-4" })}>
+        <h2 className={subtitle({ class: "mt-2 sm:mt-4" })}>
           Bonjour à toi {user?.pseudo}
-
           {user?.isAdmin ? (
-            <FontAwesomeIcon
-              className="ml-2 text-yellow-500"
-              icon={faCrown}
-            />
+            <FontAwesomeIcon className="ml-2 text-yellow-500" icon={faCrown} />
           ) : (
             <FontAwesomeIcon className="ml-2 text-blue-500" icon={faUser} />
           )}
         </h2>
-        <h2 className={subtitle({ class: "mt-4" })}>il est grand temps de faire de la paix avec l'autisme</h2>
-        <h3 className={subtitle({ class: "mt-4" })}>
+        <h2 className={subtitle({ class: "mt-2 sm:mt-4" })}>il est grand temps de faire de la paix avec l'autisme</h2>
+        <h3 className={subtitle({ class: "mt-2 sm:mt-4" })}>
           Une plateforme dédiée à l'éducation des enfants autistes, offrant des
           ressources et un accompagnement personnalisés.
         </h3>
@@ -227,7 +223,7 @@ export default function Home() {
       {/* Features Section */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1200px] mt-12"
+        className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-[1200px] mt-8 px-2 sm:px-4"
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.8, delay: 1.5 }}
       >
@@ -322,16 +318,16 @@ export default function Home() {
       {/* Articles and Tips Slider */}
       <motion.div
         animate={{ opacity: 1 }}
-        className="w-full max-w-[800px] mt-16 mx-auto text-center"
+        className="w-full max-w-[800px] mt-8 sm:mt-16 mx-auto text-center px-2 sm:px-4"
         initial={{ opacity: 0 }}
         transition={{ duration: 0.8, delay: 1 }}
       >
-        <h2 className={`${title()} text-center text-blue-600 dark:text-blue-400`}>Articles et Astuces</h2>
-        <p className="mb-8 text-lg text-blue-500 dark:text-blue-300">
+        <h2 className={`${title()} text-center text-blue-600 dark:text-blue-400 text-xl sm:text-2xl`}>Articles et Astuces</h2>
+        <p className="mb-4 sm:mb-8 text-base sm:text-lg text-blue-500 dark:text-blue-300">
           Des conseils pratiques pour aider les enfants autistes au quotidien.
         </p>
 
-        <div className="relative flex items-center justify-center">
+        <div className="relative flex items-center justify-center px-2 sm:px-4">
           <Button
             isIconOnly
             className="absolute left-0 z-10 flex items-center justify-center w-10 h-10 text-lg text-white transform -translate-y-1/2 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 top-1/2"
@@ -391,18 +387,18 @@ export default function Home() {
 
       {/* Team Section */}
       <motion.div
-        className="w-full max-w-5xl mx-auto mt-16 text-center px-4 md:px-0"
+        className="w-full max-w-5xl mx-auto mt-8 sm:mt-16 text-center px-2 sm:px-4"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
         {/* 🏆 Titre */}
-        <h2 className="text-4xl font-bold text-violet-700 dark:text-violet-400">Notre Équipe</h2>
-        <p className="mt-3 text-lg text-gray-500 dark:text-gray-400">
+        <h2 className="text-2xl sm:text-4xl font-bold text-violet-700 dark:text-violet-400">Notre Équipe</h2>
+        <p className="mt-2 sm:mt-3 text-base sm:text-lg text-gray-500 dark:text-gray-400">
           Une équipe dédiée à offrir un apprentissage adapté à tous.
         </p>
 
-        <div className="relative flex items-center justify-center mt-10 px-12 md:px-20">
+        <div className="relative flex items-center justify-center mt-6 sm:mt-10 px-2 sm:px-12">
           {/* 🔙 Bouton précédent */}
           <Button
             isIconOnly
@@ -664,21 +660,20 @@ export default function Home() {
       {/* Contact Section */}
       <motion.div
         animate={{ opacity: 1 }}
-        className="w-full max-w-4xl mt-16 text-center px-6 md:px-0 mx-auto"
+        className="w-full max-w-4xl mt-8 sm:mt-16 text-center px-3 sm:px-6 mx-auto"
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 0.8 }}
       >
         {/* 🏆 Titre */}
-        <h2 className="text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-purple-400 dark:from-violet-400 dark:to-purple-300">
+        <h2 className="text-2xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-purple-400 dark:from-violet-400 dark:to-purple-300">
           Nous Contacter
         </h2>
-        <p className="mt-4 text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-          Besoin d'assistance ou d'informations supplémentaires ? Voici comment
-          nous joindre !
+        <p className="mt-2 sm:mt-4 text-base sm:text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+          Besoin d'assistance ou d'informations supplémentaires ? Voici comment nous joindre !
         </p>
 
         {/* 📞 Contact & Infos */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-10 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-10 text-left">
           {/* 📍 Adresse */}
           <motion.div
             className="p-6 border-2 border-purple-400 dark:border-purple-500 shadow-lg bg-gradient-to-br from-violet-100 to-purple-50 dark:from-violet-900/40 dark:to-purple-900/40 rounded-xl hover:shadow-xl transition-all"
