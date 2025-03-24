@@ -362,7 +362,7 @@ const TrimestreControl = () => {
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen gap-6 py-8 md:py-10">
-      <h1 className={title({ color: "violet" })}>Contrôle Trimestriel</h1>
+      <h1 className={`${title()} text-violet-600 dark:text-violet-300`}>Contrôle Trimestriel</h1>
       <p className="mb-8 text-lg text-center text-gray-600">
         Répondez aux questions pour chaque leçon.
       </p>
