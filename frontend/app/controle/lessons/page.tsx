@@ -329,15 +329,15 @@ export default function LessonOfTheDay() {
             transition={{ duration: 0.2 }}
           >
             <h2 className="text-lg sm:text-2xl font-bold text-violet-700 dark:text-violet-400 mb-2 sm:mb-4">📅 Sélection de la date</h2>
-            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4 items-center">
               <input
-                className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border-2 border-violet-200 focus:border-violet-500 focus:outline-none flex-grow text-sm sm:text-base"
+                className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border-2 border-violet-200 focus:border-violet-500 focus:outline-none w-full sm:flex-grow text-sm sm:text-base"
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
               />
               <Button
-                className="bg-violet-600 hover:bg-violet-700 text-white px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="bg-violet-600 hover:bg-violet-700 text-white px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base w-full sm:w-auto"
                 onClick={() => fetchLessonOfTheDay(selectedDate)}
               >
                 <span>🔄</span> Actualiser
