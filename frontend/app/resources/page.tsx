@@ -53,7 +53,7 @@ const Resources = () => {
         initial={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className={title({ color: "violet" })}>Ressources</h1>
+        <h1 className={`${title()} text-violet-600 dark:text-violet-300`}>Ressources</h1>
         <p className="mt-4 text-lg text-gray-600">
           Explorez nos ressources dédiées à l'accompagnement des enfants et adultes autistes.
         </p>

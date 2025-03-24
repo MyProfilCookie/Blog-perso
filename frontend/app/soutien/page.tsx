@@ -72,7 +72,7 @@ export default function FAQ() {
         initial={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className={title({ color: "violet" })}>Foire aux Questions</h1>
+        <h1 className={`${title()} text-violet-600 dark:text-violet-300`}>Foire aux Questions</h1>
         <h2 className={subtitle({ class: "mt-4" })}>
           Trouvez des réponses aux questions les plus fréquemment posées.
         </h2>

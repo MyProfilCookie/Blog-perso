@@ -326,9 +326,7 @@ export default function Home() {
         initial={{ opacity: 0 }}
         transition={{ duration: 0.8, delay: 1 }}
       >
-        <h2 className="mb-4 text-3xl font-bold text-blue-700 dark:text-blue-400">
-          Articles et Astuces
-        </h2>
+        <h2 className={`${title()} text-center text-blue-600 dark:text-blue-400`}>Articles et Astuces</h2>
         <p className="mb-8 text-lg text-blue-500 dark:text-blue-300">
           Des conseils pratiques pour aider les enfants autistes au quotidien.
         </p>

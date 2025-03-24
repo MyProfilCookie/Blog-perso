@@ -61,10 +61,7 @@ const HeaderAutisme: React.FC<HeaderAutismeProps> = ({
         </motion.div>
 
         <h1
-          className={title({
-            color: "violet",
-            class: "text-4xl font-bold leading-tight",
-          })}
+          className={`${title()} text-violet-600 dark:text-violet-300 text-4xl font-bold leading-tight`}
         >
           {/* Ajout d'espace entre les éléments */}
           {heading || ""}
