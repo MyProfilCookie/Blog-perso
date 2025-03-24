@@ -17,6 +17,7 @@ import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import "dayjs/locale/fr"; // 📅 Locale française
+import { useTheme } from "next-themes";
 
 import Image from "next/image";
 
@@ -47,6 +48,8 @@ type LessonData = {
 };
 
 export default function LessonOfTheDay() {
+  const { theme, setTheme, resolvedTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const today = dayjs().format("YYYY-MM-DD");
   const [selectedDate, setSelectedDate] = useState(today);
   const [lessonOfTheDay, setLessonOfTheDay] = useState<LessonData | null>(null);
@@ -105,6 +108,10 @@ export default function LessonOfTheDay() {
   useEffect(() => {
     if (!isLoggedIn) return;
     fetchUserData();
+  }, []);
+
+  useEffect(() => {
+    setMounted(true);
   }, []);
 
   const fetchLessonOfTheDay = async (date: string) => {
@@ -193,7 +200,7 @@ export default function LessonOfTheDay() {
   }
 
   return (
-    <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
+    <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10 bg-white dark:bg-gray-900">
       {/* En-tête avec titre et navigation */}
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">
         <motion.div 
@@ -211,7 +218,7 @@ export default function LessonOfTheDay() {
         </motion.div>
 
         {/* Barre de navigation supérieure */}
-        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200">
+        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200 dark:border-violet-700">
           <BackButton />
           <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex items-center gap-2 text-violet-600 dark:text-violet-400">
@@ -219,7 +226,7 @@ export default function LessonOfTheDay() {
               <span className="font-medium text-sm sm:text-base">{userName}</span>
             </div>
             <Button
-              className="bg-violet-100 hover:bg-violet-200 text-violet-700 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg flex items-center gap-2 text-sm sm:text-base"
+              className="bg-violet-100 dark:bg-violet-900 hover:bg-violet-200 dark:hover:bg-violet-800 text-violet-700 dark:text-violet-300 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg flex items-center gap-2 text-sm sm:text-base"
               onClick={handleLogout}
             >
               <span>🚪</span> <span className="hidden sm:inline">Déconnexion</span>
@@ -232,7 +239,7 @@ export default function LessonOfTheDay() {
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200 dark:border-violet-700"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
@@ -246,7 +253,7 @@ export default function LessonOfTheDay() {
           </motion.div>
 
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200 dark:border-violet-700"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
@@ -260,7 +267,7 @@ export default function LessonOfTheDay() {
           </motion.div>
 
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200 dark:border-violet-700"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
@@ -274,7 +281,7 @@ export default function LessonOfTheDay() {
           </motion.div>
 
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200 dark:border-violet-700"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
@@ -324,7 +331,7 @@ export default function LessonOfTheDay() {
         {/* Sélecteur de date et statistiques */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6 mb-4 sm:mb-8 px-2 sm:px-4">
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-6 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-6 shadow-lg border border-violet-200 dark:border-violet-700"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
@@ -349,7 +356,7 @@ export default function LessonOfTheDay() {
           </motion.div>
 
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-lg border border-violet-200 dark:border-violet-700"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
@@ -382,7 +389,7 @@ export default function LessonOfTheDay() {
             {lessonOfTheDay.lessons.map((lesson, lessonIndex) => (
               <Card
                 key={lessonIndex}
-                className="w-full overflow-hidden bg-white dark:bg-gray-800 border-0 sm:border-2 border-violet-200 rounded-none sm:rounded-xl shadow-xl"
+                className="w-full overflow-hidden bg-white dark:bg-gray-800 border-0 sm:border-2 border-violet-200 dark:border-violet-700 rounded-none sm:rounded-xl shadow-xl"
               >
                 <CardBody className="p-2 sm:p-6">
                   <div className="flex flex-col md:flex-row gap-2 sm:gap-6">

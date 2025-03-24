@@ -1010,77 +1010,7 @@ export const Navbar = () => {
       <NavbarContent className="sm:flex basis-1/5 sm:basis-full" justify="end">
         {/* Bouton de mode nuit visible en mobile et tablette mais caché en desktop */}
         <NavbarItem className="flex lg:hidden">
-          <Dropdown>
-            <DropdownTrigger>
-              <button
-                aria-label="Toggle theme"
-                className="flex items-center gap-2 p-1.5 rounded-md bg-cream dark:bg-gray-800 border border-gray-300 dark:border-gray-700 transition-colors duration-300 hover:bg-gray-200 dark:hover:bg-gray-700"
-              >
-                {mounted && (
-                  <>
-                    {document.documentElement.classList.contains("dark") ? (
-                      <MoonFilledIcon className="text-blue-300" size={20} />
-                    ) : (
-                      <SunFilledIcon className="text-yellow-500" size={20} />
-                    )}
-                  </>
-                )}
-              </button>
-            </DropdownTrigger>
-            <DropdownMenu aria-label="Options de thème">
-              <DropdownItem
-                key="light"
-                onClick={() => {
-                  document.documentElement.classList.remove("dark");
-                  localStorage.setItem("theme", "light");
-                  localStorage.setItem("themeMode", "manual");
-                  setAvatarColorIndex((prev) => prev);
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <SunFilledIcon className="text-yellow-500" size={16} />
-                  <span>Mode clair</span>
-                </div>
-              </DropdownItem>
-              <DropdownItem
-                key="dark"
-                onClick={() => {
-                  document.documentElement.classList.add("dark");
-                  localStorage.setItem("theme", "dark");
-                  localStorage.setItem("themeMode", "manual");
-                  setAvatarColorIndex((prev) => prev);
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <MoonFilledIcon className="text-blue-300" size={16} />
-                  <span>Mode sombre</span>
-                </div>
-              </DropdownItem>
-              <DropdownItem
-                key="auto"
-                onClick={() => {
-                  localStorage.setItem("themeMode", "auto");
-                  // Apply theme based on current time
-                  const currentHour = new Date().getHours();
-                  const isDayTime = currentHour >= 6 && currentHour < 18;
-
-                  if (isDayTime) {
-                    document.documentElement.classList.remove("dark");
-                    localStorage.setItem("theme", "light");
-                  } else {
-                    document.documentElement.classList.add("dark");
-                    localStorage.setItem("theme", "dark");
-                  }
-                  setAvatarColorIndex((prev) => prev);
-                }}
-              >
-                <div className="flex items-center gap-2">
-                  <FontAwesomeIcon className="text-gray-500" icon={faMoon} />
-                  <span>Mode automatique</span>
-                </div>
-              </DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+          <ThemeSwitch />
         </NavbarItem>
 
         {/* Bouton de forçage de mise à jour des commandes */}

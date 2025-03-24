@@ -123,9 +123,13 @@ const ArtPage: React.FC = () => {
 
   const filteredExercises = selectedCategory === "Tout" 
     ? exercises 
-    : exercises.filter(ex => ex.category === selectedCategory);
+    : exercises.filter(ex => ex.category && ex.category === selectedCategory);
 
-  const categories = ["Tout", ...Array.from(new Set(exercises.map(ex => ex.category).filter(Boolean as any)))];
+  // Extraction des catégories uniques
+  const uniqueCategories = exercises
+    .map(ex => ex.category)
+    .filter((category): category is string => Boolean(category));
+  const categories = ["Tout", ...Array.from(new Set(uniqueCategories))];
 
   if (loading) {
     return (
