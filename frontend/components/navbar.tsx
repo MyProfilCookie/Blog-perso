@@ -300,9 +300,7 @@ export const Navbar = () => {
 
         const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
 
-        if (userCart) {
-          setCartItemsCount(JSON.parse(userCart).length);
-        }
+        setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
@@ -329,12 +327,12 @@ export const Navbar = () => {
       if (storedUser) {
         try {
           const parsedUser = JSON.parse(storedUser);
-
           setUser(parsedUser);
-
           const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
-
           setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
+          
+          // Mettre à jour les compteurs de commandes immédiatement après la connexion
+          fetchOrderCount();
         } catch (error) {
           console.error("Error parsing user data during update:", error);
         }
