@@ -5,17 +5,21 @@ import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
-export default function BackButton() {
+interface BackButtonProps {
+  label?: string;
+}
+
+export default function BackButton({ label }: BackButtonProps) {
   const router = useRouter();
 
   return (
     <Button
-      isIconOnly
       variant="light"
       onPress={() => router.back()}
       className="absolute top-4 left-4 z-50"
+      startContent={<FontAwesomeIcon icon={faArrowLeft} className="text-xl" />}
     >
-      <FontAwesomeIcon icon={faArrowLeft} className="text-xl" />
+      {label}
     </Button>
   );
 }
