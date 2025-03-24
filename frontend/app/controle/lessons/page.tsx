@@ -194,11 +194,30 @@ export default function LessonOfTheDay() {
 
   return (
     <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10">
-      {/* Barre de navigation supérieure */}
+      {/* En-tête avec titre et navigation */}
       <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-6">
-        <div className="flex items-center justify-between">
+        <motion.div 
+          className="text-center mb-6"
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-3xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
+            Espace d&apos;Apprentissage
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+            Votre parcours d&apos;apprentissage personnalisé
+          </p>
+        </motion.div>
+
+        {/* Barre de navigation supérieure */}
+        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200">
           <BackButton />
           <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 text-violet-600 dark:text-violet-400">
+              <span className="text-xl">👋</span>
+              <span className="font-medium">{userName}</span>
+            </div>
             <Button
               className="bg-violet-100 hover:bg-violet-200 text-violet-700 px-4 py-2 rounded-lg flex items-center gap-2"
               onClick={handleLogout}
