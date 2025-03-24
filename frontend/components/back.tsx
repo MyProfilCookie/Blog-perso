@@ -1,29 +1,21 @@
 "use client";
 
-import React from "react";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/navigation";
-// Supprimer l'import problématique et utiliser une solution alternative
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 
-const BackButton = ({
-  label = "Retour",
-  className = "",
-}: {
-  label?: string;
-  className?: string;
-}) => {
+export default function BackButton() {
   const router = useRouter();
 
   return (
     <Button
-      className={`flex items-center gap-2 px-4 py-2 text-white bg-blue-600 hover:bg-blue-700 rounded-md shadow-md ${className}`}
-      onClick={() => router.back()}
+      isIconOnly
+      variant="light"
+      onPress={() => router.back()}
+      className="absolute top-4 left-4 z-50"
     >
-      {/* Utiliser un élément HTML standard pour la flèche */}
-      <span className="text-sm font-bold">&larr;</span>
-      <span>{label}</span>
+      <FontAwesomeIcon icon={faArrowLeft} className="text-xl" />
     </Button>
   );
-};
-
-export default BackButton;
+}
