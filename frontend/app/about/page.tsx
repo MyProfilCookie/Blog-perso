@@ -72,9 +72,7 @@ const AboutUsPage = () => {
       >
         <motion.h1
           animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.1, 1] }}
-          className={
-            title({ color: "blue" }) + " flex items-center justify-center gap-2"
-          }
+          className={`${title()} text-blue-600 flex items-center justify-center gap-2`}
           transition={{ duration: 2, repeat: Infinity }}
         >
           Notre Histoire <Sparkles className="text-blue-600 w-6 h-6" />
