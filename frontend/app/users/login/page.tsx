@@ -198,35 +198,34 @@ export default function Connexion() {
   return (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center justify-center min-h-screen py-2"
+      className="flex flex-col items-center justify-center min-h-screen p-4 md:py-2"
       initial={{ opacity: 0, y: -50 }}
       transition={{ duration: 1 }}
     >
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="mb-6"
+        className="mb-4 md:mb-6 w-full max-w-[90%] md:max-w-[400px]"
         initial={{ opacity: 0, y: -50 }}
         transition={{ duration: 1, delay: 0.2 }}
       >
-        <AutismLogo className="mx-auto mb-2" size={60} />
-        <h1 className="text-4xl font-bold text-center text-blue-600">
+        <AutismLogo className="mx-auto mb-2" size={40} />
+        <h1 className="text-2xl md:text-4xl font-bold text-center text-blue-600">
           Bienvenue sur AutiStudy
         </h1>
       </motion.div>
 
       <motion.p
         animate={{ opacity: 1, y: 0 }}
-        className="mb-6 text-lg text-center text-gray-600"
+        className="mb-4 md:mb-6 text-base md:text-lg text-center text-gray-600 px-4"
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 1, delay: 0.4 }}
       >
-        Connectez-vous pour accéder à des ressources adaptées et un suivi
-        personnalisé.
+        Connectez-vous pour accéder à des ressources adaptées et un suivi personnalisé.
       </motion.p>
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col gap-4 w-[300px]"
+        className="flex flex-col gap-4 w-full max-w-[90%] md:max-w-[400px] px-4"
         initial={{ opacity: 0, y: 50 }}
         transition={{ duration: 1, delay: 0.6 }}
       >
@@ -237,6 +236,7 @@ export default function Connexion() {
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          className="w-full"
         />
 
         <Input
@@ -249,38 +249,47 @@ export default function Connexion() {
             setPassword(e.target.value);
             validatePassword(e.target.value);
           }}
+          className="w-full"
         />
         {password && (
           <p
-            className={`text-sm ${passwordStrength.includes("faible") ? "text-red-500" : "text-green-500"}`}
+            className={`text-xs md:text-sm ${
+              passwordStrength.includes("faible") ? "text-red-500" : "text-green-500"
+            }`}
           >
             {passwordStrength}
           </p>
         )}
 
-        <Checkbox isSelected={newsletter} onValueChange={setNewsletter}>
+        <Checkbox 
+          isSelected={newsletter} 
+          onValueChange={setNewsletter}
+          className="text-sm md:text-base"
+        >
           S&apos;inscrire à la newsletter
         </Checkbox>
 
         <Button
-          className="mt-2"
+          className="mt-2 w-full"
           color="primary"
           isLoading={loading}
           onClick={handleLogin}
+          size="lg"
         >
           {loading ? "Connexion..." : "Se connecter"}
         </Button>
 
-        <p className="mt-4 text-center">
-          Vous n&apos;avez pas de compte ?{" "}
+        <div className="mt-4 text-center text-sm md:text-base">
+          <p className="mb-2">Vous n&apos;avez pas de compte ?</p>
           <Button
             color="secondary"
             variant="light"
             onClick={() => router.push("/users/signup")}
+            className="w-full md:w-auto"
           >
             S&apos;inscrire
           </Button>
-        </p>
+        </div>
       </motion.div>
     </motion.div>
   );
