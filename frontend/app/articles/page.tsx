@@ -25,7 +25,8 @@ import {
 } from "@/components/ui/pagination";
 
 import articlesData from "@/public/dataarticles.json";
-import { title, subtitle } from "@/components/primitives";
+import { title } from "@/components/primitives";
+import ArticlesList from "@/components/articles/ArticlesList";
 
 interface ArticleCardProps {
   id: number;
@@ -141,136 +142,24 @@ const ArticlesPage = () => {
   };
 
   return (
-    <section className="flex flex-col items-center justify-center w-full gap-8 py-12 md:py-16 bg-cream dark:bg-gray-900">
+    <div className="flex flex-col items-center justify-center min-h-screen w-full">
       <motion.div
+        className="w-full text-center mb-12"
+        initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="text-center"
-        initial={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.8 }}
       >
         <motion.h1
+          className={`${title()} text-4xl md:text-5xl font-bold leading-tight text-violet-600 dark:text-violet-300 flex items-center justify-center gap-2`}
           animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.1, 1] }}
-          className={title({ color: "violet" }) + " flex items-center justify-center gap-2 dark:text-violet-300"}
           transition={{ duration: 2, repeat: Infinity }}
         >
           Articles et Astuces
-          <Sparkles className="text-violet-600 dark:text-violet-400 w-6 h-6" />
         </motion.h1>
-        <h2 className={subtitle({ class: "mt-4" }) + " dark:text-gray-300"}>
-          Explorez une variété d'articles et d'astuces pour mieux comprendre et
-          accompagner les enfants autistes.
-        </h2>
-        <motion.div
-          animate={{ opacity: 1 }}
-          className="w-full flex justify-center px-4"
-          initial={{ opacity: 0 }}
-          transition={{ duration: 1, delay: 0.5 }}
-        >
-          <div className="w-full sm:w-2/3 mt-4">
-            <Input
-              className="px-4 py-2 border rounded-lg shadow-lg focus-visible:ring-2 focus-visible:ring-violet-500 bg-cream dark:bg-gray-800 dark:text-white dark:border-gray-700"
-              placeholder="Rechercher un article..."
-              type="text"
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-            />
-          </div>
-        </motion.div>
       </motion.div>
 
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-[1200px] mt-8 px-4"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 0.5 }}
-      >
-        {currentArticles.length > 0 ? (
-          currentArticles.map((article, index) => (
-            <ArticleCard
-              key={article.id || index}
-              id={article.id || index}
-              img={article.image}
-              subtitle={article.subtitle}
-              title={article.title}
-            />
-          ))
-        ) : (
-          <div className="col-span-1 md:col-span-2 lg:col-span-3 text-center py-10">
-            <Card className="bg-cream dark:bg-gray-800 border border-transparent dark:border-gray-700 shadow-md">
-              <CardContent className="p-6">
-                <p className="text-gray-600 dark:text-gray-300 text-lg">
-                  Aucun article ne correspond à votre recherche.
-                </p>
-              </CardContent>
-            </Card>
-          </div>
-        )}
-      </motion.div>
-
-      {filteredArticles.length > articlesPerPage && (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full flex justify-center mt-8"
-          initial={{ opacity: 0, y: 30 }}
-          transition={{ duration: 0.6, delay: 0.8 }}
-        >
-          <Pagination>
-            <PaginationContent>
-              <PaginationItem>
-                <PaginationPrevious
-                  className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-violet-100 dark:hover:bg-violet-900/30"}
-                  onClick={() => paginate(currentPage - 1)}
-                />
-              </PaginationItem>
-
-              {getPageNumbers().map((page, index) => (
-                page === null ? (
-                  <PaginationItem key={`ellipsis-${index}`}>
-                    <PaginationEllipsis />
-                  </PaginationItem>
-                ) : (
-                  <PaginationItem key={`page-${page}`}>
-                    <PaginationLink
-                      className={page === currentPage
-                        ? "bg-violet-600 text-white hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800"
-                        : "hover:bg-violet-100 dark:hover:bg-violet-900/30 cursor-pointer"
-                      }
-                      isActive={page === currentPage}
-                      onClick={() => paginate(page as number)}
-                    >
-                      {page}
-                    </PaginationLink>
-                  </PaginationItem>
-                )
-              ))}
-
-              <PaginationItem>
-                <PaginationNext
-                  className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer hover:bg-violet-100 dark:hover:bg-violet-900/30"}
-                  onClick={() => paginate(currentPage + 1)}
-                />
-              </PaginationItem>
-            </PaginationContent>
-          </Pagination>
-        </motion.div>
-      )}
-
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="flex justify-center w-full mt-8"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 1 }}
-      >
-        <Link href="/resources">
-          <Button
-            className="bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white px-6 py-6 h-auto text-base font-medium shadow-lg"
-            size="lg"
-          >
-            Voir toutes nos ressources
-          </Button>
-        </Link>
-      </motion.div>
-    </section>
+      <ArticlesList />
+    </div>
   );
 };
 
