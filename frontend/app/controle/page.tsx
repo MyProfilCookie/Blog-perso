@@ -27,7 +27,6 @@ import {
   faFire,
 } from "@fortawesome/free-solid-svg-icons";
 
-import { title } from "@/components/primitives";
 import BackButton from "@/components/back";
 
 const stats = [
@@ -231,7 +230,7 @@ export default function ControlePage() {
         transition={{ duration: 0.5 }}
       >
         <motion.div 
-          className="flex items-center gap-3"
+          className="flex items-center justify-center gap-2"
           animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.1, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
         >
@@ -239,7 +238,9 @@ export default function ControlePage() {
             icon={faGraduationCap} 
             className="text-4xl text-primary-500" 
           />
-          <h1 className="text-2xl font-bold text-blue-600">Les contrôles</h1>
+          <h1 className="text-2xl font-bold bg-gradient-to-r from-blue-600 to-blue-400 bg-clip-text text-transparent">
+            Les contrôles
+          </h1>
         </motion.div>
 
         {/* Stats Section */}
