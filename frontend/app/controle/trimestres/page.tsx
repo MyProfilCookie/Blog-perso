@@ -498,7 +498,11 @@ const TrimestrePage: React.FC = () => {
                 fileName={`controle_${studentName}_${new Date().toISOString().split("T")[0]}.pdf`}
                 className="bg-green-500 text-white hover:bg-green-600 px-4 py-2 rounded-lg"
               >
-                {({ loading }) => (loading ? "Génération du PDF..." : "Télécharger le PDF")}
+                {({ loading }) => (
+                  <span>
+                    {loading ? "Génération du PDF..." : "Télécharger le PDF"}
+                  </span>
+                )}
               </PDFDownloadLink>
             </div>
           </ModalFooter>
