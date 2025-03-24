@@ -21,7 +21,12 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 }) => {
   const { theme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [isAutoMode, setIsAutoMode] = useState(true);
+  const [isAutoMode, setIsAutoMode] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem("themeMode") !== "manual";
+    }
+    return true;
+  });
   const isDarkMode = theme === "dark";
 
   useEffect(() => {
@@ -47,7 +52,9 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 
   const onThemeChange = () => {
     if (isAutoMode) return;
-    setTheme(isDarkMode ? "light" : "dark");
+    const newTheme = isDarkMode ? "light" : "dark";
+    setTheme(newTheme);
+    localStorage.setItem("theme", newTheme);
   };
 
   const toggleAutoMode = () => {
@@ -58,7 +65,9 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     if (newAutoMode) {
       const currentHour = new Date().getHours();
       const shouldBeDark = currentHour >= 20 || currentHour < 7;
-      setTheme(shouldBeDark ? "dark" : "light");
+      const newTheme = shouldBeDark ? "dark" : "light";
+      setTheme(newTheme);
+      localStorage.setItem("theme", newTheme);
     }
   };
 
