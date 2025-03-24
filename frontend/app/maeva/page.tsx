@@ -45,7 +45,7 @@ const CoursePage = () => {
   return (
     <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
       <div className="justify-center inline-block text-center">
-        <h1 className={title({ color: "violet" })}>Ma page dédiée à Maeva</h1>
+        <h1 className={`${title()} text-violet-600 dark:text-violet-300`}>Ma page dédiée à Maeva</h1>
       </div>
 
       {/* Description complète de Maeva */}
