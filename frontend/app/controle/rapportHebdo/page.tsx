@@ -317,7 +317,7 @@ const WeeklyReport = () => {
         </motion.div>
 
         {/* Grille des matières */}
-        <div className="grid grid-cols-1 md:grid-cols-3 xl:grid-cols-4 gap-8 max-w-[1400px] mx-auto mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-4">
           {report.map((item, index) => (
             <motion.div
               key={item.subject}
@@ -326,12 +326,12 @@ const WeeklyReport = () => {
               transition={{ duration: 0.3, delay: index * 0.1 }}
             >
               <Card className="border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300">
-                <CardBody className="p-6">
+                <CardBody className="p-4 sm:p-6">
                   {/* En-tête de la matière */}
                   <div
-                    className={`bg-gradient-to-r ${subjects[index].color} -mx-6 -mt-6 p-4 mb-6`}
+                    className={`bg-gradient-to-r ${subjects[index].color} -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
                   >
-                    <h3 className="text-xl font-bold text-white text-center flex items-center justify-center gap-2">
+                    <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
                       {subjects[index].icon} {item.subject}
                     </h3>
                   </div>
@@ -346,7 +346,7 @@ const WeeklyReport = () => {
                         Qu&apos;as-tu fait aujourd&apos;hui ?
                       </label>
                       <Input
-                        className="w-full"
+                        className="w-full text-sm sm:text-base"
                         id={`activity-${index}`}
                         placeholder="Décris ton activité..."
                         value={item.activity}
@@ -364,7 +364,7 @@ const WeeklyReport = () => {
                         Combien de temps y as-tu passé ?
                       </label>
                       <Input
-                        className="w-full"
+                        className="w-full text-sm sm:text-base"
                         id={`hours-${index}`}
                         placeholder="Temps en heures"
                         type="number"
@@ -384,13 +384,13 @@ const WeeklyReport = () => {
                       </label>
                       <div
                         aria-label="Progression"
-                        className="grid grid-cols-1 gap-3 mt-2"
+                        className="grid grid-cols-1 gap-2 sm:gap-3 mt-2"
                         id={`progress-${index}`}
                         role="group"
                       >
                         <Button
                           key="in-progress"
-                          className={`p-3 rounded-lg transition-all duration-300 text-base ${
+                          className={`p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
                             item.progress === "in-progress"
                               ? "bg-violet-500 text-white"
                               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
@@ -403,7 +403,7 @@ const WeeklyReport = () => {
                         </Button>
                         <Button
                           key="completed"
-                          className={`p-3 rounded-lg transition-all duration-300 text-base ${
+                          className={`p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
                             item.progress === "completed"
                               ? "bg-violet-500 text-white"
                               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
@@ -416,7 +416,7 @@ const WeeklyReport = () => {
                         </Button>
                         <Button
                           key="not-acquired"
-                          className={`p-3 rounded-lg transition-all duration-300 text-base ${
+                          className={`p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
                             item.progress === "not-acquired"
                               ? "bg-violet-500 text-white"
                               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
@@ -437,15 +437,15 @@ const WeeklyReport = () => {
         </div>
 
         {/* Boutons d'action */}
-        <div className="flex justify-center gap-4 py-6 mt-8">
+        <div className="flex flex-col sm:flex-row justify-center gap-4 py-6 mt-8 px-4">
           <Button
-            className="bg-violet-500 hover:bg-violet-600 text-white px-8 py-3 rounded-full flex items-center gap-2 transition-all duration-300"
+            className="w-full sm:w-auto bg-violet-500 hover:bg-violet-600 text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-300"
             onClick={saveReport}
           >
             Sauvegarder mon rapport 📝
           </Button>
           <Button
-            className="bg-emerald-500 hover:bg-emerald-600 text-white px-8 py-3 rounded-full flex items-center gap-2 transition-all duration-300"
+            className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-300"
             onClick={downloadReport}
           >
             Télécharger mon rapport 💾

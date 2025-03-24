@@ -207,50 +207,50 @@ export default function LessonOfTheDay() {
         </div>
 
         {/* Sélecteur de date et statistiques */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8 px-4">
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-lg border border-violet-200"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <h2 className="text-2xl font-bold text-violet-700 dark:text-violet-400 mb-4">📅 Sélection de la date</h2>
-            <div className="flex flex-col sm:flex-row gap-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-violet-700 dark:text-violet-400 mb-3 sm:mb-4">📅 Sélection de la date</h2>
+            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
               <input
-                className="px-4 py-2 rounded-lg border-2 border-violet-200 focus:border-violet-500 focus:outline-none flex-grow"
+                className="px-3 sm:px-4 py-2 rounded-lg border-2 border-violet-200 focus:border-violet-500 focus:outline-none flex-grow text-sm sm:text-base"
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
               />
               <Button
-                className="bg-violet-600 hover:bg-violet-700 text-white px-6 py-2 rounded-lg transition-all duration-200 flex items-center gap-2"
+                className="bg-violet-600 hover:bg-violet-700 text-white px-4 sm:px-6 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
                 onClick={() => fetchLessonOfTheDay(selectedDate)}
               >
                 <span>🔄</span> Actualiser
               </Button>
             </div>
-            <p className="mt-4 text-gray-600 dark:text-gray-300">
+            <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-600 dark:text-gray-300">
               Nous sommes le {dayjs().format("dddd DD MMMM YYYY")}
             </p>
           </motion.div>
 
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-lg border border-violet-200"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <h2 className="text-2xl font-bold text-violet-700 dark:text-violet-400 mb-4">📊 Votre progression</h2>
-            <div className="grid grid-cols-3 gap-4">
-              <div className="text-center p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
-                <p className="text-2xl font-bold text-green-600 dark:text-green-400">😊</p>
-                <p className="text-sm text-green-700 dark:text-green-300">Facile</p>
+            <h2 className="text-xl sm:text-2xl font-bold text-violet-700 dark:text-violet-400 mb-3 sm:mb-4">📊 Votre progression</h2>
+            <div className="grid grid-cols-3 gap-3 sm:gap-4">
+              <div className="text-center p-2 sm:p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <p className="text-xl sm:text-2xl font-bold text-green-600 dark:text-green-400">😊</p>
+                <p className="text-xs sm:text-sm text-green-700 dark:text-green-300">Facile</p>
               </div>
-              <div className="text-center p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
-                <p className="text-2xl font-bold text-yellow-600 dark:text-yellow-400">😐</p>
-                <p className="text-sm text-yellow-700 dark:text-yellow-300">Moyen</p>
+              <div className="text-center p-2 sm:p-3 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                <p className="text-xl sm:text-2xl font-bold text-yellow-600 dark:text-yellow-400">😐</p>
+                <p className="text-xs sm:text-sm text-yellow-700 dark:text-yellow-300">Moyen</p>
               </div>
-              <div className="text-center p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
-                <p className="text-2xl font-bold text-red-600 dark:text-red-400">😓</p>
-                <p className="text-sm text-red-700 dark:text-red-300">Difficile</p>
+              <div className="text-center p-2 sm:p-3 bg-red-100 dark:bg-red-900/30 rounded-lg">
+                <p className="text-xl sm:text-2xl font-bold text-red-600 dark:text-red-400">😓</p>
+                <p className="text-xs sm:text-sm text-red-700 dark:text-red-300">Difficile</p>
               </div>
             </div>
           </motion.div>
@@ -259,7 +259,7 @@ export default function LessonOfTheDay() {
         {/* Contenu des leçons */}
         {lessonOfTheDay ? (
           <motion.div 
-            className="space-y-8"
+            className="space-y-4 sm:space-y-8 px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -269,11 +269,11 @@ export default function LessonOfTheDay() {
                 key={lessonIndex}
                 className="w-full overflow-hidden bg-white dark:bg-gray-800 border-2 border-violet-200 rounded-xl shadow-xl"
               >
-                <CardBody className="p-6">
-                  <div className="flex flex-col md:flex-row gap-6">
+                <CardBody className="p-4 sm:p-6">
+                  <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
                     <div className="md:w-1/3">
                       <motion.div 
-                        className="relative h-60 rounded-xl overflow-hidden"
+                        className="relative h-48 sm:h-60 rounded-xl overflow-hidden"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.2 }}
                       >
@@ -288,22 +288,22 @@ export default function LessonOfTheDay() {
                     </div>
                     
                     <div className="md:w-2/3">
-                      <h3 className="text-3xl font-bold text-violet-600 dark:text-violet-400 mb-4">
+                      <h3 className="text-2xl sm:text-3xl font-bold text-violet-600 dark:text-violet-400 mb-3 sm:mb-4">
                         {lesson.subject}: {lesson.lesson.title}
                       </h3>
                       
-                      <p className="text-gray-600 dark:text-gray-300 mb-6">
+                      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">
                         {lesson.lesson.description}
                       </p>
 
                       {lesson.lesson.objectives && lesson.lesson.objectives.length > 0 && (
-                        <div className="mb-6">
-                          <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-3 flex items-center gap-2">
+                        <div className="mb-4 sm:mb-6">
+                          <h4 className="text-lg sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-2 sm:mb-3 flex items-center gap-2">
                             <span>🎯</span> Objectifs
                           </h4>
-                          <ul className="space-y-2">
+                          <ul className="space-y-1 sm:space-y-2">
                             {lesson.lesson.objectives.map((objective, i) => (
-                              <li key={i} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                              <li key={i} className="flex items-center gap-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
                                 <span className="text-violet-500">•</span> {objective}
                               </li>
                             ))}
@@ -312,13 +312,13 @@ export default function LessonOfTheDay() {
                       )}
 
                       {lesson.lesson.steps && lesson.lesson.steps.length > 0 && (
-                        <div className="mb-6">
-                          <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-3 flex items-center gap-2">
+                        <div className="mb-4 sm:mb-6">
+                          <h4 className="text-lg sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-2 sm:mb-3 flex items-center gap-2">
                             <span>📝</span> Étapes
                           </h4>
-                          <ul className="space-y-2">
+                          <ul className="space-y-1 sm:space-y-2">
                             {lesson.lesson.steps.map((step: string, i: number) => (
-                              <li key={i} className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                              <li key={i} className="flex items-center gap-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
                                 <span className="text-violet-500">{i + 1}.</span> {step}
                               </li>
                             ))}
@@ -327,18 +327,18 @@ export default function LessonOfTheDay() {
                       )}
 
                       {lesson.lesson.activities && lesson.lesson.activities.length > 0 && (
-                        <div className="mb-6">
-                          <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-3 flex items-center gap-2">
+                        <div className="mb-4 sm:mb-6">
+                          <h4 className="text-lg sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-2 sm:mb-3 flex items-center gap-2">
                             <span>🎮</span> Activités
                           </h4>
-                          <div className="space-y-4">
+                          <div className="space-y-3 sm:space-y-4">
                             {lesson.lesson.activities.map((activity, i) => (
-                              <div key={i} className="bg-violet-50 dark:bg-violet-900/30 p-4 rounded-lg">
-                                <h5 className="font-semibold text-violet-700 dark:text-violet-300 mb-2">{activity.title}</h5>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">⏱️ Durée: {activity.duration}</p>
+                              <div key={i} className="bg-violet-50 dark:bg-violet-900/30 p-3 sm:p-4 rounded-lg">
+                                <h5 className="font-semibold text-sm sm:text-base text-violet-700 dark:text-violet-300 mb-2">{activity.title}</h5>
+                                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">⏱️ Durée: {activity.duration}</p>
                                 <ul className="mt-2 space-y-1">
                                   {activity.steps.map((step, j) => (
-                                    <li key={j} className="text-gray-700 dark:text-gray-300 text-sm">• {step}</li>
+                                    <li key={j} className="text-xs sm:text-sm text-gray-700 dark:text-gray-300">• {step}</li>
                                   ))}
                                 </ul>
                               </div>
@@ -348,23 +348,23 @@ export default function LessonOfTheDay() {
                       )}
 
                       {/* Évaluation de la leçon */}
-                      <div className="mt-8 border-t pt-6 border-violet-200">
-                        <h4 className="text-xl font-semibold text-violet-600 dark:text-violet-400 mb-4">Comment as-tu trouvé cette leçon ?</h4>
-                        <div className="flex flex-wrap gap-4">
+                      <div className="mt-6 sm:mt-8 border-t pt-4 sm:pt-6 border-violet-200">
+                        <h4 className="text-lg sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-3 sm:mb-4">Comment as-tu trouvé cette leçon ?</h4>
+                        <div className="flex flex-wrap gap-3 sm:gap-4">
                           <Button
-                            className="bg-green-100 hover:bg-green-200 text-green-700 px-6 py-3 rounded-xl flex items-center gap-2 transition-all duration-200"
+                            className="bg-green-100 hover:bg-green-200 text-green-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
                             onClick={() => handleLessonRating("Facile")}
                           >
                             <span>😊</span> Facile
                           </Button>
                           <Button
-                            className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-6 py-3 rounded-xl flex items-center gap-2 transition-all duration-200"
+                            className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
                             onClick={() => handleLessonRating("Moyen")}
                           >
                             <span>😐</span> Moyen
                           </Button>
                           <Button
-                            className="bg-red-100 hover:bg-red-200 text-red-700 px-6 py-3 rounded-xl flex items-center gap-2 transition-all duration-200"
+                            className="bg-red-100 hover:bg-red-200 text-red-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
                             onClick={() => handleLessonRating("Difficile")}
                           >
                             <span>😓</span> Difficile
@@ -377,9 +377,9 @@ export default function LessonOfTheDay() {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5 }}
-                            className="mt-6 p-4 bg-violet-50 dark:bg-violet-900/30 rounded-xl text-center"
+                            className="mt-4 sm:mt-6 p-3 sm:p-4 bg-violet-50 dark:bg-violet-900/30 rounded-xl text-center"
                           >
-                            <p className="text-lg font-medium text-violet-700 dark:text-violet-300">
+                            <p className="text-sm sm:text-base font-medium text-violet-700 dark:text-violet-300">
                               {encouragementMessage}
                             </p>
                           </motion.div>
@@ -393,13 +393,13 @@ export default function LessonOfTheDay() {
           </motion.div>
         ) : (
           <motion.div 
-            className="text-center py-12"
+            className="text-center py-8 sm:py-12 px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
           >
-            <div className="animate-spin text-4xl mb-4">🔄</div>
-            <h3 className="text-xl text-gray-600 dark:text-gray-400">Chargement de votre leçon...</h3>
+            <div className="animate-spin text-3xl sm:text-4xl mb-3 sm:mb-4">🔄</div>
+            <h3 className="text-lg sm:text-xl text-gray-600 dark:text-gray-400">Chargement de votre leçon...</h3>
           </motion.div>
         )}
       </motion.div>
