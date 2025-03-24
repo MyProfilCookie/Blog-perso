@@ -193,16 +193,16 @@ export default function LessonOfTheDay() {
   }
 
   return (
-    <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10">
+    <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
       {/* En-tête avec titre et navigation */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">
         <motion.div 
-          className="text-center mb-6"
+          className="text-center mb-4 sm:mb-6"
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
-          <h1 className="text-3xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
+          <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
             Espace d&apos;Apprentissage
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
@@ -211,78 +211,78 @@ export default function LessonOfTheDay() {
         </motion.div>
 
         {/* Barre de navigation supérieure */}
-        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200">
+        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200">
           <BackButton />
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-2 sm:gap-4">
             <div className="flex items-center gap-2 text-violet-600 dark:text-violet-400">
               <span className="text-xl">👋</span>
-              <span className="font-medium">{userName}</span>
+              <span className="font-medium text-sm sm:text-base">{userName}</span>
             </div>
             <Button
-              className="bg-violet-100 hover:bg-violet-200 text-violet-700 px-4 py-2 rounded-lg flex items-center gap-2"
+              className="bg-violet-100 hover:bg-violet-200 text-violet-700 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg flex items-center gap-2 text-sm sm:text-base"
               onClick={handleLogout}
             >
-              <span>🚪</span> Déconnexion
+              <span>🚪</span> <span className="hidden sm:inline">Déconnexion</span>
             </Button>
           </div>
         </div>
       </div>
 
       {/* Statistiques rapides */}
-      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-6">
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
             <div className="flex items-center gap-2">
-              <span className="text-2xl">📚</span>
+              <span className="text-xl sm:text-2xl">📚</span>
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Leçons complétées</p>
-                <p className="text-xl font-bold text-violet-600 dark:text-violet-400">12</p>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Leçons complétées</p>
+                <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">12</p>
               </div>
             </div>
           </motion.div>
 
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
             <div className="flex items-center gap-2">
-              <span className="text-2xl">⏱️</span>
+              <span className="text-xl sm:text-2xl">⏱️</span>
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Temps d&apos;étude</p>
-                <p className="text-xl font-bold text-violet-600 dark:text-violet-400">2h 30</p>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Temps d&apos;étude</p>
+                <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">2h 30</p>
               </div>
             </div>
           </motion.div>
 
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
             <div className="flex items-center gap-2">
-              <span className="text-2xl">🎯</span>
+              <span className="text-xl sm:text-2xl">🎯</span>
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Objectifs atteints</p>
-                <p className="text-xl font-bold text-violet-600 dark:text-violet-400">8/10</p>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Objectifs atteints</p>
+                <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">8/10</p>
               </div>
             </div>
           </motion.div>
 
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
             <div className="flex items-center gap-2">
-              <span className="text-2xl">🌟</span>
+              <span className="text-xl sm:text-2xl">🌟</span>
               <div>
-                <p className="text-sm text-gray-600 dark:text-gray-400">Points gagnés</p>
-                <p className="text-xl font-bold text-violet-600 dark:text-violet-400">450</p>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Points gagnés</p>
+                <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">450</p>
               </div>
             </div>
           </motion.div>
