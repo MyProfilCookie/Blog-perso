@@ -140,7 +140,7 @@ export default function Home() {
         initial={{ opacity: 0, y: -50 }}
         transition={{ duration: 0.8 }}
       >
-        <h1 className={`${title()} text-violet-600 dark:text-violet-300`}>
+        <h1 className={`${title()} text-violet-600 dark:text-violet-300 text-4xl`}>
           Bienvenue sur AutiStudy
         </h1>
         <h2 className={subtitle({ class: "mt-4" })}>
