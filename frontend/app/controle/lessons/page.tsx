@@ -34,6 +34,10 @@ type Lesson = {
     title: string;
     description: string;
     objectives?: string[];
+    resources?: { title: string; link: string; type: string }[];
+    estimatedTime?: string;
+    difficulty?: string;
+    prerequisites?: string[];
   };
 };
 
@@ -50,6 +54,10 @@ export default function LessonOfTheDay() {
   const [userName, setUserName] = useState<string>("");
   const [isLoggedIn, setIsLoggedIn] = useState<boolean>(true);
   const router = useRouter();
+  const [showResources, setShowResources] = useState<boolean>(false);
+  const [showPrerequisites, setShowPrerequisites] = useState<boolean>(false);
+  const [progress, setProgress] = useState<number>(0);
+  const [notes, setNotes] = useState<string>("");
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
@@ -186,7 +194,82 @@ export default function LessonOfTheDay() {
 
   return (
     <section className="flex flex-col items-center justify-center gap-6 py-8 md:py-10">
-      <BackButton />
+      {/* Barre de navigation supérieure */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+        <div className="flex items-center justify-between">
+          <BackButton />
+          <div className="flex items-center gap-4">
+            <Button
+              className="bg-violet-100 hover:bg-violet-200 text-violet-700 px-4 py-2 rounded-lg flex items-center gap-2"
+              onClick={handleLogout}
+            >
+              <span>🚪</span> Déconnexion
+            </Button>
+          </div>
+        </div>
+      </div>
+
+      {/* Statistiques rapides */}
+      <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 mb-6">
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <motion.div 
+            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">📚</span>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Leçons complétées</p>
+                <p className="text-xl font-bold text-violet-600 dark:text-violet-400">12</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">⏱️</span>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Temps d&apos;étude</p>
+                <p className="text-xl font-bold text-violet-600 dark:text-violet-400">2h 30</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🎯</span>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Objectifs atteints</p>
+                <p className="text-xl font-bold text-violet-600 dark:text-violet-400">8/10</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div 
+            className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200"
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.2 }}
+          >
+            <div className="flex items-center gap-2">
+              <span className="text-2xl">🌟</span>
+              <div>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Points gagnés</p>
+                <p className="text-xl font-bold text-violet-600 dark:text-violet-400">450</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
       <motion.div 
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
@@ -204,6 +287,19 @@ export default function LessonOfTheDay() {
             ✨ Bienvenue sur votre espace d&apos;apprentissage, <span className="text-yellow-300">{userName}</span> ! ✨
           </motion.h1>
           <p className="text-center text-sm sm:text-lg opacity-90">Découvrez votre programme personnalisé du jour</p>
+          
+          {/* Barre de progression */}
+          <div className="mt-4">
+            <div className="w-full bg-white/20 rounded-full h-2.5">
+              <motion.div 
+                className="bg-yellow-300 h-2.5 rounded-full"
+                initial={{ width: "0%" }}
+                animate={{ width: `${progress}%` }}
+                transition={{ duration: 1 }}
+              ></motion.div>
+            </div>
+            <p className="text-center mt-2 text-sm">Progression : {progress}%</p>
+          </div>
         </div>
 
         {/* Sélecteur de date et statistiques */}
@@ -296,6 +392,49 @@ export default function LessonOfTheDay() {
                         {lesson.lesson.description}
                       </p>
 
+                      {/* Informations supplémentaires */}
+                      <div className="grid grid-cols-2 sm:grid-cols-3 gap-3 mb-4">
+                        <div className="bg-violet-50 dark:bg-violet-900/30 p-3 rounded-lg">
+                          <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">⏱️ Durée estimée</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">{lesson.lesson.estimatedTime || "30 min"}</p>
+                        </div>
+                        <div className="bg-violet-50 dark:bg-violet-900/30 p-3 rounded-lg">
+                          <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">📊 Difficulté</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">{lesson.lesson.difficulty || "Moyenne"}</p>
+                        </div>
+                        <div className="bg-violet-50 dark:bg-violet-900/30 p-3 rounded-lg">
+                          <p className="text-sm font-semibold text-violet-700 dark:text-violet-300">🎯 Objectifs</p>
+                          <p className="text-xs text-gray-600 dark:text-gray-400">{lesson.lesson.objectives?.length || 0} objectifs</p>
+                        </div>
+                      </div>
+
+                      {/* Prerequisites */}
+                      {lesson.lesson.prerequisites && lesson.lesson.prerequisites.length > 0 && (
+                        <div className="mb-4">
+                          <Button
+                            className="w-full bg-violet-50 hover:bg-violet-100 text-violet-700 mb-2"
+                            onClick={() => setShowPrerequisites(!showPrerequisites)}
+                          >
+                            <span className="mr-2">📚</span> Prérequis
+                          </Button>
+                          {showPrerequisites && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              className="bg-violet-50 dark:bg-violet-900/30 p-4 rounded-lg"
+                            >
+                              <ul className="space-y-2">
+                                {lesson.lesson.prerequisites.map((prereq, i) => (
+                                  <li key={i} className="flex items-center gap-2 text-sm">
+                                    <span className="text-violet-500">•</span> {prereq}
+                                  </li>
+                                ))}
+                              </ul>
+                            </motion.div>
+                          )}
+                        </div>
+                      )}
+
                       {lesson.lesson.objectives && lesson.lesson.objectives.length > 0 && (
                         <div className="mb-3 sm:mb-6">
                           <h4 className="text-base sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-2 sm:mb-3 flex items-center gap-2">
@@ -346,6 +485,52 @@ export default function LessonOfTheDay() {
                           </div>
                         </div>
                       )}
+
+                      {/* Resources */}
+                      {lesson.lesson.resources && lesson.lesson.resources.length > 0 && (
+                        <div className="mb-4">
+                          <Button
+                            className="w-full bg-violet-50 hover:bg-violet-100 text-violet-700 mb-2"
+                            onClick={() => setShowResources(!showResources)}
+                          >
+                            <span className="mr-2">📖</span> Ressources complémentaires
+                          </Button>
+                          {showResources && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: "auto" }}
+                              className="bg-violet-50 dark:bg-violet-900/30 p-4 rounded-lg"
+                            >
+                              <div className="space-y-3">
+                                {lesson.lesson.resources.map((resource, i) => (
+                                  <a
+                                    key={i}
+                                    href={resource.link}
+                                    target="_blank"
+                                    rel="noopener noreferrer"
+                                    className="flex items-center gap-2 text-sm text-violet-600 hover:text-violet-800"
+                                  >
+                                    <span className="text-violet-500">•</span> {resource.title}
+                                    <span className="text-xs bg-violet-100 px-2 py-1 rounded-full">{resource.type}</span>
+                                  </a>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </div>
+                      )}
+
+                      {/* Notes personnelles */}
+                      <div className="mb-4">
+                        <h4 className="text-base font-semibold text-violet-600 dark:text-violet-400 mb-2">📝 Mes notes</h4>
+                        <textarea
+                          className="w-full p-3 rounded-lg border-2 border-violet-200 focus:border-violet-500 focus:outline-none text-sm"
+                          rows={4}
+                          placeholder="Prenez des notes pendant la leçon..."
+                          value={notes}
+                          onChange={(e) => setNotes(e.target.value)}
+                        />
+                      </div>
 
                       {/* Évaluation de la leçon */}
                       <div className="mt-4 sm:mt-8 border-t pt-3 sm:pt-6 border-violet-200">
