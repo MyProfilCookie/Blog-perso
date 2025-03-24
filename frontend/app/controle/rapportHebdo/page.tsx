@@ -317,7 +317,7 @@ const WeeklyReport = () => {
         </motion.div>
 
         {/* Grille des matières */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-4">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-0 sm:px-4">
           {report.map((item, index) => (
             <motion.div
               key={item.subject}
@@ -326,7 +326,7 @@ const WeeklyReport = () => {
               transition={{ duration: 0.3, delay: index * 0.1 }}
               className="w-full"
             >
-              <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300">
+              <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
                 <CardBody className="p-4 sm:p-6">
                   {/* En-tête de la matière */}
                   <div

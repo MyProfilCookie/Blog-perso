@@ -191,44 +191,44 @@ export default function LessonOfTheDay() {
         initial={{ opacity: 0, y: -20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.5 }}
-        className="w-full max-w-7xl mx-auto px-4"
+        className="w-full max-w-7xl mx-auto px-0 sm:px-4"
       >
         {/* En-tête avec les informations de l'utilisateur */}
-        <div className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-2xl p-8 mb-8 text-white shadow-xl">
+        <div className="bg-gradient-to-r from-violet-500 to-purple-600 rounded-none sm:rounded-2xl p-4 sm:p-8 mb-4 sm:mb-8 text-white shadow-xl">
           <motion.h1 
-            className="text-4xl font-extrabold text-center mb-4"
+            className="text-2xl sm:text-4xl font-extrabold text-center mb-2 sm:mb-4"
             initial={{ scale: 0.9 }}
             animate={{ scale: 1 }}
             transition={{ duration: 0.5 }}
           >
             ✨ Bienvenue sur votre espace d&apos;apprentissage, <span className="text-yellow-300">{userName}</span> ! ✨
           </motion.h1>
-          <p className="text-center text-lg opacity-90">Découvrez votre programme personnalisé du jour</p>
+          <p className="text-center text-sm sm:text-lg opacity-90">Découvrez votre programme personnalisé du jour</p>
         </div>
 
         {/* Sélecteur de date et statistiques */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6 mb-6 sm:mb-8 px-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-6 mb-4 sm:mb-8 px-2 sm:px-4">
           <motion.div 
-            className="bg-white dark:bg-gray-800 rounded-xl p-4 sm:p-6 shadow-lg border border-violet-200"
+            className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-6 shadow-lg border border-violet-200"
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.2 }}
           >
-            <h2 className="text-xl sm:text-2xl font-bold text-violet-700 dark:text-violet-400 mb-3 sm:mb-4">📅 Sélection de la date</h2>
-            <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
+            <h2 className="text-lg sm:text-2xl font-bold text-violet-700 dark:text-violet-400 mb-2 sm:mb-4">📅 Sélection de la date</h2>
+            <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
               <input
-                className="px-3 sm:px-4 py-2 rounded-lg border-2 border-violet-200 focus:border-violet-500 focus:outline-none flex-grow text-sm sm:text-base"
+                className="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg border-2 border-violet-200 focus:border-violet-500 focus:outline-none flex-grow text-sm sm:text-base"
                 type="date"
                 value={selectedDate}
                 onChange={(e) => setSelectedDate(e.target.value)}
               />
               <Button
-                className="bg-violet-600 hover:bg-violet-700 text-white px-4 sm:px-6 py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
+                className="bg-violet-600 hover:bg-violet-700 text-white px-3 sm:px-6 py-1.5 sm:py-2 rounded-lg transition-all duration-200 flex items-center justify-center gap-2 text-sm sm:text-base"
                 onClick={() => fetchLessonOfTheDay(selectedDate)}
               >
                 <span>🔄</span> Actualiser
               </Button>
             </div>
-            <p className="mt-3 sm:mt-4 text-sm sm:text-base text-gray-600 dark:text-gray-300">
+            <p className="mt-2 sm:mt-4 text-xs sm:text-base text-gray-600 dark:text-gray-300">
               Nous sommes le {dayjs().format("dddd DD MMMM YYYY")}
             </p>
           </motion.div>
@@ -259,7 +259,7 @@ export default function LessonOfTheDay() {
         {/* Contenu des leçons */}
         {lessonOfTheDay ? (
           <motion.div 
-            className="space-y-4 sm:space-y-8 px-4"
+            className="space-y-4 sm:space-y-8 px-0 sm:px-4"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ duration: 0.5 }}
@@ -267,13 +267,13 @@ export default function LessonOfTheDay() {
             {lessonOfTheDay.lessons.map((lesson, lessonIndex) => (
               <Card
                 key={lessonIndex}
-                className="w-full overflow-hidden bg-white dark:bg-gray-800 border-2 border-violet-200 rounded-xl shadow-xl"
+                className="w-full overflow-hidden bg-white dark:bg-gray-800 border-0 sm:border-2 border-violet-200 rounded-none sm:rounded-xl shadow-xl"
               >
-                <CardBody className="p-4 sm:p-6">
-                  <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
+                <CardBody className="p-2 sm:p-6">
+                  <div className="flex flex-col md:flex-row gap-2 sm:gap-6">
                     <div className="w-full md:w-1/3">
                       <motion.div 
-                        className="relative h-48 sm:h-60 rounded-xl overflow-hidden"
+                        className="relative h-48 sm:h-60 rounded-none sm:rounded-xl overflow-hidden"
                         whileHover={{ scale: 1.05 }}
                         transition={{ duration: 0.2 }}
                       >
@@ -288,22 +288,22 @@ export default function LessonOfTheDay() {
                     </div>
                     
                     <div className="w-full md:w-2/3">
-                      <h3 className="text-2xl sm:text-3xl font-bold text-violet-600 dark:text-violet-400 mb-3 sm:mb-4">
+                      <h3 className="text-xl sm:text-3xl font-bold text-violet-600 dark:text-violet-400 mb-2 sm:mb-4">
                         {lesson.subject}: {lesson.lesson.title}
                       </h3>
                       
-                      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300 mb-4 sm:mb-6">
+                      <p className="text-xs sm:text-base text-gray-600 dark:text-gray-300 mb-3 sm:mb-6">
                         {lesson.lesson.description}
                       </p>
 
                       {lesson.lesson.objectives && lesson.lesson.objectives.length > 0 && (
-                        <div className="mb-4 sm:mb-6">
-                          <h4 className="text-lg sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-2 sm:mb-3 flex items-center gap-2">
+                        <div className="mb-3 sm:mb-6">
+                          <h4 className="text-base sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-2 sm:mb-3 flex items-center gap-2">
                             <span>🎯</span> Objectifs
                           </h4>
                           <ul className="space-y-1 sm:space-y-2">
                             {lesson.lesson.objectives.map((objective, i) => (
-                              <li key={i} className="flex items-center gap-2 text-sm sm:text-base text-gray-700 dark:text-gray-300">
+                              <li key={i} className="flex items-center gap-2 text-xs sm:text-base text-gray-700 dark:text-gray-300">
                                 <span className="text-violet-500">•</span> {objective}
                               </li>
                             ))}
@@ -348,23 +348,23 @@ export default function LessonOfTheDay() {
                       )}
 
                       {/* Évaluation de la leçon */}
-                      <div className="mt-6 sm:mt-8 border-t pt-4 sm:pt-6 border-violet-200">
-                        <h4 className="text-lg sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-3 sm:mb-4">Comment as-tu trouvé cette leçon ?</h4>
-                        <div className="flex flex-wrap gap-3 sm:gap-4">
+                      <div className="mt-4 sm:mt-8 border-t pt-3 sm:pt-6 border-violet-200">
+                        <h4 className="text-base sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-2 sm:mb-4">Comment as-tu trouvé cette leçon ?</h4>
+                        <div className="flex flex-wrap gap-2 sm:gap-4">
                           <Button
-                            className="flex-1 bg-green-100 hover:bg-green-200 text-green-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
+                            className="flex-1 bg-green-100 hover:bg-green-200 text-green-700 px-2 sm:px-6 py-1.5 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-base transition-all duration-200"
                             onClick={() => handleLessonRating("Facile")}
                           >
                             <span>😊</span> Facile
                           </Button>
                           <Button
-                            className="flex-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
+                            className="flex-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-2 sm:px-6 py-1.5 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-base transition-all duration-200"
                             onClick={() => handleLessonRating("Moyen")}
                           >
                             <span>😐</span> Moyen
                           </Button>
                           <Button
-                            className="flex-1 bg-red-100 hover:bg-red-200 text-red-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
+                            className="flex-1 bg-red-100 hover:bg-red-200 text-red-700 px-2 sm:px-6 py-1.5 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-xs sm:text-base transition-all duration-200"
                             onClick={() => handleLessonRating("Difficile")}
                           >
                             <span>😓</span> Difficile
