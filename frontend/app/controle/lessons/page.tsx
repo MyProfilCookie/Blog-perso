@@ -271,7 +271,7 @@ export default function LessonOfTheDay() {
               >
                 <CardBody className="p-4 sm:p-6">
                   <div className="flex flex-col md:flex-row gap-4 sm:gap-6">
-                    <div className="md:w-1/3">
+                    <div className="w-full md:w-1/3">
                       <motion.div 
                         className="relative h-48 sm:h-60 rounded-xl overflow-hidden"
                         whileHover={{ scale: 1.05 }}
@@ -287,7 +287,7 @@ export default function LessonOfTheDay() {
                       </motion.div>
                     </div>
                     
-                    <div className="md:w-2/3">
+                    <div className="w-full md:w-2/3">
                       <h3 className="text-2xl sm:text-3xl font-bold text-violet-600 dark:text-violet-400 mb-3 sm:mb-4">
                         {lesson.subject}: {lesson.lesson.title}
                       </h3>
@@ -352,19 +352,19 @@ export default function LessonOfTheDay() {
                         <h4 className="text-lg sm:text-xl font-semibold text-violet-600 dark:text-violet-400 mb-3 sm:mb-4">Comment as-tu trouvé cette leçon ?</h4>
                         <div className="flex flex-wrap gap-3 sm:gap-4">
                           <Button
-                            className="bg-green-100 hover:bg-green-200 text-green-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
+                            className="flex-1 bg-green-100 hover:bg-green-200 text-green-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
                             onClick={() => handleLessonRating("Facile")}
                           >
                             <span>😊</span> Facile
                           </Button>
                           <Button
-                            className="bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
+                            className="flex-1 bg-yellow-100 hover:bg-yellow-200 text-yellow-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
                             onClick={() => handleLessonRating("Moyen")}
                           >
                             <span>😐</span> Moyen
                           </Button>
                           <Button
-                            className="bg-red-100 hover:bg-red-200 text-red-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
+                            className="flex-1 bg-red-100 hover:bg-red-200 text-red-700 px-4 sm:px-6 py-2 sm:py-3 rounded-xl flex items-center justify-center gap-2 text-sm sm:text-base transition-all duration-200"
                             onClick={() => handleLessonRating("Difficile")}
                           >
                             <span>😓</span> Difficile

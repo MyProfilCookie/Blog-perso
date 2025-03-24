@@ -324,8 +324,9 @@ const WeeklyReport = () => {
               animate={{ opacity: 1, scale: 1 }}
               initial={{ opacity: 0, scale: 0.9 }}
               transition={{ duration: 0.3, delay: index * 0.1 }}
+              className="w-full"
             >
-              <Card className="border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300">
+              <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300">
                 <CardBody className="p-4 sm:p-6">
                   {/* En-tête de la matière */}
                   <div
@@ -390,7 +391,7 @@ const WeeklyReport = () => {
                       >
                         <Button
                           key="in-progress"
-                          className={`p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                          className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
                             item.progress === "in-progress"
                               ? "bg-violet-500 text-white"
                               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
@@ -403,7 +404,7 @@ const WeeklyReport = () => {
                         </Button>
                         <Button
                           key="completed"
-                          className={`p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                          className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
                             item.progress === "completed"
                               ? "bg-violet-500 text-white"
                               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
@@ -416,7 +417,7 @@ const WeeklyReport = () => {
                         </Button>
                         <Button
                           key="not-acquired"
-                          className={`p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                          className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
                             item.progress === "not-acquired"
                               ? "bg-violet-500 text-white"
                               : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
