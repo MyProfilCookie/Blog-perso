@@ -186,7 +186,8 @@ const BlogPage = () => {
   const filteredThemes = courseThemes.filter(theme => {
     const matchesSearch = theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
                          theme.description.toLowerCase().includes(searchQuery.toLowerCase());
-    const matchesCategory = !selectedCategory || theme.bgColor.split(' ')[0].includes(selectedCategory);
+    const baseColor = theme.bgColor.split(' ')[0].replace('bg-', '').split('-')[0];
+    const matchesCategory = !selectedCategory || baseColor === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
