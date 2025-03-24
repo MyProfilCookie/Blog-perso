@@ -224,37 +224,79 @@ export default function ControlePage() {
     <div className="flex flex-col items-center justify-center w-full min-h-screen p-4">
       <BackButton />
       
-      <div className="flex flex-col items-center gap-6 mb-8">
-        <div className="flex items-center gap-3">
+      <motion.div 
+        className="flex flex-col items-center gap-6 mb-8"
+        initial={{ opacity: 0, y: -20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <motion.div 
+          className="flex items-center gap-3"
+          animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.1, 1] }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
           <FontAwesomeIcon 
             icon={faGraduationCap} 
             className="text-4xl text-primary-500" 
           />
-          <h1 className="text-2xl font-bold">Les contrôles</h1>
-        </div>
-      </div>
+          <h1 className="text-2xl font-bold text-blue-600">Les contrôles</h1>
+        </motion.div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl">
-        {courseThemes.map((theme) => (
-          <Card 
+        {/* Stats Section */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
+          {stats.map((stat, index) => (
+            <motion.div
+              key={stat.label}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              whileHover={{ scale: 1.05 }}
+              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg text-center"
+            >
+              <FontAwesomeIcon 
+                icon={stat.icon} 
+                className={`text-2xl mb-2 ${stat.color}`}
+              />
+              <h3 className="text-lg font-semibold">{stat.value}</h3>
+              <p className="text-sm text-gray-600 dark:text-gray-400">{stat.label}</p>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
+      <motion.div 
+        className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.5, delay: 0.2 }}
+      >
+        {courseThemes.map((theme, index) => (
+          <motion.div
             key={theme.id}
-            isPressable 
-            className={`w-full ${theme.bgColor}`}
-            onClick={() => router.push(theme.route)}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.5, delay: index * 0.1 }}
+            whileHover={{ scale: 1.02 }}
           >
-            <CardBody className="p-4">
-              <div className="flex items-center gap-2 mb-2">
-                <FontAwesomeIcon 
-                  icon={theme.icon} 
-                  className={theme.iconColor}
-                />
-                <h2 className="font-bold">{theme.title}</h2>
-              </div>
-              <p className="text-sm">{theme.description}</p>
-            </CardBody>
-          </Card>
+            <Card 
+              isPressable 
+              className={`w-full ${theme.bgColor}`}
+              onClick={() => router.push(theme.route)}
+            >
+              <CardBody className="p-4">
+                <div className="flex items-center gap-2 mb-2">
+                  <FontAwesomeIcon 
+                    icon={theme.icon} 
+                    className={theme.iconColor}
+                  />
+                  <h2 className="font-bold">{theme.title}</h2>
+                </div>
+                <p className="text-sm">{theme.description}</p>
+              </CardBody>
+            </Card>
+          </motion.div>
         ))}
-      </div>
+      </motion.div>
     </div>
   );
 }
