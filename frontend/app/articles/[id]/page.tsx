@@ -8,10 +8,10 @@ import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { title, subtitle } from "@/components/primitives";
 
 // Importation des données d'articles depuis le fichier JSON
 import articlesData from "@/public/dataarticless.json";
-import { title, subtitle } from "@/components/primitives";
 
 // Fonction pour transformer la date au format "YYYY-MM-DD" en "DD Month YYYY"
 const formatDate = (dateString: string | number | Date) => {
@@ -109,10 +109,10 @@ const ArticlePage = () => {
           initial={{ opacity: 0, y: -50 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className={`${title({ color: "violet" })} text-4xl md:text-5xl font-bold leading-tight dark:text-violet-300`}>
+          <h1 className={`${title()} text-4xl md:text-5xl font-bold leading-tight dark:text-violet-300`}>
             {article.title}
           </h1>
-          <h2 className={`${subtitle({ class: "mt-4" })} text-xl md:text-2xl text-gray-600 dark:text-gray-300 italic`}>
+          <h2 className={`${subtitle()} text-xl md:text-2xl text-gray-600 dark:text-gray-300 italic`}>
             {article.subtitle}
           </h2>
           <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
