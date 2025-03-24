@@ -144,7 +144,7 @@ const TrimestrePage: React.FC = () => {
     setUserAnswers({ ...userAnswers, [id]: e.target.value });
   };
 
-  const handleSubmit = (id: number, correctAnswer: string) => {
+  const handleSubmit = (id: number, correctAnswer: string): void => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toString().trim().toLowerCase() === correctAnswer.toLowerCase();
 
