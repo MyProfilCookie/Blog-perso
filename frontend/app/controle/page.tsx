@@ -183,20 +183,25 @@ const BlogPage = () => {
     router.push(route);
   };
 
-  const filteredThemes = searchQuery === "" && !selectedCategory 
-    ? courseThemes 
-    : courseThemes.filter(theme => {
-        const matchesSearch = theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                            theme.description.toLowerCase().includes(searchQuery.toLowerCase());
-                            
-        const matchesCategory = !selectedCategory || 
-                              theme.bgColor.startsWith(`bg-${selectedCategory}-`);
-                              
-        return matchesSearch && matchesCategory;
-    });
+  const filteredThemes = courseThemes.filter(theme => {
+    if (!searchQuery && !selectedCategory) return true;
+    
+    const matchesSearch = !searchQuery || 
+      theme.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      theme.description.toLowerCase().includes(searchQuery.toLowerCase());
+      
+    const matchesCategory = !selectedCategory || 
+      theme.bgColor.split(' ')[0] === `bg-${selectedCategory}-200`;
+      
+    return matchesSearch && matchesCategory;
+  });
 
   if (!mounted) {
-    return null;
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <p>Chargement...</p>
+      </div>
+    );
   }
 
   return (
