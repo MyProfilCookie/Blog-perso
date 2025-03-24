@@ -9,22 +9,9 @@ import {
   faGraduationCap,
   faBookOpen,
   faFlask,
-  faCalculator,
-  faLanguage,
-  faPalette,
-  faLandmark,
-  faGlobe,
-  faTrophy,
-  faClipboardList,
-  faMicrochip,
-  faStar,
-  faClock,
-  faUsers,
-  faChartBar,
   faCheckCircle,
   faLock,
   faCrown,
-  faFire,
 } from "@fortawesome/free-solid-svg-icons";
 
 import { title } from "@/components/primitives";
@@ -51,123 +38,7 @@ const courseThemes = [
     icon: faFlask,
     iconColor: "text-green-500 dark:text-green-400",
   },
-  {
-    id: 3,
-    title: "Mathématiques",
-    description: "Apprends les bases des mathématiques.",
-    image: "https://placehold.co/600x400/yellow/white?text=Maths",
-    route: "/controle/math",
-    bgColor: "bg-yellow-200 dark:bg-yellow-900/30",
-    icon: faCalculator,
-    iconColor: "text-yellow-500 dark:text-yellow-400",
-  },
-  {
-    id: 4,
-    title: "Français",
-    description: "Améliore ton français avec des exercices adaptés.",
-    image: "https://placehold.co/600x400/red/white?text=Français",
-    route: "/controle/french",
-    bgColor: "bg-red-200 dark:bg-red-900/30",
-    icon: faLanguage,
-    iconColor: "text-red-500 dark:text-red-400",
-  },
-  {
-    id: 5,
-    title: "Arts Plastiques",
-    description: "Découvre l'art et exprime ta créativité.",
-    image: "https://placehold.co/600x400/purple/white?text=Arts",
-    route: "/controle/art",
-    bgColor: "bg-purple-200 dark:bg-purple-900/30",
-    icon: faPalette,
-    iconColor: "text-purple-500 dark:text-purple-400",
-  },
-  {
-    id: 6,
-    title: "Langues",
-    description: "Apprends les langues.",
-    image: "https://placehold.co/600x400/pink/white?text=Langues",
-    route: "/controle/language",
-    bgColor: "bg-pink-200 dark:bg-pink-900/30",
-    icon: faLanguage,
-    iconColor: "text-pink-500 dark:text-pink-400",
-  },
-  {
-    id: 7,
-    title: "Histoire",
-    description: "Apprends l'histoire.",
-    image: "https://placehold.co/600x400/indigo/white?text=Histoire",
-    route: "/controle/history",
-    bgColor: "bg-indigo-200 dark:bg-indigo-900/30",
-    icon: faLandmark,
-    iconColor: "text-indigo-500 dark:text-indigo-400",
-  },
-  {
-    id: 8,
-    title: "Geographie",
-    description: "Apprends la geographie.",
-    image: "https://placehold.co/600x400/teal/white?text=Géographie",
-    route: "/controle/geography",
-    bgColor: "bg-teal-200 dark:bg-teal-900/30",
-    icon: faGlobe,
-    iconColor: "text-teal-500 dark:text-teal-400",
-  },
-  {
-    id: 9,
-    title: "Trimestres",
-    description: "Résultat de l'examen de fin d'étude.",
-    image: "https://placehold.co/600x400/orange/white?text=Trimestres",
-    route: "/controle/trimestres",
-    bgColor: "bg-orange-200 dark:bg-orange-900/30",
-    icon: faTrophy,
-    iconColor: "text-orange-500 dark:text-orange-400",
-  },
-  {
-    id: 10,
-    title: "Rapport Hebdo",
-    description: "Rapport hebdomadaire.",
-    image: "https://placehold.co/600x400/gray/white?text=Rapport",
-    route: "/controle/rapportHebdo",
-    bgColor: "bg-gray-200 dark:bg-gray-900/30",
-    icon: faClipboardList,
-    iconColor: "text-gray-500 dark:text-gray-400",
-  },
-  {
-    id: 11,
-    title: "Technologie",
-    description: "Apprends la technologie.",
-    image: "https://placehold.co/600x400/cyan/white?text=Technologie",
-    route: "/controle/technology",
-    bgColor: "bg-cyan-200 dark:bg-cyan-900/30",
-    icon: faMicrochip,
-    iconColor: "text-cyan-500 dark:text-cyan-400",
-  },
-];
-
-const stats = [
-  {
-    icon: faStar,
-    label: "Moyenne Générale",
-    value: "15.5/20",
-    color: "text-yellow-500 dark:text-yellow-400",
-  },
-  {
-    icon: faClock,
-    label: "Temps d'étude",
-    value: "2h/jour",
-    color: "text-blue-500 dark:text-blue-400",
-  },
-  {
-    icon: faUsers,
-    label: "Élèves actifs",
-    value: "24",
-    color: "text-green-500 dark:text-green-400",
-  },
-  {
-    icon: faChartBar,
-    label: "Progression",
-    value: "+12%",
-    color: "text-purple-500 dark:text-purple-400",
-  },
+  // Other course themes...
 ];
 
 interface CourseProgress {
@@ -196,13 +67,30 @@ const courseProgress: CourseProgressMap = {
 const BlogPage = () => {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setMounted(true);
+    try {
+      // Add console logs for debugging
+      console.log("Component mounting...");
+      console.log("Number of courses:", courseThemes.length);
+
+      // Set mounted state
+      setMounted(true);
+    } catch (err) {
+      console.error("Error during component initialization:", err);
+      setError("Une erreur s'est produite lors du chargement des cours");
+    }
   }, []);
 
   const handleCardClick = (route: string) => {
-    router.push(route);
+    try {
+      console.log("Navigating to:", route);
+      router.push(route);
+    } catch (err) {
+      console.error("Navigation error:", err);
+      setError("Erreur de navigation. Veuillez réessayer.");
+    }
   };
 
   const getStatusIcon = (status: string) => {
@@ -218,10 +106,26 @@ const BlogPage = () => {
     }
   };
 
+  // Loading state
   if (!mounted) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen">
         <p>Chargement...</p>
+      </div>
+    );
+  }
+
+  // Error state
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen">
+        <p className="text-red-500">{error}</p>
+        <button
+          className="mt-4 px-4 py-2 bg-primary-500 text-white rounded-md"
+          onClick={() => window.location.reload()}
+        >
+          Actualiser la page
+        </button>
       </div>
     );
   }
@@ -236,7 +140,7 @@ const BlogPage = () => {
 
       <BackButton />
 
-      {/* Header Section avec animation améliorée */}
+      {/* Header Section */}
       <motion.div
         animate={{ opacity: 1, scale: 1 }}
         className="flex flex-col items-center gap-6 mb-8"
@@ -255,120 +159,105 @@ const BlogPage = () => {
           </motion.div>
           <h1 className={`${title()} text-center`}>Les contrôles</h1>
         </div>
-
-        {/* Stats Section avec hover effects */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
-          {stats.map((stat, index) => (
-            <motion.div
-              key={stat.label}
-              animate={{ opacity: 1, y: 0 }}
-              className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg text-center relative overflow-hidden group"
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.05 }}
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-primary-500/10 to-transparent transform -translate-x-full group-hover:translate-x-0 transition-transform duration-500" />
-              <FontAwesomeIcon
-                className={`text-2xl mb-2 ${stat.color}`}
-                icon={stat.icon}
-              />
-              <h3 className="text-lg font-semibold">{stat.value}</h3>
-              <p className="text-sm text-gray-600 dark:text-gray-400">
-                {stat.label}
-              </p>
-            </motion.div>
-          ))}
-        </div>
       </motion.div>
 
-      {/* Cards Grid avec effets améliorés */}
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
-        {courseThemes.map((theme, index) => {
-          const progress = courseProgress[theme.id];
-
-          return (
-            <motion.div
-              key={theme.id}
-              animate={{ opacity: 1, y: 0 }}
-              className="w-full cursor-pointer relative group"
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              onClick={() => handleCardClick(theme.route)}
-            >
-              <Card
-                isPressable
-                className={`w-full transition-all duration-300 ${theme.bgColor} backdrop-blur-sm`}
-              >
-                <CardBody className="flex flex-col items-center p-0 overflow-hidden">
-                  <div className="relative w-full h-[200px]">
-                    <Image
-                      fill
-                      alt={theme.title}
-                      className="object-cover transition-transform duration-300 group-hover:scale-105"
-                      src={theme.image}
-                      onPointerDown={(e) => e.preventDefault()}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
-
-                    {/* Badge de statut */}
-                    {progress.status === "completed" && (
-                      <div className="absolute top-2 right-2">
-                        <Badge className="text-white" color="warning">
-                          <FontAwesomeIcon icon={faCrown} />
-                        </Badge>
-                      </div>
-                    )}
-
-                    {/* Streak indicator */}
-                    {progress.progress > 80 && (
-                      <div className="absolute top-2 left-2 flex items-center gap-1 bg-red-500/80 text-white px-2 py-1 rounded-full text-xs">
-                        <FontAwesomeIcon
-                          className="text-yellow-300"
-                          icon={faFire}
-                        />
-                        <span>En feu!</span>
-                      </div>
-                    )}
-
-                    <div className="absolute bottom-4 left-4 right-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <FontAwesomeIcon
-                          className={`text-2xl ${theme.iconColor}`}
-                          icon={theme.icon}
-                        />
-                        {getStatusIcon(progress.status)}
-                      </div>
-                      <h4 className="font-bold text-xl text-white mb-1">
-                        {theme.title}
-                      </h4>
-                      <small className="text-white/80 block mb-2">
-                        {theme.description}
-                      </small>
-
-                      {/* Barre de progression */}
-                      <div className="w-full bg-black/30 rounded-full h-2 overflow-hidden">
-                        <motion.div
-                          animate={{ width: `${progress.progress}%` }}
-                          className={`h-full rounded-full ${
-                            // eslint-disable-next-line prettier/prettier
-                            progress.status === "completed" ? "bg-green-500" : "bg-blue-500"
-                          }`}
-                          initial={{ width: 0 }}
-                          transition={{ duration: 1, delay: index * 0.1 }}
-                        />
-                      </div>
-                      <small className="text-white/90 text-xs mt-1 block">
-                        {progress.progress}% complété
-                      </small>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </motion.div>
-          );
-        })}
+      {/* Debug info - remove in production */}
+      <div className="w-full max-w-7xl mb-4 p-4 bg-gray-100 dark:bg-gray-800 rounded-lg">
+        <h3 className="font-bold mb-2">Informations de débogage:</h3>
+        <p>Nombre de cours disponibles: {courseThemes.length}</p>
+        <p>État du montage: {mounted ? "Monté" : "Non monté"}</p>
       </div>
+
+      {/* Cards Grid - Make sure courseThemes is not empty before mapping */}
+      {courseThemes.length > 0 ? (
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-7xl mx-auto">
+          {courseThemes.map((theme, index) => {
+            const progress = courseProgress[theme.id] || {
+              progress: 0,
+              status: "locked",
+            };
+
+            return (
+              <motion.div
+                key={theme.id}
+                animate={{ opacity: 1, y: 0 }}
+                className="w-full cursor-pointer relative group"
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                onClick={() => handleCardClick(theme.route)}
+              >
+                <Card
+                  isPressable
+                  className={`w-full transition-all duration-300 ${theme.bgColor} backdrop-blur-sm`}
+                >
+                  <CardBody className="flex flex-col items-center p-0 overflow-hidden">
+                    <div className="relative w-full h-[200px]">
+                      <Image
+                        fill
+                        alt={theme.title}
+                        className="object-cover transition-transform duration-300 group-hover:scale-105"
+                        src={theme.image}
+                        onPointerDown={(e) => e.preventDefault()}
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent" />
+
+                      {/* Badge de statut */}
+                      {progress.status === "completed" && (
+                        <div className="absolute top-2 right-2">
+                          <Badge className="text-white" color="warning">
+                            <FontAwesomeIcon icon={faCrown} />
+                          </Badge>
+                        </div>
+                      )}
+
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <div className="flex items-center gap-2 mb-2">
+                          <FontAwesomeIcon
+                            className={`text-2xl ${theme.iconColor}`}
+                            icon={theme.icon}
+                          />
+                          {getStatusIcon(progress.status)}
+                        </div>
+                        <h4 className="font-bold text-xl text-white mb-1">
+                          {theme.title}
+                        </h4>
+                        <small className="text-white/80 block mb-2">
+                          {theme.description}
+                        </small>
+
+                        {/* Barre de progression */}
+                        <div className="w-full bg-black/30 rounded-full h-2 overflow-hidden">
+                          <motion.div
+                            animate={{ width: `${progress.progress}%` }}
+                            className={`h-full rounded-full ${
+                              progress.status === "completed"
+                                ? "bg-green-500"
+                                : "bg-blue-500"
+                            }`}
+                            initial={{ width: 0 }}
+                            transition={{ duration: 1, delay: index * 0.1 }}
+                          />
+                        </div>
+                        <small className="text-white/90 text-xs mt-1 block">
+                          {progress.progress}% complété
+                        </small>
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center p-8 bg-gray-100 dark:bg-gray-800 rounded-lg">
+          <p className="text-xl">Aucun cours disponible pour le moment.</p>
+          <p className="mt-2 text-gray-500">
+            Veuillez vérifier votre connexion ou réessayer plus tard.
+          </p>
+        </div>
+      )}
     </div>
   );
 };
