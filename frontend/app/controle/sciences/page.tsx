@@ -50,6 +50,20 @@ const SciencesPage: React.FC = () => {
     quickLearner: false,
   });
 
+  // Nouvel état pour le minuteur (1 heure = 3600 secondes)
+  const [timeLeft, setTimeLeft] = useState<number>(3600);
+  const [isStarted, setIsStarted] = useState<boolean>(false);
+
+  // Messages d'encouragement
+  const encouragementMessages = [
+    "🌟 Tu t'en sors très bien !",
+    "💪 Continue comme ça, tu es sur la bonne voie !",
+    "🎯 Reste concentré, tu fais du bon travail !",
+    "✨ Tu es capable de réussir !",
+    "🌈 N'hésite pas à prendre ton temps !",
+    "🚀 Tu progresses bien !"
+  ];
+
   useEffect(() => {
     const loadExercises = () => {
       try {
@@ -168,6 +182,45 @@ const SciencesPage: React.FC = () => {
     loadExercises();
   }, []);
 
+  // Gestion du minuteur et des messages d'encouragement
+  useEffect(() => {
+    let timer: NodeJS.Timeout;
+    let encouragementTimer: NodeJS.Timeout;
+
+    if (isStarted && timeLeft > 0) {
+      // Minuteur principal
+      timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            calculateFinalScore();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // Messages d'encouragement toutes les 10 minutes
+      encouragementTimer = setInterval(() => {
+        const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+        // Utiliser l'état emoji existant pour afficher temporairement le message
+        setEmoji(randomMessage);
+        setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
+      }, 600000); // 600000ms = 10 minutes
+    }
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(encouragementTimer);
+    };
+  }, [isStarted, timeLeft]);
+
+  // Fonction pour formater le temps restant
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
     setUserAnswers({ ...userAnswers, [id]: e.target.value });
   };
@@ -275,6 +328,36 @@ const SciencesPage: React.FC = () => {
           <BackButton />
         </div>
       </div>
+
+      {/* Minuteur et bouton de démarrage */}
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200">
+          <div className="flex justify-between items-center">
+            <div className="text-xl font-bold text-violet-600 dark:text-violet-400">
+              Temps restant : {formatTime(timeLeft)}
+            </div>
+            {!isStarted && (
+              <Button
+                className="bg-violet-500 text-white hover:bg-violet-600"
+                onClick={() => setIsStarted(true)}
+              >
+                Commencer
+              </Button>
+            )}
+          </div>
+        </div>
+      </div>
+
+      {/* Message d'encouragement */}
+      {emoji && (
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
+          initial={{ opacity: 0, y: -20 }}
+        >
+          <p className="text-lg">{emoji}</p>
+        </motion.div>
+      )}
 
       {/* Statistiques rapides */}
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">
