@@ -16,7 +16,7 @@ interface Exercise {
   question: string;
   options?: string[];
   image?: string;
-  answer: string;
+    answer: string;
   difficulty?: "Facile" | "Moyen" | "Difficile";
   estimatedTime?: string;
   category: string;
@@ -168,6 +168,206 @@ const SciencesPage: React.FC = () => {
             answer: "Vapeur d'eau",
             category: "Météo",
             difficulty: "Facile" as const
+          },
+          {
+            id: 11,
+            title: "Le système digestif",
+            content: "La digestion",
+            question: "Quel organe transforme les aliments en nutriments ?",
+            options: ["L'estomac", "Le cœur", "Les poumons", "Le cerveau"],
+            answer: "L'estomac",
+            category: "Corps humain",
+            difficulty: "Moyen" as const
+          },
+          {
+            id: 12,
+            title: "Les insectes",
+            content: "Classification des insectes",
+            question: "Combien de pattes a une araignée ?",
+            options: ["8 pattes", "6 pattes", "4 pattes", "10 pattes"],
+            answer: "8 pattes",
+            category: "Animaux",
+            difficulty: "Moyen" as const
+          },
+          {
+            id: 13,
+            title: "Les vitamines",
+            content: "Les nutriments essentiels",
+            question: "Quelle vitamine trouve-t-on dans les oranges ?",
+            options: ["Vitamine C", "Vitamine A", "Vitamine B", "Vitamine D"],
+            answer: "Vitamine C",
+            category: "Alimentation",
+            difficulty: "Moyen" as const
+          },
+          {
+            id: 14,
+            title: "Les nuages",
+            content: "Formation des nuages",
+            question: "Quel type de nuage apporte la pluie ?",
+            options: ["Le cumulonimbus", "Le cirrus", "Le stratus", "Le cumulus"],
+            answer: "Le cumulonimbus",
+            category: "Météo",
+            difficulty: "Moyen" as const
+          },
+          {
+            id: 15,
+            title: "Les arbres",
+            content: "La vie des arbres",
+            question: "Quelle partie de l'arbre produit l'oxygène ?",
+            options: ["Les feuilles", "Les racines", "Le tronc", "Les branches"],
+            answer: "Les feuilles",
+            category: "Nature",
+            difficulty: "Moyen" as const
+          },
+          {
+            id: 16,
+            title: "Les planètes",
+            content: "Le système solaire",
+            question: "Quelle est la planète la plus proche du Soleil ?",
+            options: ["Mercure", "Vénus", "Mars", "Terre"],
+            answer: "Mercure",
+            category: "Astronomie",
+            difficulty: "Moyen" as const
+          },
+          {
+            id: 17,
+            title: "Le squelette",
+            content: "Les os du corps",
+            question: "Quel est l'os le plus long du corps humain ?",
+            options: ["Le fémur", "Le tibia", "Le radius", "L'humérus"],
+            answer: "Le fémur",
+            category: "Corps humain",
+            difficulty: "Moyen" as const
+          },
+          {
+            id: 18,
+            title: "Les états de la matière",
+            content: "Propriétés de la matière",
+            question: "Quel est l'état de l'eau à 100°C ?",
+            options: ["Vapeur", "Liquide", "Glace", "Pluie"],
+            answer: "Vapeur",
+            category: "Matière",
+            difficulty: "Moyen" as const
+          },
+          {
+            id: 19,
+            title: "Le système respiratoire",
+            content: "La respiration",
+            question: "Quel organe permet d'absorber l'oxygène ?",
+            options: ["Les poumons", "Le cœur", "Le foie", "Les reins"],
+            answer: "Les poumons",
+            category: "Corps humain",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 20,
+            title: "Les écosystèmes",
+            content: "Les milieux naturels",
+            question: "Quel animal est au sommet de la chaîne alimentaire dans la savane ?",
+            options: ["Le lion", "La girafe", "Le zèbre", "L'éléphant"],
+            answer: "Le lion",
+            category: "Animaux",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 21,
+            title: "Les minéraux",
+            content: "Les nutriments essentiels",
+            question: "Quel minéral est important pour les os ?",
+            options: ["Le calcium", "Le fer", "Le zinc", "Le cuivre"],
+            answer: "Le calcium",
+            category: "Alimentation",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 22,
+            title: "Les phénomènes météorologiques",
+            content: "La météo",
+            question: "Qu'est-ce qui cause les éclairs ?",
+            options: ["L'électricité statique", "Le vent", "La pluie", "Les nuages"],
+            answer: "L'électricité statique",
+            category: "Météo",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 23,
+            title: "La photosynthèse",
+            content: "La vie des plantes",
+            question: "Quel gaz les plantes absorbent-elles ?",
+            options: ["Le dioxyde de carbone", "L'oxygène", "L'azote", "L'hydrogène"],
+            answer: "Le dioxyde de carbone",
+            category: "Nature",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 24,
+            title: "Les étoiles",
+            content: "L'astronomie",
+            question: "Quelle étoile est la plus proche de la Terre ?",
+            options: ["Le Soleil", "Proxima Centauri", "Sirius", "Alpha Centauri"],
+            answer: "Le Soleil",
+            category: "Astronomie",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 25,
+            title: "Le système nerveux",
+            content: "Le cerveau et les nerfs",
+            question: "Quel organe contrôle tout le corps ?",
+            options: ["Le cerveau", "Le cœur", "Les poumons", "Le foie"],
+            answer: "Le cerveau",
+            category: "Corps humain",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 26,
+            title: "Les réactions chimiques",
+            content: "La chimie",
+            question: "Qu'est-ce qui se produit quand on mélange du vinaigre et du bicarbonate de soude ?",
+            options: ["Une effervescence", "Une explosion", "Une solidification", "Une évaporation"],
+            answer: "Une effervescence",
+            category: "Matière",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 27,
+            title: "Les cellules",
+            content: "La biologie",
+            question: "Quelle est l'unité de base de la vie ?",
+            options: ["La cellule", "L'atome", "La molécule", "Le tissu"],
+            answer: "La cellule",
+            category: "Corps humain",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 28,
+            title: "Les écosystèmes marins",
+            content: "La vie marine",
+            question: "Quel est le plus grand animal marin ?",
+            options: ["La baleine bleue", "Le requin", "Le calmar", "Le dauphin"],
+            answer: "La baleine bleue",
+            category: "Animaux",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 29,
+            title: "Les protéines",
+            content: "Les nutriments",
+            question: "Dans quel groupe d'aliments trouve-t-on les protéines ?",
+            options: ["Les viandes", "Les fruits", "Les légumes", "Les céréales"],
+            answer: "Les viandes",
+            category: "Alimentation",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 30,
+            title: "Les forces",
+            content: "La physique",
+            question: "Quelle force attire les objets vers le centre de la Terre ?",
+            options: ["La gravité", "Le magnétisme", "L'électricité", "Le vent"],
+            answer: "La gravité",
+            category: "Matière",
+            difficulty: "Difficile" as const
           }
         ];
 
@@ -316,8 +516,8 @@ const SciencesPage: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-            Exercices de Sciences
-          </h1>
+          Exercices de Sciences
+        </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
             Explorez le monde des sciences à travers des exercices interactifs
           </p>
@@ -350,8 +550,8 @@ const SciencesPage: React.FC = () => {
 
       {/* Message d'encouragement */}
       {emoji && (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
           className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
           initial={{ opacity: 0, y: -20 }}
         >
@@ -474,11 +674,11 @@ const SciencesPage: React.FC = () => {
           animate={{ opacity: 1 }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           initial={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        transition={{ duration: 0.5 }}
+      >
           {filteredExercises.map((exercise, index) => (
             <motion.div
-              key={exercise.id}
+            key={exercise.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -487,15 +687,15 @@ const SciencesPage: React.FC = () => {
               <Card className="w-full h-full bg-white dark:bg-gray-800 shadow-lg border border-violet-200">
                 <CardBody className="p-4 sm:p-6">
                   <h3 className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-                    {exercise.title}
-                  </h3>
+                {exercise.title}
+              </h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-4">{exercise.content}</p>
                   <p className="font-medium mb-4">{exercise.question}</p>
 
-                  {exercise.image && (
+              {exercise.image && (
                     <div className="mb-4">
-                      <Image
-                        alt={exercise.title}
+                <Image
+                  alt={exercise.title}
                         className="rounded-lg object-cover w-full h-48"
                         height={200}
                         src={`/assets/sciences/${exercise.image}`}
@@ -519,14 +719,14 @@ const SciencesPage: React.FC = () => {
                       ))}
                     </select>
                   ) : (
-                    <input
+                  <input
                       className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
                       disabled={results[exercise.id] !== undefined}
-                      placeholder="Votre réponse"
-                      type="text"
-                      value={userAnswers[exercise.id] || ""}
-                      onChange={(e) => handleChange(e, exercise.id)}
-                    />
+                    placeholder="Votre réponse"
+                    type="text"
+                    value={userAnswers[exercise.id] || ""}
+                    onChange={(e) => handleChange(e, exercise.id)}
+                  />
                   )}
 
                   <Button
@@ -548,11 +748,11 @@ const SciencesPage: React.FC = () => {
                       {results[exercise.id] ? "Bonne réponse !" : "Mauvaise réponse, réessayez."}
                     </motion.p>
                   )}
-                </CardBody>
-              </Card>
+            </CardBody>
+          </Card>
             </motion.div>
-          ))}
-        </motion.div>
+        ))}
+      </motion.div>
       </div>
 
       {/* Section des résultats */}
@@ -565,7 +765,7 @@ const SciencesPage: React.FC = () => {
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full">
             <h2 className="text-2xl sm:text-3xl font-bold text-center text-violet-600 dark:text-violet-400 mb-4">
               Résultats {emoji}
-            </h2>
+          </h2>
             <p className="text-center text-xl mb-6">
               Score final : {finalScore?.toFixed(1)}%
             </p>
@@ -601,7 +801,7 @@ const SciencesPage: React.FC = () => {
             >
               Fermer
             </Button>
-          </div>
+        </div>
         </motion.div>
       )}
 

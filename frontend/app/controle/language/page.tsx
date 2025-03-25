@@ -50,26 +50,365 @@ const LanguagePage: React.FC = () => {
     quickLearner: false,
   });
 
+  // Nouvel état pour le minuteur (1 heure = 3600 secondes)
+  const [timeLeft, setTimeLeft] = useState<number>(3600);
+  const [isStarted, setIsStarted] = useState<boolean>(false);
+
+  // Messages d'encouragement
+  const encouragementMessages = [
+    "🌟 Tu t'en sors très bien !",
+    "💪 Continue comme ça, tu es sur la bonne voie !",
+    "🎯 Reste concentré, tu fais du bon travail !",
+    "✨ Tu es capable de réussir !",
+    "🌈 N'hésite pas à prendre ton temps !",
+    "🚀 Tu progresses bien !"
+  ];
+
+  // Gestion du minuteur et des messages d'encouragement
   useEffect(() => {
-    fetch("/datalanguage.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data && data.language_exercises) {
-          setExercises(data.language_exercises);
-        } else {
-          throw new Error("Invalid data format");
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+    let timer: NodeJS.Timeout;
+    let encouragementTimer: NodeJS.Timeout;
+
+    if (isStarted && timeLeft > 0) {
+      // Minuteur principal
+      timer = setInterval(() => {
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            calculateFinalScore();
+            return 0;
+          }
+          return prev - 1;
+        });
+      }, 1000);
+
+      // Messages d'encouragement toutes les 10 minutes
+      encouragementTimer = setInterval(() => {
+        const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+        setEmoji(randomMessage);
+        setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
+      }, 600000); // 600000ms = 10 minutes
+    }
+
+    return () => {
+      clearInterval(timer);
+      clearInterval(encouragementTimer);
+    };
+  }, [isStarted, timeLeft]);
+
+  // Fonction pour formater le temps restant
+  const formatTime = (seconds: number): string => {
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = seconds % 60;
+    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
+  };
+
+  // Données statiques pour les exercices de langues
+  const mockExercises: Exercise[] = [
+    {
+      id: 1,
+      title: "Vocabulaire Anglais",
+      content: "Apprenez des mots courants en anglais",
+      question: "Comment dit-on 'Bonjour' en anglais ?",
+      options: ["Hello", "Goodbye", "Thank you", "Please"],
+      answer: "Hello",
+      difficulty: "Facile" as const,
+      category: "Anglais"
+    },
+    {
+      id: 2,
+      title: "Grammaire Espagnole",
+      content: "Exercices de conjugaison en espagnol",
+      question: "Comment conjugue-t-on 'ser' (être) à la première personne du singulier ?",
+      options: ["soy", "eres", "es", "somos"],
+      answer: "soy",
+      difficulty: "Moyen" as const,
+      category: "Espagnol"
+    },
+    {
+      id: 3,
+      title: "Expressions Allemandes",
+      content: "Expressions courantes en allemand",
+      question: "Que signifie 'Guten Morgen' ?",
+      options: ["Bonjour", "Au revoir", "Merci", "S'il vous plaît"],
+      answer: "Bonjour",
+      difficulty: "Facile" as const,
+      category: "Allemand"
+    },
+    {
+      id: 4,
+      title: "Prononciation Italienne",
+      content: "Exercices de prononciation en italien",
+      question: "Comment se prononce 'Ciao' ?",
+      options: ["Tchao", "Siao", "Kiao", "Chao"],
+      answer: "Tchao",
+      difficulty: "Facile" as const,
+      category: "Italien"
+    },
+    {
+      id: 5,
+      title: "Vocabulaire Anglais",
+      content: "Apprenez des mots courants en anglais",
+      question: "Comment dit-on 'Au revoir' en anglais ?",
+      options: ["Goodbye", "Hello", "Thank you", "Please"],
+      answer: "Goodbye",
+      difficulty: "Facile" as const,
+      category: "Anglais"
+    },
+    {
+      id: 6,
+      title: "Grammaire Espagnole",
+      content: "Exercices de conjugaison en espagnol",
+      question: "Comment conjugue-t-on 'ser' (être) à la deuxième personne du singulier ?",
+      options: ["soy", "eres", "es", "somos"],
+      answer: "eres",
+      difficulty: "Moyen" as const,
+      category: "Espagnol"
+    },
+    {
+      id: 7,
+      title: "Expressions Allemandes",
+      content: "Expressions courantes en allemand",
+      question: "Que signifie 'Auf Wiedersehen' ?",
+      options: ["Bonjour", "Au revoir", "Merci", "S'il vous plaît"],
+      answer: "Au revoir",
+      difficulty: "Facile" as const,
+      category: "Allemand"
+    },
+    {
+      id: 8,
+      title: "Prononciation Italienne",
+      content: "Exercices de prononciation en italien",
+      question: "Comment se prononce 'Grazie' ?",
+      options: ["Gratzié", "Gratzi", "Gratziéé", "Gratziééé"],
+      answer: "Gratzié",
+      difficulty: "Facile" as const,
+      category: "Italien"
+    },
+    {
+      id: 9,
+      title: "Vocabulaire Anglais",
+      content: "Apprenez des mots courants en anglais",
+      question: "Comment dit-on 'Merci' en anglais ?",
+      options: ["Thank you", "Hello", "Goodbye", "Please"],
+      answer: "Thank you",
+      difficulty: "Facile" as const,
+      category: "Anglais"
+    },
+    {
+      id: 10,
+      title: "Grammaire Espagnole",
+      content: "Exercices de conjugaison en espagnol",
+      question: "Comment conjugue-t-on 'ser' (être) à la troisième personne du singulier ?",
+      options: ["soy", "eres", "es", "somos"],
+      answer: "es",
+      difficulty: "Moyen" as const,
+      category: "Espagnol"
+    },
+    {
+      id: 11,
+      title: "Expressions Allemandes",
+      content: "Expressions courantes en allemand",
+      question: "Que signifie 'Danke' ?",
+      options: ["Bonjour", "Au revoir", "Merci", "S'il vous plaît"],
+      answer: "Merci",
+      difficulty: "Facile" as const,
+      category: "Allemand"
+    },
+    {
+      id: 12,
+      title: "Prononciation Italienne",
+      content: "Exercices de prononciation en italien",
+      question: "Comment se prononce 'Prego' ?",
+      options: ["Prégo", "Préégo", "Prééégo", "Préééégo"],
+      answer: "Prégo",
+      difficulty: "Facile" as const,
+      category: "Italien"
+    },
+    {
+      id: 13,
+      title: "Vocabulaire Anglais",
+      content: "Apprenez des mots courants en anglais",
+      question: "Comment dit-on 'S'il vous plaît' en anglais ?",
+      options: ["Please", "Hello", "Goodbye", "Thank you"],
+      answer: "Please",
+      difficulty: "Facile" as const,
+      category: "Anglais"
+    },
+    {
+      id: 14,
+      title: "Grammaire Espagnole",
+      content: "Exercices de conjugaison en espagnol",
+      question: "Comment conjugue-t-on 'ser' (être) à la première personne du pluriel ?",
+      options: ["soy", "eres", "es", "somos"],
+      answer: "somos",
+      difficulty: "Moyen" as const,
+      category: "Espagnol"
+    },
+    {
+      id: 15,
+      title: "Expressions Allemandes",
+      content: "Expressions courantes en allemand",
+      question: "Que signifie 'Bitte' ?",
+      options: ["Bonjour", "Au revoir", "Merci", "S'il vous plaît"],
+      answer: "S'il vous plaît",
+      difficulty: "Facile" as const,
+      category: "Allemand"
+    },
+    {
+      id: 16,
+      title: "Vocabulaire Anglais",
+      content: "Apprenez des mots courants en anglais",
+      question: "Comment dit-on 'Comment allez-vous ?' en anglais ?",
+      options: ["How are you?", "Hello", "Goodbye", "Thank you"],
+      answer: "How are you?",
+      difficulty: "Moyen" as const,
+      category: "Anglais"
+    },
+    {
+      id: 17,
+      title: "Grammaire Espagnole",
+      content: "Exercices de conjugaison en espagnol",
+      question: "Comment conjugue-t-on 'estar' (être) à la première personne du singulier ?",
+      options: ["estoy", "estás", "está", "estamos"],
+      answer: "estoy",
+      difficulty: "Moyen" as const,
+      category: "Espagnol"
+    },
+    {
+      id: 18,
+      title: "Expressions Allemandes",
+      content: "Expressions courantes en allemand",
+      question: "Que signifie 'Wie geht es Ihnen?' ?",
+      options: ["Bonjour", "Comment allez-vous?", "Merci", "S'il vous plaît"],
+      answer: "Comment allez-vous?",
+      difficulty: "Moyen" as const,
+      category: "Allemand"
+    },
+    {
+      id: 19,
+      title: "Vocabulaire Anglais",
+      content: "Apprenez des mots courants en anglais",
+      question: "Comment dit-on 'Je m'appelle' en anglais ?",
+      options: ["My name is", "Hello", "Goodbye", "Thank you"],
+      answer: "My name is",
+      difficulty: "Moyen" as const,
+      category: "Anglais"
+    },
+    {
+      id: 20,
+      title: "Grammaire Espagnole",
+      content: "Exercices de conjugaison en espagnol",
+      question: "Comment conjugue-t-on 'estar' (être) à la deuxième personne du singulier ?",
+      options: ["estoy", "estás", "está", "estamos"],
+      answer: "estás",
+      difficulty: "Moyen" as const,
+      category: "Espagnol"
+    },
+    {
+      id: 21,
+      title: "Expressions Allemandes",
+      content: "Expressions courantes en allemand",
+      question: "Que signifie 'Ich heiße' ?",
+      options: ["Bonjour", "Je m'appelle", "Merci", "S'il vous plaît"],
+      answer: "Je m'appelle",
+      difficulty: "Moyen" as const,
+      category: "Allemand"
+    },
+    {
+      id: 22,
+      title: "Vocabulaire Anglais",
+      content: "Apprenez des mots courants en anglais",
+      question: "Comment dit-on 'Enchanté' en anglais ?",
+      options: ["Nice to meet you", "Hello", "Goodbye", "Thank you"],
+      answer: "Nice to meet you",
+      difficulty: "Moyen" as const,
+      category: "Anglais"
+    },
+    {
+      id: 23,
+      title: "Grammaire Espagnole",
+      content: "Exercices de conjugaison en espagnol",
+      question: "Comment conjugue-t-on 'estar' (être) à la troisième personne du singulier ?",
+      options: ["estoy", "estás", "está", "estamos"],
+      answer: "está",
+      difficulty: "Moyen" as const,
+      category: "Espagnol"
+    },
+    {
+      id: 24,
+      title: "Expressions Allemandes",
+      content: "Expressions courantes en allemand",
+      question: "Que signifie 'Freut mich' ?",
+      options: ["Bonjour", "Enchanté", "Merci", "S'il vous plaît"],
+      answer: "Enchanté",
+      difficulty: "Moyen" as const,
+      category: "Allemand"
+    },
+    {
+      id: 25,
+      title: "Vocabulaire Anglais",
+      content: "Apprenez des mots courants en anglais",
+      question: "Comment dit-on 'À bientôt' en anglais ?",
+      options: ["See you soon", "Hello", "Goodbye", "Thank you"],
+      answer: "See you soon",
+      difficulty: "Moyen" as const,
+      category: "Anglais"
+    },
+    {
+      id: 26,
+      title: "Grammaire Espagnole",
+      content: "Exercices de conjugaison en espagnol",
+      question: "Comment conjugue-t-on 'estar' (être) à la première personne du pluriel ?",
+      options: ["estoy", "estás", "está", "estamos"],
+      answer: "estamos",
+      difficulty: "Moyen" as const,
+      category: "Espagnol"
+    },
+    {
+      id: 27,
+      title: "Expressions Allemandes",
+      content: "Expressions courantes en allemand",
+      question: "Que signifie 'Bis bald' ?",
+      options: ["Bonjour", "À bientôt", "Merci", "S'il vous plaît"],
+      answer: "À bientôt",
+      difficulty: "Moyen" as const,
+      category: "Allemand"
+    },
+    {
+      id: 28,
+      title: "Vocabulaire Anglais",
+      content: "Apprenez des mots courants en anglais",
+      question: "Comment dit-on 'Bonne nuit' en anglais ?",
+      options: ["Good night", "Hello", "Goodbye", "Thank you"],
+      answer: "Good night",
+      difficulty: "Facile" as const,
+      category: "Anglais"
+    },
+    {
+      id: 29,
+      title: "Grammaire Espagnole",
+      content: "Exercices de conjugaison en espagnol",
+      question: "Comment conjugue-t-on 'tener' (avoir) à la première personne du singulier ?",
+      options: ["tengo", "tienes", "tiene", "tenemos"],
+      answer: "tengo",
+      difficulty: "Difficile" as const,
+      category: "Espagnol"
+    },
+    {
+      id: 30,
+      title: "Expressions Allemandes",
+      content: "Expressions courantes en allemand",
+      question: "Que signifie 'Gute Nacht' ?",
+      options: ["Bonjour", "Bonne nuit", "Merci", "S'il vous plaît"],
+      answer: "Bonne nuit",
+      difficulty: "Facile" as const,
+      category: "Allemand"
+    }
+  ];
+
+  useEffect(() => {
+    setExercises(mockExercises);
+    setLoading(false);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
@@ -158,8 +497,10 @@ const LanguagePage: React.FC = () => {
 
   return (
     <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
-      {/* En-tête avec titre et navigation */}
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+        <div className="absolute left-4 top-0 z-10">
+          <BackButton />
+        </div>
         <motion.div 
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-4 sm:mb-6"
@@ -167,18 +508,43 @@ const LanguagePage: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-            Exercices de Langues
+            Langues
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-            Améliorez vos compétences linguistiques à travers des exercices interactifs
+            Exercices de langues
           </p>
         </motion.div>
+      </div>
 
-        {/* Barre de navigation supérieure */}
-        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200">
-          <BackButton />
+      {/* Minuteur et bouton de démarrage */}
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4">
+        <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200">
+          <div className="flex justify-between items-center">
+            <div className="text-xl font-bold text-violet-600 dark:text-violet-400">
+              Temps restant : {formatTime(timeLeft)}
+            </div>
+            {!isStarted && (
+              <Button
+                className="bg-violet-500 text-white hover:bg-violet-600"
+                onClick={() => setIsStarted(true)}
+              >
+                Commencer
+              </Button>
+            )}
+          </div>
         </div>
       </div>
+
+      {/* Message d'encouragement */}
+      {emoji && (
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
+          initial={{ opacity: 0, y: -20 }}
+        >
+          <p className="text-lg">{emoji}</p>
+        </motion.div>
+      )}
 
       {/* Statistiques rapides */}
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">

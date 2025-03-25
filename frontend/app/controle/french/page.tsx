@@ -103,25 +103,310 @@ const FrenchPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch("/datafrench.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data && data.french_exercises) {
-          setExercises(data.french_exercises);
-        } else {
-          throw new Error("Invalid data format");
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+    const mockExercises: Exercise[] = [
+      {
+        id: 1,
+        title: "Grammaire",
+        content: "Les articles simples",
+        question: "Quel article utilise-t-on devant 'chat' ?",
+        options: ["un", "une", "des", "le"],
+        answer: "un",
+        category: "Grammaire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 2,
+        title: "Grammaire",
+        content: "Les articles simples",
+        question: "Quel article utilise-t-on devant 'table' ?",
+        options: ["une", "un", "des", "la"],
+        answer: "une",
+        category: "Grammaire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 3,
+        title: "Conjugaison",
+        content: "Le présent simple",
+        question: "Comment conjugue-t-on 'être' à la première personne ?",
+        options: ["je suis", "je es", "je être", "je est"],
+        answer: "je suis",
+        category: "Conjugaison",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 4,
+        title: "Conjugaison",
+        content: "Le présent simple",
+        question: "Comment conjugue-t-on 'avoir' à la première personne ?",
+        options: ["j'ai", "je ai", "je a", "j'as"],
+        answer: "j'ai",
+        category: "Conjugaison",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 5,
+        title: "Orthographe",
+        content: "Les mots simples",
+        question: "Comment écrit-on le mot 'chat' au pluriel ?",
+        options: ["chats", "chats", "chats", "chats"],
+        answer: "chats",
+        category: "Orthographe",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 6,
+        title: "Orthographe",
+        content: "Les mots simples",
+        question: "Comment écrit-on le mot 'table' au pluriel ?",
+        options: ["tables", "tables", "tables", "tables"],
+        answer: "tables",
+        category: "Orthographe",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 7,
+        title: "Vocabulaire",
+        content: "Les mots du quotidien",
+        question: "Quel mot désigne un animal qui miaule ?",
+        options: ["chat", "chien", "oiseau", "lapin"],
+        answer: "chat",
+        category: "Vocabulaire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 8,
+        title: "Vocabulaire",
+        content: "Les mots du quotidien",
+        question: "Quel mot désigne un objet sur lequel on mange ?",
+        options: ["table", "chaise", "lit", "armoire"],
+        answer: "table",
+        category: "Vocabulaire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 9,
+        title: "Grammaire",
+        content: "Les adjectifs simples",
+        question: "Quel adjectif utilise-t-on pour décrire un chat ?",
+        options: ["petit", "grand", "gros", "mince"],
+        answer: "petit",
+        category: "Grammaire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 10,
+        title: "Grammaire",
+        content: "Les adjectifs simples",
+        question: "Quel adjectif utilise-t-on pour décrire une table ?",
+        options: ["grande", "petite", "grosse", "mince"],
+        answer: "grande",
+        category: "Grammaire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 11,
+        title: "Conjugaison",
+        content: "Le présent des verbes simples",
+        question: "Comment conjugue-t-on 'manger' à la première personne ?",
+        options: ["je mange", "je manges", "je mangé", "je mangés"],
+        answer: "je mange",
+        category: "Conjugaison",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 12,
+        title: "Conjugaison",
+        content: "Le présent des verbes simples",
+        question: "Comment conjugue-t-on 'boire' à la première personne ?",
+        options: ["je bois", "je boit", "je boire", "je boires"],
+        answer: "je bois",
+        category: "Conjugaison",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 13,
+        title: "Orthographe",
+        content: "Les accords simples",
+        question: "Comment écrit-on 'un petit chat' au pluriel ?",
+        options: ["des petits chats", "des petit chats", "des petits chat", "des petit chat"],
+        answer: "des petits chats",
+        category: "Orthographe",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 14,
+        title: "Orthographe",
+        content: "Les accords simples",
+        question: "Comment écrit-on 'une grande table' au pluriel ?",
+        options: ["des grandes tables", "des grande tables", "des grandes table", "des grande table"],
+        answer: "des grandes tables",
+        category: "Orthographe",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 15,
+        title: "Vocabulaire",
+        content: "Les expressions simples",
+        question: "Quelle expression utilise-t-on pour dire 'bonjour' ?",
+        options: ["bonjour", "au revoir", "merci", "s'il vous plaît"],
+        answer: "bonjour",
+        category: "Vocabulaire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 16,
+        title: "Vocabulaire",
+        content: "Les expressions simples",
+        question: "Quelle expression utilise-t-on pour dire 'merci' ?",
+        options: ["merci", "bonjour", "au revoir", "s'il vous plaît"],
+        answer: "merci",
+        category: "Vocabulaire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 17,
+        title: "Grammaire",
+        content: "Les pronoms simples",
+        question: "Quel pronom utilise-t-on pour parler de soi ?",
+        options: ["je", "tu", "il", "elle"],
+        answer: "je",
+        category: "Grammaire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 18,
+        title: "Grammaire",
+        content: "Les pronoms simples",
+        question: "Quel pronom utilise-t-on pour parler à quelqu'un ?",
+        options: ["tu", "je", "il", "elle"],
+        answer: "tu",
+        category: "Grammaire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 19,
+        title: "Conjugaison",
+        content: "Le présent des verbes irréguliers",
+        question: "Comment conjugue-t-on 'aller' à la première personne ?",
+        options: ["je vais", "je va", "je aller", "je allés"],
+        answer: "je vais",
+        category: "Conjugaison",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 20,
+        title: "Conjugaison",
+        content: "Le présent des verbes irréguliers",
+        question: "Comment conjugue-t-on 'faire' à la première personne ?",
+        options: ["je fais", "je fait", "je faire", "je faits"],
+        answer: "je fais",
+        category: "Conjugaison",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 21,
+        title: "Orthographe",
+        content: "Les accords complexes",
+        question: "Comment écrit-on 'un chat noir et blanc' au pluriel ?",
+        options: ["des chats noirs et blancs", "des chat noirs et blancs", "des chats noir et blanc", "des chat noir et blanc"],
+        answer: "des chats noirs et blancs",
+        category: "Orthographe",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 22,
+        title: "Orthographe",
+        content: "Les accords complexes",
+        question: "Comment écrit-on 'une table en bois' au pluriel ?",
+        options: ["des tables en bois", "des table en bois", "des tables en bois", "des table en bois"],
+        answer: "des tables en bois",
+        category: "Orthographe",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 23,
+        title: "Vocabulaire",
+        content: "Les expressions complexes",
+        question: "Quelle expression utilise-t-on pour dire 'au revoir' ?",
+        options: ["au revoir", "bonjour", "merci", "s'il vous plaît"],
+        answer: "au revoir",
+        category: "Vocabulaire",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 24,
+        title: "Vocabulaire",
+        content: "Les expressions complexes",
+        question: "Quelle expression utilise-t-on pour dire 's'il vous plaît' ?",
+        options: ["s'il vous plaît", "bonjour", "merci", "au revoir"],
+        answer: "s'il vous plaît",
+        category: "Vocabulaire",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 25,
+        title: "Grammaire",
+        content: "Les temps simples",
+        question: "Comment conjugue-t-on 'être' au futur simple ?",
+        options: ["je serai", "je suis", "je étais", "je suis"],
+        answer: "je serai",
+        category: "Grammaire",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 26,
+        title: "Grammaire",
+        content: "Les temps simples",
+        question: "Comment conjugue-t-on 'avoir' au futur simple ?",
+        options: ["j'aurai", "j'ai", "j'avais", "j'ai"],
+        answer: "j'aurai",
+        category: "Grammaire",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 27,
+        title: "Conjugaison",
+        content: "Le passé composé",
+        question: "Comment conjugue-t-on 'manger' au passé composé ?",
+        options: ["j'ai mangé", "je mange", "je mangé", "j'ai mange"],
+        answer: "j'ai mangé",
+        category: "Conjugaison",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 28,
+        title: "Conjugaison",
+        content: "Le passé composé",
+        question: "Comment conjugue-t-on 'boire' au passé composé ?",
+        options: ["j'ai bu", "je bois", "je bu", "j'ai bois"],
+        answer: "j'ai bu",
+        category: "Conjugaison",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 29,
+        title: "Orthographe",
+        content: "Les accords particuliers",
+        question: "Comment écrit-on 'un chat qui mange' ?",
+        options: ["un chat qui mange", "un chat qui mangent", "un chat qui mangé", "un chat qui mangés"],
+        answer: "un chat qui mange",
+        category: "Orthographe",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 30,
+        title: "Orthographe",
+        content: "Les accords particuliers",
+        question: "Comment écrit-on 'une table qui brille' ?",
+        options: ["une table qui brille", "une table qui brillent", "une table qui brillé", "une table qui brillés"],
+        answer: "une table qui brille",
+        category: "Orthographe",
+        difficulty: "Difficile" as const
+      }
+    ];
+    setExercises(mockExercises);
+    setLoading(false);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
@@ -212,7 +497,7 @@ const FrenchPage: React.FC = () => {
     <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
         <div className="absolute left-4 top-0 z-10">
-          <BackButton />
+      <BackButton />
         </div>
         <motion.div 
           animate={{ opacity: 1, y: 0 }}
@@ -222,7 +507,7 @@ const FrenchPage: React.FC = () => {
         >
           <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
             Français
-          </h1>
+        </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
             Exercices de français
           </p>
@@ -250,8 +535,8 @@ const FrenchPage: React.FC = () => {
 
       {/* Message d'encouragement */}
       {emoji && (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
           className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
           initial={{ opacity: 0, y: -20 }}
         >
@@ -374,11 +659,11 @@ const FrenchPage: React.FC = () => {
           animate={{ opacity: 1 }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           initial={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        transition={{ duration: 0.5 }}
+      >
           {filteredExercises.map((exercise, index) => (
             <motion.div
-              key={exercise.id}
+            key={exercise.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -387,57 +672,57 @@ const FrenchPage: React.FC = () => {
               <Card className="w-full h-full bg-white dark:bg-gray-800 shadow-lg border border-violet-200">
                 <CardBody className="p-4 sm:p-6">
                   <h3 className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-                    {exercise.title}
-                  </h3>
+                {exercise.title}
+              </h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-4">{exercise.content}</p>
                   <p className="font-medium mb-4">{exercise.question}</p>
 
-                  {exercise.image && (
+              {exercise.image && (
                     <div className="mb-4">
-                      <Image
-                        alt={exercise.title}
+                <Image
+                  alt={exercise.title}
                         className="rounded-lg object-cover w-full h-48"
                         height={200}
-                        src={`/assets/french/${exercise.image}`}
+                  src={`/assets/french/${exercise.image}`}
                         width={300}
-                      />
+                />
                     </div>
-                  )}
+              )}
 
-                  {exercise.options ? (
-                    <select
+              {exercise.options ? (
+                <select
                       className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
                       disabled={results[exercise.id] !== undefined}
-                      value={userAnswers[exercise.id] || ""}
-                      onChange={(e) => handleChange(e, exercise.id)}
-                    >
-                      <option value="">Sélectionnez une option</option>
+                  value={userAnswers[exercise.id] || ""}
+                  onChange={(e) => handleChange(e, exercise.id)}
+                >
+                  <option value="">Sélectionnez une option</option>
                       {exercise.options.map((option, idx) => (
                         <option key={idx} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
                       className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
                       disabled={results[exercise.id] !== undefined}
-                      placeholder="Votre réponse"
-                      type="text"
-                      value={userAnswers[exercise.id] || ""}
-                      onChange={(e) => handleChange(e, exercise.id)}
-                    />
-                  )}
+                  placeholder="Votre réponse"
+                  type="text"
+                  value={userAnswers[exercise.id] || ""}
+                  onChange={(e) => handleChange(e, exercise.id)}
+                />
+              )}
 
                   <Button
                     className="w-full bg-violet-500 text-white hover:bg-violet-600"
                     disabled={results[exercise.id] !== undefined}
-                    onClick={() => handleSubmit(exercise.id, exercise.answer)}
-                  >
-                    Soumettre
+                onClick={() => handleSubmit(exercise.id, exercise.answer)}
+              >
+                Soumettre
                   </Button>
 
-                  {results[exercise.id] !== undefined && (
+              {results[exercise.id] !== undefined && (
                     <motion.p
                       animate={{ opacity: 1 }}
                       className={`mt-2 text-center ${
@@ -447,12 +732,12 @@ const FrenchPage: React.FC = () => {
                     >
                       {results[exercise.id] ? "Bonne réponse !" : "Mauvaise réponse, réessayez."}
                     </motion.p>
-                  )}
-                </CardBody>
-              </Card>
+              )}
+            </CardBody>
+          </Card>
             </motion.div>
-          ))}
-        </motion.div>
+        ))}
+      </motion.div>
       </div>
 
       {/* Section des résultats */}
@@ -465,7 +750,7 @@ const FrenchPage: React.FC = () => {
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full">
             <h2 className="text-2xl sm:text-3xl font-bold text-center text-violet-600 dark:text-violet-400 mb-4">
               Résultats {emoji}
-            </h2>
+          </h2>
             <p className="text-center text-xl mb-6">
               Score final : {finalScore?.toFixed(1)}%
             </p>
@@ -501,7 +786,7 @@ const FrenchPage: React.FC = () => {
             >
               Fermer
             </Button>
-          </div>
+        </div>
         </motion.div>
       )}
 

@@ -103,25 +103,310 @@ const HistoryPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch("/datahistory.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data && data.history_exercises) {
-          setExercises(data.history_exercises);
-        } else {
-          throw new Error("Invalid data format");
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+    const mockExercises: Exercise[] = [
+      {
+        id: 1,
+        title: "Préhistoire",
+        content: "Les hommes préhistoriques",
+        question: "Quel outil les hommes préhistoriques utilisaient-ils pour chasser ?",
+        options: ["la lance", "le téléphone", "l'ordinateur", "la voiture"],
+        answer: "la lance",
+        category: "Préhistoire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 2,
+        title: "Préhistoire",
+        content: "Les hommes préhistoriques",
+        question: "Où vivaient les hommes préhistoriques ?",
+        options: ["dans des grottes", "dans des maisons", "dans des appartements", "dans des châteaux"],
+        answer: "dans des grottes",
+        category: "Préhistoire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 3,
+        title: "Antiquité",
+        content: "Les Égyptiens",
+        question: "Qui était le roi des Égyptiens ?",
+        options: ["le pharaon", "le président", "le maire", "le roi"],
+        answer: "le pharaon",
+        category: "Antiquité",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 4,
+        title: "Antiquité",
+        content: "Les Égyptiens",
+        question: "Quelle construction célèbre ont bâtie les Égyptiens ?",
+        options: ["les pyramides", "les gratte-ciel", "les ponts", "les routes"],
+        answer: "les pyramides",
+        category: "Antiquité",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 5,
+        title: "Moyen Âge",
+        content: "Les chevaliers",
+        question: "Quel objet les chevaliers portaient-ils pour se protéger ?",
+        options: ["l'armure", "le t-shirt", "le manteau", "le chapeau"],
+        answer: "l'armure",
+        category: "Moyen Âge",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 6,
+        title: "Moyen Âge",
+        content: "Les châteaux",
+        question: "Où vivaient les rois au Moyen Âge ?",
+        options: ["dans les châteaux", "dans les appartements", "dans les maisons", "dans les tentes"],
+        answer: "dans les châteaux",
+        category: "Moyen Âge",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 7,
+        title: "Renaissance",
+        content: "Les artistes",
+        question: "Quel objet les artistes utilisaient-ils pour peindre ?",
+        options: ["le pinceau", "le crayon", "le stylo", "le téléphone"],
+        answer: "le pinceau",
+        category: "Renaissance",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 8,
+        title: "Renaissance",
+        content: "Les artistes",
+        question: "Quel objet les artistes utilisaient-ils pour dessiner ?",
+        options: ["le crayon", "le téléphone", "l'ordinateur", "la voiture"],
+        answer: "le crayon",
+        category: "Renaissance",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 9,
+        title: "Temps modernes",
+        content: "Les explorateurs",
+        question: "Quel objet les explorateurs utilisaient-ils pour naviguer ?",
+        options: ["la boussole", "le téléphone", "l'ordinateur", "la voiture"],
+        answer: "la boussole",
+        category: "Temps modernes",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 10,
+        title: "Temps modernes",
+        content: "Les explorateurs",
+        question: "Quel objet les explorateurs utilisaient-ils pour voyager ?",
+        options: ["le bateau", "l'avion", "la voiture", "le train"],
+        answer: "le bateau",
+        category: "Temps modernes",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 11,
+        title: "Révolution française",
+        content: "Les événements",
+        question: "Quelle prison a été prise d'assaut en 1789 ?",
+        options: ["la Bastille", "la Tour Eiffel", "le Louvre", "Versailles"],
+        answer: "la Bastille",
+        category: "Révolution française",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 12,
+        title: "Révolution française",
+        content: "Les événements",
+        question: "Quel roi a été guillotiné pendant la Révolution ?",
+        options: ["Louis XVI", "Napoléon", "Henri IV", "François Ier"],
+        answer: "Louis XVI",
+        category: "Révolution française",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 13,
+        title: "Empire",
+        content: "Napoléon",
+        question: "Quel objet Napoléon portait-il sur sa tête ?",
+        options: ["un chapeau", "une couronne", "un casque", "un bonnet"],
+        answer: "un chapeau",
+        category: "Empire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 14,
+        title: "Empire",
+        content: "Napoléon",
+        question: "Quel objet Napoléon portait-il sur son corps ?",
+        options: ["un uniforme", "un t-shirt", "un manteau", "un pyjama"],
+        answer: "un uniforme",
+        category: "Empire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 15,
+        title: "XIXe siècle",
+        content: "L'industrialisation",
+        question: "Quel objet a été inventé pendant l'industrialisation ?",
+        options: ["la machine à vapeur", "le téléphone", "l'ordinateur", "la voiture"],
+        answer: "la machine à vapeur",
+        category: "XIXe siècle",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 16,
+        title: "XIXe siècle",
+        content: "L'industrialisation",
+        question: "Quel objet a été inventé pendant l'industrialisation ?",
+        options: ["le train", "l'avion", "la voiture", "le bateau"],
+        answer: "le train",
+        category: "XIXe siècle",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 17,
+        title: "Première Guerre mondiale",
+        content: "Les soldats",
+        question: "Quel objet les soldats portaient-ils sur leur tête ?",
+        options: ["le casque", "le chapeau", "le bonnet", "la couronne"],
+        answer: "le casque",
+        category: "Première Guerre mondiale",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 18,
+        title: "Première Guerre mondiale",
+        content: "Les soldats",
+        question: "Quel objet les soldats utilisaient-ils pour se battre ?",
+        options: ["le fusil", "le téléphone", "l'ordinateur", "la voiture"],
+        answer: "le fusil",
+        category: "Première Guerre mondiale",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 19,
+        title: "Entre-deux-guerres",
+        content: "Les inventions",
+        question: "Quel objet a été inventé pendant l'entre-deux-guerres ?",
+        options: ["la radio", "le téléphone", "l'ordinateur", "la voiture"],
+        answer: "la radio",
+        category: "Entre-deux-guerres",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 20,
+        title: "Entre-deux-guerres",
+        content: "Les inventions",
+        question: "Quel objet a été inventé pendant l'entre-deux-guerres ?",
+        options: ["la télévision", "l'ordinateur", "le téléphone", "la voiture"],
+        answer: "la télévision",
+        category: "Entre-deux-guerres",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 21,
+        title: "Seconde Guerre mondiale",
+        content: "Les événements",
+        question: "Quel pays a été attaqué en premier pendant la guerre ?",
+        options: ["la Pologne", "la France", "l'Allemagne", "l'Angleterre"],
+        answer: "la Pologne",
+        category: "Seconde Guerre mondiale",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 22,
+        title: "Seconde Guerre mondiale",
+        content: "Les événements",
+        question: "Quel pays a gagné la guerre ?",
+        options: ["les Alliés", "l'Allemagne", "le Japon", "l'Italie"],
+        answer: "les Alliés",
+        category: "Seconde Guerre mondiale",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 23,
+        title: "Guerre froide",
+        content: "Les pays",
+        question: "Quels étaient les deux pays principaux de la guerre froide ?",
+        options: ["les États-Unis et l'URSS", "la France et l'Allemagne", "l'Angleterre et la Chine", "le Japon et l'Italie"],
+        answer: "les États-Unis et l'URSS",
+        category: "Guerre froide",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 24,
+        title: "Guerre froide",
+        content: "Les événements",
+        question: "Quel mur a été construit pendant la guerre froide ?",
+        options: ["le mur de Berlin", "le mur de Chine", "le mur de Paris", "le mur de Londres"],
+        answer: "le mur de Berlin",
+        category: "Guerre froide",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 25,
+        title: "XXIe siècle",
+        content: "Les inventions",
+        question: "Quel objet a été inventé au XXIe siècle ?",
+        options: ["le smartphone", "la radio", "la télévision", "le téléphone"],
+        answer: "le smartphone",
+        category: "XXIe siècle",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 26,
+        title: "XXIe siècle",
+        content: "Les inventions",
+        question: "Quel objet a été inventé au XXIe siècle ?",
+        options: ["l'ordinateur portable", "la radio", "la télévision", "le téléphone"],
+        answer: "l'ordinateur portable",
+        category: "XXIe siècle",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 27,
+        title: "Histoire récente",
+        content: "Les événements",
+        question: "Quel événement a eu lieu en 2001 ?",
+        options: ["les attentats du 11 septembre", "la guerre mondiale", "la révolution", "l'invention de l'ordinateur"],
+        answer: "les attentats du 11 septembre",
+        category: "Histoire récente",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 28,
+        title: "Histoire récente",
+        content: "Les événements",
+        question: "Quel événement a eu lieu en 2020 ?",
+        options: ["la pandémie de Covid-19", "la guerre mondiale", "la révolution", "l'invention de l'ordinateur"],
+        answer: "la pandémie de Covid-19",
+        category: "Histoire récente",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 29,
+        title: "Histoire locale",
+        content: "Les monuments",
+        question: "Quel monument célèbre se trouve à Paris ?",
+        options: ["la Tour Eiffel", "le Big Ben", "la Statue de la Liberté", "le Taj Mahal"],
+        answer: "la Tour Eiffel",
+        category: "Histoire locale",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 30,
+        title: "Histoire locale",
+        content: "Les monuments",
+        question: "Quel monument célèbre se trouve à Paris ?",
+        options: ["l'Arc de Triomphe", "le Big Ben", "la Statue de la Liberté", "le Taj Mahal"],
+        answer: "l'Arc de Triomphe",
+        category: "Histoire locale",
+        difficulty: "Difficile" as const
+      }
+    ];
+    setExercises(mockExercises);
+    setLoading(false);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
@@ -212,7 +497,7 @@ const HistoryPage: React.FC = () => {
     <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
         <div className="absolute left-4 top-0 z-10">
-          <BackButton />
+      <BackButton />
         </div>
         <motion.div 
           animate={{ opacity: 1, y: 0 }}
@@ -222,7 +507,7 @@ const HistoryPage: React.FC = () => {
         >
           <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
             Histoire
-          </h1>
+        </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
             Exercices d'histoire
           </p>
@@ -250,8 +535,8 @@ const HistoryPage: React.FC = () => {
 
       {/* Message d'encouragement */}
       {emoji && (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
           className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
           initial={{ opacity: 0, y: -20 }}
         >
@@ -374,11 +659,11 @@ const HistoryPage: React.FC = () => {
           animate={{ opacity: 1 }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           initial={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        transition={{ duration: 0.5 }}
+      >
           {filteredExercises.map((exercise, index) => (
             <motion.div
-              key={exercise.id}
+            key={exercise.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -387,57 +672,57 @@ const HistoryPage: React.FC = () => {
               <Card className="w-full h-full bg-white dark:bg-gray-800 shadow-lg border border-violet-200">
                 <CardBody className="p-4 sm:p-6">
                   <h3 className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-                    {exercise.title}
-                  </h3>
+                {exercise.title}
+              </h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-4">{exercise.content}</p>
                   <p className="font-medium mb-4">{exercise.question}</p>
 
-                  {exercise.image && (
+              {exercise.image && (
                     <div className="mb-4">
-                      <Image
-                        alt={exercise.title}
+                <Image
+                  alt={exercise.title}
                         className="rounded-lg object-cover w-full h-48"
                         height={200}
-                        src={`/assets/history/${exercise.image}`}
+                  src={`/assets/history/${exercise.image}`}
                         width={300}
-                      />
+                />
                     </div>
-                  )}
+              )}
 
-                  {exercise.options ? (
-                    <select
+              {exercise.options ? (
+                <select
                       className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
-                      disabled={results[exercise.id] !== undefined}
-                      value={userAnswers[exercise.id] || ""}
-                      onChange={(e) => handleChange(e, exercise.id)}
-                    >
-                      <option value="">Sélectionnez une option</option>
+                  disabled={results[exercise.id] !== undefined}
+                  value={userAnswers[exercise.id] || ""}
+                  onChange={(e) => handleChange(e, exercise.id)}
+                >
+                  <option value="">Sélectionnez une option</option>
                       {exercise.options.map((option, idx) => (
                         <option key={idx} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  ) : (
-                    <input
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
                       className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
-                      disabled={results[exercise.id] !== undefined}
-                      placeholder="Votre réponse"
-                      type="text"
-                      value={userAnswers[exercise.id] || ""}
-                      onChange={(e) => handleChange(e, exercise.id)}
-                    />
-                  )}
+                  disabled={results[exercise.id] !== undefined}
+                  placeholder="Votre réponse"
+                  type="text"
+                  value={userAnswers[exercise.id] || ""}
+                  onChange={(e) => handleChange(e, exercise.id)}
+                />
+              )}
 
                   <Button
                     className="w-full bg-violet-500 text-white hover:bg-violet-600"
-                    disabled={results[exercise.id] !== undefined}
-                    onClick={() => handleSubmit(exercise.id, exercise.answer)}
-                  >
-                    Soumettre
+                disabled={results[exercise.id] !== undefined}
+                onClick={() => handleSubmit(exercise.id, exercise.answer)}
+              >
+                Soumettre
                   </Button>
 
-                  {results[exercise.id] !== undefined && (
+              {results[exercise.id] !== undefined && (
                     <motion.p
                       animate={{ opacity: 1 }}
                       className={`mt-2 text-center ${
@@ -447,12 +732,12 @@ const HistoryPage: React.FC = () => {
                     >
                       {results[exercise.id] ? "Bonne réponse !" : "Mauvaise réponse, réessayez."}
                     </motion.p>
-                  )}
-                </CardBody>
-              </Card>
+              )}
+            </CardBody>
+          </Card>
             </motion.div>
-          ))}
-        </motion.div>
+        ))}
+      </motion.div>
       </div>
 
       {/* Section des résultats */}
@@ -465,7 +750,7 @@ const HistoryPage: React.FC = () => {
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full">
             <h2 className="text-2xl sm:text-3xl font-bold text-center text-violet-600 dark:text-violet-400 mb-4">
               Résultats {emoji}
-            </h2>
+          </h2>
             <p className="text-center text-xl mb-6">
               Score final : {finalScore?.toFixed(1)}%
             </p>
@@ -501,7 +786,7 @@ const HistoryPage: React.FC = () => {
             >
               Fermer
             </Button>
-          </div>
+        </div>
         </motion.div>
       )}
 

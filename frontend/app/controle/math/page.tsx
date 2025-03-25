@@ -103,25 +103,310 @@ const MathPage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch("/datamath.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data && data.math_exercises) {
-          setExercises(data.math_exercises);
-        } else {
-          throw new Error("Invalid data format");
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
+    const mockExercises: Exercise[] = [
+      {
+        id: 1,
+        title: "Opérations",
+        content: "Les additions simples",
+        question: "Combien font 5 + 3 ?",
+        options: ["8", "7", "9", "6"],
+        answer: "8",
+        category: "Opérations",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 2,
+        title: "Opérations",
+        content: "Les soustractions simples",
+        question: "Combien font 10 - 4 ?",
+        options: ["6", "5", "7", "4"],
+        answer: "6",
+        category: "Opérations",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 3,
+        title: "Opérations",
+        content: "Les multiplications simples",
+        question: "Combien font 4 × 3 ?",
+        options: ["12", "10", "14", "8"],
+        answer: "12",
+        category: "Opérations",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 4,
+        title: "Opérations",
+        content: "Les divisions simples",
+        question: "Combien font 15 ÷ 3 ?",
+        options: ["5", "4", "6", "3"],
+        answer: "5",
+        category: "Opérations",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 5,
+        title: "Fractions",
+        content: "Les fractions simples",
+        question: "Quelle est la moitié de 10 ?",
+        options: ["5", "4", "6", "3"],
+        answer: "5",
+        category: "Fractions",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 6,
+        title: "Géométrie",
+        content: "Les formes simples",
+        question: "Combien de côtés a un carré ?",
+        options: ["4", "3", "5", "6"],
+        answer: "4",
+        category: "Géométrie",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 7,
+        title: "Mesures",
+        content: "Les unités de mesure",
+        question: "Combien de centimètres dans un mètre ?",
+        options: ["100", "50", "200", "150"],
+        answer: "100",
+        category: "Mesures",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 8,
+        title: "Nombres",
+        content: "Les nombres pairs et impairs",
+        question: "Quel est le plus petit nombre pair ?",
+        options: ["2", "1", "3", "4"],
+        answer: "2",
+        category: "Nombres",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 9,
+        title: "Problèmes",
+        content: "Les problèmes simples",
+        question: "Si j'ai 3 pommes et j'en mange 1, combien m'en reste-t-il ?",
+        options: ["2", "1", "3", "4"],
+        answer: "2",
+        category: "Problèmes",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 10,
+        title: "Calcul mental",
+        content: "Les calculs rapides",
+        question: "Combien font 20 + 30 ?",
+        options: ["50", "40", "60", "45"],
+        answer: "50",
+        category: "Calcul mental",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 11,
+        title: "Opérations",
+        content: "Les additions avec retenue",
+        question: "Combien font 25 + 37 ?",
+        options: ["62", "61", "63", "60"],
+        answer: "62",
+        category: "Opérations",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 12,
+        title: "Opérations",
+        content: "Les soustractions avec retenue",
+        question: "Combien font 45 - 28 ?",
+        options: ["17", "16", "18", "15"],
+        answer: "17",
+        category: "Opérations",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 13,
+        title: "Opérations",
+        content: "Les multiplications à un chiffre",
+        question: "Combien font 7 × 6 ?",
+        options: ["42", "41", "43", "40"],
+        answer: "42",
+        category: "Opérations",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 14,
+        title: "Opérations",
+        content: "Les divisions avec reste",
+        question: "Combien font 25 ÷ 4 ?",
+        options: ["6 reste 1", "5 reste 5", "7 reste 3", "4 reste 9"],
+        answer: "6 reste 1",
+        category: "Opérations",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 15,
+        title: "Fractions",
+        content: "Les fractions équivalentes",
+        question: "Quelle fraction est égale à 1/2 ?",
+        options: ["2/4", "1/3", "3/6", "4/8"],
+        answer: "2/4",
+        category: "Fractions",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 16,
+        title: "Géométrie",
+        content: "Les angles",
+        question: "Quel est l'angle d'un carré ?",
+        options: ["90 degrés", "45 degrés", "180 degrés", "360 degrés"],
+        answer: "90 degrés",
+        category: "Géométrie",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 17,
+        title: "Mesures",
+        content: "Les conversions",
+        question: "Combien de mètres dans 2 kilomètres ?",
+        options: ["2000", "1000", "3000", "1500"],
+        answer: "2000",
+        category: "Mesures",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 18,
+        title: "Nombres",
+        content: "Les nombres décimaux",
+        question: "Quel est le nombre décimal pour 1/2 ?",
+        options: ["0,5", "0,2", "0,8", "0,3"],
+        answer: "0,5",
+        category: "Nombres",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 19,
+        title: "Problèmes",
+        content: "Les problèmes à étapes",
+        question: "Si j'ai 5 bonbons et j'en donne 2 à mon ami, combien m'en reste-t-il ?",
+        options: ["3", "2", "4", "1"],
+        answer: "3",
+        category: "Problèmes",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 20,
+        title: "Calcul mental",
+        content: "Les calculs rapides",
+        question: "Combien font 100 - 25 ?",
+        options: ["75", "70", "80", "65"],
+        answer: "75",
+        category: "Calcul mental",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 21,
+        title: "Opérations",
+        content: "Les additions de grands nombres",
+        question: "Combien font 234 + 567 ?",
+        options: ["801", "800", "802", "799"],
+        answer: "801",
+        category: "Opérations",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 22,
+        title: "Opérations",
+        content: "Les soustractions de grands nombres",
+        question: "Combien font 789 - 456 ?",
+        options: ["333", "332", "334", "331"],
+        answer: "333",
+        category: "Opérations",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 23,
+        title: "Opérations",
+        content: "Les multiplications à deux chiffres",
+        question: "Combien font 12 × 11 ?",
+        options: ["132", "131", "133", "130"],
+        answer: "132",
+        category: "Opérations",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 24,
+        title: "Opérations",
+        content: "Les divisions à deux chiffres",
+        question: "Combien font 144 ÷ 12 ?",
+        options: ["12", "11", "13", "10"],
+        answer: "12",
+        category: "Opérations",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 25,
+        title: "Fractions",
+        content: "Les fractions complexes",
+        question: "Quelle fraction est égale à 3/4 ?",
+        options: ["6/8", "4/6", "8/10", "5/7"],
+        answer: "6/8",
+        category: "Fractions",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 26,
+        title: "Géométrie",
+        content: "Les périmètres",
+        question: "Quel est le périmètre d'un carré de 5 cm de côté ?",
+        options: ["20 cm", "15 cm", "25 cm", "10 cm"],
+        answer: "20 cm",
+        category: "Géométrie",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 27,
+        title: "Mesures",
+        content: "Les conversions complexes",
+        question: "Combien de centimètres dans 2,5 mètres ?",
+        options: ["250", "200", "300", "150"],
+        answer: "250",
+        category: "Mesures",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 28,
+        title: "Nombres",
+        content: "Les nombres négatifs",
+        question: "Quel est le résultat de -5 + 3 ?",
+        options: ["-2", "-1", "-3", "-4"],
+        answer: "-2",
+        category: "Nombres",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 29,
+        title: "Problèmes",
+        content: "Les problèmes complexes",
+        question: "Si j'ai 20 bonbons et j'en donne 3 à chaque ami, combien d'amis peuvent en avoir ?",
+        options: ["6", "5", "7", "4"],
+        answer: "6",
+        category: "Problèmes",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 30,
+        title: "Calcul mental",
+        content: "Les calculs rapides complexes",
+        question: "Combien font 1000 - 333 ?",
+        options: ["667", "666", "668", "665"],
+        answer: "667",
+        category: "Calcul mental",
+        difficulty: "Difficile" as const
+      }
+    ];
+    setExercises(mockExercises);
+    setLoading(false);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
@@ -212,7 +497,7 @@ const MathPage: React.FC = () => {
     <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
       <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
         <div className="absolute left-4 top-0 z-10">
-          <BackButton />
+      <BackButton />
         </div>
         <motion.div 
           animate={{ opacity: 1, y: 0 }}
@@ -222,7 +507,7 @@ const MathPage: React.FC = () => {
         >
           <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
             Mathématiques
-          </h1>
+        </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
             Exercices de mathématiques
           </p>
@@ -250,8 +535,8 @@ const MathPage: React.FC = () => {
 
       {/* Message d'encouragement */}
       {emoji && (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
           className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
           initial={{ opacity: 0, y: -20 }}
         >
@@ -374,11 +659,11 @@ const MathPage: React.FC = () => {
           animate={{ opacity: 1 }}
           className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           initial={{ opacity: 0 }}
-          transition={{ duration: 0.5 }}
-        >
+        transition={{ duration: 0.5 }}
+      >
           {filteredExercises.map((exercise, index) => (
             <motion.div
-              key={exercise.id}
+            key={exercise.id}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1 }}
@@ -387,18 +672,18 @@ const MathPage: React.FC = () => {
               <Card className="w-full h-full bg-white dark:bg-gray-800 shadow-lg border border-violet-200">
                 <CardBody className="p-4 sm:p-6">
                   <h3 className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-                    {exercise.title}
-                  </h3>
+                {exercise.title}
+              </h3>
                   <p className="text-gray-600 dark:text-gray-400 mb-4">{exercise.content}</p>
                   <p className="font-medium mb-4">{exercise.question}</p>
 
-                  {exercise.image && (
+              {exercise.image && (
                     <div className="mb-4">
-                      <Image
-                        alt={exercise.title}
+                <Image
+                  alt={exercise.title}
                         className="rounded-lg object-cover w-full h-48"
                         height={200}
-                        src={`/assets/math/${exercise.image}`}
+                  src={`/assets/math/${exercise.image}`}
                         width={300}
                       />
                     </div>
@@ -419,25 +704,25 @@ const MathPage: React.FC = () => {
                       ))}
                     </select>
                   ) : (
-                    <input
+              <input
                       className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
-                      disabled={results[exercise.id] !== undefined}
-                      placeholder="Votre réponse"
-                      type="text"
-                      value={userAnswers[exercise.id] || ""}
-                      onChange={(e) => handleChange(e, exercise.id)}
-                    />
+                disabled={results[exercise.id] !== undefined}
+                placeholder="Votre réponse"
+                type="text"
+                value={userAnswers[exercise.id] || ""}
+                onChange={(e) => handleChange(e, exercise.id)}
+              />
                   )}
 
                   <Button
                     className="w-full bg-violet-500 text-white hover:bg-violet-600"
-                    disabled={results[exercise.id] !== undefined}
-                    onClick={() => handleSubmit(exercise.id, exercise.answer)}
-                  >
-                    Soumettre
+                disabled={results[exercise.id] !== undefined}
+                onClick={() => handleSubmit(exercise.id, exercise.answer)}
+              >
+                Soumettre
                   </Button>
 
-                  {results[exercise.id] !== undefined && (
+              {results[exercise.id] !== undefined && (
                     <motion.p
                       animate={{ opacity: 1 }}
                       className={`mt-2 text-center ${
@@ -447,12 +732,12 @@ const MathPage: React.FC = () => {
                     >
                       {results[exercise.id] ? "Bonne réponse !" : "Mauvaise réponse, réessayez."}
                     </motion.p>
-                  )}
-                </CardBody>
-              </Card>
+              )}
+            </CardBody>
+          </Card>
             </motion.div>
-          ))}
-        </motion.div>
+        ))}
+      </motion.div>
       </div>
 
       {/* Section des résultats */}
@@ -465,7 +750,7 @@ const MathPage: React.FC = () => {
           <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full">
             <h2 className="text-2xl sm:text-3xl font-bold text-center text-violet-600 dark:text-violet-400 mb-4">
               Résultats {emoji}
-            </h2>
+          </h2>
             <p className="text-center text-xl mb-6">
               Score final : {finalScore?.toFixed(1)}%
             </p>
@@ -501,7 +786,7 @@ const MathPage: React.FC = () => {
             >
               Fermer
             </Button>
-          </div>
+        </div>
         </motion.div>
       )}
 
