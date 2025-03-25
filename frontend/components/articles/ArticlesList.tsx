@@ -17,7 +17,7 @@ interface Article {
   "📅 date": string;
 }
 
-export function ArticlesList() {
+export default function ArticlesList() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
