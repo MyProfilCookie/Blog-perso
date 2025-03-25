@@ -51,7 +51,7 @@ const SciencesPage: React.FC = () => {
   });
 
   useEffect(() => {
-    fetch("/datasciences.json")
+    fetch("/datascience.json")
       .then((response) => {
         if (!response.ok) {
           throw new Error("Failed to fetch data");

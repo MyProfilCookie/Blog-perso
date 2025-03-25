@@ -1,0 +1,244 @@
+{
+    "langues_exercises": [
+        {
+            "id": 1,
+            "title": "Comment dire bonjour?",
+            "content": "Dire bonjour est une façon de saluer les gens quand on les voit. Il existe différentes façons de dire bonjour selon les pays et les langues. En français, on dit 'Bonjour', en anglais, on dit 'Hello' ou 'Hi', en espagnol, on dit 'Hola', et en allemand, on dit 'Guten Tag'.",
+            "questions": [
+                {
+                    "question": "Comment dit-on bonjour en français?",
+                    "answer": "En français, on dit 'Bonjour'."
+                }
+            ],
+            "image": "/assets/langues/bonjour.webp"
+        },
+        {
+            "id": 2,
+            "title": "Les couleurs en anglais",
+            "content": "Les couleurs ont des noms différents dans chaque langue. En anglais, 'red' signifie rouge, 'blue' signifie bleu, 'green' signifie vert, 'yellow' signifie jaune, et 'purple' signifie violet. Connaître les couleurs en anglais peut nous aider à décrire ce que nous voyons.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'bleu' en anglais?",
+                    "answer": "En anglais, 'bleu' se dit 'blue'."
+                }
+            ],
+            "image": "/assets/langues/couleurs.webp"
+        },
+        {
+            "id": 3,
+            "title": "Les chiffres en espagnol",
+            "content": "Compter est important dans toutes les langues. En espagnol, 'uno' signifie un, 'dos' signifie deux, 'tres' signifie trois, 'cuatro' signifie quatre, et 'cinco' signifie cinq. Connaître les chiffres nous aide à compter les objets et à parler de quantités.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'trois' en espagnol?",
+                    "answer": "En espagnol, 'trois' se dit 'tres'."
+                }
+            ],
+            "image": "/assets/langues/chiffres.webp"
+        },
+        {
+            "id": 4,
+            "title": "Les animaux en anglais",
+            "content": "Les animaux ont des noms différents dans chaque langue. En anglais, 'dog' signifie chien, 'cat' signifie chat, 'bird' signifie oiseau, 'fish' signifie poisson, et 'elephant' signifie éléphant. Apprendre les noms des animaux nous aide à parler de nos amis à quatre pattes.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'chat' en anglais?",
+                    "answer": "En anglais, 'chat' se dit 'cat'."
+                }
+            ],
+            "image": "/assets/langues/animaux.webp"
+        },
+        {
+            "id": 5,
+            "title": "Comment dire merci?",
+            "content": "Dire merci est une façon de montrer sa gratitude quand quelqu'un nous aide ou nous donne quelque chose. En français, on dit 'Merci', en anglais, on dit 'Thank you', en espagnol, on dit 'Gracias', et en allemand, on dit 'Danke'.",
+            "questions": [
+                {
+                    "question": "Comment dit-on merci en anglais?",
+                    "answer": "En anglais, on dit 'Thank you'."
+                }
+            ],
+            "image": "/assets/langues/merci.webp"
+        },
+        {
+            "id": 6,
+            "title": "Les jours de la semaine en anglais",
+            "content": "La semaine a sept jours. En anglais, 'Monday' signifie lundi, 'Tuesday' signifie mardi, 'Wednesday' signifie mercredi, 'Thursday' signifie jeudi, 'Friday' signifie vendredi, 'Saturday' signifie samedi, et 'Sunday' signifie dimanche. Connaître les jours nous aide à parler du temps.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'samedi' en anglais?",
+                    "answer": "En anglais, 'samedi' se dit 'Saturday'."
+                }
+            ],
+            "image": "/assets/langues/jours.webp"
+        },
+        {
+            "id": 7,
+            "title": "Les fruits en espagnol",
+            "content": "Les fruits sont délicieux et ont des noms différents dans chaque langue. En espagnol, 'manzana' signifie pomme, 'plátano' signifie banane, 'naranja' signifie orange, 'fresa' signifie fraise, et 'uva' signifie raisin. Connaître les noms des fruits nous aide à parler de ce que nous aimons manger.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'pomme' en espagnol?",
+                    "answer": "En espagnol, 'pomme' se dit 'manzana'."
+                }
+            ],
+            "image": "/assets/langues/fruits.webp"
+        },
+        {
+            "id": 8,
+            "title": "Les membres de la famille en anglais",
+            "content": "La famille est importante, et chaque membre a un nom spécial. En anglais, 'mother' signifie mère, 'father' signifie père, 'sister' signifie sœur, 'brother' signifie frère, et 'grandparents' signifie grands-parents. Ces mots nous aident à parler de notre famille.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'père' en anglais?",
+                    "answer": "En anglais, 'père' se dit 'father'."
+                }
+            ],
+            "image": "/assets/langues/famille.webp"
+        },
+        {
+            "id": 9,
+            "title": "Comment dire au revoir?",
+            "content": "Dire au revoir est une façon de saluer les gens quand on les quitte. En français, on dit 'Au revoir', en anglais, on dit 'Goodbye', en espagnol, on dit 'Adiós', et en allemand, on dit 'Auf Wiedersehen'.",
+            "questions": [
+                {
+                    "question": "Comment dit-on au revoir en espagnol?",
+                    "answer": "En espagnol, on dit 'Adiós'."
+                }
+            ],
+            "image": "/assets/langues/aurevoir.webp"
+        },
+        {
+            "id": 10,
+            "title": "Les parties du corps en anglais",
+            "content": "Notre corps a différentes parties, et chacune a un nom. En anglais, 'head' signifie tête, 'arm' signifie bras, 'leg' signifie jambe, 'hand' signifie main, et 'foot' signifie pied. Connaître ces mots nous aide à parler de notre corps.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'main' en anglais?",
+                    "answer": "En anglais, 'main' se dit 'hand'."
+                }
+            ],
+            "image": "/assets/langues/corps.webp"
+        },
+        {
+            "id": 11,
+            "title": "Les émotions en anglais",
+            "content": "Les émotions sont ce que nous ressentons, et elles ont des noms dans chaque langue. En anglais, 'happy' signifie heureux, 'sad' signifie triste, 'angry' signifie en colère, 'scared' signifie effrayé, et 'surprised' signifie surpris. Ces mots nous aident à exprimer ce que nous ressentons.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'heureux' en anglais?",
+                    "answer": "En anglais, 'heureux' se dit 'happy'."
+                }
+            ],
+            "image": "/assets/langues/emotions.webp"
+        },
+        {
+            "id": 12,
+            "title": "Les saisons en espagnol",
+            "content": "L'année est divisée en quatre saisons. En espagnol, 'primavera' signifie printemps, 'verano' signifie été, 'otoño' signifie automne, et 'invierno' signifie hiver. Ces mots nous aident à parler des différentes périodes de l'année.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'été' en espagnol?",
+                    "answer": "En espagnol, 'été' se dit 'verano'."
+                }
+            ],
+            "image": "/assets/langues/saisons.webp"
+        },
+        {
+            "id": 13,
+            "title": "Parler de la météo en anglais",
+            "content": "La météo change tous les jours, et nous avons besoin de mots pour en parler. En anglais, 'sunny' signifie ensoleillé, 'rainy' signifie pluvieux, 'windy' signifie venteux, 'cloudy' signifie nuageux, et 'snowy' signifie neigeux. Ces mots nous aident à décrire le temps qu'il fait.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'pluvieux' en anglais?",
+                    "answer": "En anglais, 'pluvieux' se dit 'rainy'."
+                }
+            ],
+            "image": "/assets/langues/meteo.webp"
+        },
+        {
+            "id": 14,
+            "title": "Les vêtements en anglais",
+            "content": "Les vêtements nous gardent au chaud et ont des noms différents. En anglais, 'shirt' signifie chemise, 'pants' signifie pantalon, 'shoes' signifie chaussures, 'hat' signifie chapeau, et 'coat' signifie manteau. Ces mots nous aident à parler de ce que nous portons.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'chaussures' en anglais?",
+                    "answer": "En anglais, 'chaussures' se dit 'shoes'."
+                }
+            ],
+            "image": "/assets/langues/vetements.webp"
+        },
+        {
+            "id": 15,
+            "title": "Les instruments de musique en espagnol",
+            "content": "La musique est produite par différents instruments. En espagnol, 'guitarra' signifie guitare, 'piano' signifie piano, 'tambor' signifie tambour, 'flauta' signifie flûte, et 'violín' signifie violon. Ces mots nous aident à parler des instruments de musique.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'guitare' en espagnol?",
+                    "answer": "En espagnol, 'guitare' se dit 'guitarra'."
+                }
+            ],
+            "image": "/assets/langues/instruments.webp"
+        },
+        {
+            "id": 16,
+            "title": "Comment demander 'Comment ça va?'",
+            "content": "Demander comment quelqu'un va est une façon de montrer qu'on s'intéresse à lui. En français, on dit 'Comment ça va?', en anglais, on dit 'How are you?', en espagnol, on dit '¿Cómo estás?', et en allemand, on dit 'Wie geht es dir?'.",
+            "questions": [
+                {
+                    "question": "Comment demande-t-on 'Comment ça va?' en anglais?",
+                    "answer": "En anglais, on dit 'How are you?'."
+                }
+            ],
+            "image": "/assets/langues/comment-ca-va.webp"
+        },
+        {
+            "id": 17,
+            "title": "Les moyens de transport en anglais",
+            "content": "Il existe différentes façons de se déplacer. En anglais, 'car' signifie voiture, 'bus' signifie bus, 'train' signifie train, 'bicycle' signifie vélo, et 'airplane' signifie avion. Ces mots nous aident à parler de comment nous voyageons.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'vélo' en anglais?",
+                    "answer": "En anglais, 'vélo' se dit 'bicycle'."
+                }
+            ],
+            "image": "/assets/langues/transport.webp"
+        },
+        {
+            "id": 18,
+            "title": "Comment dire 's'il vous plaît' et 'de rien'",
+            "content": "'S'il vous plaît' est une façon d'être poli quand on demande quelque chose, et 'de rien' est ce qu'on dit après que quelqu'un nous a remercié. En anglais, 's'il vous plaît' se dit 'please', et 'de rien' se dit 'you're welcome'. En espagnol, 's'il vous plaît' se dit 'por favor', et 'de rien' se dit 'de nada'.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 's'il vous plaît' en anglais?",
+                    "answer": "En anglais, 's'il vous plaît' se dit 'please'."
+                }
+            ],
+            "image": "/assets/langues/politesse.webp"
+        },
+        {
+            "id": 19,
+            "title": "Les aliments en anglais",
+            "content": "La nourriture est essentielle, et chaque aliment a un nom. En anglais, 'bread' signifie pain, 'milk' signifie lait, 'egg' signifie œuf, 'cheese' signifie fromage, et 'meat' signifie viande. Ces mots nous aident à parler de ce que nous mangeons.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'pain' en anglais?",
+                    "answer": "En anglais, 'pain' se dit 'bread'."
+                }
+            ],
+            "image": "/assets/langues/aliments.webp"
+        },
+        {
+            "id": 20,
+            "title": "Comment se présenter en anglais",
+            "content": "Se présenter est une façon de faire connaissance avec de nouvelles personnes. En anglais, pour dire 'Je m'appelle...', on dit 'My name is...'. Pour demander 'Comment t'appelles-tu?', on dit 'What is your name?'. Pour dire 'J'ai ... ans', on dit 'I am ... years old'.",
+            "questions": [
+                {
+                    "question": "Comment dit-on 'Je m'appelle Pierre' en anglais?",
+                    "answer": "En anglais, on dit 'My name is Pierre'."
+                }
+            ],
+            "image": "/assets/langues/presentation.webp"
+        }
+    ]
+}

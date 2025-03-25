@@ -93,13 +93,14 @@ const TrimestrePage: React.FC = () => {
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const [frenchData, mathData, historyData, geographyData, sciencesData, languageData] = await Promise.all([
+        const [frenchData, mathData, historyData, geographyData, sciencesData, languageData, englishData] = await Promise.all([
           fetch("/datafrench.json").then(res => res.json()),
           fetch("/datamath.json").then(res => res.json()),
           fetch("/datahistory.json").then(res => res.json()),
           fetch("/datageography.json").then(res => res.json()),
-          fetch("/datasciences.json").then(res => res.json()),
+          fetch("/datascience.json").then(res => res.json()),
           fetch("/datalanguage.json").then(res => res.json()),
+          fetch("/dataenglish.json").then(res => res.json()),
         ]);
 
         const allExercises = [
@@ -109,6 +110,7 @@ const TrimestrePage: React.FC = () => {
           ...geographyData.geography_exercises.map((ex: Exercise) => ({ ...ex, subject: "Géographie" })),
           ...sciencesData.sciences_exercises.map((ex: Exercise) => ({ ...ex, subject: "Sciences" })),
           ...languageData.language_exercises.map((ex: Exercise) => ({ ...ex, subject: "Langues" })),
+          ...englishData.english_exercises.map((ex: Exercise) => ({ ...ex, subject: "Anglais" })),
         ];
 
         setExercises(allExercises);
