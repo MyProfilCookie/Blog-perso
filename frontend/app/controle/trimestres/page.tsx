@@ -89,43 +89,285 @@ const TrimestrePage: React.FC = () => {
     { id: 5, message: "Tu es un champion !", condition: "perfect_score", emoji: "🏆" },
   ];
 
+  // Messages d'encouragement périodiques
+  useEffect(() => {
+    let encouragementTimer: NodeJS.Timeout;
+    const periodicMessages = [
+      "🌟 Tu avances bien, continue comme ça !",
+      "💪 La moitié du chemin est faite, garde ton rythme !",
+      "🎯 Reste concentré, tu fais du bon travail !",
+      "✨ N'oublie pas de relire tes réponses !",
+      "🌈 Tu es sur la bonne voie !",
+      "🚀 Plus que quelques exercices, tu peux le faire !"
+    ];
+
+    if (isStarted && !isFinished) {
+      encouragementTimer = setInterval(() => {
+        const randomMessage = periodicMessages[Math.floor(Math.random() * periodicMessages.length)];
+        setCurrentMessage(randomMessage);
+        setTimeout(() => setCurrentMessage(""), 5000);
+      }, 1200000); // 20 minutes = 1200000 ms
+    }
+
+    return () => clearInterval(encouragementTimer);
+  }, [isStarted, isFinished]);
+
   // Chargement des exercices
   useEffect(() => {
     const loadExercises = () => {
       try {
         // Données statiques pour les exercices
         const mockExercises = [
+          // Mathématiques
           {
             id: 1,
-            title: "Calcul mental",
-            content: "Exercice de calcul mental",
-            question: "Combien font 15 × 4 ?",
-            answer: "60",
+            title: "Addition simple",
+            content: "Calcule le résultat",
+            question: "15 + 8 = ?",
+            answer: "23",
             subject: "Mathématiques"
           },
           {
             id: 2,
-            title: "Conjugaison",
-            content: "Exercice de conjugaison",
-            question: "Conjuguez le verbe 'être' au présent",
-            answer: "je suis, tu es, il est, nous sommes, vous êtes, ils sont",
-            subject: "Français"
+            title: "Multiplication",
+            content: "Utilise la table de multiplication",
+            question: "7 × 6 = ?",
+            answer: "42",
+            subject: "Mathématiques"
           },
           {
             id: 3,
-            title: "Histoire de France",
-            content: "Les dates importantes",
-            question: "En quelle année a eu lieu la Révolution française ?",
-            answer: "1789",
-            subject: "Histoire"
+            title: "Formes géométriques",
+            content: "Identifie la forme",
+            question: "Combien de côtés a un carré ?",
+            options: ["3", "4", "5", "6"],
+            answer: "4",
+            subject: "Mathématiques"
           },
           {
             id: 4,
-            title: "Géographie",
-            content: "Les capitales",
-            question: "Quelle est la capitale de la France ?",
-            answer: "Paris",
+            title: "Argent",
+            content: "Calcule le prix total",
+            question: "Si un crayon coûte 2€ et que j'en achète 3, combien dois-je payer ?",
+            answer: "6",
+            subject: "Mathématiques"
+          },
+          {
+            id: 5,
+            title: "Heure",
+            content: "Lecture de l'heure",
+            question: "Combien y a-t-il de minutes dans 2 heures ?",
+            answer: "120",
+            subject: "Mathématiques"
+          },
+          // Français
+          {
+            id: 6,
+            title: "Verbes du 1er groupe",
+            content: "Conjugaison au présent",
+            question: "Comment écris-tu le verbe 'manger' avec 'je' ?",
+            answer: "je mange",
+            subject: "Français"
+          },
+          {
+            id: 7,
+            title: "Les contraires",
+            content: "Trouve le contraire",
+            question: "Quel est le contraire du mot 'chaud' ?",
+            options: ["tiède", "froid", "brûlant", "glacé"],
+            answer: "froid",
+            subject: "Français"
+          },
+          {
+            id: 8,
+            title: "Les émotions",
+            content: "Vocabulaire des émotions",
+            question: "Comment te sens-tu quand tu souris ? Je suis...",
+            options: ["content", "triste", "fatigué", "énervé"],
+            answer: "content",
+            subject: "Français"
+          },
+          {
+            id: 9,
+            title: "La politesse",
+            content: "Les formules de politesse",
+            question: "Que dis-tu quand quelqu'un te donne quelque chose ?",
+            answer: "merci",
+            subject: "Français"
+          },
+          {
+            id: 10,
+            title: "Les jours",
+            content: "Les jours de la semaine",
+            question: "Quel jour vient après mardi ?",
+            answer: "mercredi",
+            subject: "Français"
+          },
+          // Histoire
+          {
+            id: 11,
+            title: "Moyen de transport",
+            content: "Histoire des transports",
+            question: "Qui a inventé l'automobile : Henry Ford ou Thomas Edison ?",
+            answer: "henry ford",
+            subject: "Histoire"
+          },
+          {
+            id: 12,
+            title: "Inventions",
+            content: "Les grandes inventions",
+            question: "Quel frères ont inventé l'avion ?",
+            answer: "wright",
+            subject: "Histoire"
+          },
+          {
+            id: 13,
+            title: "Personnages célèbres",
+            content: "Les grands scientifiques",
+            question: "Qui a découvert la gravité en regardant une pomme tomber ?",
+            answer: "newton",
+            subject: "Histoire"
+          },
+          {
+            id: 14,
+            title: "Vie quotidienne",
+            content: "La vie d'autrefois",
+            question: "Avant l'électricité, qu'utilisait-on pour s'éclairer le soir ?",
+            options: ["bougie", "lampe", "téléphone", "télévision"],
+            answer: "bougie",
+            subject: "Histoire"
+          },
+          {
+            id: 15,
+            title: "Communication",
+            content: "L'histoire de la communication",
+            question: "Avant le téléphone, comment envoyait-on des messages ?",
+            answer: "lettre",
+            subject: "Histoire"
+          },
+          // Géographie
+          {
+            id: 16,
+            title: "Ma ville",
+            content: "Orientation dans la ville",
+            question: "Dans quel pays se trouve Paris ?",
+            answer: "france",
             subject: "Géographie"
+          },
+          {
+            id: 17,
+            title: "Les saisons",
+            content: "Le temps qu'il fait",
+            question: "En quelle saison fait-il le plus chaud ?",
+            answer: "été",
+            subject: "Géographie"
+          },
+          {
+            id: 18,
+            title: "Les animaux",
+            content: "Habitat des animaux",
+            question: "Où vit le pingouin : au pôle Nord ou au pôle Sud ?",
+            answer: "pôle sud",
+            subject: "Géographie"
+          },
+          {
+            id: 19,
+            title: "La météo",
+            content: "Les phénomènes météo",
+            question: "Comment s'appelle l'eau qui tombe du ciel ?",
+            answer: "pluie",
+            subject: "Géographie"
+          },
+          {
+            id: 20,
+            title: "Les paysages",
+            content: "Types de paysages",
+            question: "Comment s'appelle un endroit avec beaucoup de sable et peu d'eau ?",
+            answer: "désert",
+            subject: "Géographie"
+          },
+          // Sciences
+          {
+            id: 21,
+            title: "Les sens",
+            content: "Les 5 sens",
+            question: "Avec quelle partie du corps peut-on entendre ?",
+            answer: "oreilles",
+            subject: "Sciences"
+          },
+          {
+            id: 22,
+            title: "Les aliments",
+            content: "Alimentation",
+            question: "Les carottes sont des...",
+            options: ["fruits", "légumes", "viandes", "poissons"],
+            answer: "légumes",
+            subject: "Sciences"
+          },
+          {
+            id: 23,
+            title: "Le corps",
+            content: "Parties du corps",
+            question: "Combien as-tu de doigts sur une main ?",
+            answer: "5",
+            subject: "Sciences"
+          },
+          {
+            id: 24,
+            title: "Les animaux",
+            content: "Classification",
+            question: "Le chat est-il un mammifère ou un reptile ?",
+            answer: "mammifère",
+            subject: "Sciences"
+          },
+          {
+            id: 25,
+            title: "L'eau",
+            content: "États de l'eau",
+            question: "Que devient l'eau quand il fait très froid ?",
+            answer: "glace",
+            subject: "Sciences"
+          },
+          // Langues
+          {
+            id: 26,
+            title: "Anglais - Salutations",
+            content: "Dire bonjour",
+            question: "Comment dit-on 'bonjour' en anglais ?",
+            answer: "hello",
+            subject: "Langues"
+          },
+          {
+            id: 27,
+            title: "Anglais - Nombres",
+            content: "Compter en anglais",
+            question: "Comment écrit-on le chiffre 1 en anglais ?",
+            answer: "one",
+            subject: "Langues"
+          },
+          {
+            id: 28,
+            title: "Anglais - Couleurs",
+            content: "Les couleurs basiques",
+            question: "Comment dit-on 'bleu' en anglais ?",
+            answer: "blue",
+            subject: "Langues"
+          },
+          {
+            id: 29,
+            title: "Anglais - Famille",
+            content: "Les membres de la famille",
+            question: "Comment dit-on 'maman' en anglais ?",
+            answer: "mom",
+            subject: "Langues"
+          },
+          {
+            id: 30,
+            title: "Anglais - Animaux",
+            content: "Les animaux domestiques",
+            question: "Comment dit-on 'chat' en anglais ?",
+            answer: "cat",
+            subject: "Langues"
           }
         ];
 
@@ -143,18 +385,22 @@ const TrimestrePage: React.FC = () => {
   // Gestion du timer
   useEffect(() => {
     let timer: NodeJS.Timeout;
+
     if (isStarted && !isFinished && currentTime > 0) {
       timer = setInterval(() => {
         setCurrentTime(prev => {
           if (prev <= 1) {
             setIsFinished(true);
             calculateFinalScore();
+
             return 0;
           }
+
           return prev - 1;
         });
       }, 1000);
     }
+
     return () => clearInterval(timer);
   }, [isStarted, isFinished, currentTime]);
 
@@ -175,6 +421,7 @@ const TrimestrePage: React.FC = () => {
       
       // Message d'encouragement aléatoire
       const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+
       setCurrentMessage(`${randomMessage.emoji} ${randomMessage.message}`);
       setTimeout(() => setCurrentMessage(""), 3000);
     } else {
@@ -206,6 +453,7 @@ const TrimestrePage: React.FC = () => {
     const hours = Math.floor(seconds / 3600);
     const minutes = Math.floor((seconds % 3600) / 60);
     const remainingSeconds = seconds % 60;
+
     return `${hours.toString().padStart(2, "0")}:${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
@@ -270,11 +518,11 @@ const TrimestrePage: React.FC = () => {
           </h2>
           <div className="space-y-4">
             <Input
+              className="w-full"
               label="Nom de l'élève"
               placeholder="Entrez votre nom"
               value={studentName}
               onChange={(e) => setStudentName(e.target.value)}
-              className="w-full"
             />
             <div className="text-sm text-gray-600 dark:text-gray-400">
               <p>• Le contrôle dure 2 heures</p>
@@ -284,8 +532,8 @@ const TrimestrePage: React.FC = () => {
             </div>
             <Button
               className="w-full bg-violet-500 text-white hover:bg-violet-600"
-              onClick={() => setIsStarted(true)}
               isDisabled={!studentName.trim()}
+              onClick={() => setIsStarted(true)}
             >
               Commencer le contrôle
             </Button>
@@ -353,8 +601,8 @@ const TrimestrePage: React.FC = () => {
               {filteredExercises.map((exercise, index) => (
                 <motion.div
                   key={exercise.id}
-                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
                 >
@@ -437,7 +685,7 @@ const TrimestrePage: React.FC = () => {
       )}
 
       {/* Modal des résultats */}
-      <Modal isOpen={showResults} onClose={() => setShowResults(false)} size="lg">
+      <Modal isOpen={showResults} size="lg" onClose={() => setShowResults(false)}>
         <ModalContent>
           <ModalHeader className="flex flex-col gap-1">
             <h2 className="text-2xl font-bold text-violet-600 dark:text-violet-400">
@@ -486,6 +734,7 @@ const TrimestrePage: React.FC = () => {
                 Fermer
               </Button>
               <PDFDownloadLink
+                className="bg-green-500 text-white hover:bg-green-600 px-4 py-2 rounded-lg"
                 document={
                   <Document>
                     <Page size="A4" style={styles.page}>
@@ -512,7 +761,6 @@ const TrimestrePage: React.FC = () => {
                   </Document>
                 }
                 fileName={`controle_${studentName}_${new Date().toISOString().split("T")[0]}.pdf`}
-                className="bg-green-500 text-white hover:bg-green-600 px-4 py-2 rounded-lg"
               >
                 {({ loading }) => (
                   <span>
