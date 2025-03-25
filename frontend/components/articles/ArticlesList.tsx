@@ -5,6 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import ArticleCard from "./ArticleCard";
 import axios from "axios";
+import { motion } from "framer-motion";
 
 interface Article {
   "📌 titre": string;
@@ -54,29 +55,44 @@ export default function ArticlesList() {
 
   if (loading) {
     return (
-      <div className="flex justify-center items-center min-h-[400px]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500"></div>
-      </div>
+      <motion.div 
+        className="flex justify-center items-center min-h-[400px] w-full"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600"></div>
+      </motion.div>
     );
   }
 
   if (error) {
     return (
-      <div className="text-center text-red-500 p-4">
+      <motion.div 
+        className="text-center text-red-500 p-4 w-full"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ duration: 0.3 }}
+      >
         <p>{error}</p>
-      </div>
+      </motion.div>
     );
   }
 
   return (
-    <div className="space-y-8">
+    <motion.div 
+      className="space-y-8 w-full max-w-7xl mx-auto px-4"
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
+    >
       <div className="relative">
         <input
           type="text"
           placeholder="Rechercher un article..."
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
-          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="w-full px-4 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-violet-500"
         />
       </div>
 
@@ -97,7 +113,7 @@ export default function ArticlesList() {
           <button
             onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
             disabled={currentPage === 1}
-            className="px-4 py-2 border rounded-lg disabled:opacity-50"
+            className="px-4 py-2 border rounded-lg disabled:opacity-50 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-colors"
           >
             Précédent
           </button>
@@ -107,12 +123,12 @@ export default function ArticlesList() {
           <button
             onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages))}
             disabled={currentPage === totalPages}
-            className="px-4 py-2 border rounded-lg disabled:opacity-50"
+            className="px-4 py-2 border rounded-lg disabled:opacity-50 hover:bg-violet-50 dark:hover:bg-violet-900/20 transition-colors"
           >
             Suivant
           </button>
         </div>
       )}
-    </div>
+    </motion.div>
   );
 } 
