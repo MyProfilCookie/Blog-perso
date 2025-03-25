@@ -58,6 +58,16 @@ interface EncouragementMessage {
 }
 
 const TrimestrePage: React.FC = () => {
+  // Emojis pour chaque matière
+  const subjectEmojis: { [key: string]: string } = {
+    "Mathématiques": "🔢",
+    "Français": "📚",
+    "Histoire": "⏳",
+    "Géographie": "🌍",
+    "Sciences": "🔬",
+    "Langues": "💭"
+  };
+
   // États pour les données
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
@@ -585,7 +595,7 @@ const TrimestrePage: React.FC = () => {
             >
               {subjects.map((subject) => (
                 <option key={subject} value={subject}>
-                  {subject}
+                  {subject !== "Tout" ? `${subjectEmojis[subject]} ${subject}` : "🎯 Tout"}
                 </option>
               ))}
             </select>
@@ -612,8 +622,8 @@ const TrimestrePage: React.FC = () => {
                         <h3 className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
                           {exercise.title}
                         </h3>
-                        <span className="text-sm text-gray-600 dark:text-gray-400">
-                          {exercise.subject}
+                        <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                          {subjectEmojis[exercise.subject]} {exercise.subject}
                         </span>
                       </div>
                       <p className="text-gray-600 dark:text-gray-400 mb-4">{exercise.content}</p>
