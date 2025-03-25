@@ -19,7 +19,7 @@ interface Exercise {
   answer: string;
   difficulty?: "Facile" | "Moyen" | "Difficile";
   estimatedTime?: string;
-  category?: string;
+  category: string;
 }
 
 const SciencesPage: React.FC = () => {
@@ -51,25 +51,121 @@ const SciencesPage: React.FC = () => {
   });
 
   useEffect(() => {
-    fetch("/datascience.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
-        return response.json();
-      })
-      .then((data) => {
-        if (data && data.sciences_exercises) {
-          setExercises(data.sciences_exercises);
-        } else {
-          throw new Error("Invalid data format");
-        }
+    const loadExercises = () => {
+      try {
+        // Données statiques pour les exercices de sciences
+        const mockExercises: Exercise[] = [
+          {
+            id: 1,
+            title: "Le corps humain",
+            content: "Les cinq sens",
+            question: "Avec quel sens peut-on sentir les odeurs ?",
+            options: ["L'odorat", "Le goût", "La vue", "Le toucher"],
+            answer: "L'odorat",
+            category: "Corps humain",
+            difficulty: "Facile" as const
+          },
+          {
+            id: 2,
+            title: "Les animaux",
+            content: "Classification des animaux",
+            question: "Le chien est un...",
+            options: ["Mammifère", "Reptile", "Oiseau", "Poisson"],
+            answer: "Mammifère",
+            category: "Animaux",
+            difficulty: "Facile" as const
+          },
+          {
+            id: 3,
+            title: "L'alimentation",
+            content: "Les groupes d'aliments",
+            question: "Dans quel groupe se trouve la pomme ?",
+            options: ["Fruits", "Légumes", "Viandes", "Céréales"],
+            answer: "Fruits",
+            category: "Alimentation",
+            difficulty: "Facile" as const
+          },
+          {
+            id: 4,
+            title: "La météo",
+            content: "Les phénomènes météorologiques",
+            question: "Que se passe-t-il quand l'eau se transforme en glace ?",
+            options: ["Elle gèle", "Elle bout", "Elle s'évapore", "Elle fond"],
+            answer: "Elle gèle",
+            category: "Météo",
+            difficulty: "Facile" as const
+          },
+          {
+            id: 5,
+            title: "Les saisons",
+            content: "Les changements de saisons",
+            question: "En quelle saison les feuilles tombent-elles des arbres ?",
+            options: ["Automne", "Hiver", "Printemps", "Été"],
+            answer: "Automne",
+            category: "Nature",
+            difficulty: "Facile" as const
+          },
+          {
+            id: 6,
+            title: "Les plantes",
+            content: "La croissance des plantes",
+            question: "De quoi une plante a-t-elle besoin pour pousser ?",
+            options: ["De l'eau", "Du chocolat", "Du sel", "Du sucre"],
+            answer: "De l'eau",
+            category: "Nature",
+            difficulty: "Facile" as const
+          },
+          {
+            id: 7,
+            title: "Le jour et la nuit",
+            content: "Cycle jour/nuit",
+            question: "Qu'est-ce qui nous donne la lumière pendant la journée ?",
+            options: ["Le Soleil", "La Lune", "Les étoiles", "Les nuages"],
+            answer: "Le Soleil",
+            category: "Astronomie",
+            difficulty: "Facile" as const
+          },
+          {
+            id: 8,
+            title: "Les dents",
+            content: "Hygiène dentaire",
+            question: "Combien de fois par jour faut-il se brosser les dents ?",
+            options: ["2 fois", "1 fois", "3 fois", "4 fois"],
+            answer: "2 fois",
+            category: "Corps humain",
+            difficulty: "Facile" as const
+          },
+          {
+            id: 9,
+            title: "Les matériaux",
+            content: "Propriétés des matériaux",
+            question: "Quel matériau est attiré par un aimant ?",
+            options: ["Le fer", "Le bois", "Le plastique", "Le papier"],
+            answer: "Le fer",
+            category: "Matière",
+            difficulty: "Facile" as const
+          },
+          {
+            id: 10,
+            title: "L'eau",
+            content: "Les états de l'eau",
+            question: "Comment s'appelle l'eau quand elle est dans les nuages ?",
+            options: ["Vapeur d'eau", "Glace", "Neige", "Pluie"],
+            answer: "Vapeur d'eau",
+            category: "Météo",
+            difficulty: "Facile" as const
+          }
+        ];
+
+        setExercises(mockExercises);
         setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
+      } catch (err) {
+        setError("Erreur lors du chargement des exercices");
         setLoading(false);
-      });
+      }
+    };
+
+    loadExercises();
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
