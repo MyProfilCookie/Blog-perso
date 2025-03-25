@@ -160,8 +160,10 @@ const ArtPage: React.FC = () => {
 
   return (
     <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
-      {/* En-tête avec titre et navigation */}
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+        <div className="absolute left-4 top-0 z-10">
+          <BackButton />
+        </div>
         <motion.div 
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-4 sm:mb-6"
@@ -169,17 +171,12 @@ const ArtPage: React.FC = () => {
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-            Exercices d&apos;Art
+            Arts plastiques
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-            Découvrez et pratiquez l&apos;art à travers des exercices interactifs
+            Exercices d'arts plastiques
           </p>
         </motion.div>
-
-        {/* Barre de navigation supérieure */}
-        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200">
-          <BackButton />
-        </div>
       </div>
 
       {/* Statistiques rapides */}

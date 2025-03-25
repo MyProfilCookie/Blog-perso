@@ -201,38 +201,23 @@ export default function LessonOfTheDay() {
 
   return (
     <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10 bg-white dark:bg-gray-900">
-      {/* En-tête avec titre et navigation */}
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+        <div className="absolute left-4 top-0 z-10">
+          <BackButton />
+        </div>
         <motion.div 
+          animate={{ opacity: 1, y: 0 }}
           className="text-center mb-4 sm:mb-6"
           initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
         >
           <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-            Espace d&apos;Apprentissage
+            Leçon du jour
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-            Votre parcours d&apos;apprentissage personnalisé
+            {userName ? `Bonjour ${userName}` : "Chargement..."}
           </p>
         </motion.div>
-
-        {/* Barre de navigation supérieure */}
-        <div className="flex items-center justify-between bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200 dark:border-violet-700">
-          <BackButton />
-          <div className="flex items-center gap-2 sm:gap-4">
-            <div className="flex items-center gap-2 text-violet-600 dark:text-violet-400">
-              <span className="text-xl">👋</span>
-              <span className="font-medium text-sm sm:text-base">{userName}</span>
-            </div>
-            <Button
-              className="bg-violet-100 dark:bg-violet-900 hover:bg-violet-200 dark:hover:bg-violet-800 text-violet-700 dark:text-violet-300 px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg flex items-center gap-2 text-sm sm:text-base"
-              onClick={handleLogout}
-            >
-              <span>🚪</span> <span className="hidden sm:inline">Déconnexion</span>
-            </Button>
-          </div>
-        </div>
       </div>
 
       {/* Statistiques rapides */}
