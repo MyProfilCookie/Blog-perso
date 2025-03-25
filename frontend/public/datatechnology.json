@@ -1,0 +1,244 @@
+{
+    "technology_exercises": [
+        {
+            "id": 1,
+            "title": "Qu'est-ce qu'un ordinateur?",
+            "content": "Un ordinateur est une machine qui peut résoudre des problèmes et aider à accomplir des tâches. Il possède un écran pour afficher des informations, un clavier pour écrire, et une souris pour pointer. Les ordinateurs nous aident à jouer à des jeux, à apprendre et à communiquer avec d'autres personnes.",
+            "questions": [
+                {
+                    "question": "À quoi sert un ordinateur?",
+                    "answer": "Un ordinateur sert à résoudre des problèmes, jouer à des jeux, apprendre et communiquer avec d'autres personnes."
+                }
+            ],
+            "image": "/assets/technology/ordinateur.webp"
+        },
+        {
+            "id": 2,
+            "title": "Qu'est-ce qu'Internet?",
+            "content": "Internet est un réseau mondial qui connecte des millions d'ordinateurs. Grâce à Internet, nous pouvons voir des vidéos, lire des informations, et parler avec des personnes à l'autre bout du monde. Internet est comme une grande bibliothèque où l'on peut trouver presque toutes les informations dont on a besoin.",
+            "questions": [
+                {
+                    "question": "À quoi sert Internet?",
+                    "answer": "Internet sert à voir des vidéos, lire des informations et communiquer avec des personnes partout dans le monde."
+                }
+            ],
+            "image": "/assets/technology/internet.webp"
+        },
+        {
+            "id": 3,
+            "title": "Qu'est-ce qu'une tablette?",
+            "content": "Une tablette est un petit ordinateur avec un écran tactile. On peut la toucher directement avec les doigts pour jouer, lire ou regarder des vidéos. Les tablettes sont légères et faciles à transporter, c'est pourquoi beaucoup de personnes les utilisent quand elles se déplacent.",
+            "questions": [
+                {
+                    "question": "Comment utilise-t-on une tablette?",
+                    "answer": "On utilise une tablette en touchant directement l'écran avec les doigts pour jouer, lire ou regarder des vidéos."
+                }
+            ],
+            "image": "/assets/technology/tablette.webp"
+        },
+        {
+            "id": 4,
+            "title": "Qu'est-ce qu'un smartphone?",
+            "content": "Un smartphone est un téléphone intelligent qui peut faire beaucoup plus que juste passer des appels. On peut prendre des photos, jouer à des jeux, regarder des vidéos et utiliser Internet. Les smartphones ont un écran tactile que l'on peut toucher avec les doigts pour les contrôler.",
+            "questions": [
+                {
+                    "question": "Que peut-on faire avec un smartphone?",
+                    "answer": "Avec un smartphone, on peut passer des appels, prendre des photos, jouer à des jeux, regarder des vidéos et utiliser Internet."
+                }
+            ],
+            "image": "/assets/technology/smartphone.webp"
+        },
+        {
+            "id": 5,
+            "title": "Comment fonctionne une imprimante?",
+            "content": "Une imprimante est une machine qui peut mettre sur papier ce qu'on voit sur l'écran d'un ordinateur. Quand on veut garder une image ou un texte, on demande à l'imprimante de l'imprimer. L'imprimante utilise de l'encre pour dessiner sur le papier ce qu'on a choisi d'imprimer.",
+            "questions": [
+                {
+                    "question": "À quoi sert une imprimante?",
+                    "answer": "Une imprimante sert à mettre sur papier ce qu'on voit sur l'écran d'un ordinateur."
+                }
+            ],
+            "image": "/assets/technology/imprimante.webp"
+        },
+        {
+            "id": 6,
+            "title": "Qu'est-ce qu'un robot?",
+            "content": "Un robot est une machine qui peut faire des tâches automatiquement, parfois sans l'aide d'une personne. Certains robots nettoient les maisons, d'autres aident à fabriquer des objets dans les usines. Les robots sont programmés pour comprendre ce qu'ils doivent faire et comment le faire.",
+            "questions": [
+                {
+                    "question": "Que font les robots?",
+                    "answer": "Les robots font des tâches automatiquement, comme nettoyer les maisons ou aider à fabriquer des objets dans les usines."
+                }
+            ],
+            "image": "/assets/technology/robot.webp"
+        },
+        {
+            "id": 7,
+            "title": "Qu'est-ce qu'un jeu vidéo?",
+            "content": "Un jeu vidéo est un jeu auquel on joue sur un écran d'ordinateur, de console ou de téléphone. Il existe de nombreux types de jeux vidéo : des jeux d'aventure, des jeux de sport, des jeux de réflexion, etc. On contrôle les jeux avec une manette, un clavier ou en touchant l'écran.",
+            "questions": [
+                {
+                    "question": "Comment joue-t-on à un jeu vidéo?",
+                    "answer": "On joue à un jeu vidéo en utilisant une manette, un clavier ou en touchant l'écran, selon le type d'appareil."
+                }
+            ],
+            "image": "/assets/technology/jeu-video.webp"
+        },
+        {
+            "id": 8,
+            "title": "Qu'est-ce qu'une application?",
+            "content": "Une application, ou 'app', est un programme qu'on peut installer sur une tablette ou un smartphone. Il existe des applications pour jouer, pour apprendre, pour dessiner, pour écouter de la musique et pour beaucoup d'autres activités. Chaque application a une icône qu'on touche pour la démarrer.",
+            "questions": [
+                {
+                    "question": "À quoi servent les applications?",
+                    "answer": "Les applications servent à faire différentes activités comme jouer, apprendre, dessiner ou écouter de la musique sur des tablettes et smartphones."
+                }
+            ],
+            "image": "/assets/technology/application.webp"
+        },
+        {
+            "id": 9,
+            "title": "Qu'est-ce qu'un appareil photo numérique?",
+            "content": "Un appareil photo numérique est une machine qui capture des images sous forme électronique. Contrairement aux anciens appareils photo qui utilisaient des films, les appareils numériques enregistrent les photos sur une carte mémoire. On peut ensuite voir ces photos immédiatement sur l'écran de l'appareil ou les transférer sur un ordinateur.",
+            "questions": [
+                {
+                    "question": "Comment fonctionne un appareil photo numérique?",
+                    "answer": "Un appareil photo numérique capture des images et les enregistre sur une carte mémoire pour qu'on puisse les voir immédiatement ou les transférer sur un ordinateur."
+                }
+            ],
+            "image": "/assets/technology/appareil-photo.webp"
+        },
+        {
+            "id": 10,
+            "title": "Qu'est-ce qu'un casque audio?",
+            "content": "Un casque audio est un appareil qu'on met sur les oreilles pour écouter de la musique, des histoires ou des sons. Il permet d'entendre le son sans déranger les autres personnes autour. Certains casques sont reliés par un fil à l'appareil qui produit le son, d'autres fonctionnent sans fil grâce à une connexion Bluetooth.",
+            "questions": [
+                {
+                    "question": "Pourquoi utilise-t-on un casque audio?",
+                    "answer": "On utilise un casque audio pour écouter de la musique, des histoires ou des sons sans déranger les autres personnes autour."
+                }
+            ],
+            "image": "/assets/technology/casque-audio.webp"
+        },
+        {
+            "id": 11,
+            "title": "Comment fonctionne une télévision?",
+            "content": "Une télévision est un appareil avec un grand écran qui affiche des images en mouvement et du son. Elle reçoit des signaux de différentes sources comme des antennes, des câbles ou Internet. Ces signaux sont transformés en images et en sons que nous pouvons voir et entendre. Les téléviseurs modernes peuvent se connecter à Internet pour voir des vidéos en ligne.",
+            "questions": [
+                {
+                    "question": "D'où viennent les images qu'on voit sur une télévision?",
+                    "answer": "Les images qu'on voit sur une télévision viennent de signaux reçus par des antennes, des câbles ou Internet, puis transformés en images par le téléviseur."
+                }
+            ],
+            "image": "/assets/technology/television.webp"
+        },
+        {
+            "id": 12,
+            "title": "Qu'est-ce qu'un drone?",
+            "content": "Un drone est un petit appareil volant sans pilote à bord. Il est contrôlé à distance par une personne qui utilise une télécommande ou un smartphone. Les drones peuvent voler haut dans le ciel et prendre des photos ou des vidéos. Ils sont utilisés pour le loisir, mais aussi pour des travaux comme l'inspection de bâtiments ou la livraison de colis.",
+            "questions": [
+                {
+                    "question": "Comment contrôle-t-on un drone?",
+                    "answer": "On contrôle un drone à distance en utilisant une télécommande ou un smartphone."
+                }
+            ],
+            "image": "/assets/technology/drone.webp"
+        },
+        {
+            "id": 13,
+            "title": "Qu'est-ce qu'un GPS?",
+            "content": "Un GPS (Global Positioning System) est un appareil qui aide à se repérer et à trouver son chemin. Il utilise des satellites dans l'espace pour déterminer précisément où l'on se trouve sur Terre. Beaucoup de voitures et de smartphones ont un GPS intégré qui peut donner des directions pour aller d'un endroit à un autre.",
+            "questions": [
+                {
+                    "question": "À quoi sert un GPS?",
+                    "answer": "Un GPS sert à se repérer et à trouver son chemin en utilisant des satellites pour déterminer précisément où l'on se trouve."
+                }
+            ],
+            "image": "/assets/technology/gps.webp"
+        },
+        {
+            "id": 14,
+            "title": "Comment fonctionne une montre connectée?",
+            "content": "Une montre connectée est une montre intelligente qui peut faire beaucoup plus que simplement donner l'heure. Elle peut se connecter à un smartphone pour afficher des messages, compter les pas qu'on fait dans la journée, ou même mesurer le rythme cardiaque. Certaines montres connectées permettent aussi de passer des appels ou de prendre des photos.",
+            "questions": [
+                {
+                    "question": "Que peut faire une montre connectée?",
+                    "answer": "Une montre connectée peut afficher l'heure, se connecter à un smartphone, afficher des messages, compter les pas, mesurer le rythme cardiaque et parfois passer des appels."
+                }
+            ],
+            "image": "/assets/technology/montre-connectee.webp"
+        },
+        {
+            "id": 15,
+            "title": "Qu'est-ce qu'un disque dur?",
+            "content": "Un disque dur est un appareil qui stocke des informations dans un ordinateur. C'est comme une grande bibliothèque où l'ordinateur range tous ses fichiers, programmes, photos et vidéos. Même quand on éteint l'ordinateur, les informations restent enregistrées sur le disque dur, donc on peut les retrouver plus tard.",
+            "questions": [
+                {
+                    "question": "À quoi sert un disque dur?",
+                    "answer": "Un disque dur sert à stocker des informations comme des fichiers, programmes, photos et vidéos, même quand l'ordinateur est éteint."
+                }
+            ],
+            "image": "/assets/technology/disque-dur.webp"
+        },
+        {
+            "id": 16,
+            "title": "Qu'est-ce qu'un scanner?",
+            "content": "Un scanner est un appareil qui peut transformer un document papier en une image numérique. On place le document sur la vitre du scanner, et il prend une photo très précise de ce document. Cette image numérique peut ensuite être enregistrée sur un ordinateur, envoyée par email ou imprimée à nouveau.",
+            "questions": [
+                {
+                    "question": "Comment fonctionne un scanner?",
+                    "answer": "Un scanner fonctionne en prenant une photo très précise d'un document placé sur sa vitre, transformant ainsi un document papier en image numérique."
+                }
+            ],
+            "image": "/assets/technology/scanner.webp"
+        },
+        {
+            "id": 17,
+            "title": "Qu'est-ce qu'un code QR?",
+            "content": "Un code QR est comme un code-barres carré qu'on peut scanner avec un smartphone ou une tablette. Il contient des informations comme une adresse de site web, un numéro de téléphone ou un texte. Quand on scanne un code QR avec l'appareil photo d'un smartphone, il peut ouvrir automatiquement un site web ou afficher les informations contenues dans le code.",
+            "questions": [
+                {
+                    "question": "Comment utilise-t-on un code QR?",
+                    "answer": "On utilise un code QR en le scannant avec l'appareil photo d'un smartphone ou d'une tablette, qui affichera ensuite les informations contenues dans le code."
+                }
+            ],
+            "image": "/assets/technology/code-qr.webp"
+        },
+        {
+            "id": 18,
+            "title": "Qu'est-ce qu'une console de jeux?",
+            "content": "Une console de jeux est un appareil spécialement conçu pour jouer à des jeux vidéo. Elle se branche sur une télévision et utilise des manettes pour contrôler les jeux. Il existe différentes consoles comme la PlayStation, la Xbox ou la Nintendo Switch. Chaque console a ses propres jeux et fonctionnalités.",
+            "questions": [
+                {
+                    "question": "Comment fonctionne une console de jeux?",
+                    "answer": "Une console de jeux se branche sur une télévision et utilise des manettes pour permettre de jouer à des jeux vidéo spécialement conçus pour cette console."
+                }
+            ],
+            "image": "/assets/technology/console-jeux.webp"
+        },
+        {
+            "id": 19,
+            "title": "Qu'est-ce qu'un câble USB?",
+            "content": "Un câble USB est un fil qui permet de connecter différents appareils électroniques entre eux. Par exemple, on peut utiliser un câble USB pour relier un smartphone à un ordinateur afin de transférer des photos. Les câbles USB servent aussi à recharger la batterie de nombreux appareils comme les tablettes, les smartphones ou les casques sans fil.",
+            "questions": [
+                {
+                    "question": "À quoi sert un câble USB?",
+                    "answer": "Un câble USB sert à connecter des appareils électroniques entre eux pour transférer des données ou recharger des batteries."
+                }
+            ],
+            "image": "/assets/technology/cable-usb.webp"
+        },
+        {
+            "id": 20,
+            "title": "Qu'est-ce qu'un clavier d'ordinateur?",
+            "content": "Un clavier d'ordinateur est un ensemble de touches qu'on utilise pour écrire des lettres, des chiffres et des symboles sur un ordinateur. Chaque touche correspond à un caractère différent. En appuyant sur les touches, on peut écrire des textes, des messages ou des commandes pour l'ordinateur. Les claviers peuvent être connectés par un fil ou fonctionner sans fil.",
+            "questions": [
+                {
+                    "question": "À quoi sert un clavier d'ordinateur?",
+                    "answer": "Un clavier d'ordinateur sert à écrire des lettres, des chiffres et des symboles sur un ordinateur en appuyant sur différentes touches."
+                }
+            ],
+            "image": "/assets/technology/clavier.webp"
+        }
+    ]
+}
