@@ -5,6 +5,7 @@ import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
+import BackButton from "@/components/back";
 
 const subjects = [
   { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
@@ -252,7 +253,25 @@ const WeeklyReport = () => {
   };
 
   return (
-    <div className="min-h-screen flex flex-col dark:bg-gray-900">
+    <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
+      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+        <div className="absolute left-4 top-0 z-10">
+          <BackButton />
+        </div>
+        <motion.div 
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-4 sm:mb-6"
+          initial={{ opacity: 0, y: -20 }}
+          transition={{ duration: 0.5 }}
+        >
+          <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
+            Rapport Hebdomadaire
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+            Suivez votre progression semaine après semaine
+          </p>
+        </motion.div>
+      </div>
       <div className="container mx-auto px-6 py-8 flex-grow">
         {/* En-tête */}
         <motion.div
@@ -455,7 +474,7 @@ const WeeklyReport = () => {
       </div>
 
       {/* Footer */}
-    </div>
+    </section>
   );
 };
 
