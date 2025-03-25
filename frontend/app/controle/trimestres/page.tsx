@@ -91,29 +91,45 @@ const TrimestrePage: React.FC = () => {
 
   // Chargement des exercices
   useEffect(() => {
-    const fetchExercises = async () => {
+    const loadExercises = () => {
       try {
-        const [frenchData, mathData, historyData, geographyData, sciencesData, languageData, englishData] = await Promise.all([
-          fetch("/datafrench.json").then(res => res.json()),
-          fetch("/datamath.json").then(res => res.json()),
-          fetch("/datahistory.json").then(res => res.json()),
-          fetch("/datageography.json").then(res => res.json()),
-          fetch("/datascience.json").then(res => res.json()),
-          fetch("/datalanguage.json").then(res => res.json()),
-          fetch("/dataenglish.json").then(res => res.json()),
-        ]);
-
-        const allExercises = [
-          ...frenchData.french_exercises.map((ex: Exercise) => ({ ...ex, subject: "Français" })),
-          ...mathData.math_exercises.map((ex: Exercise) => ({ ...ex, subject: "Mathématiques" })),
-          ...historyData.history_exercises.map((ex: Exercise) => ({ ...ex, subject: "Histoire" })),
-          ...geographyData.geography_exercises.map((ex: Exercise) => ({ ...ex, subject: "Géographie" })),
-          ...sciencesData.sciences_exercises.map((ex: Exercise) => ({ ...ex, subject: "Sciences" })),
-          ...languageData.language_exercises.map((ex: Exercise) => ({ ...ex, subject: "Langues" })),
-          ...englishData.english_exercises.map((ex: Exercise) => ({ ...ex, subject: "Anglais" })),
+        // Données statiques pour les exercices
+        const mockExercises = [
+          {
+            id: 1,
+            title: "Calcul mental",
+            content: "Exercice de calcul mental",
+            question: "Combien font 15 × 4 ?",
+            answer: "60",
+            subject: "Mathématiques"
+          },
+          {
+            id: 2,
+            title: "Conjugaison",
+            content: "Exercice de conjugaison",
+            question: "Conjuguez le verbe 'être' au présent",
+            answer: "je suis, tu es, il est, nous sommes, vous êtes, ils sont",
+            subject: "Français"
+          },
+          {
+            id: 3,
+            title: "Histoire de France",
+            content: "Les dates importantes",
+            question: "En quelle année a eu lieu la Révolution française ?",
+            answer: "1789",
+            subject: "Histoire"
+          },
+          {
+            id: 4,
+            title: "Géographie",
+            content: "Les capitales",
+            question: "Quelle est la capitale de la France ?",
+            answer: "Paris",
+            subject: "Géographie"
+          }
         ];
 
-        setExercises(allExercises);
+        setExercises(mockExercises);
         setLoading(false);
       } catch (err) {
         setError("Erreur lors du chargement des exercices");
@@ -121,7 +137,7 @@ const TrimestrePage: React.FC = () => {
       }
     };
 
-    fetchExercises();
+    loadExercises();
   }, []);
 
   // Gestion du timer
