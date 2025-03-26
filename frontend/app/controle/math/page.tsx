@@ -5,8 +5,6 @@ import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ProgressTracker } from "@/components/progress/ProgressTracker";
-
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
