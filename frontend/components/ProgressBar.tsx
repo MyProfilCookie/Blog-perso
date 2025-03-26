@@ -30,16 +30,18 @@ export default function ProgressBar({ initialProgress = 0, onProgressComplete }:
   }, [onProgressComplete]);
 
   return (
-    <div className="w-full bg-gray-200 rounded-full h-2.5 dark:bg-gray-700 mb-4">
-      <motion.div
-        className="bg-violet-600 h-2.5 rounded-full"
-        initial={{ width: 0 }}
-        animate={{ width: `${progress}%` }}
-        transition={{ duration: 0.5 }}
-      />
+    <div className="w-full">
+      <div className="w-full bg-white/20 rounded-full h-2.5">
+        <motion.div 
+          className="bg-yellow-300 h-2.5 rounded-full"
+          initial={{ width: "0%" }}
+          animate={{ width: `${progress}%` }}
+          transition={{ duration: 1 }}
+        />
+      </div>
       <div className="flex justify-between mt-2 text-sm text-gray-600 dark:text-gray-400">
-        <span>{progress}% terminé</span>
-        <span>Temps restant: {Math.ceil((100 - progress) * 0.6)} min</span>
+        <span>Progression : {progress}%</span>
+        <span>Temps restant : {Math.ceil((100 - progress) * 0.6)} min</span>
       </div>
     </div>
   );

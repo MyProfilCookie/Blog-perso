@@ -642,18 +642,18 @@ const TrimestrePage: React.FC = () => {
 
                           {exercise.image && (
                             <div className="mb-4">
-                              <Image
+      <Image
                                 alt={exercise.title}
                                 className="rounded-lg object-cover w-full h-48"
                                 height={200}
                                 src={`/assets/${exercise.subject.toLowerCase()}/${exercise.image}`}
-                                width={300}
-                              />
-                            </div>
-                          )}
+        width={300}
+      />
+        </div>
+      )}
 
                           {exercise.options ? (
-                            <select
+              <select
                               className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
                               disabled={results[exercise.id] !== undefined}
                               value={userAnswers[exercise.id] || ""}
@@ -662,10 +662,10 @@ const TrimestrePage: React.FC = () => {
                               <option value="">Sélectionnez une option</option>
                               {exercise.options.map((option, idx) => (
                                 <option key={idx} value={option}>
-                                  {option}
-                                </option>
-                              ))}
-                            </select>
+                    {option}
+                  </option>
+                ))}
+              </select>
                           ) : (
                             <input
                               className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
@@ -677,13 +677,13 @@ const TrimestrePage: React.FC = () => {
                             />
                           )}
 
-                          <Button
+      <Button
                             className="w-full bg-violet-500 text-white hover:bg-violet-600"
                             disabled={results[exercise.id] !== undefined}
                             onClick={() => handleSubmit(exercise.id, exercise.answer)}
-                          >
-                            Soumettre
-                          </Button>
+      >
+        Soumettre
+      </Button>
 
                           {results[exercise.id] !== undefined && (
                             <motion.p

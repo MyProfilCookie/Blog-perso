@@ -407,7 +407,7 @@ const FrenchPage: React.FC = () => {
       }
     ];
     setExercises(mockExercises);
-    setLoading(false);
+        setLoading(false);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
@@ -513,7 +513,7 @@ const FrenchPage: React.FC = () => {
               </p>
             </motion.div>
             <div className="flex justify-center mb-4">
-              <BackButton />
+      <BackButton />
             </div>
             <div className="w-full max-w-3xl mx-auto">
               <ProgressBar 
@@ -543,12 +543,12 @@ const FrenchPage: React.FC = () => {
                 )}
               </div>
             </div>
-          </div>
+      </div>
 
           {/* Message d'encouragement */}
           {emoji && (
-            <motion.div
-              animate={{ opacity: 1, y: 0 }}
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
               className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
               initial={{ opacity: 0, y: -20 }}
             >
@@ -671,11 +671,11 @@ const FrenchPage: React.FC = () => {
               animate={{ opacity: 1 }}
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
               initial={{ opacity: 0 }}
-              transition={{ duration: 0.5 }}
-            >
+        transition={{ duration: 0.5 }}
+      >
               {filteredExercises.map((exercise, index) => (
                 <motion.div
-                  key={exercise.id}
+            key={exercise.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.1 }}
@@ -684,57 +684,57 @@ const FrenchPage: React.FC = () => {
                   <Card className="w-full h-full bg-white dark:bg-gray-800 shadow-lg border border-violet-200">
                     <CardBody className="p-4 sm:p-6">
                       <h3 className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-                        {exercise.title}
-                      </h3>
+                {exercise.title}
+              </h3>
                       <p className="text-gray-600 dark:text-gray-400 mb-4">{exercise.content}</p>
                       <p className="font-medium mb-4">{exercise.question}</p>
 
-                      {exercise.image && (
+              {exercise.image && (
                         <div className="mb-4">
-                          <Image
-                            alt={exercise.title}
+                <Image
+                  alt={exercise.title}
                             className="rounded-lg object-cover w-full h-48"
                             height={200}
-                            src={`/assets/french/${exercise.image}`}
+                  src={`/assets/french/${exercise.image}`}
                             width={300}
-                          />
+                />
                         </div>
-                      )}
+              )}
 
-                      {exercise.options ? (
-                        <select
+              {exercise.options ? (
+                <select
                           className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
                           disabled={results[exercise.id] !== undefined}
-                          value={userAnswers[exercise.id] || ""}
-                          onChange={(e) => handleChange(e, exercise.id)}
-                        >
-                          <option value="">Sélectionnez une option</option>
+                  value={userAnswers[exercise.id] || ""}
+                  onChange={(e) => handleChange(e, exercise.id)}
+                >
+                  <option value="">Sélectionnez une option</option>
                           {exercise.options.map((option, idx) => (
                             <option key={idx} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
                           className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
                           disabled={results[exercise.id] !== undefined}
-                          placeholder="Votre réponse"
-                          type="text"
-                          value={userAnswers[exercise.id] || ""}
-                          onChange={(e) => handleChange(e, exercise.id)}
-                        />
-                      )}
+                  placeholder="Votre réponse"
+                  type="text"
+                  value={userAnswers[exercise.id] || ""}
+                  onChange={(e) => handleChange(e, exercise.id)}
+                />
+              )}
 
                       <Button
                         className="w-full bg-violet-500 text-white hover:bg-violet-600"
                         disabled={results[exercise.id] !== undefined}
-                        onClick={() => handleSubmit(exercise.id, exercise.answer)}
-                      >
-                        Soumettre
+                onClick={() => handleSubmit(exercise.id, exercise.answer)}
+              >
+                Soumettre
                       </Button>
 
-                      {results[exercise.id] !== undefined && (
+              {results[exercise.id] !== undefined && (
                         <motion.p
                           animate={{ opacity: 1 }}
                           className={`mt-2 text-center ${
@@ -744,12 +744,12 @@ const FrenchPage: React.FC = () => {
                         >
                           {results[exercise.id] ? "Bonne réponse !" : "Mauvaise réponse, réessayez."}
                         </motion.p>
-                      )}
-                    </CardBody>
-                  </Card>
+              )}
+            </CardBody>
+          </Card>
                 </motion.div>
-              ))}
-            </motion.div>
+        ))}
+      </motion.div>
           </div>
 
           {/* Section des résultats */}
@@ -762,7 +762,7 @@ const FrenchPage: React.FC = () => {
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full">
                 <h2 className="text-2xl sm:text-3xl font-bold text-center text-violet-600 dark:text-violet-400 mb-4">
                   Résultats {emoji}
-                </h2>
+          </h2>
                 <p className="text-center text-xl mb-6">
                   Score final : {finalScore?.toFixed(1)}%
                 </p>
@@ -789,7 +789,7 @@ const FrenchPage: React.FC = () => {
                     <div className="flex items-center gap-2 text-green-500">
                       <span>⚡</span>
                       <p>Apprenant rapide !</p>
-                    </div>
+        </div>
                   )}
                 </div>
                 <Button
@@ -806,9 +806,9 @@ const FrenchPage: React.FC = () => {
           <div className="mt-8">
             <Button
               className="bg-violet-500 text-white hover:bg-violet-600"
-              onClick={calculateFinalScore}
-            >
-              Calculer le score final
+          onClick={calculateFinalScore}
+        >
+          Calculer le score final
             </Button>
           </div>
         </section>
