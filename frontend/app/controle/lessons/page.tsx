@@ -23,6 +23,7 @@ import Image from "next/image";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
+import { ProgressTracker } from "@/components/progress/ProgressTracker";
 
 // Configuration de la locale française
 dayjs.locale("fr");
@@ -179,6 +180,11 @@ export default function LessonOfTheDay() {
     // Sélection aléatoire d'un message d'encouragement
     const randomMessage = messages[rating][Math.floor(Math.random() * messages[rating].length)];
     setEncouragementMessage(randomMessage);
+  };
+
+  const handleRating = (rating: "Facile" | "Moyen" | "Difficile") => {
+    // Ici, vous pouvez ajouter la logique pour sauvegarder la progression
+    console.log(`Progression en leçons : ${rating}`);
   };
 
   if (!isLoggedIn) {
@@ -606,6 +612,8 @@ export default function LessonOfTheDay() {
       </div>
 
       <Timer />
+
+      <ProgressTracker subject="Leçons" onRating={handleRating} />
     </div>
   );
 }
