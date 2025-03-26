@@ -255,11 +255,11 @@ const WeeklyReport = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-4">
-      <div className="w-full max-w-7xl mx-auto mb-6">
+      <div className="fixed top-4 left-4 z-50 sm:relative sm:top-0 sm:left-0 sm:w-full sm:max-w-7xl sm:mx-auto sm:mb-6">
         <BackButton />
       </div>
       
-      <div className="flex-1 w-full max-w-7xl mx-auto">
+      <div className="flex-1 w-full max-w-7xl mx-auto mt-16 sm:mt-0">
         <Card className="w-full">
           <CardBody>
             <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
