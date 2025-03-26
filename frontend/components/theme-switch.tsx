@@ -63,6 +63,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     const newTheme = isDarkMode ? "light" : "dark";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
+    localStorage.setItem("themeMode", "manual");
   };
 
   const toggleAutoMode = () => {
