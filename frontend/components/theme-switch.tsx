@@ -6,7 +6,8 @@ import { SwitchProps, useSwitch } from "@nextui-org/switch";
 import { useTheme } from "next-themes";
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faMoon } from "@fortawesome/free-solid-svg-icons";
+import { faMoon, faClock } from "@fortawesome/free-solid-svg-icons";
+import { Popover, PopoverTrigger, PopoverContent, Button, Input } from "@nextui-org/react";
 
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 
@@ -23,9 +24,16 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
   const [mounted, setMounted] = useState(false);
   const [isAutoMode, setIsAutoMode] = useState(() => {
     if (typeof window !== 'undefined') {
-      return localStorage.getItem("themeMode") !== "manual";
+      return localStorage.getItem("themeMode") === "auto";
     }
     return true;
+  });
+  const [autoModeHours, setAutoModeHours] = useState(() => {
+    if (typeof window !== 'undefined') {
+      const savedHours = localStorage.getItem("autoModeHours");
+      return savedHours ? JSON.parse(savedHours) : { start: 20, end: 7 };
+    }
+    return { start: 20, end: 7 };
   });
   const isDarkMode = theme === "dark";
 
@@ -35,7 +43,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     const applyThemeBasedOnTime = () => {
       if (!isAutoMode) return;
       const currentHour = new Date().getHours();
-      const shouldBeDark = currentHour >= 20 || currentHour < 7;
+      const shouldBeDark = currentHour >= autoModeHours.start || currentHour < autoModeHours.end;
 
       if (shouldBeDark && theme !== "dark") {
         setTheme("dark");
@@ -48,7 +56,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     const intervalId = setInterval(applyThemeBasedOnTime, 60000);
 
     return () => clearInterval(intervalId);
-  }, [isAutoMode, theme, setTheme]);
+  }, [isAutoMode, theme, setTheme, autoModeHours]);
 
   const onThemeChange = () => {
     if (isAutoMode) return;
@@ -64,11 +72,16 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 
     if (newAutoMode) {
       const currentHour = new Date().getHours();
-      const shouldBeDark = currentHour >= 20 || currentHour < 7;
+      const shouldBeDark = currentHour >= autoModeHours.start || currentHour < autoModeHours.end;
       const newTheme = shouldBeDark ? "dark" : "light";
       setTheme(newTheme);
       localStorage.setItem("theme", newTheme);
     }
+  };
+
+  const updateAutoModeHours = (start: number, end: number) => {
+    setAutoModeHours({ start, end });
+    localStorage.setItem("autoModeHours", JSON.stringify({ start, end }));
   };
 
   const { Component, slots, getBaseProps, getInputProps, getWrapperProps } =
@@ -134,11 +147,62 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
             ? "bg-green-100 text-green-800 border border-green-300"
             : "bg-blue-100 text-blue-800 border border-blue-300",
         )}
-        title={isAutoMode ? "Mode automatique (20h-7h)" : "Mode manuel"}
+        title={isAutoMode ? `Mode automatique (${autoModeHours.start}h-${autoModeHours.end}h)` : "Mode manuel"}
         onClick={toggleAutoMode}
       >
         {isAutoMode ? "Auto" : "Manuel"}
       </button>
+
+      {isAutoMode && (
+        <Popover placement="bottom">
+          <PopoverTrigger>
+            <Button
+              isIconOnly
+              size="sm"
+              variant="light"
+              className="text-xs"
+              title="Modifier les heures"
+            >
+              <FontAwesomeIcon icon={faClock} />
+            </Button>
+          </PopoverTrigger>
+          <PopoverContent>
+            <div className="p-4 space-y-4">
+              <h3 className="text-sm font-medium">Heures de définition</h3>
+              <div className="flex items-center gap-2">
+                <Input
+                  type="number"
+                  min="0"
+                  max="23"
+                  value={autoModeHours.start.toString()}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value);
+                    if (value >= 0 && value <= 23) {
+                      updateAutoModeHours(value, autoModeHours.end);
+                    }
+                  }}
+                  className="w-20"
+                />
+                <span>h -</span>
+                <Input
+                  type="number"
+                  min="0"
+                  max="23"
+                  value={autoModeHours.end.toString()}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value);
+                    if (value >= 0 && value <= 23) {
+                      updateAutoModeHours(autoModeHours.start, value);
+                    }
+                  }}
+                  className="w-20"
+                />
+                <span>h</span>
+              </div>
+            </div>
+          </PopoverContent>
+        </Popover>
+      )}
     </div>
   );
 };
