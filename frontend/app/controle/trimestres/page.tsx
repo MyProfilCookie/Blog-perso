@@ -9,6 +9,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 
 import BackButton from "@/components/back";
+import ProgressBar from "@/components/ProgressBar";
 
 // Styles pour le PDF
 const styles = StyleSheet.create({
@@ -514,6 +515,15 @@ const TrimestrePage: React.FC = () => {
             </motion.div>
             <div className="flex justify-center mb-4">
               <BackButton />
+            </div>
+            <div className="w-full max-w-3xl mx-auto">
+              <ProgressBar 
+                initialProgress={0}
+                onProgressComplete={() => {
+                  // Vous pouvez ajouter une action lorsque la progression est terminée
+                  console.log("Progression terminée !");
+                }}
+              />
             </div>
           </div>
 

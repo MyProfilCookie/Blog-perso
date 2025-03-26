@@ -9,6 +9,7 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
+import ProgressBar from "@/components/ProgressBar";
 
 // Interface pour les exercices de technologie
 interface Exercise {
@@ -178,6 +179,15 @@ const TechnologyPage: React.FC = () => {
             </motion.div>
             <div className="flex justify-center mb-4">
               <BackButton />
+            </div>
+            <div className="w-full max-w-3xl mx-auto">
+              <ProgressBar 
+                initialProgress={0}
+                onProgressComplete={() => {
+                  // Vous pouvez ajouter une action lorsque la progression est terminée
+                  console.log("Progression terminée !");
+                }}
+              />
             </div>
           </div>
 
