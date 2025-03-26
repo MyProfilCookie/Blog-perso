@@ -7,22 +7,13 @@
 import { useState, useEffect } from "react";
 import React from "react";
 import { motion } from "framer-motion";
-import { Sparkles } from "lucide-react";
 import Link from "next/link";
 
 // Importation des composants shadcn/ui
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import {
-  Pagination,
-  PaginationContent,
-  PaginationEllipsis,
-  PaginationItem,
-  PaginationLink,
-  PaginationNext,
-  PaginationPrevious,
-} from "@/components/ui/pagination";
+
+
 
 import articlesData from "@/public/dataarticles.json";
 import { title } from "@/components/primitives";
@@ -144,14 +135,14 @@ const ArticlesPage = () => {
   return (
     <div className="flex flex-col items-center justify-center min-h-screen w-full">
       <motion.div
+        animate={{ opacity: 1, y: 0 }}
         className="w-full text-center mb-12"
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8 }}
       >
         <motion.h1
-          className={`${title()} text-4xl md:text-5xl font-bold leading-tight text-violet-600 dark:text-violet-300 flex items-center justify-center gap-2`}
           animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.1, 1] }}
+          className={`${title()} text-4xl md:text-5xl font-bold leading-tight text-violet-600 dark:text-violet-300 flex items-center justify-center gap-2`}
           transition={{ duration: 2, repeat: Infinity }}
         >
           Articles et Astuces
