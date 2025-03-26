@@ -8,7 +8,10 @@ interface ProgressBarProps {
   onProgressComplete?: () => void;
 }
 
-export default function ProgressBar({ initialProgress = 0, onProgressComplete }: ProgressBarProps) {
+export default function ProgressBar({
+  initialProgress = 0,
+  onProgressComplete,
+}: ProgressBarProps) {
   const [progress, setProgress] = useState(initialProgress);
 
   useEffect(() => {
@@ -17,9 +20,11 @@ export default function ProgressBar({ initialProgress = 0, onProgressComplete }:
         if (oldProgress === 100) {
           clearInterval(timer);
           onProgressComplete?.();
+
           return 100;
         }
         const newProgress = Math.min(oldProgress + 1, 100);
+
         return newProgress;
       });
     }, 1000);
@@ -32,10 +37,10 @@ export default function ProgressBar({ initialProgress = 0, onProgressComplete }:
   return (
     <div className="w-full">
       <div className="w-full bg-white/20 rounded-full h-2.5">
-        <motion.div 
+        <motion.div
+          animate={{ width: `${progress}%` }}
           className="bg-yellow-300 h-2.5 rounded-full"
           initial={{ width: "0%" }}
-          animate={{ width: `${progress}%` }}
           transition={{ duration: 1 }}
         />
       </div>
@@ -45,4 +50,4 @@ export default function ProgressBar({ initialProgress = 0, onProgressComplete }:
       </div>
     </div>
   );
-} 
+}
