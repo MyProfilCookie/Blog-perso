@@ -23,7 +23,7 @@ import Image from "next/image";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
-import { ProgressTracker } from "@/components/progress/ProgressTracker";
+import { ProgressBar } from "@/components/progress/ProgressBar";
 
 // Configuration de la locale française
 dayjs.locale("fr");
@@ -63,6 +63,8 @@ export default function LessonOfTheDay() {
   const [showPrerequisites, setShowPrerequisites] = useState<boolean>(false);
   const [progress, setProgress] = useState<number>(0);
   const [notes, setNotes] = useState<string>("");
+  const [correctAnswers, setCorrectAnswers] = useState(0);
+  const [totalQuestions, setTotalQuestions] = useState(0);
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
@@ -158,6 +160,13 @@ export default function LessonOfTheDay() {
       [rating]: prevRatings[rating] + 1,
     }));
 
+    if (rating === "Facile") {
+      setCorrectAnswers(prev => prev + 1);
+      setTotalQuestions(prev => prev + 1);
+    } else {
+      setTotalQuestions(prev => prev + 1);
+    }
+
     // Messages d'encouragement personnalisés selon la difficulté
     const messages = {
       Facile: [
@@ -180,11 +189,6 @@ export default function LessonOfTheDay() {
     // Sélection aléatoire d'un message d'encouragement
     const randomMessage = messages[rating][Math.floor(Math.random() * messages[rating].length)];
     setEncouragementMessage(randomMessage);
-  };
-
-  const handleRating = (rating: "Facile" | "Moyen" | "Difficile") => {
-    // Ici, vous pouvez ajouter la logique pour sauvegarder la progression
-    console.log(`Progression en leçons : ${rating}`);
   };
 
   if (!isLoggedIn) {
@@ -309,16 +313,14 @@ export default function LessonOfTheDay() {
               <p className="text-center text-sm sm:text-lg opacity-90">Découvrez votre programme personnalisé du jour</p>
               
               {/* Barre de progression */}
-              <div className="mt-4">
-                <div className="w-full bg-white/20 rounded-full h-2.5">
-                  <motion.div 
-                    className="bg-yellow-300 h-2.5 rounded-full"
-                    initial={{ width: "0%" }}
-                    animate={{ width: `${progress}%` }}
-                    transition={{ duration: 1 }}
-                  ></motion.div>
-                </div>
-                <p className="text-center mt-2 text-sm">Progression : {progress}%</p>
+              <div className="w-full max-w-3xl mx-auto mb-8">
+                <ProgressBar 
+                  totalQuestions={totalQuestions}
+                  correctAnswers={correctAnswers}
+                  onProgressComplete={() => {
+                    console.log("Progression terminée !");
+                  }}
+                />
               </div>
             </div>
 
@@ -612,8 +614,6 @@ export default function LessonOfTheDay() {
       </div>
 
       <Timer />
-
-      <ProgressTracker subject="Leçons" onRating={handleRating} />
     </div>
   );
 }
