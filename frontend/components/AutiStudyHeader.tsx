@@ -1,5 +1,5 @@
 // AutiStudy Header Component
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useTheme } from "next-themes";
@@ -34,6 +34,12 @@ const navLinks = [
 const AutiStudyHeader = ({ user }: { user: User | null }) => {
   const { theme, setTheme } = useTheme();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    // Émettre un événement personnalisé lorsque l'état du menu change
+    const event = new CustomEvent('menuStateChange', { detail: isMenuOpen });
+    window.dispatchEvent(event);
+  }, [isMenuOpen]);
 
   const toggleTheme = () => {
     setTheme(theme === "dark" ? "light" : "dark");

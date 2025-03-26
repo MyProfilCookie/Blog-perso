@@ -495,294 +495,297 @@ const TrimestrePage: React.FC = () => {
   }
 
   return (
-    <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
-      {/* En-tête avec titre et navigation */}
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
-        <div className="absolute left-4 top-0 z-10">
-          <BackButton />
-        </div>
-        <motion.div 
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-4 sm:mb-6"
-          initial={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-            Contrôle Trimestriel
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-            Testez vos connaissances dans toutes les matières
-          </p>
-        </motion.div>
-      </div>
-
-      {/* Formulaire de démarrage */}
-      {!isStarted && (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="w-full max-w-md mx-auto p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg"
-          initial={{ opacity: 0, y: 20 }}
-        >
-          <h2 className="text-xl font-bold text-violet-600 dark:text-violet-400 mb-4">
-            Commencer le contrôle
-          </h2>
-          <div className="space-y-4">
-            <Input
-              className="w-full"
-              label="Nom de l'élève"
-              placeholder="Entrez votre nom"
-              value={studentName}
-              onChange={(e) => setStudentName(e.target.value)}
-            />
-            <div className="text-sm text-gray-600 dark:text-gray-400">
-              <p>• Le contrôle dure 2 heures</p>
-              <p>• Vous pouvez naviguer entre les exercices</p>
-              <p>• Les réponses sont enregistrées automatiquement</p>
-              <p>• Vous pouvez télécharger votre copie à la fin</p>
-            </div>
-            <Button
-              className="w-full bg-violet-500 text-white hover:bg-violet-600"
-              isDisabled={!studentName.trim()}
-              onClick={() => setIsStarted(true)}
+    <div className="flex flex-col min-h-screen p-4">
+      <div className="flex-1 w-full max-w-7xl mx-auto">
+        <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
+          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+            <motion.div 
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-4 sm:mb-6"
+              initial={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
             >
-              Commencer le contrôle
-            </Button>
-          </div>
-        </motion.div>
-      )}
-
-      {/* Interface principale du contrôle */}
-      {isStarted && !isFinished && (
-        <>
-          {/* Barre d'état */}
-          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200">
-              <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
-                <div className="text-xl font-bold text-violet-600 dark:text-violet-400">
-                  Temps restant : {formatTime(currentTime)}
-                </div>
-                <div className="flex gap-4">
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Exercices complétés</p>
-                    <p className="text-lg font-bold text-violet-600 dark:text-violet-400">{completedExercises}</p>
-                  </div>
-                  <div className="text-center">
-                    <p className="text-sm text-gray-600 dark:text-gray-400">Points</p>
-                    <p className="text-lg font-bold text-violet-600 dark:text-violet-400">{totalPoints}</p>
-                  </div>
-                </div>
-              </div>
+              <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
+                Trimestres
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+                Résultats des trimestres
+              </p>
+            </motion.div>
+            <div className="flex justify-center mb-4">
+              <BackButton />
             </div>
           </div>
 
-          {/* Messages d'encouragement */}
-          {currentMessage && (
+          {/* Formulaire de démarrage */}
+          {!isStarted && (
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
-              initial={{ opacity: 0, y: -20 }}
+              className="w-full max-w-md mx-auto p-6 bg-white dark:bg-gray-800 rounded-xl shadow-lg"
+              initial={{ opacity: 0, y: 20 }}
             >
-              <p className="text-lg">{currentMessage}</p>
+              <h2 className="text-xl font-bold text-violet-600 dark:text-violet-400 mb-4">
+                Commencer le contrôle
+              </h2>
+              <div className="space-y-4">
+                <Input
+                  className="w-full"
+                  label="Nom de l'élève"
+                  placeholder="Entrez votre nom"
+                  value={studentName}
+                  onChange={(e) => setStudentName(e.target.value)}
+                />
+                <div className="text-sm text-gray-600 dark:text-gray-400">
+                  <p>• Le contrôle dure 2 heures</p>
+                  <p>• Vous pouvez naviguer entre les exercices</p>
+                  <p>• Les réponses sont enregistrées automatiquement</p>
+                  <p>• Vous pouvez télécharger votre copie à la fin</p>
+                </div>
+                <Button
+                  className="w-full bg-violet-500 text-white hover:bg-violet-600"
+                  isDisabled={!studentName.trim()}
+                  onClick={() => setIsStarted(true)}
+                >
+                  Commencer le contrôle
+                </Button>
+              </div>
             </motion.div>
           )}
 
-          {/* Filtre par matière */}
-          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4">
-            <select
-              className="w-full p-2 bg-white dark:bg-gray-800 rounded-lg border border-violet-200"
-              value={selectedSubject}
-              onChange={(e) => setSelectedSubject(e.target.value)}
-            >
-              {subjects.map((subject) => (
-                <option key={subject} value={subject}>
-                  {subject !== "Tout" ? `${subjectEmojis[subject]} ${subject}` : "🎯 Tout"}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Grille d'exercices */}
-          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6">
-            <motion.div
-              animate={{ opacity: 1 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-              initial={{ opacity: 0 }}
-            >
-              {filteredExercises.map((exercise, index) => (
-                <motion.div
-                  key={exercise.id}
-                  animate={{ opacity: 1, y: 0 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  transition={{ delay: index * 0.1 }}
-                  whileHover={{ scale: 1.02 }}
-                >
-                  <Card className="w-full h-full bg-white dark:bg-gray-800 shadow-lg border border-violet-200">
-                    <CardBody className="p-4 sm:p-6">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
-                          {exercise.title}
-                        </h3>
-                        <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
-                          {subjectEmojis[exercise.subject]} {exercise.subject}
-                        </span>
+          {/* Interface principale du contrôle */}
+          {isStarted && !isFinished && (
+            <>
+              {/* Barre d'état */}
+              <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4">
+                <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200">
+                  <div className="flex flex-col sm:flex-row justify-between items-center gap-4">
+                    <div className="text-xl font-bold text-violet-600 dark:text-violet-400">
+                      Temps restant : {formatTime(currentTime)}
+                    </div>
+                    <div className="flex gap-4">
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Exercices complétés</p>
+                        <p className="text-lg font-bold text-violet-600 dark:text-violet-400">{completedExercises}</p>
                       </div>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">{exercise.content}</p>
-                      <p className="font-medium mb-4">{exercise.question}</p>
+                      <div className="text-center">
+                        <p className="text-sm text-gray-600 dark:text-gray-400">Points</p>
+                        <p className="text-lg font-bold text-violet-600 dark:text-violet-400">{totalPoints}</p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
 
-                      {exercise.image && (
-                        <div className="mb-4">
-                          <Image
-                            alt={exercise.title}
-                            className="rounded-lg object-cover w-full h-48"
-                            height={200}
-                            src={`/assets/${exercise.subject.toLowerCase()}/${exercise.image}`}
-                            width={300}
-                          />
-                        </div>
-                      )}
-
-                      {exercise.options ? (
-                        <select
-                          className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
-                          disabled={results[exercise.id] !== undefined}
-                          value={userAnswers[exercise.id] || ""}
-                          onChange={(e) => handleChange(e, exercise.id)}
-                        >
-                          <option value="">Sélectionnez une option</option>
-                          {exercise.options.map((option, idx) => (
-                            <option key={idx} value={option}>
-                              {option}
-                            </option>
-                          ))}
-                        </select>
-                      ) : (
-                        <input
-                          className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
-                          disabled={results[exercise.id] !== undefined}
-                          placeholder="Votre réponse"
-                          type="text"
-                          value={userAnswers[exercise.id] || ""}
-                          onChange={(e) => handleChange(e, exercise.id)}
-                        />
-                      )}
-
-                      <Button
-                        className="w-full bg-violet-500 text-white hover:bg-violet-600"
-                        disabled={results[exercise.id] !== undefined}
-                        onClick={() => handleSubmit(exercise.id, exercise.answer)}
-                      >
-                        Soumettre
-                      </Button>
-
-                      {results[exercise.id] !== undefined && (
-                        <motion.p
-                          animate={{ opacity: 1 }}
-                          className={`mt-2 text-center ${
-                            results[exercise.id] ? "text-green-500" : "text-red-500"
-                          }`}
-                          initial={{ opacity: 0 }}
-                        >
-                          {results[exercise.id] ? "Bonne réponse !" : "Mauvaise réponse, réessayez."}
-                        </motion.p>
-                      )}
-                    </CardBody>
-                  </Card>
+              {/* Messages d'encouragement */}
+              {currentMessage && (
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
+                  initial={{ opacity: 0, y: -20 }}
+                >
+                  <p className="text-lg">{currentMessage}</p>
                 </motion.div>
-              ))}
-            </motion.div>
-          </div>
-        </>
-      )}
+              )}
 
-      {/* Modal des résultats */}
-      <Modal isOpen={showResults} size="lg" onClose={() => setShowResults(false)}>
-        <ModalContent>
-          <ModalHeader className="flex flex-col gap-1">
-            <h2 className="text-2xl font-bold text-violet-600 dark:text-violet-400">
-              Résultats du contrôle
-            </h2>
-            <p className="text-gray-600 dark:text-gray-400">
-              {studentName}
-            </p>
-          </ModalHeader>
-          <ModalBody>
-            <div className="space-y-4">
-              <div className="text-center">
-                <p className="text-4xl font-bold text-violet-600 dark:text-violet-400">
-                  {finalScore?.toFixed(1)}%
-                </p>
+              {/* Filtre par matière */}
+              <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4">
+                <select
+                  className="w-full p-2 bg-white dark:bg-gray-800 rounded-lg border border-violet-200"
+                  value={selectedSubject}
+                  onChange={(e) => setSelectedSubject(e.target.value)}
+                >
+                  {subjects.map((subject) => (
+                    <option key={subject} value={subject}>
+                      {subject !== "Tout" ? `${subjectEmojis[subject]} ${subject}` : "🎯 Tout"}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Grille d'exercices */}
+              <div className="w-full max-w-7xl mx-auto px-2 sm:px-6">
+                <motion.div
+                  animate={{ opacity: 1 }}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+                  initial={{ opacity: 0 }}
+                >
+                  {filteredExercises.map((exercise, index) => (
+                    <motion.div
+                      key={exercise.id}
+                      animate={{ opacity: 1, y: 0 }}
+                      initial={{ opacity: 0, y: 20 }}
+                      transition={{ delay: index * 0.1 }}
+                      whileHover={{ scale: 1.02 }}
+                    >
+                      <Card className="w-full h-full bg-white dark:bg-gray-800 shadow-lg border border-violet-200">
+                        <CardBody className="p-4 sm:p-6">
+                          <div className="flex justify-between items-start mb-2">
+                            <h3 className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
+                              {exercise.title}
+                            </h3>
+                            <span className="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                              {subjectEmojis[exercise.subject]} {exercise.subject}
+                            </span>
+                          </div>
+                          <p className="text-gray-600 dark:text-gray-400 mb-4">{exercise.content}</p>
+                          <p className="font-medium mb-4">{exercise.question}</p>
+
+                          {exercise.image && (
+                            <div className="mb-4">
+                              <Image
+                                alt={exercise.title}
+                                className="rounded-lg object-cover w-full h-48"
+                                height={200}
+                                src={`/assets/${exercise.subject.toLowerCase()}/${exercise.image}`}
+                                width={300}
+                              />
+                            </div>
+                          )}
+
+                          {exercise.options ? (
+                            <select
+                              className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
+                              disabled={results[exercise.id] !== undefined}
+                              value={userAnswers[exercise.id] || ""}
+                              onChange={(e) => handleChange(e, exercise.id)}
+                            >
+                              <option value="">Sélectionnez une option</option>
+                              {exercise.options.map((option, idx) => (
+                                <option key={idx} value={option}>
+                                  {option}
+                                </option>
+                              ))}
+                            </select>
+                          ) : (
+                            <input
+                              className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
+                              disabled={results[exercise.id] !== undefined}
+                              placeholder="Votre réponse"
+                              type="text"
+                              value={userAnswers[exercise.id] || ""}
+                              onChange={(e) => handleChange(e, exercise.id)}
+                            />
+                          )}
+
+                          <Button
+                            className="w-full bg-violet-500 text-white hover:bg-violet-600"
+                            disabled={results[exercise.id] !== undefined}
+                            onClick={() => handleSubmit(exercise.id, exercise.answer)}
+                          >
+                            Soumettre
+                          </Button>
+
+                          {results[exercise.id] !== undefined && (
+                            <motion.p
+                              animate={{ opacity: 1 }}
+                              className={`mt-2 text-center ${
+                                results[exercise.id] ? "text-green-500" : "text-red-500"
+                              }`}
+                              initial={{ opacity: 0 }}
+                            >
+                              {results[exercise.id] ? "Bonne réponse !" : "Mauvaise réponse, réessayez."}
+                            </motion.p>
+                          )}
+                        </CardBody>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </motion.div>
+              </div>
+            </>
+          )}
+
+          {/* Modal des résultats */}
+          <Modal isOpen={showResults} size="lg" onClose={() => setShowResults(false)}>
+            <ModalContent>
+              <ModalHeader className="flex flex-col gap-1">
+                <h2 className="text-2xl font-bold text-violet-600 dark:text-violet-400">
+                  Résultats du contrôle
+                </h2>
                 <p className="text-gray-600 dark:text-gray-400">
-                  Score final
+                  {studentName}
                 </p>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="text-center">
-                  <p className="text-lg font-bold text-violet-600 dark:text-violet-400">
-                    {completedExercises}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Exercices complétés
-                  </p>
+              </ModalHeader>
+              <ModalBody>
+                <div className="space-y-4">
+                  <div className="text-center">
+                    <p className="text-4xl font-bold text-violet-600 dark:text-violet-400">
+                      {finalScore?.toFixed(1)}%
+                    </p>
+                    <p className="text-gray-600 dark:text-gray-400">
+                      Score final
+                    </p>
+                  </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-violet-600 dark:text-violet-400">
+                        {completedExercises}
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        Exercices complétés
+                      </p>
+                    </div>
+                    <div className="text-center">
+                      <p className="text-lg font-bold text-violet-600 dark:text-violet-400">
+                        {totalPoints}
+                      </p>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        Points gagnés
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="text-center">
-                  <p className="text-lg font-bold text-violet-600 dark:text-violet-400">
-                    {totalPoints}
-                  </p>
-                  <p className="text-gray-600 dark:text-gray-400">
-                    Points gagnés
-                  </p>
+              </ModalBody>
+              <ModalFooter>
+                <div className="flex gap-4">
+                  <Button
+                    className="bg-violet-500 text-white hover:bg-violet-600"
+                    onClick={() => setShowResults(false)}
+                  >
+                    Fermer
+                  </Button>
+                  <PDFDownloadLink
+                    className="bg-green-500 text-white hover:bg-green-600 px-4 py-2 rounded-lg"
+                    document={
+                      <Document>
+                        <Page size="A4" style={styles.page}>
+                          <Text style={styles.header}>Contrôle Trimestriel</Text>
+                          <View style={styles.studentInfo}>
+                            <Text>Élève : {studentName}</Text>
+                            <Text>Score : {finalScore?.toFixed(1)}%</Text>
+                            <Text>Date : {new Date().toLocaleDateString()}</Text>
+                          </View>
+                          {exercises.map((exercise) => (
+                            <View key={exercise.id} style={styles.section}>
+                              <Text style={styles.question}>
+                                {exercise.subject} - {exercise.title}
+                              </Text>
+                              <Text style={styles.answer}>
+                                Réponse : {userAnswers[exercise.id] || "Non répondue"}
+                              </Text>
+                              <Text>
+                                {results[exercise.id] ? "✅ Correcte" : "❌ Incorrecte"}
+                              </Text>
+                            </View>
+                          ))}
+                        </Page>
+                      </Document>
+                    }
+                    fileName={`controle_${studentName}_${new Date().toISOString().split("T")[0]}.pdf`}
+                  >
+                    {({ loading }) => (
+                      <span>
+                        {loading ? "Génération du PDF..." : "Télécharger le PDF"}
+                      </span>
+                    )}
+                  </PDFDownloadLink>
                 </div>
-              </div>
-            </div>
-          </ModalBody>
-          <ModalFooter>
-            <div className="flex gap-4">
-              <Button
-                className="bg-violet-500 text-white hover:bg-violet-600"
-                onClick={() => setShowResults(false)}
-              >
-                Fermer
-              </Button>
-              <PDFDownloadLink
-                className="bg-green-500 text-white hover:bg-green-600 px-4 py-2 rounded-lg"
-                document={
-                  <Document>
-                    <Page size="A4" style={styles.page}>
-                      <Text style={styles.header}>Contrôle Trimestriel</Text>
-                      <View style={styles.studentInfo}>
-                        <Text>Élève : {studentName}</Text>
-                        <Text>Score : {finalScore?.toFixed(1)}%</Text>
-                        <Text>Date : {new Date().toLocaleDateString()}</Text>
-                      </View>
-                      {exercises.map((exercise) => (
-                        <View key={exercise.id} style={styles.section}>
-                          <Text style={styles.question}>
-                            {exercise.subject} - {exercise.title}
-                          </Text>
-                          <Text style={styles.answer}>
-                            Réponse : {userAnswers[exercise.id] || "Non répondue"}
-                          </Text>
-                          <Text>
-                            {results[exercise.id] ? "✅ Correcte" : "❌ Incorrecte"}
-                          </Text>
-                        </View>
-                      ))}
-                    </Page>
-                  </Document>
-                }
-                fileName={`controle_${studentName}_${new Date().toISOString().split("T")[0]}.pdf`}
-              >
-                {({ loading }) => (
-                  <span>
-                    {loading ? "Génération du PDF..." : "Télécharger le PDF"}
-                  </span>
-                )}
-              </PDFDownloadLink>
-            </div>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </section>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </section>
+      </div>
+    </div>
   );
 };
 
