@@ -53,7 +53,6 @@ const FrenchPage: React.FC = () => {
 
   // Nouvel état pour le minuteur (1 heure = 3600 secondes)
   const [timeLeft, setTimeLeft] = useState<number>(3600);
-  const [isStarted, setIsStarted] = useState<boolean>(false);
 
   // Messages d'encouragement
   const encouragementMessages = [
@@ -70,7 +69,7 @@ const FrenchPage: React.FC = () => {
     let timer: NodeJS.Timeout;
     let encouragementTimer: NodeJS.Timeout;
 
-    if (isStarted && timeLeft > 0) {
+    if (timeLeft > 0) {
       // Minuteur principal
       timer = setInterval(() => {
         setTimeLeft(prev => {
@@ -94,7 +93,7 @@ const FrenchPage: React.FC = () => {
       clearInterval(timer);
       clearInterval(encouragementTimer);
     };
-  }, [isStarted, timeLeft]);
+  }, [timeLeft]);
 
   // Fonction pour formater le temps restant
   const formatTime = (seconds: number): string => {
@@ -107,303 +106,103 @@ const FrenchPage: React.FC = () => {
     const mockExercises: Exercise[] = [
       {
         id: 1,
-        title: "Grammaire",
-        content: "Les articles simples",
-        question: "Quel article utilise-t-on devant 'chat' ?",
-        options: ["un", "une", "des", "le"],
-        answer: "un",
-        category: "Grammaire",
+        title: "Vocabulaire",
+        content: "Les animaux",
+        question: "Quel animal miaule ?",
+        options: ["Le chat", "Le chien", "L'oiseau", "Le lapin"],
+        answer: "Le chat",
+        category: "Vocabulaire",
         difficulty: "Facile" as const
       },
       {
         id: 2,
-        title: "Grammaire",
-        content: "Les articles simples",
-        question: "Quel article utilise-t-on devant 'table' ?",
-        options: ["une", "un", "des", "la"],
-        answer: "une",
-        category: "Grammaire",
+        title: "Vocabulaire",
+        content: "Les couleurs",
+        question: "Quelle est la couleur du ciel ?",
+        options: ["Bleu", "Rouge", "Vert", "Jaune"],
+        answer: "Bleu",
+        category: "Vocabulaire",
         difficulty: "Facile" as const
       },
       {
         id: 3,
-        title: "Conjugaison",
-        content: "Le présent simple",
-        question: "Comment conjugue-t-on 'être' à la première personne ?",
-        options: ["je suis", "je es", "je être", "je est"],
-        answer: "je suis",
-        category: "Conjugaison",
+        title: "Vocabulaire",
+        content: "Les objets",
+        question: "Sur quoi s'assoit-on ?",
+        options: ["La chaise", "La table", "Le lit", "L'armoire"],
+        answer: "La chaise",
+        category: "Vocabulaire",
         difficulty: "Facile" as const
       },
       {
         id: 4,
-        title: "Conjugaison",
-        content: "Le présent simple",
-        question: "Comment conjugue-t-on 'avoir' à la première personne ?",
-        options: ["j'ai", "je ai", "je a", "j'as"],
-        answer: "j'ai",
-        category: "Conjugaison",
+        title: "Vocabulaire",
+        content: "Les aliments",
+        question: "Quel fruit est rouge ?",
+        options: ["La pomme", "La banane", "L'orange", "Le citron"],
+        answer: "La pomme",
+        category: "Vocabulaire",
         difficulty: "Facile" as const
       },
       {
         id: 5,
-        title: "Orthographe",
-        content: "Les mots simples",
-        question: "Comment écrit-on le mot 'chat' au pluriel ?",
-        options: ["chats", "chats", "chats", "chats"],
-        answer: "chats",
-        category: "Orthographe",
+        title: "Vocabulaire",
+        content: "Les vêtements",
+        question: "Que met-on sur la tête ?",
+        options: ["Le chapeau", "Les chaussures", "Le pantalon", "La chemise"],
+        answer: "Le chapeau",
+        category: "Vocabulaire",
         difficulty: "Facile" as const
       },
       {
         id: 6,
-        title: "Orthographe",
-        content: "Les mots simples",
-        question: "Comment écrit-on le mot 'table' au pluriel ?",
-        options: ["tables", "tables", "tables", "tables"],
-        answer: "tables",
-        category: "Orthographe",
+        title: "Vocabulaire",
+        content: "Les émotions",
+        question: "Quand on est content, on est...",
+        options: ["Heureux", "Triste", "En colère", "Fatigué"],
+        answer: "Heureux",
+        category: "Vocabulaire",
         difficulty: "Facile" as const
       },
       {
         id: 7,
         title: "Vocabulaire",
-        content: "Les mots du quotidien",
-        question: "Quel mot désigne un animal qui miaule ?",
-        options: ["chat", "chien", "oiseau", "lapin"],
-        answer: "chat",
+        content: "Les actions",
+        question: "Que fait-on quand on a soif ?",
+        options: ["On boit", "On mange", "On dort", "On marche"],
+        answer: "On boit",
         category: "Vocabulaire",
         difficulty: "Facile" as const
       },
       {
         id: 8,
         title: "Vocabulaire",
-        content: "Les mots du quotidien",
-        question: "Quel mot désigne un objet sur lequel on mange ?",
-        options: ["table", "chaise", "lit", "armoire"],
-        answer: "table",
+        content: "Les lieux",
+        question: "Où va-t-on pour manger ?",
+        options: ["La cuisine", "La salle de bain", "Le garage", "Le jardin"],
+        answer: "La cuisine",
         category: "Vocabulaire",
         difficulty: "Facile" as const
       },
       {
         id: 9,
-        title: "Grammaire",
-        content: "Les adjectifs simples",
-        question: "Quel adjectif utilise-t-on pour décrire un chat ?",
-        options: ["petit", "grand", "gros", "mince"],
-        answer: "petit",
-        category: "Grammaire",
+        title: "Vocabulaire",
+        content: "Les saisons",
+        question: "Quelle saison est la plus chaude ?",
+        options: ["L'été", "L'hiver", "Le printemps", "L'automne"],
+        answer: "L'été",
+        category: "Vocabulaire",
         difficulty: "Facile" as const
       },
       {
         id: 10,
-        title: "Grammaire",
-        content: "Les adjectifs simples",
-        question: "Quel adjectif utilise-t-on pour décrire une table ?",
-        options: ["grande", "petite", "grosse", "mince"],
-        answer: "grande",
-        category: "Grammaire",
+        title: "Vocabulaire",
+        content: "Les jours",
+        question: "Quel jour vient après lundi ?",
+        options: ["Mardi", "Mercredi", "Jeudi", "Vendredi"],
+        answer: "Mardi",
+        category: "Vocabulaire",
         difficulty: "Facile" as const
-      },
-      {
-        id: 11,
-        title: "Conjugaison",
-        content: "Le présent des verbes simples",
-        question: "Comment conjugue-t-on 'manger' à la première personne ?",
-        options: ["je mange", "je manges", "je mangé", "je mangés"],
-        answer: "je mange",
-        category: "Conjugaison",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 12,
-        title: "Conjugaison",
-        content: "Le présent des verbes simples",
-        question: "Comment conjugue-t-on 'boire' à la première personne ?",
-        options: ["je bois", "je boit", "je boire", "je boires"],
-        answer: "je bois",
-        category: "Conjugaison",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 13,
-        title: "Orthographe",
-        content: "Les accords simples",
-        question: "Comment écrit-on 'un petit chat' au pluriel ?",
-        options: ["des petits chats", "des petit chats", "des petits chat", "des petit chat"],
-        answer: "des petits chats",
-        category: "Orthographe",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 14,
-        title: "Orthographe",
-        content: "Les accords simples",
-        question: "Comment écrit-on 'une grande table' au pluriel ?",
-        options: ["des grandes tables", "des grande tables", "des grandes table", "des grande table"],
-        answer: "des grandes tables",
-        category: "Orthographe",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 15,
-        title: "Vocabulaire",
-        content: "Les expressions simples",
-        question: "Quelle expression utilise-t-on pour dire 'bonjour' ?",
-        options: ["bonjour", "au revoir", "merci", "s'il vous plaît"],
-        answer: "bonjour",
-        category: "Vocabulaire",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 16,
-        title: "Vocabulaire",
-        content: "Les expressions simples",
-        question: "Quelle expression utilise-t-on pour dire 'merci' ?",
-        options: ["merci", "bonjour", "au revoir", "s'il vous plaît"],
-        answer: "merci",
-        category: "Vocabulaire",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 17,
-        title: "Grammaire",
-        content: "Les pronoms simples",
-        question: "Quel pronom utilise-t-on pour parler de soi ?",
-        options: ["je", "tu", "il", "elle"],
-        answer: "je",
-        category: "Grammaire",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 18,
-        title: "Grammaire",
-        content: "Les pronoms simples",
-        question: "Quel pronom utilise-t-on pour parler à quelqu'un ?",
-        options: ["tu", "je", "il", "elle"],
-        answer: "tu",
-        category: "Grammaire",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 19,
-        title: "Conjugaison",
-        content: "Le présent des verbes irréguliers",
-        question: "Comment conjugue-t-on 'aller' à la première personne ?",
-        options: ["je vais", "je va", "je aller", "je allés"],
-        answer: "je vais",
-        category: "Conjugaison",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 20,
-        title: "Conjugaison",
-        content: "Le présent des verbes irréguliers",
-        question: "Comment conjugue-t-on 'faire' à la première personne ?",
-        options: ["je fais", "je fait", "je faire", "je faits"],
-        answer: "je fais",
-        category: "Conjugaison",
-        difficulty: "Moyen" as const
-      },
-      {
-        id: 21,
-        title: "Orthographe",
-        content: "Les accords complexes",
-        question: "Comment écrit-on 'un chat noir et blanc' au pluriel ?",
-        options: ["des chats noirs et blancs", "des chat noirs et blancs", "des chats noir et blanc", "des chat noir et blanc"],
-        answer: "des chats noirs et blancs",
-        category: "Orthographe",
-        difficulty: "Difficile" as const
-      },
-      {
-        id: 22,
-        title: "Orthographe",
-        content: "Les accords complexes",
-        question: "Comment écrit-on 'une table en bois' au pluriel ?",
-        options: ["des tables en bois", "des table en bois", "des tables en bois", "des table en bois"],
-        answer: "des tables en bois",
-        category: "Orthographe",
-        difficulty: "Difficile" as const
-      },
-      {
-        id: 23,
-        title: "Vocabulaire",
-        content: "Les expressions complexes",
-        question: "Quelle expression utilise-t-on pour dire 'au revoir' ?",
-        options: ["au revoir", "bonjour", "merci", "s'il vous plaît"],
-        answer: "au revoir",
-        category: "Vocabulaire",
-        difficulty: "Difficile" as const
-      },
-      {
-        id: 24,
-        title: "Vocabulaire",
-        content: "Les expressions complexes",
-        question: "Quelle expression utilise-t-on pour dire 's'il vous plaît' ?",
-        options: ["s'il vous plaît", "bonjour", "merci", "au revoir"],
-        answer: "s'il vous plaît",
-        category: "Vocabulaire",
-        difficulty: "Difficile" as const
-      },
-      {
-        id: 25,
-        title: "Grammaire",
-        content: "Les temps simples",
-        question: "Comment conjugue-t-on 'être' au futur simple ?",
-        options: ["je serai", "je suis", "je étais", "je suis"],
-        answer: "je serai",
-        category: "Grammaire",
-        difficulty: "Difficile" as const
-      },
-      {
-        id: 26,
-        title: "Grammaire",
-        content: "Les temps simples",
-        question: "Comment conjugue-t-on 'avoir' au futur simple ?",
-        options: ["j'aurai", "j'ai", "j'avais", "j'ai"],
-        answer: "j'aurai",
-        category: "Grammaire",
-        difficulty: "Difficile" as const
-      },
-      {
-        id: 27,
-        title: "Conjugaison",
-        content: "Le passé composé",
-        question: "Comment conjugue-t-on 'manger' au passé composé ?",
-        options: ["j'ai mangé", "je mange", "je mangé", "j'ai mange"],
-        answer: "j'ai mangé",
-        category: "Conjugaison",
-        difficulty: "Difficile" as const
-      },
-      {
-        id: 28,
-        title: "Conjugaison",
-        content: "Le passé composé",
-        question: "Comment conjugue-t-on 'boire' au passé composé ?",
-        options: ["j'ai bu", "je bois", "je bu", "j'ai bois"],
-        answer: "j'ai bu",
-        category: "Conjugaison",
-        difficulty: "Difficile" as const
-      },
-      {
-        id: 29,
-        title: "Orthographe",
-        content: "Les accords particuliers",
-        question: "Comment écrit-on 'un chat qui mange' ?",
-        options: ["un chat qui mange", "un chat qui mangent", "un chat qui mangé", "un chat qui mangés"],
-        answer: "un chat qui mange",
-        category: "Orthographe",
-        difficulty: "Difficile" as const
-      },
-      {
-        id: 30,
-        title: "Orthographe",
-        content: "Les accords particuliers",
-        question: "Comment écrit-on 'une table qui brille' ?",
-        options: ["une table qui brille", "une table qui brillent", "une table qui brillé", "une table qui brillés"],
-        answer: "une table qui brille",
-        category: "Orthographe",
-        difficulty: "Difficile" as const
       }
     ];
     setExercises(mockExercises);
@@ -524,7 +323,33 @@ const FrenchPage: React.FC = () => {
         </section>
       </div>
 
-      <Timer />
+      <div className="flex justify-between items-center mb-4">
+        <BackButton />
+        <Timer timeLeft={timeLeft} />
+      </div>
+
+      <div className="mb-6">
+        <ProgressBar 
+          totalQuestions={exercises.length} 
+          correctAnswers={completedExercises}
+          onProgressComplete={() => {
+            if (completedExercises === exercises.length) {
+              calculateFinalScore();
+            }
+          }}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredExercises.map(ex => (
+          <Card key={ex.id} className="w-full h-full">
+            <CardBody className="p-4">
+              <h2 className="text-xl font-bold mb-2">{ex.title}</h2>
+              <p className="text-gray-600 dark:text-gray-400 text-sm">{ex.content}</p>
+            </CardBody>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

@@ -65,6 +65,12 @@ export default function LessonOfTheDay() {
   const [notes, setNotes] = useState<string>("");
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [isFinished, setIsFinished] = useState(false);
+  const [showResult, setShowResult] = useState(false);
+  const [userAnswer, setUserAnswer] = useState<string | null>(null);
+  const [currentLesson, setCurrentLesson] = useState(0);
+  const [score, setScore] = useState(0);
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
@@ -191,6 +197,28 @@ export default function LessonOfTheDay() {
     setEncouragementMessage(randomMessage);
   };
 
+  const calculateFinalScore = () => {
+    const total = totalQuestions;
+    const correct = correctAnswers;
+    const score = (correct / total) * 100;
+
+    setScore(score);
+    setShowResult(true);
+    setIsFinished(true);
+  };
+
+  useEffect(() => {
+    if (timeLeft > 0 && !isFinished) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else if (timeLeft === 0) {
+      setIsFinished(true);
+      setShowResult(true);
+    }
+  }, [timeLeft, isFinished]);
+
   if (!isLoggedIn) {
     return (
       <motion.section
@@ -212,6 +240,23 @@ export default function LessonOfTheDay() {
 
   return (
     <div className="flex flex-col min-h-screen p-4">
+      <div className="flex justify-between items-center mb-4">
+        <BackButton />
+        <Timer timeLeft={timeLeft} />
+      </div>
+
+      <div className="mb-6">
+        <ProgressBar 
+          totalQuestions={totalQuestions}
+          correctAnswers={correctAnswers}
+          onProgressComplete={() => {
+            if (correctAnswers === totalQuestions) {
+              calculateFinalScore();
+            }
+          }}
+        />
+      </div>
+
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
@@ -228,9 +273,6 @@ export default function LessonOfTheDay() {
                 Exercices de leçons
               </p>
             </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
-            </div>
           </div>
 
           {/* Statistiques rapides */}
@@ -612,8 +654,6 @@ export default function LessonOfTheDay() {
           </motion.div>
         </section>
       </div>
-
-      <Timer />
     </div>
   );
 }

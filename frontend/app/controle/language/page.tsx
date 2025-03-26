@@ -515,38 +515,22 @@ const LanguagePage: React.FC = () => {
                 Exercices de langues
               </p>
             </motion.div>
-            <div className="flex justify-center mb-4">
-      <BackButton />
+            <div className="flex justify-between items-center mb-4">
+              <BackButton />
+              <Timer timeLeft={timeLeft} />
             </div>
-            <div className="w-full max-w-3xl mx-auto">
+            <div className="mb-6">
               <ProgressBar 
-                initialProgress={0}
+                totalQuestions={exercises.length} 
+                correctAnswers={completedExercises}
                 onProgressComplete={() => {
-                  // Vous pouvez ajouter une action lorsque la progression est terminée
-                  console.log("Progression terminée !");
+                  if (completedExercises === exercises.length) {
+                    calculateFinalScore();
+                  }
                 }}
               />
             </div>
           </div>
-
-          {/* Minuteur et bouton de démarrage */}
-          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4">
-            <div className="bg-white dark:bg-gray-800 rounded-xl p-4 shadow-lg border border-violet-200">
-              <div className="flex justify-between items-center">
-                <div className="text-xl font-bold text-violet-600 dark:text-violet-400">
-                  Temps restant : {formatTime(timeLeft)}
-                </div>
-                {!isStarted && (
-                  <Button
-                    className="bg-violet-500 text-white hover:bg-violet-600"
-                    onClick={() => setIsStarted(true)}
-                  >
-                    Commencer
-                  </Button>
-                )}
-              </div>
-            </div>
-      </div>
 
           {/* Message d'encouragement */}
           {emoji && (

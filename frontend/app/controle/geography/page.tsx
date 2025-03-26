@@ -8,6 +8,7 @@ import Image from "next/image";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
+import { useRouter } from "next/navigation";
 
 // Interface pour les exercices de géographie
 interface Exercise {
@@ -24,6 +25,7 @@ interface Exercise {
 }
 
 const GeographyPage: React.FC = () => {
+  const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -53,7 +55,6 @@ const GeographyPage: React.FC = () => {
 
   // Nouvel état pour le minuteur (1 heure = 3600 secondes)
   const [timeLeft, setTimeLeft] = useState<number>(3600);
-  const [isStarted, setIsStarted] = useState<boolean>(false);
 
   // Messages d'encouragement
   const encouragementMessages = [
@@ -70,7 +71,7 @@ const GeographyPage: React.FC = () => {
     let timer: NodeJS.Timeout;
     let encouragementTimer: NodeJS.Timeout;
 
-    if (isStarted && timeLeft > 0) {
+    if (timeLeft > 0) {
       // Minuteur principal
       timer = setInterval(() => {
         setTimeLeft(prev => {
@@ -94,7 +95,7 @@ const GeographyPage: React.FC = () => {
       clearInterval(timer);
       clearInterval(encouragementTimer);
     };
-  }, [isStarted, timeLeft]);
+  }, [timeLeft]);
 
   // Fonction pour formater le temps restant
   const formatTime = (seconds: number): string => {
@@ -107,102 +108,102 @@ const GeographyPage: React.FC = () => {
     const mockExercises: Exercise[] = [
       {
         id: 1,
-        title: "Pays et capitales",
-        content: "Les capitales d'Europe",
+        title: "Pays et villes",
+        content: "Les villes importantes",
         question: "Quelle est la capitale de la France ?",
         options: ["Paris", "Londres", "Berlin", "Madrid"],
         answer: "Paris",
-        category: "Pays et capitales",
+        category: "Pays et villes",
         difficulty: "Facile" as const
       },
       {
         id: 2,
-        title: "Relief",
+        title: "Nature",
         content: "Les montagnes",
-        question: "Quelle est la plus haute montagne du monde ?",
-        options: ["L'Everest", "Le Mont Blanc", "Le Kilimandjaro", "Le Mont Fuji"],
-        answer: "L'Everest",
-        category: "Relief",
+        question: "Quelle est la plus haute montagne de France ?",
+        options: ["Le Mont Blanc", "Le Mont Fuji", "Le Kilimandjaro", "L'Everest"],
+        answer: "Le Mont Blanc",
+        category: "Nature",
         difficulty: "Facile" as const
       },
       {
         id: 3,
-        title: "Océans",
-        content: "Les océans du monde",
-        question: "Quel est le plus grand océan du monde ?",
-        options: ["L'océan Pacifique", "L'océan Atlantique", "L'océan Indien", "L'océan Arctique"],
-        answer: "L'océan Pacifique",
-        category: "Océans",
+        title: "Nature",
+        content: "Les mers",
+        question: "Quelle mer borde la France au sud ?",
+        options: ["La Méditerranée", "La mer du Nord", "La Manche", "L'océan Atlantique"],
+        answer: "La Méditerranée",
+        category: "Nature",
         difficulty: "Facile" as const
       },
       {
         id: 4,
         title: "Climat",
-        content: "Les zones climatiques",
-        question: "Quel temps fait-il à l'équateur ?",
-        options: ["Très chaud", "Très froid", "Tempéré", "Variable"],
-        answer: "Très chaud",
+        content: "Le temps qu'il fait",
+        question: "Quel temps fait-il en été ?",
+        options: ["Il fait chaud", "Il fait froid", "Il pleut", "Il neige"],
+        answer: "Il fait chaud",
         category: "Climat",
         difficulty: "Facile" as const
       },
       {
         id: 5,
-        title: "Rivières",
-        content: "Les grands fleuves",
-        question: "Quel est le plus long fleuve du monde ?",
-        options: ["Le Nil", "La Seine", "Le Rhône", "La Loire"],
-        answer: "Le Nil",
-        category: "Rivières",
+        title: "Nature",
+        content: "Les rivières",
+        question: "Quel fleuve traverse Paris ?",
+        options: ["La Seine", "Le Rhône", "La Loire", "La Garonne"],
+        answer: "La Seine",
+        category: "Nature",
         difficulty: "Facile" as const
       },
       {
         id: 6,
-        title: "Déserts",
-        content: "Les grands déserts",
-        question: "Quel est le plus grand désert du monde ?",
-        options: ["Le Sahara", "Le désert de Gobi", "Le désert d'Atacama", "Le désert d'Arabie"],
-        answer: "Le Sahara",
-        category: "Déserts",
+        title: "Pays et villes",
+        content: "Les pays voisins",
+        question: "Quel pays est au nord de la France ?",
+        options: ["La Belgique", "L'Espagne", "L'Italie", "L'Allemagne"],
+        answer: "La Belgique",
+        category: "Pays et villes",
         difficulty: "Facile" as const
       },
       {
         id: 7,
-        title: "Îles",
-        content: "Les grandes îles",
-        question: "Quelle est la plus grande île du monde ?",
-        options: ["Le Groenland", "Madagascar", "La Corse", "La Sicile"],
-        answer: "Le Groenland",
-        category: "Îles",
+        title: "Nature",
+        content: "Les îles",
+        question: "Quelle est la plus grande île de France ?",
+        options: ["La Corse", "La Martinique", "La Guadeloupe", "La Réunion"],
+        answer: "La Corse",
+        category: "Nature",
         difficulty: "Facile" as const
       },
       {
         id: 8,
-        title: "Volcans",
-        content: "Les volcans actifs",
-        question: "Quel est le plus grand volcan actif d'Europe ?",
-        options: ["L'Etna", "Le Vésuve", "Le Stromboli", "Le Puy de Dôme"],
-        answer: "L'Etna",
-        category: "Volcans",
+        title: "Climat",
+        content: "Les saisons",
+        question: "Quelle saison est la plus froide ?",
+        options: ["L'hiver", "L'été", "Le printemps", "L'automne"],
+        answer: "L'hiver",
+        category: "Climat",
         difficulty: "Facile" as const
       },
       {
         id: 9,
-        title: "Forêts",
-        content: "Les grandes forêts",
-        question: "Quelle est la plus grande forêt tropicale du monde ?",
-        options: ["L'Amazonie", "La forêt du Congo", "La forêt d'Indonésie", "La forêt d'Amérique centrale"],
-        answer: "L'Amazonie",
-        category: "Forêts",
+        title: "Nature",
+        content: "Les forêts",
+        question: "Quelle est la plus grande forêt de France ?",
+        options: ["La forêt de Fontainebleau", "La forêt des Landes", "La forêt de Compiègne", "La forêt d'Orléans"],
+        answer: "La forêt des Landes",
+        category: "Nature",
         difficulty: "Facile" as const
       },
       {
         id: 10,
-        title: "Lacs",
-        content: "Les grands lacs",
-        question: "Quel est le plus grand lac d'eau douce du monde ?",
-        options: ["Le lac Supérieur", "Le lac Victoria", "Le lac Baïkal", "Le lac Michigan"],
-        answer: "Le lac Supérieur",
-        category: "Lacs",
+        title: "Pays et villes",
+        content: "Les régions",
+        question: "Quelle région est connue pour ses vignes ?",
+        options: ["La Bourgogne", "La Bretagne", "La Normandie", "La Provence"],
+        answer: "La Bourgogne",
+        category: "Pays et villes",
         difficulty: "Facile" as const
       },
       {
@@ -524,7 +525,36 @@ const GeographyPage: React.FC = () => {
         </section>
       </div>
 
-      <Timer />
+      <div className="flex justify-between items-center mb-4">
+        <BackButton />
+        <Timer timeLeft={timeLeft} />
+      </div>
+
+      <div className="mb-6">
+        <ProgressBar 
+          totalQuestions={exercises.length} 
+          correctAnswers={completedExercises}
+          onProgressComplete={() => {
+            if (completedExercises === exercises.length) {
+              calculateFinalScore();
+            }
+          }}
+        />
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+        {filteredExercises.map(exercise => (
+          <Card key={exercise.id} className="w-full h-full">
+            <CardBody className="p-4">
+              <h2 className="text-xl font-bold mb-2">{exercise.title}</h2>
+              <p className="text-gray-600 dark:text-gray-400">{exercise.content}</p>
+              <div className="mt-4">
+                {/* Add your question rendering logic here */}
+              </div>
+            </CardBody>
+          </Card>
+        ))}
+      </div>
     </div>
   );
 };

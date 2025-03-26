@@ -8,6 +8,7 @@ import Image from "next/image";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
+import { useRouter } from "next/navigation";
 
 // Interface pour les exercices d'histoire
 interface Exercise {
@@ -24,6 +25,7 @@ interface Exercise {
 }
 
 const HistoryPage: React.FC = () => {
+  const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +39,12 @@ const HistoryPage: React.FC = () => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tout");
   const [showTips, setShowTips] = useState<boolean>(true);
+  const [currentExercise, setCurrentExercise] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [userAnswer, setUserAnswer] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [isFinished, setIsFinished] = useState(false);
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -50,10 +58,6 @@ const HistoryPage: React.FC = () => {
     historyExpert: false,
     quickLearner: false,
   });
-
-  // Nouvel état pour le minuteur (1 heure = 3600 secondes)
-  const [timeLeft, setTimeLeft] = useState<number>(3600);
-  const [isStarted, setIsStarted] = useState<boolean>(false);
 
   // Messages d'encouragement
   const encouragementMessages = [
@@ -70,7 +74,7 @@ const HistoryPage: React.FC = () => {
     let timer: NodeJS.Timeout;
     let encouragementTimer: NodeJS.Timeout;
 
-    if (isStarted && timeLeft > 0) {
+    if (timeLeft > 0 && !isFinished) {
       // Minuteur principal
       timer = setInterval(() => {
         setTimeLeft(prev => {
@@ -88,13 +92,16 @@ const HistoryPage: React.FC = () => {
         setEmoji(randomMessage);
         setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
       }, 600000); // 600000ms = 10 minutes
+    } else if (timeLeft === 0) {
+      setIsFinished(true);
+      setShowResult(true);
     }
 
     return () => {
       clearInterval(timer);
       clearInterval(encouragementTimer);
     };
-  }, [isStarted, timeLeft]);
+  }, [timeLeft, isFinished]);
 
   // Fonction pour formater le temps restant
   const formatTime = (seconds: number): string => {
@@ -501,10 +508,27 @@ const HistoryPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-4">
+      <div className="flex justify-between items-center mb-4">
+        <BackButton />
+        <Timer timeLeft={timeLeft} />
+      </div>
+
+      <div className="mb-6">
+        <ProgressBar 
+          totalQuestions={exercises.length} 
+          correctAnswers={completedExercises}
+          onProgressComplete={() => {
+            if (completedExercises === exercises.length) {
+              calculateFinalScore();
+            }
+          }}
+        />
+      </div>
+
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
-            <motion.div 
+            <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-4 sm:mb-6"
               initial={{ opacity: 0, y: -20 }}
@@ -517,14 +541,10 @@ const HistoryPage: React.FC = () => {
                 Exercices d'histoire
               </p>
             </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
-            </div>
           </div>
+          {/* Rest of the component content */}
         </section>
       </div>
-
-      <Timer />
     </div>
   );
 };

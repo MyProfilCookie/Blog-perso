@@ -1,151 +1,145 @@
-/* eslint-disable react/jsx-sort-props */
-/* eslint-disable no-console */
-/* eslint-disable prettier/prettier */
-/* eslint-disable react/no-unescaped-entities */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
-import { useRouter } from "next/navigation";
 
-// Interface pour les exercices de technologie
 interface Exercise {
   id: number;
   question: string;
   options: string[];
   answer: string;
-  difficulty: "Facile" | "Moyen" | "Difficile";
+  difficulty: "easy" | "medium" | "hard";
   category: string;
 }
 
 const exercises: Exercise[] = [
   {
     id: 1,
-    question: "Quel est le composant principal d'un ordinateur ?",
-    options: ["Le clavier", "La souris", "Le processeur", "L'écran"],
-    answer: "Le processeur",
-    difficulty: "Facile",
-    category: "Composants"
+    question: "Quel est le son le plus grave parmi ces instruments ?",
+    options: ["Flûte", "Trompette", "Tuba", "Clarinette"],
+    answer: "Tuba",
+    difficulty: "easy",
+    category: "Instruments"
   },
   {
     id: 2,
-    question: "Quelle est la fonction principale d'un navigateur web ?",
-    options: ["Jouer à des jeux", "Surfer sur Internet", "Écrire des textes", "Faire des calculs"],
-    answer: "Surfer sur Internet",
-    difficulty: "Facile",
-    category: "Internet"
+    question: "Combien y a-t-il de notes dans une octave ?",
+    options: ["6", "7", "8", "9"],
+    answer: "8",
+    difficulty: "easy",
+    category: "Théorie"
   },
   {
     id: 3,
-    question: "Quel est le symbole pour allumer un appareil ?",
-    options: ["⚡", "⭕", "🔴", "⚪"],
-    answer: "⭕",
-    difficulty: "Facile",
-    category: "Symboles"
+    question: "Quel est le rythme le plus lent ?",
+    options: ["Noire", "Blanche", "Ronde", "Croche"],
+    answer: "Ronde",
+    difficulty: "easy",
+    category: "Rythme"
   },
   {
     id: 4,
-    question: "Quelle est la couleur du câble USB ?",
-    options: ["Rouge", "Bleu", "Blanc", "Noir"],
-    answer: "Blanc",
-    difficulty: "Facile",
-    category: "Périphériques"
+    question: "Quel instrument fait partie de la famille des cordes ?",
+    options: ["Trompette", "Violon", "Flûte", "Timbale"],
+    answer: "Violon",
+    difficulty: "easy",
+    category: "Instruments"
   },
   {
     id: 5,
-    question: "Quel est le plus petit composant d'un ordinateur ?",
-    options: ["La carte mère", "Le processeur", "La puce", "Le disque dur"],
-    answer: "La puce",
-    difficulty: "Facile",
-    category: "Composants"
+    question: "Quelle est la note la plus aiguë ?",
+    options: ["Do", "Mi", "Sol", "Si"],
+    answer: "Si",
+    difficulty: "easy",
+    category: "Notes"
   },
   {
     id: 6,
-    question: "Quelle est la vitesse de connexion la plus rapide ?",
-    options: ["3G", "4G", "5G", "6G"],
-    answer: "5G",
-    difficulty: "Moyen",
-    category: "Réseaux"
+    question: "Quel est le tempo le plus rapide ?",
+    options: ["Largo", "Andante", "Allegro", "Presto"],
+    answer: "Presto",
+    difficulty: "medium",
+    category: "Tempo"
   },
   {
     id: 7,
-    question: "Quel est le système d'exploitation le plus utilisé ?",
-    options: ["Windows", "Mac", "Linux", "Android"],
-    answer: "Windows",
-    difficulty: "Moyen",
-    category: "Systèmes"
+    question: "Quelle est la durée d'une blanche pointée ?",
+    options: ["2 temps", "3 temps", "4 temps", "6 temps"],
+    answer: "3 temps",
+    difficulty: "medium",
+    category: "Rythme"
   },
   {
     id: 8,
-    question: "Quelle est la capacité de stockage la plus grande ?",
-    options: ["1 Go", "1 To", "1 Mo", "1 Ko"],
-    answer: "1 To",
-    difficulty: "Moyen",
-    category: "Stockage"
+    question: "Quel est le signe qui indique un silence ?",
+    options: ["Point", "Tiret", "Croix", "Cercle"],
+    answer: "Cercle",
+    difficulty: "medium",
+    category: "Notation"
   },
   {
     id: 9,
-    question: "Quel est le composant qui permet d'afficher les images ?",
-    options: ["La carte graphique", "Le processeur", "La mémoire", "Le disque dur"],
-    answer: "La carte graphique",
-    difficulty: "Moyen",
-    category: "Composants"
+    question: "Quelle est la famille d'instruments la plus nombreuse ?",
+    options: ["Cordes", "Vents", "Percussions", "Claviers"],
+    answer: "Percussions",
+    difficulty: "medium",
+    category: "Instruments"
   },
   {
     id: 10,
-    question: "Quelle est la fonction d'un pare-feu ?",
-    options: ["Protéger contre les virus", "Accélérer l'ordinateur", "Stocker des fichiers", "Jouer à des jeux"],
-    answer: "Protéger contre les virus",
-    difficulty: "Moyen",
-    category: "Sécurité"
+    question: "Quel est le symbole qui indique un dièse ?",
+    options: ["#", "b", "♮", "♭"],
+    answer: "#",
+    difficulty: "medium",
+    category: "Notation"
   },
   {
     id: 11,
-    question: "Quel est le langage de programmation le plus simple ?",
-    options: ["Python", "Java", "C++", "Assembleur"],
-    answer: "Python",
-    difficulty: "Difficile",
-    category: "Programmation"
+    question: "Quelle est la note qui suit Mi dans la gamme de Do ?",
+    options: ["Fa", "Sol", "La", "Si"],
+    answer: "Fa",
+    difficulty: "hard",
+    category: "Notes"
   },
   {
     id: 12,
-    question: "Quelle est la fonction d'un serveur web ?",
-    options: ["Stocker des sites", "Créer des sites", "Surfer sur Internet", "Jouer à des jeux"],
-    answer: "Stocker des sites",
-    difficulty: "Difficile",
-    category: "Réseaux"
+    question: "Quel est le nombre de temps dans une mesure à 3/4 ?",
+    options: ["2", "3", "4", "6"],
+    answer: "3",
+    difficulty: "hard",
+    category: "Mesure"
   },
   {
     id: 13,
-    question: "Quel est le composant qui permet de stocker les données ?",
-    options: ["Le processeur", "La mémoire", "Le disque dur", "La carte mère"],
-    answer: "Le disque dur",
-    difficulty: "Difficile",
-    category: "Composants"
+    question: "Quelle est la durée d'une ronde ?",
+    options: ["1 temps", "2 temps", "3 temps", "4 temps"],
+    answer: "4 temps",
+    difficulty: "hard",
+    category: "Rythme"
   },
   {
     id: 14,
-    question: "Quelle est la fonction d'un routeur ?",
-    options: ["Connecter des appareils", "Stocker des fichiers", "Créer des sites", "Jouer à des jeux"],
-    answer: "Connecter des appareils",
-    difficulty: "Difficile",
-    category: "Réseaux"
+    question: "Quel est le signe qui indique un bémol ?",
+    options: ["#", "b", "♮", "♭"],
+    answer: "♭",
+    difficulty: "hard",
+    category: "Notation"
   },
   {
     id: 15,
-    question: "Quel est le système d'exploitation le plus sécurisé ?",
-    options: ["Windows", "Mac", "Linux", "Android"],
-    answer: "Linux",
-    difficulty: "Difficile",
-    category: "Systèmes"
+    question: "Quelle est la note la plus grave de la gamme de Do ?",
+    options: ["Do", "Ré", "Mi", "Fa"],
+    answer: "Do",
+    difficulty: "hard",
+    category: "Notes"
   }
 ];
 
-const TechnologyPage: React.FC = () => {
+export default function MusicPage() {
   const router = useRouter();
   const [currentExercise, setCurrentExercise] = useState(0);
   const [score, setScore] = useState(0);
@@ -153,6 +147,7 @@ const TechnologyPage: React.FC = () => {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
   const [isFinished, setIsFinished] = useState(false);
+  const [completedExercises, setCompletedExercises] = useState(0);
 
   useEffect(() => {
     if (timeLeft > 0 && !isFinished) {
@@ -175,6 +170,7 @@ const TechnologyPage: React.FC = () => {
       if (currentExercise < exercises.length - 1) {
         setCurrentExercise(currentExercise + 1);
         setUserAnswer(null);
+        setCompletedExercises(completedExercises + 1);
       } else {
         setShowResult(true);
         setIsFinished(true);
@@ -188,10 +184,14 @@ const TechnologyPage: React.FC = () => {
 
   const getFeedback = () => {
     const percentage = calculatePercentage();
-    if (percentage >= 80) return "🌟 Excellent ! Tu es un expert en technologie !";
-    if (percentage >= 60) return "💻 Très bien ! Continue comme ça !";
-    if (percentage >= 40) return "🔧 Pas mal ! Tu peux encore progresser !";
-    return "⚡ Continue d'apprendre, tu vas y arriver !";
+    if (percentage >= 80) return "🌟 Excellent ! Tu es un vrai musicien !";
+    if (percentage >= 60) return "🎵 Très bien ! Continue comme ça !";
+    if (percentage >= 40) return "🎼 Pas mal ! Tu peux encore progresser !";
+    return "🎸 Continue d'apprendre, tu vas y arriver !";
+  };
+
+  const calculateFinalScore = () => {
+    // Implementation of calculateFinalScore
   };
 
   if (showResult) {
@@ -225,6 +225,19 @@ const TechnologyPage: React.FC = () => {
         <BackButton />
         <Timer timeLeft={timeLeft} />
       </div>
+
+      <div className="mb-6">
+        <ProgressBar 
+          totalQuestions={exercises.length} 
+          correctAnswers={completedExercises}
+          onProgressComplete={() => {
+            if (completedExercises === exercises.length) {
+              calculateFinalScore();
+            }
+          }}
+        />
+      </div>
+
       <motion.div
         key={currentExercise}
         initial={{ opacity: 0, x: 20 }}
@@ -239,7 +252,7 @@ const TechnologyPage: React.FC = () => {
             </h2>
             <p className="text-lg mb-6">{exercises[currentExercise].question}</p>
             <div className="grid grid-cols-2 gap-4">
-              {exercises[currentExercise].options?.map((option, index) => (
+              {exercises[currentExercise].options.map((option, index) => (
                 <Button
                   key={index}
                   color={
@@ -262,6 +275,4 @@ const TechnologyPage: React.FC = () => {
       </motion.div>
     </div>
   );
-};
-
-export default TechnologyPage;
+} 

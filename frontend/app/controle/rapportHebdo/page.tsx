@@ -7,6 +7,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
+import ProgressBar from "@/components/ProgressBar";
 
 const subjects = [
   { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
@@ -86,20 +87,15 @@ const isTokenExpired = (token: string) => {
 
 const WeeklyReport = () => {
   const router = useRouter();
-  const [selectedWeek, setSelectedWeek] = useState<string>(
-    `Semaine ${new Date().getWeekNumber()}`,
-  );
-  const [weeks] = useState(generateWeeksOfYear);
+  const [selectedWeek, setSelectedWeek] = useState<string>("");
+  const [userName, setUserName] = useState<string>("");
+  const [reportItems, setReportItems] = useState<ReportItem[]>([]);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [isFinished, setIsFinished] = useState(false);
   const [showWeeks, setShowWeeks] = useState(false);
-  const [userName, setUserName] = useState("");
-  const [report, setReport] = useState<ReportList>(
-    subjects.map((subject) => ({
-      subject: subject.name,
-      activity: "",
-      hours: "",
-      progress: "not-started",
-    })),
-  );
+  const [weeks] = useState(generateWeeksOfYear);
+  const [completedExercises, setCompletedExercises] = useState(0);
+  const [exercises, setExercises] = useState([]);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -156,9 +152,9 @@ const WeeklyReport = () => {
       );
 
       if (savedReport.length) {
-        setReport(savedReport);
+        setReportItems(savedReport);
       } else {
-        setReport(
+        setReportItems(
           subjects.map((subject) => ({
             subject: subject.name,
             activity: "",
@@ -170,15 +166,26 @@ const WeeklyReport = () => {
     }
   }, [selectedWeek, router]);
 
+  useEffect(() => {
+    if (timeLeft > 0 && !isFinished) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else if (timeLeft === 0) {
+      setIsFinished(true);
+    }
+  }, [timeLeft, isFinished]);
+
   const handleInputChange = (
     index: number,
     field: keyof ReportItem,
     value: string,
   ) => {
-    const updatedReport = [...report];
+    const updatedReport = [...reportItems];
 
     updatedReport[index] = { ...updatedReport[index], [field]: value };
-    setReport(updatedReport);
+    setReportItems(updatedReport);
   };
 
   const getProgressEmoji = (progress: string) => {
@@ -208,7 +215,7 @@ const WeeklyReport = () => {
       return;
     }
 
-    localStorage.setItem(selectedWeek, JSON.stringify(report));
+    localStorage.setItem(selectedWeek, JSON.stringify(reportItems));
     Swal.fire({
       icon: "success",
       title: "Bravo ! 🎉",
@@ -231,7 +238,7 @@ const WeeklyReport = () => {
       return;
     }
 
-    const dataStr = JSON.stringify(report, null, 2);
+    const dataStr = JSON.stringify(reportItems, null, 2);
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
@@ -244,7 +251,7 @@ const WeeklyReport = () => {
   };
 
   const isReportComplete = () => {
-    for (let item of report) {
+    for (let item of reportItems) {
       if (!item.activity || !item.hours || !item.progress) {
         return false;
       }
@@ -253,12 +260,33 @@ const WeeklyReport = () => {
     return true;
   };
 
+  const calculateFinalScore = () => {
+    // Implementation of calculateFinalScore function
+  };
+
   return (
     <div className="flex flex-col min-h-screen p-4">
+      <div className="flex justify-between items-center mb-4">
+        <BackButton />
+        <Timer timeLeft={timeLeft} />
+      </div>
+
+      <div className="mb-6">
+        <ProgressBar 
+          totalQuestions={exercises.length} 
+          correctAnswers={completedExercises}
+          onProgressComplete={() => {
+            if (completedExercises === exercises.length) {
+              calculateFinalScore();
+            }
+          }}
+        />
+      </div>
+
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
-            <motion.div 
+            <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-4 sm:mb-6"
               initial={{ opacity: 0, y: -20 }}
@@ -268,12 +296,9 @@ const WeeklyReport = () => {
                 Rapport Hebdomadaire
               </h1>
               <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-                Suivez votre progression hebdomadaire
+                Suivez votre progression
               </p>
             </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
-            </div>
           </div>
           <div className="container mx-auto px-6 py-8 flex-grow">
             {/* En-tête */}
@@ -340,7 +365,7 @@ const WeeklyReport = () => {
 
             {/* Grille des matières */}
             <div className="grid grid-cols-1 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-0 sm:px-4">
-              {report.map((item, index) => (
+              {reportItems.map((item, index) => (
                 <motion.div
                   key={item.subject}
                   animate={{ opacity: 1, scale: 1 }}
@@ -476,10 +501,6 @@ const WeeklyReport = () => {
             </div>
           </div>
         </section>
-      </div>
-
-      <div className="w-full max-w-7xl mx-auto mt-6">
-        <Timer />
       </div>
     </div>
   );

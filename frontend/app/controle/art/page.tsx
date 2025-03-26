@@ -8,188 +8,275 @@ import Image from "next/image";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
+import { useRouter } from "next/navigation";
 
 // Interface pour les exercices d'art
 interface Exercise {
   id: number;
-  title: string;
-  content: string;
-  image?: string;
-  questions: {
-    question: string;
-    answer: string;
-  }[];
-  difficulty?: "Facile" | "Moyen" | "Difficile";
-  estimatedTime?: string;
-  category?: string;
+  question: string;
+  options: string[];
+  answer: string;
+  difficulty: "Facile" | "Moyen" | "Difficile";
+  category: string;
 }
 
-const ArtPage: React.FC = () => {
-  const [exercises, setExercises] = useState<Exercise[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({});
-  const [results, setResults] = useState<{ [key: number]: boolean }>({});
-  const [finalScore, setFinalScore] = useState<number | null>(null);
-  const [emoji, setEmoji] = useState<string>("");
-  const [showResults, setShowResults] = useState<boolean>(false);
-  const [completedExercises, setCompletedExercises] = useState<number>(0);
-  const [currentStreak, setCurrentStreak] = useState<number>(0);
-  const [totalPoints, setTotalPoints] = useState<number>(0);
-  const [selectedCategory, setSelectedCategory] = useState<string>("Tout");
-  const [showTips, setShowTips] = useState<boolean>(true);
+const exercises: Exercise[] = [
+  {
+    id: 1,
+    question: "Quelle est la couleur du soleil ?",
+    options: ["Rouge", "Bleu", "Jaune", "Vert"],
+    answer: "Jaune",
+    difficulty: "Facile",
+    category: "Couleurs"
+  },
+  {
+    id: 2,
+    question: "Quelle est la forme d'un cercle ?",
+    options: ["Carrée", "Ronde", "Triangle", "Rectangle"],
+    answer: "Ronde",
+    difficulty: "Facile",
+    category: "Formes"
+  },
+  {
+    id: 3,
+    question: "Quelle est la couleur de l'herbe ?",
+    options: ["Rouge", "Bleue", "Verte", "Jaune"],
+    answer: "Verte",
+    difficulty: "Facile",
+    category: "Couleurs"
+  },
+  {
+    id: 4,
+    question: "Quelle est la forme d'un carré ?",
+    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
+    answer: "Carrée",
+    difficulty: "Facile",
+    category: "Formes"
+  },
+  {
+    id: 5,
+    question: "Quelle est la couleur du ciel ?",
+    options: ["Rouge", "Bleue", "Verte", "Jaune"],
+    answer: "Bleue",
+    difficulty: "Facile",
+    category: "Couleurs"
+  },
+  {
+    id: 6,
+    question: "Quelle est la forme d'un triangle ?",
+    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
+    answer: "Triangle",
+    difficulty: "Moyen",
+    category: "Formes"
+  },
+  {
+    id: 7,
+    question: "Quelle est la couleur de la neige ?",
+    options: ["Rouge", "Bleue", "Verte", "Blanche"],
+    answer: "Blanche",
+    difficulty: "Moyen",
+    category: "Couleurs"
+  },
+  {
+    id: 8,
+    question: "Quelle est la forme d'un rectangle ?",
+    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
+    answer: "Rectangle",
+    difficulty: "Moyen",
+    category: "Formes"
+  },
+  {
+    id: 9,
+    question: "Quelle est la couleur de la lune ?",
+    options: ["Rouge", "Bleue", "Verte", "Blanche"],
+    answer: "Blanche",
+    difficulty: "Moyen",
+    category: "Couleurs"
+  },
+  {
+    id: 10,
+    question: "Quelle est la forme d'une étoile ?",
+    options: ["Ronde", "Carrée", "Triangle", "Étoile"],
+    answer: "Étoile",
+    difficulty: "Moyen",
+    category: "Formes"
+  },
+  {
+    id: 11,
+    question: "Quelle est la couleur de l'arc-en-ciel ?",
+    options: ["Rouge", "Bleue", "Verte", "Multicolore"],
+    answer: "Multicolore",
+    difficulty: "Difficile",
+    category: "Couleurs"
+  },
+  {
+    id: 12,
+    question: "Quelle est la forme d'un cœur ?",
+    options: ["Ronde", "Carrée", "Triangle", "Cœur"],
+    answer: "Cœur",
+    difficulty: "Difficile",
+    category: "Formes"
+  },
+  {
+    id: 13,
+    question: "Quelle est la couleur de l'orange ?",
+    options: ["Rouge", "Bleue", "Verte", "Orange"],
+    answer: "Orange",
+    difficulty: "Difficile",
+    category: "Couleurs"
+  },
+  {
+    id: 14,
+    question: "Quelle est la forme d'un diamant ?",
+    options: ["Ronde", "Carrée", "Triangle", "Diamant"],
+    answer: "Diamant",
+    difficulty: "Difficile",
+    category: "Formes"
+  },
+  {
+    id: 15,
+    question: "Quelle est la couleur de la nuit ?",
+    options: ["Rouge", "Bleue", "Verte", "Noire"],
+    answer: "Noire",
+    difficulty: "Difficile",
+    category: "Couleurs"
+  }
+];
 
-  // Statistiques et badges
-  const [badges, setBadges] = useState<{
-    perfectScore: boolean;
-    streakMaster: boolean;
-    artExpert: boolean;
-    quickLearner: boolean;
-  }>({
-    perfectScore: false,
-    streakMaster: false,
-    artExpert: false,
-    quickLearner: false,
-  });
+const ArtPage: React.FC = () => {
+  const router = useRouter();
+  const [currentExercise, setCurrentExercise] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [userAnswer, setUserAnswer] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [isFinished, setIsFinished] = useState(false);
+  const [completedExercises, setCompletedExercises] = useState(0);
 
   useEffect(() => {
-    fetch("/dataart.json")
-      .then((response) => {
-        if (!response.ok) {
-          throw new Error("Failed to fetch data");
-        }
+    if (timeLeft > 0 && !isFinished) {
+      const timer = setInterval(() => {
+        setTimeLeft((prev) => prev - 1);
+      }, 1000);
+      return () => clearInterval(timer);
+    } else if (timeLeft === 0) {
+      setIsFinished(true);
+      setShowResult(true);
+    }
+  }, [timeLeft, isFinished]);
 
-        return response.json();
-      })
-      .then((data) => {
-        if (data && data.art_exercises) {
-          setExercises(data.art_exercises);
-        } else {
-          throw new Error("Invalid data format");
-        }
-        setLoading(false);
-      })
-      .catch((err) => {
-        setError(err.message);
-        setLoading(false);
-      });
-  }, []);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement>, id: number) => {
-    setUserAnswers({ ...userAnswers, [id]: e.target.value });
+  const handleAnswer = (answer: string) => {
+    setUserAnswer(answer);
+    if (answer === exercises[currentExercise].answer) {
+      setScore(score + 1);
+    }
+    setTimeout(() => {
+      if (currentExercise < exercises.length - 1) {
+        setCurrentExercise(currentExercise + 1);
+        setUserAnswer(null);
+        setCompletedExercises(completedExercises + 1);
+      } else {
+        setShowResult(true);
+        setIsFinished(true);
+      }
+    }, 1000);
   };
 
-  const handleSubmit = (id: number, correctAnswer: string) => {
-    const userAnswer = userAnswers[id];
-    const isCorrect = userAnswer?.toString().trim() === correctAnswer.trim();
+  const calculatePercentage = () => {
+    return Math.round((score / exercises.length) * 100);
+  };
 
-    setResults({ ...results, [id]: isCorrect });
-    
-    if (isCorrect) {
-      setCompletedExercises(prev => prev + 1);
-      setTotalPoints(prev => prev + 10);
-      setCurrentStreak(prev => prev + 1);
-    } else {
-      setCurrentStreak(0);
-    }
+  const getFeedback = () => {
+    const percentage = calculatePercentage();
+    if (percentage >= 80) return "🌟 Excellent ! Tu es un vrai artiste !";
+    if (percentage >= 60) return "🎨 Très bien ! Continue comme ça !";
+    if (percentage >= 40) return "🎭 Pas mal ! Tu peux encore progresser !";
+    return "🎪 Continue d'apprendre, tu vas y arriver !";
   };
 
   const calculateFinalScore = () => {
-    const total = exercises.length;
-    const correct = Object.values(results).filter(Boolean).length;
-    const score = (correct / total) * 100;
-
-    setFinalScore(score);
-    setShowResults(true);
-
-    // Mise à jour des badges
-    setBadges(prev => ({
-      ...prev,
-      perfectScore: score === 100,
-      streakMaster: currentStreak >= 5,
-      artExpert: completedExercises >= 10,
-      quickLearner: score >= 80 && completedExercises >= 5,
-    }));
-
-    if (score === 100) {
-      setEmoji("🌟");
-    } else if (score >= 80) {
-      setEmoji("😊");
-    } else if (score >= 50) {
-      setEmoji("😐");
-    } else {
-      setEmoji("😢");
-    }
+    // Implementation of calculateFinalScore
   };
 
-  const filteredExercises = selectedCategory === "Tout" 
-    ? exercises 
-    : exercises.filter(ex => ex.category && ex.category === selectedCategory);
-
-  // Extraction des catégories uniques
-  const uniqueCategories = exercises
-    .map(ex => ex.category)
-    .filter((category): category is string => Boolean(category));
-  const categories = ["Tout", ...Array.from(new Set(uniqueCategories))];
-
-  const handleRating = (rating: "Facile" | "Moyen" | "Difficile") => {
-    // Ici, vous pouvez ajouter la logique pour sauvegarder la progression
-    console.log(`Progression en arts plastiques : ${rating}`);
-  };
-
-  if (loading) {
+  if (showResult) {
     return (
-      <motion.div 
-        animate={{ opacity: 1 }}
-        className="flex items-center justify-center min-h-screen"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="animate-spin text-4xl">🔄</div>
-      </motion.div>
-    );
-  }
-
-  if (error) {
-    return (
-      <motion.div 
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center min-h-screen gap-4"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="text-2xl text-red-600">⚠️</div>
-        <p className="text-lg text-gray-600">Erreur: {error}</p>
-      </motion.div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center"
+        >
+          <h2 className="text-2xl font-bold mb-4">Résultats</h2>
+          <p className="text-xl mb-2">
+            Score : {score} sur {exercises.length}
+          </p>
+          <p className="text-xl mb-4">{getFeedback()}</p>
+          <Button
+            color="primary"
+            onClick={() => router.push("/controle")}
+            className="mt-4"
+          >
+            Retour au menu
+          </Button>
+        </motion.div>
+      </div>
     );
   }
 
   return (
     <div className="flex flex-col min-h-screen p-4">
-      <div className="flex-1 w-full max-w-7xl mx-auto">
-        <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
-          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
-            <motion.div 
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-4 sm:mb-6"
-              initial={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-                Arts Plastiques
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-                Exercices d'arts plastiques
-              </p>
-            </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
-            </div>
-          </div>
-        </section>
+      <div className="flex justify-between items-center mb-4">
+        <BackButton />
+        <Timer timeLeft={timeLeft} />
       </div>
 
-      <Timer />
+      <div className="mb-6">
+        <ProgressBar 
+          totalQuestions={exercises.length} 
+          correctAnswers={completedExercises}
+          onProgressComplete={() => {
+            if (completedExercises === exercises.length) {
+              calculateFinalScore();
+            }
+          }}
+        />
+      </div>
+
+      <motion.div
+        key={currentExercise}
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        exit={{ opacity: 0, x: -20 }}
+        className="flex-1 flex flex-col items-center justify-center"
+      >
+        <Card className="w-full max-w-2xl">
+          <CardBody className="text-center">
+            <h2 className="text-xl font-bold mb-4">
+              Question {currentExercise + 1} sur {exercises.length}
+            </h2>
+            <p className="text-lg mb-6">{exercises[currentExercise].question}</p>
+            <div className="grid grid-cols-2 gap-4">
+              {exercises[currentExercise].options.map((option, index) => (
+                <Button
+                  key={index}
+                  color={
+                    userAnswer === option
+                      ? option === exercises[currentExercise].answer
+                        ? "success"
+                        : "danger"
+                      : "primary"
+                  }
+                  onClick={() => handleAnswer(option)}
+                  isDisabled={userAnswer !== null}
+                  className="h-12"
+                >
+                  {option}
+                </Button>
+              ))}
+            </div>
+          </CardBody>
+        </Card>
+      </motion.div>
     </div>
   );
 };

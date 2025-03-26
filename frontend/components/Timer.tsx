@@ -15,26 +15,18 @@ const encouragementMessages = [
   "🎨 Tu es capable de grandes choses ! Continue !"
 ];
 
-export default function Timer() {
-  const [timeLeft, setTimeLeft] = useState(3600); // 1 heure en secondes
+interface TimerProps {
+  timeLeft: number;
+}
+
+export default function Timer({ timeLeft }: TimerProps) {
   const [showMessage, setShowMessage] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTimeLeft((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer);
-          return 0;
-        }
-        return prev - 1;
-      });
-      // Calcul de la progression
-      setProgress((3600 - timeLeft) / 36); // 36 = 3600/100 pour avoir un pourcentage
-    }, 1000);
-
-    return () => clearInterval(timer);
+    // Calcul de la progression
+    setProgress((3600 - timeLeft) / 36); // 36 = 3600/100 pour avoir un pourcentage
   }, [timeLeft]);
 
   useEffect(() => {

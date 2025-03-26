@@ -4,35 +4,26 @@ import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 
 interface ProgressBarProps {
-  initialProgress?: number;
+  totalQuestions: number;
+  correctAnswers: number;
   onProgressComplete?: () => void;
 }
 
 export default function ProgressBar({
-  initialProgress = 0,
+  totalQuestions,
+  correctAnswers,
   onProgressComplete,
 }: ProgressBarProps) {
-  const [progress, setProgress] = useState(initialProgress);
+  const [progress, setProgress] = useState(0);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setProgress((oldProgress) => {
-        if (oldProgress === 100) {
-          clearInterval(timer);
-          onProgressComplete?.();
+    const newProgress = (correctAnswers / totalQuestions) * 100;
+    setProgress(newProgress);
 
-          return 100;
-        }
-        const newProgress = Math.min(oldProgress + 1, 100);
-
-        return newProgress;
-      });
-    }, 1000);
-
-    return () => {
-      clearInterval(timer);
-    };
-  }, [onProgressComplete]);
+    if (newProgress === 100) {
+      onProgressComplete?.();
+    }
+  }, [correctAnswers, totalQuestions, onProgressComplete]);
 
   return (
     <div className="w-full">
@@ -41,12 +32,12 @@ export default function ProgressBar({
           animate={{ width: `${progress}%` }}
           className="bg-yellow-300 h-2.5 rounded-full"
           initial={{ width: "0%" }}
-          transition={{ duration: 1 }}
+          transition={{ duration: 0.5 }}
         />
       </div>
       <div className="flex justify-between mt-2 text-sm text-gray-600 dark:text-gray-400">
-        <span>Progression : {progress}%</span>
-        <span>Temps restant : {Math.ceil((100 - progress) * 0.6)} min</span>
+        <span>Progression : {Math.round(progress)}%</span>
+        <span>Réponses correctes : {correctAnswers}/{totalQuestions}</span>
       </div>
     </div>
   );

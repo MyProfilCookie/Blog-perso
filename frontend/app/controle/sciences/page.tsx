@@ -7,7 +7,8 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
-import ProgressBar from "@/components/ProgressBar";
+import { ProgressBar } from "@/components/progress/ProgressBar";
+import { useRouter } from "next/navigation";
 
 // Interface pour les exercices de sciences
 interface Exercise {
@@ -24,6 +25,7 @@ interface Exercise {
 }
 
 const SciencesPage: React.FC = () => {
+  const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -37,6 +39,12 @@ const SciencesPage: React.FC = () => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tout");
   const [showTips, setShowTips] = useState<boolean>(true);
+  const [currentExercise, setCurrentExercise] = useState(0);
+  const [score, setScore] = useState(0);
+  const [showResult, setShowResult] = useState(false);
+  const [userAnswer, setUserAnswer] = useState<string | null>(null);
+  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [isFinished, setIsFinished] = useState(false);
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -50,10 +58,6 @@ const SciencesPage: React.FC = () => {
     scienceExpert: false,
     quickLearner: false,
   });
-
-  // Nouvel état pour le minuteur (1 heure = 3600 secondes)
-  const [timeLeft, setTimeLeft] = useState<number>(3600);
-  const [isStarted, setIsStarted] = useState<boolean>(false);
 
   // Messages d'encouragement
   const encouragementMessages = [
@@ -388,7 +392,7 @@ const SciencesPage: React.FC = () => {
     let timer: NodeJS.Timeout;
     let encouragementTimer: NodeJS.Timeout;
 
-    if (isStarted && timeLeft > 0) {
+    if (timeLeft > 0 && !isFinished) {
       // Minuteur principal
       timer = setInterval(() => {
         setTimeLeft(prev => {
@@ -407,13 +411,16 @@ const SciencesPage: React.FC = () => {
         setEmoji(randomMessage);
         setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
       }, 600000); // 600000ms = 10 minutes
+    } else if (timeLeft === 0) {
+      setIsFinished(true);
+      setShowResult(true);
     }
 
     return () => {
       clearInterval(timer);
       clearInterval(encouragementTimer);
     };
-  }, [isStarted, timeLeft]);
+  }, [timeLeft, isFinished]);
 
   // Fonction pour formater le temps restant
   const formatTime = (seconds: number): string => {
@@ -513,6 +520,23 @@ const SciencesPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-4">
+      <div className="flex justify-between items-center mb-4">
+        <BackButton />
+        <Timer timeLeft={timeLeft} />
+      </div>
+
+      <div className="mb-6">
+        <ProgressBar 
+          totalQuestions={exercises.length} 
+          correctAnswers={completedExercises}
+          onProgressComplete={() => {
+            if (completedExercises === exercises.length) {
+              calculateFinalScore();
+            }
+          }}
+        />
+      </div>
+
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
@@ -529,14 +553,13 @@ const SciencesPage: React.FC = () => {
                 Exercices de sciences
               </p>
             </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
-            </div>
             <div className="w-full max-w-3xl mx-auto">
               <ProgressBar 
-                initialProgress={(completedExercises / exercises.length) * 100}
+                totalQuestions={exercises.length}
+                correctAnswers={score}
                 onProgressComplete={() => {
-                  console.log("Progression terminée !");
+                  setShowResult(true);
+                  setIsFinished(true);
                 }}
               />
             </div>
@@ -549,14 +572,6 @@ const SciencesPage: React.FC = () => {
                 <div className="text-xl font-bold text-violet-600 dark:text-violet-400">
                   Temps restant : {formatTime(timeLeft)}
                 </div>
-                {!isStarted && (
-                  <Button
-                    className="bg-violet-500 text-white hover:bg-violet-600"
-                    onClick={() => setIsStarted(true)}
-                  >
-                    Commencer
-                  </Button>
-                )}
               </div>
             </div>
           </div>
@@ -829,8 +844,6 @@ const SciencesPage: React.FC = () => {
           </div>
         </section>
       </div>
-
-      <Timer />
     </div>
   );
 };
