@@ -518,10 +518,12 @@ const TrimestrePage: React.FC = () => {
             </div>
             <div className="w-full max-w-3xl mx-auto">
               <ProgressBar 
-                initialProgress={0}
+                totalQuestions={exercises.length}
+                correctAnswers={completedExercises}
                 onProgressComplete={() => {
-                  // Vous pouvez ajouter une action lorsque la progression est terminée
-                  console.log("Progression terminée !");
+                  if (completedExercises === exercises.length) {
+                    calculateFinalScore();
+                  }
                 }}
               />
             </div>
