@@ -221,7 +221,9 @@ export default function ControlePage() {
 
   return (
     <div className="flex flex-col items-center justify-center w-full min-h-screen p-4">
-      <BackButton />
+      <div className="w-full max-w-7xl mb-6">
+        <BackButton />
+      </div>
       
       <motion.div 
         className="flex flex-col items-center gap-6 mb-8"

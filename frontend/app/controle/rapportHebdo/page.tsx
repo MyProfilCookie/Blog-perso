@@ -6,6 +6,7 @@ import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import BackButton from "@/components/back";
+import Timer from "@/components/Timer";
 
 const subjects = [
   { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
@@ -253,228 +254,239 @@ const WeeklyReport = () => {
   };
 
   return (
-    <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
-      <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
-        <div className="absolute left-4 top-0 z-10">
-          <BackButton />
-        </div>
-        <motion.div 
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-4 sm:mb-6"
-          initial={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-            Rapport Hebdomadaire
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-            Suivez votre progression semaine après semaine
-          </p>
-        </motion.div>
+    <div className="flex flex-col min-h-screen p-4">
+      <div className="w-full max-w-7xl mx-auto mb-6">
+        <BackButton />
       </div>
-      <div className="container mx-auto px-6 py-8 flex-grow">
-        {/* En-tête */}
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-          initial={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.5 }}
-        >
-          <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
-            📝 Mon Rapport de la Semaine
-          </h1>
+      
+      <div className="flex-1 w-full max-w-7xl mx-auto">
+        <Card className="w-full">
+          <CardBody>
+            <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
+              <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+                <motion.div 
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center mb-4 sm:mb-6"
+                  initial={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
+                    Rapport Hebdomadaire
+                  </h1>
+                  <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+                    Suivez votre progression semaine après semaine
+                  </p>
+                </motion.div>
+              </div>
+              <div className="container mx-auto px-6 py-8 flex-grow">
+                {/* En-tête */}
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-center mb-16"
+                  initial={{ opacity: 0, y: -20 }}
+                  transition={{ duration: 0.5 }}
+                >
+                  <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
+                    📝 Mon Rapport de la Semaine
+                  </h1>
 
-          <motion.h2
-            animate={{ opacity: 1, y: 0 }}
-            className="text-lg text-gray-600 dark:text-gray-300 mb-6"
-            initial={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-          >
-            {userName ? (
-              <>
-                Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine
-                ?
-              </>
-            ) : (
-              <>Chargement de ton profil...</>
-            )}
-          </motion.h2>
-
-          {/* Sélecteur de semaine */}
-          <div className="relative inline-block">
-            <Button
-              className="px-6 py-2 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-full
-                        hover:from-violet-600 hover:to-blue-600 transition-all duration-300"
-              onClick={() => setShowWeeks(!showWeeks)}
-            >
-              {selectedWeek} 📅
-            </Button>
-
-            {showWeeks && (
-              <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                className="absolute z-50 mt-2 py-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl
-                          border-2 border-violet-200 dark:border-violet-700 max-h-60 overflow-y-auto"
-                initial={{ opacity: 0, y: 10 }}
-              >
-                {weeks.map((week) => (
-                  <button
-                    key={week}
-                    className="w-full text-left px-4 py-2 cursor-pointer hover:bg-violet-50 dark:hover:bg-violet-900/30
-                              text-gray-700 dark:text-gray-300"
-                    onClick={() => {
-                      setSelectedWeek(week);
-                      setShowWeeks(false);
-                    }}
+                  <motion.h2
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-lg text-gray-600 dark:text-gray-300 mb-6"
+                    initial={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.5, delay: 0.2 }}
                   >
-                    {week}
-                  </button>
-                ))}
-              </motion.div>
-            )}
-          </div>
-        </motion.div>
+                    {userName ? (
+                      <>
+                        Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la semaine
+                        ?
+                      </>
+                    ) : (
+                      <>Chargement de ton profil...</>
+                    )}
+                  </motion.h2>
 
-        {/* Grille des matières */}
-        <div className="grid grid-cols-1 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-0 sm:px-4">
-          {report.map((item, index) => (
-            <motion.div
-              key={item.subject}
-              animate={{ opacity: 1, scale: 1 }}
-              initial={{ opacity: 0, scale: 0.9 }}
-              transition={{ duration: 0.3, delay: index * 0.1 }}
-              className="w-full"
-            >
-              <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
-                <CardBody className="p-4 sm:p-6">
-                  {/* En-tête de la matière */}
-                  <div
-                    className={`bg-gradient-to-r ${subjects[index].color} -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
+                  {/* Sélecteur de semaine */}
+                  <div className="relative inline-block">
+                    <Button
+                      className="px-6 py-2 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-full
+                                hover:from-violet-600 hover:to-blue-600 transition-all duration-300"
+                      onClick={() => setShowWeeks(!showWeeks)}
+                    >
+                      {selectedWeek} 📅
+                    </Button>
+
+                    {showWeeks && (
+                      <motion.div
+                        animate={{ opacity: 1, y: 0 }}
+                        className="absolute z-50 mt-2 py-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl
+                                  border-2 border-violet-200 dark:border-violet-700 max-h-60 overflow-y-auto"
+                        initial={{ opacity: 0, y: 10 }}
+                      >
+                        {weeks.map((week) => (
+                          <button
+                            key={week}
+                            className="w-full text-left px-4 py-2 cursor-pointer hover:bg-violet-50 dark:hover:bg-violet-900/30
+                                      text-gray-700 dark:text-gray-300"
+                            onClick={() => {
+                              setSelectedWeek(week);
+                              setShowWeeks(false);
+                            }}
+                          >
+                            {week}
+                          </button>
+                        ))}
+                      </motion.div>
+                    )}
+                  </div>
+                </motion.div>
+
+                {/* Grille des matières */}
+                <div className="grid grid-cols-1 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-0 sm:px-4">
+                  {report.map((item, index) => (
+                    <motion.div
+                      key={item.subject}
+                      animate={{ opacity: 1, scale: 1 }}
+                      initial={{ opacity: 0, scale: 0.9 }}
+                      transition={{ duration: 0.3, delay: index * 0.1 }}
+                      className="w-full"
+                    >
+                      <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
+                        <CardBody className="p-4 sm:p-6">
+                          {/* En-tête de la matière */}
+                          <div
+                            className={`bg-gradient-to-r ${subjects[index].color} -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
+                          >
+                            <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
+                              {subjects[index].icon} {item.subject}
+                            </h3>
+                          </div>
+
+                          {/* Contenu */}
+                          <div className="space-y-4">
+                            <div>
+                              <label
+                                className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                                htmlFor={`activity-${index}`}
+                              >
+                                Qu&apos;as-tu fait aujourd&apos;hui ?
+                              </label>
+                              <Input
+                                className="w-full text-sm sm:text-base"
+                                id={`activity-${index}`}
+                                placeholder="Décris ton activité..."
+                                value={item.activity}
+                                onChange={(e) =>
+                                  handleInputChange(index, "activity", e.target.value)
+                                }
+                              />
+                            </div>
+
+                            <div>
+                              <label
+                                className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                                htmlFor={`hours-${index}`}
+                              >
+                                Combien de temps y as-tu passé ?
+                              </label>
+                              <Input
+                                className="w-full text-sm sm:text-base"
+                                id={`hours-${index}`}
+                                placeholder="Temps en heures"
+                                type="number"
+                                value={item.hours}
+                                onChange={(e) =>
+                                  handleInputChange(index, "hours", e.target.value)
+                                }
+                              />
+                            </div>
+
+                            <div>
+                              <label
+                                className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                                htmlFor={`progress-${index}`}
+                              >
+                                Comment ça s&apos;est passé ?
+                              </label>
+                              <div
+                                aria-label="Progression"
+                                className="grid grid-cols-1 gap-2 sm:gap-3 mt-2"
+                                id={`progress-${index}`}
+                                role="group"
+                              >
+                                <Button
+                                  key="in-progress"
+                                  className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                                    item.progress === "in-progress"
+                                      ? "bg-violet-500 text-white"
+                                      : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                                  }`}
+                                  onClick={() =>
+                                    handleInputChange(index, "progress", "in-progress")
+                                  }
+                                >
+                                  Je progresse {getProgressEmoji("in-progress")}
+                                </Button>
+                                <Button
+                                  key="completed"
+                                  className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                                    item.progress === "completed"
+                                      ? "bg-violet-500 text-white"
+                                      : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                                  }`}
+                                  onClick={() =>
+                                    handleInputChange(index, "progress", "completed")
+                                  }
+                                >
+                                  J&apos;ai réussi ! {getProgressEmoji("completed")}
+                                </Button>
+                                <Button
+                                  key="not-acquired"
+                                  className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                                    item.progress === "not-acquired"
+                                      ? "bg-violet-500 text-white"
+                                      : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                                  }`}
+                                  onClick={() =>
+                                    handleInputChange(index, "progress", "not-acquired")
+                                  }
+                                >
+                                  Besoin d&apos;aide {getProgressEmoji("not-acquired")}
+                                </Button>
+                              </div>
+                            </div>
+                          </div>
+                        </CardBody>
+                      </Card>
+                    </motion.div>
+                  ))}
+                </div>
+
+                {/* Boutons d'action */}
+                <div className="flex flex-col sm:flex-row justify-center gap-4 py-6 mt-8 px-4">
+                  <Button
+                    className="w-full sm:w-auto bg-violet-500 hover:bg-violet-600 text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-300"
+                    onClick={saveReport}
                   >
-                    <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                      {subjects[index].icon} {item.subject}
-                    </h3>
-                  </div>
-
-                  {/* Contenu */}
-                  <div className="space-y-4">
-                    <div>
-                      <label
-                        className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                        htmlFor={`activity-${index}`}
-                      >
-                        Qu&apos;as-tu fait aujourd&apos;hui ?
-                      </label>
-                      <Input
-                        className="w-full text-sm sm:text-base"
-                        id={`activity-${index}`}
-                        placeholder="Décris ton activité..."
-                        value={item.activity}
-                        onChange={(e) =>
-                          handleInputChange(index, "activity", e.target.value)
-                        }
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                        htmlFor={`hours-${index}`}
-                      >
-                        Combien de temps y as-tu passé ?
-                      </label>
-                      <Input
-                        className="w-full text-sm sm:text-base"
-                        id={`hours-${index}`}
-                        placeholder="Temps en heures"
-                        type="number"
-                        value={item.hours}
-                        onChange={(e) =>
-                          handleInputChange(index, "hours", e.target.value)
-                        }
-                      />
-                    </div>
-
-                    <div>
-                      <label
-                        className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                        htmlFor={`progress-${index}`}
-                      >
-                        Comment ça s&apos;est passé ?
-                      </label>
-                      <div
-                        aria-label="Progression"
-                        className="grid grid-cols-1 gap-2 sm:gap-3 mt-2"
-                        id={`progress-${index}`}
-                        role="group"
-                      >
-                        <Button
-                          key="in-progress"
-                          className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
-                            item.progress === "in-progress"
-                              ? "bg-violet-500 text-white"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                          }`}
-                          onClick={() =>
-                            handleInputChange(index, "progress", "in-progress")
-                          }
-                        >
-                          Je progresse {getProgressEmoji("in-progress")}
-                        </Button>
-                        <Button
-                          key="completed"
-                          className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
-                            item.progress === "completed"
-                              ? "bg-violet-500 text-white"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                          }`}
-                          onClick={() =>
-                            handleInputChange(index, "progress", "completed")
-                          }
-                        >
-                          J&apos;ai réussi ! {getProgressEmoji("completed")}
-                        </Button>
-                        <Button
-                          key="not-acquired"
-                          className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
-                            item.progress === "not-acquired"
-                              ? "bg-violet-500 text-white"
-                              : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                          }`}
-                          onClick={() =>
-                            handleInputChange(index, "progress", "not-acquired")
-                          }
-                        >
-                          Besoin d&apos;aide {getProgressEmoji("not-acquired")}
-                        </Button>
-                      </div>
-                    </div>
-                  </div>
-                </CardBody>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-
-        {/* Boutons d'action */}
-        <div className="flex flex-col sm:flex-row justify-center gap-4 py-6 mt-8 px-4">
-          <Button
-            className="w-full sm:w-auto bg-violet-500 hover:bg-violet-600 text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-300"
-            onClick={saveReport}
-          >
-            Sauvegarder mon rapport 📝
-          </Button>
-          <Button
-            className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-300"
-            onClick={downloadReport}
-          >
-            Télécharger mon rapport 💾
-          </Button>
-        </div>
+                    Sauvegarder mon rapport 📝
+                  </Button>
+                  <Button
+                    className="w-full sm:w-auto bg-emerald-500 hover:bg-emerald-600 text-white px-6 py-3 rounded-full flex items-center justify-center gap-2 transition-all duration-300"
+                    onClick={downloadReport}
+                  >
+                    Télécharger mon rapport 💾
+                  </Button>
+                </div>
+              </div>
+            </section>
+          </CardBody>
+        </Card>
       </div>
 
-      {/* Footer */}
-    </section>
+      <div className="w-full max-w-7xl mx-auto mt-6">
+        <Timer />
+      </div>
+    </div>
   );
 };
 
