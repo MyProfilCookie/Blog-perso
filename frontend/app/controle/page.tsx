@@ -25,6 +25,7 @@ import {
   faLock,
   faCrown,
   faFire,
+  faMusic,
 } from "@fortawesome/free-solid-svg-icons";
 
 import BackButton from "@/components/back";
@@ -200,6 +201,16 @@ const courseThemes: CourseTheme[] = [
     bgColor: "bg-cyan-200 dark:bg-cyan-900/30",
     icon: faMicrochip,
     iconColor: "text-cyan-500 dark:text-cyan-400",
+  },
+  {
+    id: 12,
+    title: "Musique",
+    description: "Découvre la musique et les instruments.",
+    image: "https://placehold.co/600x400/rose/white?text=Musique",
+    route: "/controle/music",
+    bgColor: "bg-rose-200 dark:bg-rose-900/30",
+    icon: faMusic,
+    iconColor: "text-rose-500 dark:text-rose-400",
   },
 ];
 

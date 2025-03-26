@@ -800,8 +800,6 @@ const LanguagePage: React.FC = () => {
           </div>
         </section>
       </div>
-
-      <Timer />
     </div>
   );
 };
