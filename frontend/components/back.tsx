@@ -34,8 +34,9 @@ export default function BackButton({ label }: BackButtonProps) {
     <Button
       variant="light"
       onPress={() => router.back()}
-      className="absolute top-4 left-4 z-50"
+      className="fixed md:absolute md:top-8 top-16 left-4 z-50 bg-opacity-80 backdrop-blur-sm hover:bg-opacity-100 transition-all"
       startContent={<FontAwesomeIcon icon={faArrowLeft} className="text-xl" />}
+      size="sm"
     >
       {label}
     </Button>
