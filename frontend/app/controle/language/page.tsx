@@ -502,6 +502,9 @@ const LanguagePage: React.FC = () => {
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+            <div className="absolute top-0 left-0 z-10">
+              <BackButton />
+            </div>
             <motion.div 
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-4 sm:mb-6"
@@ -515,8 +518,7 @@ const LanguagePage: React.FC = () => {
                 Exercices de langues
               </p>
             </motion.div>
-            <div className="flex justify-between items-center mb-4">
-              <BackButton />
+            <div className="flex justify-end items-center mb-4">
               <Timer timeLeft={timeLeft} />
             </div>
             <div className="mb-6">

@@ -39,6 +39,8 @@ const GeographyPage: React.FC = () => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tout");
   const [showTips, setShowTips] = useState<boolean>(true);
+  const [timeLeft, setTimeLeft] = useState<number>(3600);
+  const [isStarted, setIsStarted] = useState<boolean>(false);
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -53,17 +55,14 @@ const GeographyPage: React.FC = () => {
     quickLearner: false,
   });
 
-  // Nouvel état pour le minuteur (1 heure = 3600 secondes)
-  const [timeLeft, setTimeLeft] = useState<number>(3600);
-
   // Messages d'encouragement
   const encouragementMessages = [
-    "🌟 Tu t'en sors très bien !",
-    "💪 Continue comme ça, tu es sur la bonne voie !",
-    "🎯 Reste concentré, tu fais du bon travail !",
-    "✨ Tu es capable de réussir !",
-    "🌈 N'hésite pas à prendre ton temps !",
-    "🚀 Tu progresses bien !"
+    "🌍 Tu deviens un vrai géographe !",
+    "🗺️ Excellent travail de cartographie !",
+    "🌎 Continue d'explorer le monde !",
+    "🧭 Tu t'orientes très bien !",
+    "🌏 Ta connaissance du monde s'améliore !",
+    "🚀 Tu voyages comme un pro !"
   ];
 
   // Gestion du minuteur et des messages d'encouragement
@@ -108,13 +107,13 @@ const GeographyPage: React.FC = () => {
     const mockExercises: Exercise[] = [
       {
         id: 1,
-        title: "Pays et villes",
-        content: "Les villes importantes",
+        title: "Capitales du Monde",
+        content: "Les capitales européennes",
         question: "Quelle est la capitale de la France ?",
         options: ["Paris", "Londres", "Berlin", "Madrid"],
         answer: "Paris",
-        category: "Pays et villes",
-        difficulty: "Facile" as const
+        difficulty: "Facile",
+        category: "Capitales"
       },
       {
         id: 2,
@@ -408,7 +407,7 @@ const GeographyPage: React.FC = () => {
       }
     ];
     setExercises(mockExercises);
-        setLoading(false);
+    setLoading(false);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
@@ -505,6 +504,9 @@ const GeographyPage: React.FC = () => {
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+            <div className="absolute top-0 left-0 z-10">
+              <BackButton />
+            </div>
             <motion.div 
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-4 sm:mb-6"
@@ -518,8 +520,8 @@ const GeographyPage: React.FC = () => {
                 Exercices de géographie
               </p>
             </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
+            <div className="flex justify-end items-center mb-4">
+              <Timer timeLeft={timeLeft} />
             </div>
           </div>
         </section>
@@ -527,7 +529,6 @@ const GeographyPage: React.FC = () => {
 
       <div className="flex justify-between items-center mb-4">
         <BackButton />
-        <Timer timeLeft={timeLeft} />
       </div>
 
       <div className="mb-6">

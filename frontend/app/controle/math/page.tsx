@@ -39,6 +39,8 @@ const MathPage: React.FC = () => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tout");
   const [showTips, setShowTips] = useState<boolean>(true);
+  const [timeLeft, setTimeLeft] = useState<number>(3600);
+  const [isStarted, setIsStarted] = useState<boolean>(false);
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -53,17 +55,14 @@ const MathPage: React.FC = () => {
     quickLearner: false,
   });
 
-  // Nouvel état pour le minuteur (1 heure = 3600 secondes)
-  const [timeLeft, setTimeLeft] = useState<number>(3600);
-
   // Messages d'encouragement
   const encouragementMessages = [
-    "🌟 Tu t'en sors très bien !",
-    "💪 Continue comme ça, tu es sur la bonne voie !",
-    "🎯 Reste concentré, tu fais du bon travail !",
-    "✨ Tu es capable de réussir !",
-    "🌈 N'hésite pas à prendre ton temps !",
-    "🚀 Tu progresses bien !"
+    "🔢 Tu es un as des maths !",
+    "📐 Excellent raisonnement !",
+    "➗ Continue comme ça, tu calcules bien !",
+    "📊 Tes compétences mathématiques s'améliorent !",
+    "🎯 Tu résous les problèmes comme un pro !",
+    "🚀 Tu progresses en mathématiques !"
   ];
 
   // Gestion du minuteur et des messages d'encouragement
@@ -108,13 +107,13 @@ const MathPage: React.FC = () => {
     const mockExercises: Exercise[] = [
       {
         id: 1,
-        title: "Nombres",
-        content: "Les nombres simples",
-        question: "Combien font 2 + 2 ?",
-        options: ["3", "4", "5", "6"],
-        answer: "4",
-        category: "Nombres",
-        difficulty: "Facile" as const
+        title: "Calcul Mental",
+        content: "Addition et soustraction",
+        question: "Combien font 25 + 18 ?",
+        options: ["43", "42", "44", "41"],
+        answer: "43",
+        difficulty: "Facile",
+        category: "Calcul"
       },
       {
         id: 2,
@@ -505,6 +504,9 @@ const MathPage: React.FC = () => {
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+            <div className="absolute top-0 left-0 z-10">
+              <BackButton />
+            </div>
             <motion.div 
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-4 sm:mb-6"
@@ -518,8 +520,8 @@ const MathPage: React.FC = () => {
                 Exercices de mathématiques
               </p>
             </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
+            <div className="flex justify-end items-center mb-4">
+              <Timer timeLeft={timeLeft} />
             </div>
           </div>
         </section>

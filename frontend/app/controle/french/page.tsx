@@ -37,6 +37,8 @@ const FrenchPage: React.FC = () => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tout");
   const [showTips, setShowTips] = useState<boolean>(true);
+  const [timeLeft, setTimeLeft] = useState<number>(3600);
+  const [isStarted, setIsStarted] = useState<boolean>(false);
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -51,17 +53,14 @@ const FrenchPage: React.FC = () => {
     quickLearner: false,
   });
 
-  // Nouvel état pour le minuteur (1 heure = 3600 secondes)
-  const [timeLeft, setTimeLeft] = useState<number>(3600);
-
   // Messages d'encouragement
   const encouragementMessages = [
-    "🌟 Tu t'en sors très bien !",
-    "💪 Continue comme ça, tu es sur la bonne voie !",
-    "🎯 Reste concentré, tu fais du bon travail !",
-    "✨ Tu es capable de réussir !",
-    "🌈 N'hésite pas à prendre ton temps !",
-    "🚀 Tu progresses bien !"
+    "📚 Excellent travail en français !",
+    "✍️ Ta maîtrise de la langue s'améliore !",
+    "🎯 Continue sur cette lancée !",
+    "💫 Tu progresses très bien !",
+    "🌟 Ta grammaire est de plus en plus précise !",
+    "🚀 Tu es sur la bonne voie !"
   ];
 
   // Gestion du minuteur et des messages d'encouragement
@@ -106,13 +105,13 @@ const FrenchPage: React.FC = () => {
     const mockExercises: Exercise[] = [
       {
         id: 1,
-        title: "Vocabulaire",
-        content: "Les animaux",
-        question: "Quel animal miaule ?",
-        options: ["Le chat", "Le chien", "L'oiseau", "Le lapin"],
-        answer: "Le chat",
-        category: "Vocabulaire",
-        difficulty: "Facile" as const
+        title: "Conjugaison",
+        content: "Les verbes du premier groupe",
+        question: "Comment conjugue-t-on le verbe 'chanter' au présent à la première personne du singulier ?",
+        options: ["je chante", "je chantes", "je chantent", "je chantons"],
+        answer: "je chante",
+        difficulty: "Facile",
+        category: "Conjugaison"
       },
       {
         id: 2,
@@ -406,7 +405,7 @@ const FrenchPage: React.FC = () => {
       }
     ];
     setExercises(mockExercises);
-        setLoading(false);
+    setLoading(false);
   }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
@@ -503,6 +502,9 @@ const FrenchPage: React.FC = () => {
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+            <div className="absolute top-0 left-0 z-10">
+              <BackButton />
+            </div>
             <motion.div 
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-4 sm:mb-6"
@@ -516,8 +518,8 @@ const FrenchPage: React.FC = () => {
                 Exercices de français
               </p>
             </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
+            <div className="flex justify-end items-center mb-4">
+              <Timer timeLeft={timeLeft} />
             </div>
           </div>
         </section>

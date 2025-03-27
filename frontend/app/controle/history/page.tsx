@@ -61,12 +61,12 @@ const HistoryPage: React.FC = () => {
 
   // Messages d'encouragement
   const encouragementMessages = [
-    "🌟 Tu t'en sors très bien !",
-    "💪 Continue comme ça, tu es sur la bonne voie !",
-    "🎯 Reste concentré, tu fais du bon travail !",
-    "✨ Tu es capable de réussir !",
-    "🌈 N'hésite pas à prendre ton temps !",
-    "🚀 Tu progresses bien !"
+    "📚 Tu maîtrises l'histoire !",
+    "⌛ Excellent voyage dans le temps !",
+    "🏰 Continue d'explorer le passé !",
+    "📜 Tes connaissances historiques s'améliorent !",
+    "🗿 Tu deviens un vrai historien !",
+    "🚀 Tu voyages dans le temps comme un pro !"
   ];
 
   // Gestion du minuteur et des messages d'encouragement
@@ -508,27 +508,13 @@ const HistoryPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-4">
-      <div className="flex justify-between items-center mb-4">
-        <BackButton />
-        <Timer timeLeft={timeLeft} />
-      </div>
-
-      <div className="mb-6">
-        <ProgressBar 
-          totalQuestions={exercises.length} 
-          correctAnswers={completedExercises}
-          onProgressComplete={() => {
-            if (completedExercises === exercises.length) {
-              calculateFinalScore();
-            }
-          }}
-        />
-      </div>
-
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
-            <motion.div
+            <div className="absolute top-0 left-0 z-10">
+              <BackButton />
+            </div>
+            <motion.div 
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-4 sm:mb-6"
               initial={{ opacity: 0, y: -20 }}
@@ -541,6 +527,20 @@ const HistoryPage: React.FC = () => {
                 Exercices d'histoire
               </p>
             </motion.div>
+            <div className="flex justify-end items-center mb-4">
+              <Timer timeLeft={timeLeft} />
+            </div>
+          </div>
+          <div className="mb-6">
+            <ProgressBar 
+              totalQuestions={exercises.length} 
+              correctAnswers={completedExercises}
+              onProgressComplete={() => {
+                if (completedExercises === exercises.length) {
+                  calculateFinalScore();
+                }
+              }}
+            />
           </div>
           {/* Rest of the component content */}
         </section>
