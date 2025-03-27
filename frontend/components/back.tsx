@@ -31,14 +31,16 @@ export default function BackButton({ label }: BackButtonProps) {
   }
 
   return (
-    <Button
-      variant="light"
-      onPress={() => router.back()}
-      className="fixed md:absolute md:top-8 top-16 left-4 z-50 bg-opacity-80 backdrop-blur-sm hover:bg-opacity-100 transition-all"
-      startContent={<FontAwesomeIcon icon={faArrowLeft} className="text-xl" />}
-      size="sm"
-    >
-      {label}
-    </Button>
+    <div className="w-full flex justify-start mt-20 mb-4 px-4">
+      <Button
+        variant="light"
+        onPress={() => router.back()}
+        className="bg-gray-100 dark:bg-gray-800 shadow-sm hover:shadow"
+        startContent={<FontAwesomeIcon icon={faArrowLeft} className="text-xl" />}
+        size="md"
+      >
+        {label || "Retour"}
+      </Button>
+    </div>
   );
 }
