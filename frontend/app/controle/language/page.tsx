@@ -8,7 +8,6 @@ import Image from "next/image";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
-import ProgressBar from "@/components/ProgressBar";
 
 // Interface pour les exercices de langues
 interface Exercise {
@@ -520,17 +519,6 @@ const LanguagePage: React.FC = () => {
             </motion.div>
             <div className="flex justify-end items-center mb-4">
               <Timer timeLeft={timeLeft} />
-            </div>
-            <div className="mb-6">
-              <ProgressBar 
-                totalQuestions={exercises.length} 
-                correctAnswers={completedExercises}
-                onProgressComplete={() => {
-                  if (completedExercises === exercises.length) {
-                    calculateFinalScore();
-                  }
-                }}
-              />
             </div>
           </div>
 

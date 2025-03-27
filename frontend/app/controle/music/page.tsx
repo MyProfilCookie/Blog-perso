@@ -548,16 +548,6 @@ const MusicPage: React.FC = () => {
                 Exercices de musique
               </p>
             </motion.div>
-            <div className="w-full max-w-3xl mx-auto">
-              <ProgressBar 
-                totalQuestions={exercises.length}
-                correctAnswers={score}
-                onProgressComplete={() => {
-                  setShowResult(true);
-                  setIsFinished(true);
-                }}
-              />
-            </div>
           </div>
 
           {/* Minuteur et bouton de démarrage */}

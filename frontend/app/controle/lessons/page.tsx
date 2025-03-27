@@ -23,7 +23,6 @@ import Image from "next/image";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
-import { ProgressBar } from "@/components/progress/ProgressBar";
 
 // Configuration de la locale française
 dayjs.locale("fr");
@@ -245,18 +244,6 @@ export default function LessonOfTheDay() {
         <Timer timeLeft={timeLeft} />
       </div>
 
-      <div className="mb-6">
-        <ProgressBar 
-          totalQuestions={totalQuestions}
-          correctAnswers={correctAnswers}
-          onProgressComplete={() => {
-            if (correctAnswers === totalQuestions) {
-              calculateFinalScore();
-            }
-          }}
-        />
-      </div>
-
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
@@ -353,17 +340,6 @@ export default function LessonOfTheDay() {
                 ✨ Bienvenue sur votre espace d&apos;apprentissage, <span className="text-yellow-300">{userName}</span> ! ✨
               </motion.h1>
               <p className="text-center text-sm sm:text-lg opacity-90">Découvrez votre programme personnalisé du jour</p>
-              
-              {/* Barre de progression */}
-              <div className="w-full max-w-3xl mx-auto mb-8">
-                <ProgressBar 
-                  totalQuestions={totalQuestions}
-                  correctAnswers={correctAnswers}
-                  onProgressComplete={() => {
-                    console.log("Progression terminée !");
-                  }}
-                />
-              </div>
             </div>
 
             {/* Sélecteur de date et statistiques */}

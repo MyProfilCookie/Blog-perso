@@ -7,7 +7,6 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
-import ProgressBar from "@/components/ProgressBar";
 
 const subjects = [
   { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
@@ -269,18 +268,6 @@ const WeeklyReport = () => {
       <div className="flex justify-between items-center mb-4">
         <BackButton />
         <Timer timeLeft={timeLeft} />
-      </div>
-
-      <div className="mb-6">
-        <ProgressBar 
-          totalQuestions={exercises.length} 
-          correctAnswers={completedExercises}
-          onProgressComplete={() => {
-            if (completedExercises === exercises.length) {
-              calculateFinalScore();
-            }
-          }}
-        />
       </div>
 
       <div className="flex-1 w-full max-w-7xl mx-auto">

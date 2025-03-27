@@ -548,16 +548,6 @@ const HistoryPage: React.FC = () => {
                 Exercices d'histoire
               </p>
             </motion.div>
-            <div className="w-full max-w-3xl mx-auto">
-              <ProgressBar 
-                totalQuestions={exercises.length}
-                correctAnswers={score}
-                onProgressComplete={() => {
-                  setShowResult(true);
-                  setIsFinished(true);
-                }}
-              />
-            </div>
           </div>
 
           {/* Minuteur et bouton de démarrage */}
