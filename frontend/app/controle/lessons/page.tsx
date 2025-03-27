@@ -65,7 +65,7 @@ export default function LessonOfTheDay() {
   const [notes, setNotes] = useState<string>("");
   const [correctAnswers, setCorrectAnswers] = useState(0);
   const [totalQuestions, setTotalQuestions] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(3600); // 1 hour
   const [isFinished, setIsFinished] = useState(false);
   const [showResult, setShowResult] = useState(false);
   const [userAnswer, setUserAnswer] = useState<string | null>(null);

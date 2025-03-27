@@ -90,7 +90,7 @@ const WeeklyReport = () => {
   const [selectedWeek, setSelectedWeek] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
   const [reportItems, setReportItems] = useState<ReportItem[]>([]);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(3600); // 1 hour
   const [isFinished, setIsFinished] = useState(false);
   const [showWeeks, setShowWeeks] = useState(false);
   const [weeks] = useState(generateWeeksOfYear);

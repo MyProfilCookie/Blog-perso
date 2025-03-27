@@ -43,7 +43,7 @@ const FrenchPage: React.FC = () => {
   const [score, setScore] = useState(0);
   const [showResult, setShowResult] = useState(false);
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
-  const [timeLeft, setTimeLeft] = useState(300); // 5 minutes
+  const [timeLeft, setTimeLeft] = useState(3600); // 1 hour
   const [isFinished, setIsFinished] = useState(false);
 
   // Statistiques et badges
@@ -410,7 +410,7 @@ const FrenchPage: React.FC = () => {
         // Utiliser l'état emoji existant pour afficher temporairement le message
         setEmoji(randomMessage);
         setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
-      }, 600000); // 600000ms = 10 minutes
+      }, 900000); // 900000ms = 15 minutes
     } else if (timeLeft === 0) {
       setIsFinished(true);
       setShowResult(true);

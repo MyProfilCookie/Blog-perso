@@ -88,7 +88,7 @@ const LanguagePage: React.FC = () => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
         setEmoji(randomMessage);
         setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
-      }, 600000); // 600000ms = 10 minutes
+      }, 900000); // 900000ms = 15 minutes
     }
 
     return () => {
