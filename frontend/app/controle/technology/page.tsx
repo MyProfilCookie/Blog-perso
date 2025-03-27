@@ -113,6 +113,186 @@ const mockExercises: Exercise[] = [
     options: ["Le lave-linge", "Le frigo", "Le four", "Le micro-ondes"],
     answer: "Le lave-linge",
     subject: "Technologie"
+  },
+  {
+    id: 11,
+    title: "Les appareils",
+    content: "Les appareils pour cuisiner",
+    question: "Quel appareil utilise-t-on pour faire cuire un gâteau ?",
+    options: ["Le four", "Le frigo", "Le lave-vaisselle", "Le lave-linge"],
+    answer: "Le four",
+    subject: "Technologie"
+  },
+  {
+    id: 12,
+    title: "Les écrans",
+    content: "Les écrans pour travailler",
+    question: "Sur quel écran travaille-t-on sur un ordinateur ?",
+    options: ["L'écran d'ordinateur", "La télévision", "Le tableau", "Le mur"],
+    answer: "L'écran d'ordinateur",
+    subject: "Technologie"
+  },
+  {
+    id: 13,
+    title: "Les boutons",
+    content: "Les boutons de l'ordinateur",
+    question: "Quel bouton appuie-t-on pour allumer l'ordinateur ?",
+    options: ["Le bouton power", "Le clavier", "La souris", "L'écran"],
+    answer: "Le bouton power",
+    subject: "Technologie"
+  },
+  {
+    id: 14,
+    title: "Les appareils",
+    content: "Les appareils pour nettoyer",
+    question: "Quel appareil utilise-t-on pour aspirer la poussière ?",
+    options: ["L'aspirateur", "Le balai", "La serpillière", "Le torchon"],
+    answer: "L'aspirateur",
+    subject: "Technologie"
+  },
+  {
+    id: 15,
+    title: "Les écrans",
+    content: "Les écrans pour lire",
+    question: "Sur quel écran peut-on lire des livres numériques ?",
+    options: ["La liseuse", "La télévision", "Le tableau", "Le mur"],
+    answer: "La liseuse",
+    subject: "Technologie"
+  },
+  {
+    id: 16,
+    title: "Les boutons",
+    content: "Les boutons de la machine à café",
+    question: "Quel bouton appuie-t-on pour faire un café ?",
+    options: ["Le bouton café", "Le bouton eau", "Le bouton lait", "Le bouton sucre"],
+    answer: "Le bouton café",
+    subject: "Technologie"
+  },
+  {
+    id: 17,
+    title: "Les appareils",
+    content: "Les appareils pour laver",
+    question: "Quel appareil utilise-t-on pour laver la vaisselle ?",
+    options: ["Le lave-vaisselle", "Le lave-linge", "Le frigo", "Le four"],
+    answer: "Le lave-vaisselle",
+    subject: "Technologie"
+  },
+  {
+    id: 18,
+    title: "Les écrans",
+    content: "Les écrans pour la sécurité",
+    question: "Sur quel écran voit-on les images de la caméra de surveillance ?",
+    options: ["L'écran de surveillance", "La télévision", "Le tableau", "Le mur"],
+    answer: "L'écran de surveillance",
+    subject: "Technologie"
+  },
+  {
+    id: 19,
+    title: "Les boutons",
+    content: "Les boutons de la télécommande",
+    question: "Quel bouton appuie-t-on pour changer de chaîne ?",
+    options: ["Les boutons numériques", "Le bouton menu", "Le bouton retour", "Le bouton ok"],
+    answer: "Les boutons numériques",
+    subject: "Technologie"
+  },
+  {
+    id: 20,
+    title: "Les appareils",
+    content: "Les appareils pour la musique",
+    question: "Quel appareil utilise-t-on pour écouter de la musique ?",
+    options: ["La chaîne hi-fi", "Le frigo", "Le four", "Le lave-linge"],
+    answer: "La chaîne hi-fi",
+    subject: "Technologie"
+  },
+  {
+    id: 21,
+    title: "Les écrans",
+    content: "Les écrans pour la navigation",
+    question: "Sur quel écran voit-on le trajet en voiture ?",
+    options: ["Le GPS", "La télévision", "Le tableau", "Le mur"],
+    answer: "Le GPS",
+    subject: "Technologie"
+  },
+  {
+    id: 22,
+    title: "Les boutons",
+    content: "Les boutons de la machine à laver",
+    question: "Quel bouton appuie-t-on pour lancer le programme de lavage ?",
+    options: ["Le bouton start", "Le bouton pause", "Le bouton stop", "Le bouton reset"],
+    answer: "Le bouton start",
+    subject: "Technologie"
+  },
+  {
+    id: 23,
+    title: "Les appareils",
+    content: "Les appareils pour le jardin",
+    question: "Quel appareil utilise-t-on pour tondre la pelouse ?",
+    options: ["La tondeuse", "Le râteau", "La pelle", "Le sécateur"],
+    answer: "La tondeuse",
+    subject: "Technologie"
+  },
+  {
+    id: 24,
+    title: "Les écrans",
+    content: "Les écrans pour la photo",
+    question: "Sur quel écran voit-on les photos prises avec l'appareil photo ?",
+    options: ["L'écran de l'appareil photo", "La télévision", "Le tableau", "Le mur"],
+    answer: "L'écran de l'appareil photo",
+    subject: "Technologie"
+  },
+  {
+    id: 25,
+    title: "Les boutons",
+    content: "Les boutons de l'ascenseur",
+    question: "Quel bouton appuie-t-on pour monter à l'étage ?",
+    options: ["Le bouton haut", "Le bouton bas", "Le bouton stop", "Le bouton alarme"],
+    answer: "Le bouton haut",
+    subject: "Technologie"
+  },
+  {
+    id: 26,
+    title: "Les appareils",
+    content: "Les appareils pour le bricolage",
+    question: "Quel appareil utilise-t-on pour percer un trou ?",
+    options: ["La perceuse", "Le marteau", "Le tournevis", "La scie"],
+    answer: "La perceuse",
+    subject: "Technologie"
+  },
+  {
+    id: 27,
+    title: "Les écrans",
+    content: "Les écrans pour le sport",
+    question: "Sur quel écran voit-on son rythme cardiaque pendant le sport ?",
+    options: ["Le cardiofréquencemètre", "La télévision", "Le tableau", "Le mur"],
+    answer: "Le cardiofréquencemètre",
+    subject: "Technologie"
+  },
+  {
+    id: 28,
+    title: "Les boutons",
+    content: "Les boutons de la cafetière",
+    question: "Quel bouton appuie-t-on pour faire chauffer l'eau ?",
+    options: ["Le bouton chauffe-eau", "Le bouton café", "Le bouton lait", "Le bouton sucre"],
+    answer: "Le bouton chauffe-eau",
+    subject: "Technologie"
+  },
+  {
+    id: 29,
+    title: "Les appareils",
+    content: "Les appareils pour le repassage",
+    question: "Quel appareil utilise-t-on pour repasser les vêtements ?",
+    options: ["Le fer à repasser", "Le lave-linge", "Le sèche-linge", "Le lave-vaisselle"],
+    answer: "Le fer à repasser",
+    subject: "Technologie"
+  },
+  {
+    id: 30,
+    title: "Les écrans",
+    content: "Les écrans pour la météo",
+    question: "Sur quel écran voit-on la température extérieure ?",
+    options: ["La station météo", "La télévision", "Le tableau", "Le mur"],
+    answer: "La station météo",
+    subject: "Technologie"
   }
 ];
 
@@ -192,8 +372,30 @@ const TechnologyPage: React.FC = () => {
 
   return (
     <div className="flex flex-col min-h-screen p-4">
-      <div className="flex justify-between items-center mb-4">
-        <BackButton />
+      <div className="flex-1 w-full max-w-7xl mx-auto">
+        <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
+          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+            <div className="absolute left-0 top-0">
+              <BackButton />
+            </div>
+            <motion.div 
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-4 sm:mb-6"
+              initial={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-2xl sm:text-4xl font-bold text-violet-600 dark:text-violet-400 mb-2">
+                Technologie
+              </h1>
+              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
+                Exercices de technologie
+              </p>
+            </motion.div>
+          </div>
+        </section>
+      </div>
+
+      <div className="flex justify-end items-center mb-4">
         <Timer timeLeft={timeLeft} />
       </div>
       <motion.div

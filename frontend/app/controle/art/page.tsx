@@ -111,6 +111,186 @@ const mockExercises: Exercise[] = [
     options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
     answer: "Ronde",
     subject: "Art"
+  },
+  {
+    id: 11,
+    title: "Les couleurs",
+    content: "Les couleurs des fleurs",
+    question: "Quelle est la couleur d'une rose ?",
+    options: ["Rouge", "Bleue", "Verte", "Jaune"],
+    answer: "Rouge",
+    subject: "Art"
+  },
+  {
+    id: 12,
+    title: "Les formes",
+    content: "Les formes des bâtiments",
+    question: "Quelle forme a une pyramide ?",
+    options: ["Triangle", "Carré", "Rond", "Rectangle"],
+    answer: "Triangle",
+    subject: "Art"
+  },
+  {
+    id: 13,
+    title: "Les couleurs",
+    content: "Les couleurs des légumes",
+    question: "Quelle est la couleur d'une carotte ?",
+    options: ["Orange", "Bleue", "Verte", "Jaune"],
+    answer: "Orange",
+    subject: "Art"
+  },
+  {
+    id: 14,
+    title: "Les formes",
+    content: "Les formes des meubles",
+    question: "Quelle forme a une table ronde ?",
+    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
+    answer: "Ronde",
+    subject: "Art"
+  },
+  {
+    id: 15,
+    title: "Les couleurs",
+    content: "Les couleurs des animaux",
+    question: "Quelle est la couleur d'une vache ?",
+    options: ["Noire et blanche", "Rouge", "Verte", "Jaune"],
+    answer: "Noire et blanche",
+    subject: "Art"
+  },
+  {
+    id: 16,
+    title: "Les formes",
+    content: "Les formes des instruments",
+    question: "Quelle forme a un tambour ?",
+    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
+    answer: "Ronde",
+    subject: "Art"
+  },
+  {
+    id: 17,
+    title: "Les couleurs",
+    content: "Les couleurs des saisons",
+    question: "Quelle est la couleur des feuilles en automne ?",
+    options: ["Orange", "Bleue", "Verte", "Jaune"],
+    answer: "Orange",
+    subject: "Art"
+  },
+  {
+    id: 18,
+    title: "Les formes",
+    content: "Les formes des panneaux",
+    question: "Quelle forme a un panneau stop ?",
+    options: ["Octogone", "Carré", "Rond", "Rectangle"],
+    answer: "Octogone",
+    subject: "Art"
+  },
+  {
+    id: 19,
+    title: "Les couleurs",
+    content: "Les couleurs des planètes",
+    question: "Quelle est la couleur de Mars ?",
+    options: ["Rouge", "Bleue", "Verte", "Jaune"],
+    answer: "Rouge",
+    subject: "Art"
+  },
+  {
+    id: 20,
+    title: "Les formes",
+    content: "Les formes des signes",
+    question: "Quelle forme a un cœur ?",
+    options: ["Cœur", "Carré", "Rond", "Rectangle"],
+    answer: "Cœur",
+    subject: "Art"
+  },
+  {
+    id: 21,
+    title: "Les couleurs",
+    content: "Les couleurs des drapeaux",
+    question: "Quelle est la couleur du drapeau français ?",
+    options: ["Bleu, blanc, rouge", "Vert, blanc, rouge", "Jaune, blanc, rouge", "Orange, blanc, rouge"],
+    answer: "Bleu, blanc, rouge",
+    subject: "Art"
+  },
+  {
+    id: 22,
+    title: "Les formes",
+    content: "Les formes des pièces",
+    question: "Quelle forme a une pièce de monnaie ?",
+    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
+    answer: "Ronde",
+    subject: "Art"
+  },
+  {
+    id: 23,
+    title: "Les couleurs",
+    content: "Les couleurs des fruits",
+    question: "Quelle est la couleur d'une banane ?",
+    options: ["Jaune", "Bleue", "Verte", "Rouge"],
+    answer: "Jaune",
+    subject: "Art"
+  },
+  {
+    id: 24,
+    title: "Les formes",
+    content: "Les formes des jouets",
+    question: "Quelle forme a un cube ?",
+    options: ["Carrée", "Ronde", "Triangle", "Rectangle"],
+    answer: "Carrée",
+    subject: "Art"
+  },
+  {
+    id: 25,
+    title: "Les couleurs",
+    content: "Les couleurs des vêtements",
+    question: "Quelle est la couleur d'un t-shirt blanc ?",
+    options: ["Blanche", "Bleue", "Verte", "Jaune"],
+    answer: "Blanche",
+    subject: "Art"
+  },
+  {
+    id: 26,
+    title: "Les formes",
+    content: "Les formes des aliments",
+    question: "Quelle forme a un sandwich ?",
+    options: ["Rectangle", "Rond", "Triangle", "Carré"],
+    answer: "Rectangle",
+    subject: "Art"
+  },
+  {
+    id: 27,
+    title: "Les couleurs",
+    content: "Les couleurs des éléments",
+    question: "Quelle est la couleur du feu ?",
+    options: ["Orange", "Bleue", "Verte", "Jaune"],
+    answer: "Orange",
+    subject: "Art"
+  },
+  {
+    id: 28,
+    title: "Les formes",
+    content: "Les formes des objets",
+    question: "Quelle forme a un crayon ?",
+    options: ["Rectangle", "Rond", "Triangle", "Carré"],
+    answer: "Rectangle",
+    subject: "Art"
+  },
+  {
+    id: 29,
+    title: "Les couleurs",
+    content: "Les couleurs des animaux",
+    question: "Quelle est la couleur d'un pingouin ?",
+    options: ["Noire et blanche", "Rouge", "Verte", "Jaune"],
+    answer: "Noire et blanche",
+    subject: "Art"
+  },
+  {
+    id: 30,
+    title: "Les formes",
+    content: "Les formes des bâtiments",
+    question: "Quelle forme a un château ?",
+    options: ["Complexe", "Carré", "Rond", "Rectangle"],
+    answer: "Complexe",
+    subject: "Art"
   }
 ];
 
