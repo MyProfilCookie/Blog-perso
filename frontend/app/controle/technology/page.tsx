@@ -15,133 +15,104 @@ import { useRouter } from "next/navigation";
 // Interface pour les exercices de technologie
 interface Exercise {
   id: number;
+  title: string;
+  content: string;
   question: string;
   options: string[];
   answer: string;
-  difficulty: "Facile" | "Moyen" | "Difficile";
-  category: string;
+  subject: string;
 }
 
-const exercises: Exercise[] = [
+const mockExercises: Exercise[] = [
   {
     id: 1,
-    question: "Quel est le composant principal d'un ordinateur ?",
-    options: ["Le clavier", "La souris", "Le processeur", "L'écran"],
-    answer: "Le processeur",
-    difficulty: "Facile",
-    category: "Composants"
+    title: "Les appareils",
+    content: "Reconnais les appareils",
+    question: "Quel appareil utilise-t-on pour parler avec quelqu'un qui est loin ?",
+    options: ["Le téléphone", "Le livre", "La table", "La chaise"],
+    answer: "Le téléphone",
+    subject: "Technologie"
   },
   {
     id: 2,
-    question: "Quelle est la fonction principale d'un navigateur web ?",
-    options: ["Jouer à des jeux", "Surfer sur Internet", "Écrire des textes", "Faire des calculs"],
-    answer: "Surfer sur Internet",
-    difficulty: "Facile",
-    category: "Internet"
+    title: "Les écrans",
+    content: "Les différents écrans",
+    question: "Sur quel écran regarde-t-on des dessins animés ?",
+    options: ["La télévision", "Le livre", "Le tableau", "Le mur"],
+    answer: "La télévision",
+    subject: "Technologie"
   },
   {
     id: 3,
-    question: "Quel est le symbole pour allumer un appareil ?",
-    options: ["⚡", "⭕", "🔴", "⚪"],
-    answer: "⭕",
-    difficulty: "Facile",
-    category: "Symboles"
+    title: "Les boutons",
+    content: "Les boutons simples",
+    question: "Quel bouton appuie-t-on pour allumer la télévision ?",
+    options: ["Le bouton rouge", "Le bouton bleu", "Le bouton vert", "Le bouton jaune"],
+    answer: "Le bouton rouge",
+    subject: "Technologie"
   },
   {
     id: 4,
-    question: "Quelle est la couleur du câble USB ?",
-    options: ["Rouge", "Bleu", "Blanc", "Noir"],
-    answer: "Blanc",
-    difficulty: "Facile",
-    category: "Périphériques"
+    title: "Les appareils",
+    content: "Les appareils de la maison",
+    question: "Quel appareil utilise-t-on pour garder la nourriture froide ?",
+    options: ["Le frigo", "Le four", "Le micro-ondes", "Le lave-vaisselle"],
+    answer: "Le frigo",
+    subject: "Technologie"
   },
   {
     id: 5,
-    question: "Quel est le plus petit composant d'un ordinateur ?",
-    options: ["La carte mère", "Le processeur", "La puce", "Le disque dur"],
-    answer: "La puce",
-    difficulty: "Facile",
-    category: "Composants"
+    title: "Les écrans",
+    content: "Les écrans tactiles",
+    question: "Sur quel écran peut-on toucher pour jouer ?",
+    options: ["La tablette", "La télévision", "Le tableau", "Le mur"],
+    answer: "La tablette",
+    subject: "Technologie"
   },
   {
     id: 6,
-    question: "Quelle est la vitesse de connexion la plus rapide ?",
-    options: ["3G", "4G", "5G", "6G"],
-    answer: "5G",
-    difficulty: "Moyen",
-    category: "Réseaux"
+    title: "Les boutons",
+    content: "Les boutons de la maison",
+    question: "Quel bouton appuie-t-on pour allumer la lumière ?",
+    options: ["L'interrupteur", "La poignée", "La clé", "Le cadenas"],
+    answer: "L'interrupteur",
+    subject: "Technologie"
   },
   {
     id: 7,
-    question: "Quel est le système d'exploitation le plus utilisé ?",
-    options: ["Windows", "Mac", "Linux", "Android"],
-    answer: "Windows",
-    difficulty: "Moyen",
-    category: "Systèmes"
+    title: "Les appareils",
+    content: "Les appareils de cuisine",
+    question: "Quel appareil utilise-t-on pour réchauffer la nourriture ?",
+    options: ["Le micro-ondes", "Le frigo", "Le lave-vaisselle", "Le lave-linge"],
+    answer: "Le micro-ondes",
+    subject: "Technologie"
   },
   {
     id: 8,
-    question: "Quelle est la capacité de stockage la plus grande ?",
-    options: ["1 Go", "1 To", "1 Mo", "1 Ko"],
-    answer: "1 To",
-    difficulty: "Moyen",
-    category: "Stockage"
+    title: "Les écrans",
+    content: "Les écrans pour jouer",
+    question: "Sur quel écran peut-on jouer à des jeux vidéo ?",
+    options: ["La console de jeu", "Le tableau", "Le mur", "Le livre"],
+    answer: "La console de jeu",
+    subject: "Technologie"
   },
   {
     id: 9,
-    question: "Quel est le composant qui permet d'afficher les images ?",
-    options: ["La carte graphique", "Le processeur", "La mémoire", "Le disque dur"],
-    answer: "La carte graphique",
-    difficulty: "Moyen",
-    category: "Composants"
+    title: "Les boutons",
+    content: "Les boutons de la voiture",
+    question: "Quel bouton appuie-t-on pour allumer la radio dans la voiture ?",
+    options: ["Le bouton radio", "Le volant", "La pédale", "La clé"],
+    answer: "Le bouton radio",
+    subject: "Technologie"
   },
   {
     id: 10,
-    question: "Quelle est la fonction d'un pare-feu ?",
-    options: ["Protéger contre les virus", "Accélérer l'ordinateur", "Stocker des fichiers", "Jouer à des jeux"],
-    answer: "Protéger contre les virus",
-    difficulty: "Moyen",
-    category: "Sécurité"
-  },
-  {
-    id: 11,
-    question: "Quel est le langage de programmation le plus simple ?",
-    options: ["Python", "Java", "C++", "Assembleur"],
-    answer: "Python",
-    difficulty: "Difficile",
-    category: "Programmation"
-  },
-  {
-    id: 12,
-    question: "Quelle est la fonction d'un serveur web ?",
-    options: ["Stocker des sites", "Créer des sites", "Surfer sur Internet", "Jouer à des jeux"],
-    answer: "Stocker des sites",
-    difficulty: "Difficile",
-    category: "Réseaux"
-  },
-  {
-    id: 13,
-    question: "Quel est le composant qui permet de stocker les données ?",
-    options: ["Le processeur", "La mémoire", "Le disque dur", "La carte mère"],
-    answer: "Le disque dur",
-    difficulty: "Difficile",
-    category: "Composants"
-  },
-  {
-    id: 14,
-    question: "Quelle est la fonction d'un routeur ?",
-    options: ["Connecter des appareils", "Stocker des fichiers", "Créer des sites", "Jouer à des jeux"],
-    answer: "Connecter des appareils",
-    difficulty: "Difficile",
-    category: "Réseaux"
-  },
-  {
-    id: 15,
-    question: "Quel est le système d'exploitation le plus sécurisé ?",
-    options: ["Windows", "Mac", "Linux", "Android"],
-    answer: "Linux",
-    difficulty: "Difficile",
-    category: "Systèmes"
+    title: "Les appareils",
+    content: "Les appareils pour laver",
+    question: "Quel appareil utilise-t-on pour laver les vêtements ?",
+    options: ["Le lave-linge", "Le frigo", "Le four", "Le micro-ondes"],
+    answer: "Le lave-linge",
+    subject: "Technologie"
   }
 ];
 
@@ -168,11 +139,11 @@ const TechnologyPage: React.FC = () => {
 
   const handleAnswer = (answer: string) => {
     setUserAnswer(answer);
-    if (answer === exercises[currentExercise].answer) {
+    if (answer === mockExercises[currentExercise].answer) {
       setScore(score + 1);
     }
     setTimeout(() => {
-      if (currentExercise < exercises.length - 1) {
+      if (currentExercise < mockExercises.length - 1) {
         setCurrentExercise(currentExercise + 1);
         setUserAnswer(null);
       } else {
@@ -183,7 +154,7 @@ const TechnologyPage: React.FC = () => {
   };
 
   const calculatePercentage = () => {
-    return Math.round((score / exercises.length) * 100);
+    return Math.round((score / mockExercises.length) * 100);
   };
 
   const getFeedback = () => {
@@ -204,7 +175,7 @@ const TechnologyPage: React.FC = () => {
         >
           <h2 className="text-2xl font-bold mb-4">Résultats</h2>
           <p className="text-xl mb-2">
-            Score : {score} sur {exercises.length}
+            Score : {score} sur {mockExercises.length}
           </p>
           <p className="text-xl mb-4">{getFeedback()}</p>
           <Button
@@ -235,16 +206,16 @@ const TechnologyPage: React.FC = () => {
         <Card className="w-full max-w-2xl">
           <CardBody className="text-center">
             <h2 className="text-xl font-bold mb-4">
-              Question {currentExercise + 1} sur {exercises.length}
+              Question {currentExercise + 1} sur {mockExercises.length}
             </h2>
-            <p className="text-lg mb-6">{exercises[currentExercise].question}</p>
+            <p className="text-lg mb-6">{mockExercises[currentExercise].question}</p>
             <div className="grid grid-cols-2 gap-4">
-              {exercises[currentExercise].options?.map((option, index) => (
+              {mockExercises[currentExercise].options?.map((option, index) => (
                 <Button
                   key={index}
                   color={
                     userAnswer === option
-                      ? option === exercises[currentExercise].answer
+                      ? option === mockExercises[currentExercise].answer
                         ? "success"
                         : "danger"
                       : "primary"

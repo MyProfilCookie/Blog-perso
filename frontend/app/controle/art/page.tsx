@@ -13,133 +13,104 @@ import { useRouter } from "next/navigation";
 // Interface pour les exercices d'art
 interface Exercise {
   id: number;
+  title: string;
+  content: string;
   question: string;
   options: string[];
   answer: string;
-  difficulty: "Facile" | "Moyen" | "Difficile";
-  category: string;
+  subject: string;
 }
 
-const exercises: Exercise[] = [
+const mockExercises: Exercise[] = [
   {
     id: 1,
+    title: "Les couleurs",
+    content: "Reconnais les couleurs",
     question: "Quelle est la couleur du soleil ?",
-    options: ["Rouge", "Bleu", "Jaune", "Vert"],
+    options: ["Jaune", "Bleu", "Vert", "Rouge"],
     answer: "Jaune",
-    difficulty: "Facile",
-    category: "Couleurs"
+    subject: "Art"
   },
   {
     id: 2,
-    question: "Quelle est la forme d'un cercle ?",
-    options: ["Carrée", "Ronde", "Triangle", "Rectangle"],
+    title: "Les formes",
+    content: "Les formes simples",
+    question: "Quelle forme a une pizza ?",
+    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
     answer: "Ronde",
-    difficulty: "Facile",
-    category: "Formes"
+    subject: "Art"
   },
   {
     id: 3,
+    title: "Les couleurs",
+    content: "Les couleurs de la nature",
     question: "Quelle est la couleur de l'herbe ?",
-    options: ["Rouge", "Bleue", "Verte", "Jaune"],
+    options: ["Verte", "Bleue", "Rouge", "Jaune"],
     answer: "Verte",
-    difficulty: "Facile",
-    category: "Couleurs"
+    subject: "Art"
   },
   {
     id: 4,
-    question: "Quelle est la forme d'un carré ?",
-    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
-    answer: "Carrée",
-    difficulty: "Facile",
-    category: "Formes"
+    title: "Les formes",
+    content: "Les formes dans la maison",
+    question: "Quelle forme a une fenêtre ?",
+    options: ["Rectangle", "Rond", "Triangle", "Carré"],
+    answer: "Rectangle",
+    subject: "Art"
   },
   {
     id: 5,
-    question: "Quelle est la couleur du ciel ?",
+    title: "Les couleurs",
+    content: "Les couleurs des fruits",
+    question: "Quelle est la couleur d'une pomme ?",
     options: ["Rouge", "Bleue", "Verte", "Jaune"],
-    answer: "Bleue",
-    difficulty: "Facile",
-    category: "Couleurs"
+    answer: "Rouge",
+    subject: "Art"
   },
   {
     id: 6,
-    question: "Quelle est la forme d'un triangle ?",
-    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
-    answer: "Triangle",
-    difficulty: "Moyen",
-    category: "Formes"
+    title: "Les formes",
+    content: "Les formes des objets",
+    question: "Quelle forme a un livre ?",
+    options: ["Rectangle", "Rond", "Triangle", "Carré"],
+    answer: "Rectangle",
+    subject: "Art"
   },
   {
     id: 7,
-    question: "Quelle est la couleur de la neige ?",
-    options: ["Rouge", "Bleue", "Verte", "Blanche"],
-    answer: "Blanche",
-    difficulty: "Moyen",
-    category: "Couleurs"
+    title: "Les couleurs",
+    content: "Les couleurs du ciel",
+    question: "Quelle est la couleur du ciel en été ?",
+    options: ["Bleue", "Rouge", "Verte", "Jaune"],
+    answer: "Bleue",
+    subject: "Art"
   },
   {
     id: 8,
-    question: "Quelle est la forme d'un rectangle ?",
-    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
-    answer: "Rectangle",
-    difficulty: "Moyen",
-    category: "Formes"
+    title: "Les formes",
+    content: "Les formes des animaux",
+    question: "Quelle forme a un œuf ?",
+    options: ["Ovale", "Carré", "Triangle", "Rectangle"],
+    answer: "Ovale",
+    subject: "Art"
   },
   {
     id: 9,
-    question: "Quelle est la couleur de la lune ?",
-    options: ["Rouge", "Bleue", "Verte", "Blanche"],
-    answer: "Blanche",
-    difficulty: "Moyen",
-    category: "Couleurs"
+    title: "Les couleurs",
+    content: "Les couleurs des vêtements",
+    question: "Quelle est la couleur d'un jean ?",
+    options: ["Bleue", "Rouge", "Verte", "Jaune"],
+    answer: "Bleue",
+    subject: "Art"
   },
   {
     id: 10,
-    question: "Quelle est la forme d'une étoile ?",
-    options: ["Ronde", "Carrée", "Triangle", "Étoile"],
-    answer: "Étoile",
-    difficulty: "Moyen",
-    category: "Formes"
-  },
-  {
-    id: 11,
-    question: "Quelle est la couleur de l'arc-en-ciel ?",
-    options: ["Rouge", "Bleue", "Verte", "Multicolore"],
-    answer: "Multicolore",
-    difficulty: "Difficile",
-    category: "Couleurs"
-  },
-  {
-    id: 12,
-    question: "Quelle est la forme d'un cœur ?",
-    options: ["Ronde", "Carrée", "Triangle", "Cœur"],
-    answer: "Cœur",
-    difficulty: "Difficile",
-    category: "Formes"
-  },
-  {
-    id: 13,
-    question: "Quelle est la couleur de l'orange ?",
-    options: ["Rouge", "Bleue", "Verte", "Orange"],
-    answer: "Orange",
-    difficulty: "Difficile",
-    category: "Couleurs"
-  },
-  {
-    id: 14,
-    question: "Quelle est la forme d'un diamant ?",
-    options: ["Ronde", "Carrée", "Triangle", "Diamant"],
-    answer: "Diamant",
-    difficulty: "Difficile",
-    category: "Formes"
-  },
-  {
-    id: 15,
-    question: "Quelle est la couleur de la nuit ?",
-    options: ["Rouge", "Bleue", "Verte", "Noire"],
-    answer: "Noire",
-    difficulty: "Difficile",
-    category: "Couleurs"
+    title: "Les formes",
+    content: "Les formes des jouets",
+    question: "Quelle forme a un ballon ?",
+    options: ["Ronde", "Carrée", "Triangle", "Rectangle"],
+    answer: "Ronde",
+    subject: "Art"
   }
 ];
 
@@ -167,11 +138,11 @@ const ArtPage: React.FC = () => {
 
   const handleAnswer = (answer: string) => {
     setUserAnswer(answer);
-    if (answer === exercises[currentExercise].answer) {
+    if (answer === mockExercises[currentExercise].answer) {
       setScore(score + 1);
     }
     setTimeout(() => {
-      if (currentExercise < exercises.length - 1) {
+      if (currentExercise < mockExercises.length - 1) {
         setCurrentExercise(currentExercise + 1);
         setUserAnswer(null);
         setCompletedExercises(completedExercises + 1);
@@ -183,7 +154,7 @@ const ArtPage: React.FC = () => {
   };
 
   const calculatePercentage = () => {
-    return Math.round((score / exercises.length) * 100);
+    return Math.round((score / mockExercises.length) * 100);
   };
 
   const getFeedback = () => {
@@ -208,7 +179,7 @@ const ArtPage: React.FC = () => {
         >
           <h2 className="text-2xl font-bold mb-4">Résultats</h2>
           <p className="text-xl mb-2">
-            Score : {score} sur {exercises.length}
+            Score : {score} sur {mockExercises.length}
           </p>
           <p className="text-xl mb-4">{getFeedback()}</p>
           <Button
@@ -232,10 +203,10 @@ const ArtPage: React.FC = () => {
 
       <div className="mb-6">
         <ProgressBar 
-          totalQuestions={exercises.length} 
+          totalQuestions={mockExercises.length} 
           correctAnswers={completedExercises}
           onProgressComplete={() => {
-            if (completedExercises === exercises.length) {
+            if (completedExercises === mockExercises.length) {
               calculateFinalScore();
             }
           }}
@@ -252,16 +223,16 @@ const ArtPage: React.FC = () => {
         <Card className="w-full max-w-2xl">
           <CardBody className="text-center">
             <h2 className="text-xl font-bold mb-4">
-              Question {currentExercise + 1} sur {exercises.length}
+              Question {currentExercise + 1} sur {mockExercises.length}
             </h2>
-            <p className="text-lg mb-6">{exercises[currentExercise].question}</p>
+            <p className="text-lg mb-6">{mockExercises[currentExercise].question}</p>
             <div className="grid grid-cols-2 gap-4">
-              {exercises[currentExercise].options.map((option, index) => (
+              {mockExercises[currentExercise].options.map((option, index) => (
                 <Button
                   key={index}
                   color={
                     userAnswer === option
-                      ? option === exercises[currentExercise].answer
+                      ? option === mockExercises[currentExercise].answer
                         ? "success"
                         : "danger"
                       : "primary"

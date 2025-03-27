@@ -203,6 +203,206 @@ const FrenchPage: React.FC = () => {
         answer: "Mardi",
         category: "Vocabulaire",
         difficulty: "Facile" as const
+      },
+      {
+        id: 11,
+        title: "Grammaire",
+        content: "Les articles",
+        question: "Quel article utilise-t-on devant 'chat' ?",
+        options: ["Le", "La", "Les", "L'"],
+        answer: "Le",
+        category: "Grammaire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 12,
+        title: "Grammaire",
+        content: "Les articles",
+        question: "Quel article utilise-t-on devant 'école' ?",
+        options: ["L'", "Le", "La", "Les"],
+        answer: "L'",
+        category: "Grammaire",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 13,
+        title: "Grammaire",
+        content: "Les verbes",
+        question: "Comment conjugue-t-on 'être' à la première personne ?",
+        options: ["Je suis", "Je es", "Je être", "Je suis"],
+        answer: "Je suis",
+        category: "Grammaire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 14,
+        title: "Grammaire",
+        content: "Les verbes",
+        question: "Comment conjugue-t-on 'avoir' à la première personne ?",
+        options: ["J'ai", "Je as", "Je avoir", "Je a"],
+        answer: "J'ai",
+        category: "Grammaire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 15,
+        title: "Grammaire",
+        content: "Les adjectifs",
+        question: "Quel est le féminin de 'grand' ?",
+        options: ["Grande", "Grands", "Grandes", "Grand"],
+        answer: "Grande",
+        category: "Grammaire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 16,
+        title: "Grammaire",
+        content: "Les adjectifs",
+        question: "Quel est le pluriel de 'beau' ?",
+        options: ["Beaux", "Beau", "Beaus", "Beaux"],
+        answer: "Beaux",
+        category: "Grammaire",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 17,
+        title: "Conjugaison",
+        content: "Les temps",
+        question: "Quel temps utilise-t-on pour parler du présent ?",
+        options: ["Le présent", "Le passé", "Le futur", "L'imparfait"],
+        answer: "Le présent",
+        category: "Conjugaison",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 18,
+        title: "Conjugaison",
+        content: "Les temps",
+        question: "Quel temps utilise-t-on pour parler du passé ?",
+        options: ["Le passé composé", "Le présent", "Le futur", "Le conditionnel"],
+        answer: "Le passé composé",
+        category: "Conjugaison",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 19,
+        title: "Conjugaison",
+        content: "Les verbes",
+        question: "Comment conjugue-t-on 'aller' à la première personne ?",
+        options: ["Je vais", "Je va", "Je aller", "Je vas"],
+        answer: "Je vais",
+        category: "Conjugaison",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 20,
+        title: "Conjugaison",
+        content: "Les verbes",
+        question: "Comment conjugue-t-on 'faire' à la première personne ?",
+        options: ["Je fais", "Je fait", "Je faire", "Je fais"],
+        answer: "Je fais",
+        category: "Conjugaison",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 21,
+        title: "Orthographe",
+        content: "Les accents",
+        question: "Quel accent met-on sur le 'e' dans 'école' ?",
+        options: ["L'accent aigu", "L'accent grave", "L'accent circonflexe", "Pas d'accent"],
+        answer: "L'accent aigu",
+        category: "Orthographe",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 22,
+        title: "Orthographe",
+        content: "Les accents",
+        question: "Quel accent met-on sur le 'a' dans 'là' ?",
+        options: ["L'accent grave", "L'accent aigu", "L'accent circonflexe", "Pas d'accent"],
+        answer: "L'accent grave",
+        category: "Orthographe",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 23,
+        title: "Orthographe",
+        content: "Les lettres muettes",
+        question: "Quelle lettre est muette dans 'chat' ?",
+        options: ["Le 't'", "Le 'h'", "Le 'c'", "Le 'a'"],
+        answer: "Le 't'",
+        category: "Orthographe",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 24,
+        title: "Orthographe",
+        content: "Les lettres muettes",
+        question: "Quelle lettre est muette dans 'oiseau' ?",
+        options: ["Le 'u'", "Le 'o'", "Le 'i'", "Le 'e'"],
+        answer: "Le 'u'",
+        category: "Orthographe",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 25,
+        title: "Lecture",
+        content: "La compréhension",
+        question: "Quel est le personnage principal de l'histoire ?",
+        options: ["Le chat", "Le chien", "L'oiseau", "Le lapin"],
+        answer: "Le chat",
+        category: "Lecture",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 26,
+        title: "Lecture",
+        content: "La compréhension",
+        question: "Où se passe l'histoire ?",
+        options: ["Dans la maison", "Dans le jardin", "Dans la rue", "À l'école"],
+        answer: "Dans la maison",
+        category: "Lecture",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 27,
+        title: "Lecture",
+        content: "La compréhension",
+        question: "Quel est le problème dans l'histoire ?",
+        options: ["Le chat a faim", "Le chat est fatigué", "Le chat est malade", "Le chat est triste"],
+        answer: "Le chat a faim",
+        category: "Lecture",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 28,
+        title: "Lecture",
+        content: "La compréhension",
+        question: "Comment se termine l'histoire ?",
+        options: ["Le chat mange", "Le chat dort", "Le chat part", "Le chat joue"],
+        answer: "Le chat mange",
+        category: "Lecture",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 29,
+        title: "Expression",
+        content: "Les phrases",
+        question: "Comment commence une phrase ?",
+        options: ["Avec une majuscule", "Avec une minuscule", "Avec un point", "Avec une virgule"],
+        answer: "Avec une majuscule",
+        category: "Expression",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 30,
+        title: "Expression",
+        content: "Les phrases",
+        question: "Comment termine-t-on une phrase ?",
+        options: ["Avec un point", "Avec une virgule", "Avec un point d'interrogation", "Avec un point d'exclamation"],
+        answer: "Avec un point",
+        category: "Expression",
+        difficulty: "Facile" as const
       }
     ];
     setExercises(mockExercises);

@@ -205,6 +205,206 @@ const MathPage: React.FC = () => {
         answer: "Vert",
         category: "Couleurs",
         difficulty: "Facile" as const
+      },
+      {
+        id: 11,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 4 + 5 ?",
+        options: ["7", "8", "9", "10"],
+        answer: "9",
+        category: "Nombres",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 12,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 7 - 4 ?",
+        options: ["2", "3", "4", "5"],
+        answer: "3",
+        category: "Nombres",
+        difficulty: "Facile" as const
+      },
+      {
+        id: 13,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 4 × 3 ?",
+        options: ["10", "11", "12", "13"],
+        answer: "12",
+        category: "Nombres",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 14,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 15 ÷ 3 ?",
+        options: ["3", "4", "5", "6"],
+        answer: "5",
+        category: "Nombres",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 15,
+        title: "Formes",
+        content: "Les formes simples",
+        question: "Combien y a-t-il de côtés dans un carré ?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+        category: "Formes",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 16,
+        title: "Formes",
+        content: "Les formes simples",
+        question: "Quelle est la forme d'un rectangle ?",
+        options: ["Ronde", "Carrée", "Rectangle", "Triangle"],
+        answer: "Rectangle",
+        category: "Formes",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 17,
+        title: "Couleurs",
+        content: "Les couleurs",
+        question: "Quelle est la couleur du chiffre 3 ?",
+        options: ["Rouge", "Bleu", "Vert", "Jaune"],
+        answer: "Rouge",
+        category: "Couleurs",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 18,
+        title: "Couleurs",
+        content: "Les couleurs",
+        question: "Quelle est la couleur du chiffre 7 ?",
+        options: ["Rouge", "Bleu", "Vert", "Jaune"],
+        answer: "Jaune",
+        category: "Couleurs",
+        difficulty: "Moyen" as const
+      },
+      {
+        id: 19,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 6 + 7 ?",
+        options: ["11", "12", "13", "14"],
+        answer: "13",
+        category: "Nombres",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 20,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 9 - 5 ?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+        category: "Nombres",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 21,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 5 × 4 ?",
+        options: ["18", "19", "20", "21"],
+        answer: "20",
+        category: "Nombres",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 22,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 20 ÷ 4 ?",
+        options: ["3", "4", "5", "6"],
+        answer: "5",
+        category: "Nombres",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 23,
+        title: "Formes",
+        content: "Les formes simples",
+        question: "Quelle est la plus petite forme ?",
+        options: ["Cercle", "Carré", "Triangle", "Rectangle"],
+        answer: "Triangle",
+        category: "Formes",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 24,
+        title: "Formes",
+        content: "Les formes simples",
+        question: "Combien y a-t-il de côtés dans un rectangle ?",
+        options: ["3", "4", "5", "6"],
+        answer: "4",
+        category: "Formes",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 25,
+        title: "Couleurs",
+        content: "Les couleurs",
+        question: "Quelle est la couleur du chiffre 1 ?",
+        options: ["Rouge", "Bleu", "Vert", "Jaune"],
+        answer: "Rouge",
+        category: "Couleurs",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 26,
+        title: "Couleurs",
+        content: "Les couleurs",
+        question: "Quelle est la couleur du chiffre 9 ?",
+        options: ["Rouge", "Bleu", "Vert", "Jaune"],
+        answer: "Vert",
+        category: "Couleurs",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 27,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 8 + 9 ?",
+        options: ["15", "16", "17", "18"],
+        answer: "17",
+        category: "Nombres",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 28,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 12 - 7 ?",
+        options: ["3", "4", "5", "6"],
+        answer: "5",
+        category: "Nombres",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 29,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 6 × 3 ?",
+        options: ["16", "17", "18", "19"],
+        answer: "18",
+        category: "Nombres",
+        difficulty: "Difficile" as const
+      },
+      {
+        id: 30,
+        title: "Nombres",
+        content: "Les nombres simples",
+        question: "Combien font 25 ÷ 5 ?",
+        options: ["3", "4", "5", "6"],
+        answer: "5",
+        category: "Nombres",
+        difficulty: "Difficile" as const
       }
     ];
     setExercises(mockExercises);

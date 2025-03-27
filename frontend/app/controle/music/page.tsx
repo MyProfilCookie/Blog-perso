@@ -9,133 +9,284 @@ import ProgressBar from "@/components/ProgressBar";
 
 interface Exercise {
   id: number;
+  title: string;
+  content: string;
   question: string;
   options: string[];
   answer: string;
-  difficulty: "easy" | "medium" | "hard";
-  category: string;
+  subject: string;
 }
 
-const exercises: Exercise[] = [
+const mockExercises: Exercise[] = [
   {
     id: 1,
-    question: "Quel est le son le plus grave parmi ces instruments ?",
-    options: ["Flûte", "Trompette", "Tuba", "Clarinette"],
-    answer: "Tuba",
-    difficulty: "easy",
-    category: "Instruments"
+    title: "Les instruments",
+    content: "Reconnais les instruments de musique",
+    question: "Quel instrument fait 'boum boum' quand on tape dessus ?",
+    options: ["Le tambour", "La flûte", "Le piano", "La guitare"],
+    answer: "Le tambour",
+    subject: "Musique"
   },
   {
     id: 2,
-    question: "Combien y a-t-il de notes dans une octave ?",
-    options: ["6", "7", "8", "9"],
-    answer: "8",
-    difficulty: "easy",
-    category: "Théorie"
+    title: "Les sons",
+    content: "Les différents sons",
+    question: "Quel animal fait 'miaou' ?",
+    options: ["Le chat", "Le chien", "L'oiseau", "Le poisson"],
+    answer: "Le chat",
+    subject: "Musique"
   },
   {
     id: 3,
-    question: "Quel est le rythme le plus lent ?",
-    options: ["Noire", "Blanche", "Ronde", "Croche"],
-    answer: "Ronde",
-    difficulty: "easy",
-    category: "Rythme"
+    title: "Les rythmes",
+    content: "Les rythmes simples",
+    question: "Quand on marche, quel rythme fait nos pas ?",
+    options: ["1-2, 1-2", "1-2-3, 1-2-3", "1-2-3-4, 1-2-3-4", "1-2-3-4-5"],
+    answer: "1-2, 1-2",
+    subject: "Musique"
   },
   {
     id: 4,
-    question: "Quel instrument fait partie de la famille des cordes ?",
-    options: ["Trompette", "Violon", "Flûte", "Timbale"],
-    answer: "Violon",
-    difficulty: "easy",
-    category: "Instruments"
+    title: "Les instruments",
+    content: "Les instruments à vent",
+    question: "Quel instrument fait 'souffle' quand on joue ?",
+    options: ["La flûte", "Le tambour", "Le piano", "La guitare"],
+    answer: "La flûte",
+    subject: "Musique"
   },
   {
     id: 5,
-    question: "Quelle est la note la plus aiguë ?",
-    options: ["Do", "Mi", "Sol", "Si"],
-    answer: "Si",
-    difficulty: "easy",
-    category: "Notes"
+    title: "Les sons",
+    content: "Les sons de la nature",
+    question: "Quel son fait la pluie quand elle tombe ?",
+    options: ["Plic plic", "Boum boum", "Ding dong", "Vroum vroum"],
+    answer: "Plic plic",
+    subject: "Musique"
   },
   {
     id: 6,
-    question: "Quel est le tempo le plus rapide ?",
-    options: ["Largo", "Andante", "Allegro", "Presto"],
-    answer: "Presto",
-    difficulty: "medium",
-    category: "Tempo"
+    title: "Les instruments",
+    content: "Les instruments à cordes",
+    question: "Quel instrument a des cordes qu'on gratte ?",
+    options: ["La guitare", "Le tambour", "La flûte", "Le piano"],
+    answer: "La guitare",
+    subject: "Musique"
   },
   {
     id: 7,
-    question: "Quelle est la durée d'une blanche pointée ?",
-    options: ["2 temps", "3 temps", "4 temps", "6 temps"],
-    answer: "3 temps",
-    difficulty: "medium",
-    category: "Rythme"
+    title: "Les rythmes",
+    content: "Les rythmes de la vie",
+    question: "Quel rythme fait notre cœur quand on court ?",
+    options: ["Boum-boum", "Tic-tac", "Ding-dong", "Vroum-vroum"],
+    answer: "Boum-boum",
+    subject: "Musique"
   },
   {
     id: 8,
-    question: "Quel est le signe qui indique un silence ?",
-    options: ["Point", "Tiret", "Croix", "Cercle"],
-    answer: "Cercle",
-    difficulty: "medium",
-    category: "Notation"
+    title: "Les instruments",
+    content: "Les instruments à percussion",
+    question: "Quel instrument fait 'ding ding' ?",
+    options: ["Les cymbales", "Le tambour", "La flûte", "La guitare"],
+    answer: "Les cymbales",
+    subject: "Musique"
   },
   {
     id: 9,
-    question: "Quelle est la famille d'instruments la plus nombreuse ?",
-    options: ["Cordes", "Vents", "Percussions", "Claviers"],
-    answer: "Percussions",
-    difficulty: "medium",
-    category: "Instruments"
+    title: "Les sons",
+    content: "Les sons de la maison",
+    question: "Quel son fait le réveil le matin ?",
+    options: ["Ding ding ding", "Boum boum", "Plic plic", "Vroum vroum"],
+    answer: "Ding ding ding",
+    subject: "Musique"
   },
   {
     id: 10,
-    question: "Quel est le symbole qui indique un dièse ?",
-    options: ["#", "b", "♮", "♭"],
-    answer: "#",
-    difficulty: "medium",
-    category: "Notation"
+    title: "Les instruments",
+    content: "Les instruments à touches",
+    question: "Quel instrument a des touches blanches et noires ?",
+    options: ["Le piano", "La guitare", "Le tambour", "La flûte"],
+    answer: "Le piano",
+    subject: "Musique"
   },
   {
     id: 11,
-    question: "Quelle est la note qui suit Mi dans la gamme de Do ?",
-    options: ["Fa", "Sol", "La", "Si"],
-    answer: "Fa",
-    difficulty: "hard",
-    category: "Notes"
+    title: "Les instruments",
+    content: "Les instruments à vent",
+    question: "Quel instrument fait 'tut tut' ?",
+    options: ["La trompette", "Le piano", "La guitare", "Le tambour"],
+    answer: "La trompette",
+    subject: "Musique"
   },
   {
     id: 12,
-    question: "Quel est le nombre de temps dans une mesure à 3/4 ?",
-    options: ["2", "3", "4", "6"],
-    answer: "3",
-    difficulty: "hard",
-    category: "Mesure"
+    title: "Les sons",
+    content: "Les sons des animaux",
+    question: "Quel animal fait 'coin coin' ?",
+    options: ["Le canard", "Le chat", "Le chien", "L'oiseau"],
+    answer: "Le canard",
+    subject: "Musique"
   },
   {
     id: 13,
-    question: "Quelle est la durée d'une ronde ?",
-    options: ["1 temps", "2 temps", "3 temps", "4 temps"],
-    answer: "4 temps",
-    difficulty: "hard",
-    category: "Rythme"
+    title: "Les rythmes",
+    content: "Les rythmes de la danse",
+    question: "Quel rythme fait-on quand on saute ?",
+    options: ["1-2-3, 1-2-3", "1-2, 1-2", "1-2-3-4, 1-2-3-4", "1-2-3-4-5"],
+    answer: "1-2-3, 1-2-3",
+    subject: "Musique"
   },
   {
     id: 14,
-    question: "Quel est le signe qui indique un bémol ?",
-    options: ["#", "b", "♮", "♭"],
-    answer: "♭",
-    difficulty: "hard",
-    category: "Notation"
+    title: "Les instruments",
+    content: "Les instruments à cordes",
+    question: "Quel instrument a des cordes qu'on frotte ?",
+    options: ["Le violon", "La guitare", "Le piano", "Le tambour"],
+    answer: "Le violon",
+    subject: "Musique"
   },
   {
     id: 15,
-    question: "Quelle est la note la plus grave de la gamme de Do ?",
-    options: ["Do", "Ré", "Mi", "Fa"],
-    answer: "Do",
-    difficulty: "hard",
-    category: "Notes"
+    title: "Les sons",
+    content: "Les sons de la ville",
+    question: "Quel son fait la sirène de police ?",
+    options: ["Pin pon pin pon", "Ding ding", "Boum boum", "Plic plic"],
+    answer: "Pin pon pin pon",
+    subject: "Musique"
+  },
+  {
+    id: 16,
+    title: "Les instruments",
+    content: "Les instruments à percussion",
+    question: "Quel instrument fait 'tam tam' ?",
+    options: ["Le tam-tam", "Le tambour", "Les cymbales", "La flûte"],
+    answer: "Le tam-tam",
+    subject: "Musique"
+  },
+  {
+    id: 17,
+    title: "Les rythmes",
+    content: "Les rythmes de la nature",
+    question: "Quel rythme fait le vent dans les arbres ?",
+    options: ["Chhhhh", "Boum boum", "Ding ding", "Vroum vroum"],
+    answer: "Chhhhh",
+    subject: "Musique"
+  },
+  {
+    id: 18,
+    title: "Les instruments",
+    content: "Les instruments à vent",
+    question: "Quel instrument fait 'souffle' comme le vent ?",
+    options: ["L'harmonica", "Le piano", "La guitare", "Le tambour"],
+    answer: "L'harmonica",
+    subject: "Musique"
+  },
+  {
+    id: 19,
+    title: "Les sons",
+    content: "Les sons de la cuisine",
+    question: "Quel son fait la bouilloire ?",
+    options: ["Sifflement", "Boum boum", "Ding ding", "Plic plic"],
+    answer: "Sifflement",
+    subject: "Musique"
+  },
+  {
+    id: 20,
+    title: "Les instruments",
+    content: "Les instruments à cordes",
+    question: "Quel instrument a des cordes qu'on pince ?",
+    options: ["La harpe", "Le violon", "Le piano", "Le tambour"],
+    answer: "La harpe",
+    subject: "Musique"
+  },
+  {
+    id: 21,
+    title: "Les rythmes",
+    content: "Les rythmes du corps",
+    question: "Quel rythme fait-on quand on tape des mains ?",
+    options: ["1-2-3-4, 1-2-3-4", "1-2, 1-2", "1-2-3, 1-2-3", "1-2-3-4-5"],
+    answer: "1-2-3-4, 1-2-3-4",
+    subject: "Musique"
+  },
+  {
+    id: 22,
+    title: "Les instruments",
+    content: "Les instruments à percussion",
+    question: "Quel instrument fait 'clac clac' ?",
+    options: ["Les castagnettes", "Le tambour", "Les cymbales", "La flûte"],
+    answer: "Les castagnettes",
+    subject: "Musique"
+  },
+  {
+    id: 23,
+    title: "Les sons",
+    content: "Les sons de la ferme",
+    question: "Quel animal fait 'cocorico' ?",
+    options: ["Le coq", "La poule", "Le chat", "Le chien"],
+    answer: "Le coq",
+    subject: "Musique"
+  },
+  {
+    id: 24,
+    title: "Les instruments",
+    content: "Les instruments à vent",
+    question: "Quel instrument fait 'souffle' comme une flûte ?",
+    options: ["La clarinette", "Le piano", "La guitare", "Le tambour"],
+    answer: "La clarinette",
+    subject: "Musique"
+  },
+  {
+    id: 25,
+    title: "Les rythmes",
+    content: "Les rythmes de la musique",
+    question: "Quel rythme fait-on quand on tape du pied ?",
+    options: ["1-2, 1-2", "1-2-3, 1-2-3", "1-2-3-4, 1-2-3-4", "1-2-3-4-5"],
+    answer: "1-2, 1-2",
+    subject: "Musique"
+  },
+  {
+    id: 26,
+    title: "Les instruments",
+    content: "Les instruments à cordes",
+    question: "Quel instrument a des cordes qu'on tape ?",
+    options: ["Le xylophone", "Le violon", "Le piano", "Le tambour"],
+    answer: "Le xylophone",
+    subject: "Musique"
+  },
+  {
+    id: 27,
+    title: "Les sons",
+    content: "Les sons de la forêt",
+    question: "Quel son fait le hibou ?",
+    options: ["Hou hou", "Boum boum", "Ding ding", "Plic plic"],
+    answer: "Hou hou",
+    subject: "Musique"
+  },
+  {
+    id: 28,
+    title: "Les instruments",
+    content: "Les instruments à percussion",
+    question: "Quel instrument fait 'tam tam' comme un tambour ?",
+    options: ["Le bongo", "Le tambour", "Les cymbales", "La flûte"],
+    answer: "Le bongo",
+    subject: "Musique"
+  },
+  {
+    id: 29,
+    title: "Les rythmes",
+    content: "Les rythmes de la vie",
+    question: "Quel rythme fait-on quand on nage ?",
+    options: ["1-2-3-4, 1-2-3-4", "1-2, 1-2", "1-2-3, 1-2-3", "1-2-3-4-5"],
+    answer: "1-2-3-4, 1-2-3-4",
+    subject: "Musique"
+  },
+  {
+    id: 30,
+    title: "Les instruments",
+    content: "Les instruments à vent",
+    question: "Quel instrument fait 'souffle' comme une trompette ?",
+    options: ["Le trombone", "Le piano", "La guitare", "Le tambour"],
+    answer: "Le trombone",
+    subject: "Musique"
   }
 ];
 
@@ -163,11 +314,11 @@ export default function MusicPage() {
 
   const handleAnswer = (answer: string) => {
     setUserAnswer(answer);
-    if (answer === exercises[currentExercise].answer) {
+    if (answer === mockExercises[currentExercise].answer) {
       setScore(score + 1);
     }
     setTimeout(() => {
-      if (currentExercise < exercises.length - 1) {
+      if (currentExercise < mockExercises.length - 1) {
         setCurrentExercise(currentExercise + 1);
         setUserAnswer(null);
         setCompletedExercises(completedExercises + 1);
@@ -179,7 +330,7 @@ export default function MusicPage() {
   };
 
   const calculatePercentage = () => {
-    return Math.round((score / exercises.length) * 100);
+    return Math.round((score / mockExercises.length) * 100);
   };
 
   const getFeedback = () => {
@@ -204,7 +355,7 @@ export default function MusicPage() {
         >
           <h2 className="text-2xl font-bold mb-4">Résultats</h2>
           <p className="text-xl mb-2">
-            Score : {score} sur {exercises.length}
+            Score : {score} sur {mockExercises.length}
           </p>
           <p className="text-xl mb-4">{getFeedback()}</p>
           <Button
@@ -228,10 +379,10 @@ export default function MusicPage() {
 
       <div className="mb-6">
         <ProgressBar 
-          totalQuestions={exercises.length} 
+          totalQuestions={mockExercises.length} 
           correctAnswers={completedExercises}
           onProgressComplete={() => {
-            if (completedExercises === exercises.length) {
+            if (completedExercises === mockExercises.length) {
               calculateFinalScore();
             }
           }}
@@ -248,16 +399,16 @@ export default function MusicPage() {
         <Card className="w-full max-w-2xl">
           <CardBody className="text-center">
             <h2 className="text-xl font-bold mb-4">
-              Question {currentExercise + 1} sur {exercises.length}
+              Question {currentExercise + 1} sur {mockExercises.length}
             </h2>
-            <p className="text-lg mb-6">{exercises[currentExercise].question}</p>
+            <p className="text-lg mb-6">{mockExercises[currentExercise].question}</p>
             <div className="grid grid-cols-2 gap-4">
-              {exercises[currentExercise].options.map((option, index) => (
+              {mockExercises[currentExercise].options.map((option, index) => (
                 <Button
                   key={index}
                   color={
                     userAnswer === option
-                      ? option === exercises[currentExercise].answer
+                      ? option === mockExercises[currentExercise].answer
                         ? "success"
                         : "danger"
                       : "primary"

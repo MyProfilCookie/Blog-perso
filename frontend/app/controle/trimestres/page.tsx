@@ -134,68 +134,70 @@ const TrimestrePage: React.FC = () => {
             id: 1,
             title: "Addition simple",
             content: "Calcule le résultat",
-            question: "15 + 8 = ?",
-            answer: "23",
+            question: "Si j'ai 5 bonbons et que maman m'en donne 3, combien j'ai de bonbons en tout ?",
+            answer: "8",
             subject: "Mathématiques"
           },
           {
             id: 2,
             title: "Multiplication",
             content: "Utilise la table de multiplication",
-            question: "7 × 6 = ?",
-            answer: "42",
+            question: "Si j'ai 4 boîtes et que chaque boîte contient 2 jouets, combien j'ai de jouets en tout ?",
+            answer: "8",
             subject: "Mathématiques"
           },
           {
             id: 3,
             title: "Formes géométriques",
             content: "Identifie la forme",
-            question: "Combien de côtés a un carré ?",
-            options: ["3", "4", "5", "6"],
-            answer: "4",
+            question: "Quelle forme a une pizza ?",
+            options: ["Carré", "Rond", "Triangle", "Rectangle"],
+            answer: "Rond",
             subject: "Mathématiques"
           },
           {
             id: 4,
             title: "Argent",
             content: "Calcule le prix total",
-            question: "Si un crayon coûte 2€ et que j'en achète 3, combien dois-je payer ?",
-            answer: "6",
+            question: "Si un gâteau coûte 2€ et que j'en achète 2, combien dois-je payer ?",
+            answer: "4",
             subject: "Mathématiques"
           },
           {
             id: 5,
             title: "Heure",
             content: "Lecture de l'heure",
-            question: "Combien y a-t-il de minutes dans 2 heures ?",
-            answer: "120",
+            question: "À quelle heure mange-t-on généralement le goûter ?",
+            options: ["14h", "12h", "16h", "18h"],
+            answer: "16h",
             subject: "Mathématiques"
           },
           // Français
           {
             id: 6,
-            title: "Verbes du 1er groupe",
-            content: "Conjugaison au présent",
-            question: "Comment écris-tu le verbe 'manger' avec 'je' ?",
-            answer: "je mange",
+            title: "Les émotions",
+            content: "Exprimer ses émotions",
+            question: "Comment te sens-tu quand tu reçois un cadeau ?",
+            options: ["Content", "Triste", "Fatigué", "En colère"],
+            answer: "Content",
             subject: "Français"
           },
           {
             id: 7,
             title: "Les contraires",
             content: "Trouve le contraire",
-            question: "Quel est le contraire du mot 'chaud' ?",
-            options: ["tiède", "froid", "brûlant", "glacé"],
-            answer: "froid",
+            question: "Quel est le contraire de 'grand' ?",
+            options: ["Petit", "Moyen", "Gros", "Long"],
+            answer: "Petit",
             subject: "Français"
           },
           {
             id: 8,
-            title: "Les émotions",
-            content: "Vocabulaire des émotions",
-            question: "Comment te sens-tu quand tu souris ? Je suis...",
-            options: ["content", "triste", "fatigué", "énervé"],
-            answer: "content",
+            title: "Les activités",
+            content: "Vocabulaire des activités",
+            question: "Que fait-on quand on joue au foot ?",
+            options: ["On court", "On dort", "On mange", "On lit"],
+            answer: "On court",
             subject: "Français"
           },
           {
@@ -210,91 +212,100 @@ const TrimestrePage: React.FC = () => {
             id: 10,
             title: "Les jours",
             content: "Les jours de la semaine",
-            question: "Quel jour vient après mardi ?",
-            answer: "mercredi",
+            question: "Quel jour vient après lundi ?",
+            answer: "mardi",
             subject: "Français"
           },
           // Histoire
           {
             id: 11,
-            title: "Moyen de transport",
-            content: "Histoire des transports",
-            question: "Qui a inventé l'automobile : Henry Ford ou Thomas Edison ?",
-            answer: "henry ford",
+            title: "La vie quotidienne",
+            content: "La vie d'autrefois",
+            question: "Avant l'électricité, qu'utilisait-on pour s'éclairer le soir ?",
+            options: ["Bougie", "Téléphone", "Ordinateur", "Télévision"],
+            answer: "Bougie",
             subject: "Histoire"
           },
           {
             id: 12,
-            title: "Inventions",
-            content: "Les grandes inventions",
-            question: "Quel frères ont inventé l'avion ?",
-            answer: "wright",
+            title: "Les inventions",
+            content: "Les inventions importantes",
+            question: "Quelle invention permet de parler avec quelqu'un qui est loin ?",
+            options: ["Le téléphone", "La voiture", "Le livre", "La table"],
+            answer: "Le téléphone",
             subject: "Histoire"
           },
           {
             id: 13,
-            title: "Personnages célèbres",
-            content: "Les grands scientifiques",
-            question: "Qui a découvert la gravité en regardant une pomme tomber ?",
-            answer: "newton",
+            title: "Les animaux",
+            content: "Les animaux d'autrefois",
+            question: "Quel animal servait de transport avant la voiture ?",
+            options: ["Le cheval", "Le chat", "Le chien", "Le poisson"],
+            answer: "Le cheval",
             subject: "Histoire"
           },
           {
             id: 14,
-            title: "Vie quotidienne",
-            content: "La vie d'autrefois",
-            question: "Avant l'électricité, qu'utilisait-on pour s'éclairer le soir ?",
-            options: ["bougie", "lampe", "téléphone", "télévision"],
-            answer: "bougie",
+            title: "La communication",
+            content: "Comment on communiquait avant",
+            question: "Avant le téléphone, comment envoyait-on des messages ?",
+            options: ["Par lettre", "Par ordinateur", "Par télévision", "Par radio"],
+            answer: "Par lettre",
             subject: "Histoire"
           },
           {
             id: 15,
-            title: "Communication",
-            content: "L'histoire de la communication",
-            question: "Avant le téléphone, comment envoyait-on des messages ?",
-            answer: "lettre",
+            title: "Les vêtements",
+            content: "Les vêtements d'autrefois",
+            question: "Quel vêtement portait-on pour se protéger de la pluie ?",
+            options: ["Un parapluie", "Un pantalon", "Une chemise", "Des chaussures"],
+            answer: "Un parapluie",
             subject: "Histoire"
           },
           // Géographie
           {
             id: 16,
-            title: "Ma ville",
-            content: "Orientation dans la ville",
-            question: "Dans quel pays se trouve Paris ?",
-            answer: "france",
+            title: "Les saisons",
+            content: "Le temps qu'il fait",
+            question: "En quelle saison fait-il le plus chaud ?",
+            options: ["L'été", "L'hiver", "Le printemps", "L'automne"],
+            answer: "L'été",
             subject: "Géographie"
           },
           {
             id: 17,
-            title: "Les saisons",
-            content: "Le temps qu'il fait",
-            question: "En quelle saison fait-il le plus chaud ?",
-            answer: "été",
+            title: "Les animaux",
+            content: "Où vivent les animaux",
+            question: "Où vit le pingouin : au pôle Nord ou au pôle Sud ?",
+            options: ["Pôle Nord", "Pôle Sud", "En France", "En Chine"],
+            answer: "Pôle Sud",
             subject: "Géographie"
           },
           {
             id: 18,
-            title: "Les animaux",
-            content: "Habitat des animaux",
-            question: "Où vit le pingouin : au pôle Nord ou au pôle Sud ?",
-            answer: "pôle sud",
+            title: "La météo",
+            content: "Le temps qu'il fait",
+            question: "Comment s'appelle l'eau qui tombe du ciel ?",
+            options: ["La pluie", "Le soleil", "Le vent", "La neige"],
+            answer: "La pluie",
             subject: "Géographie"
           },
           {
             id: 19,
-            title: "La météo",
-            content: "Les phénomènes météo",
-            question: "Comment s'appelle l'eau qui tombe du ciel ?",
-            answer: "pluie",
+            title: "Les paysages",
+            content: "Les différents paysages",
+            question: "Comment s'appelle un endroit avec beaucoup de sable et peu d'eau ?",
+            options: ["Le désert", "La mer", "La montagne", "La forêt"],
+            answer: "Le désert",
             subject: "Géographie"
           },
           {
             id: 20,
-            title: "Les paysages",
-            content: "Types de paysages",
-            question: "Comment s'appelle un endroit avec beaucoup de sable et peu d'eau ?",
-            answer: "désert",
+            title: "Les animaux",
+            content: "Les animaux et leur habitat",
+            question: "Où vit le poisson ?",
+            options: ["Dans l'eau", "Dans l'arbre", "Dans le sable", "Dans l'herbe"],
+            answer: "Dans l'eau",
             subject: "Géographie"
           },
           // Sciences
@@ -303,7 +314,8 @@ const TrimestrePage: React.FC = () => {
             title: "Les sens",
             content: "Les 5 sens",
             question: "Avec quelle partie du corps peut-on entendre ?",
-            answer: "oreilles",
+            options: ["Les oreilles", "Les yeux", "Le nez", "La bouche"],
+            answer: "Les oreilles",
             subject: "Sciences"
           },
           {
@@ -311,8 +323,8 @@ const TrimestrePage: React.FC = () => {
             title: "Les aliments",
             content: "Alimentation",
             question: "Les carottes sont des...",
-            options: ["fruits", "légumes", "viandes", "poissons"],
-            answer: "légumes",
+            options: ["Légumes", "Fruits", "Viandes", "Poissons"],
+            answer: "Légumes",
             subject: "Sciences"
           },
           {
@@ -320,6 +332,7 @@ const TrimestrePage: React.FC = () => {
             title: "Le corps",
             content: "Parties du corps",
             question: "Combien as-tu de doigts sur une main ?",
+            options: ["5", "4", "6", "3"],
             answer: "5",
             subject: "Sciences"
           },
@@ -328,7 +341,8 @@ const TrimestrePage: React.FC = () => {
             title: "Les animaux",
             content: "Classification",
             question: "Le chat est-il un mammifère ou un reptile ?",
-            answer: "mammifère",
+            options: ["Mammifère", "Reptile", "Oiseau", "Poisson"],
+            answer: "Mammifère",
             subject: "Sciences"
           },
           {
@@ -336,7 +350,8 @@ const TrimestrePage: React.FC = () => {
             title: "L'eau",
             content: "États de l'eau",
             question: "Que devient l'eau quand il fait très froid ?",
-            answer: "glace",
+            options: ["De la glace", "De la vapeur", "De l'air", "Du sable"],
+            answer: "De la glace",
             subject: "Sciences"
           },
           // Langues
@@ -345,7 +360,8 @@ const TrimestrePage: React.FC = () => {
             title: "Anglais - Salutations",
             content: "Dire bonjour",
             question: "Comment dit-on 'bonjour' en anglais ?",
-            answer: "hello",
+            options: ["Hello", "Goodbye", "Thank you", "Please"],
+            answer: "Hello",
             subject: "Langues"
           },
           {
@@ -353,7 +369,8 @@ const TrimestrePage: React.FC = () => {
             title: "Anglais - Nombres",
             content: "Compter en anglais",
             question: "Comment écrit-on le chiffre 1 en anglais ?",
-            answer: "one",
+            options: ["One", "Two", "Three", "Four"],
+            answer: "One",
             subject: "Langues"
           },
           {
@@ -361,7 +378,8 @@ const TrimestrePage: React.FC = () => {
             title: "Anglais - Couleurs",
             content: "Les couleurs basiques",
             question: "Comment dit-on 'bleu' en anglais ?",
-            answer: "blue",
+            options: ["Blue", "Red", "Green", "Yellow"],
+            answer: "Blue",
             subject: "Langues"
           },
           {
@@ -369,7 +387,8 @@ const TrimestrePage: React.FC = () => {
             title: "Anglais - Famille",
             content: "Les membres de la famille",
             question: "Comment dit-on 'maman' en anglais ?",
-            answer: "mom",
+            options: ["Mom", "Dad", "Sister", "Brother"],
+            answer: "Mom",
             subject: "Langues"
           },
           {
@@ -377,7 +396,8 @@ const TrimestrePage: React.FC = () => {
             title: "Anglais - Animaux",
             content: "Les animaux domestiques",
             question: "Comment dit-on 'chat' en anglais ?",
-            answer: "cat",
+            options: ["Cat", "Dog", "Bird", "Fish"],
+            answer: "Cat",
             subject: "Langues"
           }
         ];

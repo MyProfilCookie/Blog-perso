@@ -248,9 +248,9 @@ const SciencesPage: React.FC = () => {
             id: 18,
             title: "Les états de la matière",
             content: "Propriétés de la matière",
-            question: "Quel est l'état de l'eau à 100°C ?",
-            options: ["Vapeur", "Liquide", "Glace", "Pluie"],
-            answer: "Vapeur",
+            question: "Quel est l'état de l'eau quand elle est dans un verre ?",
+            options: ["Liquide", "Solide", "Gazeux", "Plastique"],
+            answer: "Liquide",
             category: "Matière",
             difficulty: "Moyen" as const
           },
@@ -258,51 +258,51 @@ const SciencesPage: React.FC = () => {
             id: 19,
             title: "Le système respiratoire",
             content: "La respiration",
-            question: "Quel organe permet d'absorber l'oxygène ?",
-            options: ["Les poumons", "Le cœur", "Le foie", "Les reins"],
+            question: "Quel organe permet de respirer ?",
+            options: ["Les poumons", "Le cœur", "L'estomac", "Le cerveau"],
             answer: "Les poumons",
             category: "Corps humain",
-            difficulty: "Difficile" as const
+            difficulty: "Moyen" as const
           },
           {
             id: 20,
-            title: "Les écosystèmes",
-            content: "Les milieux naturels",
-            question: "Quel animal est au sommet de la chaîne alimentaire dans la savane ?",
-            options: ["Le lion", "La girafe", "Le zèbre", "L'éléphant"],
-            answer: "Le lion",
+            title: "Les oiseaux",
+            content: "Classification des oiseaux",
+            question: "Quelle partie du corps permet aux oiseaux de voler ?",
+            options: ["Les ailes", "Les pattes", "Le bec", "La queue"],
+            answer: "Les ailes",
             category: "Animaux",
-            difficulty: "Difficile" as const
+            difficulty: "Moyen" as const
           },
           {
             id: 21,
-            title: "Les minéraux",
+            title: "Les protéines",
             content: "Les nutriments essentiels",
-            question: "Quel minéral est important pour les os ?",
-            options: ["Le calcium", "Le fer", "Le zinc", "Le cuivre"],
-            answer: "Le calcium",
+            question: "Dans quel aliment trouve-t-on beaucoup de protéines ?",
+            options: ["La viande", "Le pain", "Les fruits", "Les légumes"],
+            answer: "La viande",
             category: "Alimentation",
-            difficulty: "Difficile" as const
+            difficulty: "Moyen" as const
           },
           {
             id: 22,
-            title: "Les phénomènes météorologiques",
-            content: "La météo",
-            question: "Qu'est-ce qui cause les éclairs ?",
-            options: ["L'électricité statique", "Le vent", "La pluie", "Les nuages"],
-            answer: "L'électricité statique",
+            title: "Le vent",
+            content: "Les phénomènes météorologiques",
+            question: "Qu'est-ce qui cause le vent ?",
+            options: ["Les différences de température", "La pluie", "Les nuages", "Le soleil"],
+            answer: "Les différences de température",
             category: "Météo",
-            difficulty: "Difficile" as const
+            difficulty: "Moyen" as const
           },
           {
             id: 23,
-            title: "La photosynthèse",
-            content: "La vie des plantes",
-            question: "Quel gaz les plantes absorbent-elles ?",
-            options: ["Le dioxyde de carbone", "L'oxygène", "L'azote", "L'hydrogène"],
-            answer: "Le dioxyde de carbone",
+            title: "Les fleurs",
+            content: "La reproduction des plantes",
+            question: "Quelle partie de la fleur produit le pollen ?",
+            options: ["Les étamines", "Les pétales", "Les sépales", "Le pistil"],
+            answer: "Les étamines",
             category: "Nature",
-            difficulty: "Difficile" as const
+            difficulty: "Moyen" as const
           },
           {
             id: 24,
@@ -312,66 +312,66 @@ const SciencesPage: React.FC = () => {
             options: ["Le Soleil", "Proxima Centauri", "Sirius", "Alpha Centauri"],
             answer: "Le Soleil",
             category: "Astronomie",
-            difficulty: "Difficile" as const
+            difficulty: "Moyen" as const
           },
           {
             id: 25,
             title: "Le système nerveux",
-            content: "Le cerveau et les nerfs",
-            question: "Quel organe contrôle tout le corps ?",
-            options: ["Le cerveau", "Le cœur", "Les poumons", "Le foie"],
+            content: "Le cerveau",
+            question: "Quel organe contrôle tout notre corps ?",
+            options: ["Le cerveau", "Le cœur", "Les poumons", "L'estomac"],
             answer: "Le cerveau",
             category: "Corps humain",
             difficulty: "Difficile" as const
           },
           {
             id: 26,
-            title: "Les réactions chimiques",
-            content: "La chimie",
-            question: "Qu'est-ce qui se produit quand on mélange du vinaigre et du bicarbonate de soude ?",
-            options: ["Une effervescence", "Une explosion", "Une solidification", "Une évaporation"],
-            answer: "Une effervescence",
-            category: "Matière",
-            difficulty: "Difficile" as const
-          },
-          {
-            id: 27,
-            title: "Les cellules",
-            content: "La biologie",
-            question: "Quelle est l'unité de base de la vie ?",
-            options: ["La cellule", "L'atome", "La molécule", "Le tissu"],
-            answer: "La cellule",
-            category: "Corps humain",
-            difficulty: "Difficile" as const
-          },
-          {
-            id: 28,
-            title: "Les écosystèmes marins",
-            content: "La vie marine",
-            question: "Quel est le plus grand animal marin ?",
-            options: ["La baleine bleue", "Le requin", "Le calmar", "Le dauphin"],
-            answer: "La baleine bleue",
+            title: "Les reptiles",
+            content: "Classification des reptiles",
+            question: "Quelle caractéristique est commune à tous les reptiles ?",
+            options: ["Le sang froid", "Les plumes", "Les poils", "Les nageoires"],
+            answer: "Le sang froid",
             category: "Animaux",
             difficulty: "Difficile" as const
           },
           {
-            id: 29,
-            title: "Les protéines",
-            content: "Les nutriments",
-            question: "Dans quel groupe d'aliments trouve-t-on les protéines ?",
-            options: ["Les viandes", "Les fruits", "Les légumes", "Les céréales"],
-            answer: "Les viandes",
+            id: 27,
+            title: "Les minéraux",
+            content: "Les nutriments essentiels",
+            question: "Quel minéral est important pour les os ?",
+            options: ["Le calcium", "Le fer", "Le zinc", "Le cuivre"],
+            answer: "Le calcium",
             category: "Alimentation",
             difficulty: "Difficile" as const
           },
           {
+            id: 28,
+            title: "Les éclairs",
+            content: "Les phénomènes météorologiques",
+            question: "Qu'est-ce qui cause les éclairs ?",
+            options: ["L'électricité dans les nuages", "Le soleil", "La pluie", "Le vent"],
+            answer: "L'électricité dans les nuages",
+            category: "Météo",
+            difficulty: "Difficile" as const
+          },
+          {
+            id: 29,
+            title: "La photosynthèse",
+            content: "La vie des plantes",
+            question: "Quel gaz les plantes absorbent-elles pour vivre ?",
+            options: ["Le dioxyde de carbone", "L'oxygène", "L'azote", "L'hydrogène"],
+            answer: "Le dioxyde de carbone",
+            category: "Nature",
+            difficulty: "Difficile" as const
+          },
+          {
             id: 30,
-            title: "Les forces",
-            content: "La physique",
-            question: "Quelle force attire les objets vers le centre de la Terre ?",
-            options: ["La gravité", "Le magnétisme", "L'électricité", "Le vent"],
-            answer: "La gravité",
-            category: "Matière",
+            title: "Les galaxies",
+            content: "L'astronomie",
+            question: "Dans quelle galaxie se trouve notre système solaire ?",
+            options: ["La Voie lactée", "Andromède", "Le Grand Nuage de Magellan", "Le Petit Nuage de Magellan"],
+            answer: "La Voie lactée",
+            category: "Astronomie",
             difficulty: "Difficile" as const
           }
         ];
