@@ -2,13 +2,28 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { motion, progress } from "framer-motion";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
+import ProgressBar from "@/components/ProgressBar";
+
+// Interface pour les exercices
+interface Exercise {
+  id: string;
+  title: string;
+  content: string;
+  question: string;
+  options?: string[];
+  image?: string;
+  answer: string;
+  difficulty?: "Facile" | "Moyen" | "Difficile";
+  estimatedTime?: string;
+  category: string;
+}
 
 // Interface pour les questions basée sur la réponse de Postman
 interface Question {
@@ -41,11 +56,35 @@ interface ReportItem {
   progress: "completed" | "in-progress" | "not-acquired" | "not-started";
 }
 
+// Type pour les résultats par page
+interface PageResults {
+  [pageNumber: number]: {
+    score: number;
+    completed: boolean;
+    correctAnswers: number;
+    totalQuestions: number;
+  };
+}
+
+// Interface pour l'utilisateur
 interface User {
   _id: string;
-  nom: string;
-  prenom: string;
+  pseudo: string;
   email: string;
+  role: string;
+  firstName?: string;
+  lastName?: string;
+  phone?: string;
+  deliveryAddress?: {
+    street: string;
+    city: string;
+    postalCode: string;
+    country: string;
+  };
+  createdAt: string;
+  image?: string;
+  prenom?: string;
+  nom?: string;
 }
 
 interface WeeklyReportData {
@@ -168,10 +207,17 @@ const isTokenExpired = (token: string) => {
   }
 };
 
-// Fonction pour construire l'URL de base correcte
+// Fonction pour obtenir l'URL de base de l'API
 const getBaseUrl = () => {
-  // Utiliser l'URL spécifiée dans la capture d'écran
-  return process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api";
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  if (apiUrl?.endsWith('/api')) {
+    return apiUrl;
+  } else if (apiUrl) {
+    return `${apiUrl}/api`;
+  }
+  
+  return 'https://blog-perso.onrender.com/api';
 };
 
 const WeeklyReport: React.FC = () => {
@@ -225,7 +271,8 @@ const WeeklyReport: React.FC = () => {
             const userData: User = JSON.parse(userDataStr);
 
             if (userData) {
-              setUserName(userData.prenom || userData.nom.split(" ")[0]);
+              const firstName = userData.prenom || (userData.nom ? userData.nom.split(" ")[0] : "") || "";
+              setUserName(firstName);
               setUserId(userData._id);
 
               // Définir la semaine actuelle par défaut si aucune n'est sélectionnée
@@ -561,6 +608,34 @@ const fetchReportModel = async () => {
     }
   };
 
+  // Fonction pour vérifier si le rapport est complet
+  const isReportComplete = () => {
+    return reportItems.every(
+      (item) =>
+        item.activity.trim() !== "" &&
+        item.hours.trim() !== "" &&
+        item.progress !== "not-started"
+    );
+  };
+
+  // Fonction pour générer le contenu du rapport
+  const generateReportContent = () => {
+    let content = `Rapport Hebdomadaire - Semaine ${selectedWeek}\n`;
+    content += `Date: ${new Date().toLocaleDateString()}\n`;
+    content += `Élève: ${userName}\n\n`;
+
+    content += "Activités et Progression:\n";
+    reportItems.forEach((item) => {
+      content += `\nMatière: ${item.subject}\n`;
+      content += `Activité: ${item.activity}\n`;
+      content += `Temps consacré: ${item.hours}\n`;
+      content += `Progression: ${item.progress}\n`;
+      content += "-------------------\n";
+    });
+
+    return content;
+  };
+
   const saveReport = async () => {
     if (!isReportComplete()) {
       Swal.fire({
@@ -629,45 +704,16 @@ const fetchReportModel = async () => {
   };
 
   const downloadReport = () => {
-    if (!isReportComplete()) {
-      Swal.fire({
-        icon: "warning",
-        title: "Rapport incomplet",
-        text: "Le rapport est incomplet. Veuillez remplir toutes les informations avant de le télécharger.",
-        confirmButtonText: "Ok",
-      });
-
-      return;
-    }
-
-    const reportData = {
-      weekNumber: selectedWeek,
-      userName: userName,
-      date: new Date().toLocaleDateString(),
-      items: reportItems,
-      questionAnswers: selectedAnswers, // Inclure les réponses aux questions
-    };
-
-    const dataStr = JSON.stringify(reportData, null, 2);
-    const blob = new Blob([dataStr], { type: "application/json" });
+    const content = generateReportContent();
+    const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
-
     const a = document.createElement("a");
-
     a.href = url;
-    a.download = `${selectedWeek.replace(/\s+/g, "-").toLowerCase()}-rapport.json`;
+    a.download = `rapport-hebdomadaire-semaine-${selectedWeek}.txt`;
+    document.body.appendChild(a);
     a.click();
+    document.body.removeChild(a);
     URL.revokeObjectURL(url);
-  };
-
-  const isReportComplete = () => {
-    for (let item of reportItems) {
-      if (!item.activity || !item.hours || !item.progress) {
-        return false;
-      }
-    }
-
-    return true;
   };
 
   // Affichage pendant le chargement
@@ -704,6 +750,17 @@ const fetchReportModel = async () => {
       <div className="flex justify-between items-center mb-4">
         <BackButton />
         <Timer timeLeft={timeLeft} />
+        <div className="mb-6">
+        <ProgressBar
+          correctAnswers={reportItems.filter(item => item.progress === "completed").length}
+          totalQuestions={reportItems.length}
+          onProgressComplete={() => {
+            if (reportItems.filter(item => item.progress === "completed").length === reportItems.length) {
+              saveReport();
+            }
+          }}
+        />
+      </div>
       </div>
 
       <div className="flex-1 w-full max-w-7xl mx-auto">
