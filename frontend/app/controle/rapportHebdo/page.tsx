@@ -327,6 +327,7 @@ const fetchReportModel = async () => {
     const loadReportModel = async () => {
       if (selectedWeek) {
         console.log("🔍 selectedWeek au moment du chargement du modèle :", selectedWeek);
+        console.log("⏳ Appel de loadReportModel pour la semaine :", selectedWeek);
         const model = await fetchReportModel();
 
         if (model) {
