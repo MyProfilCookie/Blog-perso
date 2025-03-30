@@ -7,8 +7,8 @@ const fs = require("fs");
 // Ajustez ces chemins selon votre structure de projet
 const DBConnectionHandler = require("../api/utils/DBconnect");
 
-// Importer le modèle Subject directement (NE PAS UTILISER mongoose.model)
-const Subject = require("../api/models/Subject");
+// Importer le modèle Subject et RapportHebdo directement (NE PAS UTILISER mongoose.model)
+const { Subject, RapportHebdo } = require("../api/models/Subject");
 
 // Données des matières
 const subjects = [
@@ -110,6 +110,27 @@ async function importSubjects() {
 
     // Importer chaque matière avec ses questions
     for (const subject of subjects) {
+      // Vérification spéciale pour le cas rapportHebdo
+      if (subject.name === "rapportHebdo") {
+        const weekFilePath = path.join(__dirname, `../data/rapportHebdo-questions.json`);
+        if (fs.existsSync(weekFilePath)) {
+          const data = fs.readFileSync(weekFilePath, 'utf8');
+          const weeks = JSON.parse(data);
+
+          for (const weekEntry of weeks) {
+            const result = await RapportHebdo.findOneAndUpdate(
+              { week: weekEntry.week },
+              { ...weekEntry, createdAt: new Date() },
+              { upsert: true, new: true }
+            );
+            console.log(`📘 Rapport semaine ${weekEntry.week} importé (${result.subjects.length} matières)`);
+          }
+        } else {
+          console.warn("⚠️ Fichier rapportHebdo-questions.json introuvable");
+        }
+        continue;
+      }
+
       // Charger les questions pour cette matière
       const questions = loadQuestions(subject.name);
       
