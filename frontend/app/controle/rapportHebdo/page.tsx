@@ -278,7 +278,7 @@ const WeeklyReport: React.FC = () => {
       const data = response.data;
  
       const weekNumber = parseInt(selectedWeek.replace("Semaine ", ""));
-      const selectedWeekData = data.find((weekObj: any) => weekObj.week === weekNumber);
+      const selectedWeekData = data.weeks.find((weekObj: any) => weekObj.week === weekNumber);
  
       if (!selectedWeekData || !selectedWeekData.subjects) {
         console.warn("⚠️ Aucune donnée pour cette semaine.");
