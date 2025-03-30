@@ -13,7 +13,7 @@ import axios from "axios";
 // Interface pour les questions
 interface Question {
   _id: string;
-  text?: string;
+  text: string; // Rendre obligatoire
   options: string[];
   subjectId?: string;
 }
@@ -24,7 +24,6 @@ interface ReportItem {
   activity: string;
   hours: string;
   progress: string;
-  questions?: Question[]; // Questions associées à la matière
 }
 
 // Interface pour le modèle de rapport
@@ -52,7 +51,7 @@ interface WeeklyReportData {
   userId: string;
   weekNumber: string;
   items: ReportItem[];
-  questionAnswers?: Record<string, string>; // Réponses aux questions
+  questionAnswers?: Record<string, string>;
   createdAt?: string;
   updatedAt?: string;
 }
@@ -150,7 +149,8 @@ const WeeklyReport = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  const [reportModel, setReportModel] = useState<ReportModel | null>(null);
+  // Questions pour tout le rapport
+  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
   
   // Références pour éviter les appels multiples
   const modelLoaded = useRef(false);
@@ -213,20 +213,58 @@ const WeeklyReport = () => {
         return null;
       }
       
-      // En production, vous appelleriez votre API
-      /*
-      const baseUrl = getBaseUrl();
-      const url = `${baseUrl}/models/rapportHebdo`;
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`
+      // Données de test basées sur votre capture d'écran
+      console.log("Création des données de test basées sur la capture d'écran");
+      
+      // Création de questions avec des textes explicites pour le debugging
+      const demoQuestions: Question[] = [
+        {
+          _id: "67e93661fa898e1b64ac7a17",
+          text: "Comment évaluez-vous votre compréhension de cette matière?",
+          options: ["Excellente", "Bonne", "Moyenne", "Besoin d'aide"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a18",
+          text: "Avez-vous eu besoin d'aide supplémentaire?",
+          options: ["Oui", "Non", "Parfois"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a19",
+          text: "Quelles ressources avez-vous utilisées?",
+          options: ["Manuels", "Vidéos", "Exercices en ligne", "Aide d'un adulte"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1a",
+          text: "Êtes-vous satisfait de vos progrès cette semaine?",
+          options: ["Très satisfait", "Satisfait", "Peu satisfait", "Pas du tout satisfait"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1b",
+          text: "Quel a été le plus grand défi cette semaine?",
+          options: ["Comprendre les concepts", "Manque de temps", "Concentration", "Autre"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1c",
+          text: "Avez-vous atteint vos objectifs pour cette semaine?",
+          options: ["Oui, tous", "La plupart", "Quelques-uns", "Non"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1d",
+          text: "Quels sont vos objectifs pour la semaine prochaine?",
+          options: ["Améliorer la compréhension", "Compléter plus d'exercices", "Être plus régulier", "Demander plus d'aide"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1e",
+          text: "Comment qualifieriez-vous votre motivation cette semaine?",
+          options: ["Très motivé", "Motivé", "Peu motivé", "Pas motivé"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1f",
+          text: "Avez-vous besoin de ressources supplémentaires?",
+          options: ["Oui, urgentes", "Quelques-unes", "Pas pour le moment", "Non"]
         }
-      });
+      ];
       
-      return response.data;
-      */
-      
-      // Simulation des données du modèle basée sur votre capture d'écran
       return {
         _id: "67e93661c16800718f4dd177",
         name: "rapportHebdo",
@@ -236,27 +274,7 @@ const WeeklyReport = () => {
         description: "Rapports hebdomadaires et suivis d'activités",
         displayName: "Rapport Hebdomadaire",
         icon: "file-text",
-        questions: [
-          {
-            _id: "67e93661fa898e1b64ac7a17",
-            text: "Comment évaluez-vous votre compréhension de cette matière?",
-            options: ["Excellente", "Bonne", "Moyenne", "Besoin d'aide"],
-            subjectId: "math"
-          },
-          {
-            _id: "67e93661fa898e1b64ac7a18",
-            text: "Avez-vous eu besoin d'aide supplémentaire?",
-            options: ["Oui", "Non", "Parfois"],
-            subjectId: "math"
-          },
-          {
-            _id: "67e93661fa898e1b64ac7a19",
-            text: "Quelles ressources avez-vous utilisées?",
-            options: ["Manuels", "Vidéos", "Exercices en ligne", "Aide d'un adulte"],
-            subjectId: "science"
-          },
-          // Ajoutez d'autres questions selon vos besoins...
-        ]
+        questions: demoQuestions
       };
     } catch (error) {
       console.error("Erreur lors de la récupération du modèle de rapport:", error);
@@ -269,45 +287,33 @@ const WeeklyReport = () => {
     const loadReportModel = async () => {
       if (!modelLoaded.current) {
         modelLoaded.current = true;
+        
         const model = await fetchReportModel();
-        setReportModel(model);
-        console.log("Modèle de rapport chargé:", model ? "Oui" : "Non");
+        if (model && model.questions) {
+          setAllQuestions(model.questions);
+          console.log("Questions chargées:", model.questions.length);
+        } else {
+          console.error("Impossible de charger les questions");
+        }
       }
     };
     
     loadReportModel();
   }, []);
 
-  // Fonction pour créer un rapport vide avec des questions
+  // Fonction pour créer un rapport vide
   const createEmptyReport = () => {
-    // Organiser les questions par matière
-    const questionsBySubject: Record<string, Question[]> = {};
-    
-    if (reportModel && reportModel.questions) {
-      // Associer les questions aux matières
-      reportModel.questions.forEach(question => {
-        if (question.subjectId) {
-          if (!questionsBySubject[question.subjectId]) {
-            questionsBySubject[question.subjectId] = [];
-          }
-          questionsBySubject[question.subjectId].push(question);
-        }
-      });
-    }
-    
-    // Créer les items du rapport avec les questions
     const defaultItems: ReportItem[] = subjects.map(subject => ({
       subject: subject.name,
       activity: "",
       hours: "",
-      progress: "not-started",
-      questions: questionsBySubject[subject.id] || []
+      progress: "not-started"
     }));
     
     setReportItems(defaultItems);
     setReportId(undefined);
     setSelectedAnswers({});
-    console.log("Rapport vide créé avec questions par matière");
+    console.log("Rapport vide créé");
   };
 
   // Récupérer un rapport d'un utilisateur pour une semaine spécifique
@@ -409,37 +415,12 @@ const WeeklyReport = () => {
         }
         
         try {
-          // Attendre que le modèle soit chargé
-          if (!reportModel) {
-            const model = await fetchReportModel();
-            setReportModel(model);
-          }
-          
           // Tentative de récupération du rapport depuis l'API
           const report = await getUserWeeklyReport(userId, selectedWeek, token);
           
           if (report && report.items && report.items.length > 0) {
             console.log("Rapport chargé depuis l'API");
-            
-            // Vérifier que les questions sont incluses dans les items
-            // Si non, les ajouter depuis le modèle
-            const updatedItems = report.items.map((item, index) => {
-              // Trouver l'ID de la matière correspondante
-              const subjectId = subjects.find(s => s.name === item.subject)?.id;
-              
-              // Si des questions existent pour cette matière
-              if (reportModel && reportModel.questions && subjectId) {
-                const questions = reportModel.questions.filter(q => q.subjectId === subjectId);
-                
-                if (!item.questions || item.questions.length === 0) {
-                  return { ...item, questions };
-                }
-              }
-              
-              return item;
-            });
-            
-            setReportItems(updatedItems);
+            setReportItems(report.items);
             setReportId(report._id);
             
             // Charger les réponses aux questions
@@ -467,7 +448,7 @@ const WeeklyReport = () => {
     };
 
     loadWeeklyReport();
-  }, [userId, selectedWeek, router, reportModel]);
+  }, [userId, selectedWeek, router]);
 
   // Gestion du timer
   useEffect(() => {
@@ -497,6 +478,7 @@ const WeeklyReport = () => {
 
   // Gestion des réponses aux questions
   const handleAnswerSelection = (questionId: string, answer: string) => {
+    console.log(`Réponse sélectionnée: question ${questionId}, réponse ${answer}`);
     setSelectedAnswers(prev => ({
       ...prev,
       [questionId]: answer
@@ -618,6 +600,18 @@ const WeeklyReport = () => {
       }
     }
     return true;
+  };
+
+  // Fonction pour obtenir les questions associées à une matière
+  const getQuestionsForSubject = (subjectIndex: number): Question[] => {
+    // Utiliser le nom de la matière (pour compatibilité avec votre système)
+    const subjectName = subjects[subjectIndex].name;
+    
+    // Pour le test, associer quelques questions à chaque matière
+    const questions = allQuestions.slice(0, 3); // Prendre les 3 premières questions pour chaque matière
+    
+    console.log(`Questions pour ${subjectName}:`, questions.length);
+    return questions;
   };
 
   // Affichage pendant le chargement
@@ -853,15 +847,16 @@ const WeeklyReport = () => {
                           </div>
                         </div>
                         
-                        {/* Questions spécifiques à la matière */}
-                        {item.questions && item.questions.length > 0 && (
-                          <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                              Questions sur cette matière
-                            </h4>
-                            
-                            <div className="space-y-4">
-                              {item.questions.map((question) => (
+                        {/* Questions spécifiques à la matière - FORCÉ À AFFICHER */}
+                        <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                            Questions sur cette matière
+                          </h4>
+                          
+                          <div className="space-y-4">
+                            {/* Afficher toutes les questions pour chaque matière */}
+                            {allQuestions.length > 0 ? (
+                              allQuestions.map((question) => (
                                 <div key={question._id} className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
                                   <p className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">
                                     {question.text}
@@ -883,10 +878,17 @@ const WeeklyReport = () => {
                                     ))}
                                   </div>
                                 </div>
-                              ))}
-                            </div>
+                              ))
+                            ) : (
+                              // Afficher un message si aucune question n'est disponible
+                              <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+                                <p className="text-sm text-center text-gray-600 dark:text-gray-400">
+                                  Les questions sont en cours de chargement...
+                                </p>
+                              </div>
+                            )}
                           </div>
-                        )}
+                        </div>
                       </div>
                     </CardBody>
                   </Card>
