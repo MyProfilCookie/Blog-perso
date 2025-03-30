@@ -9,6 +9,7 @@ import { PDFDownloadLink } from "@react-pdf/renderer";
 import { Document, Page, Text, View, StyleSheet } from "@react-pdf/renderer";
 
 import BackButton from "@/components/back";
+import ProgressBar from "@/components/ProgressBar";
 
 // Styles pour le PDF
 const styles = StyleSheet.create({

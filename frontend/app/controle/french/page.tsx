@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
@@ -9,10 +7,11 @@ import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
+import { getSubjectByName } from "@/services/subjectService";
 
 // Interface pour les exercices de français
 interface Exercise {
-  id: number;
+  id: string;
   title: string;
   content: string;
   question: string;
@@ -29,8 +28,8 @@ const FrenchPage: React.FC = () => {
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [userAnswers, setUserAnswers] = useState<{ [key: number]: string }>({});
-  const [results, setResults] = useState<{ [key: number]: boolean }>({});
+  const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
+  const [results, setResults] = useState<{ [key: string]: boolean }>({});
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [emoji, setEmoji] = useState<string>("");
   const [showResults, setShowResults] = useState<boolean>(false);
@@ -39,10 +38,6 @@ const FrenchPage: React.FC = () => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tout");
   const [showTips, setShowTips] = useState<boolean>(true);
-  const [currentExercise, setCurrentExercise] = useState(0);
-  const [score, setScore] = useState(0);
-  const [showResult, setShowResult] = useState(false);
-  const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hour
   const [isFinished, setIsFinished] = useState(false);
 
@@ -70,315 +65,33 @@ const FrenchPage: React.FC = () => {
   ];
 
   useEffect(() => {
-    const loadExercises = () => {
+    const loadExercises = async () => {
       try {
-        // Données statiques pour les exercices de français
-        const mockExercises: Exercise[] = [
-          {
-            id: 1,
-            title: "Conjugaison",
-            content: "Les verbes du premier groupe",
-            question: "Comment conjugue-t-on le verbe 'chanter' au présent à la première personne du singulier ?",
-            options: ["je chante", "je chantes", "je chantent", "je chantons"],
-            answer: "je chante",
-            difficulty: "Facile",
-            category: "Conjugaison"
-          },
-          {
-            id: 2,
-            title: "Vocabulaire",
-            content: "Les couleurs",
-            question: "Quelle est la couleur du ciel ?",
-            options: ["Bleu", "Rouge", "Vert", "Jaune"],
-            answer: "Bleu",
-            category: "Vocabulaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 3,
-            title: "Vocabulaire",
-            content: "Les objets",
-            question: "Sur quoi s'assoit-on ?",
-            options: ["La chaise", "La table", "Le lit", "L'armoire"],
-            answer: "La chaise",
-            category: "Vocabulaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 4,
-            title: "Vocabulaire",
-            content: "Les aliments",
-            question: "Quel fruit est rouge ?",
-            options: ["La pomme", "La banane", "L'orange", "Le citron"],
-            answer: "La pomme",
-            category: "Vocabulaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 5,
-            title: "Vocabulaire",
-            content: "Les vêtements",
-            question: "Que met-on sur la tête ?",
-            options: ["Le chapeau", "Les chaussures", "Le pantalon", "La chemise"],
-            answer: "Le chapeau",
-            category: "Vocabulaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 6,
-            title: "Vocabulaire",
-            content: "Les émotions",
-            question: "Quand on est content, on est...",
-            options: ["Heureux", "Triste", "En colère", "Fatigué"],
-            answer: "Heureux",
-            category: "Vocabulaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 7,
-            title: "Vocabulaire",
-            content: "Les actions",
-            question: "Que fait-on quand on a soif ?",
-            options: ["On boit", "On mange", "On dort", "On marche"],
-            answer: "On boit",
-            category: "Vocabulaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 8,
-            title: "Vocabulaire",
-            content: "Les lieux",
-            question: "Où va-t-on pour manger ?",
-            options: ["La cuisine", "La salle de bain", "Le garage", "Le jardin"],
-            answer: "La cuisine",
-            category: "Vocabulaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 9,
-            title: "Vocabulaire",
-            content: "Les saisons",
-            question: "Quelle saison est la plus chaude ?",
-            options: ["L'été", "L'hiver", "Le printemps", "L'automne"],
-            answer: "L'été",
-            category: "Vocabulaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 10,
-            title: "Vocabulaire",
-            content: "Les jours",
-            question: "Quel jour vient après lundi ?",
-            options: ["Mardi", "Mercredi", "Jeudi", "Vendredi"],
-            answer: "Mardi",
-            category: "Vocabulaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 11,
-            title: "Grammaire",
-            content: "Les articles",
-            question: "Quel article utilise-t-on devant 'chat' ?",
-            options: ["Le", "La", "Les", "L'"],
-            answer: "Le",
-            category: "Grammaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 12,
-            title: "Grammaire",
-            content: "Les articles",
-            question: "Quel article utilise-t-on devant 'école' ?",
-            options: ["L'", "Le", "La", "Les"],
-            answer: "L'",
-            category: "Grammaire",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 13,
-            title: "Grammaire",
-            content: "Les verbes",
-            question: "Comment conjugue-t-on 'être' à la première personne ?",
-            options: ["Je suis", "Je es", "Je être", "Je suis"],
-            answer: "Je suis",
-            category: "Grammaire",
-            difficulty: "Moyen" as const
-          },
-          {
-            id: 14,
-            title: "Grammaire",
-            content: "Les verbes",
-            question: "Comment conjugue-t-on 'avoir' à la première personne ?",
-            options: ["J'ai", "Je as", "Je avoir", "Je a"],
-            answer: "J'ai",
-            category: "Grammaire",
-            difficulty: "Moyen" as const
-          },
-          {
-            id: 15,
-            title: "Grammaire",
-            content: "Les adjectifs",
-            question: "Quel est le féminin de 'grand' ?",
-            options: ["Grande", "Grands", "Grandes", "Grand"],
-            answer: "Grande",
-            category: "Grammaire",
-            difficulty: "Moyen" as const
-          },
-          {
-            id: 16,
-            title: "Grammaire",
-            content: "Les adjectifs",
-            question: "Quel est le pluriel de 'beau' ?",
-            options: ["Beaux", "Beau", "Beaus", "Beaux"],
-            answer: "Beaux",
-            category: "Grammaire",
-            difficulty: "Moyen" as const
-          },
-          {
-            id: 17,
-            title: "Conjugaison",
-            content: "Les temps",
-            question: "Quel temps utilise-t-on pour parler du présent ?",
-            options: ["Le présent", "Le passé", "Le futur", "L'imparfait"],
-            answer: "Le présent",
-            category: "Conjugaison",
-            difficulty: "Moyen" as const
-          },
-          {
-            id: 18,
-            title: "Conjugaison",
-            content: "Les temps",
-            question: "Quel temps utilise-t-on pour parler du passé ?",
-            options: ["Le passé composé", "Le présent", "Le futur", "Le conditionnel"],
-            answer: "Le passé composé",
-            category: "Conjugaison",
-            difficulty: "Moyen" as const
-          },
-          {
-            id: 19,
-            title: "Conjugaison",
-            content: "Les verbes",
-            question: "Comment conjugue-t-on 'aller' à la première personne ?",
-            options: ["Je vais", "Je va", "Je aller", "Je vas"],
-            answer: "Je vais",
-            category: "Conjugaison",
-            difficulty: "Difficile" as const
-          },
-          {
-            id: 20,
-            title: "Conjugaison",
-            content: "Les verbes",
-            question: "Comment conjugue-t-on 'faire' à la première personne ?",
-            options: ["Je fais", "Je fait", "Je faire", "Je fais"],
-            answer: "Je fais",
-            category: "Conjugaison",
-            difficulty: "Difficile" as const
-          },
-          {
-            id: 21,
-            title: "Orthographe",
-            content: "Les accents",
-            question: "Quel accent met-on sur le 'e' dans 'école' ?",
-            options: ["L'accent aigu", "L'accent grave", "L'accent circonflexe", "Pas d'accent"],
-            answer: "L'accent aigu",
-            category: "Orthographe",
-            difficulty: "Difficile" as const
-          },
-          {
-            id: 22,
-            title: "Orthographe",
-            content: "Les accents",
-            question: "Quel accent met-on sur le 'a' dans 'là' ?",
-            options: ["L'accent grave", "L'accent aigu", "L'accent circonflexe", "Pas d'accent"],
-            answer: "L'accent grave",
-            category: "Orthographe",
-            difficulty: "Difficile" as const
-          },
-          {
-            id: 23,
-            title: "Orthographe",
-            content: "Les lettres muettes",
-            question: "Quelle lettre est muette dans 'chat' ?",
-            options: ["Le 't'", "Le 'h'", "Le 'c'", "Le 'a'"],
-            answer: "Le 't'",
-            category: "Orthographe",
-            difficulty: "Difficile" as const
-          },
-          {
-            id: 24,
-            title: "Orthographe",
-            content: "Les lettres muettes",
-            question: "Quelle lettre est muette dans 'oiseau' ?",
-            options: ["Le 'u'", "Le 'o'", "Le 'i'", "Le 'e'"],
-            answer: "Le 'u'",
-            category: "Orthographe",
-            difficulty: "Difficile" as const
-          },
-          {
-            id: 25,
-            title: "Lecture",
-            content: "La compréhension",
-            question: "Quel est le personnage principal de l'histoire ?",
-            options: ["Le chat", "Le chien", "L'oiseau", "Le lapin"],
-            answer: "Le chat",
-            category: "Lecture",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 26,
-            title: "Lecture",
-            content: "La compréhension",
-            question: "Où se passe l'histoire ?",
-            options: ["Dans la maison", "Dans le jardin", "Dans la rue", "À l'école"],
-            answer: "Dans la maison",
-            category: "Lecture",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 27,
-            title: "Lecture",
-            content: "La compréhension",
-            question: "Quel est le problème dans l'histoire ?",
-            options: ["Le chat a faim", "Le chat est fatigué", "Le chat est malade", "Le chat est triste"],
-            answer: "Le chat a faim",
-            category: "Lecture",
-            difficulty: "Moyen" as const
-          },
-          {
-            id: 28,
-            title: "Lecture",
-            content: "La compréhension",
-            question: "Comment se termine l'histoire ?",
-            options: ["Le chat mange", "Le chat dort", "Le chat part", "Le chat joue"],
-            answer: "Le chat mange",
-            category: "Lecture",
-            difficulty: "Moyen" as const
-          },
-          {
-            id: 29,
-            title: "Expression",
-            content: "Les phrases",
-            question: "Comment commence une phrase ?",
-            options: ["Avec une majuscule", "Avec une minuscule", "Avec un point", "Avec une virgule"],
-            answer: "Avec une majuscule",
-            category: "Expression",
-            difficulty: "Facile" as const
-          },
-          {
-            id: 30,
-            title: "Expression",
-            content: "Les phrases",
-            question: "Comment termine-t-on une phrase ?",
-            options: ["Avec un point", "Avec une virgule", "Avec un point d'interrogation", "Avec un point d'exclamation"],
-            answer: "Avec un point",
-            category: "Expression",
-            difficulty: "Facile" as const
-          }
-        ];
-
-        setExercises(mockExercises);
+        setLoading(true);
+        
+        // Appeler la fonction du service
+        const data = await getSubjectByName('francais');
+        
+        if (!data || !data.questions) {
+          throw new Error('Aucune donnée reçue ou format invalide');
+        }
+        
+        // Transform the questions from your API to match the Exercise interface
+        const fetchedExercises: Exercise[] = data.questions.map((question) => ({
+          id: question._id,
+          title: question.category || "Français",
+          content: question.subcategory || "Exercice",
+          question: question.text,
+          options: question.options,
+          answer: question.correctAnswer,
+          difficulty: question.difficulty || "Moyen",
+          category: question.category || "Français"
+        }));
+        
+        setExercises(fetchedExercises);
         setLoading(false);
       } catch (err) {
+        console.error("Error fetching exercises:", err);
         setError("Erreur lors du chargement des exercices");
         setLoading(false);
       }
@@ -404,16 +117,15 @@ const FrenchPage: React.FC = () => {
         });
       }, 1000);
 
-      // Messages d'encouragement toutes les 10 minutes
+      // Messages d'encouragement toutes les 15 minutes
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
-        // Utiliser l'état emoji existant pour afficher temporairement le message
         setEmoji(randomMessage);
         setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
       }, 900000); // 900000ms = 15 minutes
     } else if (timeLeft === 0) {
       setIsFinished(true);
-      setShowResult(true);
+      calculateFinalScore();
     }
 
     return () => {
@@ -429,11 +141,11 @@ const FrenchPage: React.FC = () => {
     return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: number) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: string) => {
     setUserAnswers({ ...userAnswers, [id]: e.target.value });
   };
 
-  const handleSubmit = (id: number, correctAnswer: string) => {
+  const handleSubmit = (id: string, correctAnswer: string) => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toString().trim().toLowerCase() === correctAnswer.toLowerCase();
 
@@ -451,7 +163,7 @@ const FrenchPage: React.FC = () => {
   const calculateFinalScore = () => {
     const total = exercises.length;
     const correct = Object.values(results).filter(Boolean).length;
-    const score = (correct / total) * 100;
+    const score = total > 0 ? (correct / total) * 100 : 0;
 
     setFinalScore(score);
     setShowResults(true);
@@ -565,7 +277,7 @@ const FrenchPage: React.FC = () => {
           {emoji && (
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200"
+              className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200 z-50"
               initial={{ opacity: 0, y: -20 }}
             >
               <p className="text-lg">{emoji}</p>
@@ -673,9 +385,9 @@ const FrenchPage: React.FC = () => {
                 <h3 className="font-bold text-violet-600 dark:text-violet-400 mb-2">Conseils pour réussir :</h3>
                 <ul className="list-disc list-inside space-y-2 text-sm text-gray-600 dark:text-gray-400">
                   <li>Lis bien chaque question attentivement</li>
-                  <li>N'oublie pas les règles de grammaire</li>
+                  <li>N&apos;oublie pas les règles de grammaire</li>
                   <li>Réfléchis à la formation des mots</li>
-                  <li>Fais attention aux accents et à l'orthographe</li>
+                  <li>Fais attention aux accents et à l&apos;orthographe</li>
                 </ul>
               </motion.div>
             )}
@@ -744,7 +456,7 @@ const FrenchPage: React.FC = () => {
 
                       <Button
                         className="w-full bg-violet-500 text-white hover:bg-violet-600"
-                        disabled={results[exercise.id] !== undefined}
+                        disabled={!userAnswers[exercise.id] || results[exercise.id] !== undefined}
                         onClick={() => handleSubmit(exercise.id, exercise.answer)}
                       >
                         Soumettre
@@ -772,7 +484,7 @@ const FrenchPage: React.FC = () => {
           {showResults && (
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50"
               initial={{ opacity: 0, y: 20 }}
             >
               <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full">

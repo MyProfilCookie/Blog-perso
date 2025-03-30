@@ -7,6 +7,8 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
+import ProgressBar from "@/components/ProgressBar";
+import { getUserWeeklyReport, saveWeeklyReport, ReportItem } from "@/services/reportService";
 
 const subjects = [
   { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
@@ -50,15 +52,6 @@ const generateWeeksOfYear = () => {
   return weeks;
 };
 
-interface ReportItem {
-  subject: string;
-  activity: string;
-  hours: string;
-  progress: "not-started" | "in-progress" | "completed" | "not-acquired";
-}
-
-type ReportList = ReportItem[];
-
 // Fonction pour vérifier si le token est expiré
 const isTokenExpired = (token: string) => {
   try {
@@ -79,23 +72,32 @@ const isTokenExpired = (token: string) => {
     return exp < currentTime;
   } catch (error) {
     console.error("Erreur lors de la vérification du token:", error);
-
     return true; // En cas d'erreur, on considère le token comme expiré
   }
 };
+
+interface User {
+  _id: string;
+  nom: string;
+  prenom: string;
+  email: string;
+}
 
 const WeeklyReport = () => {
   const router = useRouter();
   const [selectedWeek, setSelectedWeek] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
+  const [userId, setUserId] = useState<string>("");
   const [reportItems, setReportItems] = useState<ReportItem[]>([]);
+  const [reportId, setReportId] = useState<string | undefined>(undefined);
   const [timeLeft, setTimeLeft] = useState(3600); // 1 hour
   const [isFinished, setIsFinished] = useState(false);
   const [showWeeks, setShowWeeks] = useState(false);
   const [weeks] = useState(generateWeeksOfYear);
-  const [completedExercises, setCompletedExercises] = useState(0);
-  const [exercises, setExercises] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
+  // Vérification de l'authentification et chargement des données utilisateur
   useEffect(() => {
     const checkAuth = async () => {
       try {
@@ -106,7 +108,6 @@ const WeeklyReport = () => {
           if (!token || !userDataStr) {
             console.log("Informations de connexion manquantes, redirection...");
             router.push("/users/login");
-
             return;
           }
 
@@ -115,56 +116,80 @@ const WeeklyReport = () => {
             console.log("Token expiré, redirection vers la connexion...");
             localStorage.removeItem("userToken");
             router.push("/users/login");
-
             return;
           }
 
           try {
-            const userData = JSON.parse(userDataStr);
-
-            if (userData && (userData.prenom || userData.nom)) {
+            const userData: User = JSON.parse(userDataStr);
+            if (userData) {
               setUserName(userData.prenom || userData.nom.split(" ")[0]);
+              setUserId(userData._id);
+              
+              // Définir la semaine actuelle par défaut si aucune n'est sélectionnée
+              if (!selectedWeek) {
+                const currentWeek = `Semaine ${new Date().getWeekNumber()}`;
+                setSelectedWeek(currentWeek);
+              }
             }
           } catch (error) {
-            console.error(
-              "Erreur lors de la lecture des données utilisateur:",
-              error,
-            );
+            console.error("Erreur lors de la lecture des données utilisateur:", error);
+            setError("Erreur de lecture des données utilisateur");
           }
         }
       } catch (error) {
-        console.error(
-          "Erreur lors de la vérification de l'authentification:",
-          error,
-        );
+        console.error("Erreur lors de la vérification de l'authentification:", error);
+        setError("Erreur d'authentification");
       }
     };
 
     checkAuth();
+  }, [router]);
 
-    // Chargement du rapport sauvegardé seulement si nous avons un token valide
-    const token = localStorage.getItem("userToken");
-
-    if (token && !isTokenExpired(token)) {
-      const savedReport = JSON.parse(
-        localStorage.getItem(selectedWeek) || "[]",
-      );
-
-      if (savedReport.length) {
-        setReportItems(savedReport);
-      } else {
-        setReportItems(
-          subjects.map((subject) => ({
+  // Chargement du rapport pour la semaine sélectionnée
+  useEffect(() => {
+    const loadWeeklyReport = async () => {
+      if (!userId || !selectedWeek) return;
+      
+      try {
+        setLoading(true);
+        const token = localStorage.getItem("userToken");
+        
+        if (!token || isTokenExpired(token)) {
+          router.push("/users/login");
+          return;
+        }
+        
+        // Récupérer le rapport depuis l'API
+        const report = await getUserWeeklyReport(userId, selectedWeek, token);
+        
+        if (report && report.items && report.items.length > 0) {
+          setReportItems(report.items);
+          setReportId(report._id);
+        } else {
+          // Créer un nouveau rapport vide si aucun n'existe
+          const defaultItems: ReportItem[] = subjects.map((subject) => ({
             subject: subject.name,
             activity: "",
             hours: "",
             progress: "not-started",
-          })),
-        );
+          }));
+          
+          setReportItems(defaultItems);
+          setReportId(undefined);
+        }
+        
+        setLoading(false);
+      } catch (err) {
+        console.error("Erreur lors du chargement du rapport:", err);
+        setError("Erreur lors du chargement du rapport");
+        setLoading(false);
       }
-    }
-  }, [selectedWeek, router]);
+    };
 
+    loadWeeklyReport();
+  }, [userId, selectedWeek, router]);
+
+  // Gestion du timer
   useEffect(() => {
     if (timeLeft > 0 && !isFinished) {
       const timer = setInterval(() => {
@@ -182,8 +207,10 @@ const WeeklyReport = () => {
     value: string,
   ) => {
     const updatedReport = [...reportItems];
-
-    updatedReport[index] = { ...updatedReport[index], [field]: value };
+    updatedReport[index] = { 
+      ...updatedReport[index], 
+      [field]: value 
+    };
     setReportItems(updatedReport);
   };
 
@@ -200,7 +227,7 @@ const WeeklyReport = () => {
     }
   };
 
-  const saveReport = () => {
+  const saveReport = async () => {
     if (!isReportComplete()) {
       Swal.fire({
         icon: "warning",
@@ -210,19 +237,53 @@ const WeeklyReport = () => {
         background: "#fff",
         confirmButtonColor: "#6366f1",
       });
-
       return;
     }
 
-    localStorage.setItem(selectedWeek, JSON.stringify(reportItems));
-    Swal.fire({
-      icon: "success",
-      title: "Bravo ! 🎉",
-      text: `Tu as bien sauvegardé ton rapport pour ${selectedWeek} !`,
-      confirmButtonText: "Super !",
-      background: "#fff",
-      confirmButtonColor: "#6366f1",
-    });
+    try {
+      const token = localStorage.getItem("userToken");
+      
+      if (!token || isTokenExpired(token)) {
+        router.push("/users/login");
+        return;
+      }
+      
+      // Préparer les données du rapport
+      const reportData = {
+        _id: reportId,
+        userId: userId,
+        weekNumber: selectedWeek,
+        items: reportItems
+      };
+      
+      // Sauvegarder le rapport via l'API
+      const savedReport = await saveWeeklyReport(reportData, token);
+      
+      // Mettre à jour l'ID du rapport si c'est un nouveau rapport
+      if (savedReport && !reportId) {
+        setReportId(savedReport._id);
+      }
+      
+      Swal.fire({
+        icon: "success",
+        title: "Bravo ! 🎉",
+        text: `Tu as bien sauvegardé ton rapport pour ${selectedWeek} !`,
+        confirmButtonText: "Super !",
+        background: "#fff",
+        confirmButtonColor: "#6366f1",
+      });
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde du rapport:", error);
+      
+      Swal.fire({
+        icon: "error",
+        title: "Erreur",
+        text: "Une erreur est survenue lors de la sauvegarde de ton rapport.",
+        confirmButtonText: "D'accord",
+        background: "#fff",
+        confirmButtonColor: "#6366f1",
+      });
+    }
   };
 
   const downloadReport = () => {
@@ -233,18 +294,23 @@ const WeeklyReport = () => {
         text: "Le rapport est incomplet. Veuillez remplir toutes les informations avant de le télécharger.",
         confirmButtonText: "Ok",
       });
-
       return;
     }
 
-    const dataStr = JSON.stringify(reportItems, null, 2);
+    const reportData = {
+      weekNumber: selectedWeek,
+      userName: userName,
+      date: new Date().toLocaleDateString(),
+      items: reportItems
+    };
+
+    const dataStr = JSON.stringify(reportData, null, 2);
     const blob = new Blob([dataStr], { type: "application/json" });
     const url = URL.createObjectURL(blob);
 
     const a = document.createElement("a");
-
     a.href = url;
-    a.download = `${selectedWeek}-weeklyReport.json`;
+    a.download = `${selectedWeek.replace(/\s+/g, "-").toLowerCase()}-rapport.json`;
     a.click();
     URL.revokeObjectURL(url);
   };
@@ -255,13 +321,37 @@ const WeeklyReport = () => {
         return false;
       }
     }
-
     return true;
   };
 
-  const calculateFinalScore = () => {
-    // Implementation of calculateFinalScore function
-  };
+  // Affichage pendant le chargement
+  if (loading) {
+    return (
+      <motion.div 
+        animate={{ opacity: 1 }}
+        className="flex items-center justify-center min-h-screen"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="animate-spin text-4xl">🔄</div>
+      </motion.div>
+    );
+  }
+
+  // Affichage en cas d'erreur
+  if (error) {
+    return (
+      <motion.div 
+        animate={{ opacity: 1 }}
+        className="flex flex-col items-center justify-center min-h-screen gap-4"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="text-2xl text-red-600">⚠️</div>
+        <p className="text-lg text-gray-600">Erreur: {error}</p>
+      </motion.div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen p-4">
@@ -322,7 +412,7 @@ const WeeklyReport = () => {
                             hover:from-violet-600 hover:to-blue-600 transition-all duration-300"
                   onClick={() => setShowWeeks(!showWeeks)}
                 >
-                  {selectedWeek} 📅
+                  {selectedWeek || "Sélectionner une semaine"} 📅
                 </Button>
 
                 {showWeeks && (
@@ -354,7 +444,7 @@ const WeeklyReport = () => {
             <div className="grid grid-cols-1 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-0 sm:px-4">
               {reportItems.map((item, index) => (
                 <motion.div
-                  key={item.subject}
+                  key={`${item.subject}-${index}`}
                   animate={{ opacity: 1, scale: 1 }}
                   initial={{ opacity: 0, scale: 0.9 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
@@ -364,10 +454,12 @@ const WeeklyReport = () => {
                     <CardBody className="p-4 sm:p-6">
                       {/* En-tête de la matière */}
                       <div
-                        className={`bg-gradient-to-r ${subjects[index].color} -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
+                        className={`bg-gradient-to-r ${
+                          subjects[index % subjects.length].color
+                        } -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
                       >
                         <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                          {subjects[index].icon} {item.subject}
+                          {subjects[index % subjects.length].icon} {item.subject}
                         </h3>
                       </div>
 

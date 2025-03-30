@@ -8,6 +8,7 @@ import Image from "next/image";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
+import ProgressBar from "@/components/ProgressBar";
 
 // Interface pour les exercices de langues
 interface Exercise {

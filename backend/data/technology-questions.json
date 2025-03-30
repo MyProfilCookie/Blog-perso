@@ -1,0 +1,1631 @@
+[
+  {
+    "title": "Informatique",
+    "content": "Les composants d'un ordinateur",
+    "question": "Quel composant est le 'cerveau' de l'ordinateur ?",
+    "options": ["Le processeur", "La carte mère", "La mémoire RAM", "Le disque dur"],
+    "answer": "Le processeur",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Périphériques",
+    "content": "Les périphériques d'entrée",
+    "question": "Quel périphérique permet de saisir du texte ?",
+    "options": ["Le clavier", "L'écran", "L'imprimante", "Les haut-parleurs"],
+    "answer": "Le clavier",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Périphériques",
+    "content": "Les périphériques de sortie",
+    "question": "Quel périphérique permet de voir les informations ?",
+    "options": ["L'écran", "La souris", "Le clavier", "Le microphone"],
+    "answer": "L'écran",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Logiciels",
+    "content": "Les types de logiciels",
+    "question": "Comment s'appelle un logiciel qui permet de naviguer sur internet ?",
+    "options": ["Un navigateur", "Un système d'exploitation", "Un antivirus", "Un traitement de texte"],
+    "answer": "Un navigateur",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Logiciels",
+    "content": "Les systèmes d'exploitation",
+    "question": "Quel est le système d'exploitation le plus utilisé sur les ordinateurs ?",
+    "options": ["Windows", "macOS", "Linux", "Android"],
+    "answer": "Windows",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Internet",
+    "content": "Les sites web",
+    "question": "Comment s'appelle un site web qui permet de faire des recherches ?",
+    "options": ["Un moteur de recherche", "Un réseau social", "Un blog", "Un forum"],
+    "answer": "Un moteur de recherche",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Internet",
+    "content": "Les réseaux sociaux",
+    "question": "Quel est l'âge minimum pour créer un compte sur la plupart des réseaux sociaux ?",
+    "options": ["13 ans", "10 ans", "16 ans", "18 ans"],
+    "answer": "13 ans",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Technologie mobile",
+    "content": "Les smartphones",
+    "question": "Quel composant permet de prendre des photos avec un smartphone ?",
+    "options": ["L'appareil photo", "Le microphone", "Le haut-parleur", "L'écran tactile"],
+    "answer": "L'appareil photo",
+    "difficulty": "Facile",
+    "category": "Mobile"
+  },
+  {
+    "title": "Technologie mobile",
+    "content": "Les applications",
+    "question": "Comment s'appelle l'endroit où l'on télécharge des applications sur un smartphone ?",
+    "options": ["La boutique d'applications", "La bibliothèque", "Le magasin", "Le supermarché"],
+    "answer": "La boutique d'applications",
+    "difficulty": "Facile",
+    "category": "Mobile"
+  },
+  {
+    "title": "Sécurité informatique",
+    "content": "Protection des données",
+    "question": "Qu'est-ce qui protège un compte contre les hackers ?",
+    "options": ["Un mot de passe fort", "Un nom d'utilisateur", "Une adresse email", "Une photo de profil"],
+    "answer": "Un mot de passe fort",
+    "difficulty": "Facile",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Hardware avancé",
+    "content": "Les composants internes",
+    "question": "Quelle est la fonction de la mémoire RAM ?",
+    "options": ["Stocker les données temporaires", "Stocker les données permanentes", "Afficher les images", "Imprimer les documents"],
+    "answer": "Stocker les données temporaires",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Hardware avancé",
+    "content": "Les cartes graphiques",
+    "question": "À quoi sert principalement une carte graphique ?",
+    "options": ["Traiter les images et vidéos", "Stocker des fichiers", "Connecter à Internet", "Faire fonctionner le clavier"],
+    "answer": "Traiter les images et vidéos",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Software avancé",
+    "content": "Les langages de programmation",
+    "question": "Quel langage est souvent utilisé pour créer des sites web ?",
+    "options": ["HTML", "Word", "Excel", "PowerPoint"],
+    "answer": "HTML",
+    "difficulty": "Moyen",
+    "category": "Programming"
+  },
+  {
+    "title": "Software avancé",
+    "content": "Les bases de données",
+    "question": "Qu'est-ce qu'une base de données ?",
+    "options": ["Un ensemble organisé d'informations", "Un jeu vidéo", "Un logiciel de dessin", "Un type d'écran"],
+    "answer": "Un ensemble organisé d'informations",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Internet avancé",
+    "content": "Le fonctionnement d'Internet",
+    "question": "Que signifie l'acronyme 'URL' ?",
+    "options": ["Uniform Resource Locator", "Universal Remote Link", "User Reference List", "Ultimate Resource Library"],
+    "answer": "Uniform Resource Locator",
+    "difficulty": "Moyen",
+    "category": "Internet"
+  },
+  {
+    "title": "Internet avancé",
+    "content": "Les protocoles",
+    "question": "Quel protocole est utilisé pour sécuriser les connexions web ?",
+    "options": ["HTTPS", "HTML", "FTP", "SMTP"],
+    "answer": "HTTPS",
+    "difficulty": "Moyen",
+    "category": "Internet"
+  },
+  {
+    "title": "Mobile avancé",
+    "content": "Les systèmes d'exploitation mobiles",
+    "question": "Quel système d'exploitation est développé par Apple pour ses iPhones ?",
+    "options": ["iOS", "Android", "Windows Mobile", "Blackberry OS"],
+    "answer": "iOS",
+    "difficulty": "Moyen",
+    "category": "Mobile"
+  },
+  {
+    "title": "Mobile avancé",
+    "content": "La connectivité",
+    "question": "Quelle technologie permet de connecter un smartphone à une enceinte sans fil ?",
+    "options": ["Bluetooth", "WiFi", "4G", "NFC"],
+    "answer": "Bluetooth",
+    "difficulty": "Moyen",
+    "category": "Mobile"
+  },
+  {
+    "title": "Sécurité avancée",
+    "content": "Les menaces informatiques",
+    "question": "Comment s'appelle un programme malveillant qui bloque l'accès à un ordinateur et demande de l'argent ?",
+    "options": ["Un ransomware", "Un virus", "Un spam", "Un cookie"],
+    "answer": "Un ransomware",
+    "difficulty": "Moyen",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Sécurité avancée",
+    "content": "La protection des données",
+    "question": "Quelle est la meilleure façon de protéger ses données importantes ?",
+    "options": ["Faire des sauvegardes régulières", "Utiliser un mot de passe simple", "Partager ses informations", "Ne jamais éteindre son ordinateur"],
+    "answer": "Faire des sauvegardes régulières",
+    "difficulty": "Moyen",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Hardware expert",
+    "content": "Les processeurs",
+    "question": "Quelle unité mesure la fréquence d'un processeur ?",
+    "options": ["Le gigahertz (GHz)", "Le gigaoctet (Go)", "Le mégapixel (MP)", "Le décibel (dB)"],
+    "answer": "Le gigahertz (GHz)",
+    "difficulty": "Difficile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Hardware expert",
+    "content": "Le stockage",
+    "question": "Quelle technologie de stockage est la plus rapide ?",
+    "options": ["SSD (Solid State Drive)", "HDD (Hard Disk Drive)", "DVD", "Disquette"],
+    "answer": "SSD (Solid State Drive)",
+    "difficulty": "Difficile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Programming",
+    "content": "Les algorithmes",
+    "question": "Qu'est-ce qu'un algorithme en informatique ?",
+    "options": ["Une série d'instructions pour résoudre un problème", "Un type de virus", "Un composant matériel", "Un logiciel de dessin"],
+    "answer": "Une série d'instructions pour résoudre un problème",
+    "difficulty": "Difficile",
+    "category": "Programming"
+  },
+  {
+    "title": "Programming",
+    "content": "Les bases de la programmation",
+    "question": "Qu'est-ce qu'une variable en programmation ?",
+    "options": ["Un emplacement mémoire pour stocker des données", "Un câble d'ordinateur", "Un type d'écran", "Un logiciel antivirus"],
+    "answer": "Un emplacement mémoire pour stocker des données",
+    "difficulty": "Difficile",
+    "category": "Programming"
+  },
+  {
+    "title": "Internet expert",
+    "content": "L'infrastructure d'Internet",
+    "question": "Qu'est-ce qu'un serveur web ?",
+    "options": ["Un ordinateur qui héberge des sites web", "Un moteur de recherche", "Un câble sous-marin", "Un fournisseur d'accès Internet"],
+    "answer": "Un ordinateur qui héberge des sites web",
+    "difficulty": "Difficile",
+    "category": "Internet"
+  },
+  {
+    "title": "Internet expert",
+    "content": "Le cloud computing",
+    "question": "Qu'est-ce que le 'cloud computing' ?",
+    "options": ["L'utilisation de serveurs distants pour stocker des données", "La météo sur Internet", "Un type de connexion sans fil", "Un logiciel de dessin dans le nuage"],
+    "answer": "L'utilisation de serveurs distants pour stocker des données",
+    "difficulty": "Difficile",
+    "category": "Internet"
+  },
+  {
+    "title": "Mobile expert",
+    "content": "Les technologies mobiles avancées",
+    "question": "Que signifie l'acronyme 'NFC' sur un smartphone ?",
+    "options": ["Near Field Communication", "New Function Control", "Network Frequency Controller", "Next Feature Coming"],
+    "answer": "Near Field Communication",
+    "difficulty": "Difficile",
+    "category": "Mobile"
+  },
+  {
+    "title": "Mobile expert",
+    "content": "Les réseaux mobiles",
+    "question": "Quelle génération de réseau mobile offre les débits les plus rapides actuellement ?",
+    "options": ["5G", "4G", "3G", "2G"],
+    "answer": "5G",
+    "difficulty": "Difficile",
+    "category": "Mobile"
+  },
+  {
+    "title": "Sécurité expert",
+    "content": "La cryptographie",
+    "question": "Qu'est-ce que le chiffrement en informatique ?",
+    "options": ["La transformation de données pour les rendre illisibles sans clé", "La compression de fichiers", "La suppression de virus", "La création de mots de passe"],
+    "answer": "La transformation de données pour les rendre illisibles sans clé",
+    "difficulty": "Difficile",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Tendances technologiques",
+    "content": "Les technologies émergentes",
+    "question": "Quelle technologie permet aux machines d'apprendre à partir de données ?",
+    "options": ["L'intelligence artificielle", "La réalité virtuelle", "La blockchain", "Le réseau 5G"],
+    "answer": "L'intelligence artificielle",
+    "difficulty": "Difficile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Écrans d'ordinateur",
+    "content": "Les types d'écrans",
+    "question": "Quel type d'écran est le plus courant aujourd'hui ?",
+    "options": ["LCD (écran à cristaux liquides)", "Écran à tube cathodique", "Projecteur", "Écran plasma"],
+    "answer": "LCD (écran à cristaux liquides)",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Souris",
+    "content": "Les périphériques d'entrée",
+    "question": "Comment s'appelle le bouton principal d'une souris ?",
+    "options": ["Clic gauche", "Clic droit", "Molette", "Capteur"],
+    "answer": "Clic gauche",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Imprimantes",
+    "content": "Les périphériques de sortie",
+    "question": "Quel est le type d'imprimante le plus économique à long terme ?",
+    "options": ["Imprimante laser", "Imprimante à jet d'encre", "Imprimante 3D", "Imprimante matricielle"],
+    "answer": "Imprimante laser",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Logiciels de bureautique",
+    "content": "Traitement de texte",
+    "question": "Quel logiciel de Microsoft permet d'écrire des lettres et des documents ?",
+    "options": ["Word", "Excel", "PowerPoint", "Outlook"],
+    "answer": "Word",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Logiciels de bureautique",
+    "content": "Tableurs",
+    "question": "Quel logiciel de Microsoft permet de faire des calculs et des tableaux ?",
+    "options": ["Excel", "Word", "PowerPoint", "Access"],
+    "answer": "Excel",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Logiciels de bureautique",
+    "content": "Présentations",
+    "question": "Quel logiciel de Microsoft permet de créer des diaporamas ?",
+    "options": ["PowerPoint", "Word", "Excel", "Outlook"],
+    "answer": "PowerPoint",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Logiciels de bureautique",
+    "content": "Email",
+    "question": "Quel logiciel de Microsoft permet de gérer ses emails ?",
+    "options": ["Outlook", "Word", "Excel", "PowerPoint"],
+    "answer": "Outlook",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Internet Basique",
+    "content": "Navigation web",
+    "question": "Quel navigateur est développé par Google ?",
+    "options": ["Chrome", "Firefox", "Safari", "Edge"],
+    "answer": "Chrome",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Internet Basique",
+    "content": "Navigation web",
+    "question": "Quel navigateur est développé par Mozilla ?",
+    "options": ["Firefox", "Chrome", "Safari", "Edge"],
+    "answer": "Firefox",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Internet Basique",
+    "content": "Navigation web",
+    "question": "Quel navigateur est développé par Apple ?",
+    "options": ["Safari", "Chrome", "Firefox", "Edge"],
+    "answer": "Safari",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Internet Basique",
+    "content": "Navigation web",
+    "question": "Quel navigateur est développé par Microsoft ?",
+    "options": ["Edge", "Chrome", "Firefox", "Safari"],
+    "answer": "Edge",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Réseaux sociaux",
+    "content": "Les plateformes sociales",
+    "question": "Quelle application permet de partager des photos avec des filtres ?",
+    "options": ["Instagram", "Twitter", "Facebook", "LinkedIn"],
+    "answer": "Instagram",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Réseaux sociaux",
+    "content": "Les plateformes sociales",
+    "question": "Quelle application permet de partager des messages courts (tweets) ?",
+    "options": ["Twitter", "Instagram", "Facebook", "TikTok"],
+    "answer": "Twitter",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Réseaux sociaux",
+    "content": "Les plateformes sociales",
+    "question": "Quelle application permet de partager des vidéos courtes avec de la musique ?",
+    "options": ["TikTok", "YouTube", "Instagram", "Snapchat"],
+    "answer": "TikTok",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Réseaux sociaux",
+    "content": "Les plateformes sociales",
+    "question": "Quelle plateforme permet de regarder des vidéos en ligne ?",
+    "options": ["YouTube", "Netflix", "Spotify", "Deezer"],
+    "answer": "YouTube",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Smartphones",
+    "content": "Les systèmes d'exploitation",
+    "question": "Quel système d'exploitation est utilisé par Samsung ?",
+    "options": ["Android", "iOS", "Windows", "BlackBerry OS"],
+    "answer": "Android",
+    "difficulty": "Facile",
+    "category": "Mobile"
+  },
+  {
+    "title": "Smartphones",
+    "content": "Les fabricants",
+    "question": "Quelle entreprise fabrique l'iPhone ?",
+    "options": ["Apple", "Samsung", "Huawei", "Xiaomi"],
+    "answer": "Apple",
+    "difficulty": "Facile",
+    "category": "Mobile"
+  },
+  {
+    "title": "Smartphones",
+    "content": "Les applications",
+    "question": "Comment s'appelle la boutique d'applications pour Android ?",
+    "options": ["Google Play Store", "App Store", "Galaxy Store", "Windows Store"],
+    "answer": "Google Play Store",
+    "difficulty": "Facile",
+    "category": "Mobile"
+  },
+  {
+    "title": "Smartphones",
+    "content": "Les applications",
+    "question": "Comment s'appelle la boutique d'applications pour iPhone ?",
+    "options": ["App Store", "Google Play Store", "Galaxy Store", "Windows Store"],
+    "answer": "App Store",
+    "difficulty": "Facile",
+    "category": "Mobile"
+  },
+  {
+    "title": "Périphériques",
+    "content": "Les accessoires",
+    "question": "Comment s'appelle l'appareil qui permet d'écouter de la musique individuellement ?",
+    "options": ["Écouteurs", "Haut-parleurs", "Microphone", "Amplificateur"],
+    "answer": "Écouteurs",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Périphériques",
+    "content": "Les accessoires",
+    "question": "Comment s'appelle l'appareil qui permet d'écouter de la musique à plusieurs ?",
+    "options": ["Haut-parleurs", "Écouteurs", "Microphone", "Amplificateur"],
+    "answer": "Haut-parleurs",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Sécurité informatique",
+    "content": "Les menaces",
+    "question": "Comment s'appelle un programme informatique qui se cache et qui peut endommager l'ordinateur ?",
+    "options": ["Un virus", "Un antivirus", "Un pare-feu", "Une mise à jour"],
+    "answer": "Un virus",
+    "difficulty": "Facile",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Sécurité informatique",
+    "content": "La protection",
+    "question": "Comment s'appelle un programme qui protège contre les virus ?",
+    "options": ["Un antivirus", "Un virus", "Un pare-feu", "Une mise à jour"],
+    "answer": "Un antivirus",
+    "difficulty": "Facile",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Sécurité informatique",
+    "content": "La protection",
+    "question": "Comment s'appelle le système qui bloque les intrusions sur un réseau ?",
+    "options": ["Un pare-feu", "Un antivirus", "Un VPN", "Un routeur"],
+    "answer": "Un pare-feu",
+    "difficulty": "Moyen",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Internet avancé",
+    "content": "Les connexions",
+    "question": "Comment s'appelle l'appareil qui permet de se connecter à Internet ?",
+    "options": ["Un routeur", "Un écran", "Une imprimante", "Un clavier"],
+    "answer": "Un routeur",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Internet avancé",
+    "content": "Les connexions",
+    "question": "Que signifie l'acronyme 'WiFi' ?",
+    "options": ["Wireless Fidelity", "Wired Firmware", "Web Finder", "Window Filter"],
+    "answer": "Wireless Fidelity",
+    "difficulty": "Moyen",
+    "category": "Internet"
+  },
+  {
+    "title": "Internet avancé",
+    "content": "Les connexions",
+    "question": "Quelle technologie permet de se connecter à Internet sans fil ?",
+    "options": ["WiFi", "Bluetooth", "USB", "HDMI"],
+    "answer": "WiFi",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Jeux vidéo",
+    "content": "Les consoles",
+    "question": "Quelle entreprise fabrique la PlayStation ?",
+    "options": ["Sony", "Microsoft", "Nintendo", "Sega"],
+    "answer": "Sony",
+    "difficulty": "Facile",
+    "category": "Divertissement"
+  },
+  {
+    "title": "Jeux vidéo",
+    "content": "Les consoles",
+    "question": "Quelle entreprise fabrique la Xbox ?",
+    "options": ["Microsoft", "Sony", "Nintendo", "Sega"],
+    "answer": "Microsoft",
+    "difficulty": "Facile",
+    "category": "Divertissement"
+  },
+  {
+    "title": "Jeux vidéo",
+    "content": "Les consoles",
+    "question": "Quelle entreprise fabrique la Switch ?",
+    "options": ["Nintendo", "Sony", "Microsoft", "Sega"],
+    "answer": "Nintendo",
+    "difficulty": "Facile",
+    "category": "Divertissement"
+  },
+  {
+    "title": "Jeux vidéo",
+    "content": "Les périphériques",
+    "question": "Comment s'appelle l'accessoire que l'on tient dans les mains pour jouer aux jeux vidéo ?",
+    "options": ["Une manette", "Une souris", "Un clavier", "Un écran"],
+    "answer": "Une manette",
+    "difficulty": "Facile",
+    "category": "Divertissement"
+  },
+  {
+    "title": "Musique numérique",
+    "content": "Les services de streaming",
+    "question": "Quelle application permet d'écouter de la musique en streaming ?",
+    "options": ["Spotify", "Word", "Chrome", "Paint"],
+    "answer": "Spotify",
+    "difficulty": "Facile",
+    "category": "Divertissement"
+  },
+  {
+    "title": "Musique numérique",
+    "content": "Les formats",
+    "question": "Quel format de fichier est couramment utilisé pour la musique ?",
+    "options": ["MP3", "JPG", "DOC", "EXE"],
+    "answer": "MP3",
+    "difficulty": "Facile",
+    "category": "Divertissement"
+  },
+  {
+    "title": "Vidéo numérique",
+    "content": "Les plateformes",
+    "question": "Quelle plateforme permet de regarder des films et séries en streaming ?",
+    "options": ["Netflix", "Word", "Paint", "Excel"],
+    "answer": "Netflix",
+    "difficulty": "Facile",
+    "category": "Divertissement"
+  },
+  {
+    "title": "Vidéo numérique",
+    "content": "Les formats",
+    "question": "Quel format de fichier est couramment utilisé pour les vidéos ?",
+    "options": ["MP4", "JPG", "DOC", "MP3"],
+    "answer": "MP4",
+    "difficulty": "Facile",
+    "category": "Divertissement"
+  },
+  {
+    "title": "Photos numériques",
+    "content": "Les formats",
+    "question": "Quel format de fichier est couramment utilisé pour les photos ?",
+    "options": ["JPG", "MP3", "DOC", "EXE"],
+    "answer": "JPG",
+    "difficulty": "Facile",
+    "category": "Divertissement"
+  },
+  {
+    "title": "Photos numériques",
+    "content": "Les applications",
+    "question": "Quelle application permet de modifier des photos sur un ordinateur ?",
+    "options": ["Photoshop", "Word", "Excel", "PowerPoint"],
+    "answer": "Photoshop",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Documents",
+    "content": "Les formats",
+    "question": "Quel format de fichier est couramment utilisé pour les documents texte ?",
+    "options": ["DOC ou DOCX", "JPG", "MP3", "EXE"],
+    "answer": "DOC ou DOCX",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Documents",
+    "content": "Les formats",
+    "question": "Quel format de fichier permet de créer des documents qui ne peuvent pas être modifiés facilement ?",
+    "options": ["PDF", "DOC", "JPG", "MP3"],
+    "answer": "PDF",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Communication",
+    "content": "Les applications de messagerie",
+    "question": "Quelle application permet d'envoyer des messages instantanés ?",
+    "options": ["WhatsApp", "Word", "Excel", "Paint"],
+    "answer": "WhatsApp",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Communication",
+    "content": "Les applications de visioconférence",
+    "question": "Quelle application permet de faire des appels vidéo ?",
+    "options": ["Zoom", "Paint", "Excel", "Word"],
+    "answer": "Zoom",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Réalité virtuelle",
+    "content": "Les casques VR",
+    "question": "Quel accessoire permet d'entrer dans un monde virtuel ?",
+    "options": ["Un casque de réalité virtuelle", "Une manette", "Un écran", "Un clavier"],
+    "answer": "Un casque de réalité virtuelle",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Intelligence artificielle",
+    "content": "Les assistants vocaux",
+    "question": "Quel est l'assistant vocal de Google ?",
+    "options": ["Google Assistant", "Siri", "Alexa", "Cortana"],
+    "answer": "Google Assistant",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Intelligence artificielle",
+    "content": "Les assistants vocaux",
+    "question": "Quel est l'assistant vocal d'Apple ?",
+    "options": ["Siri", "Google Assistant", "Alexa", "Cortana"],
+    "answer": "Siri",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Intelligence artificielle",
+    "content": "Les assistants vocaux",
+    "question": "Quel est l'assistant vocal d'Amazon ?",
+    "options": ["Alexa", "Siri", "Google Assistant", "Cortana"],
+    "answer": "Alexa",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Intelligence artificielle",
+    "content": "Les assistants vocaux",
+    "question": "Quel est l'assistant vocal de Microsoft ?",
+    "options": ["Cortana", "Siri", "Google Assistant", "Alexa"],
+    "answer": "Cortana",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Objets connectés",
+    "content": "La maison intelligente",
+    "question": "Comment s'appelle une ampoule qu'on peut contrôler avec son téléphone ?",
+    "options": ["Une ampoule connectée", "Une ampoule classique", "Une ampoule à économie d'énergie", "Une ampoule à LED"],
+    "answer": "Une ampoule connectée",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Objets connectés",
+    "content": "La maison intelligente",
+    "question": "Comment s'appelle un thermostat qu'on peut contrôler à distance ?",
+    "options": ["Un thermostat connecté", "Un thermostat classique", "Un radiateur", "Une climatisation"],
+    "answer": "Un thermostat connecté",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Objets connectés",
+    "content": "Les accessoires",
+    "question": "Comment s'appelle une montre qui peut se connecter à un smartphone ?",
+    "options": ["Une montre connectée", "Une montre classique", "Une montre à quartz", "Une montre mécanique"],
+    "answer": "Une montre connectée",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Objets connectés",
+    "content": "Les accessoires",
+    "question": "Comment s'appelle un bracelet qui compte les pas et surveille le rythme cardiaque ?",
+    "options": ["Un bracelet connecté", "Un bracelet classique", "Un bracelet en cuir", "Un bracelet en métal"],
+    "answer": "Un bracelet connecté",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Énergie",
+    "content": "Les batteries",
+    "question": "Comment s'appelle l'élément qui stocke l'énergie dans un appareil électronique ?",
+    "options": ["Une batterie", "Un écran", "Un processeur", "Une carte mère"],
+    "answer": "Une batterie",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Énergie",
+    "content": "La charge",
+    "question": "Comment s'appelle le câble qui permet de recharger un smartphone ?",
+    "options": ["Un câble de charge", "Un câble réseau", "Un câble HDMI", "Un câble VGA"],
+    "answer": "Un câble de charge",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Énergie",
+    "content": "La charge",
+    "question": "Quel port de charge est utilisé par la plupart des smartphones Android ?",
+    "options": ["USB-C", "Lightning", "Micro-USB", "USB-A"],
+    "answer": "USB-C",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Énergie",
+    "content": "La charge",
+    "question": "Quel port de charge est utilisé par les iPhone ?",
+    "options": ["Lightning", "USB-C", "Micro-USB", "USB-A"],
+    "answer": "Lightning",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Stockage",
+    "content": "Les unités de stockage",
+    "question": "Quelle unité mesure la capacité de stockage des fichiers ?",
+    "options": ["Le gigaoctet (Go)", "Le mètre (m)", "Le kilogramme (kg)", "Le litre (L)"],
+    "answer": "Le gigaoctet (Go)",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Stockage",
+    "content": "Les dispositifs de stockage",
+    "question": "Comment s'appelle un petit dispositif de stockage externe qu'on branche sur un port USB ?",
+    "options": ["Une clé USB", "Une carte SD", "Un disque dur", "Une carte mère"],
+    "answer": "Une clé USB",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Stockage",
+    "content": "Les dispositifs de stockage",
+    "question": "Comment s'appelle une petite carte de stockage utilisée dans les appareils photo et smartphones ?",
+    "options": ["Une carte SD", "Une clé USB", "Un disque dur", "Une carte mère"],
+    "answer": "Une carte SD",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Stockage",
+    "content": "Les dispositifs de stockage",
+    "question": "Comment s'appelle un grand dispositif de stockage externe qui nécessite souvent une alimentation électrique ?",
+    "options": ["Un disque dur externe", "Une clé USB", "Une carte SD", "Une carte mère"],
+    "answer": "Un disque dur externe",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Impression",
+    "content": "Les types d'imprimantes",
+    "question": "Quel type d'imprimante utilise de l'encre liquide ?",
+    "options": ["Imprimante à jet d'encre", "Imprimante laser", "Imprimante 3D", "Imprimante matricielle"],
+    "answer": "Imprimante à jet d'encre",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Impression",
+    "content": "Les types d'imprimantes",
+    "question": "Quel type d'imprimante utilise de la poudre (toner) ?",
+    "options": ["Imprimante laser", "Imprimante à jet d'encre", "Imprimante 3D", "Imprimante matricielle"],
+    "answer": "Imprimante laser",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Impression",
+    "content": "Les types d'imprimantes",
+    "question": "Quel type d'imprimante permet de créer des objets en 3 dimensions ?",
+    "options": ["Imprimante 3D", "Imprimante laser", "Imprimante à jet d'encre", "Imprimante matricielle"],
+    "answer": "Imprimante 3D",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Impression",
+    "content": "Les consommables",
+    "question": "Comment s'appelle la cartouche qui contient l'encre dans une imprimante ?",
+    "options": ["Une cartouche d'encre", "Une batterie", "Un toner", "Un câble"],
+    "answer": "Une cartouche d'encre",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Système d'exploitation",
+    "content": "Les fonctions",
+    "question": "Quelle est la fonction principale d'un système d'exploitation ?",
+    "options": ["Gérer les ressources de l'ordinateur", "Jouer à des jeux", "Créer des documents", "Envoyer des emails"],
+    "answer": "Gérer les ressources de l'ordinateur",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Système d'exploitation",
+    "content": "Les versions",
+    "question": "Quelle est la dernière version de Windows ?",
+    "options": ["Windows 11", "Windows 95", "Windows XP", "Windows 7"],
+    "answer": "Windows 11",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Système d'exploitation",
+    "content": "Les versions",
+    "question": "Quel est le système d'exploitation développé par Apple pour ses ordinateurs ?",
+    "options": ["macOS", "iOS", "Windows", "Android"],
+    "answer": "macOS",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Système d'exploitation",
+    "content": "Les versions",
+    "question": "Quel système d'exploitation est gratuit et open source ?",
+    "options": ["Linux", "Windows", "macOS", "iOS"],
+    "answer": "Linux",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Programmation débutant",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce qu'un bug en informatique ?",
+    "options": ["Une erreur dans un programme", "Un virus", "Un insecte dans l'ordinateur", "Un nouveau logiciel"],
+    "answer": "Une erreur dans un programme",
+    "difficulty": "Facile",
+    "category": "Programming"
+  },
+  {
+    "title": "Programmation débutant",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce qu'un algorithme ?",
+    "options": ["Une suite d'instructions pour résoudre un problème", "Un virus informatique", "Un type de clavier", "Un langage de programmation"],
+    "answer": "Une suite d'instructions pour résoudre un problème",
+    "difficulty": "Moyen",
+    "category": "Programming"
+  },
+  {
+    "title": "Programmation débutant",
+    "content": "Les langages",
+    "question": "Quel langage est utilisé pour créer des pages web ?",
+    "options": ["HTML", "Java", "Python", "C++"],
+    "answer": "HTML",
+    "difficulty": "Facile",
+    "category": "Programming"
+  },
+  {
+    "title": "Programmation débutant",
+    "content": "Les langages",
+    "question": "Quel langage est souvent utilisé pour apprendre la programmation aux débutants ?",
+    "options": ["Scratch", "Java", "C++", "Assembly"],
+    "answer": "Scratch",
+    "difficulty": "Facile",
+    "category": "Programming"
+  },
+  {
+    "title": "Programmation intermédiaire",
+    "content": "Les concepts avancés",
+    "question": "Qu'est-ce qu'une boucle en programmation ?",
+    "options": ["Une instruction qui se répète", "Un virus", "Un câble", "Un écran"],
+    "answer": "Une instruction qui se répète",
+    "difficulty": "Moyen",
+    "category": "Programming"
+  },
+  {
+    "title": "Programmation intermédiaire",
+    "content": "Les concepts avancés",
+    "question": "Qu'est-ce qu'une condition en programmation ?",
+    "options": ["Une instruction qui s'exécute selon une situation", "Un virus", "Un câble", "Un écran"],
+    "answer": "Une instruction qui s'exécute selon une situation",
+    "difficulty": "Moyen",
+    "category": "Programming"
+  },
+  {
+    "title": "Développement web",
+    "content": "Les technologies web",
+    "question": "Quel langage permet d'ajouter du style à une page web ?",
+    "options": ["CSS", "HTML", "JavaScript", "PHP"],
+    "answer": "CSS",
+    "difficulty": "Moyen",
+    "category": "Programming"
+  },
+  {
+    "title": "Développement web",
+    "content": "Les technologies web",
+    "question": "Quel langage permet d'ajouter de l'interactivité à une page web ?",
+    "options": ["JavaScript", "HTML", "CSS", "Python"],
+    "answer": "JavaScript",
+    "difficulty": "Moyen",
+    "category": "Programming"
+  },
+  {
+    "title": "Développement web",
+    "content": "Les technologies web",
+    "question": "Qu'est-ce qu'un CMS (Content Management System) ?",
+    "options": ["Un système pour gérer le contenu d'un site web", "Un logiciel de traitement de texte", "Un antivirus", "Un système d'exploitation"],
+    "answer": "Un système pour gérer le contenu d'un site web",
+    "difficulty": "Difficile",
+    "category": "Programming"
+  },
+  {
+    "title": "Développement web",
+    "content": "Les technologies web",
+    "question": "Quel CMS est le plus utilisé dans le monde ?",
+    "options": ["WordPress", "Drupal", "Joomla", "Magento"],
+    "answer": "WordPress",
+    "difficulty": "Difficile",
+    "category": "Programming"
+  },
+  {
+    "title": "Réseaux",
+    "content": "Les types de réseaux",
+    "question": "Comment s'appelle un réseau informatique limité à une maison ou un bureau ?",
+    "options": ["Réseau local (LAN)", "Internet", "Réseau étendu (WAN)", "Réseau métropolitain (MAN)"],
+    "answer": "Réseau local (LAN)",
+    "difficulty": "Moyen",
+    "category": "Internet"
+  },
+  {
+    "title": "Réseaux",
+    "content": "Les types de réseaux",
+    "question": "Comment s'appelle le réseau mondial qui relie tous les ordinateurs entre eux ?",
+    "options": ["Internet", "Réseau local (LAN)", "Intranet", "Extranet"],
+    "answer": "Internet",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Réseaux",
+    "content": "Les équipements",
+    "question": "Comment s'appelle l'appareil qui permet de répartir Internet dans toute la maison ?",
+    "options": ["Un routeur", "Un modem", "Un switch", "Un hub"],
+    "answer": "Un routeur",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Réseaux",
+    "content": "Les équipements",
+    "question": "Comment s'appelle l'appareil qui convertit les signaux numériques en signaux analogiques et vice-versa ?",
+    "options": ["Un modem", "Un routeur", "Un switch", "Un hub"],
+    "answer": "Un modem",
+    "difficulty": "Moyen",
+    "category": "Internet"
+  },
+  {
+    "title": "Réseaux",
+    "content": "Les protocoles",
+    "question": "Quel protocole est utilisé pour envoyer des emails ?",
+    "options": ["SMTP", "HTTP", "FTP", "SSH"],
+    "answer": "SMTP",
+    "difficulty": "Difficile",
+    "category": "Internet"
+  },
+  {
+    "title": "Réseaux",
+    "content": "Les protocoles",
+    "question": "Quel protocole est utilisé pour transférer des fichiers ?",
+    "options": ["FTP", "HTTP", "SMTP", "SSH"],
+    "answer": "FTP",
+    "difficulty": "Difficile",
+    "category": "Internet"
+  },
+  {
+    "title": "Bases de données",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce qu'une base de données ?",
+    "options": ["Un ensemble organisé d'informations", "Un virus", "Un logiciel de traitement de texte", "Un système d'exploitation"],
+    "answer": "Un ensemble organisé d'informations",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Bases de données",
+    "content": "Les types",
+    "question": "Quel type de base de données est organisé en tables avec des lignes et des colonnes ?",
+    "options": ["Base de données relationnelle", "Base de données NoSQL", "Base de données orientée objet", "Base de données hiérarchique"],
+    "answer": "Base de données relationnelle",
+    "difficulty": "Difficile",
+    "category": "Software"
+  },
+  {
+    "title": "Bases de données",
+    "content": "Les systèmes",
+    "question": "Quel système de gestion de base de données est développé par Oracle ?",
+    "options": ["Oracle Database", "MySQL", "MongoDB", "SQLite"],
+    "answer": "Oracle Database",
+    "difficulty": "Difficile",
+    "category": "Software"
+  },
+  {
+    "title": "Intelligence artificielle",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce que l'intelligence artificielle ?",
+    "options": ["La capacité d'une machine à imiter l'intelligence humaine", "Un robot humanoïde", "Un ordinateur très rapide", "Une application mobile"],
+    "answer": "La capacité d'une machine à imiter l'intelligence humaine",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Intelligence artificielle",
+    "content": "Les applications",
+    "question": "Quelle technologie permet à un ordinateur de reconnaître des visages ?",
+    "options": ["La reconnaissance faciale", "La réalité virtuelle", "La blockchain", "Le cloud computing"],
+    "answer": "La reconnaissance faciale",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Intelligence artificielle",
+    "content": "Les applications",
+    "question": "Quelle technologie permet à un ordinateur de comprendre la parole humaine ?",
+    "options": ["La reconnaissance vocale", "La réalité virtuelle", "La blockchain", "Le cloud computing"],
+    "answer": "La reconnaissance vocale",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Réalité virtuelle",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce que la réalité virtuelle ?",
+    "options": ["Un environnement artificiel créé par ordinateur", "Un robot", "Une intelligence artificielle", "Un système d'exploitation"],
+    "answer": "Un environnement artificiel créé par ordinateur",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Réalité virtuelle",
+    "content": "Les dispositifs",
+    "question": "Quel dispositif permet de voir un environnement virtuel ?",
+    "options": ["Un casque de réalité virtuelle", "Une manette", "Un écran tactile", "Un clavier"],
+    "answer": "Un casque de réalité virtuelle",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Réalité augmentée",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce que la réalité augmentée ?",
+    "options": ["L'ajout d'éléments virtuels à la réalité", "Un environnement entièrement virtuel", "Un robot", "Un système d'exploitation"],
+    "answer": "L'ajout d'éléments virtuels à la réalité",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Réalité augmentée",
+    "content": "Les applications",
+    "question": "Quelle application de réalité augmentée a été très populaire avec des créatures virtuelles à capturer ?",
+    "options": ["Pokémon GO", "Minecraft", "Candy Crush", "Angry Birds"],
+    "answer": "Pokémon GO",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Robotique",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce qu'un robot ?",
+    "options": ["Une machine programmable qui peut effectuer des tâches", "Un logiciel antivirus", "Un système d'exploitation", "Un appareil photo"],
+    "answer": "Une machine programmable qui peut effectuer des tâches",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Robotique",
+    "content": "Les types",
+    "question": "Comment s'appelle un robot qui ressemble à un humain ?",
+    "options": ["Un robot humanoïde", "Un robot industriel", "Un drone", "Un aspirateur robot"],
+    "answer": "Un robot humanoïde",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Robotique",
+    "content": "Les types",
+    "question": "Comment s'appelle un petit avion sans pilote ?",
+    "options": ["Un drone", "Un robot humanoïde", "Un robot industriel", "Un aspirateur robot"],
+    "answer": "Un drone",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Robotique",
+    "content": "Les applications",
+    "question": "Quel type de robot peut nettoyer les sols automatiquement ?",
+    "options": ["Un aspirateur robot", "Un drone", "Un robot industriel", "Un robot humanoïde"],
+    "answer": "Un aspirateur robot",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Cloud Computing",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce que le cloud computing ?",
+    "options": ["L'utilisation de serveurs distants pour stocker des données", "La météo", "Un type de réseau", "Un système d'exploitation"],
+    "answer": "L'utilisation de serveurs distants pour stocker des données",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Cloud Computing",
+    "content": "Les services",
+    "question": "Quel service de cloud est proposé par Google pour stocker des documents ?",
+    "options": ["Google Drive", "iCloud", "OneDrive", "Dropbox"],
+    "answer": "Google Drive",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Cloud Computing",
+    "content": "Les services",
+    "question": "Quel service de cloud est proposé par Apple pour stocker des documents ?",
+    "options": ["iCloud", "Google Drive", "OneDrive", "Dropbox"],
+    "answer": "iCloud",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Cloud Computing",
+    "content": "Les services",
+    "question": "Quel service de cloud est proposé par Microsoft pour stocker des documents ?",
+    "options": ["OneDrive", "Google Drive", "iCloud", "Dropbox"],
+    "answer": "OneDrive",
+    "difficulty": "Facile",
+    "category": "Internet"
+  },
+  {
+    "title": "Blockchain",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce que la blockchain ?",
+    "options": ["Une chaîne de blocs contenant des informations sécurisées", "Un type de virus", "Un système d'exploitation", "Un type de réseau"],
+    "answer": "Une chaîne de blocs contenant des informations sécurisées",
+    "difficulty": "Difficile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Blockchain",
+    "content": "Les applications",
+    "question": "Quelle est la cryptomonnaie la plus connue basée sur la blockchain ?",
+    "options": ["Bitcoin", "Dollar", "Euro", "Yen"],
+    "answer": "Bitcoin",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Impression 3D",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce que l'impression 3D ?",
+    "options": ["La création d'objets en trois dimensions", "L'impression de photos", "L'impression de documents", "L'impression de livres"],
+    "answer": "La création d'objets en trois dimensions",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Impression 3D",
+    "content": "Les matériaux",
+    "question": "Quel matériau est couramment utilisé en impression 3D ?",
+    "options": ["Le plastique", "Le métal", "Le bois", "Le verre"],
+    "answer": "Le plastique",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Internet des objets",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce que l'Internet des objets (IoT) ?",
+    "options": ["Des objets connectés à Internet", "Des objets dans Internet", "Des objets pour Internet", "Des objets comme Internet"],
+    "answer": "Des objets connectés à Internet",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Internet des objets",
+    "content": "Les applications",
+    "question": "Quel objet connecté peut contrôler la température d'une maison ?",
+    "options": ["Un thermostat intelligent", "Une ampoule connectée", "Une montre connectée", "Un réfrigérateur intelligent"],
+    "answer": "Un thermostat intelligent",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Internet des objets",
+    "content": "Les applications",
+    "question": "Quel objet connecté peut surveiller l'activité physique ?",
+    "options": ["Un bracelet connecté", "Une ampoule connectée", "Un thermostat intelligent", "Un réfrigérateur intelligent"],
+    "answer": "Un bracelet connecté",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Internet des objets",
+    "content": "Les applications",
+    "question": "Quel objet connecté peut conserver les aliments et créer des listes de courses ?",
+    "options": ["Un réfrigérateur intelligent", "Une ampoule connectée", "Un thermostat intelligent", "Un bracelet connecté"],
+    "answer": "Un réfrigérateur intelligent",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Écologie numérique",
+    "content": "L'impact environnemental",
+    "question": "Qu'est-ce que la pollution numérique ?",
+    "options": ["L'impact environnemental des technologies numériques", "La pollution de l'eau", "La pollution de l'air", "La pollution sonore"],
+    "answer": "L'impact environnemental des technologies numériques",
+    "difficulty": "Difficile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Écologie numérique",
+    "content": "Les solutions",
+    "question": "Quelle action permet de réduire la pollution numérique ?",
+    "options": ["Garder ses appareils plus longtemps", "Changer de smartphone tous les ans", "Laisser les appareils en veille", "Imprimer tous ses emails"],
+    "answer": "Garder ses appareils plus longtemps",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Cybersécurité",
+    "content": "Les concepts de base",
+    "question": "Qu'est-ce que la cybersécurité ?",
+    "options": ["La protection des systèmes informatiques", "Un type de virus", "Un système d'exploitation", "Un type de réseau"],
+    "answer": "La protection des systèmes informatiques",
+    "difficulty": "Moyen",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Cybersécurité",
+    "content": "Les menaces",
+    "question": "Qu'est-ce qu'un phishing ?",
+    "options": ["Une technique pour voler des informations personnelles", "Un type de virus", "Un système d'exploitation", "Un type de réseau"],
+    "answer": "Une technique pour voler des informations personnelles",
+    "difficulty": "Difficile",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Cybersécurité",
+    "content": "Les menaces",
+    "question": "Qu'est-ce qu'un malware ?",
+    "options": ["Un logiciel malveillant", "Un antivirus", "Un système d'exploitation", "Un type de réseau"],
+    "answer": "Un logiciel malveillant",
+    "difficulty": "Moyen",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Cybersécurité",
+    "content": "Les protections",
+    "question": "Quelle pratique améliore la sécurité des comptes en ligne ?",
+    "options": ["Utiliser un mot de passe différent pour chaque site", "Utiliser le même mot de passe partout", "Ne jamais changer de mot de passe", "Partager ses mots de passe"],
+    "answer": "Utiliser un mot de passe différent pour chaque site",
+    "difficulty": "Moyen",
+    "category": "Sécurité"
+  },
+  {
+    "title": "Technologie éducative",
+    "content": "Les outils",
+    "question": "Quel type de programme permet d'apprendre en ligne ?",
+    "options": ["Une plateforme e-learning", "Un antivirus", "Un système d'exploitation", "Un type de réseau"],
+    "answer": "Une plateforme e-learning",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Technologie éducative",
+    "content": "Les plateformes",
+    "question": "Quelle plateforme permet de suivre des cours en ligne ?",
+    "options": ["Khan Academy", "Instagram", "TikTok", "Snapchat"],
+    "answer": "Khan Academy",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Technologie éducative",
+    "content": "Les applications",
+    "question": "Quelle application permet d'apprendre des langues étrangères ?",
+    "options": ["Duolingo", "Instagram", "TikTok", "Snapchat"],
+    "answer": "Duolingo",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Technologie éducative",
+    "content": "Les outils",
+    "question": "Quel type de programme permet de créer des présentations interactives ?",
+    "options": ["Un logiciel de présentation", "Un antivirus", "Un système d'exploitation", "Un type de réseau"],
+    "answer": "Un logiciel de présentation",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Technologie de santé",
+    "content": "Les applications",
+    "question": "Quelle application permet de compter ses pas quotidiens ?",
+    "options": ["Une application de fitness", "Un jeu vidéo", "Une calculatrice", "Un calendrier"],
+    "answer": "Une application de fitness",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Technologie de santé",
+    "content": "Les appareils",
+    "question": "Quel appareil peut mesurer le rythme cardiaque ?",
+    "options": ["Un bracelet connecté", "Une imprimante", "Un écran", "Un clavier"],
+    "answer": "Un bracelet connecté",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Technologie de santé",
+    "content": "Les appareils",
+    "question": "Quel appareil peut mesurer la qualité du sommeil ?",
+    "options": ["Un tracker de sommeil", "Une imprimante", "Un écran", "Un clavier"],
+    "answer": "Un tracker de sommeil",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Métiers de l'informatique",
+    "content": "Les professions",
+    "question": "Quel professionnel crée des sites web ?",
+    "options": ["Un développeur web", "Un médecin", "Un avocat", "Un architecte"],
+    "answer": "Un développeur web",
+    "difficulty": "Facile",
+    "category": "Métiers"
+  },
+  {
+    "title": "Métiers de l'informatique",
+    "content": "Les professions",
+    "question": "Quel professionnel s'occupe de la sécurité informatique ?",
+    "options": ["Un expert en cybersécurité", "Un médecin", "Un avocat", "Un architecte"],
+    "answer": "Un expert en cybersécurité",
+    "difficulty": "Moyen",
+    "category": "Métiers"
+  },
+  {
+    "title": "Métiers de l'informatique",
+    "content": "Les professions",
+    "question": "Quel professionnel conçoit des applications mobiles ?",
+    "options": ["Un développeur mobile", "Un médecin", "Un avocat", "Un architecte"],
+    "answer": "Un développeur mobile",
+    "difficulty": "Moyen",
+    "category": "Métiers"
+  },
+  {
+    "title": "Métiers de l'informatique",
+    "content": "Les professions",
+    "question": "Quel professionnel gère les réseaux informatiques ?",
+    "options": ["Un administrateur réseau", "Un médecin", "Un avocat", "Un architecte"],
+    "answer": "Un administrateur réseau",
+    "difficulty": "Moyen",
+    "category": "Métiers"
+  },
+  {
+    "title": "Innovations récentes",
+    "content": "Les nouvelles technologies",
+    "question": "Quelle technologie permet de créer de l'énergie à partir du soleil ?",
+    "options": ["Les panneaux solaires", "Les éoliennes", "Les barrages", "Les centrales nucléaires"],
+    "answer": "Les panneaux solaires",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Innovations récentes",
+    "content": "Les nouvelles technologies",
+    "question": "Quelle technologie permet de créer de l'énergie à partir du vent ?",
+    "options": ["Les éoliennes", "Les panneaux solaires", "Les barrages", "Les centrales nucléaires"],
+    "answer": "Les éoliennes",
+    "difficulty": "Facile",
+    "category": "Innovation"
+  },
+  {
+    "title": "Innovations récentes",
+    "content": "Les nouvelles technologies",
+    "question": "Quelle technologie permet de remplacer les cartes bancaires avec un téléphone ?",
+    "options": ["Le paiement mobile", "Le QR code", "Le Bluetooth", "Le WiFi"],
+    "answer": "Le paiement mobile",
+    "difficulty": "Moyen",
+    "category": "Innovation"
+  },
+  {
+    "title": "Innovations récentes",
+    "content": "Les applications",
+    "question": "Quelle application permet de voir des cartes et de s'orienter ?",
+    "options": ["Google Maps", "Instagram", "TikTok", "Snapchat"],
+    "answer": "Google Maps",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Innovations récentes",
+    "content": "Les applications",
+    "question": "Quelle application permet d'écouter des livres audio ?",
+    "options": ["Audible", "Instagram", "TikTok", "Snapchat"],
+    "answer": "Audible",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Innovations récentes",
+    "content": "Les applications",
+    "question": "Quelle application permet de commander des repas à domicile ?",
+    "options": ["Uber Eats", "Instagram", "TikTok", "Snapchat"],
+    "answer": "Uber Eats",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Innovations récentes",
+    "content": "Les applications",
+    "question": "Quelle application permet de commander un taxi ?",
+    "options": ["Uber", "Instagram", "TikTok", "Snapchat"],
+    "answer": "Uber",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Hardware avancé",
+    "content": "Les composants",
+    "question": "Quelle est la partie d'un ordinateur qui stocke les données même quand l'ordinateur est éteint ?",
+    "options": ["Le disque dur", "La mémoire RAM", "Le processeur", "La carte graphique"],
+    "answer": "Le disque dur",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Hardware avancé",
+    "content": "Les ports",
+    "question": "Quel port permet de connecter un écran à un ordinateur ?",
+    "options": ["HDMI", "USB", "Ethernet", "Audio"],
+    "answer": "HDMI",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Hardware avancé",
+    "content": "Les ports",
+    "question": "Quel port permet de connecter un périphérique comme une souris ou un clavier ?",
+    "options": ["USB", "HDMI", "Ethernet", "Audio"],
+    "answer": "USB",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Hardware avancé",
+    "content": "Les ports",
+    "question": "Quel port permet de se connecter à Internet via un câble ?",
+    "options": ["Ethernet", "USB", "HDMI", "Audio"],
+    "answer": "Ethernet",
+    "difficulty": "Moyen",
+    "category": "Hardware"
+  },
+  {
+    "title": "Hardware avancé",
+    "content": "Les ports",
+    "question": "Quel port permet de connecter des écouteurs à un appareil ?",
+    "options": ["Port audio (jack)", "USB", "HDMI", "Ethernet"],
+    "answer": "Port audio (jack)",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Software avancé",
+    "content": "Les systèmes",
+    "question": "Quel logiciel permet de compresser des fichiers ?",
+    "options": ["WinRAR ou 7-Zip", "Word", "Excel", "PowerPoint"],
+    "answer": "WinRAR ou 7-Zip",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Software avancé",
+    "content": "Les systèmes",
+    "question": "Quel logiciel permet de lire des PDF ?",
+    "options": ["Adobe Acrobat Reader", "Word", "Excel", "PowerPoint"],
+    "answer": "Adobe Acrobat Reader",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Software avancé",
+    "content": "Les systèmes",
+    "question": "Quel logiciel permet de modifier des images ?",
+    "options": ["Adobe Photoshop", "Word", "Excel", "PowerPoint"],
+    "answer": "Adobe Photoshop",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Software avancé",
+    "content": "Les systèmes",
+    "question": "Quel logiciel permet de monter des vidéos ?",
+    "options": ["Adobe Premiere Pro", "Word", "Excel", "PowerPoint"],
+    "answer": "Adobe Premiere Pro",
+    "difficulty": "Moyen",
+    "category": "Software"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "Les opérations de base",
+    "question": "Comment s'appelle l'action de copier un fichier ?",
+    "options": ["Copier/coller", "Glisser/déposer", "Enregistrer", "Supprimer"],
+    "answer": "Copier/coller",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "Les opérations de base",
+    "question": "Comment s'appelle l'action d'enregistrer un document ?",
+    "options": ["Sauvegarder", "Copier", "Coller", "Supprimer"],
+    "answer": "Sauvegarder",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "Les opérations de base",
+    "question": "Comment s'appelle l'action de déplacer un fichier d'un dossier à un autre ?",
+    "options": ["Couper/coller", "Copier/coller", "Enregistrer", "Supprimer"],
+    "answer": "Couper/coller",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "Les opérations de base",
+    "question": "Comment s'appelle l'action de supprimer définitivement un fichier ?",
+    "options": ["Supprimer", "Copier", "Coller", "Enregistrer"],
+    "answer": "Supprimer",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "L'interface",
+    "question": "Comment s'appelle la barre en bas de l'écran sur Windows ?",
+    "options": ["La barre des tâches", "La barre de menu", "La barre d'outils", "La barre de titre"],
+    "answer": "La barre des tâches",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "L'interface",
+    "question": "Comment s'appelle l'icône principale de Windows ?",
+    "options": ["Le menu Démarrer", "Le bureau", "La corbeille", "Le Gestionnaire des tâches"],
+    "answer": "Le menu Démarrer",
+    "difficulty": "Facile",
+    "category": "Software"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "Le clavier",
+    "question": "Quelle combinaison de touches permet de copier ?",
+    "options": ["Ctrl+C", "Ctrl+V", "Ctrl+X", "Ctrl+Z"],
+    "answer": "Ctrl+C",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "Le clavier",
+    "question": "Quelle combinaison de touches permet de coller ?",
+    "options": ["Ctrl+V", "Ctrl+C", "Ctrl+X", "Ctrl+Z"],
+    "answer": "Ctrl+V",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "Le clavier",
+    "question": "Quelle combinaison de touches permet de couper ?",
+    "options": ["Ctrl+X", "Ctrl+C", "Ctrl+V", "Ctrl+Z"],
+    "answer": "Ctrl+X",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  },
+  {
+    "title": "Utilisation de l'ordinateur",
+    "content": "Le clavier",
+    "question": "Quelle combinaison de touches permet d'annuler une action ?",
+    "options": ["Ctrl+Z", "Ctrl+C", "Ctrl+V", "Ctrl+X"],
+    "answer": "Ctrl+Z",
+    "difficulty": "Facile",
+    "category": "Hardware"
+  }
+]
