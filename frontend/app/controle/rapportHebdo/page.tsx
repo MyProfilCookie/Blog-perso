@@ -255,82 +255,65 @@ const WeeklyReport: React.FC = () => {
     checkAuth();
   }, [router]);
 
-  // Fonction pour récupérer le modèle de rapport avec les questions
   const fetchReportModel = async () => {
     try {
       const token = localStorage.getItem("userToken");
-
+ 
       if (!token || isTokenExpired(token)) {
         router.push("/users/login");
-
         return null;
       }
-
-      // Appeler l'API pour récupérer le modèle de rapport
+ 
       const baseUrl = getBaseUrl();
-      const url = `${baseUrl}/subjects/rapportHebdo`; // URL correcte d'après votre Postman
-
+      const url = `${baseUrl}/subjects/rapportHebdo`;
+ 
       console.log("📡 Récupération du modèle de rapport:", url);
-
-      try {
-        const response = await axios.get(url, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        // Ajouter du texte aux questions pour les afficher
-        const model = response.data;
-
-        if (model && model.questions) {
-          // Ajouter des textes fictifs aux questions
-          model.questions = model.questions.map(
-            (q: Question, index: number) => {
-              return {
-                ...q,
-                text: `Question ${index + 1}`, // Texte par défaut
-                options: q.options.length
-                  ? q.options
-                  : ["Oui", "Non", "Peut-être"], // Options par défaut si vides
-              };
-            },
-          );
-        }
-
-        return model;
-      } catch (apiError) {
-        console.error("Erreur lors de l'appel API:", apiError);
-
-        // En cas d'erreur, utiliser les données de la capture d'écran
-        const mockModel = {
-          _id: "67e93661c16800718f4dd177",
-          name: "rapportHebdo",
-          __v: 0,
-          active: true,
-          createdAt: "2025-03-30T12:17:37.069Z",
-          description: "Rapports hebdomadaires et suivis d'activités",
-          displayName: "Rapport Hebdomadaire",
-          icon: "file-text",
-          questions: [] as Question[],
-        };
-
-        // Créer 52 questions fictives basées sur les IDs de la capture d'écran
-        for (let i = 0; i < 52; i++) {
-          const hexValue = (i + 0x17).toString(16).padStart(2, "0");
-
-          mockModel.questions.push({
-            _id: `67e93661fa898e1b64ac7a${hexValue}`,
-            text: `Question ${i + 1}`,
-            options: ["Excellente", "Bonne", "Moyenne", "À améliorer"],
-            category: "Rapport hebdomadaire",
-          });
-        }
-
-        return mockModel;
+ 
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+ 
+      const data = response.data;
+ 
+      const weekNumber = parseInt(selectedWeek.replace("Semaine ", ""));
+      const selectedWeekData = data.find((weekObj: any) => weekObj.week === weekNumber);
+ 
+      if (!selectedWeekData || !selectedWeekData.subjects) {
+        console.warn("⚠️ Aucune donnée pour cette semaine.");
+        return null;
       }
+ 
+      const questions: Question[] = [];
+ 
+      selectedWeekData.subjects.forEach((subject: any) => {
+        subject.questions.forEach((q: any, index: number) => {
+          questions.push({
+            _id: `${subject.name}-${index}`,
+            text: q.question,
+            options: q.options,
+            category: subject.name,
+          });
+        });
+      });
+ 
+      const model: ReportModel = {
+        _id: `rapportHebdo-${weekNumber}`,
+        name: "rapportHebdo",
+        description: `Questions pour la semaine ${weekNumber}`,
+        displayName: `Rapport semaine ${weekNumber}`,
+        icon: "📝",
+        active: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        __v: 0,
+        questions,
+      };
+ 
+      return model;
     } catch (error) {
-      console.error("Erreur générale:", error);
-
+      console.error("❌ Erreur lors de la récupération des questions :", error);
       return null;
     }
   };
