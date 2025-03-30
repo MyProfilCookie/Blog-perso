@@ -7,7 +7,7 @@ import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
-import { getSubjectByName } from "@/services/subjectService";
+import axios from "axios";
 
 // Interface pour les exercices de français
 interface Exercise {
@@ -21,6 +21,28 @@ interface Exercise {
   difficulty?: "Facile" | "Moyen" | "Difficile";
   estimatedTime?: string;
   category: string;
+}
+
+// Interface pour la question de l'API
+interface Question {
+  _id: string;
+  title: string;
+  content: string;
+  question: string;
+  options?: string[];
+  answer: string;
+  difficulty?: "Facile" | "Moyen" | "Difficile";
+  category: string;
+}
+
+// Interface pour le sujet
+interface Subject {
+  _id: string;
+  name: string;
+  description?: string;
+  active: boolean;
+  icon?: string;
+  questions: Question[];
 }
 
 const FrenchPage: React.FC = () => {
@@ -64,29 +86,84 @@ const FrenchPage: React.FC = () => {
     "🚀 Tu es sur la bonne voie !"
   ];
 
+  // Fonction pour récupérer une matière par son ID
+  const getSubjectById = async (id: string): Promise<Subject> => {
+    try {
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com';
+      
+      // Construire l'URL correctement
+      const url = baseUrl.endsWith('/api') 
+        ? `${baseUrl}/subjects/id/${id}` 
+        : `${baseUrl}/api/subjects/id/${id}`;
+      
+      console.log('📡 Appel API getSubjectById:', url);
+      const response = await axios.get(url);
+      return response.data;
+    } catch (error) {
+      console.error(`❌ Erreur lors de la récupération de la matière ID ${id}:`, error);
+      throw error;
+    }
+  };
+
   useEffect(() => {
     const loadExercises = async () => {
       try {
         setLoading(true);
         
-        // Appeler la fonction du service
-        const data = await getSubjectByName('french');
+        // Utiliser l'ID fixe pour French au lieu du nom
+        const frenchId = "67e93660c16800718f4dd171";
+        
+        // Contourner le problème en accédant directement à la liste des matières
+        let data;
+        try {
+          // Essayer d'abord avec l'ID
+          data = await getSubjectById(frenchId);
+        } catch (idError) {
+          console.error("Erreur avec ID, essai alternatif:", idError);
+          
+          // Si ça échoue, essayer une approche alternative avec la liste des sujets
+          const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com';
+          const allSubjectsUrl = baseUrl.endsWith('/api') 
+            ? `${baseUrl}/subjects` 
+            : `${baseUrl}/api/subjects`;
+          
+          console.log('📡 Appel API getAllSubjects:', allSubjectsUrl);
+          const allSubjectsResponse = await axios.get(allSubjectsUrl);
+          
+          // Trouver la matière French dans la liste
+          const frenchSubject = allSubjectsResponse.data.find((s: any) => s.name === "french");
+          
+          if (!frenchSubject) {
+            throw new Error('Matière french non trouvée dans la liste');
+          }
+          
+          // Obtenir les détails complets de la matière
+          const detailsUrl = baseUrl.endsWith('/api') 
+            ? `${baseUrl}/subjects/${frenchSubject._id}` 
+            : `${baseUrl}/api/subjects/${frenchSubject._id}`;
+          
+          console.log('📡 Appel API getSubjectDetails:', detailsUrl);
+          const detailsResponse = await axios.get(detailsUrl);
+          data = detailsResponse.data;
+        }
         
         if (!data || !data.questions) {
           throw new Error('Aucune donnée reçue ou format invalide');
         }
         
-        // Transform the questions from your API to match the Exercise interface
-        const fetchedExercises: Exercise[] = data.questions.map((question) => ({
-          id: question._id,
-          title: question.category || "Français",
-          content: question.subcategory || "Exercice",
-          question: question.text,
-          options: question.options,
-          answer: question.correctAnswer,
-          difficulty: question.difficulty || "Moyen",
-          category: question.category || "Français"
-        }));
+        // Transformer les questions en exercices (limité aux 20 premiers)
+        const fetchedExercises: Exercise[] = data.questions
+          .slice(0, 20) // Limiter aux 20 premières questions
+          .map((question: Question) => ({
+            id: question._id,
+            title: question.title || question.category || "Français",
+            content: question.content || "Exercice",
+            question: question.question,
+            options: question.options,
+            answer: question.answer,
+            difficulty: question.difficulty || "Moyen",
+            category: question.category || "Français"
+          }));
         
         setExercises(fetchedExercises);
         setLoading(false);
@@ -257,7 +334,7 @@ const FrenchPage: React.FC = () => {
                 Français
               </h1>
               <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-                Exercices de français
+                Exercices de français (20 premières questions)
               </p>
             </motion.div>
           </div>
