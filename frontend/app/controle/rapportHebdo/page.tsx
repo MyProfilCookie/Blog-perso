@@ -266,12 +266,9 @@ const fetchReportModel = async () => {
  
     const baseUrl = getBaseUrl();
     const match = selectedWeek.match(/\d+/);
-    const weekNumber = match ? parseInt(match[0], 10) : null;
-
-    if (!weekNumber || isNaN(weekNumber)) {
-      console.warn("❌ selectedWeek est invalide :", selectedWeek);
-      return null;
-    }
+    const weekNumber = match && !isNaN(parseInt(match[0], 10))
+      ? parseInt(match[0], 10)
+      : new Date().getWeekNumber();
     const url = `${baseUrl}/subjects/rapportHebdo?week=${weekNumber}`;
  
     console.log("📡 Récupération du modèle de rapport pour la semaine :", weekNumber);
@@ -317,7 +314,11 @@ const fetchReportModel = async () => {
  
     return model;
   } catch (error) {
-    console.error("❌ Erreur lors de la récupération des questions :", error);
+    if (axios.isAxiosError(error)) {
+      console.error("❌ Erreur Axios:", error.response?.status, error.response?.data);
+    } else {
+      console.error("❌ Erreur inconnue:", error);
+    }
     return null;
   }
 };
