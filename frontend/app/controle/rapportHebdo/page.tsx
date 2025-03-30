@@ -266,6 +266,10 @@ const fetchReportModel = async () => {
  
     const baseUrl = getBaseUrl();
     const weekNumber = parseInt(selectedWeek.replace("Semaine ", ""));
+    if (isNaN(weekNumber)) {
+      console.warn("❌ selectedWeek est invalide :", selectedWeek);
+      return null;
+    }
     const url = `${baseUrl}/subjects/rapportHebdo?week=${weekNumber}`;
  
     console.log("📡 Récupération du modèle de rapport pour la semaine :", weekNumber);
@@ -319,7 +323,7 @@ const fetchReportModel = async () => {
   // Charger le modèle de rapport une seule fois
   useEffect(() => {
     const loadReportModel = async () => {
-      if (!modelLoaded.current) {
+    if (!modelLoaded.current && selectedWeek) {
         modelLoaded.current = true;
 
         const model = await fetchReportModel();
