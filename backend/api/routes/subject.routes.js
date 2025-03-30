@@ -30,6 +30,23 @@ router.get("/:name", async (req, res) => {
   }
 });
 
+// Get a subject by its ID
+router.get("/id/:id", async (req, res) => {
+  try {
+    console.log(`🔍 Recherche de la matière par ID: ${req.params.id}`);
+    const subject = await Subject.findById(req.params.id);
+    
+    if (!subject || !subject.active) {
+      return res.status(404).json({ message: "Matière non trouvée" });
+    }
+    
+    res.status(200).json(subject);
+  } catch (error) {
+    console.error(`❌ Error fetching subject ID ${req.params.id}:`, error);
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
 // Add a new subject (admin only)
 router.post("/", isAdmin, async (req, res) => {
   try {
