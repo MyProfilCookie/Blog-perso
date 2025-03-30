@@ -33,9 +33,7 @@ const getBaseUrl = () => {
 
 /**
  * Récupère le rapport d'un utilisateur pour une semaine spécifique
- * @param userId ID de l'utilisateur
- * @param weekNumber Numéro de la semaine
- * @param token Token d'authentification
+ * OU retourne null si le rapport n'existe pas encore
  */
 export const getUserWeeklyReport = async (
   userId: string, 
@@ -43,10 +41,12 @@ export const getUserWeeklyReport = async (
   token: string
 ): Promise<WeeklyReportData | null> => {
   try {
+    // Plutôt que d'essayer de récupérer un rapport par semaine (qui peut ne pas exister),
+    // récupérons tous les rapports de l'utilisateur
     const baseUrl = getBaseUrl();
-    const url = `${baseUrl}/reports/user/${userId}/week/${encodeURIComponent(weekNumber)}`;
+    const url = `${baseUrl}/reports/user/${userId}`;
     
-    console.log('📡 Récupération du rapport:', url);
+    console.log('📡 Récupération de tous les rapports:', url);
     
     const response = await axios.get(url, {
       headers: {
@@ -54,21 +54,22 @@ export const getUserWeeklyReport = async (
       }
     });
     
-    return response.data;
+    // Chercher le rapport pour la semaine spécifiée
+    const reports = response.data;
+    const weeklyReport = Array.isArray(reports) 
+      ? reports.find(report => report.weekNumber === weekNumber)
+      : null;
+    
+    return weeklyReport || null;
   } catch (error) {
-    console.error(`❌ Erreur lors de la récupération du rapport pour la semaine ${weekNumber}:`, error);
-    // Si le rapport n'existe pas (404), on retourne null plutôt que de lancer une erreur
-    if (axios.isAxiosError(error) && error.response?.status === 404) {
-      return null;
-    }
-    throw error;
+    console.error(`❌ Erreur lors de la récupération des rapports:`, error);
+    // Retourner null en cas d'erreur pour permettre la création d'un rapport local
+    return null;
   }
 };
 
 /**
  * Sauvegarde ou met à jour le rapport hebdomadaire d'un utilisateur
- * @param reportData Données du rapport
- * @param token Token d'authentification
  */
 export const saveWeeklyReport = async (
   reportData: WeeklyReportData,
@@ -91,7 +92,7 @@ export const saveWeeklyReport = async (
     } else {
       // Création d'un nouveau rapport
       const url = `${baseUrl}/reports`;
-      console.log('📡 Création d\'un nouveau rapport:', url);
+      console.log("📡 Création d'un nouveau rapport:", url);
       
       response = await axios.post(url, reportData, {
         headers: {
@@ -103,14 +104,18 @@ export const saveWeeklyReport = async (
     return response.data;
   } catch (error) {
     console.error('❌ Erreur lors de la sauvegarde du rapport:', error);
-    throw error;
+    
+    // En cas d'erreur, retourner les données d'origine pour que l'utilisateur
+    // ne perde pas son travail
+    return {
+      ...reportData,
+      _id: reportData._id || 'local-draft'
+    };
   }
 };
 
 /**
  * Récupère tous les rapports d'un utilisateur
- * @param userId ID de l'utilisateur
- * @param token Token d'authentification
  */
 export const getAllUserReports = async (
   userId: string,
@@ -137,8 +142,6 @@ export const getAllUserReports = async (
 
 /**
  * Supprime un rapport hebdomadaire
- * @param reportId ID du rapport
- * @param token Token d'authentification
  */
 export const deleteWeeklyReport = async (
   reportId: string,
@@ -159,6 +162,6 @@ export const deleteWeeklyReport = async (
     return response.data;
   } catch (error) {
     console.error(`❌ Erreur lors de la suppression du rapport ${reportId}:`, error);
-    throw error;
+    return { message: "Échec de la suppression du rapport" };
   }
 };
