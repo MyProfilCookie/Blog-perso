@@ -255,76 +255,66 @@ const WeeklyReport: React.FC = () => {
     checkAuth();
   }, [router]);
 
-  const fetchReportModel = async () => {
-    try {
-      const token = localStorage.getItem("userToken");
+const fetchReportModel = async () => {
+  try {
+    const token = localStorage.getItem("userToken");
  
-      if (!token || isTokenExpired(token)) {
-        router.push("/users/login");
-        return null;
-      }
- 
-      const baseUrl = getBaseUrl();
-      const url = `${baseUrl}/subjects/rapportHebdo`;
- 
-      console.log("📡 Récupération du modèle de rapport:", url);
- 
-      const response = await axios.get(url, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
- 
-      const data = response.data;
- 
-      const weekNumber = parseInt(selectedWeek.replace("Semaine ", ""));
-      let selectedWeekData;
- 
-      if (Array.isArray(data)) {
-        selectedWeekData = data.find((weekObj: any) => weekObj.week === weekNumber);
-      } else if (Array.isArray(data.weeks)) {
-        selectedWeekData = data.weeks.find((weekObj: any) => weekObj.week === weekNumber);
-      } else if (data.week === weekNumber) {
-        selectedWeekData = data;
-      }
- 
-      if (!selectedWeekData || !selectedWeekData.subjects) {
-        console.warn("⚠️ Aucune donnée pour cette semaine.");
-        return null;
-      }
- 
-      const questions: Question[] = [];
- 
-      selectedWeekData.subjects.forEach((subject: any) => {
-        subject.questions.forEach((q: any, index: number) => {
-          questions.push({
-            _id: `${subject.name}-${index}`,
-            text: q.question,
-            options: q.options,
-            category: subject.name,
-          });
-        });
-      });
- 
-      const model: ReportModel = {
-        _id: `rapportHebdo-${weekNumber}`,
-        name: "rapportHebdo",
-        description: `Questions pour la semaine ${weekNumber}`,
-        displayName: `Rapport semaine ${weekNumber}`,
-        icon: "📝",
-        active: true,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-        __v: 0,
-        questions,
-      };
- 
-      return model;
-    } catch (error) {
-      console.error("❌ Erreur lors de la récupération des questions :", error);
+    if (!token || isTokenExpired(token)) {
+      router.push("/users/login");
       return null;
     }
-  };
+ 
+    const baseUrl = getBaseUrl();
+    const weekNumber = parseInt(selectedWeek.replace("Semaine ", ""));
+    const url = `${baseUrl}/subjects/rapportHebdo?week=${weekNumber}`;
+ 
+    console.log("📡 Récupération du modèle de rapport pour la semaine :", weekNumber);
+ 
+    const response = await axios.get(url, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+ 
+    const selectedWeekData = response.data;
+ 
+    if (!selectedWeekData || !selectedWeekData.subjects) {
+      console.warn("⚠️ Aucune donnée pour cette semaine.");
+      return null;
+    }
+ 
+    const questions: Question[] = [];
+ 
+    selectedWeekData.subjects.forEach((subject: any) => {
+      subject.questions.forEach((q: any, index: number) => {
+        questions.push({
+          _id: `${subject.name}-${index}`,
+          text: q.question,
+          options: q.options,
+          category: subject.name,
+        });
+      });
+    });
+ 
+    const model: ReportModel = {
+      _id: `rapportHebdo-${weekNumber}`,
+      name: "rapportHebdo",
+      description: `Questions pour la semaine ${weekNumber}`,
+      displayName: `Rapport semaine ${weekNumber}`,
+      icon: "📝",
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      __v: 0,
+      questions,
+    };
+ 
+    return model;
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération des questions :", error);
+    return null;
+  }
+};
 
   // Charger le modèle de rapport une seule fois
   useEffect(() => {
