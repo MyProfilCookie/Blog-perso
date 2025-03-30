@@ -23,7 +23,7 @@ export interface Subject {
 }
 
 // URL de base de l'API
-const API_URL = '/api/subjects';
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/subjects`;
 
 /**
  * Récupère toutes les matières actives

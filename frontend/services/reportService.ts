@@ -20,7 +20,7 @@ export interface WeeklyReportData {
 }
 
 // URL de base de l'API
-const API_URL = '/api/reports';
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/reports`;
 
 /**
  * Récupère le rapport d'un utilisateur pour une semaine spécifique
