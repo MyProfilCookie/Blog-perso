@@ -101,8 +101,17 @@ interface WeeklyReportData {
   userId: string;
   weekNumber: string;
   items: ReportItem[];
+  questionAnswers?: Record<string, string>; // Ajout pour les réponses aux questions
   createdAt?: string;
   updatedAt?: string;
+}
+
+// Interface pour les questions
+interface Question {
+  _id: string;
+  text: string;
+  options: string[];
+  subjectId?: string; // Optionnel : pour lier les questions à des matières spécifiques
 }
 
 const WeeklyReport = () => {
@@ -118,6 +127,11 @@ const WeeklyReport = () => {
   const [weeks] = useState(generateWeeksOfYear);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  
+  // États pour les questions
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  const [loadingQuestions, setLoadingQuestions] = useState(false);
 
   // Vérification de l'authentification et chargement des données utilisateur
   useEffect(() => {
@@ -167,6 +181,105 @@ const WeeklyReport = () => {
     checkAuth();
   }, [router]);
 
+  // Fonction pour récupérer les questions
+  const fetchQuestions = async () => {
+    try {
+      setLoadingQuestions(true);
+      const token = localStorage.getItem("userToken");
+      
+      if (!token || isTokenExpired(token)) {
+        router.push("/users/login");
+        return;
+      }
+      
+      const baseUrl = getBaseUrl();
+      const response = await axios.get(`${baseUrl}/questions`, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      // Transformer les données pour correspondre à notre interface Question
+      const questionsData = response.data.map((q: any) => ({
+        _id: q._id,
+        text: q.text || "Question sans texte",
+        options: Array.isArray(q.options) ? q.options : [],
+        subjectId: q.subjectId
+      }));
+      
+      setQuestions(questionsData);
+      console.log("Questions chargées:", questionsData.length);
+    } catch (error) {
+      console.error("Erreur lors du chargement des questions:", error);
+      // Créer des questions fictives si l'API échoue
+      const mockQuestions = [
+        {
+          _id: "67e93661fa898e1b64ac7a17",
+          text: "Comment évaluez-vous votre compréhension de cette matière?",
+          options: ["Excellente", "Bonne", "Moyenne", "Besoin d'aide"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a18", 
+          text: "Avez-vous eu besoin d'aide supplémentaire?",
+          options: ["Oui", "Non", "Parfois"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a19",
+          text: "Quelles ressources avez-vous utilisées?",
+          options: ["Manuels", "Vidéos", "Exercices en ligne", "Aide d'un adulte"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1a",
+          text: "Êtes-vous satisfait de vos progrès cette semaine?",
+          options: ["Très satisfait", "Satisfait", "Peu satisfait", "Pas du tout satisfait"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1b",
+          text: "Quel a été le plus grand défi cette semaine?",
+          options: ["Comprendre les concepts", "Manque de temps", "Concentration", "Autre"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1c",
+          text: "Avez-vous atteint vos objectifs pour cette semaine?",
+          options: ["Oui, tous", "La plupart", "Quelques-uns", "Non"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1d",
+          text: "Quels sont vos objectifs pour la semaine prochaine?",
+          options: ["Améliorer la compréhension", "Compléter plus d'exercices", "Être plus régulier", "Demander plus d'aide"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1e",
+          text: "Comment qualifieriez-vous votre motivation cette semaine?",
+          options: ["Très motivé", "Motivé", "Peu motivé", "Pas motivé"]
+        },
+        {
+          _id: "67e93661fa898e1b64ac7a1f",
+          text: "Avez-vous besoin de ressources supplémentaires?",
+          options: ["Oui, urgentes", "Quelques-unes", "Pas pour le moment", "Non"]
+        }
+      ];
+      setQuestions(mockQuestions);
+    } finally {
+      setLoadingQuestions(false);
+    }
+  };
+
+  // Appeler fetchQuestions après avoir chargé les données utilisateur
+  useEffect(() => {
+    if (userId) {
+      fetchQuestions();
+    }
+  }, [userId]);
+
+  // Fonction pour gérer la sélection des réponses aux questions
+  const handleAnswerSelection = (questionId: string, answer: string) => {
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: answer
+    }));
+  };
+
   // Fonction pour créer un rapport vide
   const createEmptyReport = () => {
     const defaultItems: ReportItem[] = subjects.map((subject) => ({
@@ -210,6 +323,11 @@ const WeeklyReport = () => {
       const weeklyReport = reports.find(report => report.weekNumber === weekNumber);
       console.log(`Rapport pour ${weekNumber} trouvé:`, weeklyReport ? "Oui" : "Non");
       
+      // Si le rapport contient des réponses aux questions, les charger
+      if (weeklyReport && weeklyReport.questionAnswers) {
+        setSelectedAnswers(weeklyReport.questionAnswers);
+      }
+
       return weeklyReport || null;
     } catch (error) {
       console.error(`❌ Erreur lors de la récupération des rapports:`, error);
@@ -283,15 +401,22 @@ const WeeklyReport = () => {
             console.log("Rapport chargé depuis l'API");
             setReportItems(report.items);
             setReportId(report._id);
+            
+            // Charger les réponses aux questions si elles existent
+            if (report.questionAnswers) {
+              setSelectedAnswers(report.questionAnswers);
+            }
           } else {
             // Création d'un nouveau rapport local si aucun n'existe
             console.log("Création d'un rapport vide local");
             createEmptyReport();
+            setSelectedAnswers({}); // Réinitialiser les réponses aux questions
           }
         } catch (apiError) {
           // En cas d'erreur API, créer un rapport vide local
           console.log("Erreur API, création d'un rapport vide local:", apiError);
           createEmptyReport();
+          setSelectedAnswers({}); // Réinitialiser les réponses aux questions
         }
         
         setLoading(false);
@@ -299,6 +424,7 @@ const WeeklyReport = () => {
         console.error("Erreur lors du chargement du rapport:", err);
         // Même en cas d'erreur, créer un rapport vide pour que l'utilisateur puisse continuer
         createEmptyReport();
+        setSelectedAnswers({}); // Réinitialiser les réponses aux questions
         setError(null); // On ne montre pas d'erreur pour permettre à l'utilisateur de continuer
         setLoading(false);
       }
@@ -366,12 +492,13 @@ const WeeklyReport = () => {
         return;
       }
       
-      // Préparer les données du rapport
+      // Préparer les données du rapport incluant les réponses aux questions
       const reportData = {
         _id: reportId,
         userId: userId,
         weekNumber: selectedWeek,
-        items: reportItems
+        items: reportItems,
+        questionAnswers: selectedAnswers // Ajouter les réponses aux questions
       };
       
       // Sauvegarder le rapport via l'API
@@ -424,7 +551,8 @@ const WeeklyReport = () => {
       weekNumber: selectedWeek,
       userName: userName,
       date: new Date().toLocaleDateString(),
-      items: reportItems
+      items: reportItems,
+      questionAnswers: selectedAnswers // Inclure les réponses aux questions dans le téléchargement
     };
 
     const dataStr = JSON.stringify(reportData, null, 2);
@@ -445,6 +573,66 @@ const WeeklyReport = () => {
       }
     }
     return true;
+  };
+
+  // Composant pour afficher les questions
+  const QuestionsSection = () => {
+    if (loadingQuestions) {
+      return (
+        <div className="text-center py-4">
+          <div className="animate-spin text-2xl inline-block">🔄</div>
+          <p className="text-gray-600 dark:text-gray-400 mt-2">Chargement des questions...</p>
+        </div>
+      );
+    }
+    
+    if (questions.length === 0) {
+      return null;
+    }
+    
+    return (
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="mt-12 mb-8"
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5 }}
+      >
+        <h2 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
+          📋 Questions Complémentaires
+        </h2>
+        
+        <div className="grid grid-cols-1 gap-6 max-w-[1000px] mx-auto">
+          {questions.map((question) => (
+            <Card 
+              key={question._id}
+              className="border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-lg transition-all duration-300"
+            >
+              <CardBody className="p-5">
+                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                  {question.text}
+                </h3>
+                
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {question.options.map((option, index) => (
+                    <Button
+                      key={index}
+                      className={`p-3 rounded-lg transition-all duration-300 text-sm ${
+                        selectedAnswers[question._id] === option
+                          ? "bg-violet-500 text-white"
+                          : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                      }`}
+                      onClick={() => handleAnswerSelection(question._id, option)}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </div>
+              </CardBody>
+            </Card>
+          ))}
+        </div>
+      </motion.div>
+    );
   };
 
   // Affichage pendant le chargement
@@ -685,6 +873,9 @@ const WeeklyReport = () => {
                 </motion.div>
               ))}
             </div>
+
+            {/* Section des Questions */}
+            <QuestionsSection />
 
             {/* Boutons d'action */}
             <div className="flex flex-col sm:flex-row justify-center gap-4 py-6 mt-8 px-4">
