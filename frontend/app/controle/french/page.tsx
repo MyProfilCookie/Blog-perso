@@ -128,12 +128,27 @@ const FrenchPage: React.FC = () => {
     return pageResultsDetails[currentPage] || {};
   };
 
-  // Calculer le nombre total de réponses correctes sur toutes les pages
-  const getTotalCorrectAnswers = (): number => {
-    return Object.values(pageResults).reduce((total, result) => {
-      return total + result.correctAnswers;
-    }, 0);
-  };
+// Calculer le nombre total de réponses correctes sur toutes les pages
+const getTotalCorrectAnswers = (): number => {
+  // Calcul des bonnes réponses des pages déjà évaluées
+  const savedPagesCorrect = Object.values(pageResults).reduce((total, result) => {
+    return total + result.correctAnswers;
+  }, 0);
+  
+  // Si la page actuelle n'a pas encore été "calculée" officiellement
+  // mais que l'utilisateur a déjà donné des réponses correctes
+  const currentPageExists = pageResults[currentPage];
+  let currentPageCorrect = 0;
+  
+  if (!currentPageExists && pageResultsDetails[currentPage]) {
+    // Compter les réponses correctes de la page actuelle
+    currentPageCorrect = Object.values(pageResultsDetails[currentPage])
+      .filter(result => result === true).length;
+  }
+  
+  // Retourner le total des réponses correctes des pages calculées + page actuelle
+  return savedPagesCorrect + currentPageCorrect;
+};
 
   // Calculer le nombre total de questions tentées sur toutes les pages
   const getTotalQuestionsAttempted = (): number => {
