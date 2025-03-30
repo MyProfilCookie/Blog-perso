@@ -3,11 +3,12 @@ import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button, Pagination } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
-import { useRouter } from "next/navigation";
-import axios from "axios";
 
 // Interface pour les exercices de français
 interface Exercise {
@@ -60,24 +61,28 @@ const FrenchPage: React.FC = () => {
   const [allExercises, setAllExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
+
   // Pagination states
   const [currentPage, setCurrentPage] = useState(1);
   const [questionsPerPage] = useState(20);
   const [pageResults, setPageResults] = useState<PageResults>({});
-  
+
   // Navigation state
   const [totalPages, setTotalPages] = useState(0);
-  
+
   // User answers and results per page
-  const [pageUserAnswers, setPageUserAnswers] = useState<{[page: number]: {[key: string]: string}}>({});
-  const [pageResultsDetails, setPageResultsDetails] = useState<{[page: number]: {[key: string]: boolean}}>({});
-  
+  const [pageUserAnswers, setPageUserAnswers] = useState<{
+    [page: number]: { [key: string]: string };
+  }>({});
+  const [pageResultsDetails, setPageResultsDetails] = useState<{
+    [page: number]: { [key: string]: boolean };
+  }>({});
+
   // Current page state
   const [currentPageStreak, setCurrentPageStreak] = useState(0);
   const [currentPageCompleted, setCurrentPageCompleted] = useState(0);
   const [currentPagePoints, setCurrentPagePoints] = useState(0);
-  
+
   // UI states
   const [emoji, setEmoji] = useState<string>("");
   const [showResults, setShowResults] = useState<boolean>(false);
@@ -108,47 +113,52 @@ const FrenchPage: React.FC = () => {
     "🎯 Continue sur cette lancée !",
     "💫 Tu progresses très bien !",
     "🌟 Ta grammaire est de plus en plus précise !",
-    "🚀 Tu es sur la bonne voie !"
+    "🚀 Tu es sur la bonne voie !",
   ];
 
   // Helper pour obtenir les questions de la page actuelle
   const getCurrentPageExercises = (): Exercise[] => {
     const startIndex = (currentPage - 1) * questionsPerPage;
     const endIndex = startIndex + questionsPerPage;
+
     return allExercises.slice(startIndex, endIndex);
   };
 
   // Obtenir les réponses utilisateur pour la page actuelle
-  const getCurrentPageUserAnswers = (): {[key: string]: string} => {
+  const getCurrentPageUserAnswers = (): { [key: string]: string } => {
     return pageUserAnswers[currentPage] || {};
   };
 
   // Obtenir les résultats pour la page actuelle
-  const getCurrentPageResultDetails = (): {[key: string]: boolean} => {
+  const getCurrentPageResultDetails = (): { [key: string]: boolean } => {
     return pageResultsDetails[currentPage] || {};
   };
 
-// Calculer le nombre total de réponses correctes sur toutes les pages
-const getTotalCorrectAnswers = (): number => {
-  // Calcul des bonnes réponses des pages déjà évaluées
-  const savedPagesCorrect = Object.values(pageResults).reduce((total, result) => {
-    return total + result.correctAnswers;
-  }, 0);
-  
-  // Si la page actuelle n'a pas encore été "calculée" officiellement
-  // mais que l'utilisateur a déjà donné des réponses correctes
-  const currentPageExists = pageResults[currentPage];
-  let currentPageCorrect = 0;
-  
-  if (!currentPageExists && pageResultsDetails[currentPage]) {
-    // Compter les réponses correctes de la page actuelle
-    currentPageCorrect = Object.values(pageResultsDetails[currentPage])
-      .filter(result => result === true).length;
-  }
-  
-  // Retourner le total des réponses correctes des pages calculées + page actuelle
-  return savedPagesCorrect + currentPageCorrect;
-};
+  // Calculer le nombre total de réponses correctes sur toutes les pages
+  const getTotalCorrectAnswers = (): number => {
+    // Calcul des bonnes réponses des pages déjà évaluées
+    const savedPagesCorrect = Object.values(pageResults).reduce(
+      (total, result) => {
+        return total + result.correctAnswers;
+      },
+      0,
+    );
+
+    // Si la page actuelle n'a pas encore été "calculée" officiellement
+    // mais que l'utilisateur a déjà donné des réponses correctes
+    const currentPageExists = pageResults[currentPage];
+    let currentPageCorrect = 0;
+
+    if (!currentPageExists && pageResultsDetails[currentPage]) {
+      // Compter les réponses correctes de la page actuelle
+      currentPageCorrect = Object.values(
+        pageResultsDetails[currentPage],
+      ).filter((result) => result === true).length;
+    }
+
+    // Retourner le total des réponses correctes des pages calculées + page actuelle
+    return savedPagesCorrect + currentPageCorrect;
+  };
 
   // Calculer le nombre total de questions tentées sur toutes les pages
   const getTotalQuestionsAttempted = (): number => {
@@ -161,8 +171,9 @@ const getTotalCorrectAnswers = (): number => {
   const calculateGlobalScore = (): number => {
     const totalCorrect = getTotalCorrectAnswers();
     const totalAttempted = getTotalQuestionsAttempted();
-    
+
     if (totalAttempted === 0) return 0;
+
     return (totalCorrect / totalAttempted) * 100;
   };
 
@@ -170,57 +181,67 @@ const getTotalCorrectAnswers = (): number => {
     const loadExercises = async () => {
       try {
         setLoading(true);
-        
+
         // Obtenez l'URL de base, qui peut se terminer par "api" ou non
-        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com';
-        
+        const baseUrl =
+          process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
+
         // Construisez l'URL correcte pour obtenir toutes les matières
-        const allSubjectsUrl = baseUrl.endsWith('/api') 
-          ? `${baseUrl}/subjects` 
+        const allSubjectsUrl = baseUrl.endsWith("/api")
+          ? `${baseUrl}/subjects`
           : `${baseUrl}/api/subjects`;
-        
-        console.log('📡 Appel API getAllSubjects:', allSubjectsUrl);
+
+        console.log("📡 Appel API getAllSubjects:", allSubjectsUrl);
         const allSubjectsResponse = await axios.get(allSubjectsUrl);
-        
+
         // Trouver la matière "french" dans la liste
-        const frenchSubject = allSubjectsResponse.data.find((s: any) => s.name === "french");
-        
+        const frenchSubject = allSubjectsResponse.data.find(
+          (s: any) => s.name === "french",
+        );
+
         if (!frenchSubject) {
-          throw new Error('Matière french non trouvée dans la liste');
+          throw new Error("Matière french non trouvée dans la liste");
         }
-        
+
         // Obtenir les détails complets de la matière en utilisant le nom "french"
         // et non l'ID, car votre route backend utilise le nom comme paramètre
-        const frenchDetailsUrl = baseUrl.endsWith('/api') 
-          ? `${baseUrl}/subjects/french` 
+        const frenchDetailsUrl = baseUrl.endsWith("/api")
+          ? `${baseUrl}/subjects/french`
           : `${baseUrl}/api/subjects/french`;
-        
-        console.log('📡 Appel API getSubjectDetails par nom:', frenchDetailsUrl);
+
+        console.log(
+          "📡 Appel API getSubjectDetails par nom:",
+          frenchDetailsUrl,
+        );
         const detailsResponse = await axios.get(frenchDetailsUrl);
         const data = detailsResponse.data;
-        
+
         if (!data || !data.questions) {
-          throw new Error('Aucune donnée reçue ou format invalide');
+          throw new Error("Aucune donnée reçue ou format invalide");
         }
-        
+
         // Transformer toutes les questions en exercices
-        const fetchedExercises: Exercise[] = data.questions.map((question: Question) => ({
-          id: question._id,
-          title: question.title || question.category || "Français",
-          content: question.content || "Exercice",
-          question: question.question,
-          options: question.options,
-          answer: question.answer,
-          difficulty: question.difficulty || "Moyen",
-          category: question.category || "Français"
-        }));
-        
-        console.log(`✅ ${fetchedExercises.length} exercices chargés avec succès`);
+        const fetchedExercises: Exercise[] = data.questions.map(
+          (question: Question) => ({
+            id: question._id,
+            title: question.title || question.category || "Français",
+            content: question.content || "Exercice",
+            question: question.question,
+            options: question.options,
+            answer: question.answer,
+            difficulty: question.difficulty || "Moyen",
+            category: question.category || "Français",
+          }),
+        );
+
+        console.log(
+          `✅ ${fetchedExercises.length} exercices chargés avec succès`,
+        );
         setAllExercises(fetchedExercises);
-        
+
         // Calculer le nombre total de pages
         setTotalPages(Math.ceil(fetchedExercises.length / questionsPerPage));
-        
+
         setLoading(false);
       } catch (err) {
         console.error("Error fetching exercises:", err);
@@ -237,6 +258,7 @@ const getTotalCorrectAnswers = (): number => {
     // Si cette page a déjà des résultats, chargez-les
     if (pageResults[currentPage]) {
       const pageResult = pageResults[currentPage];
+
       setCurrentPageCompleted(pageResult.correctAnswers);
       setCurrentPagePoints(pageResult.correctAnswers * 10);
     } else {
@@ -255,18 +277,24 @@ const getTotalCorrectAnswers = (): number => {
     if (timeLeft > 0 && !isFinished) {
       // Minuteur principal
       timer = setInterval(() => {
-        setTimeLeft(prev => {
+        setTimeLeft((prev) => {
           if (prev <= 1) {
             calculateCurrentPageScore();
+
             return 0;
           }
+
           return prev - 1;
         });
       }, 1000);
 
       // Messages d'encouragement toutes les 15 minutes
       encouragementTimer = setInterval(() => {
-        const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+        const randomMessage =
+          encouragementMessages[
+            Math.floor(Math.random() * encouragementMessages.length)
+          ];
+
         setEmoji(randomMessage);
         setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
       }, 900000); // 900000ms = 15 minutes
@@ -285,38 +313,46 @@ const getTotalCorrectAnswers = (): number => {
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
+
     return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: string) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    id: string,
+  ) => {
     const updatedAnswers = {
       ...pageUserAnswers,
       [currentPage]: {
         ...(pageUserAnswers[currentPage] || {}),
-        [id]: e.target.value
-      }
+        [id]: e.target.value,
+      },
     };
+
     setPageUserAnswers(updatedAnswers);
   };
 
   const handleSubmit = (id: string, correctAnswer: string) => {
     const userAnswer = pageUserAnswers[currentPage]?.[id];
-    const isCorrect = userAnswer?.toString().trim().toLowerCase() === correctAnswer.toLowerCase();
+    const isCorrect =
+      userAnswer?.toString().trim().toLowerCase() ===
+      correctAnswer.toLowerCase();
 
     // Mettre à jour les résultats détaillés pour cette page
     const updatedResultsDetails = {
       ...pageResultsDetails,
       [currentPage]: {
         ...(pageResultsDetails[currentPage] || {}),
-        [id]: isCorrect
-      }
+        [id]: isCorrect,
+      },
     };
+
     setPageResultsDetails(updatedResultsDetails);
-    
+
     if (isCorrect) {
-      setCurrentPageCompleted(prev => prev + 1);
-      setCurrentPagePoints(prev => prev + 10);
-      setCurrentPageStreak(prev => prev + 1);
+      setCurrentPageCompleted((prev) => prev + 1);
+      setCurrentPagePoints((prev) => prev + 10);
+      setCurrentPageStreak((prev) => prev + 1);
     } else {
       setCurrentPageStreak(0);
     }
@@ -325,15 +361,17 @@ const getTotalCorrectAnswers = (): number => {
   const calculateCurrentPageScore = () => {
     const pageExercises = getCurrentPageExercises();
     const pageAnswersResults = getCurrentPageResultDetails();
-    
+
     // Compter les réponses correctes
-    const correctAnswers = Object.values(pageAnswersResults).filter(Boolean).length;
+    const correctAnswers =
+      Object.values(pageAnswersResults).filter(Boolean).length;
     // Total des questions répondues
     const answeredQuestions = Object.keys(pageAnswersResults).length;
-    
+
     // Calculer le score pour cette page
-    const score = answeredQuestions > 0 ? (correctAnswers / answeredQuestions) * 100 : 0;
-    
+    const score =
+      answeredQuestions > 0 ? (correctAnswers / answeredQuestions) * 100 : 0;
+
     // Mettre à jour les résultats de la page
     const updatedPageResults = {
       ...pageResults,
@@ -341,16 +379,17 @@ const getTotalCorrectAnswers = (): number => {
         score,
         completed: answeredQuestions === pageExercises.length,
         correctAnswers,
-        totalQuestions: answeredQuestions
-      }
+        totalQuestions: answeredQuestions,
+      },
     };
+
     setPageResults(updatedPageResults);
     setCurrentPageScore(score);
     setShowResults(true);
 
     // Mise à jour des badges basés sur toutes les pages complétées
     updateGlobalBadges(updatedPageResults);
-    
+
     // Ajouter emoji basé sur le score de cette page
     if (score === 100) {
       setEmoji("🌟");
@@ -365,11 +404,18 @@ const getTotalCorrectAnswers = (): number => {
 
   const updateGlobalBadges = (results: PageResults) => {
     // Calculer les métriques globales
-    const totalCorrect = Object.values(results).reduce((sum, page) => sum + page.correctAnswers, 0);
-    const totalAttempted = Object.values(results).reduce((sum, page) => sum + page.totalQuestions, 0);
-    const globalScore = totalAttempted > 0 ? (totalCorrect / totalAttempted) * 100 : 0;
+    const totalCorrect = Object.values(results).reduce(
+      (sum, page) => sum + page.correctAnswers,
+      0,
+    );
+    const totalAttempted = Object.values(results).reduce(
+      (sum, page) => sum + page.totalQuestions,
+      0,
+    );
+    const globalScore =
+      totalAttempted > 0 ? (totalCorrect / totalAttempted) * 100 : 0;
     const maxStreak = 5; // Seuil pour le badge de série
-    
+
     // Mise à jour des badges
     setBadges({
       perfectScore: globalScore === 100 && totalAttempted >= 20,
@@ -388,23 +434,34 @@ const getTotalCorrectAnswers = (): number => {
     if (Object.keys(pageUserAnswers[currentPage] || {}).length > 0) {
       calculateCurrentPageScore();
     }
-    
+
     setCurrentPage(page);
   };
 
-  const filteredExercises = selectedCategory === "Tout" 
-    ? getCurrentPageExercises()
-    : getCurrentPageExercises().filter(ex => ex.category && ex.category === selectedCategory);
+  const filteredExercises =
+    selectedCategory === "Tout"
+      ? getCurrentPageExercises()
+      : getCurrentPageExercises().filter(
+          (ex) => ex.category && ex.category === selectedCategory,
+        );
+
+  // choisit d'un emoji en fonction de la catégorie
+  const getEmojiByCategory = (category: string) => {
+    if (category === "Grammaire") return "📚";
+    if (category === "Vocabulaire") return "💬";
+    if (category === "Orthographe") return "✍️";
+    return "🌟";
+  };
 
   // Extraction des catégories uniques de la page courante
   const uniqueCategories = getCurrentPageExercises()
-    .map(ex => ex.category)
+    .map((ex) => ex.category)
     .filter((category): category is string => Boolean(category));
   const categories = ["Tout", ...Array.from(new Set(uniqueCategories))];
 
   if (loading) {
     return (
-      <motion.div 
+      <motion.div
         animate={{ opacity: 1 }}
         className="flex items-center justify-center min-h-screen"
         initial={{ opacity: 0 }}
@@ -417,7 +474,7 @@ const getTotalCorrectAnswers = (): number => {
 
   if (error) {
     return (
-      <motion.div 
+      <motion.div
         animate={{ opacity: 1 }}
         className="flex flex-col items-center justify-center min-h-screen gap-4"
         initial={{ opacity: 0 }}
@@ -437,9 +494,9 @@ const getTotalCorrectAnswers = (): number => {
       </div>
 
       <div className="mb-6">
-        <ProgressBar 
-          totalQuestions={getCurrentPageExercises().length} 
+        <ProgressBar
           correctAnswers={currentPageCompleted}
+          totalQuestions={getCurrentPageExercises().length}
           onProgressComplete={() => {
             if (currentPageCompleted === getCurrentPageExercises().length) {
               calculateCurrentPageScore();
@@ -451,7 +508,7 @@ const getTotalCorrectAnswers = (): number => {
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
-            <motion.div 
+            <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-4 sm:mb-6"
               initial={{ opacity: 0, y: -20 }}
@@ -461,7 +518,8 @@ const getTotalCorrectAnswers = (): number => {
                 Français
               </h1>
               <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-                Page {currentPage} sur {totalPages} ({getCurrentPageExercises().length} questions)
+                Page {currentPage} sur {totalPages} (
+                {getCurrentPageExercises().length} questions)
               </p>
             </motion.div>
           </div>
@@ -470,14 +528,14 @@ const getTotalCorrectAnswers = (): number => {
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4">
             <div className="flex justify-center items-center">
               <Pagination
-                total={totalPages}
-                initialPage={1}
-                page={currentPage}
-                onChange={handlePageChange}
                 showControls
                 showShadow
-                color="secondary"
                 className="mt-2"
+                color="secondary"
+                initialPage={1}
+                page={currentPage}
+                total={totalPages}
+                onChange={handlePageChange}
               />
             </div>
           </div>
@@ -513,7 +571,7 @@ const getTotalCorrectAnswers = (): number => {
           {/* Statistiques rapides */}
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6">
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-4">
-              <motion.div 
+              <motion.div
                 className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
                 transition={{ duration: 0.2 }}
                 whileHover={{ scale: 1.02 }}
@@ -521,13 +579,18 @@ const getTotalCorrectAnswers = (): number => {
                 <div className="flex items-center gap-2">
                   <span className="text-xl sm:text-2xl">📚</span>
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Page actuelle</p>
-                    <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">{currentPageCompleted} / {getCurrentPageExercises().length}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                      Page actuelle
+                    </p>
+                    <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
+                      {currentPageCompleted} /{" "}
+                      {getCurrentPageExercises().length}
+                    </p>
                   </div>
                 </div>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
                 transition={{ duration: 0.2 }}
                 whileHover={{ scale: 1.02 }}
@@ -535,13 +598,17 @@ const getTotalCorrectAnswers = (): number => {
                 <div className="flex items-center gap-2">
                   <span className="text-xl sm:text-2xl">🔥</span>
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Série actuelle</p>
-                    <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">{currentPageStreak}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                      Série actuelle
+                    </p>
+                    <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
+                      {currentPageStreak}
+                    </p>
                   </div>
                 </div>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
                 transition={{ duration: 0.2 }}
                 whileHover={{ scale: 1.02 }}
@@ -549,13 +616,17 @@ const getTotalCorrectAnswers = (): number => {
                 <div className="flex items-center gap-2">
                   <span className="text-xl sm:text-2xl">🎯</span>
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Points (page)</p>
-                    <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">{currentPagePoints}</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                      Points (page)
+                    </p>
+                    <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
+                      {currentPagePoints}
+                    </p>
                   </div>
                 </div>
               </motion.div>
 
-              <motion.div 
+              <motion.div
                 className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200"
                 transition={{ duration: 0.2 }}
                 whileHover={{ scale: 1.02 }}
@@ -563,7 +634,9 @@ const getTotalCorrectAnswers = (): number => {
                 <div className="flex items-center gap-2">
                   <span className="text-xl sm:text-2xl">⭐</span>
                   <div>
-                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">Total correct</p>
+                    <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400">
+                      Total correct
+                    </p>
                     <p className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400">
                       {getTotalCorrectAnswers()}
                     </p>
@@ -608,7 +681,9 @@ const getTotalCorrectAnswers = (): number => {
                 initial={{ opacity: 0, height: 0 }}
                 transition={{ duration: 0.3 }}
               >
-                <h3 className="font-bold text-violet-600 dark:text-violet-400 mb-2">Conseils pour réussir :</h3>
+                <h3 className="font-bold text-violet-600 dark:text-violet-400 mb-2">
+                  Conseils pour réussir :
+                </h3>
                 <ul className="list-disc list-inside space-y-2 text-sm text-gray-600 dark:text-gray-400">
                   <li>Lis bien chaque question attentivement</li>
                   <li>N&apos;oublie pas les règles de grammaire</li>
@@ -630,17 +705,19 @@ const getTotalCorrectAnswers = (): number => {
               {filteredExercises.map((exercise, index) => (
                 <motion.div
                   key={exercise.id}
-                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
                   transition={{ delay: index * 0.1 }}
                   whileHover={{ scale: 1.02 }}
                 >
                   <Card className="w-full h-full bg-white dark:bg-gray-800 shadow-lg border border-violet-200">
                     <CardBody className="p-4 sm:p-6">
                       <h3 className="text-lg sm:text-xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-                        {exercise.title}
+                        {getEmojiByCategory(exercise.category)} {exercise.title}
                       </h3>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">{exercise.content}</p>
+                      <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        {exercise.content}
+                      </p>
                       <p className="font-medium mb-4">{exercise.question}</p>
 
                       {exercise.image && (
@@ -658,8 +735,13 @@ const getTotalCorrectAnswers = (): number => {
                       {exercise.options ? (
                         <select
                           className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
-                          disabled={pageResultsDetails[currentPage]?.[exercise.id] !== undefined}
-                          value={pageUserAnswers[currentPage]?.[exercise.id] || ""}
+                          disabled={
+                            pageResultsDetails[currentPage]?.[exercise.id] !==
+                            undefined
+                          }
+                          value={
+                            pageUserAnswers[currentPage]?.[exercise.id] || ""
+                          }
                           onChange={(e) => handleChange(e, exercise.id)}
                         >
                           <option value="">Sélectionnez une option</option>
@@ -672,31 +754,47 @@ const getTotalCorrectAnswers = (): number => {
                       ) : (
                         <input
                           className="w-full p-2 mb-4 bg-white dark:bg-gray-700 rounded-lg border border-violet-200"
-                          disabled={pageResultsDetails[currentPage]?.[exercise.id] !== undefined}
+                          disabled={
+                            pageResultsDetails[currentPage]?.[exercise.id] !==
+                            undefined
+                          }
                           placeholder="Votre réponse"
                           type="text"
-                          value={pageUserAnswers[currentPage]?.[exercise.id] || ""}
+                          value={
+                            pageUserAnswers[currentPage]?.[exercise.id] || ""
+                          }
                           onChange={(e) => handleChange(e, exercise.id)}
                         />
                       )}
 
                       <Button
                         className="w-full bg-violet-500 text-white hover:bg-violet-600"
-                        disabled={!pageUserAnswers[currentPage]?.[exercise.id] || pageResultsDetails[currentPage]?.[exercise.id] !== undefined}
-                        onClick={() => handleSubmit(exercise.id, exercise.answer)}
+                        disabled={
+                          !pageUserAnswers[currentPage]?.[exercise.id] ||
+                          pageResultsDetails[currentPage]?.[exercise.id] !==
+                            undefined
+                        }
+                        onClick={() =>
+                          handleSubmit(exercise.id, exercise.answer)
+                        }
                       >
                         Soumettre
                       </Button>
 
-                      {pageResultsDetails[currentPage]?.[exercise.id] !== undefined && (
+                      {pageResultsDetails[currentPage]?.[exercise.id] !==
+                        undefined && (
                         <motion.p
                           animate={{ opacity: 1 }}
                           className={`mt-2 text-center ${
-                            pageResultsDetails[currentPage][exercise.id] ? "text-green-500" : "text-red-500"
+                            pageResultsDetails[currentPage][exercise.id]
+                              ? "text-green-500"
+                              : "text-red-500"
                           }`}
                           initial={{ opacity: 0 }}
                         >
-                          {pageResultsDetails[currentPage][exercise.id] ? "Bonne réponse !" : "Mauvaise réponse, réessayez."}
+                          {pageResultsDetails[currentPage][exercise.id]
+                            ? "Bonne réponse !"
+                            : "Mauvaise réponse, réessayez."}
                         </motion.p>
                       )}
                     </CardBody>
@@ -721,7 +819,9 @@ const getTotalCorrectAnswers = (): number => {
                   Score: {currentPageScore?.toFixed(1)}%
                 </p>
                 <p className="text-center mb-6">
-                  {currentPageCompleted} réponse(s) correcte(s) sur {Object.keys(pageResultsDetails[currentPage] || {}).length} question(s) tentée(s)
+                  {currentPageCompleted} réponse(s) correcte(s) sur{" "}
+                  {Object.keys(pageResultsDetails[currentPage] || {}).length}{" "}
+                  question(s) tentée(s)
                 </p>
                 <div className="flex justify-between mt-6">
                   <Button
@@ -760,19 +860,25 @@ const getTotalCorrectAnswers = (): number => {
                 <p className="text-center text-xl mb-6">
                   Score total: {calculateGlobalScore().toFixed(1)}%
                 </p>
-                
+
                 <div className="mb-6">
                   <h3 className="font-bold mb-2">Résultats par page:</h3>
                   <div className="max-h-40 overflow-y-auto">
                     {Object.entries(pageResults).map(([pageNum, result]) => (
-                      <div key={pageNum} className="flex justify-between items-center mb-2 p-2 bg-gray-100 dark:bg-gray-700 rounded">
+                      <div
+                        key={pageNum}
+                        className="flex justify-between items-center mb-2 p-2 bg-gray-100 dark:bg-gray-700 rounded"
+                      >
                         <span>Page {pageNum}:</span>
-                        <span>{result.score.toFixed(1)}% ({result.correctAnswers}/{result.totalQuestions})</span>
+                        <span>
+                          {result.score.toFixed(1)}% ({result.correctAnswers}/
+                          {result.totalQuestions})
+                        </span>
                       </div>
                     ))}
                   </div>
                 </div>
-                
+
                 <div className="space-y-4 mb-6">
                   <h3 className="font-bold mb-2">Badges obtenus:</h3>
                   {badges.perfectScore && (
@@ -800,10 +906,12 @@ const getTotalCorrectAnswers = (): number => {
                     </div>
                   )}
                   {Object.values(badges).filter(Boolean).length === 0 && (
-                    <p className="text-gray-500">Continuez à travailler pour débloquer des badges!</p>
+                    <p className="text-gray-500">
+                      Continuez à travailler pour débloquer des badges!
+                    </p>
                   )}
                 </div>
-                
+
                 <Button
                   className="w-full bg-violet-500 text-white hover:bg-violet-600"
                   onClick={() => setShowOverallResults(false)}
