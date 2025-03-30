@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 "use client";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
@@ -9,21 +9,68 @@ import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
 import axios from "axios";
-import { ReportItem } from "@/services/reportService";
+
+// Interface pour les questions
+interface Question {
+  _id: string;
+  text?: string;
+  options: string[];
+  subjectId?: string;
+}
+
+// Interface pour les éléments du rapport
+interface ReportItem {
+  subject: string;
+  activity: string;
+  hours: string;
+  progress: string;
+  questions?: Question[]; // Questions associées à la matière
+}
+
+// Interface pour le modèle de rapport
+interface ReportModel {
+  _id: string;
+  name: string;
+  v: number;
+  active: boolean;
+  createdAt: string;
+  description: string;
+  displayName: string;
+  icon: string;
+  questions: Question[];
+}
+
+interface User {
+  _id: string;
+  nom: string;
+  prenom: string;
+  email: string;
+}
+
+interface WeeklyReportData {
+  _id?: string;
+  userId: string;
+  weekNumber: string;
+  items: ReportItem[];
+  questionAnswers?: Record<string, string>; // Réponses aux questions
+  createdAt?: string;
+  updatedAt?: string;
+}
 
 const subjects = [
-  { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
-  { name: "Sciences", color: "from-green-400 to-green-300", icon: "🔬" },
-  { name: "Français", color: "from-blue-400 to-blue-300", icon: "📚" },
-  { name: "Histoire", color: "from-yellow-400 to-yellow-300", icon: "⏳" },
-  { name: "Géographie", color: "from-purple-400 to-purple-300", icon: "🌍" },
-  { name: "Langues", color: "from-pink-400 to-pink-300", icon: "🗣️" },
+  { id: "math", name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
+  { id: "science", name: "Sciences", color: "from-green-400 to-green-300", icon: "🔬" },
+  { id: "francais", name: "Français", color: "from-blue-400 to-blue-300", icon: "📚" },
+  { id: "histoire", name: "Histoire", color: "from-yellow-400 to-yellow-300", icon: "⏳" },
+  { id: "geo", name: "Géographie", color: "from-purple-400 to-purple-300", icon: "🌍" },
+  { id: "langues", name: "Langues", color: "from-pink-400 to-pink-300", icon: "🗣️" },
   {
+    id: "arts",
     name: "Arts Plastiques",
     color: "from-indigo-400 to-indigo-300",
     icon: "🎨",
   },
-  { name: "Leçons du jour", color: "from-teal-400 to-teal-300", icon: "📖" },
+  { id: "lecons", name: "Leçons du jour", color: "from-teal-400 to-teal-300", icon: "📖" },
 ];
 
 // Méthode pour obtenir le numéro de la semaine actuelle
@@ -89,31 +136,6 @@ const getBaseUrl = () => {
   }
 };
 
-interface User {
-  _id: string;
-  nom: string;
-  prenom: string;
-  email: string;
-}
-
-interface WeeklyReportData {
-  _id?: string;
-  userId: string;
-  weekNumber: string;
-  items: ReportItem[];
-  questionAnswers?: Record<string, string>; // Ajout pour les réponses aux questions
-  createdAt?: string;
-  updatedAt?: string;
-}
-
-// Interface pour les questions
-interface Question {
-  _id: string;
-  text: string;
-  options: string[];
-  subjectId?: string; // Optionnel : pour lier les questions à des matières spécifiques
-}
-
 const WeeklyReport = () => {
   const router = useRouter();
   const [selectedWeek, setSelectedWeek] = useState<string>("");
@@ -127,11 +149,11 @@ const WeeklyReport = () => {
   const [weeks] = useState(generateWeeksOfYear);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  
-  // États pour les questions
-  const [questions, setQuestions] = useState<Question[]>([]);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  const [loadingQuestions, setLoadingQuestions] = useState(false);
+  const [reportModel, setReportModel] = useState<ReportModel | null>(null);
+  
+  // Références pour éviter les appels multiples
+  const modelLoaded = useRef(false);
 
   // Vérification de l'authentification et chargement des données utilisateur
   useEffect(() => {
@@ -181,162 +203,111 @@ const WeeklyReport = () => {
     checkAuth();
   }, [router]);
 
-  // Fonction pour récupérer les questions
-  const fetchQuestions = async () => {
-    // Éviter de charger plusieurs fois les questions
-    if (questions.length > 0 || loadingQuestions) {
-      console.log("Chargement des questions ignoré (déjà en cours ou déjà chargées)");
-      return;
-    }
-    
+  // Fonction pour récupérer le modèle de rapport
+  const fetchReportModel = async () => {
     try {
-      setLoadingQuestions(true);
-      console.log("Début du chargement des questions");
-      
       const token = localStorage.getItem("userToken");
       
       if (!token || isTokenExpired(token)) {
         router.push("/users/login");
-        return;
+        return null;
       }
       
-      // Créer directement les questions à partir des IDs de la console
-      console.log("Création des questions à partir des IDs de la console");
-      const mockQuestions = [
-        {
-          _id: "67e93661fa898e1b64ac7a17",
-          text: "Comment évaluez-vous votre compréhension de cette matière?",
-          options: ["Excellente", "Bonne", "Moyenne", "Besoin d'aide"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a18", 
-          text: "Avez-vous eu besoin d'aide supplémentaire?",
-          options: ["Oui", "Non", "Parfois"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a19",
-          text: "Quelles ressources avez-vous utilisées?",
-          options: ["Manuels", "Vidéos", "Exercices en ligne", "Aide d'un adulte"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1a",
-          text: "Êtes-vous satisfait de vos progrès cette semaine?",
-          options: ["Très satisfait", "Satisfait", "Peu satisfait", "Pas du tout satisfait"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1b",
-          text: "Quel a été le plus grand défi cette semaine?",
-          options: ["Comprendre les concepts", "Manque de temps", "Concentration", "Autre"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1c",
-          text: "Avez-vous atteint vos objectifs pour cette semaine?",
-          options: ["Oui, tous", "La plupart", "Quelques-uns", "Non"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1d",
-          text: "Quels sont vos objectifs pour la semaine prochaine?",
-          options: ["Améliorer la compréhension", "Compléter plus d'exercices", "Être plus régulier", "Demander plus d'aide"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1e",
-          text: "Comment qualifieriez-vous votre motivation cette semaine?",
-          options: ["Très motivé", "Motivé", "Peu motivé", "Pas motivé"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1f",
-          text: "Avez-vous besoin de ressources supplémentaires?",
-          options: ["Oui, urgentes", "Quelques-unes", "Pas pour le moment", "Non"]
+      // En production, vous appelleriez votre API
+      /*
+      const baseUrl = getBaseUrl();
+      const url = `${baseUrl}/models/rapportHebdo`;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      ];
+      });
       
-      // Définir les questions directement
-      console.log("Définition des questions:", mockQuestions.length);
-      setQuestions(mockQuestions);
-      setLoadingQuestions(false);
-      
-      /* Version API - Décommentez pour l'intégration finale
-      try {
-        const baseUrl = getBaseUrl();
-        const response = await axios.get(`${baseUrl}/questions`, {
-          headers: {
-            Authorization: `Bearer ${token}`
-          }
-        });
-        
-        // Transformer les données pour correspondre à notre interface Question
-        const questionsData = response.data.map((q: any) => ({
-          _id: q._id,
-          text: q.text || "Question sans texte",
-          options: Array.isArray(q.options) ? q.options : [],
-          subjectId: q.subjectId
-        }));
-        
-        setQuestions(questionsData);
-        console.log("Questions chargées depuis l'API:", questionsData.length);
-        setLoadingQuestions(false);
-      } catch (apiError) {
-        console.error("Erreur lors du chargement des questions depuis l'API:", apiError);
-        // Utiliser des questions fictives en cas d'échec
-        setQuestions(mockQuestions);
-        setLoadingQuestions(false);
-      }
+      return response.data;
       */
       
+      // Simulation des données du modèle basée sur votre capture d'écran
+      return {
+        _id: "67e93661c16800718f4dd177",
+        name: "rapportHebdo",
+        v: 0,
+        active: true,
+        createdAt: "2025-03-30T12:17:37.069+00:00",
+        description: "Rapports hebdomadaires et suivis d'activités",
+        displayName: "Rapport Hebdomadaire",
+        icon: "file-text",
+        questions: [
+          {
+            _id: "67e93661fa898e1b64ac7a17",
+            text: "Comment évaluez-vous votre compréhension de cette matière?",
+            options: ["Excellente", "Bonne", "Moyenne", "Besoin d'aide"],
+            subjectId: "math"
+          },
+          {
+            _id: "67e93661fa898e1b64ac7a18",
+            text: "Avez-vous eu besoin d'aide supplémentaire?",
+            options: ["Oui", "Non", "Parfois"],
+            subjectId: "math"
+          },
+          {
+            _id: "67e93661fa898e1b64ac7a19",
+            text: "Quelles ressources avez-vous utilisées?",
+            options: ["Manuels", "Vidéos", "Exercices en ligne", "Aide d'un adulte"],
+            subjectId: "science"
+          },
+          // Ajoutez d'autres questions selon vos besoins...
+        ]
+      };
     } catch (error) {
-      console.error("Erreur générale lors du chargement des questions:", error);
-      
-      // En cas d'erreur générale, toujours créer des questions par défaut
-      const defaultQuestions = [
-        {
-          _id: "default-1",
-          text: "Comment évaluez-vous cette semaine de travail?",
-          options: ["Très bien", "Bien", "Moyenne", "Difficile"]
-        },
-        {
-          _id: "default-2",
-          text: "Avez-vous besoin d'assistance supplémentaire?",
-          options: ["Oui", "Non", "Peut-être"]
-        }
-      ];
-      
-      setQuestions(defaultQuestions);
-      setLoadingQuestions(false);
+      console.error("Erreur lors de la récupération du modèle de rapport:", error);
+      return null;
     }
   };
 
-  // Appeler fetchQuestions après avoir chargé les données utilisateur
-  // Utiliser une référence pour éviter les appels multiples
-  const questionsLoaded = React.useRef(false);
-  
+  // Charger le modèle de rapport une seule fois
   useEffect(() => {
-    if (userId && !questionsLoaded.current) {
-      questionsLoaded.current = true;
-      console.log("Chargement initial des questions (une seule fois)");
-      fetchQuestions();
-    }
-  }, [userId]);
+    const loadReportModel = async () => {
+      if (!modelLoaded.current) {
+        modelLoaded.current = true;
+        const model = await fetchReportModel();
+        setReportModel(model);
+        console.log("Modèle de rapport chargé:", model ? "Oui" : "Non");
+      }
+    };
+    
+    loadReportModel();
+  }, []);
 
-  // Fonction pour gérer la sélection des réponses aux questions
-  const handleAnswerSelection = (questionId: string, answer: string) => {
-    setSelectedAnswers(prev => ({
-      ...prev,
-      [questionId]: answer
-    }));
-  };
-
-  // Fonction pour créer un rapport vide
+  // Fonction pour créer un rapport vide avec des questions
   const createEmptyReport = () => {
-    const defaultItems: ReportItem[] = subjects.map((subject) => ({
+    // Organiser les questions par matière
+    const questionsBySubject: Record<string, Question[]> = {};
+    
+    if (reportModel && reportModel.questions) {
+      // Associer les questions aux matières
+      reportModel.questions.forEach(question => {
+        if (question.subjectId) {
+          if (!questionsBySubject[question.subjectId]) {
+            questionsBySubject[question.subjectId] = [];
+          }
+          questionsBySubject[question.subjectId].push(question);
+        }
+      });
+    }
+    
+    // Créer les items du rapport avec les questions
+    const defaultItems: ReportItem[] = subjects.map(subject => ({
       subject: subject.name,
       activity: "",
       hours: "",
       progress: "not-started",
+      questions: questionsBySubject[subject.id] || []
     }));
     
     setReportItems(defaultItems);
     setReportId(undefined);
-    console.log("Rapport vide créé localement");
+    setSelectedAnswers({});
+    console.log("Rapport vide créé avec questions par matière");
   };
 
   // Récupérer un rapport d'un utilisateur pour une semaine spécifique
@@ -346,7 +317,7 @@ const WeeklyReport = () => {
     token: string
   ): Promise<WeeklyReportData | null> => {
     try {
-      // Récupérer tous les rapports de l'utilisateur au lieu d'un rapport spécifique
+      // Récupérer tous les rapports de l'utilisateur
       const baseUrl = getBaseUrl();
       const url = `${baseUrl}/reports/user/${userId}`;
       
@@ -415,8 +386,7 @@ const WeeklyReport = () => {
     } catch (error) {
       console.error('❌ Erreur lors de la sauvegarde du rapport:', error);
       
-      // En cas d'erreur, retourner les données d'origine pour que l'utilisateur
-      // ne perde pas son travail
+      // En cas d'erreur, retourner les données d'origine
       return {
         ...reportData,
         _id: reportData._id || 'local-draft'
@@ -439,44 +409,65 @@ const WeeklyReport = () => {
         }
         
         try {
+          // Attendre que le modèle soit chargé
+          if (!reportModel) {
+            const model = await fetchReportModel();
+            setReportModel(model);
+          }
+          
           // Tentative de récupération du rapport depuis l'API
           const report = await getUserWeeklyReport(userId, selectedWeek, token);
           
           if (report && report.items && report.items.length > 0) {
             console.log("Rapport chargé depuis l'API");
-            setReportItems(report.items);
+            
+            // Vérifier que les questions sont incluses dans les items
+            // Si non, les ajouter depuis le modèle
+            const updatedItems = report.items.map((item, index) => {
+              // Trouver l'ID de la matière correspondante
+              const subjectId = subjects.find(s => s.name === item.subject)?.id;
+              
+              // Si des questions existent pour cette matière
+              if (reportModel && reportModel.questions && subjectId) {
+                const questions = reportModel.questions.filter(q => q.subjectId === subjectId);
+                
+                if (!item.questions || item.questions.length === 0) {
+                  return { ...item, questions };
+                }
+              }
+              
+              return item;
+            });
+            
+            setReportItems(updatedItems);
             setReportId(report._id);
             
-            // Charger les réponses aux questions si elles existent
+            // Charger les réponses aux questions
             if (report.questionAnswers) {
               setSelectedAnswers(report.questionAnswers);
             }
           } else {
-            // Création d'un nouveau rapport local si aucun n'existe
+            // Création d'un nouveau rapport local
             console.log("Création d'un rapport vide local");
             createEmptyReport();
-            setSelectedAnswers({}); // Réinitialiser les réponses aux questions
           }
         } catch (apiError) {
           // En cas d'erreur API, créer un rapport vide local
           console.log("Erreur API, création d'un rapport vide local:", apiError);
           createEmptyReport();
-          setSelectedAnswers({}); // Réinitialiser les réponses aux questions
         }
         
         setLoading(false);
       } catch (err) {
         console.error("Erreur lors du chargement du rapport:", err);
-        // Même en cas d'erreur, créer un rapport vide pour que l'utilisateur puisse continuer
         createEmptyReport();
-        setSelectedAnswers({}); // Réinitialiser les réponses aux questions
-        setError(null); // On ne montre pas d'erreur pour permettre à l'utilisateur de continuer
+        setError(null);
         setLoading(false);
       }
     };
 
     loadWeeklyReport();
-  }, [userId, selectedWeek, router]);
+  }, [userId, selectedWeek, router, reportModel]);
 
   // Gestion du timer
   useEffect(() => {
@@ -490,6 +481,7 @@ const WeeklyReport = () => {
     }
   }, [timeLeft, isFinished]);
 
+  // Gestion des changements d'entrée pour les matières
   const handleInputChange = (
     index: number,
     field: keyof ReportItem,
@@ -501,6 +493,14 @@ const WeeklyReport = () => {
       [field]: value 
     };
     setReportItems(updatedReport);
+  };
+
+  // Gestion des réponses aux questions
+  const handleAnswerSelection = (questionId: string, answer: string) => {
+    setSelectedAnswers(prev => ({
+      ...prev,
+      [questionId]: answer
+    }));
   };
 
   const getProgressEmoji = (progress: string) => {
@@ -537,13 +537,13 @@ const WeeklyReport = () => {
         return;
       }
       
-      // Préparer les données du rapport incluant les réponses aux questions
+      // Préparer les données du rapport avec les réponses aux questions
       const reportData = {
         _id: reportId,
         userId: userId,
         weekNumber: selectedWeek,
         items: reportItems,
-        questionAnswers: selectedAnswers // Ajouter les réponses aux questions
+        questionAnswers: selectedAnswers // Inclure les réponses aux questions
       };
       
       // Sauvegarder le rapport via l'API
@@ -597,7 +597,7 @@ const WeeklyReport = () => {
       userName: userName,
       date: new Date().toLocaleDateString(),
       items: reportItems,
-      questionAnswers: selectedAnswers // Inclure les réponses aux questions dans le téléchargement
+      questionAnswers: selectedAnswers // Inclure les réponses aux questions
     };
 
     const dataStr = JSON.stringify(reportData, null, 2);
@@ -618,85 +618,6 @@ const WeeklyReport = () => {
       }
     }
     return true;
-  };
-
-  // Composant pour afficher les questions
-  const QuestionsSection = () => {
-    // Référence pour éviter les rendus infinis
-    const questionInitialized = React.useRef(false);
-    
-    // Initialisation des questions par défaut seulement au premier rendu
-    useEffect(() => {
-      if (questions.length === 0 && !loadingQuestions && !questionInitialized.current) {
-        questionInitialized.current = true;
-        console.log("Initialisation des questions par défaut (une seule fois)");
-        fetchQuestions();
-      }
-    }, []);
-    
-    // Affichage pendant le chargement
-    if (loadingQuestions) {
-      return (
-        <div className="text-center py-4">
-          <div className="animate-spin text-2xl inline-block">🔄</div>
-          <p className="text-gray-600 dark:text-gray-400 mt-2">Chargement des questions...</p>
-        </div>
-      );
-    }
-    
-    // Si aucune question n'est disponible
-    if (questions.length === 0) {
-      return (
-        <div className="text-center py-8 mt-12 mb-8">
-          <h2 className="text-2xl font-bold text-center mb-4 bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
-            📋 Questions Complémentaires
-          </h2>
-          <p className="text-gray-600 dark:text-gray-400">
-            Les questions sont en cours de préparation...
-          </p>
-        </div>
-      );
-    }
-    
-    // Rendu normal des questions
-    return (
-      <div className="py-4">
-        <h2 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
-          📋 Questions Complémentaires
-        </h2>
-        
-        <div className="grid grid-cols-1 gap-6 max-w-[1000px] mx-auto">
-          {questions.map((question) => (
-            <Card 
-              key={question._id}
-              className="border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-lg transition-all duration-300"
-            >
-              <CardBody className="p-5">
-                <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                  {question.text}
-                </h3>
-                
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                  {question.options.map((option, index) => (
-                    <Button
-                      key={index}
-                      className={`p-3 rounded-lg transition-all duration-300 text-sm ${
-                        selectedAnswers[question._id] === option
-                          ? "bg-violet-500 text-white"
-                          : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                      }`}
-                      onClick={() => handleAnswerSelection(question._id, option)}
-                    >
-                      {option}
-                    </Button>
-                  ))}
-                </div>
-              </CardBody>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
   };
 
   // Affichage pendant le chargement
@@ -838,7 +759,7 @@ const WeeklyReport = () => {
                         </h3>
                       </div>
 
-                      {/* Contenu */}
+                      {/* Contenu principal */}
                       <div className="space-y-4">
                         <div>
                           <label
@@ -931,16 +852,46 @@ const WeeklyReport = () => {
                             </Button>
                           </div>
                         </div>
+                        
+                        {/* Questions spécifiques à la matière */}
+                        {item.questions && item.questions.length > 0 && (
+                          <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+                            <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                              Questions sur cette matière
+                            </h4>
+                            
+                            <div className="space-y-4">
+                              {item.questions.map((question) => (
+                                <div key={question._id} className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+                                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">
+                                    {question.text}
+                                  </p>
+                                  
+                                  <div className="grid grid-cols-2 gap-2">
+                                    {question.options.map((option, optIdx) => (
+                                      <Button
+                                        key={optIdx}
+                                        className={`p-2 text-xs sm:text-sm rounded ${
+                                          selectedAnswers[question._id] === option
+                                            ? "bg-violet-500 text-white"
+                                            : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                                        }`}
+                                        onClick={() => handleAnswerSelection(question._id, option)}
+                                      >
+                                        {option}
+                                      </Button>
+                                    ))}
+                                  </div>
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </CardBody>
                   </Card>
                 </motion.div>
               ))}
-            </div>
-
-            {/* Section des Questions - Assurez-vous que cette section est bien visible */}
-            <div className="w-full border-t-2 border-violet-100 dark:border-violet-800 pt-8 mt-8">
-              <QuestionsSection />
             </div>
 
             {/* Boutons d'action */}
