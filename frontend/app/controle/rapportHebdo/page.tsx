@@ -10,12 +10,29 @@ import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
 import axios from "axios";
 
-// Interface pour les questions
+// Interface pour les questions basée sur votre schéma
 interface Question {
   _id: string;
-  text: string; // Rendre obligatoire
+  title: string;
+  content: string;
+  question: string;
   options: string[];
-  subjectId?: string;
+  answer: string;
+  difficulty: 'Facile' | 'Moyen' | 'Difficile';
+  category: string;
+}
+
+// Interface pour les matières basée sur votre schéma
+interface Subject {
+  _id: string;
+  name: string;
+  displayName: string;
+  description: string;
+  icon: string;
+  active: boolean;
+  questions: Question[];
+  createdAt: string;
+  updatedAt: string;
 }
 
 // Interface pour les éléments du rapport
@@ -24,19 +41,6 @@ interface ReportItem {
   activity: string;
   hours: string;
   progress: string;
-}
-
-// Interface pour le modèle de rapport
-interface ReportModel {
-  _id: string;
-  name: string;
-  v: number;
-  active: boolean;
-  createdAt: string;
-  description: string;
-  displayName: string;
-  icon: string;
-  questions: Question[];
 }
 
 interface User {
@@ -51,25 +55,26 @@ interface WeeklyReportData {
   userId: string;
   weekNumber: string;
   items: ReportItem[];
-  questionAnswers?: Record<string, string>;
+  questionAnswers?: Record<string, string>; // Réponses aux questions
   createdAt?: string;
   updatedAt?: string;
 }
 
-const subjects = [
+// Liste des matières visibles dans l'interface
+const subjectsList = [
   { id: "math", name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
-  { id: "science", name: "Sciences", color: "from-green-400 to-green-300", icon: "🔬" },
-  { id: "francais", name: "Français", color: "from-blue-400 to-blue-300", icon: "📚" },
-  { id: "histoire", name: "Histoire", color: "from-yellow-400 to-yellow-300", icon: "⏳" },
-  { id: "geo", name: "Géographie", color: "from-purple-400 to-purple-300", icon: "🌍" },
-  { id: "langues", name: "Langues", color: "from-pink-400 to-pink-300", icon: "🗣️" },
+  { id: "sciences", name: "Sciences", color: "from-green-400 to-green-300", icon: "🔬" },
+  { id: "french", name: "Français", color: "from-blue-400 to-blue-300", icon: "📚" },
+  { id: "history", name: "Histoire", color: "from-yellow-400 to-yellow-300", icon: "⏳" },
+  { id: "geography", name: "Géographie", color: "from-purple-400 to-purple-300", icon: "🌍" },
+  { id: "language", name: "Langues", color: "from-pink-400 to-pink-300", icon: "🗣️" },
   {
-    id: "arts",
+    id: "art",
     name: "Arts Plastiques",
     color: "from-indigo-400 to-indigo-300",
     icon: "🎨",
   },
-  { id: "lecons", name: "Leçons du jour", color: "from-teal-400 to-teal-300", icon: "📖" },
+  { id: "rapportHebdo", name: "Leçons du jour", color: "from-teal-400 to-teal-300", icon: "📖" },
 ];
 
 // Méthode pour obtenir le numéro de la semaine actuelle
@@ -149,11 +154,12 @@ const WeeklyReport = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  // Questions pour tout le rapport
-  const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+  
+  // Stocker les matières avec leurs questions
+  const [subjects, setSubjects] = useState<Subject[]>([]);
   
   // Références pour éviter les appels multiples
-  const modelLoaded = useRef(false);
+  const subjectsLoaded = useRef(false);
 
   // Vérification de l'authentification et chargement des données utilisateur
   useEffect(() => {
@@ -203,107 +209,126 @@ const WeeklyReport = () => {
     checkAuth();
   }, [router]);
 
-  // Fonction pour récupérer le modèle de rapport
-  const fetchReportModel = async () => {
+  // Fonction pour récupérer toutes les matières avec leurs questions
+  const fetchSubjects = async () => {
     try {
       const token = localStorage.getItem("userToken");
       
       if (!token || isTokenExpired(token)) {
         router.push("/users/login");
-        return null;
+        return [];
       }
       
-      // Données de test basées sur votre capture d'écran
-      console.log("Création des données de test basées sur la capture d'écran");
-      
-      // Création de questions avec des textes explicites pour le debugging
-      const demoQuestions: Question[] = [
-        {
-          _id: "67e93661fa898e1b64ac7a17",
-          text: "Comment évaluez-vous votre compréhension de cette matière?",
-          options: ["Excellente", "Bonne", "Moyenne", "Besoin d'aide"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a18",
-          text: "Avez-vous eu besoin d'aide supplémentaire?",
-          options: ["Oui", "Non", "Parfois"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a19",
-          text: "Quelles ressources avez-vous utilisées?",
-          options: ["Manuels", "Vidéos", "Exercices en ligne", "Aide d'un adulte"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1a",
-          text: "Êtes-vous satisfait de vos progrès cette semaine?",
-          options: ["Très satisfait", "Satisfait", "Peu satisfait", "Pas du tout satisfait"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1b",
-          text: "Quel a été le plus grand défi cette semaine?",
-          options: ["Comprendre les concepts", "Manque de temps", "Concentration", "Autre"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1c",
-          text: "Avez-vous atteint vos objectifs pour cette semaine?",
-          options: ["Oui, tous", "La plupart", "Quelques-uns", "Non"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1d",
-          text: "Quels sont vos objectifs pour la semaine prochaine?",
-          options: ["Améliorer la compréhension", "Compléter plus d'exercices", "Être plus régulier", "Demander plus d'aide"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1e",
-          text: "Comment qualifieriez-vous votre motivation cette semaine?",
-          options: ["Très motivé", "Motivé", "Peu motivé", "Pas motivé"]
-        },
-        {
-          _id: "67e93661fa898e1b64ac7a1f",
-          text: "Avez-vous besoin de ressources supplémentaires?",
-          options: ["Oui, urgentes", "Quelques-unes", "Pas pour le moment", "Non"]
+      // En production, vous appelleriez votre API pour récupérer les données
+      /*
+      const baseUrl = getBaseUrl();
+      const url = `${baseUrl}/subjects`;
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`
         }
-      ];
+      });
       
-      return {
-        _id: "67e93661c16800718f4dd177",
-        name: "rapportHebdo",
-        v: 0,
-        active: true,
-        createdAt: "2025-03-30T12:17:37.069+00:00",
-        description: "Rapports hebdomadaires et suivis d'activités",
-        displayName: "Rapport Hebdomadaire",
-        icon: "file-text",
-        questions: demoQuestions
-      };
+      return response.data;
+      */
+      
+      // Données de test pour simuler les matières avec des questions
+      const mockSubjects: Subject[] = subjectsList.map(subject => {
+        // Créer 3 questions par matière
+        const questions: Question[] = [
+          {
+            _id: `q1_${subject.id}`,
+            title: `Question 1 pour ${subject.name}`,
+            content: `Contenu de la question 1 pour ${subject.name}`,
+            question: `Quelle est votre compréhension de ${subject.name}?`,
+            options: ["Excellente", "Bonne", "Moyenne", "Faible"],
+            answer: "Bonne",
+            difficulty: "Moyen",
+            category: "Compréhension"
+          },
+          {
+            _id: `q2_${subject.id}`,
+            title: `Question 2 pour ${subject.name}`,
+            content: `Contenu de la question 2 pour ${subject.name}`,
+            question: `Avez-vous besoin d'aide supplémentaire en ${subject.name}?`,
+            options: ["Oui", "Non", "Peut-être"],
+            answer: "Non",
+            difficulty: "Facile",
+            category: "Support"
+          },
+          {
+            _id: `q3_${subject.id}`,
+            title: `Question 3 pour ${subject.name}`,
+            content: `Contenu de la question 3 pour ${subject.name}`,
+            question: `Quelles ressources utilisez-vous pour ${subject.name}?`,
+            options: ["Manuels", "Vidéos", "Exercices en ligne", "Aide d'un adulte"],
+            answer: "Manuels",
+            difficulty: "Moyen",
+            category: "Ressources"
+          }
+        ];
+        
+        return {
+          _id: subject.id,
+          name: subject.id,
+          displayName: subject.name,
+          description: `Description de ${subject.name}`,
+          icon: subject.icon,
+          active: true,
+          questions: questions,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+      });
+      
+      // Ajouter spécifiquement un sujet rapportHebdo avec plus de questions
+      const rapportIndex = mockSubjects.findIndex(s => s.name === 'rapportHebdo');
+      if (rapportIndex >= 0) {
+        // Ajouter des questions supplémentaires pour le rapport hebdomadaire
+        for (let i = 4; i <= 10; i++) {
+          mockSubjects[rapportIndex].questions.push({
+            _id: `q${i}_rapportHebdo`,
+            title: `Question ${i} du rapport hebdomadaire`,
+            content: `Contenu de la question ${i}`,
+            question: `Question ${i} pour le rapport hebdomadaire?`,
+            options: ["Option 1", "Option 2", "Option 3", "Option 4"],
+            answer: "Option 2",
+            difficulty: "Moyen",
+            category: "Rapport"
+          });
+        }
+      }
+      
+      return mockSubjects;
     } catch (error) {
-      console.error("Erreur lors de la récupération du modèle de rapport:", error);
-      return null;
+      console.error("Erreur lors de la récupération des matières:", error);
+      return [];
     }
   };
 
-  // Charger le modèle de rapport une seule fois
+  // Charger les matières une seule fois
   useEffect(() => {
-    const loadReportModel = async () => {
-      if (!modelLoaded.current) {
-        modelLoaded.current = true;
+    const loadSubjects = async () => {
+      if (!subjectsLoaded.current) {
+        subjectsLoaded.current = true;
         
-        const model = await fetchReportModel();
-        if (model && model.questions) {
-          setAllQuestions(model.questions);
-          console.log("Questions chargées:", model.questions.length);
-        } else {
-          console.error("Impossible de charger les questions");
-        }
+        const fetchedSubjects = await fetchSubjects();
+        setSubjects(fetchedSubjects);
+        console.log("Matières chargées:", fetchedSubjects.length);
+        
+        // Log pour débogage
+        fetchedSubjects.forEach(subject => {
+          console.log(`Matière ${subject.displayName}: ${subject.questions.length} questions`);
+        });
       }
     };
     
-    loadReportModel();
+    loadSubjects();
   }, []);
 
   // Fonction pour créer un rapport vide
   const createEmptyReport = () => {
-    const defaultItems: ReportItem[] = subjects.map(subject => ({
+    const defaultItems: ReportItem[] = subjectsList.map(subject => ({
       subject: subject.name,
       activity: "",
       hours: "",
@@ -602,16 +627,17 @@ const WeeklyReport = () => {
     return true;
   };
 
-  // Fonction pour obtenir les questions associées à une matière
-  const getQuestionsForSubject = (subjectIndex: number): Question[] => {
-    // Utiliser le nom de la matière (pour compatibilité avec votre système)
-    const subjectName = subjects[subjectIndex].name;
+  // Fonction pour obtenir les questions d'une matière spécifique
+  const getQuestionsForSubject = (subjectName: string): Question[] => {
+    // Trouver l'ID de la matière correspondant au nom affiché
+    const subjectInfo = subjectsList.find(s => s.name === subjectName);
+    if (!subjectInfo) return [];
     
-    // Pour le test, associer quelques questions à chaque matière
-    const questions = allQuestions.slice(0, 3); // Prendre les 3 premières questions pour chaque matière
+    // Trouver la matière dans la liste des matières chargées
+    const subject = subjects.find(s => s.name === subjectInfo.id);
+    if (!subject || !subject.questions) return [];
     
-    console.log(`Questions pour ${subjectName}:`, questions.length);
-    return questions;
+    return subject.questions;
   };
 
   // Affichage pendant le chargement
@@ -732,168 +758,172 @@ const WeeklyReport = () => {
 
             {/* Grille des matières */}
             <div className="grid grid-cols-1 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-0 sm:px-4">
-              {reportItems.map((item, index) => (
-                <motion.div
-                  key={`${item.subject}-${index}`}
-                  animate={{ opacity: 1, scale: 1 }}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                  className="w-full"
-                >
-                  <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
-                    <CardBody className="p-4 sm:p-6">
-                      {/* En-tête de la matière */}
-                      <div
-                        className={`bg-gradient-to-r ${
-                          subjects[index % subjects.length].color
-                        } -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
-                      >
-                        <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                          {subjects[index % subjects.length].icon} {item.subject}
-                        </h3>
-                      </div>
-
-                      {/* Contenu principal */}
-                      <div className="space-y-4">
-                        <div>
-                          <label
-                            className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                            htmlFor={`activity-${index}`}
-                          >
-                            Qu&apos;as-tu fait aujourd&apos;hui ?
-                          </label>
-                          <Input
-                            className="w-full text-sm sm:text-base"
-                            id={`activity-${index}`}
-                            placeholder="Décris ton activité..."
-                            value={item.activity}
-                            onChange={(e) =>
-                              handleInputChange(index, "activity", e.target.value)
-                            }
-                          />
+              {reportItems.map((item, index) => {
+                // Récupérer les questions pour cette matière
+                const questions = getQuestionsForSubject(item.subject);
+                
+                return (
+                  <motion.div
+                    key={`${item.subject}-${index}`}
+                    animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                    className="w-full"
+                  >
+                    <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
+                      <CardBody className="p-4 sm:p-6">
+                        {/* En-tête de la matière */}
+                        <div
+                          className={`bg-gradient-to-r ${
+                            subjectsList[index % subjectsList.length].color
+                          } -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
+                        >
+                          <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
+                            {subjectsList[index % subjectsList.length].icon} {item.subject}
+                          </h3>
                         </div>
 
-                        <div>
-                          <label
-                            className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                            htmlFor={`hours-${index}`}
-                          >
-                            Combien de temps y as-tu passé ?
-                          </label>
-                          <Input
-                            className="w-full text-sm sm:text-base"
-                            id={`hours-${index}`}
-                            placeholder="Temps en heures"
-                            type="number"
-                            value={item.hours}
-                            onChange={(e) =>
-                              handleInputChange(index, "hours", e.target.value)
-                            }
-                          />
-                        </div>
-
-                        <div>
-                          <label
-                            className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                            htmlFor={`progress-${index}`}
-                          >
-                            Comment ça s&apos;est passé ?
-                          </label>
-                          <div
-                            aria-label="Progression"
-                            className="grid grid-cols-1 gap-2 sm:gap-3 mt-2"
-                            id={`progress-${index}`}
-                            role="group"
-                          >
-                            <Button
-                              key="in-progress"
-                              className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
-                                item.progress === "in-progress"
-                                  ? "bg-violet-500 text-white"
-                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                              }`}
-                              onClick={() =>
-                                handleInputChange(index, "progress", "in-progress")
-                              }
+                        {/* Contenu principal */}
+                        <div className="space-y-4">
+                          <div>
+                            <label
+                              className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                              htmlFor={`activity-${index}`}
                             >
-                              Je progresse {getProgressEmoji("in-progress")}
-                            </Button>
-                            <Button
-                              key="completed"
-                              className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
-                                item.progress === "completed"
-                                  ? "bg-violet-500 text-white"
-                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                              }`}
-                              onClick={() =>
-                                handleInputChange(index, "progress", "completed")
+                              Qu&apos;as-tu fait aujourd&apos;hui ?
+                            </label>
+                            <Input
+                              className="w-full text-sm sm:text-base"
+                              id={`activity-${index}`}
+                              placeholder="Décris ton activité..."
+                              value={item.activity}
+                              onChange={(e) =>
+                                handleInputChange(index, "activity", e.target.value)
                               }
-                            >
-                              J&apos;ai réussi ! {getProgressEmoji("completed")}
-                            </Button>
-                            <Button
-                              key="not-acquired"
-                              className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
-                                item.progress === "not-acquired"
-                                  ? "bg-violet-500 text-white"
-                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                              }`}
-                              onClick={() =>
-                                handleInputChange(index, "progress", "not-acquired")
-                              }
-                            >
-                              Besoin d&apos;aide {getProgressEmoji("not-acquired")}
-                            </Button>
+                            />
                           </div>
-                        </div>
-                        
-                        {/* Questions spécifiques à la matière - FORCÉ À AFFICHER */}
-                        <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
-                          <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
-                            Questions sur cette matière
-                          </h4>
+
+                          <div>
+                            <label
+                              className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                              htmlFor={`hours-${index}`}
+                            >
+                              Combien de temps y as-tu passé ?
+                            </label>
+                            <Input
+                              className="w-full text-sm sm:text-base"
+                              id={`hours-${index}`}
+                              placeholder="Temps en heures"
+                              type="number"
+                              value={item.hours}
+                              onChange={(e) =>
+                                handleInputChange(index, "hours", e.target.value)
+                              }
+                            />
+                          </div>
+
+                          <div>
+                            <label
+                              className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                              htmlFor={`progress-${index}`}
+                            >
+                              Comment ça s&apos;est passé ?
+                            </label>
+                            <div
+                              aria-label="Progression"
+                              className="grid grid-cols-1 gap-2 sm:gap-3 mt-2"
+                              id={`progress-${index}`}
+                              role="group"
+                            >
+                              <Button
+                                key="in-progress"
+                                className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                                  item.progress === "in-progress"
+                                    ? "bg-violet-500 text-white"
+                                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                                }`}
+                                onClick={() =>
+                                  handleInputChange(index, "progress", "in-progress")
+                                }
+                              >
+                                Je progresse {getProgressEmoji("in-progress")}
+                              </Button>
+                              <Button
+                                key="completed"
+                                className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                                  item.progress === "completed"
+                                    ? "bg-violet-500 text-white"
+                                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                                }`}
+                                onClick={() =>
+                                  handleInputChange(index, "progress", "completed")
+                                }
+                              >
+                                J&apos;ai réussi ! {getProgressEmoji("completed")}
+                              </Button>
+                              <Button
+                                key="not-acquired"
+                                className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                                  item.progress === "not-acquired"
+                                    ? "bg-violet-500 text-white"
+                                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                                }`}
+                                onClick={() =>
+                                  handleInputChange(index, "progress", "not-acquired")
+                                }
+                              >
+                                Besoin d&apos;aide {getProgressEmoji("not-acquired")}
+                              </Button>
+                            </div>
+                          </div>
                           
-                          <div className="space-y-4">
-                            {/* Afficher toutes les questions pour chaque matière */}
-                            {allQuestions.length > 0 ? (
-                              allQuestions.map((question) => (
-                                <div key={question._id} className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-                                  <p className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">
-                                    {question.text}
-                                  </p>
-                                  
-                                  <div className="grid grid-cols-2 gap-2">
-                                    {question.options.map((option, optIdx) => (
-                                      <Button
-                                        key={optIdx}
-                                        className={`p-2 text-xs sm:text-sm rounded ${
-                                          selectedAnswers[question._id] === option
-                                            ? "bg-violet-500 text-white"
-                                            : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
-                                        }`}
-                                        onClick={() => handleAnswerSelection(question._id, option)}
-                                      >
-                                        {option}
-                                      </Button>
-                                    ))}
+                          {/* Questions spécifiques à la matière */}
+                          {questions && questions.length > 0 ? (
+                            <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+                              <h4 className="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
+                                Questions sur {item.subject}
+                              </h4>
+                              
+                              <div className="space-y-4">
+                                {questions.map((question) => (
+                                  <div key={question._id} className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
+                                    <p className="text-sm font-medium text-gray-800 dark:text-gray-200 mb-2">
+                                      {question.question}
+                                    </p>
+                                    
+                                    <div className="grid grid-cols-2 gap-2">
+                                      {question.options.map((option, optIdx) => (
+                                        <Button
+                                          key={optIdx}
+                                          className={`p-2 text-xs sm:text-sm rounded ${
+                                            selectedAnswers[question._id] === option
+                                              ? "bg-violet-500 text-white"
+                                              : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                                          }`}
+                                          onClick={() => handleAnswerSelection(question._id, option)}
+                                        >
+                                          {option}
+                                        </Button>
+                                      ))}
+                                    </div>
                                   </div>
-                                </div>
-                              ))
-                            ) : (
-                              // Afficher un message si aucune question n'est disponible
-                              <div className="bg-gray-50 dark:bg-gray-800 p-3 rounded-lg">
-                                <p className="text-sm text-center text-gray-600 dark:text-gray-400">
-                                  Les questions sont en cours de chargement...
-                                </p>
+                                ))}
                               </div>
-                            )}
-                          </div>
+                            </div>
+                          ) : (
+                            // Message si aucune question n'est trouvée pour cette matière
+                            <div className="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4 text-center">
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
+                                Pas de questions disponibles pour cette matière.
+                              </p>
+                            </div>
+                          )}
                         </div>
-                      </div>
-                    </CardBody>
-                  </Card>
-                </motion.div>
-              ))}
+                      </CardBody>
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
 
             {/* Boutons d'action */}
