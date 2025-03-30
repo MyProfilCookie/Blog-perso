@@ -120,9 +120,9 @@ router.get("/rapportHebdo", async (req, res) => {
   try {
     if (req.query.week) {
       const weekNumber = parseInt(req.query.week, 10);
-      const singleWeek = await RapportHebdo.findOne({ week: weekNumber });
-      if (!singleWeek) {
-        return res.status(404).json({ message: "Semaine non trouvée" });
+      const singleWeek = await RapportHebdo.findOne({ week: weekNumber }).lean();
+      if (!singleWeek || !Array.isArray(singleWeek.subjects)) {
+        return res.status(404).json({ message: "Semaine ou matières non trouvées" });
       }
       return res.status(200).json(singleWeek);
     } else {
