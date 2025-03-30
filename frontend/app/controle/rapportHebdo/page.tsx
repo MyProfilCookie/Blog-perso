@@ -323,26 +323,22 @@ const fetchReportModel = async () => {
   // Charger le modèle de rapport une seule fois
   useEffect(() => {
     const loadReportModel = async () => {
-    if (!modelLoaded.current && selectedWeek) {
-        modelLoaded.current = true;
-
+      if (selectedWeek) {
         const model = await fetchReportModel();
 
         if (model) {
           setReportModel(model);
-          console.log(
-            "Modèle de rapport chargé avec",
-            model.questions.length,
-            "questions",
-          );
+          modelLoaded.current = true;
+          console.log("Modèle de rapport chargé avec", model.questions.length, "questions");
         } else {
+          modelLoaded.current = false;
           console.error("Impossible de charger le modèle de rapport");
         }
       }
     };
 
     loadReportModel();
-  }, []);
+  }, [selectedWeek]);
 
   // Fonction pour créer un rapport vide
   const createEmptyReport = () => {
