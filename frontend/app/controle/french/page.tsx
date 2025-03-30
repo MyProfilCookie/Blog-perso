@@ -70,7 +70,7 @@ const FrenchPage: React.FC = () => {
         setLoading(true);
         
         // Appeler la fonction du service
-        const data = await getSubjectByName('francais');
+        const data = await getSubjectByName('french');
         
         if (!data || !data.questions) {
           throw new Error('Aucune donnée reçue ou format invalide');
