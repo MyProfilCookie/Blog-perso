@@ -22,14 +22,37 @@ export interface Subject {
   questions: Question[];
 }
 
-// URL de base de l'API
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/subjects`;
+// Fonction pour déterminer l'URL de base de l'API
+const getBaseUrl = () => {
+  // Vercel met à disposition les variables d'environnement côté client
+  // seulement si elles commencent par NEXT_PUBLIC_
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL;
+  
+  // Log pour débogage
+  console.log('🔍 FRONTEND - NEXT_PUBLIC_API_URL:', apiUrl);
+  
+  // Si l'URL se termine déjà par /api, ne pas l'ajouter à nouveau
+  if (apiUrl?.endsWith('/api')) {
+    return `${apiUrl}/subjects`;
+  } else if (apiUrl) {
+    return `${apiUrl}/api/subjects`;
+  }
+  
+  // URL de repli pour déploiement Vercel - à adapter selon votre configuration
+  return 'https://blog-perso.onrender.com/api/subjects';
+};
+
+// Initialisation de l'URL de base
+const API_URL = getBaseUrl();
 
 /**
  * Récupère toutes les matières actives
  */
 export const getAllSubjects = async (): Promise<Subject[]> => {
   try {
+    // Log pour débogage
+    console.log('📡 Appel API getAllSubjects:', API_URL);
+    
     const response = await axios.get(API_URL);
     return response.data;
   } catch (error) {
@@ -44,7 +67,12 @@ export const getAllSubjects = async (): Promise<Subject[]> => {
  */
 export const getSubjectByName = async (name: string): Promise<Subject> => {
   try {
-    const response = await axios.get(`${API_URL}/${name}`);
+    const url = `${API_URL}/${name}`;
+    
+    // Log pour débogage
+    console.log('📡 Appel API getSubjectByName:', url);
+    
+    const response = await axios.get(url);
     return response.data;
   } catch (error) {
     console.error(`❌ Erreur lors de la récupération de la matière ${name}:`, error);
