@@ -8,7 +8,8 @@ import { useRouter } from "next/navigation";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
-import { getUserWeeklyReport, saveWeeklyReport, ReportItem } from "@/services/reportService";
+import axios from "axios";
+import { ReportItem } from "@/services/reportService";
 
 const subjects = [
   { name: "Mathématiques", color: "from-red-400 to-red-300", icon: "🔢" },
@@ -76,11 +77,32 @@ const isTokenExpired = (token: string) => {
   }
 };
 
+// Fonction pour construire l'URL de base correcte
+const getBaseUrl = () => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com';
+  
+  // Si l'URL se termine déjà par /api, on ne l'ajoute pas à nouveau
+  if (apiUrl.endsWith('/api')) {
+    return apiUrl;
+  } else {
+    return `${apiUrl}/api`;
+  }
+};
+
 interface User {
   _id: string;
   nom: string;
   prenom: string;
   email: string;
+}
+
+interface WeeklyReportData {
+  _id?: string;
+  userId: string;
+  weekNumber: string;
+  items: ReportItem[];
+  createdAt?: string;
+  updatedAt?: string;
 }
 
 const WeeklyReport = () => {
@@ -145,6 +167,100 @@ const WeeklyReport = () => {
     checkAuth();
   }, [router]);
 
+  // Fonction pour créer un rapport vide
+  const createEmptyReport = () => {
+    const defaultItems: ReportItem[] = subjects.map((subject) => ({
+      subject: subject.name,
+      activity: "",
+      hours: "",
+      progress: "not-started",
+    }));
+    
+    setReportItems(defaultItems);
+    setReportId(undefined);
+    console.log("Rapport vide créé localement");
+  };
+
+  // Récupérer un rapport d'un utilisateur pour une semaine spécifique
+  const getUserWeeklyReport = async (
+    userId: string, 
+    weekNumber: string, 
+    token: string
+  ): Promise<WeeklyReportData | null> => {
+    try {
+      // Récupérer tous les rapports de l'utilisateur au lieu d'un rapport spécifique
+      const baseUrl = getBaseUrl();
+      const url = `${baseUrl}/reports/user/${userId}`;
+      
+      console.log('📡 Récupération de tous les rapports:', url);
+      
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`
+        }
+      });
+      
+      // Chercher le rapport pour la semaine spécifiée
+      const reports = response.data;
+      if (!Array.isArray(reports)) {
+        console.log("Format de réponse inattendu:", reports);
+        return null;
+      }
+      
+      const weeklyReport = reports.find(report => report.weekNumber === weekNumber);
+      console.log(`Rapport pour ${weekNumber} trouvé:`, weeklyReport ? "Oui" : "Non");
+      
+      return weeklyReport || null;
+    } catch (error) {
+      console.error(`❌ Erreur lors de la récupération des rapports:`, error);
+      return null;
+    }
+  };
+
+  // Sauvegarder ou mettre à jour un rapport
+  const saveWeeklyReport = async (
+    reportData: WeeklyReportData,
+    token: string
+  ): Promise<WeeklyReportData> => {
+    try {
+      const baseUrl = getBaseUrl();
+      let response;
+      
+      if (reportData._id) {
+        // Mise à jour d'un rapport existant
+        const url = `${baseUrl}/reports/${reportData._id}`;
+        console.log('📡 Mise à jour du rapport:', url);
+        
+        response = await axios.put(url, reportData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      } else {
+        // Création d'un nouveau rapport
+        const url = `${baseUrl}/reports`;
+        console.log("📡 Création d'un nouveau rapport:", url);
+        
+        response = await axios.post(url, reportData, {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        });
+      }
+      
+      return response.data;
+    } catch (error) {
+      console.error('❌ Erreur lors de la sauvegarde du rapport:', error);
+      
+      // En cas d'erreur, retourner les données d'origine pour que l'utilisateur
+      // ne perde pas son travail
+      return {
+        ...reportData,
+        _id: reportData._id || 'local-draft'
+      };
+    }
+  };
+
   // Chargement du rapport pour la semaine sélectionnée
   useEffect(() => {
     const loadWeeklyReport = async () => {
@@ -159,29 +275,31 @@ const WeeklyReport = () => {
           return;
         }
         
-        // Récupérer le rapport depuis l'API
-        const report = await getUserWeeklyReport(userId, selectedWeek, token);
-        
-        if (report && report.items && report.items.length > 0) {
-          setReportItems(report.items);
-          setReportId(report._id);
-        } else {
-          // Créer un nouveau rapport vide si aucun n'existe
-          const defaultItems: ReportItem[] = subjects.map((subject) => ({
-            subject: subject.name,
-            activity: "",
-            hours: "",
-            progress: "not-started",
-          }));
+        try {
+          // Tentative de récupération du rapport depuis l'API
+          const report = await getUserWeeklyReport(userId, selectedWeek, token);
           
-          setReportItems(defaultItems);
-          setReportId(undefined);
+          if (report && report.items && report.items.length > 0) {
+            console.log("Rapport chargé depuis l'API");
+            setReportItems(report.items);
+            setReportId(report._id);
+          } else {
+            // Création d'un nouveau rapport local si aucun n'existe
+            console.log("Création d'un rapport vide local");
+            createEmptyReport();
+          }
+        } catch (apiError) {
+          // En cas d'erreur API, créer un rapport vide local
+          console.log("Erreur API, création d'un rapport vide local:", apiError);
+          createEmptyReport();
         }
         
         setLoading(false);
       } catch (err) {
         console.error("Erreur lors du chargement du rapport:", err);
-        setError("Erreur lors du chargement du rapport");
+        // Même en cas d'erreur, créer un rapport vide pour que l'utilisateur puisse continuer
+        createEmptyReport();
+        setError(null); // On ne montre pas d'erreur pour permettre à l'utilisateur de continuer
         setLoading(false);
       }
     };
@@ -260,7 +378,7 @@ const WeeklyReport = () => {
       const savedReport = await saveWeeklyReport(reportData, token);
       
       // Mettre à jour l'ID du rapport si c'est un nouveau rapport
-      if (savedReport && !reportId) {
+      if (savedReport && savedReport._id && savedReport._id !== 'local-draft') {
         setReportId(savedReport._id);
       }
       
@@ -275,13 +393,18 @@ const WeeklyReport = () => {
     } catch (error) {
       console.error("Erreur lors de la sauvegarde du rapport:", error);
       
+      // Même en cas d'erreur, permettre à l'utilisateur de télécharger son rapport
       Swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: "Une erreur est survenue lors de la sauvegarde de ton rapport.",
-        confirmButtonText: "D'accord",
+        icon: "warning",
+        title: "Problème de sauvegarde",
+        text: "Impossible de sauvegarder en ligne. Vous pouvez télécharger votre rapport.",
+        confirmButtonText: "Télécharger",
         background: "#fff",
         confirmButtonColor: "#6366f1",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          downloadReport();
+        }
       });
     }
   };
