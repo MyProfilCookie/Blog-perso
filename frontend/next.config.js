@@ -33,6 +33,16 @@ const nextConfig = {
       },
     ];
   },
+  
+  // Ajoutez cette configuration pour rediriger les requêtes API
+  async rewrites() {
+    return [
+      {
+        source: '/api/:path*',
+        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/:path*`,
+      },
+    ];
+  },
 
   webpack: (config, { isServer }) => {
     if (!isServer) {
