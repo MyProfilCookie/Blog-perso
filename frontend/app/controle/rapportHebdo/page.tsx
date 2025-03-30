@@ -265,8 +265,10 @@ const fetchReportModel = async () => {
     }
  
     const baseUrl = getBaseUrl();
-    const weekNumber = parseInt(selectedWeek.replace("Semaine ", ""));
-    if (isNaN(weekNumber)) {
+    const match = selectedWeek.match(/\d+/);
+    const weekNumber = match ? parseInt(match[0], 10) : null;
+
+    if (!weekNumber || isNaN(weekNumber)) {
       console.warn("❌ selectedWeek est invalide :", selectedWeek);
       return null;
     }
@@ -324,6 +326,7 @@ const fetchReportModel = async () => {
   useEffect(() => {
     const loadReportModel = async () => {
       if (selectedWeek) {
+        console.log("🔍 selectedWeek au moment du chargement du modèle :", selectedWeek);
         const model = await fetchReportModel();
 
         if (model) {
