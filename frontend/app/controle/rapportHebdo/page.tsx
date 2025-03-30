@@ -788,7 +788,7 @@ const fetchReportModel = async () => {
 
             {/* Grille des matières */}
             <div
-              className="grid grid-cols-1 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-0 sm:px-4"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-4"
               role="grid"
             >
               {reportItems.map((item, index) => (
