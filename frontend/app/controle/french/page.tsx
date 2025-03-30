@@ -111,25 +111,6 @@ const FrenchPage: React.FC = () => {
     "🚀 Tu es sur la bonne voie !"
   ];
 
-  // Fonction pour récupérer une matière par son ID
-  const getSubjectById = async (id: string): Promise<Subject> => {
-    try {
-      const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com';
-      
-      // Construire l'URL correctement
-      const url = baseUrl.endsWith('/api') 
-        ? `${baseUrl}/subjects/id/${id}` 
-        : `${baseUrl}/api/subjects/id/${id}`;
-      
-      console.log('📡 Appel API getSubjectById:', url);
-      const response = await axios.get(url);
-      return response.data;
-    } catch (error) {
-      console.error(`❌ Erreur lors de la récupération de la matière ID ${id}:`, error);
-      throw error;
-    }
-  };
-
   // Helper pour obtenir les questions de la page actuelle
   const getCurrentPageExercises = (): Exercise[] => {
     const startIndex = (currentPage - 1) * questionsPerPage;
@@ -175,42 +156,33 @@ const FrenchPage: React.FC = () => {
       try {
         setLoading(true);
         
-        // Utiliser l'ID fixe pour French
-        const frenchId = "67e93660c16800718f4dd171";
+        // Obtenez l'URL de base, qui peut se terminer par "api" ou non
+        const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com';
         
-        // Contourner le problème en accédant directement à la liste des matières
-        let data;
-        try {
-          // Essayer d'abord avec l'ID
-          data = await getSubjectById(frenchId);
-        } catch (idError) {
-          console.error("Erreur avec ID, essai alternatif:", idError);
-          
-          // Si ça échoue, essayer une approche alternative avec la liste des sujets
-          const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com';
-          const allSubjectsUrl = baseUrl.endsWith('/api') 
-            ? `${baseUrl}/subjects` 
-            : `${baseUrl}/api/subjects`;
-          
-          console.log('📡 Appel API getAllSubjects:', allSubjectsUrl);
-          const allSubjectsResponse = await axios.get(allSubjectsUrl);
-          
-          // Trouver la matière French dans la liste
-          const frenchSubject = allSubjectsResponse.data.find((s: any) => s.name === "french");
-          
-          if (!frenchSubject) {
-            throw new Error('Matière french non trouvée dans la liste');
-          }
-          
-          // Obtenir les détails complets de la matière
-          const detailsUrl = baseUrl.endsWith('/api') 
-            ? `${baseUrl}/subjects/${frenchSubject._id}` 
-            : `${baseUrl}/api/subjects/${frenchSubject._id}`;
-          
-          console.log('📡 Appel API getSubjectDetails:', detailsUrl);
-          const detailsResponse = await axios.get(detailsUrl);
-          data = detailsResponse.data;
+        // Construisez l'URL correcte pour obtenir toutes les matières
+        const allSubjectsUrl = baseUrl.endsWith('/api') 
+          ? `${baseUrl}/subjects` 
+          : `${baseUrl}/api/subjects`;
+        
+        console.log('📡 Appel API getAllSubjects:', allSubjectsUrl);
+        const allSubjectsResponse = await axios.get(allSubjectsUrl);
+        
+        // Trouver la matière "french" dans la liste
+        const frenchSubject = allSubjectsResponse.data.find((s: any) => s.name === "french");
+        
+        if (!frenchSubject) {
+          throw new Error('Matière french non trouvée dans la liste');
         }
+        
+        // Obtenir les détails complets de la matière en utilisant le nom "french"
+        // et non l'ID, car votre route backend utilise le nom comme paramètre
+        const frenchDetailsUrl = baseUrl.endsWith('/api') 
+          ? `${baseUrl}/subjects/french` 
+          : `${baseUrl}/api/subjects/french`;
+        
+        console.log('📡 Appel API getSubjectDetails par nom:', frenchDetailsUrl);
+        const detailsResponse = await axios.get(frenchDetailsUrl);
+        const data = detailsResponse.data;
         
         if (!data || !data.questions) {
           throw new Error('Aucune donnée reçue ou format invalide');
@@ -228,7 +200,9 @@ const FrenchPage: React.FC = () => {
           category: question.category || "Français"
         }));
         
+        console.log(`✅ ${fetchedExercises.length} exercices chargés avec succès`);
         setAllExercises(fetchedExercises);
+        
         // Calculer le nombre total de pages
         setTotalPages(Math.ceil(fetchedExercises.length / questionsPerPage));
         
