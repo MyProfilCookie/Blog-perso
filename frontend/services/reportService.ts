@@ -19,8 +19,17 @@ export interface WeeklyReportData {
   updatedAt?: string;
 }
 
-// URL de base de l'API
-const API_URL = `${process.env.NEXT_PUBLIC_API_URL}/reports`;
+// Fonction pour construire l'URL de base correcte
+const getBaseUrl = () => {
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com';
+  
+  // Si l'URL se termine déjà par /api, on ne l'ajoute pas à nouveau
+  if (apiUrl.endsWith('/api')) {
+    return apiUrl;
+  } else {
+    return `${apiUrl}/api`;
+  }
+};
 
 /**
  * Récupère le rapport d'un utilisateur pour une semaine spécifique
@@ -34,15 +43,25 @@ export const getUserWeeklyReport = async (
   token: string
 ): Promise<WeeklyReportData | null> => {
   try {
-    const response = await axios.get(`${API_URL}/user/${userId}/week/${weekNumber}`, {
+    const baseUrl = getBaseUrl();
+    const url = `${baseUrl}/reports/user/${userId}/week/${encodeURIComponent(weekNumber)}`;
+    
+    console.log('📡 Récupération du rapport:', url);
+    
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
     return response.data;
   } catch (error) {
     console.error(`❌ Erreur lors de la récupération du rapport pour la semaine ${weekNumber}:`, error);
-    return null;
+    // Si le rapport n'existe pas (404), on retourne null plutôt que de lancer une erreur
+    if (axios.isAxiosError(error) && error.response?.status === 404) {
+      return null;
+    }
+    throw error;
   }
 };
 
@@ -56,18 +75,25 @@ export const saveWeeklyReport = async (
   token: string
 ): Promise<WeeklyReportData> => {
   try {
+    const baseUrl = getBaseUrl();
     let response;
     
     if (reportData._id) {
       // Mise à jour d'un rapport existant
-      response = await axios.put(`${API_URL}/${reportData._id}`, reportData, {
+      const url = `${baseUrl}/reports/${reportData._id}`;
+      console.log('📡 Mise à jour du rapport:', url);
+      
+      response = await axios.put(url, reportData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
       });
     } else {
       // Création d'un nouveau rapport
-      response = await axios.post(API_URL, reportData, {
+      const url = `${baseUrl}/reports`;
+      console.log('📡 Création d\'un nouveau rapport:', url);
+      
+      response = await axios.post(url, reportData, {
         headers: {
           Authorization: `Bearer ${token}`
         }
@@ -91,11 +117,17 @@ export const getAllUserReports = async (
   token: string
 ): Promise<WeeklyReportData[]> => {
   try {
-    const response = await axios.get(`${API_URL}/user/${userId}`, {
+    const baseUrl = getBaseUrl();
+    const url = `${baseUrl}/reports/user/${userId}`;
+    
+    console.log('📡 Récupération de tous les rapports:', url);
+    
+    const response = await axios.get(url, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
     return response.data;
   } catch (error) {
     console.error('❌ Erreur lors de la récupération des rapports:', error);
@@ -113,11 +145,17 @@ export const deleteWeeklyReport = async (
   token: string
 ): Promise<{ message: string }> => {
   try {
-    const response = await axios.delete(`${API_URL}/${reportId}`, {
+    const baseUrl = getBaseUrl();
+    const url = `${baseUrl}/reports/${reportId}`;
+    
+    console.log('📡 Suppression du rapport:', url);
+    
+    const response = await axios.delete(url, {
       headers: {
         Authorization: `Bearer ${token}`
       }
     });
+    
     return response.data;
   } catch (error) {
     console.error(`❌ Erreur lors de la suppression du rapport ${reportId}:`, error);
