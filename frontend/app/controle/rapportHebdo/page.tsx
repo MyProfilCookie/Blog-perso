@@ -183,6 +183,12 @@ const WeeklyReport = () => {
 
   // Fonction pour récupérer les questions
   const fetchQuestions = async () => {
+    // Éviter de charger plusieurs fois les questions
+    if (questions.length > 0 || loadingQuestions) {
+      console.log("Chargement des questions ignoré (déjà en cours ou déjà chargées)");
+      return;
+    }
+    
     try {
       setLoadingQuestions(true);
       console.log("Début du chargement des questions");
@@ -194,8 +200,7 @@ const WeeklyReport = () => {
         return;
       }
       
-      // Récupération directe des questions depuis la console pour garantir l'affichage
-      // Commenter ces lignes et décommenter le bloc API ci-dessous pour une intégration API réelle
+      // Créer directement les questions à partir des IDs de la console
       console.log("Création des questions à partir des IDs de la console");
       const mockQuestions = [
         {
@@ -245,12 +250,10 @@ const WeeklyReport = () => {
         }
       ];
       
-      // Simuler un délai pour montrer le chargement (à retirer en production)
-      setTimeout(() => {
-        setQuestions(mockQuestions);
-        console.log("Questions créées:", mockQuestions.length);
-        setLoadingQuestions(false);
-      }, 1000);
+      // Définir les questions directement
+      console.log("Définition des questions:", mockQuestions.length);
+      setQuestions(mockQuestions);
+      setLoadingQuestions(false);
       
       /* Version API - Décommentez pour l'intégration finale
       try {
@@ -303,8 +306,13 @@ const WeeklyReport = () => {
   };
 
   // Appeler fetchQuestions après avoir chargé les données utilisateur
+  // Utiliser une référence pour éviter les appels multiples
+  const questionsLoaded = React.useRef(false);
+  
   useEffect(() => {
-    if (userId) {
+    if (userId && !questionsLoaded.current) {
+      questionsLoaded.current = true;
+      console.log("Chargement initial des questions (une seule fois)");
       fetchQuestions();
     }
   }, [userId]);
@@ -614,32 +622,18 @@ const WeeklyReport = () => {
 
   // Composant pour afficher les questions
   const QuestionsSection = () => {
-    // Forcer l'affichage des questions même si l'API échoue
+    // Référence pour éviter les rendus infinis
+    const questionInitialized = React.useRef(false);
+    
+    // Initialisation des questions par défaut seulement au premier rendu
     useEffect(() => {
-      if (questions.length === 0 && !loadingQuestions) {
-        // Si aucune question n'est chargée après la tentative initiale, créer des questions par défaut
-        const defaultQuestions = [
-          {
-            _id: "67e93661fa898e1b64ac7a17",
-            text: "Comment évaluez-vous votre compréhension de cette matière?",
-            options: ["Excellente", "Bonne", "Moyenne", "Besoin d'aide"]
-          },
-          {
-            _id: "67e93661fa898e1b64ac7a18", 
-            text: "Avez-vous eu besoin d'aide supplémentaire?",
-            options: ["Oui", "Non", "Parfois"]
-          },
-          {
-            _id: "67e93661fa898e1b64ac7a19",
-            text: "Quelles ressources avez-vous utilisées?",
-            options: ["Manuels", "Vidéos", "Exercices en ligne", "Aide d'un adulte"]
-          }
-        ];
-        setQuestions(defaultQuestions);
-        console.log("Questions par défaut créées");
+      if (questions.length === 0 && !loadingQuestions && !questionInitialized.current) {
+        questionInitialized.current = true;
+        console.log("Initialisation des questions par défaut (une seule fois)");
+        fetchQuestions();
       }
-    }, [questions.length, loadingQuestions]);
-
+    }, []);
+    
     // Affichage pendant le chargement
     if (loadingQuestions) {
       return (
@@ -650,7 +644,7 @@ const WeeklyReport = () => {
       );
     }
     
-    // Même si questions est vide, on va afficher un message
+    // Si aucune question n'est disponible
     if (questions.length === 0) {
       return (
         <div className="text-center py-8 mt-12 mb-8">
@@ -666,12 +660,7 @@ const WeeklyReport = () => {
     
     // Rendu normal des questions
     return (
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="mt-12 mb-8"
-        initial={{ opacity: 0, y: 20 }}
-        transition={{ duration: 0.5 }}
-      >
+      <div className="py-4">
         <h2 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
           📋 Questions Complémentaires
         </h2>
@@ -706,7 +695,7 @@ const WeeklyReport = () => {
             </Card>
           ))}
         </div>
-      </motion.div>
+      </div>
     );
   };
 
