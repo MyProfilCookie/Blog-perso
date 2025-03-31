@@ -255,7 +255,7 @@ const TechnologyPage: React.FC = () => {
                 <p className="mb-4">{ex.question}</p>
                 {ex.options ? (
                   <select
-                    className="w-full mb-2"
+                    className="w-full mb-2 p-3 text-base rounded-lg border border-violet-300 dark:bg-gray-700"
                     disabled={results[ex._id] !== undefined}
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
