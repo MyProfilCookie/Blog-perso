@@ -822,7 +822,7 @@ const WeeklyReport: React.FC = () => {
 
       <div className="flex-1 w-full max-w-7xl mx-auto">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
-          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+          {/* <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-4 sm:mb-6"
@@ -836,7 +836,7 @@ const WeeklyReport: React.FC = () => {
                 Suivez votre progression
               </p>
             </motion.div>
-          </div>
+          </div> */}
           <div className="container mx-auto px-6 py-8 flex-grow">
             {/* En-tête */}
             <motion.div
