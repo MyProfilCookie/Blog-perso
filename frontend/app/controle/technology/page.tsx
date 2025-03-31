@@ -38,6 +38,8 @@ const TechnologyPage: React.FC = () => {
   const [showTips, setShowTips] = useState<boolean>(true);
   const [timeLeft, setTimeLeft] = useState(3600);
   const [isFinished, setIsFinished] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const questionsPerPage = 20;
   const correctSound = typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
 
   const encouragementMessages = [
@@ -98,7 +100,7 @@ const TechnologyPage: React.FC = () => {
 
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
-        setEmoji(randomMessage);
+        setEmoji(`Page ${currentPage} : ${randomMessage}`);
         setTimeout(() => setEmoji(""), 5000);
       }, 900000);
     } else if (timeLeft === 0) {
@@ -110,7 +112,7 @@ const TechnologyPage: React.FC = () => {
       clearInterval(timer);
       clearInterval(encouragementTimer);
     };
-  }, [timeLeft, isFinished]);
+  }, [timeLeft, isFinished, currentPage]);
 
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
@@ -144,9 +146,15 @@ const TechnologyPage: React.FC = () => {
     setShowResults(true);
   };
 
-  const filteredExercises = selectedCategory === "Tout"
+  const filteredAllExercises = selectedCategory === "Tout"
     ? exercises
     : exercises.filter((ex) => ex.category === selectedCategory);
+
+  const totalPages = Math.ceil(filteredAllExercises.length / questionsPerPage);
+  const paginatedExercises = filteredAllExercises.slice(
+    (currentPage - 1) * questionsPerPage,
+    currentPage * questionsPerPage
+  );
 
   const uniqueCategories = Array.from(new Set(exercises.map((ex) => ex.category)));
   const categories = ["Tout", ...uniqueCategories];
@@ -202,6 +210,22 @@ const TechnologyPage: React.FC = () => {
         ))}
       </select>
 
+      <div className="flex justify-center my-4 gap-2">
+        {Array.from({ length: totalPages }).map((_, idx) => (
+          <button
+            key={idx}
+            className={`px-3 py-1 rounded-md border ${
+              currentPage === idx + 1
+                ? "bg-violet-500 text-white"
+                : "bg-white text-violet-500"
+            }`}
+            onClick={() => setCurrentPage(idx + 1)}
+          >
+            {idx + 1}
+          </button>
+        ))}
+      </div>
+
       {emoji && (
         <motion.div
           className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200 z-50"
@@ -214,7 +238,7 @@ const TechnologyPage: React.FC = () => {
       )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        {filteredExercises.map((ex, idx) => (
+        {paginatedExercises.map((ex, idx) => (
           <motion.div
             key={ex._id}
             initial={{ opacity: 0, y: 20 }}
