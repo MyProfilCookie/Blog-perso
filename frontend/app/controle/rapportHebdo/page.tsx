@@ -784,26 +784,10 @@ const WeeklyReport: React.FC = () => {
   }
 
   return (
-    <div className="flex flex-col min-h-screen p-4">
+    <motion.div className="flex flex-col min-h-screen p-4">
       <div className="flex justify-between items-center mb-4">
         <BackButton />
         <Timer timeLeft={timeLeft} />
-        <div className="mb-6">
-          <ProgressBar
-            correctAnswers={
-              reportItems.filter((item) => item.progress === "completed").length
-            }
-            totalQuestions={reportItems.length}
-            onProgressComplete={() => {
-              if (
-                reportItems.filter((item) => item.progress === "completed")
-                  .length === reportItems.length
-              ) {
-                saveReport();
-              }
-            }}
-          />
-        </div>
       </div>
 
       <div className="flex-1 w-full max-w-7xl mx-auto">
@@ -1117,7 +1101,7 @@ const WeeklyReport: React.FC = () => {
           </div>
         </section>
       </div>
-    </div>
+    </motion.div>
   );
 };
 
