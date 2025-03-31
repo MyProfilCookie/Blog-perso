@@ -2,7 +2,7 @@
 "use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
-import { motion, progress } from "framer-motion";
+import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import axios from "axios";
@@ -210,14 +210,14 @@ const isTokenExpired = (token: string) => {
 // Fonction pour obtenir l'URL de base de l'API
 const getBaseUrl = () => {
   const apiUrl = process.env.NEXT_PUBLIC_API_URL;
-  
-  if (apiUrl?.endsWith('/api')) {
+
+  if (apiUrl?.endsWith("/api")) {
     return apiUrl;
   } else if (apiUrl) {
     return `${apiUrl}/api`;
   }
-  
-  return 'https://blog-perso.onrender.com/api';
+
+  return "https://blog-perso.onrender.com/api";
 };
 
 const WeeklyReport: React.FC = () => {
@@ -271,7 +271,11 @@ const WeeklyReport: React.FC = () => {
             const userData: User = JSON.parse(userDataStr);
 
             if (userData) {
-              const firstName = userData.prenom || (userData.nom ? userData.nom.split(" ")[0] : "") || "";
+              const firstName =
+                userData.prenom ||
+                (userData.nom ? userData.nom.split(" ")[0] : "") ||
+                "";
+
               setUserName(firstName);
               setUserId(userData._id);
 
@@ -302,86 +306,107 @@ const WeeklyReport: React.FC = () => {
     checkAuth();
   }, [router]);
 
-const fetchReportModel = async () => {
-  try {
-    const token = localStorage.getItem("userToken");
- 
-    if (!token || isTokenExpired(token)) {
-      router.push("/users/login");
-      return null;
-    }
- 
-    const baseUrl = getBaseUrl();
-    const match = selectedWeek.match(/\d+/);
-    const weekNumber = match && !isNaN(parseInt(match[0], 10))
-      ? parseInt(match[0], 10)
-      : new Date().getWeekNumber();
-    const url = `${baseUrl}/subjects/rapportHebdo?week=${weekNumber}`;
- 
-    console.log("📡 Récupération du modèle de rapport pour la semaine :", weekNumber);
- 
-    const response = await axios.get(url, {
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-    });
- 
-    const selectedWeekData = response.data;
- 
-    if (!selectedWeekData || !selectedWeekData.subjects) {
-      console.warn("⚠️ Aucune donnée pour cette semaine.");
-      return null;
-    }
- 
-    const questions: Question[] = [];
- 
-    selectedWeekData.subjects.forEach((subject: any) => {
-      subject.questions.forEach((q: any, index: number) => {
-        questions.push({
-          _id: `${subject.name}-${index}`,
-          text: q.question,
-          options: q.options,
-          category: subject.name,
+  const fetchReportModel = async () => {
+    try {
+      const token = localStorage.getItem("userToken");
+
+      if (!token || isTokenExpired(token)) {
+        router.push("/users/login");
+
+        return null;
+      }
+
+      const baseUrl = getBaseUrl();
+      const match = selectedWeek.match(/\d+/);
+      const weekNumber =
+        match && !isNaN(parseInt(match[0], 10))
+          ? parseInt(match[0], 10)
+          : new Date().getWeekNumber();
+      const url = `${baseUrl}/subjects/rapportHebdo?week=${weekNumber}`;
+
+      console.log(
+        "📡 Récupération du modèle de rapport pour la semaine :",
+        weekNumber,
+      );
+
+      const response = await axios.get(url, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const selectedWeekData = response.data;
+
+      if (!selectedWeekData || !selectedWeekData.subjects) {
+        console.warn("⚠️ Aucune donnée pour cette semaine.");
+
+        return null;
+      }
+
+      const questions: Question[] = [];
+
+      selectedWeekData.subjects.forEach((subject: any) => {
+        subject.questions.forEach((q: any, index: number) => {
+          questions.push({
+            _id: `${subject.name}-${index}`,
+            text: q.question,
+            options: q.options,
+            category: subject.name,
+          });
         });
       });
-    });
- 
-    const model: ReportModel = {
-      _id: `rapportHebdo-${weekNumber}`,
-      name: "rapportHebdo",
-      description: `Questions pour la semaine ${weekNumber}`,
-      displayName: `Rapport semaine ${weekNumber}`,
-      icon: "📝",
-      active: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      __v: 0,
-      questions,
-    };
- 
-    return model;
-  } catch (error) {
-    if (axios.isAxiosError(error)) {
-      console.error("❌ Erreur Axios:", error.response?.status, error.response?.data);
-    } else {
-      console.error("❌ Erreur inconnue:", error);
+
+      const model: ReportModel = {
+        _id: `rapportHebdo-${weekNumber}`,
+        name: "rapportHebdo",
+        description: `Questions pour la semaine ${weekNumber}`,
+        displayName: `Rapport semaine ${weekNumber}`,
+        icon: "📝",
+        active: true,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+        __v: 0,
+        questions,
+      };
+
+      return model;
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error(
+          "❌ Erreur Axios:",
+          error.response?.status,
+          error.response?.data,
+        );
+      } else {
+        console.error("❌ Erreur inconnue:", error);
+      }
+
+      return null;
     }
-    return null;
-  }
-};
+  };
 
   // Charger le modèle de rapport une seule fois
   useEffect(() => {
     const loadReportModel = async () => {
       if (selectedWeek) {
-        console.log("🔍 selectedWeek au moment du chargement du modèle :", selectedWeek);
-        console.log("⏳ Appel de loadReportModel pour la semaine :", selectedWeek);
+        console.log(
+          "🔍 selectedWeek au moment du chargement du modèle :",
+          selectedWeek,
+        );
+        console.log(
+          "⏳ Appel de loadReportModel pour la semaine :",
+          selectedWeek,
+        );
         const model = await fetchReportModel();
 
         if (model) {
           setReportModel(model);
           modelLoaded.current = true;
-          console.log("Modèle de rapport chargé avec", model.questions.length, "questions");
+          console.log(
+            "Modèle de rapport chargé avec",
+            model.questions.length,
+            "questions",
+          );
         } else {
           modelLoaded.current = false;
           console.error("Impossible de charger le modèle de rapport");
@@ -614,13 +639,14 @@ const fetchReportModel = async () => {
       (item) =>
         item.activity.trim() !== "" &&
         item.hours.trim() !== "" &&
-        item.progress !== "not-started"
+        item.progress !== "not-started",
     );
   };
 
   // Fonction pour générer le contenu du rapport
   const generateReportContent = () => {
     let content = `Rapport Hebdomadaire - Semaine ${selectedWeek}\n`;
+
     content += `Date: ${new Date().toLocaleDateString()}\n`;
     content += `Élève: ${userName}\n\n`;
 
@@ -708,6 +734,7 @@ const fetchReportModel = async () => {
     const blob = new Blob([content], { type: "text/plain" });
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
+
     a.href = url;
     a.download = `rapport-hebdomadaire-semaine-${selectedWeek}.txt`;
     document.body.appendChild(a);
@@ -751,16 +778,21 @@ const fetchReportModel = async () => {
         <BackButton />
         <Timer timeLeft={timeLeft} />
         <div className="mb-6">
-        <ProgressBar
-          correctAnswers={reportItems.filter(item => item.progress === "completed").length}
-          totalQuestions={reportItems.length}
-          onProgressComplete={() => {
-            if (reportItems.filter(item => item.progress === "completed").length === reportItems.length) {
-              saveReport();
+          <ProgressBar
+            correctAnswers={
+              reportItems.filter((item) => item.progress === "completed").length
             }
-          }}
-        />
-      </div>
+            totalQuestions={reportItems.length}
+            onProgressComplete={() => {
+              if (
+                reportItems.filter((item) => item.progress === "completed")
+                  .length === reportItems.length
+              ) {
+                saveReport();
+              }
+            }}
+          />
+        </div>
       </div>
 
       <div className="flex-1 w-full max-w-7xl mx-auto">
