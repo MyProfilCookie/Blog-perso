@@ -220,6 +220,17 @@ const getBaseUrl = () => {
   return "https://blog-perso.onrender.com/api";
 };
 
+const subjectEmojis: Record<string, string> = {
+  Mathématiques: "🔢",
+  Sciences: "🔬",
+  Français: "📚",
+  Histoire: "⏳",
+  Géographie: "🌍",
+  Langues: "🗣️",
+  "Arts Plastiques": "🎨",
+  "Leçons du jour": "📖",
+};
+
 const WeeklyReport: React.FC = () => {
   const router = useRouter();
   const [selectedWeek, setSelectedWeek] = useState<string>("");
@@ -1036,7 +1047,7 @@ const WeeklyReport: React.FC = () => {
                       >
                         <CardBody className="p-5">
                           <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                            {question.text || `Question ${index + 1}`}
+                            {`${subjectEmojis[question.category || ""] || "❓"} ${question.text || `Question ${index + 1}`}`}
                           </h3>
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
