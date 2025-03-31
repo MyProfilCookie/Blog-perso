@@ -49,6 +49,28 @@ const TechnologyPage: React.FC = () => {
     "🚀 Tu progresses comme un pro !"
   ];
 
+  const getEmojiForCategory = (category: string) => {
+    switch (category.toLowerCase()) {
+      case "hardware":
+        return "💻";
+      case "software":
+        return "🧠";
+      case "internet":
+        return "🌐";
+      case "mobile":
+        return "📱";
+      case "sécurité":
+      case "securité":
+        return "🔒";
+      case "programming":
+        return "🖥️";
+      case "innovation":
+        return "🚀";
+      default:
+        return "🔧";
+    }
+  };
+
   useEffect(() => {
     const fetchExercises = async () => {
       try {
@@ -202,7 +224,9 @@ const TechnologyPage: React.FC = () => {
           >
             <Card className="w-full border border-violet-200">
               <CardBody className="p-4">
-                <h3 className="font-bold mb-2">{ex.title}</h3>
+                <h3 className="font-bold mb-2">
+                  {getEmojiForCategory(ex.category)} {ex.title}
+                </h3>
                 <p className="mb-2">{ex.content}</p>
                 <p className="mb-4">{ex.question}</p>
                 {ex.options ? (
