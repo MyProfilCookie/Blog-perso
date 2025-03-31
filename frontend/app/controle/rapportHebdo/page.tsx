@@ -289,7 +289,15 @@ const WeeklyReport: React.FC = () => {
 
               setUserName(firstName);
               setUserId(userData._id);
-
+              if (firstName) {
+                Swal.fire({
+                  title: `Bienvenue ${firstName} 😊`,
+                  text: "Es-tu prêt(e) à commencer ton rapport de la semaine ?",
+                  confirmButtonText: "Oui, allons-y !",
+                  background: "#f0f4ff",
+                  confirmButtonColor: "#6366f1",
+                });
+              }
               // Définir la semaine actuelle par défaut si aucune n'est sélectionnée
               if (!selectedWeek) {
                 const currentWeek = `Semaine ${new Date().getWeekNumber()}`;
@@ -597,6 +605,16 @@ const WeeklyReport: React.FC = () => {
     if (timeLeft > 0 && !isFinished) {
       const timer = setInterval(() => {
         setTimeLeft((prev) => prev - 1);
+        if ((3600 - timeLeft) % 900 === 0 && timeLeft !== 3600) {
+          Swal.fire({
+            icon: "info",
+            title: "👏 Bravo !",
+            text: "Continue comme ça, tu fais de ton mieux !",
+            timer: 4000,
+            showConfirmButton: false,
+            background: "#f0f4ff",
+          });
+        }
       }, 1000);
 
       return () => clearInterval(timer);
@@ -788,6 +806,18 @@ const WeeklyReport: React.FC = () => {
       <div className="flex justify-between items-center mb-4">
         <BackButton />
         <Timer timeLeft={timeLeft} />
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          initial={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.5 }}
+        >
+          <ProgressBar
+            correctAnswers={
+              reportItems.filter((item) => item.progress === "completed").length
+            }
+            totalQuestions={reportItems.length}
+          />
+        </motion.div>
       </div>
 
       <div className="flex-1 w-full max-w-7xl mx-auto">
