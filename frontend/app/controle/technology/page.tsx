@@ -2,12 +2,12 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import Image from "next/image";
+import { useRouter } from "next/navigation";
+import axios from "axios";
+
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
-import { useRouter } from "next/navigation";
-import axios from "axios";
 
 interface Exercise {
   _id: string;
@@ -40,7 +40,8 @@ const TechnologyPage: React.FC = () => {
   const [isFinished, setIsFinished] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 20;
-  const correctSound = typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
+  const correctSound =
+    typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
 
   const encouragementMessages = [
     "💻 Tu es un vrai geek !",
@@ -48,7 +49,7 @@ const TechnologyPage: React.FC = () => {
     "🌐 Continue d'explorer la technologie !",
     "⚡ Tes connaissances techniques s'améliorent !",
     "🤖 Tu deviens un expert en tech !",
-    "🚀 Tu progresses comme un pro !"
+    "🚀 Tu progresses comme un pro !",
   ];
 
   const getEmojiForCategory = (category: string) => {
@@ -76,7 +77,10 @@ const TechnologyPage: React.FC = () => {
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/subjects/technology`);
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/technology`,
+        );
+
         setExercises(response.data.questions);
         setLoading(false);
       } catch (err) {
@@ -99,7 +103,11 @@ const TechnologyPage: React.FC = () => {
       }, 1000);
 
       encouragementTimer = setInterval(() => {
-        const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+        const randomMessage =
+          encouragementMessages[
+            Math.floor(Math.random() * encouragementMessages.length)
+          ];
+
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
         setTimeout(() => setEmoji(""), 5000);
       }, 900000);
@@ -117,16 +125,22 @@ const TechnologyPage: React.FC = () => {
   const formatTime = (seconds: number): string => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
+
     return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
   };
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>, id: string) => {
+  const handleChange = (
+    e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
+    id: string,
+  ) => {
     setUserAnswers({ ...userAnswers, [id]: e.target.value });
   };
 
   const handleSubmit = (id: string, correctAnswer: string) => {
     const userAnswer = userAnswers[id];
-    const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
+    const isCorrect =
+      userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
+
     setResults({ ...results, [id]: isCorrect });
     if (isCorrect) {
       correctSound?.play();
@@ -142,29 +156,33 @@ const TechnologyPage: React.FC = () => {
     const total = exercises.length;
     const correct = Object.values(results).filter(Boolean).length;
     const score = (correct / total) * 100;
+
     setFinalScore(score);
     setShowResults(true);
   };
 
-  const filteredAllExercises = selectedCategory === "Tout"
-    ? exercises
-    : exercises.filter((ex) => ex.category === selectedCategory);
+  const filteredAllExercises =
+    selectedCategory === "Tout"
+      ? exercises
+      : exercises.filter((ex) => ex.category === selectedCategory);
 
   const totalPages = Math.ceil(filteredAllExercises.length / questionsPerPage);
   const paginatedExercises = filteredAllExercises.slice(
     (currentPage - 1) * questionsPerPage,
-    currentPage * questionsPerPage
+    currentPage * questionsPerPage,
   );
 
-  const uniqueCategories = Array.from(new Set(exercises.map((ex) => ex.category)));
+  const uniqueCategories = Array.from(
+    new Set(exercises.map((ex) => ex.category)),
+  );
   const categories = ["Tout", ...uniqueCategories];
 
   if (loading) {
     return (
       <motion.div
+        animate={{ opacity: 1 }}
         className="flex items-center justify-center min-h-screen"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
         transition={{ duration: 0.5 }}
       >
         <div className="text-3xl animate-spin">🔄</div>
@@ -183,20 +201,22 @@ const TechnologyPage: React.FC = () => {
       </div>
 
       <motion.div
+        animate={{ opacity: 1, y: 0 }}
         className="text-center mb-4"
         initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.4 }}
       >
         <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
           Technologie 🔧
         </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">Exercices interactifs</p>
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
+          Exercices interactifs
+        </p>
       </motion.div>
 
       <ProgressBar
-        totalQuestions={exercises.length}
         correctAnswers={completedExercises}
+        totalQuestions={exercises.length}
         onProgressComplete={() => {
           if (completedExercises === exercises.length) {
             calculateFinalScore();
@@ -204,9 +224,14 @@ const TechnologyPage: React.FC = () => {
         }}
       />
 
-      <select value={selectedCategory} onChange={(e) => setSelectedCategory(e.target.value)}>
+      <select
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+      >
         {categories.map((cat) => (
-          <option key={cat} value={cat}>{cat}</option>
+          <option key={cat} value={cat}>
+            {cat}
+          </option>
         ))}
       </select>
 
@@ -228,9 +253,9 @@ const TechnologyPage: React.FC = () => {
 
       {emoji && (
         <motion.div
+          animate={{ opacity: 1, y: 0 }}
           className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200 z-50"
           initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.3 }}
         >
           <p className="text-lg">{emoji}</p>
@@ -241,8 +266,8 @@ const TechnologyPage: React.FC = () => {
         {paginatedExercises.map((ex, idx) => (
           <motion.div
             key={ex._id}
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
+            initial={{ opacity: 0, y: 20 }}
             transition={{ delay: idx * 0.1 }}
             whileHover={{ scale: 1.02 }}
           >
@@ -262,27 +287,31 @@ const TechnologyPage: React.FC = () => {
                   >
                     <option value="">Sélectionner une réponse</option>
                     {ex.options.map((option, optIdx) => (
-                      <option key={optIdx} value={option}>{option}</option>
+                      <option key={optIdx} value={option}>
+                        {option}
+                      </option>
                     ))}
                   </select>
                 ) : (
                   <input
                     className="w-full mb-2"
+                    disabled={results[ex._id] !== undefined}
                     type="text"
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
-                    disabled={results[ex._id] !== undefined}
                   />
                 )}
                 <Button
-                  onClick={() => handleSubmit(ex._id, ex.answer)}
-                  disabled={results[ex._id] !== undefined}
                   className="w-full bg-violet-500 text-white"
+                  disabled={results[ex._id] !== undefined}
+                  onClick={() => handleSubmit(ex._id, ex.answer)}
                 >
                   Soumettre
                 </Button>
                 {results[ex._id] !== undefined && (
-                  <p className={`mt-2 text-center ${results[ex._id] ? "text-green-500" : "text-red-500"}`}>
+                  <p
+                    className={`mt-2 text-center ${results[ex._id] ? "text-green-500" : "text-red-500"}`}
+                  >
                     {results[ex._id] ? "Bonne réponse !" : "Mauvaise réponse"}
                   </p>
                 )}
