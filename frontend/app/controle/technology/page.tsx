@@ -194,7 +194,7 @@ const TechnologyPage: React.FC = () => {
   }
 
   return (
-    <div className="p-4">
+    <div className="p-4 bg-gradient-to-br from-white to-violet-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
       <div className="flex justify-between items-center mb-4">
         <BackButton />
         <Timer timeLeft={timeLeft} />
@@ -224,22 +224,30 @@ const TechnologyPage: React.FC = () => {
         }}
       />
 
-      <select
-        value={selectedCategory}
-        onChange={(e) => setSelectedCategory(e.target.value)}
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        initial={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.3 }}
+        className="mb-4"
       >
-        {categories.map((cat) => (
-          <option key={cat} value={cat}>
-            {cat}
-          </option>
-        ))}
-      </select>
+        <select
+          className="w-full sm:w-80 p-4 text-lg font-semibold rounded-2xl border border-violet-400 bg-violet-50 dark:bg-gray-900 shadow-md focus:ring-2 focus:ring-violet-500"
+          value={selectedCategory}
+          onChange={(e) => setSelectedCategory(e.target.value)}
+        >
+          {categories.map((cat) => (
+            <option key={cat} value={cat}>
+              {cat}
+            </option>
+          ))}
+        </select>
+      </motion.div>
 
       <div className="flex justify-center my-4 gap-2">
         {Array.from({ length: totalPages }).map((_, idx) => (
           <button
             key={idx}
-            className={`px-3 py-1 rounded-md border ${
+            className={`px-4 py-2 rounded-full font-semibold transition-transform transform border shadow-sm hover:scale-105 hover:bg-violet-200 ${
               currentPage === idx + 1
                 ? "bg-violet-500 text-white"
                 : "bg-white text-violet-500"
@@ -254,9 +262,10 @@ const TechnologyPage: React.FC = () => {
       {emoji && (
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg border border-violet-200 z-50"
+          className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-5 text-lg rounded-xl shadow-xl border-2 border-violet-300 z-50 font-semibold text-violet-600 dark:text-violet-400"
           initial={{ opacity: 0, y: -20 }}
           transition={{ duration: 0.3 }}
+          whileHover={{ scale: 1.05 }}
         >
           <p className="text-lg">{emoji}</p>
         </motion.div>
@@ -273,14 +282,14 @@ const TechnologyPage: React.FC = () => {
           >
             <Card className="w-full border border-violet-200">
               <CardBody className="p-4">
-                <h3 className="font-bold mb-2">
+                <h3 className="font-bold mb-3 text-lg sm:text-xl text-violet-700 dark:text-violet-300">
                   {getEmojiForCategory(ex.category)} {ex.title}
                 </h3>
                 <p className="mb-2">{ex.content}</p>
                 <p className="mb-4">{ex.question}</p>
                 {ex.options ? (
                   <select
-                    className="w-full mb-2 p-3 text-base rounded-lg border border-violet-300 dark:bg-gray-700"
+                    className="w-full mb-2 p-4 text-base rounded-xl border border-violet-300 dark:bg-gray-700 font-medium shadow-md focus:ring-2 focus:ring-violet-400"
                     disabled={results[ex._id] !== undefined}
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
@@ -302,7 +311,7 @@ const TechnologyPage: React.FC = () => {
                   />
                 )}
                 <Button
-                  className="w-full bg-violet-500 text-white"
+                  className="w-full bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold py-2 rounded-xl hover:brightness-110 transition"
                   disabled={results[ex._id] !== undefined}
                   onClick={() => handleSubmit(ex._id, ex.answer)}
                 >
@@ -310,7 +319,9 @@ const TechnologyPage: React.FC = () => {
                 </Button>
                 {results[ex._id] !== undefined && (
                   <p
-                    className={`mt-2 text-center ${results[ex._id] ? "text-green-500" : "text-red-500"}`}
+                    className={`mt-3 text-center font-semibold text-lg ${
+                      results[ex._id] ? "text-green-600" : "text-red-500"
+                    }`}
                   >
                     {results[ex._id] ? "Bonne réponse !" : "Mauvaise réponse"}
                   </p>
