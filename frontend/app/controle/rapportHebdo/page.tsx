@@ -646,7 +646,7 @@ const WeeklyReport: React.FC = () => {
 
   // Gestion des réponses aux questions
   const handleAnswerSelection = (questionId: string, answer: string) => {
-    if (answerAttempts[questionId] === 2 || errorCount >= 20) {
+  if (answerAttempts[questionId] === 3 || errorCount >= 20) {
       Swal.fire({
         icon: "info",
         title: "Limite atteinte",
@@ -671,18 +671,29 @@ const WeeklyReport: React.FC = () => {
       const question = reportModel.questions.find((q) => q._id === questionId);
 
       if (question && question.options && question.answer) {
-        const isCorrect = question.answer === answer;
+        const currentAttempts = (answerAttempts[questionId] || 0) + 1;
+        const isCorrect = question.answer === answer && currentAttempts <= 2;
 
         if (!isCorrect) {
           setErrorCount((prev) => prev + 1);
         }
 
+        let feedbackHtml = "";
+
+        if (isCorrect) {
+          feedbackHtml = "<strong>Tu as bien répondu 👏</strong>";
+        } else if (currentAttempts === 2) {
+          feedbackHtml = `<p>Essaie encore une fois ! 💪</p>`;
+        } else if (currentAttempts === 3) {
+          feedbackHtml = `<p>❌ Mauvaise réponse.<br/>✅ La bonne réponse était : <strong>${question.answer}</strong></p>`;
+        } else {
+          feedbackHtml = `<p>Ne t'inquiète pas, tu feras mieux la prochaine fois 💪</p>`;
+        }
+
         Swal.fire({
           icon: isCorrect ? "success" : "error",
           title: isCorrect ? "✅ Bravo !" : "❌ Mauvaise réponse",
-          html: isCorrect
-            ? "<strong>Tu as bien répondu 👏</strong>"
-            : `<p>Ne t'inquiète pas, tu feras mieux la prochaine fois 💪</p><br/><p>✅ La bonne réponse était : <strong>${question.answer}</strong></p>`,
+          html: feedbackHtml,
           timer: 4000,
           showConfirmButton: false,
           background: "#f0f4ff",
