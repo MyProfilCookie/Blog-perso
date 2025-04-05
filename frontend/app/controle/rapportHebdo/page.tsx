@@ -371,6 +371,7 @@ const WeeklyReport: React.FC = () => {
             _id: `${subject.name}-${index}`,
             text: q.question,
             options: q.options,
+            answer: q.answer, // Ajout de la réponse pour vérification
             category: subject.name,
           });
         });
