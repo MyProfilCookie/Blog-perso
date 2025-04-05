@@ -218,7 +218,7 @@ const courseThemes: CourseTheme[] = [
     title: "Erreurs de révision",
     description: "Résultat de l'examen de fin d'étude.",
     image: "https://placehold.co/600x400/orange/white?text=Erreurs",
-    route: "/controle/revision-errors",
+    route: "/revision-errors",
     bgColor: "bg-orange-200 dark:bg-orange-900/30",
     icon: faExclamationTriangle,
     iconColor: "text-gray-500 dark:text-gray-400",
