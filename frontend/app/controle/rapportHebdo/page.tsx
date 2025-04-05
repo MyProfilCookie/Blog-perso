@@ -248,6 +248,10 @@ const WeeklyReport: React.FC = () => {
   const [selectedAnswers, setSelectedAnswers] = useState<
     Record<string, string>
   >({});
+  const [answerAttempts, setAnswerAttempts] = useState<Record<string, number>>(
+    {},
+  );
+  const [errorCount, setErrorCount] = useState(0);
 
   // Stocker le modèle de rapport avec ses questions
   const [reportModel, setReportModel] = useState<ReportModel | null>(null);
@@ -642,27 +646,44 @@ const WeeklyReport: React.FC = () => {
 
   // Gestion des réponses aux questions
   const handleAnswerSelection = (questionId: string, answer: string) => {
-    console.log(
-      `Réponse sélectionnée: question ${questionId}, réponse ${answer}`,
-    );
+    if (answerAttempts[questionId] === 2 || errorCount >= 20) {
+      Swal.fire({
+        icon: "info",
+        title: "Limite atteinte",
+        text: "Tu ne peux plus répondre à cette question ou tu as atteint la limite d’erreurs.",
+        background: "#f0f4ff",
+      });
+
+      return;
+    }
+
     setSelectedAnswers((prev) => ({
       ...prev,
       [questionId]: answer,
     }));
-    // Vérifie si la réponse est correcte (si on a le modèle et la bonne réponse)
+
+    setAnswerAttempts((prev) => ({
+      ...prev,
+      [questionId]: (prev[questionId] || 0) + 1,
+    }));
+
     if (reportModel) {
       const question = reportModel.questions.find((q) => q._id === questionId);
 
       if (question && question.options && question.answer) {
         const isCorrect = question.answer === answer;
 
+        if (!isCorrect) {
+          setErrorCount((prev) => prev + 1);
+        }
+
         Swal.fire({
           icon: isCorrect ? "success" : "error",
-          title: isCorrect ? "✅ Bravo !" : "❌ Ce n'est pas la bonne réponse",
-          text: isCorrect
-            ? "Tu as bien répondu 👏"
-            : "Ne t'inquiète pas, tu feras mieux la prochaine fois 💪",
-          timer: 3000,
+          title: isCorrect ? "✅ Bravo !" : "❌ Mauvaise réponse",
+          html: isCorrect
+            ? "<strong>Tu as bien répondu 👏</strong>"
+            : `<p>Ne t'inquiète pas, tu feras mieux la prochaine fois 💪</p><br/><p>✅ La bonne réponse était : <strong>${question.answer}</strong></p>`,
+          timer: 4000,
           showConfirmButton: false,
           background: "#f0f4ff",
         });
@@ -858,6 +879,18 @@ const WeeklyReport: React.FC = () => {
               </p>
             </motion.div>
           </div> */}
+          {/* Error Progress Bar */}
+          <div className="w-full max-w-4xl mx-auto mb-6">
+            <div className="mb-2 text-sm text-center text-gray-700 dark:text-gray-300">
+              Erreurs : {errorCount} / 20
+            </div>
+            <div className="w-full bg-gray-200 rounded-full h-3 dark:bg-gray-700">
+              <div
+                className="h-3 rounded-full bg-red-500 transition-all duration-300"
+                style={{ width: `${(errorCount / 20) * 100}%` }}
+              />
+            </div>
+          </div>
           <div className="container mx-auto px-6 py-8 flex-grow">
             {/* En-tête */}
             <motion.div
