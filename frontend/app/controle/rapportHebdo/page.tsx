@@ -29,6 +29,7 @@ interface Exercise {
 interface Question {
   _id: string;
   options: string[];
+  answer?: string;
   // Ces champs seront ajoutés pour les questions fictives
   text?: string;
   category?: string;
@@ -647,6 +648,25 @@ const WeeklyReport: React.FC = () => {
       ...prev,
       [questionId]: answer,
     }));
+    // Vérifie si la réponse est correcte (si on a le modèle et la bonne réponse)
+    if (reportModel) {
+      const question = reportModel.questions.find((q) => q._id === questionId);
+
+      if (question && question.options && question.answer) {
+        const isCorrect = question.answer === answer;
+
+        Swal.fire({
+          icon: isCorrect ? "success" : "error",
+          title: isCorrect ? "✅ Bravo !" : "❌ Ce n'est pas la bonne réponse",
+          text: isCorrect
+            ? "Tu as bien répondu 👏"
+            : "Ne t'inquiète pas, tu feras mieux la prochaine fois 💪",
+          timer: 3000,
+          showConfirmButton: false,
+          background: "#f0f4ff",
+        });
+      }
+    }
   };
 
   const getProgressEmoji = (progress: string) => {
