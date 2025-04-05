@@ -37,22 +37,28 @@ export const RevisionProvider: React.FC<RevisionProviderProps> = ({ children }) 
 
   useEffect(() => {
     const fetchErrors = async () => {
+      if (typeof window === 'undefined') return;
+
       const user = localStorage.getItem("user");
       const token = localStorage.getItem("userToken");
 
       if (!user || !token) return;
 
-      const userId = JSON.parse(user)._id;
+      try {
+        const userId = JSON.parse(user)._id;
 
-      const response = await fetch(`/api/revision-errors?userId=${userId}`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
+        const response = await fetch(`/api/revision-errors?userId=${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
-      if (response.ok) {
-        const data = await response.json();
-        setErrors(data.errors || []);
+        if (response.ok) {
+          const data = await response.json();
+          setErrors(data.errors || []);
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération des erreurs:', error);
       }
     };
 
