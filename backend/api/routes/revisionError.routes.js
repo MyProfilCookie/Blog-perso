@@ -4,7 +4,7 @@ const router = express.Router();
 const RevisionError = require('../models/RevisionError'); // ou le bon chemin vers ton modèle
 
 // POST /api/revision-errors
-router.post('/revision-errors', async (req, res) => {
+router.post('/', async (req, res) => {
   const { userId, questionId, questionText, selectedAnswer, correctAnswer, category } = req.body;
 
   try {
