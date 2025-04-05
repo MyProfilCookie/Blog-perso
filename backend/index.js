@@ -26,6 +26,7 @@ const adminRoutes = require("./api/routes/admin.routes");
 const monthlyRoutes = require("./api/routes/monthly_courses.routes");
 const subjectRoutes = require("./api/routes/subject.routes"); // Nouvelle route pour les matières
 const reportRoutes = require("./api/routes/reportRoutes"); // Nouvelle route pour les rapports
+const revisionErrorRoutes = require("./api/routes/revisionError.routes"); // Nouvelle route pour les erreurs de révision // Nouvelle route pour les erreurs de révision
 const Payment = require("./api/models/payments"); // Modèle de paiement
 
 // 🔍 Vérification des variables d'environnement
@@ -134,6 +135,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/monthly", monthlyRoutes);
 app.use("/api/subjects", subjectRoutes); // Nouvelle route pour les matières
 app.use("/api/reports", reportRoutes); // Nouvelle route pour les rapports
+app.use("/api/revisionErrors", revisionErrorRoutes); // Nouvelle route pour les erreurs de révision
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   console.log('Headers:', req.headers);

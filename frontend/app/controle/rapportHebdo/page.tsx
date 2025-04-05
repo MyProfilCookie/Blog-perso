@@ -676,6 +676,26 @@ const WeeklyReport: React.FC = () => {
 
         if (!isCorrect) {
           setErrorCount((prev) => prev + 1);
+ 
+          if (currentAttempts === 3 && userId) {
+            fetch(`${getBaseUrl()}/revision-errors`, {
+              method: "POST",
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${localStorage.getItem("userToken")}`,
+              },
+              body: JSON.stringify({
+                userId,
+                questionId: question._id,
+                questionText: question.text,
+                selectedAnswer: answer,
+                correctAnswer: question.answer,
+                category: question.category,
+              }),
+            }).catch((err) =>
+              console.error("Erreur lors de l'enregistrement de l'erreur :", err)
+            );
+          }
         }
 
         let feedbackHtml = "";
