@@ -135,7 +135,7 @@ app.use("/api/admin", adminRoutes);
 app.use("/api/monthly", monthlyRoutes);
 app.use("/api/subjects", subjectRoutes); // Nouvelle route pour les matières
 app.use("/api/reports", reportRoutes); // Nouvelle route pour les rapports
-app.use("/api/revisionErrors", revisionErrorRoutes); // Nouvelle route pour les erreurs de révision
+app.use("/api/revision-errors", revisionErrorRoutes ); // Nouvelle route pour les erreurs de révision
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   console.log('Headers:', req.headers);
