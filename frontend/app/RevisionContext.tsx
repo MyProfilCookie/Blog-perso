@@ -35,10 +35,9 @@ interface RevisionProviderProps {
 export const RevisionProvider: React.FC<RevisionProviderProps> = ({ children }) => {
   const [errors, setErrors] = useState<RevisionError[]>([]);
 
-  const getBaseUrl = () =>
-    process.env.NODE_ENV === "development"
-      ? "http://localhost:3001"
-      : "https://autistudy-api.onrender.com";
+  const baseUrl =
+          process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
+
 
   useEffect(() => {
     const fetchErrors = async () => {
@@ -52,7 +51,7 @@ export const RevisionProvider: React.FC<RevisionProviderProps> = ({ children }) 
       try {
         const userId = JSON.parse(user)._id;
 
-        const response = await fetch(`${getBaseUrl()}/api/revision-errors?userId=${userId}`, {
+        const response = await fetch(`${baseUrl}/revision-errors?userId=${userId}`, {
           headers: {
             Authorization: `Bearer ${token}`,
           },
