@@ -16,4 +16,19 @@ router.post('/', async (req, res) => {
   }
 });
 
+// GET /api/revision-errors?userId=...
+router.get('/', async (req, res) => {
+  const userId = req.query.userId;
+  if (!userId) {
+    return res.status(400).json({ success: false, message: 'Paramètre userId manquant' });
+  }
+
+  try {
+    const errors = await RevisionError.find({ userId }).sort({ date: -1 });
+    res.status(200).json({ success: true, errors });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Erreur lors de la récupération des erreurs' });
+  }
+});
+
 module.exports = router;
