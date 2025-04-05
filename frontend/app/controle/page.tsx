@@ -26,6 +26,7 @@ import {
   faCrown,
   faFire,
   faMusic,
+  faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
 
 import BackButton from "@/components/back";
@@ -211,6 +212,16 @@ const courseThemes: CourseTheme[] = [
     bgColor: "bg-rose-200 dark:bg-rose-900/30",
     icon: faMusic,
     iconColor: "text-rose-500 dark:text-rose-400",
+  },
+  {
+    id: 13,
+    title: "Erreurs de révision",
+    description: "Résultat de l'examen de fin d'étude.",
+    image: "https://placehold.co/600x400/orange/white?text=Erreurs",
+    route: "/controle/revision-errors",
+    bgColor: "bg-orange-200 dark:bg-orange-900/30",
+    icon: faExclamationTriangle,
+    iconColor: "text-gray-500 dark:text-gray-400",
   },
 ];
 
