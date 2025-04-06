@@ -233,7 +233,11 @@ const ControlePage = ({ courseThemes }: { courseThemes: CourseTheme[] }) => {
             <Card
               isPressable
               className={`relative w-full h-full min-h-[160px] ${theme.bgColor} flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:brightness-110`}
-              onClick={() => router.push(theme.route)}
+              onClick={() => {
+                if (router.pathname !== theme.route) {
+                  router.push(theme.route);
+                }
+              }}
             >
               <CardBody className="p-4 flex flex-col justify-center h-full text-center items-center">
                 {theme.status && (
