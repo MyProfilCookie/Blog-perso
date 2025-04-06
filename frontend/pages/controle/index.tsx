@@ -237,7 +237,7 @@ export default function ControlePage() {
 
   return (
     <div className="flex flex-col min-h-screen p-4">
-      <div className="flex-1 w-full max-w-7xl mx-auto">
+      <div className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8">
         <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
             <motion.div
