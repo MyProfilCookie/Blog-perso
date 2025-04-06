@@ -33,8 +33,8 @@ const formatDate = (dateString: string) => {
 };
 
 const ArticlePage = () => {
-  const { id } = useParams();
-  const articleId = Array.isArray(id) ? id[0] : id;
+  const params = useParams() as { id: string | string[] };
+  const articleId = Array.isArray(params.id) ? params.id[0] : params.id;
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -181,9 +181,3 @@ const ArticlePage = () => {
 };
 
 export default ArticlePage;
-
-
-
-
-
-
