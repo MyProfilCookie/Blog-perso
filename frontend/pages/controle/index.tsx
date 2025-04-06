@@ -234,7 +234,7 @@ const ControlePage = ({ courseThemes }: { courseThemes: CourseTheme[] }) => {
               isPressable
               className={`relative w-full h-full min-h-[160px] ${theme.bgColor} flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:brightness-110`}
               onClick={() => {
-                if (router.pathname !== theme.route) {
+                if (theme.route && router.pathname !== theme.route) {
                   router.push(theme.route);
                 }
               }}
@@ -260,7 +260,7 @@ const ControlePage = ({ courseThemes }: { courseThemes: CourseTheme[] }) => {
                 <div className="flex items-center gap-2 mb-2">
                   <FontAwesomeIcon
                     className={theme.iconColor}
-                    icon={iconMap[theme.icon as keyof typeof iconMap]}
+                    icon={iconMap[theme.icon as keyof typeof iconMap] || faBookOpen}
                   />
                   <h2 className="font-bold">{theme.title}</h2>
                 </div>
