@@ -1251,7 +1251,7 @@ export const Navbar = () => {
 
                   <DropdownItem
                     key="controle"
-                    onClick={() => router.push("/controle")}
+                    onClick={() => router.push("/pages/controle")}
                   >
                     <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
                     Controle
