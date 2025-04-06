@@ -1,5 +1,3 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
@@ -9,7 +7,6 @@ import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 // Interface pour les exercices d'art
 interface Exercise {
@@ -24,9 +21,27 @@ interface Exercise {
   category: string;
 }
 
-const ArtPage: React.FC = () => {
+export async function getServerSideProps() {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL || "https://autistudy-api.onrender.com";
+
+  const response = await fetch(`${baseUrl}/subjects/art`);
+  const data = await response.json();
+
+  return {
+    props: {
+      serverExercises: data.questions || [],
+    },
+  };
+}
+
+interface ArtPageProps {
+  serverExercises: Exercise[];
+}
+
+const ArtPage: React.FC<ArtPageProps> = ({ serverExercises }) => {
   const router = useRouter();
-  const [exercises, setExercises] = useState<Exercise[]>([]);
+  const [exercises, setExercises] = useState<Exercise[]>(serverExercises);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
@@ -89,59 +104,6 @@ const ArtPage: React.FC = () => {
         return "🎨";
     }
   };
-
-  useEffect(() => {
-    const fetchExercises = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/subjects/art`,
-        );
-
-        setExercises(response.data.questions);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setError("Erreur lors du chargement des exercices");
-        setLoading(false);
-      }
-    };
-
-    fetchExercises();
-  }, []);
-
-  // Gestion du minuteur et des messages d'encouragement
-  useEffect(() => {
-    let timer: NodeJS.Timeout;
-    let encouragementTimer: NodeJS.Timeout;
-
-    if (timeLeft > 0 && !isFinished) {
-      // Minuteur principal
-      timer = setInterval(() => {
-        setTimeLeft(prev => {
-          if (prev <= 1) {
-            calculateFinalScore();
-            return 0;
-          }
-          return prev - 1;
-        });
-      }, 1000);
-
-      // Messages d'encouragement toutes les 10 minutes
-      encouragementTimer = setInterval(() => {
-        const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
-        setEmoji(`Page ${currentPage} : ${randomMessage}`);
-        setTimeout(() => setEmoji(""), 5000);
-      }, 900000);
-    } else if (timeLeft === 0) {
-      setIsFinished(true);
-      setShowResults(true);
-    }
-
-    return () => {
-      clearInterval(timer);
-      clearInterval(encouragementTimer);
-    };
-  }, [timeLeft, isFinished, currentPage]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,

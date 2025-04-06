@@ -1,3 +1,20 @@
+export async function getServerSideProps() {
+  const baseUrl =
+    process.env.NEXT_PUBLIC_API_URL || "https://autistudy-api.onrender.com";
+
+  const response = await fetch(`${baseUrl}/subjects/french`);
+  const data = await response.json();
+
+  return {
+    props: {
+      serverExercises: data.questions || [],
+    },
+  };
+}
+
+interface FrenchPageProps {
+  serverExercises: Exercise[];
+}
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
@@ -9,7 +26,6 @@ import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 // Interface pour les exercices de français
 interface Exercise {
@@ -24,7 +40,7 @@ interface Exercise {
   category: string;
 }
 
-const FrenchPage: React.FC = () => {
+const FrenchPage: React.FC<FrenchPageProps> = ({ serverExercises }) => {
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
@@ -91,23 +107,11 @@ const FrenchPage: React.FC = () => {
   };
 
   useEffect(() => {
-    const fetchExercises = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/subjects/french`,
-        );
+    if (!serverExercises) return;
 
-        setExercises(response.data.questions);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setError("Erreur lors du chargement des exercices");
-        setLoading(false);
-      }
-    };
-
-    fetchExercises();
-  }, []);
+    setExercises(serverExercises);
+    setLoading(false);
+  }, [serverExercises]);
 
   // Gestion du minuteur et des messages d'encouragement
   useEffect(() => {
@@ -440,4 +444,4 @@ const FrenchPage: React.FC = () => {
   );
 };
 
-export default FrenchPage; 
+export default FrenchPage;

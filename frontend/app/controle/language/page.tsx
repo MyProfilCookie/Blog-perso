@@ -198,7 +198,7 @@ const LanguagePage: React.FC = () => {
 
   const filteredAllExercises =
     selectedCategory === "Tout"
-      ? exercises
+    ? exercises 
       : exercises.filter((ex) => ex.category === selectedCategory);
 
   const totalPages = Math.ceil(filteredAllExercises.length / questionsPerPage);
@@ -214,7 +214,7 @@ const LanguagePage: React.FC = () => {
 
   if (loading) {
     return (
-      <motion.div
+      <motion.div 
         animate={{ opacity: 1 }}
         className="flex items-center justify-center min-h-screen"
         initial={{ opacity: 0 }}
@@ -231,23 +231,23 @@ const LanguagePage: React.FC = () => {
   return (
     <div className="p-4 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
       <div className="flex justify-between items-center mb-4">
-        <BackButton />
+              <BackButton />
         <Timer timeLeft={timeLeft} />
-      </div>
+            </div>
 
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
+            <motion.div 
+              animate={{ opacity: 1, y: 0 }}
         className="text-center mb-4"
         initial={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.4 }}
       >
         <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400">
           Langues 🌍
-        </h1>
+              </h1>
         <p className="text-gray-600 dark:text-gray-400 text-sm">
           Exercices interactifs
-        </p>
-      </motion.div>
+              </p>
+            </motion.div>
 
       <ProgressBar
         correctAnswers={completedExercises}
@@ -265,17 +265,17 @@ const LanguagePage: React.FC = () => {
         transition={{ duration: 0.3 }}
         className="mb-4"
       >
-        <select
+                <select
           className="w-full sm:w-80 p-4 text-lg font-semibold rounded-2xl border border-blue-400 bg-blue-50 dark:bg-gray-900 shadow-md focus:ring-2 focus:ring-blue-500"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                >
           {categories.map((cat) => (
             <option key={cat} value={cat}>
               {cat}
-            </option>
-          ))}
-        </select>
+                    </option>
+                  ))}
+                </select>
       </motion.div>
 
       <div className="flex justify-center my-4 gap-2">
@@ -292,51 +292,51 @@ const LanguagePage: React.FC = () => {
             {idx + 1}
           </button>
         ))}
-      </div>
+            </div>
 
       {emoji && (
-        <motion.div
+              <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-5 text-lg rounded-xl shadow-xl border-2 border-blue-300 z-50 font-semibold text-blue-600 dark:text-blue-400"
           initial={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
+                transition={{ duration: 0.3 }}
           whileHover={{ scale: 1.05 }}
         >
           <p className="text-lg">{emoji}</p>
-        </motion.div>
-      )}
+              </motion.div>
+            )}
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         {paginatedExercises.map((ex, idx) => (
-          <motion.div
+            <motion.div
             key={ex._id}
             animate={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 20 }}
+                  initial={{ opacity: 0, y: 20 }}
             transition={{ delay: idx * 0.1 }}
-            whileHover={{ scale: 1.02 }}
-          >
+                  whileHover={{ scale: 1.02 }}
+                >
             <Card className="w-full border border-blue-200">
               <CardBody className="p-4">
                 <h3 className="font-bold mb-3 text-lg sm:text-xl text-blue-700 dark:text-blue-300">
                   {getEmojiForCategory(ex.category)} {ex.title}
-                </h3>
+              </h3>
                 <p className="mb-2">{ex.content}</p>
                 <p className="mb-4">{ex.question}</p>
 
                 {ex.image && (
-                  <div className="mb-4">
-                    <Image
+                        <div className="mb-4">
+                <Image
                       alt={ex.title}
-                      className="rounded-lg object-cover w-full h-48"
-                      height={200}
+                            className="rounded-lg object-cover w-full h-48"
+                            height={200}
                       src={`/assets/language/${ex.image}`}
-                      width={300}
-                    />
-                  </div>
-                )}
+                            width={300}
+                          />
+                        </div>
+              )}
 
                 {ex.options ? (
-                  <select
+                <select
                     className="w-full mb-2 p-4 text-base rounded-xl border border-blue-300 dark:bg-gray-700 font-medium shadow-md focus:ring-2 focus:ring-blue-400"
                     disabled={results[ex._id] !== undefined}
                     value={userAnswers[ex._id] || ""}
@@ -345,27 +345,27 @@ const LanguagePage: React.FC = () => {
                     <option value="">Sélectionner une réponse</option>
                     {ex.options.map((option, optIdx) => (
                       <option key={optIdx} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
+                      {option}
+                    </option>
+                  ))}
+                </select>
+              ) : (
+                <input
                     className="w-full mb-2"
                     disabled={results[ex._id] !== undefined}
-                    type="text"
+                  type="text"
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
-                  />
-                )}
+                />
+              )}
 
-                <Button
+                      <Button
                   className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-2 rounded-xl hover:brightness-110 transition"
                   disabled={results[ex._id] !== undefined}
                   onClick={() => handleSubmit(ex._id, ex.answer)}
-                >
-                  Soumettre
-                </Button>
+              >
+                Soumettre
+                      </Button>
 
                 {results[ex._id] !== undefined && (
                   <p
@@ -375,59 +375,59 @@ const LanguagePage: React.FC = () => {
                   >
                     {results[ex._id] ? "Bonne réponse !" : "Mauvaise réponse"}
                   </p>
-                )}
-              </CardBody>
-            </Card>
-          </motion.div>
+              )}
+            </CardBody>
+          </Card>
+                </motion.div>
         ))}
-      </div>
-
-      {showResults && (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
-          initial={{ opacity: 0, y: 20 }}
-        >
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full">
-            <h2 className="text-2xl sm:text-3xl font-bold text-center text-blue-600 dark:text-blue-400 mb-4">
-              Résultats {emoji}
-            </h2>
-            <p className="text-center text-xl mb-6">
-              Score final : {finalScore?.toFixed(1)}%
-            </p>
-            <div className="space-y-4">
-              {badges.perfectScore && (
-                <div className="flex items-center gap-2 text-yellow-500">
-                  <span>🌟</span>
-                  <p>Score parfait !</p>
-                </div>
-              )}
-              {badges.streakMaster && (
-                <div className="flex items-center gap-2 text-orange-500">
-                  <span>🔥</span>
-                  <p>Maître des séries !</p>
-                </div>
-              )}
-              {badges.languageExpert && (
-                <div className="flex items-center gap-2 text-blue-500">
-                  <span>🎓</span>
-                  <p>Expert en langues !</p>
-                </div>
-              )}
-              {badges.quickLearner && (
-                <div className="flex items-center gap-2 text-green-500">
-                  <span>⚡</span>
-                  <p>Apprenant rapide !</p>
-                </div>
-              )}
-            </div>
-            <Button
-              className="w-full mt-6 bg-blue-500 text-white hover:bg-blue-600"
-              onClick={() => setShowResults(false)}
-            >
-              Fermer
-            </Button>
           </div>
+
+          {showResults && (
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
+              initial={{ opacity: 0, y: 20 }}
+            >
+              <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full">
+            <h2 className="text-2xl sm:text-3xl font-bold text-center text-blue-600 dark:text-blue-400 mb-4">
+                  Résultats {emoji}
+                </h2>
+                <p className="text-center text-xl mb-6">
+                  Score final : {finalScore?.toFixed(1)}%
+                </p>
+                <div className="space-y-4">
+                  {badges.perfectScore && (
+                    <div className="flex items-center gap-2 text-yellow-500">
+                      <span>🌟</span>
+                      <p>Score parfait !</p>
+                    </div>
+                  )}
+                  {badges.streakMaster && (
+                    <div className="flex items-center gap-2 text-orange-500">
+                      <span>🔥</span>
+                      <p>Maître des séries !</p>
+                    </div>
+                  )}
+                  {badges.languageExpert && (
+                    <div className="flex items-center gap-2 text-blue-500">
+                      <span>🎓</span>
+                      <p>Expert en langues !</p>
+                    </div>
+                  )}
+                  {badges.quickLearner && (
+                    <div className="flex items-center gap-2 text-green-500">
+                      <span>⚡</span>
+                      <p>Apprenant rapide !</p>
+                    </div>
+                  )}
+                </div>
+                <Button
+              className="w-full mt-6 bg-blue-500 text-white hover:bg-blue-600"
+                  onClick={() => setShowResults(false)}
+                >
+                  Fermer
+                </Button>
+              </div>
         </motion.div>
       )}
     </div>
