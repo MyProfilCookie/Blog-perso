@@ -1003,11 +1003,15 @@ const WeeklyReport: React.FC = () => {
                       {/* En-tête de la matière */}
                       <div
                         className={`bg-gradient-to-r ${
-                          subjectList.find((s) => s.name === item.subject)?.color || "from-gray-400 to-gray-300"
+                          subjectList.find(
+                            (s) => s.name.trim().toLowerCase() === item.subject.trim().toLowerCase()
+                          )?.color || "from-gray-400 to-gray-300"
                         } -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
                       >
                         <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                          {(subjectList.find((s) => s.name === item.subject)?.icon || "📘")} {item.subject}
+                          {(subjectList.find(
+                            (s) => s.name.trim().toLowerCase() === item.subject.trim().toLowerCase()
+                          )?.icon || "📘")} {item.subject}
                         </h3>
                       </div>
 
