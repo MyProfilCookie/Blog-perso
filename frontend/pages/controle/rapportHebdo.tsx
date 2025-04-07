@@ -1005,16 +1005,25 @@ const WeeklyReport: React.FC = () => {
                   <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
                     <CardBody className="p-4 sm:p-6">
                       <div
-                        className={`-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6 text-white text-center font-bold ${
-                          subjectList.find((s) =>
-                            s.name.trim().toLowerCase() === item.subject.trim().toLowerCase()
-                          )?.color || "bg-gray-400"
-                        }`}
+                        className="-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6 text-white text-center font-bold"
+                        style={{
+                          background: `linear-gradient(to right, ${
+                            subjectList
+                              .find(
+                                (s) =>
+                                  s.name.trim().toLowerCase() ===
+                                  item.subject.trim().toLowerCase(),
+                              )
+                              ?.color?.replace("from-", "#")
+                              .replace(" to-", ", #") || "#ccc, #ccc"
+                          })`,
+                        }}
                       >
                         <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
                           {subjectList.find(
                             (s) =>
-                              s.name.trim().toLowerCase() === item.subject.trim().toLowerCase()
+                              s.name.trim().toLowerCase() ===
+                              item.subject.trim().toLowerCase(),
                           )?.icon || "📘"}{" "}
                           {item.subject}
                         </h3>
