@@ -366,19 +366,15 @@ const WeeklyReport: React.FC = () => {
         return null;
       }
 
-      const questions: Question[] = [];
-
-      selectedWeekData.subjects.forEach((subject: any) => {
-        subject.questions.forEach((q: any, index: number) => {
-          questions.push({
-            _id: `${subject.name}-${index}`,
-            text: q.question,
-            options: q.options,
-            answer: q.answer, // Ajout de la réponse pour vérification
-            category: subject.name,
-          });
-        });
-      });
+      const questions: Question[] = selectedWeekData.subjects.flatMap((subject: any) =>
+        subject.questions.map((q: any, index: number) => ({
+          _id: `${subject.name}-${index}`,
+          text: q.question,
+          options: q.options,
+          answer: q.answer,
+          category: subject.name,
+        }))
+      );
 
       const model: ReportModel = {
         _id: `rapportHebdo-${weekNumber}`,
@@ -393,6 +389,7 @@ const WeeklyReport: React.FC = () => {
         questions,
       };
 
+      console.log("✅ Questions récupérées :", questions);
       return model;
     } catch (error) {
       if (axios.isAxiosError(error)) {
