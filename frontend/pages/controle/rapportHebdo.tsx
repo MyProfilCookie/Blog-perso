@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+"use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
@@ -5,7 +7,6 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-import ReportHeader from "@/components/rapport/ReportHeader";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
@@ -335,16 +336,17 @@ const WeeklyReport: React.FC = () => {
 
       if (!token || isTokenExpired(token)) {
         router.push("/users/login");
+
         return null;
       }
 
       const baseUrl = getBaseUrl();
       const match = selectedWeek.match(/\d+/);
-      const weekNumber = match && !isNaN(parseInt(match[0], 10))
-        ? parseInt(match[0], 10)
-        : new Date().getWeekNumber();
-
-      const url = `${process.env.NEXT_PUBLIC_API_URL}/subjects/rapportHebdo?week=${weekNumber}`;
+      const weekNumber =
+        match && !isNaN(parseInt(match[0], 10))
+          ? parseInt(match[0], 10)
+          : new Date().getWeekNumber();
+      const url = `${baseUrl}/subjects/rapportHebdo?week=${weekNumber}`;
 
       console.log(
         "📡 Récupération du modèle de rapport pour la semaine :",
@@ -354,10 +356,6 @@ const WeeklyReport: React.FC = () => {
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,
-        },
-        params: { 
-          week: weekNumber,
-          type: "weekly"
         },
       });
 
@@ -369,15 +367,19 @@ const WeeklyReport: React.FC = () => {
         return null;
       }
 
-      const questions: Question[] = selectedWeekData.subjects.flatMap((subject: any) =>
-        subject.questions.map((q: any, index: number) => ({
-          _id: `${subject.name}-${index}`,
-          text: q.question,
-          options: q.options,
-          answer: q.answer,
-          category: subject.name,
-        }))
-      );
+      const questions: Question[] = [];
+
+      selectedWeekData.subjects.forEach((subject: any) => {
+        subject.questions.forEach((q: any, index: number) => {
+          questions.push({
+            _id: `${subject.name}-${index}`,
+            text: q.question,
+            options: q.options,
+            answer: q.answer, // Ajout de la réponse pour vérification
+            category: subject.name,
+          });
+        });
+      });
 
       const model: ReportModel = {
         _id: `rapportHebdo-${weekNumber}`,
@@ -392,7 +394,6 @@ const WeeklyReport: React.FC = () => {
         questions,
       };
 
-      console.log("✅ Questions récupérées :", questions);
       return model;
     } catch (error) {
       if (axios.isAxiosError(error)) {
@@ -408,6 +409,38 @@ const WeeklyReport: React.FC = () => {
       return null;
     }
   };
+
+  // Charger le modèle de rapport une seule fois
+  useEffect(() => {
+    const loadReportModel = async () => {
+      if (selectedWeek) {
+        console.log(
+          "🔍 selectedWeek au moment du chargement du modèle :",
+          selectedWeek,
+        );
+        console.log(
+          "⏳ Appel de loadReportModel pour la semaine :",
+          selectedWeek,
+        );
+        const model = await fetchReportModel();
+
+        if (model) {
+          setReportModel(model);
+          modelLoaded.current = true;
+          console.log(
+            "Modèle de rapport chargé avec",
+            model.questions.length,
+            "questions",
+          );
+        } else {
+          modelLoaded.current = false;
+          console.error("Impossible de charger le modèle de rapport");
+        }
+      }
+    };
+
+    loadReportModel();
+  }, [selectedWeek]);
 
   // Fonction pour créer un rapport vide
   const createEmptyReport = () => {
@@ -433,7 +466,7 @@ const WeeklyReport: React.FC = () => {
     try {
       // Récupérer tous les rapports de l'utilisateur
       const baseUrl = getBaseUrl();
-      const url = `${baseUrl.replace("/api", "")}/reports/user/${userId}`;
+      const url = `${baseUrl}/reports/user/${userId}`;
 
       console.log("📡 Récupération de tous les rapports:", url);
 
@@ -485,7 +518,7 @@ const WeeklyReport: React.FC = () => {
 
       if (reportData._id) {
         // Mise à jour d'un rapport existant
-        const url = `${baseUrl.replace("/api", "")}/reports/${reportData._id}`;
+        const url = `${baseUrl}/reports/${reportData._id}`;
 
         console.log("📡 Mise à jour du rapport:", url);
 
@@ -496,7 +529,7 @@ const WeeklyReport: React.FC = () => {
         });
       } else {
         // Création d'un nouveau rapport
-        const url = `${baseUrl.replace("/api", "")}/reports`;
+        const url = `${baseUrl}/reports`;
 
         console.log("📡 Création d'un nouveau rapport:", url);
 
@@ -541,11 +574,6 @@ const WeeklyReport: React.FC = () => {
           if (report && report.items && report.items.length > 0) {
             console.log("Rapport chargé depuis l'API");
             setReportItems(report.items);
-            const model = await fetchReportModel();
-
-            if (model) {
-              setReportModel(model);
-            }
             setReportId(report._id);
 
             // Charger les réponses aux questions
@@ -618,11 +646,11 @@ const WeeklyReport: React.FC = () => {
 
   // Gestion des réponses aux questions
   const handleAnswerSelection = (questionId: string, answer: string) => {
-    if (answerAttempts[questionId] === 3 || errorCount >= 20) {
+  if (answerAttempts[questionId] === 3 || errorCount >= 20) {
       Swal.fire({
         icon: "info",
         title: "Limite atteinte",
-        text: "Tu ne peux plus répondre à cette question ou tu as atteint la limite d'erreurs.",
+        text: "Tu ne peux plus répondre à cette question ou tu as atteint la limite d’erreurs.",
         background: "#f0f4ff",
       });
 
@@ -648,9 +676,9 @@ const WeeklyReport: React.FC = () => {
 
         if (!isCorrect) {
           setErrorCount((prev) => prev + 1);
-
+ 
           if (currentAttempts === 3 && userId) {
-            fetch(`${getBaseUrl().replace("/api", "")}/revision-errors`, {
+            fetch(`${getBaseUrl()}/revision-errors`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -665,10 +693,7 @@ const WeeklyReport: React.FC = () => {
                 category: question.category,
               }),
             }).catch((err) =>
-              console.error(
-                "Erreur lors de l'enregistrement de l'erreur :",
-                err,
-              ),
+              console.error("Erreur lors de l'enregistrement de l'erreur :", err)
             );
           }
         }
@@ -820,24 +845,18 @@ const WeeklyReport: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  // Composant de chargement
-  const LoadingPlaceholder = () => {
+  // Affichage pendant le chargement
+  if (loading) {
     return (
       <motion.div
         animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center min-h-screen gap-4"
+        className="flex items-center justify-center min-h-screen"
         initial={{ opacity: 0 }}
         transition={{ duration: 0.5 }}
       >
-        <div className="text-3xl animate-spin">🔄</div>
-        <p className="text-lg text-gray-600">Chargement en cours...</p>
+        <div className="animate-spin text-4xl">🔄</div>
       </motion.div>
     );
-  };
-
-  // Affichage pendant le chargement
-  if (loading) {
-    return <LoadingPlaceholder />;
   }
 
   // Affichage en cas d'erreur
@@ -904,17 +923,67 @@ const WeeklyReport: React.FC = () => {
             </div>
           </div>
           <div className="container mx-auto px-6 py-8 flex-grow">
-            <ReportHeader
-              selectedWeek={selectedWeek}
-              showWeeks={showWeeks}
-              toggleWeekList={() => setShowWeeks(!showWeeks)}
-              userName={userName}
-              weeks={weeks}
-              onWeekSelect={(week) => {
-                setSelectedWeek(week);
-                setShowWeeks(false);
-              }}
-            />
+            {/* En-tête */}
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-16"
+              initial={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.5 }}
+            >
+              <h1 className="text-4xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-4">
+                📝 Mon Rapport de la Semaine
+              </h1>
+
+              <motion.h2
+                animate={{ opacity: 1, y: 0 }}
+                className="text-lg text-gray-600 dark:text-gray-300 mb-6"
+                initial={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+              >
+                {userName ? (
+                  <>
+                    Salut {userName} ! 👋 Prêt(e) à noter tes progrès de la
+                    semaine ?
+                  </>
+                ) : (
+                  <>Chargement de ton profil...</>
+                )}
+              </motion.h2>
+
+              {/* Sélecteur de semaine */}
+              <div className="relative inline-block">
+                <Button
+                  className="px-6 py-2 bg-gradient-to-r from-violet-500 to-blue-500 text-white rounded-full
+                            hover:from-violet-600 hover:to-blue-600 transition-all duration-300"
+                  onClick={() => setShowWeeks(!showWeeks)}
+                >
+                  {selectedWeek || "Sélectionner une semaine"} 📅
+                </Button>
+
+                {showWeeks && (
+                  <motion.div
+                    animate={{ opacity: 1, y: 0 }}
+                    className="absolute z-50 mt-2 py-2 w-48 bg-white dark:bg-gray-800 rounded-xl shadow-xl
+                              border-2 border-violet-200 dark:border-violet-700 max-h-60 overflow-y-auto"
+                    initial={{ opacity: 0, y: 10 }}
+                  >
+                    {weeks.map((week) => (
+                      <button
+                        key={week}
+                        className="w-full text-left px-4 py-2 cursor-pointer hover:bg-violet-50 dark:hover:bg-violet-900/30
+                                  text-gray-700 dark:text-gray-300"
+                        onClick={() => {
+                          setSelectedWeek(week);
+                          setShowWeeks(false);
+                        }}
+                      >
+                        {week}
+                      </button>
+                    ))}
+                  </motion.div>
+                )}
+              </div>
+            </motion.div>
 
             {/* Grille des matières */}
             <div
@@ -932,23 +1001,16 @@ const WeeklyReport: React.FC = () => {
                   <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
                     <CardBody className="p-4 sm:p-6">
                       {/* En-tête de la matière */}
-                      {(() => {
-                        const subjectData = subjectList.find(
-                          (s) => s.name === item.subject,
-                        );
-                        const gradient =
-                          subjectData?.color || "from-gray-400 to-gray-300";
-
-                        return (
-                          <div
-                            className={`bg-gradient-to-r ${gradient} -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
-                          >
-                            <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                              {subjectData?.icon || "📘"} {item.subject}
-                            </h3>
-                          </div>
-                        );
-                      })()}
+                      <div
+                        className={`bg-gradient-to-r ${
+                          subjectList[index % subjectList.length].color
+                        } -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
+                      >
+                        <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
+                          {subjectList[index % subjectList.length].icon}{" "}
+                          {item.subject}
+                        </h3>
+                      </div>
 
                       {/* Contenu principal */}
                       <div className="space-y-4">
@@ -1067,82 +1129,74 @@ const WeeklyReport: React.FC = () => {
               ))}
             </div>
 
-            {/* Matières de la semaine */}
+            {/* Section des questions */}
             {reportModel &&
               reportModel.questions &&
               reportModel.questions.length > 0 && (
-                <div className="w-full max-w-4xl mx-auto mb-8 px-4">
-                  <h2 className="text-lg font-bold mb-4 text-center text-violet-600 dark:text-violet-400">
-                    Matières de la semaine
+                <div className="mt-12 mb-8">
+                  <h2 className="text-2xl font-bold text-center mb-8 bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent">
+                    📋 Questions Complémentaires
                   </h2>
-                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-                    {Array.from(
-                      new Set(
-                        reportModel.questions
-                          .map((q) => q.category)
-                          .filter(Boolean),
-                      ),
-                    ).map((category) => {
-                      const subject = subjectList.find(
-                        (s) => s.name === category,
-                      );
-                      const gradient =
-                        subject?.color || "from-gray-400 to-gray-300";
-                      const icon = subject?.icon || "📘";
 
-                      return (
-                        <div
-                          key={category}
-                          className={`bg-gradient-to-r ${gradient} p-4 text-white rounded-lg shadow-md flex items-center justify-center`}
-                        >
-                          <span className="text-xl">{icon}</span>
-                          <span className="ml-2 font-semibold">{category}</span>
-                        </div>
-                      );
-                    })}
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-[1400px] mx-auto">
+                    {reportModel.questions.map((question, index) => (
+                      <Card
+                        key={question._id}
+                        className="border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-lg transition-all duration-300"
+                      >
+                        <CardBody className="p-5">
+                          <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
+                            {`${subjectEmojis[question.category || ""] || "❓"} ${question.text || `Question ${index + 1}`}`}
+                          </h3>
+
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                            {question.options && question.options.length > 0
+                              ? question.options.map((option, optIdx) => (
+                                  <Button
+                                    key={optIdx}
+                                    className={`p-2 text-xs sm:text-sm rounded ${
+                                      selectedAnswers[question._id] === option
+                                        ? "bg-violet-500 text-white"
+                                        : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                                    }`}
+                                    onClick={() =>
+                                      handleAnswerSelection(
+                                        question._id,
+                                        option,
+                                      )
+                                    }
+                                  >
+                                    {option}
+                                  </Button>
+                                ))
+                              : // Fallback pour les options vides
+                                ["Oui", "Non", "Peut-être"].map(
+                                  (option, optIdx) => (
+                                    <Button
+                                      key={optIdx}
+                                      className={`p-2 text-xs sm:text-sm rounded ${
+                                        selectedAnswers[question._id] === option
+                                          ? "bg-violet-500 text-white"
+                                          : "bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300"
+                                      }`}
+                                      onClick={() =>
+                                        handleAnswerSelection(
+                                          question._id,
+                                          option,
+                                        )
+                                      }
+                                    >
+                                      {option}
+                                    </Button>
+                                  ),
+                                )}
+                          </div>
+                        </CardBody>
+                      </Card>
+                    ))}
                   </div>
                 </div>
               )}
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-12 px-4">
-              {reportModel?.questions.map((question, idx) => (
-                <motion.div
-                  key={question._id}
-                  animate={{ opacity: 1, scale: 1 }}
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, delay: idx * 0.1 }}
-                >
-                  <Card className="border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
-                    <CardBody className="p-4 space-y-4">
-                      <h4 className="font-semibold text-gray-800 dark:text-white text-base">
-                        {question.text}
-                      </h4>
-                      <div className="space-y-2">
-                        {question.options.map((option, i) => {
-                          const isSelected =
-                            selectedAnswers[question._id] === option;
-
-                          return (
-                            <Button
-                              key={i}
-                              className={`w-full text-left text-sm p-2 ${
-                                isSelected
-                                  ? "bg-violet-500 text-white"
-                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                              }`}
-                              onClick={() =>
-                                handleAnswerSelection(question._id, option)
-                              }
-                            >
-                              {option}
-                            </Button>
-                          );
-                        })}
-                      </div>
-                    </CardBody>
-                  </Card>
-                </motion.div>
-              ))}
-            </div>
 
             {/* Boutons d'action */}
             <div className="flex flex-col sm:flex-row justify-center gap-4 py-6 mt-8 px-4">
