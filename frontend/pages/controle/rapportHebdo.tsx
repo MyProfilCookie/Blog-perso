@@ -346,7 +346,7 @@ const WeeklyReport: React.FC = () => {
         match && !isNaN(parseInt(match[0], 10))
           ? parseInt(match[0], 10)
           : new Date().getWeekNumber();
-      const url = `${baseUrl}/subjects/rapportHebdo?week=${weekNumber}`;
+      const url = `${baseUrl}/reports/rapportHebdo?week=${weekNumber}`;
 
       console.log(
         "📡 Récupération du modèle de rapport pour la semaine :",
@@ -928,16 +928,18 @@ const WeeklyReport: React.FC = () => {
                   <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
                     <CardBody className="p-4 sm:p-6">
                       {/* En-tête de la matière */}
-                      <div
-                        className={`bg-gradient-to-r ${
-                          subjectList[index % subjectList.length].color
-                        } -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
-                      >
-                        <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                          {subjectList[index % subjectList.length].icon}{" "}
-                          {item.subject}
-                        </h3>
-                      </div>
+                      {(() => {
+                        const subjectData = subjectList.find((s) => s.name === item.subject);
+                        const gradient = subjectData?.color || "from-gray-400 to-gray-300";
+
+                        return (
+                          <div className={`bg-gradient-to-r ${gradient} -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}>
+                            <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
+                              {subjectData?.icon || "📘"} {item.subject}
+                            </h3>
+                          </div>
+                        );
+                      })()}
 
                       {/* Contenu principal */}
                       <div className="space-y-4">
