@@ -1,54 +1,80 @@
-/* eslint-disable no-console */
 export async function getServerSideProps() {
   const baseUrl =
     process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
 
   const currentWeek = new Date().getWeekNumber();
-  const response = await fetch(
-    `${baseUrl}/subjects/rapportHebdo?week=${currentWeek}`,
-  );
-  const data = await response.json();
 
-  const questions: {
-    _id: string;
-    text: any;
-    options: any;
-    answer: any;
-    category: any;
-  }[] = [];
+  try {
+    const response = await fetch(
+      `${baseUrl}/subjects/rapportHebdo?week=${currentWeek}`,
+    );
 
-  if (data?.subjects) {
-    data.subjects.forEach((subject: any) => {
-      subject.questions.forEach((q: any, index: number) => {
-        questions.push({
-          _id: `${subject.name}-${index}`,
-          text: q.question,
-          options: q.options,
-          answer: q.answer,
-          category: subject.name,
+    if (!response.ok) {
+      throw new Error("Erreur de récupération des questions");
+    }
+
+    const data = await response.json();
+
+    const questions: {
+      _id: string;
+      text: any;
+      options: any;
+      answer: any;
+      category: any;
+    }[] = [];
+
+    if (data?.subjects) {
+      data.subjects.forEach((subject: any) => {
+        subject.questions.forEach((q: any, index: number) => {
+          questions.push({
+            _id: `${subject.name}-${index}`,
+            text: q.question,
+            options: q.options,
+            answer: q.answer,
+            category: subject.name,
+          });
         });
       });
-    });
+    }
+
+    const model = {
+      _id: `rapportHebdo-${currentWeek}`,
+      name: "rapportHebdo",
+      description: `Questions pour la semaine ${currentWeek}`,
+      displayName: `Rapport semaine ${currentWeek}`,
+      icon: "📝",
+      active: true,
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString(),
+      __v: 0,
+      questions,
+    };
+
+    return {
+      props: {
+        serverModel: model,
+      },
+    };
+  } catch (error) {
+    console.error("Erreur API dans getServerSideProps:", error);
+
+    return {
+      props: {
+        serverModel: {
+          _id: `rapportHebdo-${currentWeek}`,
+          name: "rapportHebdo",
+          description: `Aucune question disponible pour la semaine ${currentWeek}`,
+          displayName: `Rapport semaine ${currentWeek}`,
+          icon: "📝",
+          active: true,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+          __v: 0,
+          questions: [],
+        },
+      },
+    };
   }
-
-  const model = {
-    _id: `rapportHebdo-${currentWeek}`,
-    name: "rapportHebdo",
-    description: `Questions pour la semaine ${currentWeek}`,
-    displayName: `Rapport semaine ${currentWeek}`,
-    icon: "📝",
-    active: true,
-    createdAt: new Date().toISOString(),
-    updatedAt: new Date().toISOString(),
-    __v: 0,
-    questions,
-  };
-
-  return {
-    props: {
-      serverModel: model,
-    },
-  };
 }
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";

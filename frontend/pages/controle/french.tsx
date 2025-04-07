@@ -2,14 +2,29 @@ export async function getServerSideProps() {
   const baseUrl =
     process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
 
-  const response = await fetch(`${baseUrl}/subjects/french`);
-  const data = await response.json();
+  try {
+    const response = await fetch(`${baseUrl}/subjects/french`);
 
-  return {
-    props: {
-      serverExercises: data.questions || [],
-    },
-  };
+    if (!response.ok) {
+      throw new Error("Erreur lors de la récupération des questions");
+    }
+
+    const data = await response.json();
+
+    return {
+      props: {
+        serverExercises: data.questions || [],
+      },
+    };
+  } catch (error) {
+    console.error("Erreur dans getServerSideProps (french.tsx):", error);
+
+    return {
+      props: {
+        serverExercises: [],
+      },
+    };
+  }
 }
 
 interface FrenchPageProps {
