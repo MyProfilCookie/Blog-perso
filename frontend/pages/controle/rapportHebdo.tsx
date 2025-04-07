@@ -217,7 +217,7 @@ const getBaseUrl = () => {
     return `${apiUrl}/api`;
   }
 
-  return "https://blog-perso.onrender.com/api";
+  return "https://autistudy-api.vercel.app/api";
 };
 
 const subjectEmojis: Record<string, string> = {
@@ -335,17 +335,16 @@ const WeeklyReport: React.FC = () => {
 
       if (!token || isTokenExpired(token)) {
         router.push("/users/login");
-
         return null;
       }
 
       const baseUrl = getBaseUrl();
       const match = selectedWeek.match(/\d+/);
-      const weekNumber =
-        match && !isNaN(parseInt(match[0], 10))
-          ? parseInt(match[0], 10)
-          : new Date().getWeekNumber();
-      const url = `${baseUrl}/subjects/rapportHebdo`; // l'API utilise params, pas une route directe
+      const weekNumber = match && !isNaN(parseInt(match[0], 10))
+        ? parseInt(match[0], 10)
+        : new Date().getWeekNumber();
+
+      const url = `${baseUrl}/rapportHebdo`;
 
       console.log(
         "📡 Récupération du modèle de rapport pour la semaine :",
@@ -356,7 +355,10 @@ const WeeklyReport: React.FC = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
-        params: { week: weekNumber },
+        params: { 
+          week: weekNumber,
+          type: "weekly"
+        },
       });
 
       const selectedWeekData = response.data;
