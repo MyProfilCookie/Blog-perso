@@ -110,49 +110,49 @@ const subjectList: Subject[] = [
   {
     id: "math",
     name: "Mathématiques",
-    color: "from-red-400 to-red-300",
+    color: "bg-red-400",
     icon: "🔢",
   },
   {
     id: "sciences",
     name: "Sciences",
-    color: "from-green-400 to-green-300",
+    color: "bg-green-400",
     icon: "🔬",
   },
   {
     id: "french",
     name: "Français",
-    color: "from-blue-400 to-blue-300",
+    color: "bg-blue-400",
     icon: "📚",
   },
   {
     id: "history",
     name: "Histoire",
-    color: "from-yellow-400 to-yellow-300",
+    color: "bg-yellow-400",
     icon: "⏳",
   },
   {
     id: "geography",
     name: "Géographie",
-    color: "from-purple-400 to-purple-300",
+    color: "bg-purple-400",
     icon: "🌍",
   },
   {
     id: "language",
     name: "Langues",
-    color: "from-pink-400 to-pink-300",
+    color: "bg-pink-400",
     icon: "🗣️",
   },
   {
     id: "art",
     name: "Arts Plastiques",
-    color: "from-indigo-400 to-indigo-300",
+    color: "bg-indigo-400",
     icon: "🎨",
   },
   {
     id: "rapportHebdo",
     name: "Leçons du jour",
-    color: "from-teal-400 to-teal-300",
+    color: "bg-teal-400",
     icon: "📖",
   },
 ];
@@ -995,9 +995,13 @@ const WeeklyReport: React.FC = () => {
               role="grid"
             >
               {reportItems.map((item, index) => {
-                const subjectColorClass = subjectList.find(
-                  (s) => s.name.trim().toLowerCase() === item.subject.trim().toLowerCase()
-                )?.color || "from-gray-400 to-gray-300";
+                const subjectColorClass =
+                  subjectList.find(
+                    (s) =>
+                      s.name.trim().toLowerCase() ===
+                      item.subject.trim().toLowerCase(),
+                  )?.color || "from-gray-400 to-gray-300";
+
                 return (
                   <motion.div
                     key={`${item.subject}-${index}`}
@@ -1009,7 +1013,7 @@ const WeeklyReport: React.FC = () => {
                     <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
                       <CardBody className="p-4 sm:p-6">
                         <div
-                          className={`-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6 text-white text-center font-bold bg-gradient-to-r ${subjectColorClass}`}
+                          className={`-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6 text-white text-center font-bold ${subjectColorClass}`}
                         >
                           <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
                             {subjectList.find(
@@ -1059,7 +1063,11 @@ const WeeklyReport: React.FC = () => {
                               type="number"
                               value={item.hours}
                               onChange={(e) =>
-                                handleInputChange(index, "hours", e.target.value)
+                                handleInputChange(
+                                  index,
+                                  "hours",
+                                  e.target.value,
+                                )
                               }
                             />
                           </div>
@@ -1109,7 +1117,8 @@ const WeeklyReport: React.FC = () => {
                                   )
                                 }
                               >
-                                J&apos;ai réussi ! {getProgressEmoji("completed")}
+                                J&apos;ai réussi !{" "}
+                                {getProgressEmoji("completed")}
                               </Button>
                               <Button
                                 key="not-acquired"
