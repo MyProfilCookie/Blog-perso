@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 "use client";
 import React, { useState, useEffect, useRef } from "react";
@@ -646,7 +647,7 @@ const WeeklyReport: React.FC = () => {
 
   // Gestion des réponses aux questions
   const handleAnswerSelection = (questionId: string, answer: string) => {
-  if (answerAttempts[questionId] === 3 || errorCount >= 20) {
+    if (answerAttempts[questionId] === 3 || errorCount >= 20) {
       Swal.fire({
         icon: "info",
         title: "Limite atteinte",
@@ -676,7 +677,7 @@ const WeeklyReport: React.FC = () => {
 
         if (!isCorrect) {
           setErrorCount((prev) => prev + 1);
- 
+
           if (currentAttempts === 3 && userId) {
             fetch(`${getBaseUrl()}/revision-errors`, {
               method: "POST",
@@ -693,7 +694,10 @@ const WeeklyReport: React.FC = () => {
                 category: question.category,
               }),
             }).catch((err) =>
-              console.error("Erreur lors de l'enregistrement de l'erreur :", err)
+              console.error(
+                "Erreur lors de l'enregistrement de l'erreur :",
+                err,
+              ),
             );
           }
         }
@@ -1002,16 +1006,33 @@ const WeeklyReport: React.FC = () => {
                     <CardBody className="p-4 sm:p-6">
                       {/* En-tête de la matière */}
                       <div
-                        className={`bg-gradient-to-r ${
-                          subjectList.find(
-                            (s) => s.name.trim().toLowerCase() === item.subject.trim().toLowerCase()
-                          )?.color || "from-gray-400 to-gray-300"
-                        } -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
+                        className={`-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6 text-white text-center font-bold ${
+                          item.subject === "Mathématiques"
+                            ? "bg-red-400"
+                            : item.subject === "Sciences"
+                              ? "bg-green-400"
+                              : item.subject === "Français"
+                                ? "bg-blue-400"
+                                : item.subject === "Histoire"
+                                  ? "bg-yellow-400"
+                                  : item.subject === "Géographie"
+                                    ? "bg-purple-400"
+                                    : item.subject === "Langues"
+                                      ? "bg-pink-400"
+                                      : item.subject === "Arts Plastiques"
+                                        ? "bg-indigo-400"
+                                        : item.subject === "Leçons du jour"
+                                          ? "bg-teal-400"
+                                          : "bg-gray-400"
+                        }`}
                       >
                         <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                          {(subjectList.find(
-                            (s) => s.name.trim().toLowerCase() === item.subject.trim().toLowerCase()
-                          )?.icon || "📘")} {item.subject}
+                          {subjectList.find(
+                            (s) =>
+                              s.name.trim().toLowerCase() ===
+                              item.subject.trim().toLowerCase(),
+                          )?.icon || "📘"}{" "}
+                          {item.subject}
                         </h3>
                       </div>
 
