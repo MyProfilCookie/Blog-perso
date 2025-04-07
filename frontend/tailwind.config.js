@@ -8,6 +8,20 @@ module.exports = {
     './app/**/*.{js,ts,jsx,tsx,mdx}',
     './node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}'
   ],
+  safelist: [
+    "bg-red-100", "dark:bg-red-800",
+    "bg-green-100", "dark:bg-green-800",
+    "bg-yellow-100", "dark:bg-yellow-800",
+    "bg-pink-100", "dark:bg-pink-800",
+    "bg-purple-100", "dark:bg-purple-800",
+    "bg-indigo-100", "dark:bg-indigo-800",
+    "bg-teal-100", "dark:bg-teal-800",
+    "bg-orange-100", "dark:bg-orange-800",
+    "bg-gray-100", "dark:bg-gray-800",
+    "bg-cyan-100", "dark:bg-cyan-800",
+    "bg-rose-100", "dark:bg-rose-800",
+    "bg-blue-100", "dark:bg-blue-800"
+  ],
   theme: {
   	extend: {
   		fontFamily: {
