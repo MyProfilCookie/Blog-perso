@@ -433,7 +433,7 @@ const WeeklyReport: React.FC = () => {
     try {
       // Récupérer tous les rapports de l'utilisateur
       const baseUrl = getBaseUrl();
-      const url = `${baseUrl}/reports/user/${userId}`;
+      const url = `${baseUrl.replace("/api", "")}/reports/user/${userId}`;
 
       console.log("📡 Récupération de tous les rapports:", url);
 
@@ -485,7 +485,7 @@ const WeeklyReport: React.FC = () => {
 
       if (reportData._id) {
         // Mise à jour d'un rapport existant
-        const url = `${baseUrl}/reports/${reportData._id}`;
+        const url = `${baseUrl.replace("/api", "")}/reports/${reportData._id}`;
 
         console.log("📡 Mise à jour du rapport:", url);
 
@@ -496,7 +496,7 @@ const WeeklyReport: React.FC = () => {
         });
       } else {
         // Création d'un nouveau rapport
-        const url = `${baseUrl}/reports`;
+        const url = `${baseUrl.replace("/api", "")}/reports`;
 
         console.log("📡 Création d'un nouveau rapport:", url);
 
@@ -541,6 +541,11 @@ const WeeklyReport: React.FC = () => {
           if (report && report.items && report.items.length > 0) {
             console.log("Rapport chargé depuis l'API");
             setReportItems(report.items);
+            const model = await fetchReportModel();
+
+            if (model) {
+              setReportModel(model);
+            }
             setReportId(report._id);
 
             // Charger les réponses aux questions
@@ -645,7 +650,7 @@ const WeeklyReport: React.FC = () => {
           setErrorCount((prev) => prev + 1);
 
           if (currentAttempts === 3 && userId) {
-            fetch(`${getBaseUrl()}/revision-errors`, {
+            fetch(`${getBaseUrl().replace("/api", "")}/revision-errors`, {
               method: "POST",
               headers: {
                 "Content-Type": "application/json",
@@ -1062,6 +1067,42 @@ const WeeklyReport: React.FC = () => {
               ))}
             </div>
 
+            {/* Matières de la semaine */}
+            {reportModel &&
+              reportModel.questions &&
+              reportModel.questions.length > 0 && (
+                <div className="w-full max-w-4xl mx-auto mb-8 px-4">
+                  <h2 className="text-lg font-bold mb-4 text-center text-violet-600 dark:text-violet-400">
+                    Matières de la semaine
+                  </h2>
+                  <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    {Array.from(
+                      new Set(
+                        reportModel.questions
+                          .map((q) => q.category)
+                          .filter(Boolean),
+                      ),
+                    ).map((category) => {
+                      const subject = subjectList.find(
+                        (s) => s.name === category,
+                      );
+                      const gradient =
+                        subject?.color || "from-gray-400 to-gray-300";
+                      const icon = subject?.icon || "📘";
+
+                      return (
+                        <div
+                          key={category}
+                          className={`bg-gradient-to-r ${gradient} p-4 text-white rounded-lg shadow-md flex items-center justify-center`}
+                        >
+                          <span className="text-xl">{icon}</span>
+                          <span className="ml-2 font-semibold">{category}</span>
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-12 px-4">
               {reportModel?.questions.map((question, idx) => (
                 <motion.div
