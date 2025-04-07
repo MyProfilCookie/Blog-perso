@@ -1003,12 +1003,11 @@ const WeeklyReport: React.FC = () => {
                       {/* En-tête de la matière */}
                       <div
                         className={`bg-gradient-to-r ${
-                          subjectList[index % subjectList.length].color
+                          subjectList.find((s) => s.name === item.subject)?.color || "from-gray-400 to-gray-300"
                         } -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
                       >
                         <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                          {subjectList[index % subjectList.length].icon}{" "}
-                          {item.subject}
+                          {(subjectList.find((s) => s.name === item.subject)?.icon || "📘")} {item.subject}
                         </h3>
                       </div>
 
@@ -1146,7 +1145,7 @@ const WeeklyReport: React.FC = () => {
                       >
                         <CardBody className="p-5">
                           <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-4">
-                            {`${subjectEmojis[question.category || ""] || "❓"} ${question.text || `Question ${index + 1}`}`}
+                            {`${subjectEmojis[question.category || ""] || "📘"} ${question.text || `Question ${index + 1}`}`}
                           </h3>
 
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
