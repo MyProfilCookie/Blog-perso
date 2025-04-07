@@ -651,7 +651,7 @@ const WeeklyReport: React.FC = () => {
       Swal.fire({
         icon: "info",
         title: "Limite atteinte",
-        text: "Tu ne peux plus répondre à cette question ou tu as atteint la limite d’erreurs.",
+        text: "Tu ne peux plus répondre à cette question ou tu as atteint la limite d'erreurs.",
         background: "#f0f4ff",
       });
 
@@ -994,156 +994,149 @@ const WeeklyReport: React.FC = () => {
               className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-8 px-4"
               role="grid"
             >
-              {reportItems.map((item, index) => (
-                <motion.div
-                  key={`${item.subject}-${index}`}
-                  animate={{ opacity: 1, scale: 1 }}
-                  className="w-full"
-                  initial={{ opacity: 0, scale: 0.9 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
-                  <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
-                    <CardBody className="p-4 sm:p-6">
-                      <div
-                        className="-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6 text-white text-center font-bold"
-                        style={{
-                          background: `linear-gradient(to right, ${
-                            subjectList
-                              .find(
-                                (s) =>
-                                  s.name.trim().toLowerCase() ===
-                                  item.subject.trim().toLowerCase(),
-                              )
-                              ?.color?.replace("from-", "#")
-                              .replace(" to-", ", #") || "#ccc, #ccc"
-                          })`,
-                        }}
-                      >
-                        <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
-                          {subjectList.find(
-                            (s) =>
-                              s.name.trim().toLowerCase() ===
-                              item.subject.trim().toLowerCase(),
-                          )?.icon || "📘"}{" "}
-                          {item.subject}
-                        </h3>
-                      </div>
-
-                      {/* Contenu principal */}
-                      <div className="space-y-4">
-                        <div>
-                          <label
-                            className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                            htmlFor={`activity-${index}`}
-                          >
-                            Qu&apos;as-tu fait aujourd&apos;hui ?
-                          </label>
-                          <Input
-                            className="w-full text-sm sm:text-base"
-                            id={`activity-${index}`}
-                            placeholder="Décris ton activité..."
-                            value={item.activity}
-                            onChange={(e) =>
-                              handleInputChange(
-                                index,
-                                "activity",
-                                e.target.value,
-                              )
-                            }
-                          />
+              {reportItems.map((item, index) => {
+                const subjectColorClass = subjectList.find(
+                  (s) => s.name.trim().toLowerCase() === item.subject.trim().toLowerCase()
+                )?.color || "from-gray-400 to-gray-300";
+                return (
+                  <motion.div
+                    key={`${item.subject}-${index}`}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="w-full"
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    transition={{ duration: 0.3, delay: index * 0.1 }}
+                  >
+                    <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
+                      <CardBody className="p-4 sm:p-6">
+                        <div
+                          className={`-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6 text-white text-center font-bold bg-gradient-to-r ${subjectColorClass}`}
+                        >
+                          <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
+                            {subjectList.find(
+                              (s) =>
+                                s.name.trim().toLowerCase() ===
+                                item.subject.trim().toLowerCase(),
+                            )?.icon || "📘"}{" "}
+                            {item.subject}
+                          </h3>
                         </div>
 
-                        <div>
-                          <label
-                            className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                            htmlFor={`hours-${index}`}
-                          >
-                            Combien de temps y as-tu passé ?
-                          </label>
-                          <Input
-                            className="w-full text-sm sm:text-base"
-                            id={`hours-${index}`}
-                            placeholder="Temps en heures"
-                            type="number"
-                            value={item.hours}
-                            onChange={(e) =>
-                              handleInputChange(index, "hours", e.target.value)
-                            }
-                          />
-                        </div>
+                        {/* Contenu principal */}
+                        <div className="space-y-4">
+                          <div>
+                            <label
+                              className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                              htmlFor={`activity-${index}`}
+                            >
+                              Qu&apos;as-tu fait aujourd&apos;hui ?
+                            </label>
+                            <Input
+                              className="w-full text-sm sm:text-base"
+                              id={`activity-${index}`}
+                              placeholder="Décris ton activité..."
+                              value={item.activity}
+                              onChange={(e) =>
+                                handleInputChange(
+                                  index,
+                                  "activity",
+                                  e.target.value,
+                                )
+                              }
+                            />
+                          </div>
 
-                        <div>
-                          <label
-                            className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
-                            htmlFor={`progress-${index}`}
-                          >
-                            Comment ça s&apos;est passé ?
-                          </label>
-                          <div
-                            aria-label="Progression"
-                            className="grid grid-cols-1 gap-2 sm:gap-3 mt-2"
-                            id={`progress-${index}`}
-                            role="group"
-                          >
-                            <Button
-                              key="in-progress"
-                              className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
-                                item.progress === "in-progress"
-                                  ? "bg-violet-500 text-white"
-                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                              }`}
-                              onClick={() =>
-                                handleInputChange(
-                                  index,
-                                  "progress",
-                                  "in-progress",
-                                )
-                              }
+                          <div>
+                            <label
+                              className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                              htmlFor={`hours-${index}`}
                             >
-                              Je progresse {getProgressEmoji("in-progress")}
-                            </Button>
-                            <Button
-                              key="completed"
-                              className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
-                                item.progress === "completed"
-                                  ? "bg-violet-500 text-white"
-                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                              }`}
-                              onClick={() =>
-                                handleInputChange(
-                                  index,
-                                  "progress",
-                                  "completed",
-                                )
+                              Combien de temps y as-tu passé ?
+                            </label>
+                            <Input
+                              className="w-full text-sm sm:text-base"
+                              id={`hours-${index}`}
+                              placeholder="Temps en heures"
+                              type="number"
+                              value={item.hours}
+                              onChange={(e) =>
+                                handleInputChange(index, "hours", e.target.value)
                               }
+                            />
+                          </div>
+
+                          <div>
+                            <label
+                              className="text-sm text-gray-600 dark:text-gray-400 mb-1 block"
+                              htmlFor={`progress-${index}`}
                             >
-                              J&apos;ai réussi ! {getProgressEmoji("completed")}
-                            </Button>
-                            <Button
-                              key="not-acquired"
-                              className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
-                                item.progress === "not-acquired"
-                                  ? "bg-violet-500 text-white"
-                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
-                              }`}
-                              onClick={() =>
-                                handleInputChange(
-                                  index,
-                                  "progress",
-                                  "not-acquired",
-                                )
-                              }
+                              Comment ça s&apos;est passé ?
+                            </label>
+                            <div
+                              aria-label="Progression"
+                              className="grid grid-cols-1 gap-2 sm:gap-3 mt-2"
+                              id={`progress-${index}`}
+                              role="group"
                             >
-                              Besoin d&apos;aide{" "}
-                              {getProgressEmoji("not-acquired")}
-                            </Button>
+                              <Button
+                                key="in-progress"
+                                className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                                  item.progress === "in-progress"
+                                    ? "bg-violet-500 text-white"
+                                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                                }`}
+                                onClick={() =>
+                                  handleInputChange(
+                                    index,
+                                    "progress",
+                                    "in-progress",
+                                  )
+                                }
+                              >
+                                Je progresse {getProgressEmoji("in-progress")}
+                              </Button>
+                              <Button
+                                key="completed"
+                                className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                                  item.progress === "completed"
+                                    ? "bg-violet-500 text-white"
+                                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                                }`}
+                                onClick={() =>
+                                  handleInputChange(
+                                    index,
+                                    "progress",
+                                    "completed",
+                                  )
+                                }
+                              >
+                                J&apos;ai réussi ! {getProgressEmoji("completed")}
+                              </Button>
+                              <Button
+                                key="not-acquired"
+                                className={`w-full p-2 sm:p-3 rounded-lg transition-all duration-300 text-sm sm:text-base ${
+                                  item.progress === "not-acquired"
+                                    ? "bg-violet-500 text-white"
+                                    : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                                }`}
+                                onClick={() =>
+                                  handleInputChange(
+                                    index,
+                                    "progress",
+                                    "not-acquired",
+                                  )
+                                }
+                              >
+                                Besoin d&apos;aide{" "}
+                                {getProgressEmoji("not-acquired")}
+                              </Button>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    </CardBody>
-                  </Card>
-                </motion.div>
-              ))}
+                      </CardBody>
+                    </Card>
+                  </motion.div>
+                );
+              })}
             </div>
 
             {/* Section des questions */}
