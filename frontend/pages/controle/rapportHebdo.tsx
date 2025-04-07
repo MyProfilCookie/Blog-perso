@@ -1,7 +1,7 @@
 /* eslint-disable no-console */
 export async function getServerSideProps() {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "https://autistudy-api.onrender.com";
+    process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
 
   const currentWeek = new Date().getWeekNumber();
   const response = await fetch(

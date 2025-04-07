@@ -23,7 +23,7 @@ interface Exercise {
 
 export async function getServerSideProps() {
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "https://autistudy-api.onrender.com";
+    process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
 
   const response = await fetch(`${baseUrl}/subjects/art`);
   const data = await response.json();
