@@ -24,7 +24,6 @@ const messageRoutes = require("./api/routes/message.routes");
 const blogRoutes = require("./api/routes/blog.routes");
 const adminRoutes = require("./api/routes/admin.routes");
 const monthlyRoutes = require("./api/routes/monthly_courses.routes");
-const rapportsRoutes = require("./api/routes/rapportHebdo.routes");
 const subjectRoutes = require("./api/routes/subject.routes"); // Nouvelle route pour les matières
 const reportRoutes = require("./api/routes/reportRoutes"); // Nouvelle route pour les rapports
 const revisionErrorRoutes = require("./api/routes/revisionError.routes"); // Nouvelle route pour les erreurs de révision // Nouvelle route pour les erreurs de révision
@@ -143,8 +142,7 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/monthly", monthlyRoutes);
-app.use("/api/subjects", subjectRoutes); // Nouvelle route pour les matières
-app.use("/api/rapports", rapportsRoutes); // Nouvelle route pour les rapports
+app.use("/api/subjects", subjectRoutes); // Nouvelle route pour les matières // Nouvelle route pour les rapports
 app.use("/api/reports", reportRoutes); // Nouvelle route pour les rapports
 app.use("/api/revision-errors", revisionErrorRoutes ); // Nouvelle route pour les erreurs de révision
 app.use((req, res, next) => {
