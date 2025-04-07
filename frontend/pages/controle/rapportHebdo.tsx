@@ -1000,7 +1000,7 @@ const WeeklyReport: React.FC = () => {
                     (s) =>
                       s.name.trim().toLowerCase() ===
                       item.subject.trim().toLowerCase(),
-                  )?.color || "from-gray-400 to-gray-300";
+                  )?.color || "bg-gray-400";
 
                 return (
                   <motion.div
@@ -1013,7 +1013,7 @@ const WeeklyReport: React.FC = () => {
                     <Card className="w-full border-2 border-violet-200 dark:border-violet-700 overflow-hidden hover:shadow-xl transition-all duration-300 rounded-none sm:rounded-lg">
                       <CardBody className="p-4 sm:p-6">
                         <div
-                          className={`-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6 text-white text-center font-bold ${subjectColorClass}`}
+                          className={`-mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6 text-white text-center font-bold ${subjectColorClass} hover:opacity-90 transition-opacity`}
                         >
                           <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
                             {subjectList.find(
