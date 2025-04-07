@@ -217,7 +217,7 @@ const getBaseUrl = () => {
     return `${apiUrl}/api`;
   }
 
-  return "https://autistudy-api.vercel.app/api";
+  return "https://blog-perso.onrender.com/api";
 };
 
 const subjectEmojis: Record<string, string> = {
@@ -344,7 +344,7 @@ const WeeklyReport: React.FC = () => {
         ? parseInt(match[0], 10)
         : new Date().getWeekNumber();
 
-      const url = `${baseUrl}/rapportHebdo`;
+      const url = `${process.env.NEXT_PUBLIC_API_URL}/subjects/rapportHebdo?week=${weekNumber}`;
 
       console.log(
         "📡 Récupération du modèle de rapport pour la semaine :",
