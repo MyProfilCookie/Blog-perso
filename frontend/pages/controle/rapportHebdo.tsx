@@ -345,7 +345,7 @@ const WeeklyReport: React.FC = () => {
         match && !isNaN(parseInt(match[0], 10))
           ? parseInt(match[0], 10)
           : new Date().getWeekNumber();
-      const url = `${baseUrl}/subjects/rapportHebdo?week=${weekNumber}`;
+      const url = `${baseUrl}/subjects/rapportHebdo`; // l'API utilise params, pas une route directe
 
       console.log(
         "📡 Récupération du modèle de rapport pour la semaine :",
@@ -356,6 +356,7 @@ const WeeklyReport: React.FC = () => {
         headers: {
           Authorization: `Bearer ${token}`,
         },
+        params: { week: weekNumber },
       });
 
       const selectedWeekData = response.data;
