@@ -345,7 +345,7 @@ const WeeklyReport: React.FC = () => {
         match && !isNaN(parseInt(match[0], 10))
           ? parseInt(match[0], 10)
           : new Date().getWeekNumber();
-      const url = `${baseUrl}/reports/rapportHebdo?week=${weekNumber}`;
+      const url = `${baseUrl}/reports/user/${userId}/week/${weekNumber}`;
 
       console.log(
         "📡 Récupération du modèle de rapport pour la semaine :",
