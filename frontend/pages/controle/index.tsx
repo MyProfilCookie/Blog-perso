@@ -73,7 +73,7 @@ const courseThemes = [
     id: 3,
     title: "Mathématiques",
     description: "Calculs, logique et raisonnement",
-    route: "/controle/maths",
+    route: "/controle/math",
     icon: faCalculator,
     bgColor: "bg-yellow-100 dark:bg-yellow-800",
     iconColor: "text-yellow-600 dark:text-yellow-300",
@@ -82,7 +82,7 @@ const courseThemes = [
     id: 4,
     title: "Langues",
     description: "Compréhension et vocabulaire",
-    route: "/controle/languages",
+    route: "/controle/language",
     icon: faLanguage,
     bgColor: "bg-pink-100 dark:bg-pink-800",
     iconColor: "text-pink-600 dark:text-pink-300",
@@ -158,6 +158,15 @@ const courseThemes = [
     icon: faExclamationTriangle,
     bgColor: "bg-red-200 dark:bg-red-800",
     iconColor: "text-red-600 dark:text-red-300",
+  },
+  {
+    id: 13,
+    title: "Lessons",
+    description: "Apprendre les leçons",
+    route: "/controle/lessons",
+    icon: faBookOpen,
+    bgColor: "bg-blue-100 dark:bg-blue-800",
+    iconColor: "text-blue-600 dark:text-blue-300",
   },
 ];
 
