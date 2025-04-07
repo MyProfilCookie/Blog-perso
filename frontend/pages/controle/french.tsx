@@ -1,38 +1,8 @@
-export async function getServerSideProps() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
-
-  try {
-    const response = await fetch(`${baseUrl}/subjects/french`);
-
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des questions");
-    }
-
-    const data = await response.json();
-
-    return {
-      props: {
-        serverExercises: data.questions || [],
-      },
-    };
-  } catch (error) {
-    console.error("Erreur dans getServerSideProps (french.tsx):", error);
-
-    return {
-      props: {
-        serverExercises: [],
-      },
-    };
-  }
-}
-
-interface FrenchPageProps {
-  serverExercises: Exercise[];
-}
+"use client";
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState } from "react";
+import axios from "axios";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -54,9 +24,27 @@ interface Exercise {
   category: string;
 }
 
-const FrenchPage: React.FC<FrenchPageProps> = ({ serverExercises }) => {
+const FrenchPage: React.FC = () => {
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/french`
+        );
+
+        setExercises(response.data.questions || []);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError("Erreur lors du chargement des exercices");
+        setLoading(false);
+      }
+    };
+
+    fetchExercises();
+  }, []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
@@ -120,12 +108,7 @@ const FrenchPage: React.FC<FrenchPageProps> = ({ serverExercises }) => {
     }
   };
 
-  useEffect(() => {
-    if (!serverExercises) return;
-
-    setExercises(serverExercises);
-    setLoading(false);
-  }, [serverExercises]);
+  // Removed serverExercises useEffect as data is now fetched client-side.
 
   // Gestion du minuteur et des messages d'encouragement
   useEffect(() => {
@@ -334,6 +317,11 @@ const FrenchPage: React.FC<FrenchPageProps> = ({ serverExercises }) => {
         </motion.div>
       )}
 
+      {exercises.length === 0 && (
+        <div className="text-center text-red-500 font-semibold mb-6">
+          Aucune question n'est disponible pour le moment. Veuillez réessayer plus tard.
+        </div>
+      )}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
         {paginatedExercises.map((ex, idx) => (
           <motion.div

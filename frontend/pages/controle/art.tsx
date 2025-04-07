@@ -7,6 +7,7 @@ import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
+import axios from "axios";
 
 // Interface pour les exercices d'art
 interface Exercise {
@@ -21,42 +22,9 @@ interface Exercise {
   category: string;
 }
 
-export async function getServerSideProps() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
-
-  try {
-    const response = await fetch(`${baseUrl}/subjects/art`);
-
-    if (!response.ok) {
-      throw new Error("Erreur lors de la récupération des questions");
-    }
-
-    const data = await response.json();
-
-    return {
-      props: {
-        serverExercises: data.questions || [],
-      },
-    };
-  } catch (error) {
-    console.error("Erreur dans getServerSideProps (art.tsx):", error);
-
-    return {
-      props: {
-        serverExercises: [],
-      },
-    };
-  }
-}
-
-interface ArtPageProps {
-  serverExercises: Exercise[];
-}
-
-const ArtPage: React.FC<ArtPageProps> = ({ serverExercises }) => {
+const ArtPage: React.FC = () => {
   const router = useRouter();
-  const [exercises, setExercises] = useState<Exercise[]>(serverExercises);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
@@ -187,6 +155,24 @@ const ArtPage: React.FC<ArtPageProps> = ({ serverExercises }) => {
     new Set(exercises.map((ex) => ex.category)),
   );
   const categories = ["Tout", ...uniqueCategories];
+
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/art`
+        );
+        setExercises(response.data.questions || []);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError("Erreur lors du chargement des exercices");
+        setLoading(false);
+      }
+    };
+
+    fetchExercises();
+  }, []);
 
   if (loading) {
     return (

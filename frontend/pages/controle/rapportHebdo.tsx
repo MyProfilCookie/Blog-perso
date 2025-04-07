@@ -1,81 +1,3 @@
-export async function getServerSideProps() {
-  const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
-
-  const currentWeek = new Date().getWeekNumber();
-
-  try {
-    const response = await fetch(
-      `${baseUrl}/subjects/rapportHebdo?week=${currentWeek}`,
-    );
-
-    if (!response.ok) {
-      throw new Error("Erreur de récupération des questions");
-    }
-
-    const data = await response.json();
-
-    const questions: {
-      _id: string;
-      text: any;
-      options: any;
-      answer: any;
-      category: any;
-    }[] = [];
-
-    if (data?.subjects) {
-      data.subjects.forEach((subject: any) => {
-        subject.questions.forEach((q: any, index: number) => {
-          questions.push({
-            _id: `${subject.name}-${index}`,
-            text: q.question,
-            options: q.options,
-            answer: q.answer,
-            category: subject.name,
-          });
-        });
-      });
-    }
-
-    const model = {
-      _id: `rapportHebdo-${currentWeek}`,
-      name: "rapportHebdo",
-      description: `Questions pour la semaine ${currentWeek}`,
-      displayName: `Rapport semaine ${currentWeek}`,
-      icon: "📝",
-      active: true,
-      createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString(),
-      __v: 0,
-      questions,
-    };
-
-    return {
-      props: {
-        serverModel: model,
-      },
-    };
-  } catch (error) {
-    console.error("Erreur API dans getServerSideProps:", error);
-
-    return {
-      props: {
-        serverModel: {
-          _id: `rapportHebdo-${currentWeek}`,
-          name: "rapportHebdo",
-          description: `Aucune question disponible pour la semaine ${currentWeek}`,
-          displayName: `Rapport semaine ${currentWeek}`,
-          icon: "📝",
-          active: true,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-          __v: 0,
-          questions: [],
-        },
-      },
-    };
-  }
-}
 import React, { useState, useEffect, useRef } from "react";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
@@ -310,11 +232,7 @@ const subjectEmojis: Record<string, string> = {
   "Leçons du jour": "📖",
 };
 
-interface WeeklyReportProps {
-  serverModel: ReportModel;
-}
-
-const WeeklyReport: React.FC<WeeklyReportProps> = ({ serverModel }) => {
+const WeeklyReport: React.FC = () => {
   const router = useRouter();
   const [selectedWeek, setSelectedWeek] = useState<string>("");
   const [userName, setUserName] = useState<string>("");
@@ -336,9 +254,7 @@ const WeeklyReport: React.FC<WeeklyReportProps> = ({ serverModel }) => {
   const [errorCount, setErrorCount] = useState(0);
 
   // Stocker le modèle de rapport avec ses questions
-  const [reportModel, setReportModel] = useState<ReportModel | null>(
-    serverModel,
-  );
+  const [reportModel, setReportModel] = useState<ReportModel | null>(null);
 
   // Références pour éviter les appels multiples
   const modelLoaded = useRef(false);
