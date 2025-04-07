@@ -7,7 +7,6 @@ import axios from "axios";
 
 import ReportHeader from "@/components/rapport/ReportHeader";
 import BackButton from "@/components/back";
-import QuestionSection from "@/components/rapport/QuestionSection";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
 
@@ -929,11 +928,16 @@ const WeeklyReport: React.FC = () => {
                     <CardBody className="p-4 sm:p-6">
                       {/* En-tête de la matière */}
                       {(() => {
-                        const subjectData = subjectList.find((s) => s.name === item.subject);
-                        const gradient = subjectData?.color || "from-gray-400 to-gray-300";
+                        const subjectData = subjectList.find(
+                          (s) => s.name === item.subject,
+                        );
+                        const gradient =
+                          subjectData?.color || "from-gray-400 to-gray-300";
 
                         return (
-                          <div className={`bg-gradient-to-r ${gradient} -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}>
+                          <div
+                            className={`bg-gradient-to-r ${gradient} -mx-4 sm:-mx-6 -mt-4 sm:-mt-6 p-3 sm:p-4 mb-4 sm:mb-6`}
+                          >
                             <h3 className="text-lg sm:text-xl font-bold text-white text-center flex items-center justify-center gap-2">
                               {subjectData?.icon || "📘"} {item.subject}
                             </h3>
@@ -1058,11 +1062,46 @@ const WeeklyReport: React.FC = () => {
               ))}
             </div>
 
-            <QuestionSection
-              questions={reportModel?.questions || []}
-              selectedAnswers={selectedAnswers}
-              onAnswerSelect={handleAnswerSelection}
-            />
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 max-w-[1400px] mx-auto mb-12 px-4">
+              {reportModel?.questions.map((question, idx) => (
+                <motion.div
+                  key={question._id}
+                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  transition={{ duration: 0.3, delay: idx * 0.1 }}
+                >
+                  <Card className="border border-gray-200 dark:border-gray-700 hover:shadow-md transition-shadow">
+                    <CardBody className="p-4 space-y-4">
+                      <h4 className="font-semibold text-gray-800 dark:text-white text-base">
+                        {question.text}
+                      </h4>
+                      <div className="space-y-2">
+                        {question.options.map((option, i) => {
+                          const isSelected =
+                            selectedAnswers[question._id] === option;
+
+                          return (
+                            <Button
+                              key={i}
+                              className={`w-full text-left text-sm p-2 ${
+                                isSelected
+                                  ? "bg-violet-500 text-white"
+                                  : "bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-violet-100 dark:hover:bg-violet-900/30"
+                              }`}
+                              onClick={() =>
+                                handleAnswerSelection(question._id, option)
+                              }
+                            >
+                              {option}
+                            </Button>
+                          );
+                        })}
+                      </div>
+                    </CardBody>
+                  </Card>
+                </motion.div>
+              ))}
+            </div>
 
             {/* Boutons d'action */}
             <div className="flex flex-col sm:flex-row justify-center gap-4 py-6 mt-8 px-4">
