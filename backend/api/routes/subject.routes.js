@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const { Subject, RapportHebdo } = require("../models/Subject");
+const Trimestre = require("../models/Trimestre");
 const { isAdmin } = require("../middlewares/authMiddleware"); // Assuming you have auth middleware
 
 // Get all subjects (public access)
@@ -131,6 +132,22 @@ router.delete("/:id", isAdmin, async (req, res) => {
     res.status(200).json({ message: "Matière supprimée avec succès" });
   } catch (error) {
     console.error(`❌ Error deleting subject ${req.params.id}:`, error);
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+// Get a specific trimestre by its number (e.g., /api/subjects/trimestres/1)
+router.get("/trimestres/:id", async (req, res) => {
+  try {
+    const trimestre = await Trimestre.findById(req.params.id);
+
+    if (!trimestre) {
+      return res.status(404).json({ message: "Trimestre non trouvé" });
+    }
+
+    res.status(200).json(trimestre);
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du trimestre :", error);
     res.status(500).json({ message: "Erreur serveur", error: error.message });
   }
 });

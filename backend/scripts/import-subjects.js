@@ -7,8 +7,9 @@ const fs = require("fs");
 // Ajustez ces chemins selon votre structure de projet
 const DBConnectionHandler = require("../api/utils/DBconnect");
 
-// Importer le modèle Subject et RapportHebdo directement (NE PAS UTILISER mongoose.model)
+// Importer le modèle Subject, RapportHebdo et Trimestre
 const { Subject, RapportHebdo } = require("../api/models/Subject");
+const Trimestre = require("../api/models/Trimestre");
 
 // Données des matières
 const subjects = [
@@ -87,7 +88,7 @@ const loadQuestions = (subjectName) => {
     if (fs.existsSync(filePath)) {
       const data = fs.readFileSync(filePath, 'utf8');
       const questions = JSON.parse(data);
-      console.log(`✅ Fichier ${subjectName}-questions.json trouvé avec ${questions.length} questions`);
+      console.log(`✅ Fichier ${subjectName}-questions.json trouvé`);
       return questions;
     }
     console.log(`⚠️ Fichier ${subjectName}-questions.json non trouvé`);
@@ -100,7 +101,6 @@ const loadQuestions = (subjectName) => {
 
 async function importSubjects() {
   try {
-    // Utiliser votre gestionnaire de connexion ou se connecter directement à MongoDB
     if (typeof DBConnectionHandler === 'function') {
       await DBConnectionHandler();
     } else {
@@ -108,9 +108,7 @@ async function importSubjects() {
       console.log("✅ Connecté à MongoDB");
     }
 
-    // Importer chaque matière avec ses questions
     for (const subject of subjects) {
-      // Vérification spéciale pour le cas rapportHebdo
       if (subject.name === "rapportHebdo") {
         const weekFilePath = path.join(__dirname, `../data/rapportHebdo-questions.json`);
         if (fs.existsSync(weekFilePath)) {
@@ -131,21 +129,39 @@ async function importSubjects() {
         continue;
       }
 
-      // Charger les questions pour cette matière
+      if (subject.name === "trimestres") {
+        const trimestreFilePath = path.join(__dirname, `../data/trimestres-questions.json`);
+        if (fs.existsSync(trimestreFilePath)) {
+          const data = fs.readFileSync(trimestreFilePath, 'utf8');
+          const trimestres = JSON.parse(data);
+
+          for (const trimestreEntry of trimestres) {
+            const result = await Trimestre.findOneAndUpdate(
+              { trimestre: trimestreEntry.trimestre },
+              { ...trimestreEntry, createdAt: new Date() },
+              { upsert: true, new: true }
+            );
+            console.log(`📘 Trimestre ${trimestreEntry.trimestre} importé (${result.subjects.length} matières)`);
+          }
+        } else {
+          console.warn("⚠️ Fichier trimestres-questions.json introuvable");
+        }
+        continue;
+      }
+
       const questions = loadQuestions(subject.name);
-      
+
       try {
-        // Créer ou mettre à jour la matière avec ses questions
         const result = await Subject.findOneAndUpdate(
           { name: subject.name },
-          { 
-            ...subject, 
+          {
+            ...subject,
             questions: questions.length > 0 ? questions : [],
             updatedAt: new Date()
           },
           { upsert: true, new: true }
         );
-        
+
         if (questions.length > 0) {
           console.log(`✅ Matière "${subject.displayName}" importée avec ${questions.length} questions`);
         } else {
@@ -155,15 +171,12 @@ async function importSubjects() {
         console.error(`❌ Erreur lors de l'importation de la matière ${subject.name}:`, subjectError.message);
       }
     }
-    
+
     console.log("🎉 Import terminé avec succès");
-    
-    // Fermer la connexion à la base de données
     await mongoose.connection.close();
     process.exit(0);
   } catch (error) {
     console.error(`❌ Erreur lors de l'importation: ${error.message}`);
-    // Fermer la connexion en cas d'erreur
     if (mongoose.connection.readyState !== 0) {
       await mongoose.connection.close();
     }
@@ -171,5 +184,4 @@ async function importSubjects() {
   }
 }
 
-// Exécuter la fonction d'importation
 importSubjects();

@@ -3,32 +3,17 @@ import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
 
 interface Question {
+  _id: string;
   question: string;
   options: string[];
   answer: string;
-  subject: string;
-}
-
-interface TrimestreData {
-  trimestre: number;
-  questions: Question[];
 }
 
 const Trimestres = () => {
   const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedSubject, setSelectedSubject] = useState("Tout");
   const [answers, setAnswers] = useState<{ [index: number]: string }>({});
   const [results, setResults] = useState<{ [index: number]: boolean }>({});
-
-  const subjectLabels: { [key: string]: string } = {
-    math: "Mathématiques",
-    french: "Français",
-    hist: "Histoire",
-    geo: "Géographie",
-    sci: "Sciences",
-    lang: "Langues",
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -36,18 +21,15 @@ const Trimestres = () => {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres`,
         );
-        const data: { trimestre: number; questions: Question[] }[] = await res.json();
-        const parsedData = Array.isArray(data) ? data : [data];
-        const trimestre1 = parsedData.find((t) => t.trimestre === 1);
-
-        if (trimestre1 && Array.isArray(trimestre1.questions)) {
-          setQuestions(trimestre1.questions);
+        const data = await res.json();
+        if (Array.isArray(data.questions)) {
+          setQuestions(data.questions);
         } else {
-          console.warn("Pas de questions pour le trimestre 1");
+          console.warn("Aucune question trouvée pour le sujet trimestres.");
         }
-        setLoading(false);
       } catch (error) {
-        console.error("Erreur chargement:", error);
+        console.error("Erreur lors du chargement des questions :", error);
+      } finally {
         setLoading(false);
       }
     };
@@ -69,39 +51,18 @@ const Trimestres = () => {
     });
   };
 
-  const filteredQuestions =
-    selectedSubject === "Tout"
-      ? questions
-      : questions.filter((q) => q.subject === selectedSubject);
-
-  const uniqueSubjects = Array.from(new Set(questions.map((q) => q.subject)));
-
   if (loading) return <p className="text-center mt-10">Chargement...</p>;
 
   return (
     <div className="p-6 max-w-4xl mx-auto">
-      <h1 className="text-3xl font-bold mb-4 text-center text-violet-600">
-        Contrôle trimestriel
+      <h1 className="text-3xl font-bold mb-6 text-center text-violet-600">
+        Questions du contrôle trimestriel
       </h1>
 
-      <div className="mb-6">
-        <select
-          className="w-full border border-gray-300 rounded px-4 py-2"
-          onChange={(e) => setSelectedSubject(e.target.value)}
-        >
-          <option value="Tout">🎯 Toutes les matières</option>
-          {uniqueSubjects.map((subj) => (
-            <option key={subj} value={subj}>
-              {subjectLabels[subj] || subj}
-            </option>
-          ))}
-        </select>
-      </div>
-
       <div className="space-y-6">
-        {filteredQuestions.map((q, index) => (
+        {questions.map((q, index) => (
           <div
-            key={index}
+            key={q._id}
             className="border border-gray-200 rounded-lg p-4 shadow-sm bg-white"
           >
             <h3 className="text-lg font-semibold mb-2">{q.question}</h3>
@@ -128,11 +89,13 @@ const Trimestres = () => {
             </Button>
             {results[index] !== undefined && (
               <p
-                className={`mt-2 ${results[index] ? "text-green-500" : "text-red-500"}`}
+                className={`mt-2 ${
+                  results[index] ? "text-green-500" : "text-red-500"
+                }`}
               >
                 {results[index]
                   ? "Bonne réponse !"
-                  : `Mauvaise réponse. Réponse : ${q.answer}`}
+                  : `Mauvaise réponse. Réponse correcte : ${q.answer}`}
               </p>
             )}
           </div>
