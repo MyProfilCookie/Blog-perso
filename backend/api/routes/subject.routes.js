@@ -152,4 +152,15 @@ router.get("/trimestres/:id", async (req, res) => {
   }
 });
 
+router.get("/trimestres", async (req, res) => {
+  try {
+    const trimestres = await Trimestre.find();
+    res.status(200).json(trimestres);
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération des trimestres :", error);
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
+
 module.exports = router;
