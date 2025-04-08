@@ -36,11 +36,14 @@ const Trimestres = () => {
         const res = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres`,
         );
-        const data: TrimestreData[] = await res.json();
-        const trimestre1 = data.find((t) => t.trimestre === 1);
+        const data: { trimestre: number; questions: Question[] }[] = await res.json();
+        const parsedData = Array.isArray(data) ? data : [data];
+        const trimestre1 = parsedData.find((t) => t.trimestre === 1);
 
-        if (trimestre1) {
+        if (trimestre1 && Array.isArray(trimestre1.questions)) {
           setQuestions(trimestre1.questions);
+        } else {
+          console.warn("Pas de questions pour le trimestre 1");
         }
         setLoading(false);
       } catch (error) {
