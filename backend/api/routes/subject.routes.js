@@ -36,20 +36,7 @@ router.get("/rapportHebdo", async (req, res) => {
 });
 
 // Get a specific subject with its questions
-router.get("/:name", async (req, res) => {
-  try {
-    const subject = await Subject.findOne({ name: req.params.name, active: true });
-    
-    if (!subject) {
-      return res.status(404).json({ message: "Matière non trouvée" });
-    }
-    
-    res.status(200).json(subject);
-  } catch (error) {
-    console.error(`❌ Error fetching subject ${req.params.name}:`, error);
-    res.status(500).json({ message: "Erreur serveur", error: error.message });
-  }
-});
+// (This route has been moved to the end of the file)
 
 // Get a subject by its ID
 router.get("/id/:id", async (req, res) => {
@@ -139,7 +126,7 @@ router.delete("/:id", isAdmin, async (req, res) => {
 // Get a specific trimestre by its number (e.g., /api/subjects/trimestres/1)
 router.get("/trimestres/:id", async (req, res) => {
   try {
-    const trimestre = await Trimestre.findById(req.params.id);
+    const trimestre = await Trimestre.findOne({ numero: parseInt(req.params.id, 10) });
 
     if (!trimestre) {
       return res.status(404).json({ message: "Trimestre non trouvé" });
@@ -162,5 +149,20 @@ router.get("/trimestres", async (req, res) => {
   }
 });
 
+// Get a specific subject with its questions
+router.get("/nom/:name", async (req, res) => {
+  try {
+    const subject = await Subject.findOne({ name: req.params.name, active: true });
+
+    if (!subject) {
+      return res.status(404).json({ message: "Matière non trouvée" });
+    }
+
+    res.status(200).json(subject);
+  } catch (error) {
+    console.error(`❌ Error fetching subject ${req.params.name}:`, error);
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
 
 module.exports = router;

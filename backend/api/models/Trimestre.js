@@ -16,7 +16,7 @@ const subjectSchema = new mongoose.Schema({
 
 const trimestreSchema = new mongoose.Schema(
   {
-    trimestre: { type: Number, required: true },
+    numero: { type: Number, required: true, unique: true },
     subjects: [subjectSchema],
   },
   { timestamps: true }

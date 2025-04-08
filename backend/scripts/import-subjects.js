@@ -137,8 +137,12 @@ async function importSubjects() {
 
           for (const trimestreEntry of trimestres) {
             const result = await Trimestre.findOneAndUpdate(
-              { trimestre: trimestreEntry.trimestre },
-              { ...trimestreEntry, createdAt: new Date() },
+              { numero: trimestreEntry.trimestre },
+              {
+                numero: trimestreEntry.trimestre,
+                subjects: trimestreEntry.subjects,
+                updatedAt: new Date()
+              },
               { upsert: true, new: true }
             );
             console.log(`📘 Trimestre ${trimestreEntry.trimestre} importé (${result.subjects.length} matières)`);
