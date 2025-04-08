@@ -85,7 +85,7 @@
 		"tailwind-merge": "^3.0.2",
 		"tailwindcss-animate": "^1.0.7",
 		"update-browserslist-db": "^1.1.3",
-		"vercel": "^41.4.1"
+		"vercel": "^41.5.0"
 	},
 	"devDependencies": {
 		"@types/node": "20.5.7",
