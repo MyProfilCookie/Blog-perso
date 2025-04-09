@@ -35,8 +35,11 @@ const TrimestrePage = () => {
     const fetchData = async () => {
       if (!id) return;
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres/${id}`);
+        const res = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres/${id}`,
+        );
         const data = await res.json();
+
         if (data && data.subjects) {
           setTrimestre(data);
         } else {
@@ -54,7 +57,7 @@ const TrimestrePage = () => {
 
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
-    questionId: string
+    questionId: string,
   ) => {
     setAnswers({ ...answers, [questionId]: e.target.value });
   };
@@ -62,6 +65,7 @@ const TrimestrePage = () => {
   const handleSubmit = (questionId: string, correct: string) => {
     const userAnswer = answers[questionId]?.toLowerCase().trim();
     const correctAnswer = correct.toLowerCase();
+
     setResults({ ...results, [questionId]: userAnswer === correctAnswer });
   };
 
