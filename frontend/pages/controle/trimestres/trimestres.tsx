@@ -1,4 +1,3 @@
-"use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
@@ -24,7 +23,7 @@ interface TrimestreData {
   subjects: Subject[];
 }
 
-const Trimestres = () => {
+const TrimestrePage = () => {
   const [trimestre, setTrimestre] = useState<TrimestreData | null>(null);
   const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState<{ [questionId: string]: string }>({});
@@ -34,8 +33,9 @@ const Trimestres = () => {
 
   useEffect(() => {
     const fetchData = async () => {
+      if (!id) return;
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/trimestres/${id}`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres/${id}`);
         const data = await res.json();
         if (data && data.subjects) {
           setTrimestre(data);
@@ -77,7 +77,7 @@ const Trimestres = () => {
         <div key={subject._id} className="mb-10">
           <h2
             className="text-2xl font-semibold mb-4 px-3 py-2 rounded text-white"
-            style={{ background: subject.color }}
+            style={{ backgroundColor: subject.color }}
           >
             {subject.icon} {subject.name}
           </h2>
@@ -130,4 +130,4 @@ const Trimestres = () => {
   );
 };
 
-export default Trimestres;
+export default TrimestrePage;
