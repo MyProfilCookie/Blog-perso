@@ -31,7 +31,7 @@ export default function TrimestresPage() {
   useEffect(() => {
     const fetchTrimestres = async () => {
       try {
-        const response = await axios.get("/api/trimestres");
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres`);
         setTrimestres(response.data);
       } catch (err: any) {
         setError("Erreur lors du chargement des trimestres");
