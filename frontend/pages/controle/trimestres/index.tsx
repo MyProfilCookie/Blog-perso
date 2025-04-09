@@ -31,8 +31,12 @@ export default function TrimestresPage() {
   useEffect(() => {
     const fetchTrimestres = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres`);
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres`,
+        );
+
         setTrimestres(response.data);
+        console.log(response.data);
       } catch (err: any) {
         setError("Erreur lors du chargement des trimestres");
         console.error(err);
@@ -51,10 +55,12 @@ export default function TrimestresPage() {
         {trimestres.map((trimestre) => (
           <Link
             key={trimestre._id}
-            href={`/controle/trimestres/${trimestre._id}`}
             className="border p-4 rounded-md shadow hover:bg-gray-50 transition"
+            href={`/controle/trimestres/${trimestre._id}`}
           >
-            <h2 className="text-xl font-semibold mb-2">Trimestre {trimestre.numero}</h2>
+            <h2 className="text-xl font-semibold mb-2">
+              Trimestre {trimestre.numero}
+            </h2>
             <p>{trimestre.subjects.length} matières</p>
           </Link>
         ))}
