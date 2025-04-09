@@ -32,7 +32,7 @@ export default function TrimestresPage() {
     const fetchTrimestres = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres`,
+          `${process.env.NEXT_PUBLIC_API_URL}/trimestres`,
         );
 
         setTrimestres(response.data);

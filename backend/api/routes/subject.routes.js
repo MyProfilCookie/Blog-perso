@@ -123,32 +123,6 @@ router.delete("/:id", isAdmin, async (req, res) => {
   }
 });
 
-// Get a specific trimestre by its number (e.g., /api/subjects/trimestres/1)
-router.get("/trimestres/:id", async (req, res) => {
-  try {
-    const trimestre = await Trimestre.findOne({ numero: parseInt(req.params.id, 10) });
-
-    if (!trimestre) {
-      return res.status(404).json({ message: "Trimestre non trouvé" });
-    }
-
-    res.status(200).json(trimestre);
-  } catch (error) {
-    console.error("❌ Erreur lors de la récupération du trimestre :", error);
-    res.status(500).json({ message: "Erreur serveur", error: error.message });
-  }
-});
-
-router.get("/trimestres", async (req, res) => {
-  try {
-    const trimestres = await Trimestre.find();
-    res.status(200).json(trimestres);
-  } catch (error) {
-    console.error("❌ Erreur lors de la récupération des trimestres :", error);
-    res.status(500).json({ message: "Erreur serveur", error: error.message });
-  }
-});
-
 // Get a specific subject with its questions
 router.get("/nom/:name", async (req, res) => {
   try {
