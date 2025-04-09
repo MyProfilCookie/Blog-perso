@@ -1,6 +1,7 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
+import { useRouter } from "next/router";
 
 interface Question {
   _id: string;
@@ -28,11 +29,13 @@ const Trimestres = () => {
   const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState<{ [questionId: string]: string }>({});
   const [results, setResults] = useState<{ [questionId: string]: boolean }>({});
+  const router = useRouter();
+  const { id } = router.query;
 
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/subjects/trimestres/1`);
+        const res = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/trimestres/${id}`);
         const data = await res.json();
         if (data && data.subjects) {
           setTrimestre(data);
@@ -47,7 +50,7 @@ const Trimestres = () => {
     };
 
     fetchData();
-  }, []);
+  }, [id]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
