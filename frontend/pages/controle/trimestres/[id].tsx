@@ -2,7 +2,7 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, CardBody, Button, Progress } from "@nextui-org/react";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 
 import BackButton from "@/components/back";
@@ -33,7 +33,7 @@ export default function TrimestreDetails() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [currentSubjectIndex, setCurrentSubjectIndex] = useState(0);
-  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: string]: string;
   }>({});
@@ -42,6 +42,8 @@ export default function TrimestreDetails() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [streak, setStreak] = useState(0);
+
+  const QUESTIONS_PER_PAGE = 4;
 
   useEffect(() => {
     if (!id) return;
@@ -76,12 +78,32 @@ export default function TrimestreDetails() {
     }
   };
 
-  const handleAnswerSelect = async (answer: string) => {
+  const getCurrentQuestions = () => {
+    if (!data) return [];
+    const currentSubject = data.subjects[currentSubjectIndex];
+    const startIndex = currentPage * QUESTIONS_PER_PAGE;
+
+    return currentSubject.questions.slice(
+      startIndex,
+      startIndex + QUESTIONS_PER_PAGE,
+    );
+  };
+
+  const getTotalPages = () => {
+    if (!data) return 0;
+    const currentSubject = data.subjects[currentSubjectIndex];
+
+    return Math.ceil(currentSubject.questions.length / QUESTIONS_PER_PAGE);
+  };
+
+  const handleAnswerSelect = async (questionIndex: number, answer: string) => {
     if (!data) return;
 
     const currentSubject = data.subjects[currentSubjectIndex];
-    const currentQuestion = currentSubject.questions[currentQuestionIndex];
-    const questionId = `${currentSubjectIndex}-${currentQuestionIndex}`;
+    const absoluteQuestionIndex =
+      currentPage * QUESTIONS_PER_PAGE + questionIndex;
+    const currentQuestion = currentSubject.questions[absoluteQuestionIndex];
+    const questionId = `${currentSubjectIndex}-${absoluteQuestionIndex}`;
 
     setSelectedAnswers((prev) => ({
       ...prev,
@@ -99,61 +121,74 @@ export default function TrimestreDetails() {
         title: getEncouragement(true, streak),
         icon: "success",
         timer: 1500,
+        position: 'bottom-end',
         showConfirmButton: false,
         background: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
         color: "#fff",
+        width: 300,
+        toast: true,
         customClass: {
-          popup: "rounded-xl border-4 border-white/20",
-          title: "text-2xl font-bold",
+          popup: "rounded-xl border border-white/20",
+          title: "text-base font-medium",
         },
         showClass: {
-          popup: "animate__animated animate__fadeInDown",
+          popup: "animate__animated animate__fadeInRight",
         },
         hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
+          popup: "animate__animated animate__fadeOutRight",
+        }
       });
     } else {
       setStreak(0);
       await Swal.fire({
         title: getEncouragement(false, 0),
-        html: `<p class="text-lg mb-2">${getEncouragement(false, 0)}</p><p class="text-sm font-medium">La bonne réponse était : <span class="font-bold">${currentQuestion.answer}</span></p>`,
+        html: `<p class="text-sm">${getEncouragement(false, 0)}</p><p class="text-xs mt-1 opacity-90">La bonne réponse était : <span class="font-medium">${currentQuestion.answer}</span></p>`,
         icon: "error",
         timer: 2000,
+        position: 'bottom-end',
         showConfirmButton: false,
         background: "linear-gradient(135deg, #f87171 0%, #dc2626 100%)",
         color: "#fff",
+        width: 300,
+        toast: true,
         customClass: {
-          popup: "rounded-xl border-4 border-white/20",
-          title: "text-2xl font-bold",
+          popup: "rounded-xl border border-white/20",
+          title: "text-base font-medium",
         },
         showClass: {
-          popup: "animate__animated animate__fadeInDown",
+          popup: "animate__animated animate__fadeInRight",
         },
         hideClass: {
-          popup: "animate__animated animate__fadeOutUp",
-        },
+          popup: "animate__animated animate__fadeOutRight",
+        }
       });
     }
 
-    handleNextQuestion();
-  };
+    // Vérifier si toutes les questions de la page sont répondues
+    const currentPageQuestions = getCurrentQuestions();
+    const allAnswered = currentPageQuestions.every((_, idx) => {
+      const qId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + idx}`;
 
-  const handleNextQuestion = () => {
-    if (!data) return;
+      return selectedAnswers[qId] || questionId === qId;
+    });
 
-    const currentSubject = data.subjects[currentSubjectIndex];
+    if (allAnswered) {
+      // Passer à la page suivante ou au sujet suivant
+      const totalPages = getTotalPages();
 
-    setShowFeedback(false);
-
-    if (currentQuestionIndex < currentSubject.questions.length - 1) {
-      setCurrentQuestionIndex((prev) => prev + 1);
-    } else if (currentSubjectIndex < data.subjects.length - 1) {
-      setCurrentSubjectIndex((prev) => prev + 1);
-      setCurrentQuestionIndex(0);
-    } else {
-      calculateScore();
-      setShowResults(true);
+      if (currentPage < totalPages - 1) {
+        setTimeout(() => setCurrentPage((prev) => prev + 1), 1500);
+      } else if (currentSubjectIndex < data.subjects.length - 1) {
+        setTimeout(() => {
+          setCurrentSubjectIndex((prev) => prev + 1);
+          setCurrentPage(0);
+        }, 1500);
+      } else {
+        setTimeout(() => {
+          calculateScore();
+          setShowResults(true);
+        }, 1500);
+      }
     }
   };
 
@@ -214,7 +249,7 @@ export default function TrimestreDetails() {
         if (
           subjectIndex < currentSubjectIndex ||
           (subjectIndex === currentSubjectIndex &&
-            questionIndex <= currentQuestionIndex)
+            questionIndex <= currentPage * QUESTIONS_PER_PAGE)
         ) {
           currentQuestionNumber++;
         }
@@ -226,14 +261,14 @@ export default function TrimestreDetails() {
 
   if (loading)
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex justify-center items-center">
         <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary" />
       </div>
     );
 
   if (error)
     return (
-      <div className="flex justify-center items-center min-h-screen">
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex justify-center items-center">
         <Card className="bg-danger-50">
           <CardBody>
             <p className="text-danger">{error}</p>
@@ -280,7 +315,7 @@ export default function TrimestreDetails() {
                 onClick={() => {
                   setShowResults(false);
                   setCurrentSubjectIndex(0);
-                  setCurrentQuestionIndex(0);
+                  setCurrentPage(0);
                   setSelectedAnswers({});
                   setStreak(0);
                 }}
@@ -301,17 +336,25 @@ export default function TrimestreDetails() {
   }
 
   const currentSubject = data.subjects[currentSubjectIndex];
-  const currentQuestion = currentSubject.questions[currentQuestionIndex];
-  const questionId = `${currentSubjectIndex}-${currentQuestionIndex}`;
+  const currentQuestions = getCurrentQuestions();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-6">
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-7xl mx-auto">
         <BackButton />
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white mb-2">
-            Trimestre {data.numero}
-          </h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-3xl font-bold text-white mb-2">
+              Trimestre {data.numero}
+            </h1>
+            <div className="flex items-center gap-2">
+              <span className="text-4xl">{currentSubject.icon}</span>
+              <h2 className="text-xl font-bold text-white">
+                {currentSubject.name}
+              </h2>
+            </div>
+          </div>
+
           <div className="flex items-center gap-2 mt-4 bg-white/5 p-3 rounded-xl backdrop-blur-sm">
             <Progress
               className="flex-1 h-3"
@@ -319,9 +362,10 @@ export default function TrimestreDetails() {
               value={getCurrentProgress()}
             />
             <span className="text-sm font-medium text-white">
-              {Math.round(getCurrentProgress())}%
+              Page {currentPage + 1}/{getTotalPages()}
             </span>
           </div>
+
           {streak >= 3 && (
             <div className="mt-3 text-emerald-400 flex items-center gap-2 bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/20">
               <span className="animate-bounce">🔥</span>
@@ -332,73 +376,63 @@ export default function TrimestreDetails() {
           )}
         </div>
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={`${currentSubjectIndex}-${currentQuestionIndex}`}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-            transition={{ duration: 0.4, ease: "easeOut" }}
-          >
-            <Card
-              className="shadow-2xl border border-white/10"
-              style={{
-                background: "rgba(30, 41, 59, 0.9)",
-                backdropFilter: "blur(16px)",
-              }}
-            >
-              <CardBody className="p-8">
-                <div className="flex items-center gap-4 mb-8 bg-white/5 p-4 rounded-xl">
-                  <span className="text-4xl">{currentSubject.icon}</span>
-                  <div>
-                    <h2 className="text-2xl font-bold text-white">
-                      {currentSubject.name}
-                    </h2>
-                    <p className="text-sm text-blue-200">
-                      Question {currentQuestionIndex + 1}/
-                      {currentSubject.questions.length}
-                    </p>
-                  </div>
-                </div>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          {currentQuestions.map((question, index) => {
+            const questionId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + index}`;
 
-                <div className="mb-8">
-                  <p className="text-xl mb-6 font-medium text-white bg-white/5 p-4 rounded-xl">
-                    {currentQuestion.question}
-                  </p>
-                  <div className="space-y-4">
-                    {currentQuestion.options.map((option, index) => (
-                      <Button
-                        key={index}
-                        className={`w-full text-left justify-start h-auto py-4 px-6 text-lg transition-all duration-300 hover:scale-102 hover:bg-white/10 ${
-                          selectedAnswers[questionId] === option
-                            ? "bg-blue-500/20 border-blue-500"
-                            : "bg-white/5 hover:border-white/40"
-                        }`}
-                        color={
-                          selectedAnswers[questionId] === option
-                            ? "primary"
-                            : "default"
-                        }
-                        disabled={showFeedback}
-                        variant={
-                          selectedAnswers[questionId] === option
-                            ? "solid"
-                            : "bordered"
-                        }
-                        onClick={() => handleAnswerSelect(option)}
-                      >
-                        <span className="mr-3 text-blue-300">
-                          {String.fromCharCode(65 + index)}.
-                        </span>
-                        <span className="text-white">{option}</span>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
-              </CardBody>
-            </Card>
-          </motion.div>
-        </AnimatePresence>
+            return (
+              <motion.div
+                key={questionId}
+                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3, delay: index * 0.1 }}
+              >
+                <Card
+                  className="shadow-2xl border border-white/10"
+                  style={{
+                    background: "rgba(30, 41, 59, 0.9)",
+                    backdropFilter: "blur(16px)",
+                  }}
+                >
+                  <CardBody className="p-6">
+                    <p className="text-lg font-medium text-white mb-4 bg-white/5 p-3 rounded-lg">
+                      {question.question}
+                    </p>
+                    <div className="space-y-3">
+                      {question.options.map((option, optIndex) => (
+                        <Button
+                          key={optIndex}
+                          className={`w-full text-left justify-start h-auto py-3 px-4 text-base transition-all duration-300 hover:scale-102 hover:bg-white/10 ${
+                            selectedAnswers[questionId] === option
+                              ? "bg-blue-500/20 border-blue-500"
+                              : "bg-white/5 hover:border-white/40"
+                          }`}
+                          color={
+                            selectedAnswers[questionId] === option
+                              ? "primary"
+                              : "default"
+                          }
+                          disabled={showFeedback}
+                          variant={
+                            selectedAnswers[questionId] === option
+                              ? "solid"
+                              : "bordered"
+                          }
+                          onClick={() => handleAnswerSelect(index, option)}
+                        >
+                          <span className="mr-3 text-blue-300">
+                            {String.fromCharCode(65 + optIndex)}.
+                          </span>
+                          <span className="text-white">{option}</span>
+                        </Button>
+                      ))}
+                    </div>
+                  </CardBody>
+                </Card>
+              </motion.div>
+            );
+          })}
+        </div>
       </div>
     </div>
   );
