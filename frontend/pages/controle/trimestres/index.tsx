@@ -56,7 +56,7 @@ export default function TrimestresPage() {
           <Link
             key={trimestre._id}
             className="border p-4 rounded-md shadow hover:bg-gray-50 transition"
-            href={`/controle/trimestres/${trimestre._id}`}
+            href={`/controle/trimestres/${trimestre.numero}`}
           >
             <h2 className="text-xl font-semibold mb-2">
               Trimestre {trimestre.numero}
