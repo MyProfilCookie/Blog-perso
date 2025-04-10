@@ -305,17 +305,17 @@ export default function TrimestreDetails() {
   const questionId = `${currentSubjectIndex}-${currentQuestionIndex}`;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 p-6">
       <div className="max-w-4xl mx-auto">
         <BackButton />
         <div className="mb-6">
-          <h1 className="text-3xl font-bold text-white">
+          <h1 className="text-3xl font-bold text-white mb-2">
             Trimestre {data.numero}
           </h1>
-          <div className="flex items-center gap-2 mt-4">
+          <div className="flex items-center gap-2 mt-4 bg-white/5 p-3 rounded-xl backdrop-blur-sm">
             <Progress
               className="flex-1 h-3"
-              color="primary"
+              color="success"
               value={getCurrentProgress()}
             />
             <span className="text-sm font-medium text-white">
@@ -323,7 +323,7 @@ export default function TrimestreDetails() {
             </span>
           </div>
           {streak >= 3 && (
-            <div className="mt-3 text-success flex items-center gap-2 bg-success/10 p-2 rounded-lg">
+            <div className="mt-3 text-emerald-400 flex items-center gap-2 bg-emerald-500/10 p-3 rounded-lg border border-emerald-500/20">
               <span className="animate-bounce">🔥</span>
               <span className="font-medium">
                 Série de {streak} bonnes réponses !
@@ -343,18 +343,18 @@ export default function TrimestreDetails() {
             <Card
               className="shadow-2xl border border-white/10"
               style={{
-                background: `linear-gradient(135deg, ${currentSubject.color}15 0%, ${currentSubject.color}25 100%)`,
-                backdropFilter: "blur(10px)",
+                background: "rgba(30, 41, 59, 0.9)",
+                backdropFilter: "blur(16px)",
               }}
             >
               <CardBody className="p-8">
-                <div className="flex items-center gap-3 mb-8">
+                <div className="flex items-center gap-4 mb-8 bg-white/5 p-4 rounded-xl">
                   <span className="text-4xl">{currentSubject.icon}</span>
                   <div>
                     <h2 className="text-2xl font-bold text-white">
                       {currentSubject.name}
                     </h2>
-                    <p className="text-sm text-gray-300">
+                    <p className="text-sm text-blue-200">
                       Question {currentQuestionIndex + 1}/
                       {currentSubject.questions.length}
                     </p>
@@ -362,14 +362,18 @@ export default function TrimestreDetails() {
                 </div>
 
                 <div className="mb-8">
-                  <p className="text-xl mb-6 font-medium text-white">
+                  <p className="text-xl mb-6 font-medium text-white bg-white/5 p-4 rounded-xl">
                     {currentQuestion.question}
                   </p>
                   <div className="space-y-4">
                     {currentQuestion.options.map((option, index) => (
                       <Button
                         key={index}
-                        className="w-full text-left justify-start h-auto py-4 px-6 text-lg transition-all duration-300 hover:scale-102"
+                        className={`w-full text-left justify-start h-auto py-4 px-6 text-lg transition-all duration-300 hover:scale-102 hover:bg-white/10 ${
+                          selectedAnswers[questionId] === option
+                            ? "bg-blue-500/20 border-blue-500"
+                            : "bg-white/5 hover:border-white/40"
+                        }`}
                         color={
                           selectedAnswers[questionId] === option
                             ? "primary"
@@ -383,10 +387,10 @@ export default function TrimestreDetails() {
                         }
                         onClick={() => handleAnswerSelect(option)}
                       >
-                        <span className="mr-3">
+                        <span className="mr-3 text-blue-300">
                           {String.fromCharCode(65 + index)}.
                         </span>
-                        {option}
+                        <span className="text-white">{option}</span>
                       </Button>
                     ))}
                   </div>
