@@ -1,9 +1,10 @@
-import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
-import axios from 'axios';
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import { Card, CardBody, Button, Progress } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Swal from "sweetalert2";
+
 import BackButton from "@/components/back";
 
 interface Question {
@@ -33,16 +34,24 @@ export default function TrimestreDetails() {
   const [error, setError] = useState<string | null>(null);
   const [currentSubjectIndex, setCurrentSubjectIndex] = useState(0);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<{[key: string]: string}>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<{
+    [key: string]: string;
+  }>({});
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
+  const [showFeedback, setShowFeedback] = useState(false);
+  const [isCorrect, setIsCorrect] = useState(false);
+  const [streak, setStreak] = useState(0);
 
   useEffect(() => {
     if (!id) return;
 
     const fetchTrimestre = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/trimestres/${id}`);
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/trimestres/${id}`,
+        );
+
         setData(response.data);
       } catch (err) {
         setError("Erreur lors de la récupération des données du trimestre.");
@@ -54,28 +63,73 @@ export default function TrimestreDetails() {
     fetchTrimestre();
   }, [id]);
 
-  const handleAnswerSelect = (answer: string) => {
+  const getEncouragement = (isCorrect: boolean, streak: number) => {
+    if (isCorrect) {
+      if (streak >= 5) return "🌟 Extraordinaire ! Tu es inarrêtable !";
+      if (streak >= 3) return "🎯 Excellent ! Continue comme ça !";
+
+      return "✅ Bravo ! C'est la bonne réponse !";
+    } else {
+      if (streak > 2) return "😮 Dommage, mais tu étais sur une belle série !";
+
+      return "❌ Ce n'est pas la bonne réponse, mais continue d'essayer !";
+    }
+  };
+
+  const handleAnswerSelect = async (answer: string) => {
     if (!data) return;
-    
+
     const currentSubject = data.subjects[currentSubjectIndex];
     const currentQuestion = currentSubject.questions[currentQuestionIndex];
     const questionId = `${currentSubjectIndex}-${currentQuestionIndex}`;
-    
-    setSelectedAnswers(prev => ({
+
+    setSelectedAnswers((prev) => ({
       ...prev,
-      [questionId]: answer
+      [questionId]: answer,
     }));
+
+    const correct = answer === currentQuestion.answer;
+
+    setIsCorrect(correct);
+    setShowFeedback(true);
+
+    if (correct) {
+      setStreak((prev) => prev + 1);
+      await Swal.fire({
+        title: getEncouragement(true, streak),
+        icon: "success",
+        timer: 1500,
+        showConfirmButton: false,
+        background: "#4ade80",
+        color: "#fff",
+      });
+    } else {
+      setStreak(0);
+      await Swal.fire({
+        title: getEncouragement(false, 0),
+        text: `La bonne réponse était : ${currentQuestion.answer}`,
+        icon: "error",
+        timer: 2000,
+        showConfirmButton: false,
+        background: "#f87171",
+        color: "#fff",
+      });
+    }
+
+    handleNextQuestion();
   };
 
   const handleNextQuestion = () => {
     if (!data) return;
 
     const currentSubject = data.subjects[currentSubjectIndex];
-    
+
+    setShowFeedback(false);
+
     if (currentQuestionIndex < currentSubject.questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
+      setCurrentQuestionIndex((prev) => prev + 1);
     } else if (currentSubjectIndex < data.subjects.length - 1) {
-      setCurrentSubjectIndex(prev => prev + 1);
+      setCurrentSubjectIndex((prev) => prev + 1);
       setCurrentQuestionIndex(0);
     } else {
       calculateScore();
@@ -92,6 +146,7 @@ export default function TrimestreDetails() {
     data.subjects.forEach((subject, subjectIndex) => {
       subject.questions.forEach((question, questionIndex) => {
         const questionId = `${subjectIndex}-${questionIndex}`;
+
         if (selectedAnswers[questionId] === question.answer) {
           correctAnswers++;
         }
@@ -99,20 +154,48 @@ export default function TrimestreDetails() {
       });
     });
 
-    setScore((correctAnswers / totalQuestions) * 100);
+    const finalScore = (correctAnswers / totalQuestions) * 100;
+
+    setScore(finalScore);
+
+    // Afficher un message final selon le score
+    let message = "";
+    let icon = "success";
+
+    if (finalScore >= 80) {
+      message = "🌟 Félicitations ! Tu as excellé dans ce trimestre !";
+    } else if (finalScore >= 60) {
+      message = "👏 Bien joué ! Continue tes efforts !";
+      icon = "success";
+    } else if (finalScore >= 40) {
+      message = "💪 Tu peux faire mieux ! Continue de pratiquer !";
+      icon = "warning";
+    } else {
+      message = "📚 Il faut revoir ces notions. Ne te décourage pas !";
+      icon = "error";
+    }
+
+    Swal.fire({
+      title: message,
+      icon: icon as any,
+      confirmButtonText: "Voir mes résultats",
+    });
   };
 
   const getCurrentProgress = () => {
     if (!data) return 0;
-    
+
     let totalQuestions = 0;
     let currentQuestionNumber = 0;
 
     data.subjects.forEach((subject, subjectIndex) => {
       subject.questions.forEach((_, questionIndex) => {
         totalQuestions++;
-        if (subjectIndex < currentSubjectIndex || 
-            (subjectIndex === currentSubjectIndex && questionIndex <= currentQuestionIndex)) {
+        if (
+          subjectIndex < currentSubjectIndex ||
+          (subjectIndex === currentSubjectIndex &&
+            questionIndex <= currentQuestionIndex)
+        ) {
           currentQuestionNumber++;
         }
       });
@@ -121,8 +204,24 @@ export default function TrimestreDetails() {
     return (currentQuestionNumber / totalQuestions) * 100;
   };
 
-  if (loading) return <div className="flex justify-center items-center min-h-screen">Chargement...</div>;
-  if (error) return <div className="flex justify-center items-center min-h-screen text-red-500">{error}</div>;
+  if (loading)
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary" />
+      </div>
+    );
+
+  if (error)
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Card className="bg-danger-50">
+          <CardBody>
+            <p className="text-danger">{error}</p>
+          </CardBody>
+        </Card>
+      </div>
+    );
+
   if (!data) return null;
 
   if (showResults) {
@@ -131,26 +230,50 @@ export default function TrimestreDetails() {
         <BackButton />
         <Card className="mt-4">
           <CardBody>
-            <h2 className="text-2xl font-bold mb-4">Résultats</h2>
-            <div className="mb-4">
+            <h2 className="text-2xl font-bold mb-4">
+              Résultats du Trimestre {data.numero}
+            </h2>
+            <div className="mb-6">
               <Progress
+                className="w-full h-4"
+                color={
+                  score >= 70 ? "success" : score >= 50 ? "warning" : "danger"
+                }
                 value={score}
-                color={score >= 70 ? "success" : score >= 50 ? "warning" : "danger"}
-                className="w-full"
               />
-              <p className="mt-2 text-lg">Score final : {score.toFixed(1)}%</p>
+              <p className="mt-2 text-lg font-semibold">
+                Score final : {score.toFixed(1)}%
+              </p>
+              <p className="mt-2 text-gray-600">
+                {score >= 80
+                  ? "🌟 Excellent travail !"
+                  : score >= 60
+                    ? "👏 Bon travail !"
+                    : score >= 40
+                      ? "💪 Continue tes efforts !"
+                      : "📚 N'hésite pas à revoir les leçons"}
+              </p>
             </div>
-            <Button
-              color="primary"
-              onClick={() => {
-                setShowResults(false);
-                setCurrentSubjectIndex(0);
-                setCurrentQuestionIndex(0);
-                setSelectedAnswers({});
-              }}
-            >
-              Recommencer
-            </Button>
+            <div className="flex gap-4">
+              <Button
+                color="primary"
+                onClick={() => {
+                  setShowResults(false);
+                  setCurrentSubjectIndex(0);
+                  setCurrentQuestionIndex(0);
+                  setSelectedAnswers({});
+                  setStreak(0);
+                }}
+              >
+                Recommencer
+              </Button>
+              <Button
+                color="secondary"
+                onClick={() => router.push("/controle/trimestres")}
+              >
+                Retour aux trimestres
+              </Button>
+            </div>
           </CardBody>
         </Card>
       </div>
@@ -166,53 +289,81 @@ export default function TrimestreDetails() {
       <BackButton />
       <div className="mb-6">
         <h1 className="text-2xl font-bold">Trimestre {data.numero}</h1>
-        <Progress value={getCurrentProgress()} className="mt-4" />
+        <div className="flex items-center gap-2 mt-2">
+          <Progress
+            className="flex-1"
+            color="primary"
+            value={getCurrentProgress()}
+          />
+          <span className="text-sm font-medium">
+            {Math.round(getCurrentProgress())}%
+          </span>
+        </div>
+        {streak >= 3 && (
+          <div className="mt-2 text-success flex items-center gap-2">
+            <span>🔥</span>
+            <span>Série de {streak} bonnes réponses !</span>
+          </div>
+        )}
       </div>
 
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Card>
-          <CardBody>
-            <div className="flex items-center gap-2 mb-4">
-              <span className="text-2xl">{currentSubject.icon}</span>
-              <h2 className="text-xl font-semibold">{currentSubject.name}</h2>
-            </div>
-            
-            <div className="mb-6">
-              <p className="text-lg mb-4">{currentQuestion.question}</p>
-              <div className="space-y-3">
-                {currentQuestion.options.map((option, index) => (
-                  <Button
-                    key={index}
-                    className="w-full text-left justify-start"
-                    color={selectedAnswers[questionId] === option ? "primary" : "default"}
-                    variant={selectedAnswers[questionId] === option ? "solid" : "bordered"}
-                    onClick={() => handleAnswerSelect(option)}
-                  >
-                    {option}
-                  </Button>
-                ))}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={`${currentSubjectIndex}-${currentQuestionIndex}`}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3 }}
+        >
+          <Card
+            className="shadow-lg"
+            style={{ backgroundColor: currentSubject.color + "20" }}
+          >
+            <CardBody>
+              <div className="flex items-center gap-2 mb-6">
+                <span className="text-3xl">{currentSubject.icon}</span>
+                <div>
+                  <h2 className="text-xl font-semibold">
+                    {currentSubject.name}
+                  </h2>
+                  <p className="text-sm text-gray-600">
+                    Question {currentQuestionIndex + 1}/
+                    {currentSubject.questions.length}
+                  </p>
+                </div>
               </div>
-            </div>
 
-            <div className="flex justify-end">
-              <Button
-                color="primary"
-                isDisabled={!selectedAnswers[questionId]}
-                onClick={handleNextQuestion}
-              >
-                {currentSubjectIndex === data.subjects.length - 1 && 
-                 currentQuestionIndex === currentSubject.questions.length - 1 
-                  ? "Terminer"
-                  : "Question suivante"}
-              </Button>
-            </div>
-          </CardBody>
-        </Card>
-      </motion.div>
+              <div className="mb-6">
+                <p className="text-lg mb-4 font-medium">
+                  {currentQuestion.question}
+                </p>
+                <div className="space-y-3">
+                  {currentQuestion.options.map((option, index) => (
+                    <Button
+                      key={index}
+                      className="w-full text-left justify-start h-auto py-3 px-4"
+                      color={
+                        selectedAnswers[questionId] === option
+                          ? "primary"
+                          : "default"
+                      }
+                      disabled={showFeedback}
+                      variant={
+                        selectedAnswers[questionId] === option
+                          ? "solid"
+                          : "bordered"
+                      }
+                      onClick={() => handleAnswerSelect(option)}
+                    >
+                      {option}
+                    </Button>
+                  ))}
+                </div>
+              </div>
+            </CardBody>
+          </Card>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }
