@@ -141,13 +141,13 @@ export default function TrimestreDetails() {
         timer: 10800000,
         position: "bottom-end",
         showConfirmButton: false,
-        background: `linear-gradient(135deg, ${currentSubject.color.split(" ")[0]} 0%, ${currentSubject.color.split(" ")[1]} 100%)`,
-        color: "#fff",
+        background: "#fff",
+        color: "#16a34a",
         width: 300,
         toast: true,
         customClass: {
-          popup: "rounded-xl border border-white/20",
-          title: "text-base font-medium",
+          popup: "rounded-lg border border-green-100",
+          title: "text-[15px] font-medium",
         },
         showClass: {
           popup: "animate__animated animate__fadeInRight",
@@ -160,18 +160,18 @@ export default function TrimestreDetails() {
       setStreak(0);
       await Swal.fire({
         title: getEncouragement(false, 0),
-        html: `<p class="text-sm">${getEncouragement(false, 0)}</p><p class="text-xs mt-1 opacity-90">La bonne réponse était : <span class="font-medium">${currentQuestion.answer}</span></p>`,
+        html: `<p class="text-[15px]">${getEncouragement(false, 0)}</p><p class="text-[13px] mt-1 opacity-90">La bonne réponse était : <span class="font-medium">${currentQuestion.answer}</span></p>`,
         icon: "error",
         timer: 10800000,
         position: "bottom-end",
         showConfirmButton: false,
-        background: "bg-red-400 dark:bg-red-800",
-        color: "#fff",
+        background: "#fff",
+        color: "#dc2626",
         width: 300,
         toast: true,
         customClass: {
-          popup: "rounded-xl border border-white/20",
-          title: "text-base font-medium",
+          popup: "rounded-lg border border-red-100",
+          title: "text-[15px] font-medium",
         },
         showClass: {
           popup: "animate__animated animate__fadeInRight",
@@ -395,36 +395,41 @@ export default function TrimestreDetails() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {currentQuestions.map((question, index) => {
             const questionId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + index}`;
+            const subjectColor = currentSubject.color || "bg-gray-400 dark:bg-gray-800";
+            const borderColor = subjectColor.split(' ')[0].replace('bg-', 'border-');
 
             return (
               <div
                 key={questionId}
-                className="bg-white rounded-lg shadow-sm overflow-hidden"
+                className={`bg-white rounded-lg shadow-sm overflow-hidden border-l-4 ${borderColor}`}
               >
                 <div className="p-3 sm:p-4">
-                  <p className="text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4">
+                  <p className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectColor.split(' ')[0]} bg-opacity-10 rounded-lg p-3`}>
                     {question.question}
                   </p>
                   <div className="space-y-2">
                     {question.options.map((option, optIndex) => {
                       const isSelected = selectedAnswers[questionId] === option;
-
                       return (
                         <button
                           key={optIndex}
-                          className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border ${
-                            isSelected
-                              ? "bg-gray-50 border-gray-300"
-                              : "bg-white border-gray-200 hover:bg-gray-50"
-                          } transition-colors duration-200`}
                           disabled={showFeedback}
                           onClick={() => handleAnswerSelect(index, option)}
+                          className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border ${
+                            isSelected
+                              ? `${subjectColor.split(' ')[0]} bg-opacity-10 border-${borderColor}`
+                              : "bg-white border-gray-200 hover:bg-gray-50"
+                          } transition-colors duration-200`}
                         >
                           <div className="flex items-center gap-2.5 sm:gap-3">
-                            <span className="text-gray-400 text-[13px] sm:text-[15px]">
+                            <span className={`text-[13px] sm:text-[15px] ${
+                              isSelected ? subjectColor.split(' ')[0].replace('bg-', 'text-') : 'text-gray-400'
+                            }`}>
                               {String.fromCharCode(65 + optIndex)}.
                             </span>
-                            <span className="text-gray-700 text-[13px] sm:text-[15px]">
+                            <span className={`text-[13px] sm:text-[15px] ${
+                              isSelected ? 'text-gray-900' : 'text-gray-700'
+                            }`}>
                               {option}
                             </span>
                           </div>
