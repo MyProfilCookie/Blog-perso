@@ -383,6 +383,7 @@ export default function TrimestreDetails() {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
           {currentQuestions.map((question, index) => {
             const questionId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + index}`;
+            const subjectColor = currentSubject.color || "bg-yellow-400 dark:bg-yellow-800";
 
             return (
               <motion.div
@@ -392,50 +393,42 @@ export default function TrimestreDetails() {
                 transition={{ duration: 0.3, delay: index * 0.1 }}
               >
                 <Card
-                  className="shadow-sm border-0 dark:border dark:border-white/10"
+                  className={`shadow-sm border-2 ${subjectColor.replace('bg-', 'border-')} dark:border-opacity-50`}
                   style={{
                     background: "rgba(255, 255, 255, 0.9)",
                     backdropFilter: "blur(12px)",
                   }}
                 >
                   <CardBody className="p-4 sm:p-6">
-                    <p className="text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-4 bg-gray-50 dark:bg-slate-700/50 p-3 rounded-lg">
+                    <p className={`text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-4 ${subjectColor} bg-opacity-10 dark:bg-opacity-20 p-3 rounded-lg`}>
                       {question.question}
                     </p>
                     <div className="space-y-2.5">
-                      {question.options.map((option, optIndex) => (
-                        <Button
-                          key={optIndex}
-                          className={`w-full text-left justify-start h-auto py-2.5 px-4 text-sm sm:text-base transition-all duration-300 ${
-                            selectedAnswers[questionId] === option
-                              ? "bg-blue-50 dark:bg-blue-500/20 border-blue-200 dark:border-blue-500 text-blue-700 dark:text-blue-300"
-                              : "bg-white dark:bg-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-600/50 text-gray-700 dark:text-gray-200"
-                          }`}
-                          color={
-                            selectedAnswers[questionId] === option
-                              ? "primary"
-                              : "default"
-                          }
-                          disabled={showFeedback}
-                          variant={
-                            selectedAnswers[questionId] === option
-                              ? "flat"
-                              : "bordered"
-                          }
-                          onClick={() => handleAnswerSelect(index, option)}
-                        >
-                          <span
-                            className={`mr-3 ${
-                              selectedAnswers[questionId] === option
-                                ? "text-blue-500 dark:text-blue-300"
-                                : "text-gray-400 dark:text-gray-400"
+                      {question.options.map((option, optIndex) => {
+                        const isSelected = selectedAnswers[questionId] === option;
+                        return (
+                          <Button
+                            key={optIndex}
+                            className={`w-full text-left justify-start h-auto py-2.5 px-4 text-sm sm:text-base transition-all duration-300 ${
+                              isSelected
+                                ? `${subjectColor} bg-opacity-20 dark:bg-opacity-30 border-2 ${subjectColor.replace('bg-', 'border-')} text-gray-900 dark:text-white`
+                                : "bg-white dark:bg-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-600/50 text-gray-700 dark:text-gray-200"
                             }`}
+                            disabled={showFeedback}
+                            variant={isSelected ? "flat" : "bordered"}
+                            onClick={() => handleAnswerSelect(index, option)}
                           >
-                            {String.fromCharCode(65 + optIndex)}.
-                          </span>
-                          <span>{option}</span>
-                        </Button>
-                      ))}
+                            <span className={`mr-3 ${
+                              isSelected
+                                ? "text-gray-900 dark:text-white"
+                                : "text-gray-400 dark:text-gray-400"
+                            }`}>
+                              {String.fromCharCode(65 + optIndex)}.
+                            </span>
+                            <span>{option}</span>
+                          </Button>
+                        );
+                      })}
                     </div>
                   </CardBody>
                 </Card>
