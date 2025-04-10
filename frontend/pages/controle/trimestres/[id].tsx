@@ -33,7 +33,7 @@ export default function TrimestreDetails() {
 
     const fetchTrimestre = async () => {
       try {
-        const response = await axios.get(`/api/subjects/trimestres/${id}`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/trimestres/${id}`);
         setData(response.data);
       } catch (err) {
         setError("Erreur lors de la récupération des données du trimestre.");
