@@ -42,6 +42,7 @@ export default function TrimestreDetails() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [streak, setStreak] = useState(0);
+  const [timeLeft, setTimeLeft] = useState(10800); // 3 heures en secondes
 
   const QUESTIONS_PER_PAGE = 4;
 
@@ -64,6 +65,22 @@ export default function TrimestreDetails() {
 
     fetchTrimestre();
   }, [id]);
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setTimeLeft((prevTime) => {
+        if (prevTime <= 0) {
+          clearInterval(timer);
+          calculateScore();
+          setShowResults(true);
+          return 0;
+        }
+        return prevTime - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(timer);
+  }, []);
 
   const getEncouragement = (isCorrect: boolean, streak: number) => {
     if (isCorrect) {
@@ -339,51 +356,49 @@ export default function TrimestreDetails() {
   const currentQuestions = getCurrentQuestions();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-slate-900 dark:to-slate-800 p-4 sm:p-6">
+    <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-7xl mx-auto">
         <div className="mb-6">
-          <div className="mb-4">
+          <div className="flex items-center gap-2 mb-4">
             <BackButton />
+            <span className="text-xl">Retour</span>
           </div>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm">
-            <h1 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-              Trimestre {data.numero}
-            </h1>
-            <div className="flex items-center gap-3">
-              <span className="text-3xl">{currentSubject.icon}</span>
-              <h2 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white">
-                {currentSubject.name}
-              </h2>
-            </div>
-          </div>
-
-          <div className="mt-4 bg-white dark:bg-slate-800 rounded-xl p-4 shadow-sm">
+          
+          <div className="flex items-center gap-3 mb-4">
+            <h1 className="text-2xl font-bold">Trimestre {data.numero}</h1>
             <div className="flex items-center gap-2">
-              <Progress
-                className="flex-1 h-2.5"
-                color="success"
-                value={getCurrentProgress()}
-              />
-              <span className="text-sm font-medium text-gray-600 dark:text-gray-300 min-w-[4rem] text-right">
-                Page {currentPage + 1}/{getTotalPages()}
-              </span>
+              <span className="text-2xl">{currentSubject.icon}</span>
+              <span className="text-xl font-bold">{currentSubject.name}</span>
             </div>
-
-            {streak >= 3 && (
-              <div className="mt-3 text-emerald-600 dark:text-emerald-400 flex items-center gap-2 bg-emerald-50 dark:bg-emerald-500/10 p-3 rounded-lg">
-                <span className="animate-bounce">🔥</span>
-                <span className="font-medium">
-                  Série de {streak} bonnes réponses !
-                </span>
-              </div>
-            )}
           </div>
+
+          <div className="bg-gray-200 h-1 w-full rounded-full mb-1">
+            <div
+              className="bg-green-400 h-full rounded-full transition-all duration-1000"
+              style={{ width: `${(timeLeft / 10800) * 100}%` }}
+            />
+          </div>
+
+          <div className="flex justify-between items-center text-sm text-gray-600 mb-6">
+            <div>
+              {Math.floor(timeLeft / 3600)}h{Math.floor((timeLeft % 3600) / 60)}m
+            </div>
+            <div>
+              Page {currentPage + 1}/{getTotalPages()}
+            </div>
+          </div>
+
+          {streak >= 3 && (
+            <div className="bg-green-50 text-green-600 p-3 rounded-lg flex items-center gap-2 mb-4">
+              <span className="animate-bounce">🔥</span>
+              <span className="font-medium">Série de {streak} bonnes réponses !</span>
+            </div>
+          )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
           {currentQuestions.map((question, index) => {
             const questionId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + index}`;
-            const subjectColor = currentSubject.color || "bg-yellow-400 dark:bg-yellow-800";
 
             return (
               <motion.div
@@ -392,46 +407,35 @@ export default function TrimestreDetails() {
                 initial={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.3, delay: index * 0.1 }}
               >
-                <Card
-                  className={`shadow-sm border-2 ${subjectColor.replace('bg-', 'border-')} dark:border-opacity-50`}
-                  style={{
-                    background: "rgba(255, 255, 255, 0.9)",
-                    backdropFilter: "blur(12px)",
-                  }}
-                >
-                  <CardBody className="p-4 sm:p-6">
-                    <p className={`text-base sm:text-lg font-medium text-gray-900 dark:text-white mb-4 ${subjectColor} bg-opacity-10 dark:bg-opacity-20 p-3 rounded-lg`}>
-                      {question.question}
-                    </p>
-                    <div className="space-y-2.5">
-                      {question.options.map((option, optIndex) => {
-                        const isSelected = selectedAnswers[questionId] === option;
-                        return (
-                          <Button
-                            key={optIndex}
-                            className={`w-full text-left justify-start h-auto py-2.5 px-4 text-sm sm:text-base transition-all duration-300 ${
-                              isSelected
-                                ? `${subjectColor} bg-opacity-20 dark:bg-opacity-30 border-2 ${subjectColor.replace('bg-', 'border-')} text-gray-900 dark:text-white`
-                                : "bg-white dark:bg-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-600/50 text-gray-700 dark:text-gray-200"
-                            }`}
-                            disabled={showFeedback}
-                            variant={isSelected ? "flat" : "bordered"}
-                            onClick={() => handleAnswerSelect(index, option)}
-                          >
-                            <span className={`mr-3 ${
-                              isSelected
-                                ? "text-gray-900 dark:text-white"
-                                : "text-gray-400 dark:text-gray-400"
-                            }`}>
+                <div className="bg-white rounded-lg p-4 shadow-sm">
+                  <p className="text-base font-medium text-gray-900 mb-4">
+                    {question.question}
+                  </p>
+                  <div className="space-y-2">
+                    {question.options.map((option, optIndex) => {
+                      const isSelected = selectedAnswers[questionId] === option;
+                      return (
+                        <button
+                          key={optIndex}
+                          onClick={() => handleAnswerSelect(index, option)}
+                          disabled={showFeedback}
+                          className={`w-full text-left p-4 rounded-lg border ${
+                            isSelected
+                              ? "bg-gray-50 border-gray-300"
+                              : "bg-white border-gray-200 hover:bg-gray-50"
+                          } transition-colors duration-200`}
+                        >
+                          <div className="flex items-center gap-3">
+                            <span className="text-gray-400">
                               {String.fromCharCode(65 + optIndex)}.
                             </span>
-                            <span>{option}</span>
-                          </Button>
-                        );
-                      })}
-                    </div>
-                  </CardBody>
-                </Card>
+                            <span className="text-gray-700">{option}</span>
+                          </div>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
               </motion.div>
             );
           })}
