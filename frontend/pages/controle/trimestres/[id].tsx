@@ -100,19 +100,39 @@ export default function TrimestreDetails() {
         icon: "success",
         timer: 1500,
         showConfirmButton: false,
-        background: "#4ade80",
+        background: "linear-gradient(135deg, #4ade80 0%, #22c55e 100%)",
         color: "#fff",
+        customClass: {
+          popup: "rounded-xl border-4 border-white/20",
+          title: "text-2xl font-bold",
+        },
+        showClass: {
+          popup: "animate__animated animate__fadeInDown",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp",
+        },
       });
     } else {
       setStreak(0);
       await Swal.fire({
         title: getEncouragement(false, 0),
-        text: `La bonne réponse était : ${currentQuestion.answer}`,
+        html: `<p class="text-lg mb-2">${getEncouragement(false, 0)}</p><p class="text-sm font-medium">La bonne réponse était : <span class="font-bold">${currentQuestion.answer}</span></p>`,
         icon: "error",
         timer: 2000,
         showConfirmButton: false,
-        background: "#f87171",
+        background: "linear-gradient(135deg, #f87171 0%, #dc2626 100%)",
         color: "#fff",
+        customClass: {
+          popup: "rounded-xl border-4 border-white/20",
+          title: "text-2xl font-bold",
+        },
+        showClass: {
+          popup: "animate__animated animate__fadeInDown",
+        },
+        hideClass: {
+          popup: "animate__animated animate__fadeOutUp",
+        },
       });
     }
 
@@ -285,85 +305,97 @@ export default function TrimestreDetails() {
   const questionId = `${currentSubjectIndex}-${currentQuestionIndex}`;
 
   return (
-    <div className="p-6 max-w-4xl mx-auto">
-      <BackButton />
-      <div className="mb-6">
-        <h1 className="text-2xl font-bold">Trimestre {data.numero}</h1>
-        <div className="flex items-center gap-2 mt-2">
-          <Progress
-            className="flex-1"
-            color="primary"
-            value={getCurrentProgress()}
-          />
-          <span className="text-sm font-medium">
-            {Math.round(getCurrentProgress())}%
-          </span>
-        </div>
-        {streak >= 3 && (
-          <div className="mt-2 text-success flex items-center gap-2">
-            <span>🔥</span>
-            <span>Série de {streak} bonnes réponses !</span>
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 p-6">
+      <div className="max-w-4xl mx-auto">
+        <BackButton />
+        <div className="mb-6">
+          <h1 className="text-3xl font-bold text-white">
+            Trimestre {data.numero}
+          </h1>
+          <div className="flex items-center gap-2 mt-4">
+            <Progress
+              className="flex-1 h-3"
+              color="primary"
+              value={getCurrentProgress()}
+            />
+            <span className="text-sm font-medium text-white">
+              {Math.round(getCurrentProgress())}%
+            </span>
           </div>
-        )}
-      </div>
+          {streak >= 3 && (
+            <div className="mt-3 text-success flex items-center gap-2 bg-success/10 p-2 rounded-lg">
+              <span className="animate-bounce">🔥</span>
+              <span className="font-medium">
+                Série de {streak} bonnes réponses !
+              </span>
+            </div>
+          )}
+        </div>
 
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={`${currentSubjectIndex}-${currentQuestionIndex}`}
-          animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          initial={{ opacity: 0, y: 20 }}
-          transition={{ duration: 0.3 }}
-        >
-          <Card
-            className="shadow-lg"
-            style={{ backgroundColor: currentSubject.color + "20" }}
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={`${currentSubjectIndex}-${currentQuestionIndex}`}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            exit={{ opacity: 0, y: -20, scale: 0.95 }}
+            initial={{ opacity: 0, y: 20, scale: 0.95 }}
+            transition={{ duration: 0.4, ease: "easeOut" }}
           >
-            <CardBody>
-              <div className="flex items-center gap-2 mb-6">
-                <span className="text-3xl">{currentSubject.icon}</span>
-                <div>
-                  <h2 className="text-xl font-semibold">
-                    {currentSubject.name}
-                  </h2>
-                  <p className="text-sm text-gray-600">
-                    Question {currentQuestionIndex + 1}/
-                    {currentSubject.questions.length}
-                  </p>
+            <Card
+              className="shadow-2xl border border-white/10"
+              style={{
+                background: `linear-gradient(135deg, ${currentSubject.color}15 0%, ${currentSubject.color}25 100%)`,
+                backdropFilter: "blur(10px)",
+              }}
+            >
+              <CardBody className="p-8">
+                <div className="flex items-center gap-3 mb-8">
+                  <span className="text-4xl">{currentSubject.icon}</span>
+                  <div>
+                    <h2 className="text-2xl font-bold text-white">
+                      {currentSubject.name}
+                    </h2>
+                    <p className="text-sm text-gray-300">
+                      Question {currentQuestionIndex + 1}/
+                      {currentSubject.questions.length}
+                    </p>
+                  </div>
                 </div>
-              </div>
 
-              <div className="mb-6">
-                <p className="text-lg mb-4 font-medium">
-                  {currentQuestion.question}
-                </p>
-                <div className="space-y-3">
-                  {currentQuestion.options.map((option, index) => (
-                    <Button
-                      key={index}
-                      className="w-full text-left justify-start h-auto py-3 px-4"
-                      color={
-                        selectedAnswers[questionId] === option
-                          ? "primary"
-                          : "default"
-                      }
-                      disabled={showFeedback}
-                      variant={
-                        selectedAnswers[questionId] === option
-                          ? "solid"
-                          : "bordered"
-                      }
-                      onClick={() => handleAnswerSelect(option)}
-                    >
-                      {option}
-                    </Button>
-                  ))}
+                <div className="mb-8">
+                  <p className="text-xl mb-6 font-medium text-white">
+                    {currentQuestion.question}
+                  </p>
+                  <div className="space-y-4">
+                    {currentQuestion.options.map((option, index) => (
+                      <Button
+                        key={index}
+                        className="w-full text-left justify-start h-auto py-4 px-6 text-lg transition-all duration-300 hover:scale-102"
+                        color={
+                          selectedAnswers[questionId] === option
+                            ? "primary"
+                            : "default"
+                        }
+                        disabled={showFeedback}
+                        variant={
+                          selectedAnswers[questionId] === option
+                            ? "solid"
+                            : "bordered"
+                        }
+                        onClick={() => handleAnswerSelect(option)}
+                      >
+                        <span className="mr-3">
+                          {String.fromCharCode(65 + index)}.
+                        </span>
+                        {option}
+                      </Button>
+                    ))}
+                  </div>
                 </div>
-              </div>
-            </CardBody>
-          </Card>
-        </motion.div>
-      </AnimatePresence>
+              </CardBody>
+            </Card>
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }
