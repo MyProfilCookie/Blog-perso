@@ -1,8 +1,7 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, CardBody, Button, Progress } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { Card, CardBody } from "@nextui-org/react";
 import Swal from "sweetalert2";
 
 import BackButton from "@/components/back";
@@ -42,7 +41,7 @@ export default function TrimestreDetails() {
   const [showFeedback, setShowFeedback] = useState(false);
   const [isCorrect, setIsCorrect] = useState(false);
   const [streak, setStreak] = useState(0);
-  const [timeLeft, setTimeLeft] = useState(10800); // 3 heures en secondes
+  const [timeLeft, setTimeLeft] = useState(10800); // 3h en secondes
 
   const QUESTIONS_PER_PAGE = 4;
 
@@ -73,8 +72,10 @@ export default function TrimestreDetails() {
           clearInterval(timer);
           calculateScore();
           setShowResults(true);
+
           return 0;
         }
+
         return prevTime - 1;
       });
     }, 1000);
@@ -140,7 +141,7 @@ export default function TrimestreDetails() {
         timer: 10800000,
         position: "bottom-end",
         showConfirmButton: false,
-        background: `linear-gradient(135deg, ${currentSubject.color.split(' ')[0]} 0%, ${currentSubject.color.split(' ')[1]} 100%)`,
+        background: `linear-gradient(135deg, ${currentSubject.color.split(" ")[0]} 0%, ${currentSubject.color.split(" ")[1]} 100%)`,
         color: "#fff",
         width: 300,
         toast: true,
@@ -298,56 +299,49 @@ export default function TrimestreDetails() {
 
   if (showResults) {
     return (
-      <div className="p-6 max-w-4xl mx-auto">
-        <BackButton />
-        <Card className="mt-4">
-          <CardBody>
-            <h2 className="text-2xl font-bold mb-4">
-              Résultats du Trimestre {data.numero}
-            </h2>
-            <div className="mb-6">
-              <Progress
-                className="w-full h-4"
-                color={
-                  score >= 70 ? "success" : score >= 50 ? "warning" : "danger"
-                }
-                value={score}
+      <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
+        <div className="bg-white rounded-xl p-6 max-w-lg w-full">
+          <h2 className="text-xl sm:text-2xl font-bold mb-4">
+            Résultats du Trimestre {data.numero}
+          </h2>
+          <div className="mb-6">
+            <div className="bg-gray-200 h-2 w-full rounded-full mb-2">
+              <div
+                className={`h-full rounded-full transition-all duration-500 ${
+                  score >= 70
+                    ? "bg-green-400"
+                    : score >= 50
+                      ? "bg-yellow-400"
+                      : "bg-red-400"
+                }`}
+                style={{ width: `${score}%` }}
               />
-              <p className="mt-2 text-lg font-semibold">
-                Score final : {score.toFixed(1)}%
-              </p>
-              <p className="mt-2 text-gray-600">
-                {score >= 80
-                  ? "🌟 Excellent travail !"
-                  : score >= 60
-                    ? "👏 Bon travail !"
-                    : score >= 40
-                      ? "💪 Continue tes efforts !"
-                      : "📚 N'hésite pas à revoir les leçons"}
-              </p>
             </div>
-            <div className="flex gap-4">
-              <Button
-                color="primary"
-                onClick={() => {
-                  setShowResults(false);
-                  setCurrentSubjectIndex(0);
-                  setCurrentPage(0);
-                  setSelectedAnswers({});
-                  setStreak(0);
-                }}
-              >
-                Recommencer
-              </Button>
-              <Button
-                color="secondary"
-                onClick={() => router.push("/controle/trimestres")}
-              >
-                Retour aux trimestres
-              </Button>
-            </div>
-          </CardBody>
-        </Card>
+            <p className="text-base sm:text-lg font-semibold">
+              Score final : {score.toFixed(1)}%
+            </p>
+          </div>
+          <div className="flex flex-col sm:flex-row gap-3">
+            <button
+              className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
+              onClick={() => {
+                setShowResults(false);
+                setCurrentSubjectIndex(0);
+                setCurrentPage(0);
+                setSelectedAnswers({});
+                setStreak(0);
+              }}
+            >
+              Recommencer
+            </button>
+            <button
+              className="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              onClick={() => router.push("/controle/trimestres")}
+            >
+              Retour aux trimestres
+            </button>
+          </div>
+        </div>
       </div>
     );
   }
@@ -356,87 +350,90 @@ export default function TrimestreDetails() {
   const currentQuestions = getCurrentQuestions();
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
-      <div className="max-w-7xl mx-auto">
-        <div className="mb-6">
-          <div className="flex items-center gap-2 mb-4">
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
+        <div className="mb-6 sm:mb-8">
+          <div className="flex items-center gap-2 mb-4 sm:mb-6">
             <BackButton />
-            <span className="text-xl">Retour</span>
+            <span className="text-[13px] sm:text-[15px] text-gray-600">
+              Retour
+            </span>
           </div>
-          
-          <div className="flex items-center gap-3 mb-4">
-            <h1 className="text-2xl font-bold">Trimestre {data.numero}</h1>
+
+          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-6">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
+              Trimestre {data.numero}
+            </h1>
             <div className="flex items-center gap-2">
-              <span className="text-2xl">{currentSubject.icon}</span>
-              <span className="text-xl font-bold">{currentSubject.name}</span>
+              <span className="text-xl sm:text-2xl">{currentSubject.icon}</span>
+              <span className="text-lg sm:text-xl font-semibold text-gray-900">
+                {currentSubject.name}
+              </span>
             </div>
           </div>
 
-          <div className="bg-gray-200 h-1 w-full rounded-full mb-1">
-            <div
-              className="bg-green-400 h-full rounded-full transition-all duration-1000"
-              style={{ width: `${(timeLeft / 10800) * 100}%` }}
-            />
-          </div>
+          <div className="space-y-1.5">
+            <div className="bg-gray-200 h-1 w-full rounded-full">
+              <div
+                className="bg-green-400 h-full rounded-full transition-all duration-1000"
+                style={{ width: `${(timeLeft / 10800) * 100}%` }}
+              />
+            </div>
 
-          <div className="flex justify-between items-center text-sm text-gray-600 mb-6">
-            <div>
-              {Math.floor(timeLeft / 3600)}h{Math.floor((timeLeft % 3600) / 60)}m
-            </div>
-            <div>
-              Page {currentPage + 1}/{getTotalPages()}
+            <div className="flex justify-between items-center">
+              <div className="text-[12px] sm:text-[13px] text-gray-500">
+                {Math.floor(timeLeft / 3600)}h
+                {Math.floor((timeLeft % 3600) / 60)}m
+              </div>
+              <div className="text-[12px] sm:text-[13px] text-gray-500">
+                Page {currentPage + 1}/{getTotalPages()}
+              </div>
             </div>
           </div>
-
-          {streak >= 3 && (
-            <div className="bg-green-50 text-green-600 p-3 rounded-lg flex items-center gap-2 mb-4">
-              <span className="animate-bounce">🔥</span>
-              <span className="font-medium">Série de {streak} bonnes réponses !</span>
-            </div>
-          )}
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {currentQuestions.map((question, index) => {
             const questionId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + index}`;
 
             return (
-              <motion.div
+              <div
                 key={questionId}
-                animate={{ opacity: 1, y: 0 }}
-                initial={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.3, delay: index * 0.1 }}
+                className="bg-white rounded-lg shadow-sm overflow-hidden"
               >
-                <div className="bg-white rounded-lg p-4 shadow-sm">
-                  <p className="text-base font-medium text-gray-900 mb-4">
+                <div className="p-3 sm:p-4">
+                  <p className="text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4">
                     {question.question}
                   </p>
                   <div className="space-y-2">
                     {question.options.map((option, optIndex) => {
                       const isSelected = selectedAnswers[questionId] === option;
+
                       return (
                         <button
                           key={optIndex}
-                          onClick={() => handleAnswerSelect(index, option)}
-                          disabled={showFeedback}
-                          className={`w-full text-left p-4 rounded-lg border ${
+                          className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border ${
                             isSelected
                               ? "bg-gray-50 border-gray-300"
                               : "bg-white border-gray-200 hover:bg-gray-50"
                           } transition-colors duration-200`}
+                          disabled={showFeedback}
+                          onClick={() => handleAnswerSelect(index, option)}
                         >
-                          <div className="flex items-center gap-3">
-                            <span className="text-gray-400">
+                          <div className="flex items-center gap-2.5 sm:gap-3">
+                            <span className="text-gray-400 text-[13px] sm:text-[15px]">
                               {String.fromCharCode(65 + optIndex)}.
                             </span>
-                            <span className="text-gray-700">{option}</span>
+                            <span className="text-gray-700 text-[13px] sm:text-[15px]">
+                              {option}
+                            </span>
                           </div>
                         </button>
                       );
                     })}
                   </div>
                 </div>
-              </motion.div>
+              </div>
             );
           })}
         </div>
