@@ -544,27 +544,32 @@ export default function TrimestreDetails() {
             return (
               <div
                 key={questionId}
-                className={`bg-white/70 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${subjectStyle.border} transform hover:-translate-y-1`}
+                className={`bg-white/70 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${subjectStyle.border} transform hover:-translate-y-1 hover:scale-[1.02] group`}
               >
                 <div className="p-3 sm:p-4">
                   <p
-                    className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border}`}
+                    className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border} group-hover:bg-opacity-30 transition-all duration-300`}
                   >
                     {question.question}
                   </p>
                   <div className="space-y-2">
                     {question.options.map((option, optIndex) => {
                       const isSelected = selectedAnswers[questionId] === option;
+                      const isValidated = validatedQuestions[questionId];
 
                       return (
                         <button
                           key={optIndex}
-                          className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border transition-all duration-200 ${
+                          className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border transition-all duration-300 ${
                             isSelected
                               ? `${subjectStyle.bg} bg-opacity-20 ${subjectStyle.border} transform scale-[1.02]`
-                              : "bg-white hover:bg-yellow-50 border-gray-100 hover:border-yellow-200"
+                              : "bg-white hover:bg-gray-50/80 border-gray-100 hover:border-gray-200 hover:scale-[1.01]"
+                          } ${
+                            isValidated
+                              ? "cursor-not-allowed opacity-80"
+                              : "hover:shadow-md"
                           }`}
-                          disabled={showFeedback}
+                          disabled={isValidated}
                           onClick={() => handleAnswerSelect(index, option)}
                         >
                           <div className="flex items-center gap-2.5 sm:gap-3">
