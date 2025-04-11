@@ -11,6 +11,7 @@ import { motion } from "framer-motion";
 import BackButton from "@/components/back";
 
 interface Question {
+  _id: string;
   question: string;
   options: string[];
   answer: string;
@@ -22,9 +23,11 @@ interface Subject {
   icon: string;
   color: string;
   questions: Question[];
+  completed?: boolean;
 }
 
 interface TrimestreData {
+  _id: string;
   numero: number;
   subjects: Subject[];
 }
@@ -78,14 +81,12 @@ export default function TrimestreDetails() {
   const [data, setData] = useState<TrimestreData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentSubjectIndex, setCurrentSubjectIndex] = useState(0);
+  const [currentSubjectIndex, setCurrentSubjectIndex] = useState<number | null>(null);
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<{
-    [key: string]: string;
-  }>({});
-  const [validatedQuestions, setValidatedQuestions] = useState<{
-    [key: string]: boolean;
-  }>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
+  const [validatedQuestions, setValidatedQuestions] = useState<Record<string, boolean>>({});
+  const [completedSubjects, setCompletedSubjects] = useState<Record<number, boolean>>({});
+  const [showSubjectSelector, setShowSubjectSelector] = useState(true);
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -154,45 +155,27 @@ export default function TrimestreDetails() {
   // Charger la progression sauvegardée
   useEffect(() => {
     const savedProgress = localStorage.getItem(`trimestre-${id}-progress`);
-
     if (savedProgress) {
       const progress = JSON.parse(savedProgress);
-
       setSelectedAnswers(progress.selectedAnswers);
       setValidatedQuestions(progress.validatedQuestions);
-      setCurrentSubjectIndex(progress.currentSubjectIndex);
-      setCurrentPage(progress.currentPage);
-      setScore(progress.score);
+      setCompletedSubjects(progress.completedSubjects || {});
       setTimeLeft(progress.timeLeft);
     }
   }, [id]);
 
   // Sauvegarder la progression
   useEffect(() => {
-    if (id && Object.keys(selectedAnswers).length > 0) {
+    if (id && (Object.keys(selectedAnswers).length > 0 || Object.keys(completedSubjects).length > 0)) {
       const progress = {
         selectedAnswers,
         validatedQuestions,
-        currentSubjectIndex,
-        currentPage,
-        score,
+        completedSubjects,
         timeLeft,
       };
-
-      localStorage.setItem(
-        `trimestre-${id}-progress`,
-        JSON.stringify(progress),
-      );
+      localStorage.setItem(`trimestre-${id}-progress`, JSON.stringify(progress));
     }
-  }, [
-    id,
-    selectedAnswers,
-    validatedQuestions,
-    currentSubjectIndex,
-    currentPage,
-    score,
-    timeLeft,
-  ]);
+  }, [id, selectedAnswers, validatedQuestions, completedSubjects, timeLeft]);
 
   useEffect(() => {
     const savedUserInfo = localStorage.getItem("userInfo");
@@ -231,8 +214,8 @@ export default function TrimestreDetails() {
     }
   };
 
-  const getCurrentQuestions = () => {
-    if (!data) return [];
+  const getCurrentQuestions = (): Question[] => {
+    if (!data || currentSubjectIndex === null) return [];
     const currentSubject = data.subjects[currentSubjectIndex];
     const startIndex = currentPage * QUESTIONS_PER_PAGE;
 
@@ -242,15 +225,15 @@ export default function TrimestreDetails() {
     );
   };
 
-  const getTotalPages = () => {
-    if (!data) return 0;
+  const getTotalPages = (): number => {
+    if (!data || currentSubjectIndex === null) return 0;
     const currentSubject = data.subjects[currentSubjectIndex];
 
     return Math.ceil(currentSubject.questions.length / QUESTIONS_PER_PAGE);
   };
 
   const handleAnswerSelect = async (questionIndex: number, answer: string) => {
-    if (!data) return;
+    if (!data || currentSubjectIndex === null) return;
 
     const currentSubject = data.subjects[currentSubjectIndex];
     const absoluteQuestionIndex =
@@ -327,21 +310,19 @@ export default function TrimestreDetails() {
 
     // Vérifier si toutes les questions de la page sont validées
     const currentPageQuestions = getCurrentQuestions();
-    const allAnswered = currentPageQuestions.every((_, idx) => {
+    const allAnswered = currentPageQuestions.every((_: Question, idx: number) => {
       const qId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + idx}`;
-
       return validatedQuestions[qId];
     });
 
     if (allAnswered) {
-      // Passer à la page suivante ou au sujet suivant
       const totalPages = getTotalPages();
 
       if (currentPage < totalPages - 1) {
         setTimeout(() => setCurrentPage((prev) => prev + 1), 1500);
       } else if (currentSubjectIndex < data.subjects.length - 1) {
         setTimeout(() => {
-          setCurrentSubjectIndex((prev) => prev + 1);
+          setCurrentSubjectIndex((prev) => (prev === null ? 0 : prev + 1));
           setCurrentPage(0);
         }, 1500);
       } else {
@@ -398,8 +379,8 @@ export default function TrimestreDetails() {
     });
   };
 
-  const getCurrentProgress = () => {
-    if (!data) return 0;
+  const getCurrentProgress = (): number => {
+    if (!data || currentSubjectIndex === null) return 0;
 
     let totalQuestions = 0;
     let currentQuestionNumber = 0;
@@ -420,9 +401,8 @@ export default function TrimestreDetails() {
     return (currentQuestionNumber / totalQuestions) * 100;
   };
 
-  // Ajouter cette fonction pour vérifier si toutes les questions d'une page sont répondues
-  const areAllQuestionsAnswered = (pageIndex: number) => {
-    if (!data) return false;
+  const areAllQuestionsAnswered = (pageIndex: number): boolean => {
+    if (!data || currentSubjectIndex === null) return false;
     const startIndex = pageIndex * QUESTIONS_PER_PAGE;
     const endIndex = Math.min(startIndex + QUESTIONS_PER_PAGE, data.subjects[currentSubjectIndex].questions.length);
     
@@ -434,6 +414,50 @@ export default function TrimestreDetails() {
     }
     return true;
   };
+
+  const isSubjectCompleted = (subjectIndex: number): boolean => {
+    if (!data) return false;
+    const subject = data.subjects[subjectIndex];
+    return subject.questions.every((_: Question, questionIndex: number) => {
+      const questionId = `${subjectIndex}-${questionIndex}`;
+      return validatedQuestions[questionId];
+    });
+  };
+
+  const handleSubjectSelect = (index: number) => {
+    setCurrentSubjectIndex(index);
+    setShowSubjectSelector(false);
+  };
+
+  const handleSubjectComplete = () => {
+    if (currentSubjectIndex === null || !data) return;
+    
+    if (isSubjectCompleted(currentSubjectIndex)) {
+      setCompletedSubjects((prev: Record<number, boolean>) => ({
+        ...prev,
+        [currentSubjectIndex]: true
+      }));
+      
+      toast.success(
+        <div className="font-medium">
+          Bravo ! Vous avez terminé la matière {data.subjects[currentSubjectIndex].name} ! 🎉
+        </div>,
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+        }
+      );
+      
+      setShowSubjectSelector(true);
+      setCurrentSubjectIndex(null);
+    }
+  };
+
+  useEffect(() => {
+    if (currentSubjectIndex !== null && isSubjectCompleted(currentSubjectIndex)) {
+      handleSubjectComplete();
+    }
+  }, [validatedQuestions]);
 
   if (loading)
     return (
@@ -455,90 +479,69 @@ export default function TrimestreDetails() {
 
   if (!data) return null;
 
-  if (showResults) {
+  if (showSubjectSelector) {
     return (
-      <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-        <div className="bg-cream rounded-xl p-6 max-w-lg w-full">
-          <h2 className="text-xl sm:text-2xl font-bold mb-4">
-            Résultats du Trimestre {data.numero}
-          </h2>
-          <div className="mb-6">
-            <div className="bg-gray-200 h-2 w-full rounded-full mb-2">
-              <div
-                className={`h-full rounded-full transition-all duration-500 ${
-                  score >= 70
-                    ? "bg-green-400"
-                    : score >= 50
-                      ? "bg-yellow-400"
-                      : "bg-red-400"
-                }`}
-                style={{ width: `${score}%` }}
-              />
-            </div>
-            <p className="text-base sm:text-lg font-semibold">
-              Score final : {score.toFixed(1)}%
+      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 p-8">
+        <div className="max-w-4xl mx-auto">
+          <div className="mb-8">
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">
+              Choisissez une matière
+            </h1>
+            <p className="text-gray-600">
+              Sélectionnez la matière par laquelle vous souhaitez commencer
             </p>
           </div>
-          <div className="flex flex-col sm:flex-row gap-3">
-            <button
-              className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-              onClick={() => {
-                // Générer et télécharger le compte-rendu
-                const userInfo = JSON.parse(
-                  localStorage.getItem("userInfo") || "{}",
-                );
-                const report = {
-                  nom: userInfo.lastName,
-                  prenom: userInfo.firstName,
-                  age: userInfo.age,
-                  trimestre: data.numero,
-                  score: score.toFixed(1),
-                  date: new Date().toLocaleDateString(),
-                  matieres: data.subjects.map((subject) => ({
-                    nom: subject.name,
-                    questions: subject.questions.length,
-                  })),
-                };
 
-                const blob = new Blob([JSON.stringify(report, null, 2)], {
-                  type: "application/json",
-                });
-                const url = window.URL.createObjectURL(blob);
-                const a = document.createElement("a");
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {data.subjects.map((subject: Subject, index: number) => {
+              const isCompleted = completedSubjects[index];
+              const subjectStyle = subjectColors[subject.name as keyof typeof subjectColors] || subjectColors.default;
 
-                a.href = url;
-                a.download = `compte-rendu-trimestre-${data.numero}.json`;
-                document.body.appendChild(a);
-                a.click();
-                window.URL.revokeObjectURL(url);
-                document.body.removeChild(a);
-              }}
-            >
-              Télécharger le compte-rendu
-            </button>
-            <button
-              className="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-              onClick={() => {
-                setShowResults(false);
-                setCurrentSubjectIndex(0);
-                setCurrentPage(0);
-                setSelectedAnswers({});
-                setStreak(0);
-              }}
-            >
-              Recommencer
-            </button>
-            <button
-              className="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
-              onClick={() => router.push("/controle/trimestres")}
-            >
-              Retour aux trimestres
-            </button>
+              return (
+                <motion.button
+                  key={index}
+                  className={`p-6 rounded-xl backdrop-blur-sm border transition-all duration-300 ${
+                    isCompleted 
+                      ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
+                      : 'bg-white hover:shadow-lg border-yellow-200 hover:border-yellow-300 cursor-pointer'
+                  }`}
+                  onClick={() => !isCompleted && handleSubjectSelect(index)}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  disabled={isCompleted}
+                >
+                  <div className="flex items-center gap-4">
+                    <div className={`w-12 h-12 ${subjectStyle.bg} bg-opacity-20 rounded-full flex items-center justify-center text-2xl`}>
+                      {subject.icon}
+                    </div>
+                    <div className="flex-1 text-left">
+                      <h3 className="text-lg font-semibold text-gray-800">
+                        {subject.name}
+                      </h3>
+                      <p className="text-sm text-gray-500">
+                        {subject.questions.length} questions
+                      </p>
+                    </div>
+                    {isCompleted ? (
+                      <div className="flex items-center text-green-500">
+                        <span className="mr-2">Terminé</span>
+                        <span>✓</span>
+                      </div>
+                    ) : (
+                      <span className="text-yellow-500">→</span>
+                    )}
+                  </div>
+                </motion.button>
+              );
+            })}
           </div>
         </div>
       </div>
     );
   }
+
+  if (currentSubjectIndex === null) return null;
 
   const currentSubject = data.subjects[currentSubjectIndex];
   const currentQuestions = getCurrentQuestions();
@@ -632,7 +635,7 @@ export default function TrimestreDetails() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
-          {currentQuestions.map((question, index) => {
+          {currentQuestions.map((question: Question, index: number) => {
             const questionId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + index}`;
             const subjectStyle =
               subjectColors[
@@ -661,7 +664,7 @@ export default function TrimestreDetails() {
                     )}
                   </div>
                   <div className="space-y-2">
-                    {question.options.map((option, optIndex) => {
+                    {question.options.map((option: string, optIndex: number) => {
                       const isSelected = selectedAnswers[questionId] === option;
                       const isValidated = validatedQuestions[questionId];
 
