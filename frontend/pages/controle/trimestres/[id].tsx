@@ -196,7 +196,7 @@ export default function TrimestreDetails() {
           draggable: true,
           progress: undefined,
           className: `${subjectStyle.bg} bg-opacity-10 border ${subjectStyle.border} border-opacity-20`,
-        }
+        },
       );
     } else {
       setStreak(0);
@@ -217,7 +217,7 @@ export default function TrimestreDetails() {
           draggable: true,
           progress: undefined,
           className: "bg-red-50 border border-red-200",
-        }
+        },
       );
     }
 
@@ -389,43 +389,47 @@ export default function TrimestreDetails() {
   const currentQuestions = getCurrentQuestions();
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100">
       <ToastContainer />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center gap-2 mb-4 sm:mb-6">
             <BackButton />
-            <span className="text-[13px] sm:text-[15px] text-gray-600">
+            <span className="text-[13px] sm:text-[15px] text-yellow-600">
               Retour
             </span>
           </div>
 
           <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-6">
-            <h1 className="text-xl sm:text-2xl font-bold text-gray-900">
-              Trimestre {data.numero}
-            </h1>
             <div className="flex items-center gap-2">
-              <span className="text-xl sm:text-2xl">{currentSubject.icon}</span>
-              <span className="text-lg sm:text-xl font-semibold text-gray-900">
-                {currentSubject.name}
-              </span>
+              <h1 className="text-xl sm:text-2xl font-bold text-yellow-800">
+                Trimestre {data.numero}
+              </h1>
+              <div className="flex items-center gap-2 bg-yellow-400/10 px-3 py-1 rounded-full">
+                <span className="text-xl sm:text-2xl animate-bounce">
+                  {currentSubject.icon}
+                </span>
+                <span className="text-lg sm:text-xl font-semibold text-yellow-700">
+                  {currentSubject.name}
+                </span>
+              </div>
             </div>
           </div>
 
-          <div className="space-y-1.5">
-            <div className="bg-gray-200 h-1 w-full rounded-full">
+          <div className="space-y-1.5 bg-white/50 backdrop-blur-sm rounded-xl p-4">
+            <div className="bg-yellow-100 h-2 w-full rounded-full overflow-hidden">
               <div
-                className="bg-green-400 h-full rounded-full transition-all duration-1000"
+                className="bg-yellow-400 h-full rounded-full transition-all duration-1000"
                 style={{ width: `${(timeLeft / 10800) * 100}%` }}
               />
             </div>
 
             <div className="flex justify-between items-center">
-              <div className="text-[12px] sm:text-[13px] text-gray-500">
-                {Math.floor(timeLeft / 3600)}h
+              <div className="text-[12px] sm:text-[13px] text-yellow-700 font-medium">
+                {Math.floor(timeLeft / 3600)}h{" "}
                 {Math.floor((timeLeft % 3600) / 60)}m
               </div>
-              <div className="text-[12px] sm:text-[13px] text-gray-500">
+              <div className="text-[12px] sm:text-[13px] text-yellow-700 font-medium">
                 Page {currentPage + 1}/{getTotalPages()}
               </div>
             </div>
@@ -443,11 +447,11 @@ export default function TrimestreDetails() {
             return (
               <div
                 key={questionId}
-                className={`bg-white rounded-lg shadow-sm overflow-hidden border-l-4 ${subjectStyle.border}`}
+                className={`bg-white/70 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${subjectStyle.border} transform hover:-translate-y-1`}
               >
                 <div className="p-3 sm:p-4">
                   <p
-                    className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-10 rounded-lg p-3`}
+                    className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border}`}
                   >
                     {question.question}
                   </p>
@@ -458,19 +462,21 @@ export default function TrimestreDetails() {
                       return (
                         <button
                           key={optIndex}
-                          className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border ${
+                          className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border transition-all duration-200 ${
                             isSelected
-                              ? `${subjectStyle.bg} bg-opacity-10 ${subjectStyle.border}`
-                              : "bg-white border-gray-200 hover:bg-gray-50"
-                          } transition-colors duration-200`}
+                              ? `${subjectStyle.bg} bg-opacity-20 ${subjectStyle.border} transform scale-[1.02]`
+                              : "bg-white hover:bg-yellow-50 border-gray-100 hover:border-yellow-200"
+                          }`}
                           disabled={showFeedback}
                           onClick={() => handleAnswerSelect(index, option)}
                         >
                           <div className="flex items-center gap-2.5 sm:gap-3">
                             <span
                               className={`text-[13px] sm:text-[15px] ${
-                                isSelected ? subjectStyle.text : "text-gray-400"
-                              }`}
+                                isSelected
+                                  ? subjectStyle.text
+                                  : "text-yellow-600"
+                              } font-medium`}
                             >
                               {String.fromCharCode(65 + optIndex)}.
                             </span>
