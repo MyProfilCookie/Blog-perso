@@ -364,6 +364,37 @@ export default function TrimestreDetails() {
             <button
               className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
               onClick={() => {
+                // Générer et télécharger le compte-rendu
+                const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+                const report = {
+                  nom: userInfo.lastName,
+                  prenom: userInfo.firstName,
+                  age: userInfo.age,
+                  trimestre: data.numero,
+                  score: score.toFixed(1),
+                  date: new Date().toLocaleDateString(),
+                  matieres: data.subjects.map(subject => ({
+                    nom: subject.name,
+                    questions: subject.questions.length
+                  }))
+                };
+                
+                const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement("a");
+                a.href = url;
+                a.download = `compte-rendu-trimestre-${data.numero}.json`;
+                document.body.appendChild(a);
+                a.click();
+                window.URL.revokeObjectURL(url);
+                document.body.removeChild(a);
+              }}
+            >
+              Télécharger le compte-rendu
+            </button>
+            <button
+              className="w-full sm:w-auto px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 transition-colors"
+              onClick={() => {
                 setShowResults(false);
                 setCurrentSubjectIndex(0);
                 setCurrentPage(0);

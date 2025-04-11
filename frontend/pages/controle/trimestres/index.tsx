@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
-import { Card, CardBody, Progress } from "@nextui-org/react";
+import { Card, CardBody, Progress, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import { useRouter } from "next/router";
 
 interface Question {
   _id: string;
@@ -38,17 +39,29 @@ const subjectColors = {
 };
 
 export default function TrimestresPage() {
+  const router = useRouter();
   const [trimestres, setTrimestres] = useState<Trimestre[]>([]);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [showForm, setShowForm] = useState(true);
+  const [userInfo, setUserInfo] = useState({
+    firstName: "",
+    lastName: "",
+    age: "",
+  });
 
   useEffect(() => {
+    const savedUserInfo = localStorage.getItem("userInfo");
+    if (savedUserInfo) {
+      setUserInfo(JSON.parse(savedUserInfo));
+      setShowForm(false);
+    }
+
     const fetchTrimestres = async () => {
       try {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/trimestres`,
         );
-
         setTrimestres(response.data);
       } catch (err: any) {
         setError("Erreur lors du chargement des trimestres");
@@ -60,6 +73,12 @@ export default function TrimestresPage() {
 
     fetchTrimestres();
   }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    localStorage.setItem("userInfo", JSON.stringify(userInfo));
+    setShowForm(false);
+  };
 
   const getTrimestreProgress = (trimestre: Trimestre) => {
     let totalQuestions = 0;
@@ -91,12 +110,93 @@ export default function TrimestresPage() {
     );
   }
 
+  if (showForm) {
+    return (
+      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+        >
+          <Card className="w-full max-w-md backdrop-blur-lg bg-white/10">
+            <CardBody className="p-6">
+              <h2 className="text-2xl font-bold text-white mb-4 text-center">
+                Confirmation d&apos;identité
+              </h2>
+              <p className="text-gray-300 mb-6 text-center">
+                Veuillez confirmer votre identité pour accéder au contrôle des connaissances. Un compte-rendu sera disponible à la fin de chaque trimestre.
+              </p>
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <Input
+                  label="Prénom"
+                  placeholder="Entrez votre prénom"
+                  value={userInfo.firstName}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, firstName: e.target.value })
+                  }
+                  required
+                  className="text-white"
+                  classNames={{
+                    label: "text-white",
+                    input: "text-white",
+                  }}
+                />
+                <Input
+                  label="Nom"
+                  placeholder="Entrez votre nom"
+                  value={userInfo.lastName}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, lastName: e.target.value })
+                  }
+                  required
+                  className="text-white"
+                  classNames={{
+                    label: "text-white",
+                    input: "text-white",
+                  }}
+                />
+                <Input
+                  label="Âge"
+                  placeholder="Entrez votre âge"
+                  type="number"
+                  min="0"
+                  max="100"
+                  value={userInfo.age}
+                  onChange={(e) =>
+                    setUserInfo({ ...userInfo, age: e.target.value })
+                  }
+                  required
+                  className="text-white"
+                  classNames={{
+                    label: "text-white",
+                    input: "text-white",
+                  }}
+                />
+                <Button
+                  type="submit"
+                  className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium py-2 rounded-lg transition-colors"
+                >
+                  Confirmer et commencer
+                </Button>
+              </form>
+            </CardBody>
+          </Card>
+        </motion.div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 p-8">
-      <h1 className="text-4xl font-bold mb-8 text-center text-white">
-        Contrôle des Connaissances
-      </h1>
       <div className="max-w-7xl mx-auto">
+        <div className="text-center mb-8">
+          <h1 className="text-4xl font-bold text-white mb-2">
+            Contrôle des Connaissances
+          </h1>
+          <p className="text-gray-300">
+            Bonjour {userInfo.firstName} {userInfo.lastName} 👋
+          </p>
+        </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {trimestres.map((trimestre) => (
             <motion.div
