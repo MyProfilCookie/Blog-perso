@@ -40,7 +40,7 @@ const RevisionContent: React.FC = () => {
         </p>
         <Button 
           color="primary" 
-          onClick={() => router.push("/login")}
+          onClick={() => router.push("/users/login")}
         >
           Se connecter
         </Button>
