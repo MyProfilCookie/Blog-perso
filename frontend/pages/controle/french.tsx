@@ -6,10 +6,11 @@ import axios from "axios";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
+import { useRouter } from "next/router";
+
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
-import { useRouter } from "next/router";
 
 // Interface pour les exercices de français
 interface Exercise {
@@ -32,6 +33,7 @@ interface Result {
 const FrenchPage: React.FC = () => {
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
+
   useEffect(() => {
     const fetchExercises = async () => {
       try {
@@ -127,8 +129,10 @@ const FrenchPage: React.FC = () => {
         setTimeLeft(prev => {
           if (prev <= 1) {
             calculateFinalScore();
+
             return 0;
           }
+
           return prev - 1;
         });
       }, 1000);
@@ -136,6 +140,7 @@ const FrenchPage: React.FC = () => {
       // Messages d'encouragement toutes les 10 minutes
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
         setTimeout(() => setEmoji(""), 5000);
       }, 900000);
@@ -180,6 +185,7 @@ const FrenchPage: React.FC = () => {
       
       if (!userId || !token) {
         console.error("Utilisateur non connecté");
+
         return;
       }
 
@@ -300,9 +306,9 @@ const FrenchPage: React.FC = () => {
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
+        className="mb-4"
         initial={{ opacity: 0, y: -10 }}
         transition={{ duration: 0.3 }}
-        className="mb-4"
       >
         <select
           className="w-full sm:w-80 p-4 text-lg font-semibold rounded-2xl border border-blue-400 bg-blue-50 dark:bg-gray-900 shadow-md focus:ring-2 focus:ring-blue-500"

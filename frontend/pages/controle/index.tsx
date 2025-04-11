@@ -18,6 +18,7 @@ import {
   faChartBar,
   faMusic,
   faExclamationTriangle,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { Card, CardBody } from "@nextui-org/react";
 import { motion } from "framer-motion";
@@ -168,6 +169,15 @@ const courseThemes = [
     icon: faBookOpen,
     bgColor: "bg-blue-100 dark:bg-blue-800",
     iconColor: "text-blue-600 dark:text-blue-300",
+  },
+  {
+    id: 14,
+    title: "Eleve",
+    description: "Accéder à votre profil",
+    route: "/controle/eleve",
+    icon: faUser,
+    bgColor: "bg-gray-100 dark:bg-gray-800",
+    iconColor: "text-gray-600 dark:text-gray-300",
   },
 ];
 
