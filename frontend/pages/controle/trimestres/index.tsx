@@ -224,7 +224,7 @@ export default function TrimestresPage() {
                 >
                   <CardBody className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
+                      <h2 className="text-2xl font-bold text-dark">
                         Trimestre {trimestre.numero}
                       </h2>
                       <span className="text-3xl group-hover:rotate-12 transition-transform duration-300">
@@ -266,7 +266,7 @@ export default function TrimestresPage() {
                       <div className="mt-4">
                         <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full"
+                            className="h-full bg-gradient-to-r from-dark to-dark rounded-full"
                             style={{ width: "100%" }}
                           />
                         </div>
