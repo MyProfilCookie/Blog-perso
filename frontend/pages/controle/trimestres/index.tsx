@@ -213,7 +213,7 @@ export default function TrimestresPage() {
               transition={{ duration: 0.3 }}
             >
               <Card
-                className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-white"
+                className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream"
                 style={{
                   backdropFilter: "blur(10px)",
                   borderRadius: "10px",
@@ -262,12 +262,12 @@ export default function TrimestresPage() {
                     <div className="mt-4">
                       <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full"
+                          className="h-full bg-gradient-to-r from-red-500 to-red-400 rounded-full"
                           style={{ width: "100%" }}
                         />
                       </div>
                       <button
-                        className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-lg font-medium transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg flex items-center justify-center gap-2 text-base"
+                        className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-red-500 to-red-400 text-white rounded-lg font-medium transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg flex items-center justify-center gap-2 text-base"
                         onClick={() => {
                           router.push(
                             `/controle/trimestres/${trimestre.numero}`,
