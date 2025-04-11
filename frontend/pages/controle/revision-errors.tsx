@@ -3,7 +3,7 @@ import React from "react";
 import { Card, CardBody } from "@nextui-org/react";
 import { motion } from "framer-motion";
 
-import { useRevision } from "../../../contexts/RevisionContext";
+import { useRevision } from "../../contexts/RevisionContext";
 
 interface RevisionError {
   _id: string;
