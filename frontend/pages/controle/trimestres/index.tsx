@@ -215,8 +215,11 @@ export default function TrimestresPage() {
                 <Card
                   className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream bg-opacity-50"
                   style={{
-                    background: "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
+                    background: "bg-cream",
                     backdropFilter: "blur(10px)",
+                    border: "1px solid rgba(0, 0, 0, 0.1)",
+                    borderRadius: "10px",
+                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
                   }}
                 >
                   <CardBody className="p-6">
