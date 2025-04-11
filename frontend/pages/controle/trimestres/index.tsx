@@ -213,9 +213,9 @@ export default function TrimestresPage() {
             >
               <Link href={`/controle/trimestres/${trimestre.numero}`}>
                 <Card
-                  className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none"
+                  className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream bg-opacity-50"
                   style={{
-                    background: "bg-cream bg-opacity-50",
+                    background: "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
                     backdropFilter: "blur(10px)",
                   }}
                 >
