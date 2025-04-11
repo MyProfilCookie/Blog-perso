@@ -196,10 +196,10 @@ export default function TrimestresPage() {
     <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 p-8">
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
-          <h1 className="text-4xl font-bold text-white mb-2">
+          <h1 className="text-4xl font-bold text-dark mb-2">
             Contrôle des Connaissances
           </h1>
-          <p className="text-blue-500 text-xl">
+          <p className="text-dark text-2xl">
             Bonjour {userInfo.firstName} {userInfo.lastName} 👋
           </p>
         </div>
@@ -215,7 +215,7 @@ export default function TrimestresPage() {
                 <Card
                   className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none"
                   style={{
-                    background: "bg-cream bg-opacity-50 linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
+                    background: "bg-cream bg-opacity-50",
                     backdropFilter: "blur(10px)",
                   }}
                 >
