@@ -15,6 +15,17 @@ router.get("/", async (req, res) => {
   }
 });
 
+// par nom 
+router.get("/:name", async (req, res) => {
+  try {
+    const subject = await Subject.findOne({ name: req.params.name, active: true });
+    res.status(200).json(subject);
+  } catch (error) {
+    console.error("❌ Error fetching subject:", error);
+    res.status(500).json({ message: "Erreur serveur", error: error.message });
+  }
+});
+
 // Get weekly questions for rapportHebdo
 router.get("/rapportHebdo", async (req, res) => {
   try {
