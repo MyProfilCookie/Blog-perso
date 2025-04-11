@@ -6,6 +6,7 @@ import { Card, CardBody } from "@nextui-org/react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
+import { motion } from "framer-motion";
 
 import BackButton from "@/components/back";
 
@@ -30,9 +31,9 @@ interface TrimestreData {
 
 const subjectColors = {
   Mathématiques: {
-    bg: "bg-crimson-500",
-    text: "text-crimson-600",
-    border: "border-crimson-500",
+    bg: "bg-yellow-500",
+    text: "text-yellow-600",
+    border: "border-yellow-500",
   },
   Sciences: {
     bg: "bg-green-500",
@@ -91,6 +92,21 @@ export default function TrimestreDetails() {
   const [isCorrect, setIsCorrect] = useState(false);
   const [streak, setStreak] = useState(0);
   const [timeLeft, setTimeLeft] = useState(10800); // 3h en secondes
+  const [encouragementMessage, setEncouragementMessage] = useState("");
+  const [userInfo, setUserInfo] = useState<{ firstName: string; lastName: string } | null>(null);
+
+  const encouragementMessages = [
+    "Continue comme ça, tu es sur la bonne voie ! 🌟",
+    "Tu as le potentiel pour réussir ! 💪",
+    "Chaque effort te rapproche du succès ! 🎯",
+    "Tu es capable de grandes choses ! 🌈",
+    "Garde ta motivation, tu fais du bon travail ! 🚀",
+    "Ton travail acharné finira par payer ! ⭐",
+    "N'oublie pas que chaque progrès compte ! 🌱",
+    "Tu deviens plus fort(e) à chaque défi ! 💫",
+    "Ta persévérance est admirable ! 🏆",
+    "Continue d'apprendre et de grandir ! 📚"
+  ];
 
   const QUESTIONS_PER_PAGE = 4;
 
@@ -174,6 +190,26 @@ export default function TrimestreDetails() {
     score,
     timeLeft,
   ]);
+
+  useEffect(() => {
+    const savedUserInfo = localStorage.getItem("userInfo");
+    if (savedUserInfo) {
+      setUserInfo(JSON.parse(savedUserInfo));
+    }
+  }, []);
+
+  useEffect(() => {
+    // Changer le message toutes les 20 minutes
+    const updateMessage = () => {
+      const randomIndex = Math.floor(Math.random() * encouragementMessages.length);
+      setEncouragementMessage(encouragementMessages[randomIndex]);
+    };
+
+    updateMessage(); // Message initial
+    const interval = setInterval(updateMessage, 20 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   const getEncouragement = (isCorrect: boolean, streak: number) => {
     if (isCorrect) {
@@ -497,27 +533,61 @@ export default function TrimestreDetails() {
             </span>
           </div>
 
-          <div className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3 mb-6">
-            <div className="flex items-center gap-2">
-              <h1 className="text-xl sm:text-2xl font-bold text-yellow-800">
-                Trimestre {data.numero}
-              </h1>
-              <div className="flex items-center gap-2 bg-yellow-400/10 px-3 py-1 rounded-full">
-                <span className="text-xl sm:text-2xl animate-bounce">
-                  {currentSubject.icon}
-                </span>
-                <span className="text-lg sm:text-xl font-semibold text-yellow-700">
-                  {currentSubject.name}
-                </span>
-              </div>
+          <div className="flex flex-col gap-4 mb-6">
+            <div className="flex items-center justify-between">
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="flex items-center gap-2"
+              >
+                <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-800 bg-clip-text text-transparent">
+                  {userInfo?.firstName ? `Courage ${userInfo.firstName} !` : 'Courage !'}
+                </h1>
+                <span className="text-2xl sm:text-3xl animate-bounce">💪</span>
+              </motion.div>
+              <motion.div
+                initial={{ opacity: 0, x: 20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-xl sm:text-2xl font-bold text-yellow-800"
+              >
+                Trimestre {data?.numero}
+              </motion.div>
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-yellow-200"
+            >
+              <p className="text-gray-700 text-lg font-medium text-center italic">
+                {encouragementMessage}
+              </p>
+            </motion.div>
+
+            <div className="flex items-center gap-2 bg-yellow-400/10 px-3 py-1 rounded-full">
+              <motion.span
+                animate={{ rotate: [0, -10, 10, -10, 0] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="text-xl sm:text-2xl"
+              >
+                {currentSubject.icon}
+              </motion.span>
+              <span className="text-lg sm:text-xl font-semibold text-yellow-700">
+                {currentSubject.name}
+              </span>
             </div>
           </div>
 
           <div className="space-y-1.5 bg-white/50 backdrop-blur-sm rounded-xl p-4">
             <div className="bg-yellow-100 h-2 w-full rounded-full overflow-hidden">
-              <div
-                className="bg-yellow-400 h-full rounded-full transition-all duration-1000"
-                style={{ width: `${(timeLeft / 10800) * 100}%` }}
+              <motion.div
+                className="bg-yellow-400 h-full rounded-full"
+                initial={{ width: 0 }}
+                animate={{ width: `${(timeLeft / 10800) * 100}%` }}
+                transition={{ duration: 1 }}
               />
             </div>
 
@@ -542,14 +612,15 @@ export default function TrimestreDetails() {
               ] || subjectColors.default;
 
             return (
-              <div
+              <motion.div
                 key={questionId}
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
                 className={`bg-white/70 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${subjectStyle.border} transform hover:-translate-y-1 hover:scale-[1.02] group`}
               >
                 <div className="p-3 sm:p-4">
-                  <p
-                    className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border} group-hover:bg-opacity-30 transition-all duration-300`}
-                  >
+                  <p className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border} group-hover:bg-opacity-30 transition-all duration-300`}>
                     {question.question}
                   </p>
                   <div className="space-y-2">
@@ -563,30 +634,26 @@ export default function TrimestreDetails() {
                           className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border transition-all duration-300 ${
                             isSelected
                               ? `${subjectStyle.bg} bg-opacity-20 ${subjectStyle.border} transform scale-[1.02]`
-                              : "bg-white hover:bg-gray-50/80 border-gray-100 hover:border-gray-200 hover:scale-[1.01]"
+                              : "bg-white hover:bg-yellow-50 border-gray-100 hover:border-yellow-200 hover:scale-[1.01]"
                           } ${
                             isValidated
-                              ? "cursor-not-allowed opacity-80"
+                              ? "bg-gray-100 cursor-not-allowed"
                               : "hover:shadow-md"
                           }`}
                           disabled={isValidated}
                           onClick={() => handleAnswerSelect(index, option)}
                         >
                           <div className="flex items-center gap-2.5 sm:gap-3">
-                            <span
-                              className={`text-[13px] sm:text-[15px] ${
-                                isSelected
-                                  ? subjectStyle.text
-                                  : "text-yellow-600"
-                              } font-medium`}
-                            >
+                            <span className={`text-[13px] sm:text-[15px] ${
+                              isSelected
+                                ? subjectStyle.text
+                                : "text-yellow-600"
+                            } font-medium`}>
                               {String.fromCharCode(65 + optIndex)}.
                             </span>
-                            <span
-                              className={`text-[13px] sm:text-[15px] ${
-                                isSelected ? "text-gray-900" : "text-gray-700"
-                              }`}
-                            >
+                            <span className={`text-[13px] sm:text-[15px] ${
+                              isSelected ? "text-gray-900" : "text-gray-700"
+                            }`}>
                               {option}
                             </span>
                           </div>
@@ -595,7 +662,7 @@ export default function TrimestreDetails() {
                     })}
                   </div>
                 </div>
-              </div>
+              </motion.div>
             );
           })}
         </div>
