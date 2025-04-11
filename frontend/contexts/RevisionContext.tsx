@@ -35,11 +35,16 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           return;
         }
 
+        // Vérifier si l'utilisateur est connecté en utilisant plusieurs méthodes
         const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("token");
+        const userToken = localStorage.getItem("userToken");
+        const userInfo = localStorage.getItem("userInfo");
         
-        // Vérifier si l'utilisateur est connecté
-        if (!userId || !token) {
+        // Si l'une de ces informations est présente, considérer l'utilisateur comme connecté
+        const isUserLoggedIn = userId || token || userToken || userInfo;
+        
+        if (!isUserLoggedIn) {
           console.log("Utilisateur non connecté, affichage des données de démonstration");
           setIsAuthenticated(false);
           setIsLoading(false);
@@ -49,12 +54,22 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // L'utilisateur est connecté
         setIsAuthenticated(true);
         
+        // Utiliser le token disponible
+        const authToken = token || userToken;
+        const userIdentifier = userId || (userInfo ? JSON.parse(userInfo).id : null);
+        
+        if (!authToken || !userIdentifier) {
+          console.log("Informations d'authentification incomplètes");
+          setIsLoading(false);
+          return;
+        }
+        
         try {
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/revision-errors/${userId}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/revision-errors/${userIdentifier}`,
             {
               headers: {
-                Authorization: `Bearer ${token}`
+                Authorization: `Bearer ${authToken}`
               }
             }
           );
