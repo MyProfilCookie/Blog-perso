@@ -15,12 +15,16 @@ interface RevisionContextType {
   addError: (error: RevisionError) => void;
   removeError: (id: string) => void;
   clearErrors: () => void;
+  isLoading: boolean;
+  isAuthenticated: boolean;
 }
 
 const RevisionContext = createContext<RevisionContextType | undefined>(undefined);
 
 export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [errors, setErrors] = useState<RevisionError[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
     const fetchErrors = async () => {
@@ -29,24 +33,35 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         const token = localStorage.getItem("token");
         
         if (!userId || !token) {
-          console.error("Utilisateur non connecté");
+          console.log("Utilisateur non connecté, affichage des données de démonstration");
+          setIsAuthenticated(false);
+          setIsLoading(false);
           return;
         }
 
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/revision-errors/${userId}`,
-          {
-            headers: {
-              Authorization: `Bearer ${token}`
+        setIsAuthenticated(true);
+        
+        try {
+          const response = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/revision-errors/${userId}`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
             }
-          }
-        );
+          );
 
-        if (response.data && Array.isArray(response.data)) {
-          setErrors(response.data);
+          if (response.data && Array.isArray(response.data)) {
+            setErrors(response.data);
+          }
+        } catch (error) {
+          console.error("Erreur lors de la récupération des erreurs:", error);
+          // En cas d'erreur, on garde un tableau vide
         }
       } catch (error) {
-        console.error("Erreur lors de la récupération des erreurs:", error);
+        console.error("Erreur lors de l'accès au localStorage:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
@@ -66,7 +81,14 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   };
 
   return (
-    <RevisionContext.Provider value={{ errors, addError, removeError, clearErrors }}>
+    <RevisionContext.Provider value={{ 
+      errors, 
+      addError, 
+      removeError, 
+      clearErrors,
+      isLoading,
+      isAuthenticated
+    }}>
       {children}
     </RevisionContext.Provider>
   );

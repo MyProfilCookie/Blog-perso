@@ -1,8 +1,9 @@
 "use client";
 import React from "react";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { RevisionProvider, useRevision } from "../../contexts/RevisionContext";
+import { useRouter } from "next/navigation";
 
 interface RevisionError {
   _id: string;
@@ -13,7 +14,39 @@ interface RevisionError {
 }
 
 const RevisionContent: React.FC = () => {
-  const { errors } = useRevision();
+  const { errors, isLoading, isAuthenticated } = useRevision();
+  const router = useRouter();
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center min-h-[50vh]">
+        <Spinner size="lg" color="primary" />
+      </div>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <motion.div
+        className="max-w-4xl mx-auto p-6 text-center"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+      >
+        <h1 className="text-2xl font-bold mb-6">
+          🔒 Connexion requise
+        </h1>
+        <p className="mb-6 text-gray-600">
+          Vous devez être connecté pour accéder à vos erreurs de révision.
+        </p>
+        <Button 
+          color="primary" 
+          onClick={() => router.push("/login")}
+        >
+          Se connecter
+        </Button>
+      </motion.div>
+    );
+  }
 
   return (
     <motion.div
