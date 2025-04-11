@@ -35,17 +35,18 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           return;
         }
 
-        // Vérifier si l'utilisateur est connecté en utilisant plusieurs méthodes
-        const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("token");
+        // Récupérer les informations d'authentification selon la structure de l'application
         const userToken = localStorage.getItem("userToken");
-        const userInfo = localStorage.getItem("userInfo");
+        const userInfo = localStorage.getItem("user");
         
-        // Si l'une de ces informations est présente, considérer l'utilisateur comme connecté
-        const isUserLoggedIn = userId || token || userToken || userInfo;
+        console.log("Informations d'authentification trouvées:", {
+          userToken: userToken ? "présent" : "absent",
+          userInfo: userInfo ? "présent" : "absent"
+        });
         
-        if (!isUserLoggedIn) {
-          console.log("Utilisateur non connecté, affichage des données de démonstration");
+        // Vérifier si l'utilisateur est connecté
+        if (!userToken || !userInfo) {
+          console.log("Utilisateur non connecté ou token manquant");
           setIsAuthenticated(false);
           setIsLoading(false);
           return;
@@ -54,33 +55,46 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         // L'utilisateur est connecté
         setIsAuthenticated(true);
         
-        // Utiliser le token disponible
-        const authToken = token || userToken;
-        const userIdentifier = userId || (userInfo ? JSON.parse(userInfo).id : null);
-        
-        if (!authToken || !userIdentifier) {
-          console.log("Informations d'authentification incomplètes");
+        // Récupérer l'ID utilisateur depuis les informations utilisateur
+        let userId = null;
+        try {
+          const parsedUserInfo = JSON.parse(userInfo);
+          userId = parsedUserInfo._id || parsedUserInfo.id;
+          console.log(`ID utilisateur trouvé: ${userId}`);
+        } catch (e) {
+          console.error("Erreur lors du parsing de userInfo:", e);
           setIsLoading(false);
           return;
         }
         
+        if (!userId) {
+          console.log("ID utilisateur non trouvé dans userInfo");
+          setIsLoading(false);
+          return;
+        }
+        
+        console.log(`Tentative de récupération des erreurs pour l'utilisateur: ${userId}`);
+        
         try {
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/revision-errors/${userIdentifier}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/revision-errors/${userId}`,
             {
               headers: {
-                Authorization: `Bearer ${authToken}`
+                Authorization: `Bearer ${userToken}`
               }
             }
           );
 
           if (response.data && Array.isArray(response.data)) {
             setErrors(response.data);
+            console.log(`${response.data.length} erreurs récupérées`);
+          } else {
+            console.log("Aucune donnée reçue de l'API");
+            setErrors([]);
           }
         } catch (error) {
           console.error("Erreur lors de la récupération des erreurs:", error);
-          // En cas d'erreur, on garde un tableau vide mais on considère toujours l'utilisateur comme authentifié
-          setIsAuthenticated(true);
+          setErrors([]);
         }
       } catch (error) {
         console.error("Erreur lors de l'accès au localStorage:", error);
