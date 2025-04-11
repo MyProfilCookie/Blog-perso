@@ -93,7 +93,10 @@ export default function TrimestreDetails() {
   const [streak, setStreak] = useState(0);
   const [timeLeft, setTimeLeft] = useState(10800); // 3h en secondes
   const [encouragementMessage, setEncouragementMessage] = useState("");
-  const [userInfo, setUserInfo] = useState<{ firstName: string; lastName: string } | null>(null);
+  const [userInfo, setUserInfo] = useState<{
+    firstName: string;
+    lastName: string;
+  } | null>(null);
 
   const encouragementMessages = [
     "Continue comme ça, tu es sur la bonne voie ! 🌟",
@@ -105,7 +108,7 @@ export default function TrimestreDetails() {
     "N'oublie pas que chaque progrès compte ! 🌱",
     "Tu deviens plus fort(e) à chaque défi ! 💫",
     "Ta persévérance est admirable ! 🏆",
-    "Continue d'apprendre et de grandir ! 📚"
+    "Continue d'apprendre et de grandir ! 📚",
   ];
 
   const QUESTIONS_PER_PAGE = 4;
@@ -193,6 +196,7 @@ export default function TrimestreDetails() {
 
   useEffect(() => {
     const savedUserInfo = localStorage.getItem("userInfo");
+
     if (savedUserInfo) {
       setUserInfo(JSON.parse(savedUserInfo));
     }
@@ -201,7 +205,10 @@ export default function TrimestreDetails() {
   useEffect(() => {
     // Changer le message toutes les 20 minutes
     const updateMessage = () => {
-      const randomIndex = Math.floor(Math.random() * encouragementMessages.length);
+      const randomIndex = Math.floor(
+        Math.random() * encouragementMessages.length,
+      );
+
       setEncouragementMessage(encouragementMessages[randomIndex]);
     };
 
@@ -436,7 +443,7 @@ export default function TrimestreDetails() {
   if (showResults) {
     return (
       <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4">
-        <div className="bg-white rounded-xl p-6 max-w-lg w-full">
+        <div className="bg-cream rounded-xl p-6 max-w-lg w-full">
           <h2 className="text-xl sm:text-2xl font-bold mb-4">
             Résultats du Trimestre {data.numero}
           </h2>
@@ -536,31 +543,36 @@ export default function TrimestreDetails() {
           <div className="flex flex-col gap-4 mb-6">
             <div className="flex items-center justify-between">
               <motion.div
-                initial={{ opacity: 0, x: -20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
                 className="flex items-center gap-2"
+                initial={{ opacity: 0, x: -20 }}
+                transition={{ duration: 0.5 }}
               >
                 <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-800 bg-clip-text text-transparent">
-                  {userInfo?.firstName ? `Courage ${userInfo.firstName} !` : 'Courage !'}
+                  {userInfo?.firstName
+                    ? `Courage ${userInfo.firstName} !`
+                    : "Courage !"}
                 </h1>
+                <h2 className="text-2xl sm:text-3xl text-yellow-800 font-bold dark:text-yellow-600">
+                  {userInfo?.lastName}
+                </h2>
                 <span className="text-2xl sm:text-3xl animate-bounce">💪</span>
               </motion.div>
               <motion.div
-                initial={{ opacity: 0, x: 20 }}
                 animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.5 }}
                 className="text-xl sm:text-2xl font-bold text-yellow-800"
+                initial={{ opacity: 0, x: 20 }}
+                transition={{ duration: 0.5 }}
               >
                 Trimestre {data?.numero}
               </motion.div>
             </div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              className="bg-cream backdrop-blur-sm rounded-xl p-4 shadow-lg border border-yellow-200"
+              initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: 0.2 }}
-              className="bg-white/80 backdrop-blur-sm rounded-xl p-4 shadow-lg border border-yellow-200"
             >
               <p className="text-gray-700 text-lg font-medium text-center italic">
                 {encouragementMessage}
@@ -570,8 +582,8 @@ export default function TrimestreDetails() {
             <div className="flex items-center gap-2 bg-yellow-400/10 px-3 py-1 rounded-full">
               <motion.span
                 animate={{ rotate: [0, -10, 10, -10, 0] }}
-                transition={{ duration: 2, repeat: Infinity }}
                 className="text-xl sm:text-2xl"
+                transition={{ duration: 2, repeat: Infinity }}
               >
                 {currentSubject.icon}
               </motion.span>
@@ -584,9 +596,9 @@ export default function TrimestreDetails() {
           <div className="space-y-1.5 bg-white/50 backdrop-blur-sm rounded-xl p-4">
             <div className="bg-yellow-100 h-2 w-full rounded-full overflow-hidden">
               <motion.div
+                animate={{ width: `${(timeLeft / 10800) * 100}%` }}
                 className="bg-yellow-400 h-full rounded-full"
                 initial={{ width: 0 }}
-                animate={{ width: `${(timeLeft / 10800) * 100}%` }}
                 transition={{ duration: 1 }}
               />
             </div>
@@ -614,13 +626,15 @@ export default function TrimestreDetails() {
             return (
               <motion.div
                 key={questionId}
-                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                className={`bg-white/90 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${subjectStyle.border} transform hover:-translate-y-1 hover:scale-[1.02] group`}
+                initial={{ opacity: 0, y: 20 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className={`bg-white/70 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${subjectStyle.border} transform hover:-translate-y-1 hover:scale-[1.02] group`}
               >
                 <div className="p-3 sm:p-4">
-                  <p className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border} group-hover:bg-opacity-30 transition-all duration-300`}>
+                  <p
+                    className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border} group-hover:bg-opacity-30 transition-all duration-300`}
+                  >
                     {question.question}
                   </p>
                   <div className="space-y-2">
@@ -634,7 +648,7 @@ export default function TrimestreDetails() {
                           className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border transition-all duration-300 ${
                             isSelected
                               ? `${subjectStyle.bg} bg-opacity-20 ${subjectStyle.border} transform scale-[1.02]`
-                              : "bg-white hover:bg-yellow-50 border-gray-100 hover:border-yellow-200 hover:scale-[1.01]"
+                              : "bg-white/100 hover:bg-yellow-50 border-gray-100 hover:border-yellow-200 hover:scale-[1.01]"
                           } ${
                             isValidated
                               ? "bg-gray-100 cursor-not-allowed"
@@ -644,16 +658,20 @@ export default function TrimestreDetails() {
                           onClick={() => handleAnswerSelect(index, option)}
                         >
                           <div className="flex items-center gap-2.5 sm:gap-3">
-                            <span className={`text-[13px] sm:text-[15px] ${
-                              isSelected
-                                ? subjectStyle.text
-                                : "text-yellow-600"
-                            } font-medium`}>
+                            <span
+                              className={`text-[13px] sm:text-[15px] ${
+                                isSelected
+                                  ? subjectStyle.text
+                                  : "text-yellow-600"
+                              } font-medium`}
+                            >
                               {String.fromCharCode(65 + optIndex)}.
                             </span>
-                            <span className={`text-[13px] sm:text-[15px] ${
-                              isSelected ? "text-gray-900" : "text-gray-700"
-                            }`}>
+                            <span
+                              className={`text-[13px] sm:text-[15px] ${
+                                isSelected ? "text-gray-900" : "text-gray-700"
+                              }`}
+                            >
                               {option}
                             </span>
                           </div>
