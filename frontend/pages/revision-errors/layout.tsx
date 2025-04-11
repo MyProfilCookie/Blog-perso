@@ -1,5 +1,5 @@
 import Page from "./page";
-import { RevisionProvider } from "../RevisionContext";
+import { RevisionProvider } from "../../contexts/RevisionContext";
 
 const Layout: React.FC = () => {
   return (
