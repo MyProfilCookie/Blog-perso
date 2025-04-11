@@ -2,7 +2,8 @@
 import React from "react";
 import { Card, CardBody } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { useRevision } from "../../contexts/RevisionContext";
+
+import { useRevision } from "../../../contexts/RevisionContext";
 
 interface RevisionError {
   _id: string;
@@ -17,9 +18,9 @@ const RevisionPage: React.FC = () => {
 
   return (
     <motion.div
+      animate={{ opacity: 1 }}
       className="max-w-4xl mx-auto p-6"
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
     >
       <h1 className="text-2xl font-bold mb-6 text-center">
         📚 Questions à Revoir
