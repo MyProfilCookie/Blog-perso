@@ -46,11 +46,41 @@ export default function TrimestresPage() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(true);
+  const [encouragementMessage, setEncouragementMessage] = useState("");
   const [userInfo, setUserInfo] = useState({
     firstName: "",
     lastName: "",
     age: "",
   });
+
+  const encouragementMessages = [
+    "Continue comme ça, tu es sur la bonne voie ! 🌟",
+    "Tu as le potentiel pour réussir ! 💪",
+    "Chaque effort te rapproche du succès ! 🎯",
+    "Tu es capable de grandes choses ! 🌈",
+    "Garde ta motivation, tu fais du bon travail ! 🚀",
+    "Ton travail acharné finira par payer ! ⭐",
+    "N'oublie pas que chaque progrès compte ! 🌱",
+    "Tu deviens plus fort(e) à chaque défi ! 💫",
+    "Ta persévérance est admirable ! 🏆",
+    "Continue d'apprendre et de grandir ! 📚",
+  ];
+
+  useEffect(() => {
+    // Changer le message toutes les 15 minutes
+    const updateMessage = () => {
+      const randomIndex = Math.floor(
+        Math.random() * encouragementMessages.length,
+      );
+
+      setEncouragementMessage(encouragementMessages[randomIndex]);
+    };
+
+    updateMessage(); // Message initial
+    const interval = setInterval(updateMessage, 15 * 60 * 1000);
+
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     const savedUserInfo = localStorage.getItem("userInfo");
@@ -198,11 +228,14 @@ export default function TrimestresPage() {
       <div className="max-w-7xl mx-auto">
         <div className="text-center mb-8">
           <h1 className="text-4xl font-bold text-dark mb-2">
-            Contrôle des Connaissances
+            Bienvenue {userInfo.firstName} 👋
           </h1>
-          <p className="text-dark text-2xl">
-            Bonjour {userInfo.firstName} {userInfo.lastName} 👋
-          </p>
+          <p className="text-xl text-dark mb-4">Contrôle des Connaissances</p>
+          <div className="bg-cream dark:bg-gray-800 rounded-lg p-4 shadow-lg max-w-2xl mx-auto">
+            <p className="text-gray-800 dark:text-gray-200 text-lg italic">
+              {encouragementMessage}
+            </p>
+          </div>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {trimestres.map((trimestre) => (
@@ -222,7 +255,7 @@ export default function TrimestresPage() {
               >
                 <CardBody className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 group-hover:text-violet-500 transition-colors duration-300">
                       Trimestre {trimestre.numero}
                     </h2>
                     <span className="text-3xl group-hover:rotate-12 transition-transform duration-300">

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
@@ -29,9 +30,9 @@ interface TrimestreData {
 
 const subjectColors = {
   Mathématiques: {
-    bg: "bg-yellow-500",
-    text: "text-yellow-600",
-    border: "border-yellow-500",
+    bg: "bg-crimson-500",
+    text: "text-crimson-600",
+    border: "border-crimson-500",
   },
   Sciences: {
     bg: "bg-green-500",
@@ -81,6 +82,9 @@ export default function TrimestreDetails() {
   const [selectedAnswers, setSelectedAnswers] = useState<{
     [key: string]: string;
   }>({});
+  const [validatedQuestions, setValidatedQuestions] = useState<{
+    [key: string]: boolean;
+  }>({});
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
   const [showFeedback, setShowFeedback] = useState(false);
@@ -128,6 +132,49 @@ export default function TrimestreDetails() {
     return () => clearInterval(timer);
   }, []);
 
+  // Charger la progression sauvegardée
+  useEffect(() => {
+    const savedProgress = localStorage.getItem(`trimestre-${id}-progress`);
+
+    if (savedProgress) {
+      const progress = JSON.parse(savedProgress);
+
+      setSelectedAnswers(progress.selectedAnswers);
+      setValidatedQuestions(progress.validatedQuestions);
+      setCurrentSubjectIndex(progress.currentSubjectIndex);
+      setCurrentPage(progress.currentPage);
+      setScore(progress.score);
+      setTimeLeft(progress.timeLeft);
+    }
+  }, [id]);
+
+  // Sauvegarder la progression
+  useEffect(() => {
+    if (id && Object.keys(selectedAnswers).length > 0) {
+      const progress = {
+        selectedAnswers,
+        validatedQuestions,
+        currentSubjectIndex,
+        currentPage,
+        score,
+        timeLeft,
+      };
+
+      localStorage.setItem(
+        `trimestre-${id}-progress`,
+        JSON.stringify(progress),
+      );
+    }
+  }, [
+    id,
+    selectedAnswers,
+    validatedQuestions,
+    currentSubjectIndex,
+    currentPage,
+    score,
+    timeLeft,
+  ]);
+
   const getEncouragement = (isCorrect: boolean, streak: number) => {
     if (isCorrect) {
       if (streak >= 5) return "🌟 Extraordinaire ! Tu es inarrêtable !";
@@ -165,8 +212,16 @@ export default function TrimestreDetails() {
     const currentSubject = data.subjects[currentSubjectIndex];
     const absoluteQuestionIndex =
       currentPage * QUESTIONS_PER_PAGE + questionIndex;
-    const currentQuestion = currentSubject.questions[absoluteQuestionIndex];
     const questionId = `${currentSubjectIndex}-${absoluteQuestionIndex}`;
+
+    // Vérifier si la question a déjà été validée
+    if (validatedQuestions[questionId]) {
+      toast.info("Cette question a déjà été validée !");
+
+      return;
+    }
+
+    const currentQuestion = currentSubject.questions[absoluteQuestionIndex];
     const subjectStyle =
       subjectColors[currentSubject.name as keyof typeof subjectColors] ||
       subjectColors.default;
@@ -177,6 +232,12 @@ export default function TrimestreDetails() {
     }));
 
     const correct = answer === currentQuestion.answer;
+
+    // Marquer la question comme validée
+    setValidatedQuestions((prev) => ({
+      ...prev,
+      [questionId]: true,
+    }));
 
     setIsCorrect(correct);
     setShowFeedback(true);
@@ -221,12 +282,12 @@ export default function TrimestreDetails() {
       );
     }
 
-    // Vérifier si toutes les questions de la page sont répondues
+    // Vérifier si toutes les questions de la page sont validées
     const currentPageQuestions = getCurrentQuestions();
     const allAnswered = currentPageQuestions.every((_, idx) => {
       const qId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + idx}`;
 
-      return selectedAnswers[qId] || questionId === qId;
+      return validatedQuestions[qId];
     });
 
     if (allAnswered) {
@@ -365,7 +426,9 @@ export default function TrimestreDetails() {
               className="w-full sm:w-auto px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
               onClick={() => {
                 // Générer et télécharger le compte-rendu
-                const userInfo = JSON.parse(localStorage.getItem("userInfo") || "{}");
+                const userInfo = JSON.parse(
+                  localStorage.getItem("userInfo") || "{}",
+                );
                 const report = {
                   nom: userInfo.lastName,
                   prenom: userInfo.firstName,
@@ -373,15 +436,18 @@ export default function TrimestreDetails() {
                   trimestre: data.numero,
                   score: score.toFixed(1),
                   date: new Date().toLocaleDateString(),
-                  matieres: data.subjects.map(subject => ({
+                  matieres: data.subjects.map((subject) => ({
                     nom: subject.name,
-                    questions: subject.questions.length
-                  }))
+                    questions: subject.questions.length,
+                  })),
                 };
-                
-                const blob = new Blob([JSON.stringify(report, null, 2)], { type: "application/json" });
+
+                const blob = new Blob([JSON.stringify(report, null, 2)], {
+                  type: "application/json",
+                });
                 const url = window.URL.createObjectURL(blob);
                 const a = document.createElement("a");
+
                 a.href = url;
                 a.download = `compte-rendu-trimestre-${data.numero}.json`;
                 document.body.appendChild(a);
