@@ -37,7 +37,7 @@ const subjectColors = {
   Art: { bg: "rgba(236, 72, 153, 0.8)", icon: "🎨" },
   Musique: { bg: "rgba(139, 92, 246, 0.8)", icon: "🎵" },
   Langues: { bg: "rgba(2, 193, 7, 0.8)", icon: "🇫🇷" },
-  Technologie: { bg: "rgba(123, 1, 7, 0.8)", icon: "💻" },
+  Technologie: { bg: "rgba(123, 189, 189, 0.8)", icon: "💻" },
   default: { bg: "rgba(107, 114, 128, 0.8)", icon: "📖" },
 };
 
@@ -124,9 +124,9 @@ export default function TrimestresPage() {
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.5 }}
         >
-          <Card className="backdrop-blur-lg bg-white/95 shadow-xl border-none">
+          <Card className="backdrop-blur-lg bg-cream shadow-xl border-none">
             <CardBody className="p-8">
-              <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">
+              <h2 className="text-2xl font-bold text-dark mb-2 text-center">
                 Confirmation d&apos;identité
               </h2>
               <p className="text-gray-600 mb-6 text-center text-sm">
@@ -215,13 +215,13 @@ export default function TrimestresPage() {
             >
               <Link href={`/controle/trimestres/${trimestre.numero}`}>
                 <Card
-                  className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream bg-opacity-50"
+                  className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream bg-opacity-50 hover:scale-[1.02]"
                   style={{
                     background: "bg-cream",
                     backdropFilter: "blur(10px)",
                     border: "1px solid rgba(0, 0, 0, 0.1)",
                     borderRadius: "10px",
-                    boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
                   }}
                 >
                   <CardBody className="p-6">
