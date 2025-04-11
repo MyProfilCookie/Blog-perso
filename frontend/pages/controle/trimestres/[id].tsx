@@ -420,6 +420,21 @@ export default function TrimestreDetails() {
     return (currentQuestionNumber / totalQuestions) * 100;
   };
 
+  // Ajouter cette fonction pour vérifier si toutes les questions d'une page sont répondues
+  const areAllQuestionsAnswered = (pageIndex: number) => {
+    if (!data) return false;
+    const startIndex = pageIndex * QUESTIONS_PER_PAGE;
+    const endIndex = Math.min(startIndex + QUESTIONS_PER_PAGE, data.subjects[currentSubjectIndex].questions.length);
+    
+    for (let i = startIndex; i < endIndex; i++) {
+      const questionId = `${currentSubjectIndex}-${i}`;
+      if (!validatedQuestions[questionId]) {
+        return false;
+      }
+    }
+    return true;
+  };
+
   if (loading)
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex justify-center items-center">
@@ -553,8 +568,9 @@ export default function TrimestreDetails() {
                     ? `Courage ${userInfo.firstName} !`
                     : "Courage !"}
                 </h1>
-                <h2 className="text-2xl sm:text-3xl text-yellow-800 font-bold dark:text-yellow-600">
-                  {userInfo?.lastName}
+                <h2 className="text-2xl sm:text-3xl text-black font-bold dark:text-white text-center">
+                  Bonjour {userInfo?.firstName}, es-tu prêt(e) pour le trimestre
+                  {data?.numero} ?
                 </h2>
                 <span className="text-2xl sm:text-3xl animate-bounce">💪</span>
               </motion.div>
@@ -570,11 +586,11 @@ export default function TrimestreDetails() {
 
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="bg-cream backdrop-blur-sm rounded-xl p-4 shadow-lg border border-yellow-200"
+              className="bg-cream backdrop-blur-sm rounded-xl p-4 shadow-lg border border-yellow-500"
               initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: 0.2 }}
             >
-              <p className="text-gray-700 text-lg font-medium text-center italic">
+              <p className="text-gray-700 text-xl font-medium text-center italic">
                 {encouragementMessage}
               </p>
             </motion.div>
@@ -632,11 +648,18 @@ export default function TrimestreDetails() {
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
                 <div className="p-3 sm:p-4">
-                  <p
-                    className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border} group-hover:bg-opacity-30 transition-all duration-300`}
-                  >
-                    {question.question}
-                  </p>
+                  <div className="flex justify-between items-start mb-3">
+                    <p
+                      className={`text-[14px] sm:text-[15px] font-medium text-gray-900 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border} group-hover:bg-opacity-30 transition-all duration-300 flex-1 mr-2`}
+                    >
+                      {question.question}
+                    </p>
+                    {validatedQuestions[questionId] && (
+                      <div className="flex items-center justify-center w-6 h-6 bg-green-100 rounded-full">
+                        <span className="text-green-600 text-sm">✓</span>
+                      </div>
+                    )}
+                  </div>
                   <div className="space-y-2">
                     {question.options.map((option, optIndex) => {
                       const isSelected = selectedAnswers[questionId] === option;
@@ -683,6 +706,54 @@ export default function TrimestreDetails() {
               </motion.div>
             );
           })}
+        </div>
+
+        {/* Pagination */}
+        <div className="mt-6 flex justify-between items-center bg-cream backdrop-blur-sm rounded-xl p-4 shadow-lg border border-yellow-500">
+          <button
+            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+              currentPage === 0
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-yellow-500 text-white hover:bg-yellow-600"
+            }`}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
+            disabled={currentPage === 0}
+          >
+            ← Précédent
+          </button>
+
+          <div className="flex items-center gap-2">
+            {Array.from({ length: getTotalPages() }, (_, i) => (
+              <button
+                key={i}
+                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                  currentPage === i
+                    ? "bg-yellow-500 text-white"
+                    : "bg-white text-gray-600 hover:bg-yellow-100"
+                } ${
+                  !areAllQuestionsAnswered(i)
+                    ? "cursor-not-allowed opacity-50"
+                    : ""
+                }`}
+                onClick={() => setCurrentPage(i)}
+                disabled={!areAllQuestionsAnswered(i)}
+              >
+                {i + 1}
+              </button>
+            ))}
+          </div>
+
+          <button
+            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
+              !areAllQuestionsAnswered(currentPage) || currentPage === getTotalPages() - 1
+                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
+                : "bg-yellow-500 text-white hover:bg-yellow-600"
+            }`}
+            onClick={() => setCurrentPage((prev) => prev + 1)}
+            disabled={!areAllQuestionsAnswered(currentPage) || currentPage === getTotalPages() - 1}
+          >
+            Suivant →
+          </button>
         </div>
       </div>
     </div>
