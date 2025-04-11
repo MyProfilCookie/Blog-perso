@@ -1,7 +1,8 @@
+/* eslint-disable no-console */
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import axios from "axios";
-import { Card, CardBody, Progress, Input, Button } from "@nextui-org/react";
+import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
 
@@ -52,6 +53,7 @@ export default function TrimestresPage() {
 
   useEffect(() => {
     const savedUserInfo = localStorage.getItem("userInfo");
+
     if (savedUserInfo) {
       setUserInfo(JSON.parse(savedUserInfo));
       setShowForm(false);
@@ -62,6 +64,7 @@ export default function TrimestresPage() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/trimestres`,
         );
+
         setTrimestres(response.data);
       } catch (err: any) {
         setError("Erreur lors du chargement des trimestres");
@@ -114,10 +117,10 @@ export default function TrimestresPage() {
     return (
       <div className="min-h-screen bg-gradient-to-b from-violet-600 via-indigo-600 to-blue-700 flex items-center justify-center p-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5 }}
           className="w-full max-w-md"
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.5 }}
         >
           <Card className="backdrop-blur-lg bg-white/95 shadow-xl border-none">
             <CardBody className="p-8">
@@ -125,57 +128,59 @@ export default function TrimestresPage() {
                 Confirmation d&apos;identité
               </h2>
               <p className="text-gray-600 mb-6 text-center text-sm">
-                Veuillez confirmer votre identité pour accéder au contrôle des connaissances. Un compte-rendu sera disponible à la fin de chaque trimestre.
+                Veuillez confirmer votre identité pour accéder au contrôle des
+                connaissances. Un compte-rendu sera disponible à la fin de
+                chaque trimestre.
               </p>
-              <form onSubmit={handleSubmit} className="space-y-4">
+              <form className="space-y-4" onSubmit={handleSubmit}>
                 <Input
+                  required
+                  classNames={{
+                    label: "text-gray-700 font-medium",
+                    input: "bg-gray-50 border-gray-200 focus:border-violet-500",
+                    inputWrapper: "shadow-sm",
+                  }}
                   label="Prénom"
                   placeholder="Entrez votre prénom"
                   value={userInfo.firstName}
                   onChange={(e) =>
                     setUserInfo({ ...userInfo, firstName: e.target.value })
                   }
+                />
+                <Input
                   required
                   classNames={{
                     label: "text-gray-700 font-medium",
                     input: "bg-gray-50 border-gray-200 focus:border-violet-500",
                     inputWrapper: "shadow-sm",
                   }}
-                />
-                <Input
                   label="Nom"
                   placeholder="Entrez votre nom"
                   value={userInfo.lastName}
                   onChange={(e) =>
                     setUserInfo({ ...userInfo, lastName: e.target.value })
                   }
+                />
+                <Input
                   required
                   classNames={{
                     label: "text-gray-700 font-medium",
                     input: "bg-gray-50 border-gray-200 focus:border-violet-500",
                     inputWrapper: "shadow-sm",
                   }}
-                />
-                <Input
                   label="Âge"
+                  max="100"
+                  min="0"
                   placeholder="Entrez votre âge"
                   type="number"
-                  min="0"
-                  max="100"
                   value={userInfo.age}
                   onChange={(e) =>
                     setUserInfo({ ...userInfo, age: e.target.value })
                   }
-                  required
-                  classNames={{
-                    label: "text-gray-700 font-medium",
-                    input: "bg-gray-50 border-gray-200 focus:border-violet-500",
-                    inputWrapper: "shadow-sm",
-                  }}
                 />
                 <Button
-                  type="submit"
                   className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-medium py-3 rounded-lg hover:opacity-90 transition-opacity shadow-md"
+                  type="submit"
                 >
                   Confirmer et commencer
                 </Button>
@@ -194,7 +199,7 @@ export default function TrimestresPage() {
           <h1 className="text-4xl font-bold text-white mb-2">
             Contrôle des Connaissances
           </h1>
-          <p className="text-white text-xl">
+          <p className="text-blue-500 text-xl">
             Bonjour {userInfo.firstName} {userInfo.lastName} 👋
           </p>
         </div>
@@ -202,15 +207,15 @@ export default function TrimestresPage() {
           {trimestres.map((trimestre) => (
             <motion.div
               key={trimestre._id}
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
             >
               <Link href={`/controle/trimestres/${trimestre.numero}`}>
-                <Card 
+                <Card
                   className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none"
                   style={{
-                    background: "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
+                    background: "bg-cream bg-opacity-50 linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
                     backdropFilter: "blur(10px)",
                   }}
                 >
@@ -223,7 +228,7 @@ export default function TrimestresPage() {
                         📚
                       </span>
                     </div>
-                    
+
                     <div className="space-y-4">
                       <div className="flex items-center justify-between text-gray-600 font-medium">
                         <span>{trimestre.subjects.length} matières</span>
@@ -240,14 +245,16 @@ export default function TrimestresPage() {
                           return (
                             <div
                               key={subject._id}
-                              className="px-3 py-1 rounded-full text-sm text-white flex items-center gap-1.5 shadow-sm hover:shadow-md transition-shadow"
-                              style={{ 
+                              className="px-3 py-1 rounded-full text-sm text-dark flex items-center gap-1.5 shadow-sm hover:shadow-md transition-shadow"
+                              style={{
                                 backgroundColor: subjectStyle.bg,
-                                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
+                                boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
                               }}
                             >
                               <span>{subjectStyle.icon}</span>
-                              <span className="font-medium">{subject.name}</span>
+                              <span className="font-medium">
+                                {subject.name}
+                              </span>
                             </div>
                           );
                         })}
@@ -255,7 +262,7 @@ export default function TrimestresPage() {
 
                       <div className="mt-4">
                         <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                          <div 
+                          <div
                             className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full"
                             style={{ width: "100%" }}
                           />
