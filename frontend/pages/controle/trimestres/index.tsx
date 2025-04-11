@@ -112,18 +112,19 @@ export default function TrimestresPage() {
 
   if (showForm) {
     return (
-      <div className="min-h-screen bg-gradient-to-b from-gray-900 via-gray-800 to-gray-900 flex items-center justify-center p-4">
+      <div className="min-h-screen bg-gradient-to-b from-violet-600 via-indigo-600 to-blue-700 flex items-center justify-center p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5 }}
+          className="w-full max-w-md"
         >
-          <Card className="w-full max-w-md backdrop-blur-lg bg-white/10">
-            <CardBody className="p-6">
-              <h2 className="text-2xl font-bold text-white mb-4 text-center">
+          <Card className="backdrop-blur-lg bg-white/95 shadow-xl border-none">
+            <CardBody className="p-8">
+              <h2 className="text-2xl font-bold text-gray-800 mb-2 text-center">
                 Confirmation d&apos;identité
               </h2>
-              <p className="text-gray-300 mb-6 text-center">
+              <p className="text-gray-600 mb-6 text-center text-sm">
                 Veuillez confirmer votre identité pour accéder au contrôle des connaissances. Un compte-rendu sera disponible à la fin de chaque trimestre.
               </p>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -135,10 +136,10 @@ export default function TrimestresPage() {
                     setUserInfo({ ...userInfo, firstName: e.target.value })
                   }
                   required
-                  className="text-white"
                   classNames={{
-                    label: "text-white",
-                    input: "text-white",
+                    label: "text-gray-700 font-medium",
+                    input: "bg-gray-50 border-gray-200 focus:border-violet-500",
+                    inputWrapper: "shadow-sm",
                   }}
                 />
                 <Input
@@ -149,10 +150,10 @@ export default function TrimestresPage() {
                     setUserInfo({ ...userInfo, lastName: e.target.value })
                   }
                   required
-                  className="text-white"
                   classNames={{
-                    label: "text-white",
-                    input: "text-white",
+                    label: "text-gray-700 font-medium",
+                    input: "bg-gray-50 border-gray-200 focus:border-violet-500",
+                    inputWrapper: "shadow-sm",
                   }}
                 />
                 <Input
@@ -166,15 +167,15 @@ export default function TrimestresPage() {
                     setUserInfo({ ...userInfo, age: e.target.value })
                   }
                   required
-                  className="text-white"
                   classNames={{
-                    label: "text-white",
-                    input: "text-white",
+                    label: "text-gray-700 font-medium",
+                    input: "bg-gray-50 border-gray-200 focus:border-violet-500",
+                    inputWrapper: "shadow-sm",
                   }}
                 />
                 <Button
                   type="submit"
-                  className="w-full bg-violet-600 hover:bg-violet-700 text-white font-medium py-2 rounded-lg transition-colors"
+                  className="w-full bg-gradient-to-r from-violet-600 to-indigo-600 text-white font-medium py-3 rounded-lg hover:opacity-90 transition-opacity shadow-md"
                 >
                   Confirmer et commencer
                 </Button>
@@ -193,7 +194,7 @@ export default function TrimestresPage() {
           <h1 className="text-4xl font-bold text-white mb-2">
             Contrôle des Connaissances
           </h1>
-          <p className="text-gray-300">
+          <p className="text-white text-xl">
             Bonjour {userInfo.firstName} {userInfo.lastName} 👋
           </p>
         </div>
@@ -207,15 +208,15 @@ export default function TrimestresPage() {
             >
               <Link href={`/controle/trimestres/${trimestre.numero}`}>
                 <Card 
-                  className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border border-gray-700"
+                  className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none"
                   style={{
-                    background: "rgba(24, 24, 27, 0.8)",
+                    background: "linear-gradient(135deg, rgba(255,255,255,0.9), rgba(255,255,255,0.7))",
                     backdropFilter: "blur(10px)",
                   }}
                 >
                   <CardBody className="p-6">
                     <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-2xl font-bold text-white">
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-violet-600 to-indigo-600 bg-clip-text text-transparent">
                         Trimestre {trimestre.numero}
                       </h2>
                       <span className="text-3xl group-hover:rotate-12 transition-transform duration-300">
@@ -224,7 +225,7 @@ export default function TrimestresPage() {
                     </div>
                     
                     <div className="space-y-4">
-                      <div className="flex items-center justify-between text-gray-300">
+                      <div className="flex items-center justify-between text-gray-600 font-medium">
                         <span>{trimestre.subjects.length} matières</span>
                         <span>{getTrimestreProgress(trimestre)} questions</span>
                       </div>
@@ -239,26 +240,27 @@ export default function TrimestresPage() {
                           return (
                             <div
                               key={subject._id}
-                              className="px-3 py-1 rounded-full text-sm text-white flex items-center gap-1 backdrop-blur-sm"
+                              className="px-3 py-1 rounded-full text-sm text-white flex items-center gap-1.5 shadow-sm hover:shadow-md transition-shadow"
                               style={{ 
                                 backgroundColor: subjectStyle.bg,
-                                boxShadow: "0 0 10px rgba(0,0,0,0.1)"
+                                boxShadow: "0 4px 6px rgba(0,0,0,0.1)"
                               }}
                             >
                               <span>{subjectStyle.icon}</span>
-                              <span>{subject.name}</span>
+                              <span className="font-medium">{subject.name}</span>
                             </div>
                           );
                         })}
                       </div>
 
                       <div className="mt-4">
-                        <Progress 
-                          className="h-2" 
-                          color="primary" 
-                          value={100}
-                        />
-                        <p className="text-sm text-gray-400 mt-2">
+                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full"
+                            style={{ width: "100%" }}
+                          />
+                        </div>
+                        <p className="text-sm text-gray-500 mt-2 font-medium">
                           Cliquez pour commencer
                         </p>
                       </div>
