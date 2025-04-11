@@ -213,18 +213,16 @@ export default function TrimestresPage() {
               transition={{ duration: 0.3 }}
             >
               <Card
-                className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream bg-opacity-50 hover:scale-[1.02]"
+                className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-white"
                 style={{
-                  background: "bg-cream",
                   backdropFilter: "blur(10px)",
-                  border: "1px solid rgba(0, 0, 0, 0.1)",
                   borderRadius: "10px",
-                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                  boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
                 }}
               >
                 <CardBody className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold text-dark">
+                    <h2 className="text-2xl font-bold text-gray-800">
                       Trimestre {trimestre.numero}
                     </h2>
                     <span className="text-3xl group-hover:rotate-12 transition-transform duration-300">
@@ -248,7 +246,7 @@ export default function TrimestresPage() {
                         return (
                           <div
                             key={subject._id}
-                            className="px-3 py-1 rounded-full text-sm text-dark flex items-center gap-1.5 shadow-sm hover:shadow-md transition-shadow"
+                            className="px-3 py-1 rounded-full text-sm text-white flex items-center gap-1.5 shadow-sm hover:shadow-md transition-shadow"
                             style={{
                               backgroundColor: subjectStyle.bg,
                               boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
@@ -264,12 +262,12 @@ export default function TrimestresPage() {
                     <div className="mt-4">
                       <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-red-600 to-red-400 rounded-full hover:scale-[1.02]"
+                          className="h-full bg-gradient-to-r from-violet-500 to-indigo-500 rounded-full"
                           style={{ width: "100%" }}
                         />
                       </div>
                       <button
-                        className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-red-600 to-red-400 text-white rounded-lg font-medium transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg flex items-center justify-center gap-2"
+                        className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-violet-600 to-indigo-600 text-white rounded-lg font-medium transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg flex items-center justify-center gap-2 text-base"
                         onClick={() => {
                           router.push(
                             `/controle/trimestres/${trimestre.numero}`,
