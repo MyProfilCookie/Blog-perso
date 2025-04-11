@@ -222,7 +222,7 @@ export default function TrimestresPage() {
               >
                 <CardBody className="p-6">
                   <div className="flex items-center justify-between mb-4">
-                    <h2 className="text-2xl font-bold text-gray-800">
+                    <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200">
                       Trimestre {trimestre.numero}
                     </h2>
                     <span className="text-3xl group-hover:rotate-12 transition-transform duration-300">
