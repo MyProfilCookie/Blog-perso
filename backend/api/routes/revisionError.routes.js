@@ -31,4 +31,35 @@ router.get('/', async (req, res) => {
   }
 });
 
+router.delete('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedError = await RevisionError.findByIdAndDelete(id);
+    if (!deletedError) {
+      return res.status(404).json({ success: false, message: 'Erreur non trouvée' });
+    }
+
+    res.status(200).json({ success: true, message: 'Erreur supprimée avec succès' });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Erreur lors de la suppression' });
+  }
+});
+
+router.get('/:id', async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const error = await RevisionError.findById(id); 
+    if (!error) {
+      return res.status(404).json({ success: false, message: 'Erreur non trouvée' });
+    }
+
+    res.status(200).json({ success: true, error });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Erreur lors de la récupération' });  
+  }
+});
+
+
 module.exports = router;

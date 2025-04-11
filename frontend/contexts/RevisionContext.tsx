@@ -8,6 +8,8 @@ interface RevisionError {
   selectedAnswer: string;
   correctAnswer: string;
   date: string;
+  questionId?: string;
+  category?: string;
 }
 
 interface RevisionContextType {
@@ -76,20 +78,24 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
         console.log(`Tentative de récupération des erreurs pour l'utilisateur: ${userId}`);
         
         try {
+          // Adapter la route pour correspondre au contrôleur backend
+          // Le contrôleur attend un paramètre de requête userId, pas un paramètre d'URL
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/revision-errors/${userId}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/revision-errors`,
             {
+              params: { userId },
               headers: {
                 Authorization: `Bearer ${userToken}`
               }
             }
           );
 
-          if (response.data && Array.isArray(response.data)) {
-            setErrors(response.data);
-            console.log(`${response.data.length} erreurs récupérées`);
+          // Adapter le traitement de la réponse selon la structure du contrôleur
+          if (response.data && response.data.success && Array.isArray(response.data.errors)) {
+            setErrors(response.data.errors);
+            console.log(`${response.data.errors.length} erreurs récupérées`);
           } else {
-            console.log("Aucune donnée reçue de l'API");
+            console.log("Format de réponse inattendu:", response.data);
             setErrors([]);
           }
         } catch (error) {
@@ -106,12 +112,88 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
     fetchErrors();
   }, []);
 
-  const addError = (error: RevisionError) => {
-    setErrors(prev => [...prev, error]);
+  const addError = async (error: RevisionError) => {
+    try {
+      // Récupérer les informations d'authentification
+      const userToken = localStorage.getItem("userToken");
+      const userInfo = localStorage.getItem("user");
+      
+      if (!userToken || !userInfo) {
+        console.error("Impossible d'ajouter une erreur: utilisateur non connecté");
+        return;
+      }
+      
+      // Récupérer l'ID utilisateur
+      let userId = null;
+      try {
+        const parsedUserInfo = JSON.parse(userInfo);
+        userId = parsedUserInfo._id || parsedUserInfo.id;
+      } catch (e) {
+        console.error("Erreur lors du parsing de userInfo:", e);
+        return;
+      }
+      
+      if (!userId) {
+        console.error("ID utilisateur non trouvé dans userInfo");
+        return;
+      }
+      
+      // Ajouter l'erreur à l'API
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/revision-errors`,
+        {
+          ...error,
+          userId
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        }
+      );
+      
+      if (response.data && response.data.success) {
+        // Ajouter l'erreur au state local
+        setErrors(prev => [...prev, response.data.error]);
+        console.log("Erreur ajoutée avec succès");
+      } else {
+        console.error("Erreur lors de l'ajout de l'erreur:", response.data);
+      }
+    } catch (error) {
+      console.error("Erreur lors de l'ajout de l'erreur:", error);
+    }
   };
 
-  const removeError = (id: string) => {
-    setErrors(prev => prev.filter(error => error._id !== id));
+  const removeError = async (id: string) => {
+    try {
+      // Récupérer le token d'authentification
+      const userToken = localStorage.getItem("userToken");
+      
+      if (!userToken) {
+        console.error("Impossible de supprimer l'erreur: utilisateur non connecté");
+        return;
+      }
+      
+      // Supprimer l'erreur de l'API
+      const response = await axios.delete(
+        `${process.env.NEXT_PUBLIC_API_URL}/revision-errors/${id}`,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        }
+      );
+      
+      if (response.data && response.data.success) {
+        // Supprimer l'erreur du state local
+        setErrors(prev => prev.filter(error => error._id !== id));
+        console.log("Erreur supprimée avec succès");
+      } else {
+        console.error("Erreur lors de la suppression de l'erreur:", response.data);
+      }
+    } catch (error) {
+      console.error("Erreur lors de la suppression de l'erreur:", error);
+    }
   };
 
   const clearErrors = () => {
