@@ -260,14 +260,14 @@ export default function TrimestresPage() {
                     </div>
 
                     <div className="mt-4">
-                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                      <div className="h-2 bg-cream rounded-full overflow-hidden">
                         <div
-                          className="h-full bg-gradient-to-r from-rose-600 to-pink-500 rounded-full"
+                          className="h-full bg-red-400 rounded-full"
                           style={{ width: "100%" }}
                         />
                       </div>
                       <button
-                        className="w-full mt-4 px-6 py-3 bg-gradient-to-r from-rose-600 to-pink-500 text-white rounded-lg font-medium transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:from-rose-500 hover:to-pink-400 flex items-center justify-center gap-2 text-base"
+                        className="w-full mt-4 px-6 py-3 bg-red-400 text-dark rounded-lg font-medium transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg hover:from-rose-500 hover:to-pink-400 flex items-center justify-center gap-2 text-base"
                         onClick={() => {
                           router.push(
                             `/controle/trimestres/${trimestre.numero}`,
