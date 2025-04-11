@@ -25,13 +25,18 @@ interface Exercise {
   category: string;
 }
 
+interface Result {
+  isCorrect: boolean;
+  exerciseId: string;
+}
+
 const LanguagePage: React.FC = () => {
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
-  const [results, setResults] = useState<{ [key: string]: boolean }>({});
+  const [results, setResults] = useState<Result[]>([]);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [emoji, setEmoji] = useState<string>("");
   const [showResults, setShowResults] = useState<boolean>(false);
@@ -89,6 +94,8 @@ const LanguagePage: React.FC = () => {
         return "🌍";
     }
   };
+
+  const [timeSpent, setTimeSpent] = useState(0);
 
   useEffect(() => {
     const fetchExercises = async () => {
@@ -154,45 +161,59 @@ const LanguagePage: React.FC = () => {
 
   const handleSubmit = (id: string, correctAnswer: string) => {
     const userAnswer = userAnswers[id];
-    const isCorrect =
-      userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
+    const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
 
-    setResults({ ...results, [id]: isCorrect });
+    setResults([...results, { isCorrect, exerciseId: id }]);
+    
     if (isCorrect) {
       correctSound?.play();
-      setCompletedExercises((prev) => prev + 1);
-      setTotalPoints((prev) => prev + 10);
-      setCurrentStreak((prev) => prev + 1);
+      setCompletedExercises(prev => prev + 1);
+      setTotalPoints(prev => prev + 10);
+      setCurrentStreak(prev => prev + 1);
     } else {
       setCurrentStreak(0);
     }
   };
 
-  const calculateFinalScore = () => {
-    const total = exercises.length;
-    const correct = Object.values(results).filter(Boolean).length;
-    const score = (correct / total) * 100;
+  const calculateFinalScore = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+      
+      if (!userId || !token) {
+        console.error("Utilisateur non connecté");
+        return;
+      }
 
-    setFinalScore(score);
-    setShowResults(true);
+      const pageData = {
+        pageNumber: currentPage,
+        score: finalScore,
+        timeSpent: timeSpent,
+        correctAnswers: results.filter((r: Result) => r.isCorrect).length,
+        totalQuestions: exercises.length
+      };
 
-    // Mise à jour des badges
-    setBadges(prev => ({
-      ...prev,
-      perfectScore: score === 100,
-      streakMaster: currentStreak >= 5,
-      languageExpert: completedExercises >= 10,
-      quickLearner: score >= 80 && completedExercises >= 5,
-    }));
+      const response = await fetch("/api/eleves/score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          userId,
+          subjectName: "language",
+          pageData
+        })
+      });
 
-    if (score === 100) {
-      setEmoji("🌟");
-    } else if (score >= 80) {
-      setEmoji("😊");
-    } else if (score >= 50) {
-      setEmoji("😐");
-    } else {
-      setEmoji("😢");
+      if (!response.ok) {
+        throw new Error("Erreur lors de la sauvegarde de la note");
+      }
+
+      // Rediriger vers le profil de l'élève
+      router.push(`/eleve/${userId}`);
+    } catch (error) {
+      console.error("Erreur:", error);
     }
   };
 
@@ -211,6 +232,14 @@ const LanguagePage: React.FC = () => {
     new Set(exercises.map((ex) => ex.category)),
   );
   const categories = ["Tout", ...uniqueCategories];
+
+  const isAnswerSubmitted = (exerciseId: string) => {
+    return results.some((r) => r.exerciseId === exerciseId);
+  };
+
+  const isAnswerCorrect = (exerciseId: string) => {
+    return results.some((r) => r.exerciseId === exerciseId && r.isCorrect);
+  };
 
   if (loading) {
     return (
@@ -338,7 +367,7 @@ const LanguagePage: React.FC = () => {
                 {ex.options ? (
                 <select
                     className="w-full mb-2 p-4 text-base rounded-xl border border-blue-300 dark:bg-gray-700 font-medium shadow-md focus:ring-2 focus:ring-blue-400"
-                    disabled={results[ex._id] !== undefined}
+                    disabled={isAnswerSubmitted(ex._id)}
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
                   >
@@ -352,7 +381,7 @@ const LanguagePage: React.FC = () => {
               ) : (
                 <input
                     className="w-full mb-2"
-                    disabled={results[ex._id] !== undefined}
+                    disabled={isAnswerSubmitted(ex._id)}
                   type="text"
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
@@ -361,19 +390,17 @@ const LanguagePage: React.FC = () => {
 
                       <Button
                   className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-2 rounded-xl hover:brightness-110 transition"
-                  disabled={results[ex._id] !== undefined}
+                  disabled={isAnswerSubmitted(ex._id)}
                   onClick={() => handleSubmit(ex._id, ex.answer)}
               >
                 Soumettre
                       </Button>
 
-                {results[ex._id] !== undefined && (
+                {isAnswerCorrect(ex._id) && (
                   <p
-                    className={`mt-3 text-center font-semibold text-lg ${
-                      results[ex._id] ? "text-green-600" : "text-red-500"
-                    }`}
+                    className={`mt-3 text-center font-semibold text-lg text-green-600`}
                   >
-                    {results[ex._id] ? "Bonne réponse !" : "Mauvaise réponse"}
+                    Bonne réponse !
                   </p>
               )}
             </CardBody>

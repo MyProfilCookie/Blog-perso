@@ -21,6 +21,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Card, CardBody } from "@nextui-org/react";
 import { motion } from "framer-motion";
+
 import BackButton from "@/components/back";
 
 const stats = [
@@ -193,9 +194,9 @@ export default function ControlePage() {
           <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
             <motion.div
               animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-4 sm:mb-6"
               initial={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.5 }}
-              className="text-center mb-4 sm:mb-6"
             >
               <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400 mb-2">
                 Contrôle
@@ -213,9 +214,9 @@ export default function ControlePage() {
             {stats.map((stat, index) => (
               <motion.div
                 key={stat.label}
+                animate={{ opacity: 1, y: 0 }}
                 className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg text-center"
                 initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
                 transition={{ delay: index * 0.1 }}
                 whileHover={{ scale: 1.05 }}
               >
@@ -233,16 +234,16 @@ export default function ControlePage() {
         </section>
 
         <motion.div
+          animate={{ opacity: 1 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl"
           initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           {courseThemes.map((theme, index) => (
             <motion.div
               key={theme.id}
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
             >

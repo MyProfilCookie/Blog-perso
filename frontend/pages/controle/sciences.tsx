@@ -24,13 +24,18 @@ interface Exercise {
   category: string;
 }
 
+interface Result {
+  isCorrect: boolean;
+  answer: string;
+}
+
 const SciencesPage: React.FC = () => {
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
-  const [results, setResults] = useState<{ [key: string]: boolean }>({});
+  const [results, setResults] = useState<Result[]>([]);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [emoji, setEmoji] = useState<string>("");
   const [showResults, setShowResults] = useState<boolean>(false);
@@ -45,6 +50,7 @@ const SciencesPage: React.FC = () => {
   const questionsPerPage = 20;
   const correctSound =
     typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
+  const [timeSpent, setTimeSpent] = useState(0);
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -62,7 +68,7 @@ const SciencesPage: React.FC = () => {
   // Messages d'encouragement
   const encouragementMessages = [
     "🧪 Tu es un vrai scientifique !",
-    "�� Excellent esprit d'observation !",
+    "Excellent esprit d'observation !",
     "🧬 Continue d'explorer la science !",
     "⚗️ Tes connaissances scientifiques s'améliorent !",
     "🔍 Tu deviens un expert en sciences !",
@@ -160,45 +166,79 @@ const SciencesPage: React.FC = () => {
   const handleSubmit = (id: string, correctAnswer: string) => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
-
-    setResults({ ...results, [id]: isCorrect });
+    const exerciseIndex = exercises.findIndex(ex => ex._id === id);
     
-    if (isCorrect) {
-      correctSound?.play();
-      setCompletedExercises(prev => prev + 1);
-      setTotalPoints(prev => prev + 10);
-      setCurrentStreak(prev => prev + 1);
-    } else {
-      setCurrentStreak(0);
+    if (exerciseIndex !== -1) {
+      const newResults = [...results];
+      newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
+      setResults(newResults);
+      
+      if (isCorrect) {
+        correctSound?.play();
+        setCompletedExercises(prev => prev + 1);
+        setTotalPoints(prev => prev + 10);
+        setCurrentStreak(prev => prev + 1);
+      } else {
+        setCurrentStreak(0);
+      }
     }
   };
 
-  const calculateFinalScore = () => {
-    const total = exercises.length;
-    const correct = Object.values(results).filter(Boolean).length;
-    const score = (correct / total) * 100;
+  const calculateFinalScore = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+      
+      if (!userId || !token) {
+        console.error("Utilisateur non connecté");
+        return;
+      }
 
-    setFinalScore(score);
-    setShowResults(true);
+      const pageData = {
+        pageNumber: currentPage,
+        score: finalScore,
+        timeSpent: timeSpent,
+        correctAnswers: results.filter((r: Result) => r.isCorrect).length,
+        totalQuestions: exercises.length
+      };
 
-    // Mise à jour des badges
-    setBadges(prev => ({
-      ...prev,
-      perfectScore: score === 100,
-      streakMaster: currentStreak >= 5,
-      scienceExpert: completedExercises >= 10,
-      quickLearner: score >= 80 && completedExercises >= 5,
-    }));
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/scores`,
+        {
+          userId,
+          token,
+          pageId: "sciences",
+          score: finalScore,
+          timeSpent,
+          correctAnswers: results.filter((r: Result) => r.isCorrect).length,
+          totalQuestions: exercises.length
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
 
-    if (score === 100) {
-      setEmoji("🌟");
-    } else if (score >= 80) {
-      setEmoji("😊");
-    } else if (score >= 50) {
-      setEmoji("😐");
-    } else {
-      setEmoji("😢");
+      if (response.status !== 200) {
+        throw new Error("Erreur lors de la sauvegarde de la note");
+      }
+
+      // Rediriger vers le profil de l'élève
+      router.push(`/eleve/${userId}`);
+    } catch (error) {
+      console.error("Erreur:", error);
     }
+  };
+
+  const isAnswerSubmitted = (exerciseId: string) => {
+    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
+    return exerciseIndex !== -1 && results[exerciseIndex] !== undefined;
+  };
+
+  const isAnswerCorrect = (exerciseId: string) => {
+    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
+    return exerciseIndex !== -1 && results[exerciseIndex]?.isCorrect;
   };
 
   const filteredAllExercises =
@@ -360,7 +400,7 @@ const SciencesPage: React.FC = () => {
                 {ex.options ? (
                   <select
                     className="w-full mb-2 p-4 text-base rounded-xl border border-green-300 dark:bg-gray-700 font-medium shadow-md focus:ring-2 focus:ring-green-400"
-                    disabled={results[ex._id] !== undefined}
+                    disabled={isAnswerSubmitted(ex._id)}
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
                   >
@@ -374,7 +414,7 @@ const SciencesPage: React.FC = () => {
                 ) : (
                   <input
                     className="w-full mb-2"
-                    disabled={results[ex._id] !== undefined}
+                    disabled={isAnswerSubmitted(ex._id)}
                     type="text"
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
@@ -383,19 +423,19 @@ const SciencesPage: React.FC = () => {
 
                 <Button
                   className="w-full bg-gradient-to-r from-green-500 to-emerald-500 text-white font-bold py-2 rounded-xl hover:brightness-110 transition"
-                  disabled={results[ex._id] !== undefined}
+                  disabled={isAnswerSubmitted(ex._id)}
                   onClick={() => handleSubmit(ex._id, ex.answer)}
                 >
                   Soumettre
                 </Button>
 
-                {results[ex._id] !== undefined && (
+                {isAnswerSubmitted(ex._id) && (
                   <p
                     className={`mt-3 text-center font-semibold text-lg ${
-                      results[ex._id] ? "text-green-600" : "text-red-500"
+                      isAnswerCorrect(ex._id) ? "text-green-600" : "text-red-500"
                     }`}
                   >
-                    {results[ex._id] ? "Bonne réponse !" : "Mauvaise réponse"}
+                    {isAnswerCorrect(ex._id) ? "Bonne réponse !" : "Mauvaise réponse"}
                   </p>
                 )}
               </CardBody>

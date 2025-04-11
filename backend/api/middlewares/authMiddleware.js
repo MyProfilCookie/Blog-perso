@@ -124,24 +124,11 @@ exports.authMiddleware = async (req, res, next) => {
 };
 
 /**
- * Middleware pour vérifier si l'utilisateur est administrateur
+ * Middleware pour vérifier si l'utilisateur est authentifié
+ * Alias pour authMiddleware pour une meilleure lisibilité
  */
-exports.isAdmin = async (req, res, next) => {
-  try {
-    if (!req.user) {
-      return res.status(401).json({ message: "Non authentifié" });
-    }
-    
-    if (!req.user.isAdmin) {
-      return res.status(403).json({ message: "Accès refusé, vous devez être administrateur." });
-    }
-    
-    next();
-  } catch (error) {
-    console.log("🚨 Erreur dans le middleware isAdmin:", error.message);
-    return res.status(500).json({ message: "Erreur serveur" });
-  }
-};
+exports.isAuthenticated = exports.authMiddleware;
+
 /**
  * Middleware pour vérifier si l'utilisateur est administrateur
  */

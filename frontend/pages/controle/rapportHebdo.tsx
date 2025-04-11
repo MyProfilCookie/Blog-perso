@@ -106,6 +106,11 @@ interface Subject {
   icon: string;
 }
 
+interface Result {
+  isCorrect: boolean;
+  exerciseId: string;
+}
+
 const subjectList: Subject[] = [
   {
     id: "math",
@@ -253,6 +258,11 @@ const WeeklyReport: React.FC = () => {
     {},
   );
   const [errorCount, setErrorCount] = useState(0);
+  const [timeSpent, setTimeSpent] = useState(0);
+  const [results, setResults] = useState<Result[]>([]);
+  const [completedExercises, setCompletedExercises] = useState(0);
+  const [totalPoints, setTotalPoints] = useState(0);
+  const [currentStreak, setCurrentStreak] = useState(0);
 
   // Stocker le modèle de rapport avec ses questions
   const [reportModel, setReportModel] = useState<ReportModel | null>(null);
@@ -847,6 +857,71 @@ const WeeklyReport: React.FC = () => {
     a.click();
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
+  };
+
+  const handleSubmit = (id: string, correctAnswer: string) => {
+    const userAnswer = selectedAnswers[id];
+    const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
+
+    setResults([...results, { isCorrect, exerciseId: id }]);
+    
+    if (isCorrect) {
+      setCompletedExercises(prev => prev + 1);
+      setTotalPoints(prev => prev + 10);
+      setCurrentStreak(prev => prev + 1);
+    } else {
+      setCurrentStreak(0);
+    }
+  };
+
+  const calculateFinalScore = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+      
+      if (!userId || !token) {
+        console.error("Utilisateur non connecté");
+        return;
+      }
+
+      const pageData = {
+        pageNumber: 1,
+        score: totalPoints,
+        timeSpent: timeSpent,
+        correctAnswers: results.filter((r: Result) => r.isCorrect).length,
+        totalQuestions: results.length
+      };
+
+      const response = await fetch("/api/eleves/score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          userId,
+          subjectName: "rapportHebdo",
+          pageData
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la sauvegarde de la note");
+      }
+
+      // Rediriger vers le profil de l'élève
+      router.push(`/eleve/${userId}`);
+    } catch (error) {
+      console.error("Erreur:", error);
+    }
+  };
+
+  const isAnswerSubmitted = (exerciseId: string) => {
+    return results.some((r) => r.exerciseId === exerciseId);
+  };
+
+  const isAnswerCorrect = (exerciseId: string) => {
+    return results.some((r) => r.exerciseId === exerciseId && r.isCorrect);
   };
 
   // Affichage pendant le chargement

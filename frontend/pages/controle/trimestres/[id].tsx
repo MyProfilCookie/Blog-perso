@@ -32,6 +32,11 @@ interface TrimestreData {
   subjects: Subject[];
 }
 
+interface Result {
+  isCorrect: boolean;
+  answer: string;
+}
+
 const subjectColors = {
   Mathématiques: {
     bg: "bg-yellow-500",
@@ -106,6 +111,8 @@ export default function TrimestreDetails() {
     firstName: string;
     lastName: string;
   } | null>(null);
+  const [timeSpent, setTimeSpent] = useState(0);
+  const [results, setResults] = useState<Result[]>([]);
 
   const encouragementMessages = [
     "Continue comme ça, tu es sur la bonne voie ! 🌟",
@@ -253,151 +260,72 @@ export default function TrimestreDetails() {
   const handleAnswerSelect = async (questionIndex: number, answer: string) => {
     if (!data || currentSubjectIndex === null) return;
 
-    const currentSubject = data.subjects[currentSubjectIndex];
-    const absoluteQuestionIndex =
-      currentPage * QUESTIONS_PER_PAGE + questionIndex;
-    const questionId = `${currentSubjectIndex}-${absoluteQuestionIndex}`;
-
-    // Vérifier si la question a déjà été validée
-    if (validatedQuestions[questionId]) {
-      toast.info("Cette question a déjà été validée !");
-
-      return;
-    }
-
-    const currentQuestion = currentSubject.questions[absoluteQuestionIndex];
-    const subjectStyle =
-      subjectColors[currentSubject.name as keyof typeof subjectColors] ||
-      subjectColors.default;
+    const currentQuestions = getCurrentQuestions();
+    const question = currentQuestions[questionIndex];
+    
+    const isCorrect = answer === question.answer;
+    const newResults = [...results];
+    newResults[questionIndex] = { isCorrect, answer };
+    setResults(newResults);
 
     setSelectedAnswers((prev) => ({
       ...prev,
-      [questionId]: answer,
+      [questionIndex]: answer,
     }));
 
-    const correct = answer === currentQuestion.answer;
-
-    // Marquer la question comme validée
     setValidatedQuestions((prev) => ({
       ...prev,
-      [questionId]: true,
+      [questionIndex]: true,
     }));
 
-    setIsCorrect(correct);
-    setShowFeedback(true);
-
-    if (correct) {
-      setStreak((prev) => prev + 1);
-      toast.success(
-        <div className={`${subjectStyle.text} font-medium`}>
-          {getEncouragement(true, streak)}
-        </div>,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: `${subjectStyle.bg} bg-opacity-10 border ${subjectStyle.border} border-opacity-20`,
-        },
-      );
-    } else {
-      setStreak(0);
-      toast.error(
-        <div className="text-red-600 font-medium">
-          <p>{getEncouragement(false, 0)}</p>
-          <p className="text-sm mt-1 opacity-90">
-            La bonne réponse était :{" "}
-            <span className="font-medium">{currentQuestion.answer}</span>
-          </p>
-        </div>,
-        {
-          position: "bottom-right",
-          autoClose: 3000,
-          hideProgressBar: false,
-          closeOnClick: true,
-          pauseOnHover: true,
-          draggable: true,
-          progress: undefined,
-          className: "bg-red-50 border border-red-200",
-        },
-      );
+    // Sauvegarder le score
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
+    
+    if (userId && token) {
+      try {
+        await axios.post(
+          `${process.env.NEXT_PUBLIC_API_URL}/scores`,
+          {
+            userId,
+            token,
+            pageId: id,
+            score: isCorrect ? 1 : 0,
+            timeSpent,
+            correctAnswers: isCorrect ? 1 : 0,
+            totalQuestions: 1,
+          },
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde du score:", error);
+      }
     }
 
-    // Vérifier si toutes les questions de la page sont validées
-    const currentPageQuestions = getCurrentQuestions();
-    const allAnswered = currentPageQuestions.every(
-      (_: Question, idx: number) => {
-        const qId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + idx}`;
+    // Mettre à jour le score total
+    const newScore = calculateScore();
+    setScore(newScore);
 
-        return validatedQuestions[qId];
-      },
-    );
-
-    if (allAnswered) {
-      const totalPages = getTotalPages();
-
-      if (currentPage < totalPages - 1) {
-        setTimeout(() => setCurrentPage((prev) => prev + 1), 1500);
-      } else if (currentSubjectIndex < data.subjects.length - 1) {
-        setTimeout(() => {
-          setCurrentSubjectIndex((prev) => (prev === null ? 0 : prev + 1));
-          setCurrentPage(0);
-        }, 1500);
-      } else {
-        setTimeout(() => {
-          calculateScore();
-          setShowResults(true);
-        }, 1500);
-      }
+    // Vérifier si toutes les questions sont répondues
+    if (areAllQuestionsAnswered(currentPage)) {
+      setShowResults(true);
+      setShowFeedback(true);
     }
   };
 
   const calculateScore = () => {
-    if (!data) return;
+    if (!data || currentSubjectIndex === null) return 0;
 
-    let correctAnswers = 0;
-    let totalQuestions = 0;
+    const currentQuestions = getCurrentQuestions();
+    const correctAnswers = results.filter(r => r.isCorrect).length;
+    const totalQuestions = currentQuestions.length;
+    const finalScore = Math.round((correctAnswers / totalQuestions) * 100);
 
-    data.subjects.forEach((subject, subjectIndex) => {
-      subject.questions.forEach((question, questionIndex) => {
-        const questionId = `${subjectIndex}-${questionIndex}`;
-
-        if (selectedAnswers[questionId] === question.answer) {
-          correctAnswers++;
-        }
-        totalQuestions++;
-      });
-    });
-
-    const finalScore = (correctAnswers / totalQuestions) * 100;
-
-    setScore(finalScore);
-
-    // Afficher un message final selon le score
-    let message = "";
-    let icon = "success";
-
-    if (finalScore >= 80) {
-      message = "🌟 Félicitations ! Tu as excellé dans ce trimestre !";
-    } else if (finalScore >= 60) {
-      message = "👏 Bien joué ! Continue tes efforts !";
-      icon = "success";
-    } else if (finalScore >= 40) {
-      message = "💪 Tu peux faire mieux ! Continue de pratiquer !";
-      icon = "warning";
-    } else {
-      message = "📚 Il faut revoir ces notions. Ne te décourage pas !";
-      icon = "error";
-    }
-
-    Swal.fire({
-      title: message,
-      icon: icon as any,
-      confirmButtonText: "Voir mes résultats",
-    });
+    return finalScore;
   };
 
   const getCurrentProgress = (): number => {
@@ -490,6 +418,22 @@ export default function TrimestreDetails() {
       handleSubjectComplete();
     }
   }, [validatedQuestions]);
+
+  useEffect(() => {
+    let interval: NodeJS.Timeout;
+    
+    if (currentSubjectIndex !== null && !showResults) {
+      interval = setInterval(() => {
+        setTimeSpent(prev => prev + 1);
+      }, 1000);
+    }
+    
+    return () => {
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
+  }, [currentSubjectIndex, showResults]);
 
   if (loading)
     return (

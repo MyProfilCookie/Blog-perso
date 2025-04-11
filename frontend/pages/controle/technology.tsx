@@ -21,13 +21,18 @@ interface Exercise {
   category: string;
 }
 
+interface Result {
+  isCorrect: boolean;
+  exerciseId: string;
+}
+
 const TechnologyPage: React.FC = () => {
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
-  const [results, setResults] = useState<{ [key: string]: boolean }>({});
+  const [results, setResults] = useState<Result[]>([]);
   const [finalScore, setFinalScore] = useState<number | null>(null);
   const [emoji, setEmoji] = useState<string>("");
   const [showResults, setShowResults] = useState<boolean>(false);
@@ -42,6 +47,7 @@ const TechnologyPage: React.FC = () => {
   const questionsPerPage = 20;
   const correctSound =
     typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
+  const [timeSpent, setTimeSpent] = useState(0);
 
   const encouragementMessages = [
     "💻 Tu es un vrai geek !",
@@ -141,7 +147,7 @@ const TechnologyPage: React.FC = () => {
     const isCorrect =
       userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
 
-    setResults({ ...results, [id]: isCorrect });
+    setResults([...results, { isCorrect, exerciseId: id }]);
     if (isCorrect) {
       correctSound?.play();
       setCompletedExercises((prev) => prev + 1);
@@ -152,13 +158,46 @@ const TechnologyPage: React.FC = () => {
     }
   };
 
-  const calculateFinalScore = () => {
-    const total = exercises.length;
-    const correct = Object.values(results).filter(Boolean).length;
-    const score = (correct / total) * 100;
+  const calculateFinalScore = async () => {
+    try {
+      const userId = localStorage.getItem("userId");
+      const token = localStorage.getItem("token");
+      
+      if (!userId || !token) {
+        console.error("Utilisateur non connecté");
+        return;
+      }
 
-    setFinalScore(score);
-    setShowResults(true);
+      const pageData = {
+        pageNumber: currentPage,
+        score: finalScore,
+        timeSpent: timeSpent,
+        correctAnswers: results.filter((r: Result) => r.isCorrect).length,
+        totalQuestions: exercises.length
+      };
+
+      const response = await fetch("/api/eleves/score", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          userId,
+          subjectName: "technology",
+          pageData
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la sauvegarde de la note");
+      }
+
+      // Rediriger vers le profil de l'élève
+      router.push(`/eleve/${userId}`);
+    } catch (error) {
+      console.error("Erreur:", error);
+    }
   };
 
   const filteredAllExercises =
@@ -176,6 +215,14 @@ const TechnologyPage: React.FC = () => {
     new Set(exercises.map((ex) => ex.category)),
   );
   const categories = ["Tout", ...uniqueCategories];
+
+  const isAnswerSubmitted = (exerciseId: string) => {
+    return results.some((r) => r.exerciseId === exerciseId);
+  };
+
+  const isAnswerCorrect = (exerciseId: string) => {
+    return results.some((r) => r.exerciseId === exerciseId && r.isCorrect);
+  };
 
   if (loading) {
     return (
@@ -290,7 +337,7 @@ const TechnologyPage: React.FC = () => {
                 {ex.options ? (
                   <select
                     className="w-full mb-2 p-4 text-base rounded-xl border border-violet-300 dark:bg-gray-700 font-medium shadow-md focus:ring-2 focus:ring-violet-400"
-                    disabled={results[ex._id] !== undefined}
+                    disabled={isAnswerSubmitted(ex._id)}
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
                   >
@@ -304,7 +351,7 @@ const TechnologyPage: React.FC = () => {
                 ) : (
                   <input
                     className="w-full mb-2"
-                    disabled={results[ex._id] !== undefined}
+                    disabled={isAnswerSubmitted(ex._id)}
                     type="text"
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
@@ -312,18 +359,18 @@ const TechnologyPage: React.FC = () => {
                 )}
                 <Button
                   className="w-full bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold py-2 rounded-xl hover:brightness-110 transition"
-                  disabled={results[ex._id] !== undefined}
+                  disabled={isAnswerSubmitted(ex._id)}
                   onClick={() => handleSubmit(ex._id, ex.answer)}
                 >
                   Soumettre
                 </Button>
-                {results[ex._id] !== undefined && (
+                {isAnswerSubmitted(ex._id) && (
                   <p
                     className={`mt-3 text-center font-semibold text-lg ${
-                      results[ex._id] ? "text-green-600" : "text-red-500"
+                      isAnswerCorrect(ex._id) ? "text-green-600" : "text-red-500"
                     }`}
                   >
-                    {results[ex._id] ? "Bonne réponse !" : "Mauvaise réponse"}
+                    {isAnswerCorrect(ex._id) ? "Bonne réponse !" : "Mauvaise réponse"}
                   </p>
                 )}
               </CardBody>
