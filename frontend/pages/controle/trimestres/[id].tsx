@@ -81,11 +81,19 @@ export default function TrimestreDetails() {
   const [data, setData] = useState<TrimestreData | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [currentSubjectIndex, setCurrentSubjectIndex] = useState<number | null>(null);
+  const [currentSubjectIndex, setCurrentSubjectIndex] = useState<number | null>(
+    null,
+  );
   const [currentPage, setCurrentPage] = useState(0);
-  const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
-  const [validatedQuestions, setValidatedQuestions] = useState<Record<string, boolean>>({});
-  const [completedSubjects, setCompletedSubjects] = useState<Record<number, boolean>>({});
+  const [selectedAnswers, setSelectedAnswers] = useState<
+    Record<string, string>
+  >({});
+  const [validatedQuestions, setValidatedQuestions] = useState<
+    Record<string, boolean>
+  >({});
+  const [completedSubjects, setCompletedSubjects] = useState<
+    Record<number, boolean>
+  >({});
   const [showSubjectSelector, setShowSubjectSelector] = useState(true);
   const [score, setScore] = useState(0);
   const [showResults, setShowResults] = useState(false);
@@ -155,8 +163,10 @@ export default function TrimestreDetails() {
   // Charger la progression sauvegardée
   useEffect(() => {
     const savedProgress = localStorage.getItem(`trimestre-${id}-progress`);
+
     if (savedProgress) {
       const progress = JSON.parse(savedProgress);
+
       setSelectedAnswers(progress.selectedAnswers);
       setValidatedQuestions(progress.validatedQuestions);
       setCompletedSubjects(progress.completedSubjects || {});
@@ -166,14 +176,22 @@ export default function TrimestreDetails() {
 
   // Sauvegarder la progression
   useEffect(() => {
-    if (id && (Object.keys(selectedAnswers).length > 0 || Object.keys(completedSubjects).length > 0)) {
+    if (
+      id &&
+      (Object.keys(selectedAnswers).length > 0 ||
+        Object.keys(completedSubjects).length > 0)
+    ) {
       const progress = {
         selectedAnswers,
         validatedQuestions,
         completedSubjects,
         timeLeft,
       };
-      localStorage.setItem(`trimestre-${id}-progress`, JSON.stringify(progress));
+
+      localStorage.setItem(
+        `trimestre-${id}-progress`,
+        JSON.stringify(progress),
+      );
     }
   }, [id, selectedAnswers, validatedQuestions, completedSubjects, timeLeft]);
 
@@ -310,10 +328,13 @@ export default function TrimestreDetails() {
 
     // Vérifier si toutes les questions de la page sont validées
     const currentPageQuestions = getCurrentQuestions();
-    const allAnswered = currentPageQuestions.every((_: Question, idx: number) => {
-      const qId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + idx}`;
-      return validatedQuestions[qId];
-    });
+    const allAnswered = currentPageQuestions.every(
+      (_: Question, idx: number) => {
+        const qId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + idx}`;
+
+        return validatedQuestions[qId];
+      },
+    );
 
     if (allAnswered) {
       const totalPages = getTotalPages();
@@ -404,22 +425,29 @@ export default function TrimestreDetails() {
   const areAllQuestionsAnswered = (pageIndex: number): boolean => {
     if (!data || currentSubjectIndex === null) return false;
     const startIndex = pageIndex * QUESTIONS_PER_PAGE;
-    const endIndex = Math.min(startIndex + QUESTIONS_PER_PAGE, data.subjects[currentSubjectIndex].questions.length);
-    
+    const endIndex = Math.min(
+      startIndex + QUESTIONS_PER_PAGE,
+      data.subjects[currentSubjectIndex].questions.length,
+    );
+
     for (let i = startIndex; i < endIndex; i++) {
       const questionId = `${currentSubjectIndex}-${i}`;
+
       if (!validatedQuestions[questionId]) {
         return false;
       }
     }
+
     return true;
   };
 
   const isSubjectCompleted = (subjectIndex: number): boolean => {
     if (!data) return false;
     const subject = data.subjects[subjectIndex];
+
     return subject.questions.every((_: Question, questionIndex: number) => {
       const questionId = `${subjectIndex}-${questionIndex}`;
+
       return validatedQuestions[questionId];
     });
   };
@@ -431,30 +459,34 @@ export default function TrimestreDetails() {
 
   const handleSubjectComplete = () => {
     if (currentSubjectIndex === null || !data) return;
-    
+
     if (isSubjectCompleted(currentSubjectIndex)) {
       setCompletedSubjects((prev: Record<number, boolean>) => ({
         ...prev,
-        [currentSubjectIndex]: true
+        [currentSubjectIndex]: true,
       }));
-      
+
       toast.success(
         <div className="font-medium">
-          Bravo ! Vous avez terminé la matière {data.subjects[currentSubjectIndex].name} ! 🎉
+          Bravo ! Vous avez terminé la matière{" "}
+          {data.subjects[currentSubjectIndex].name} ! 🎉
         </div>,
         {
           position: "bottom-right",
           autoClose: 3000,
-        }
+        },
       );
-      
+
       setShowSubjectSelector(true);
       setCurrentSubjectIndex(null);
     }
   };
 
   useEffect(() => {
-    if (currentSubjectIndex !== null && isSubjectCompleted(currentSubjectIndex)) {
+    if (
+      currentSubjectIndex !== null &&
+      isSubjectCompleted(currentSubjectIndex)
+    ) {
       handleSubjectComplete();
     }
   }, [validatedQuestions]);
@@ -495,24 +527,28 @@ export default function TrimestreDetails() {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {data.subjects.map((subject: Subject, index: number) => {
               const isCompleted = completedSubjects[index];
-              const subjectStyle = subjectColors[subject.name as keyof typeof subjectColors] || subjectColors.default;
+              const subjectStyle =
+                subjectColors[subject.name as keyof typeof subjectColors] ||
+                subjectColors.default;
 
               return (
                 <motion.button
                   key={index}
-                  className={`p-6 rounded-xl backdrop-blur-sm border transition-all duration-300 ${
-                    isCompleted 
-                      ? 'bg-gray-100 border-gray-200 cursor-not-allowed'
-                      : 'bg-white hover:shadow-lg border-yellow-200 hover:border-yellow-300 cursor-pointer'
-                  }`}
-                  onClick={() => !isCompleted && handleSubjectSelect(index)}
-                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  className={`p-6 rounded-xl backdrop-blur-sm border transition-all duration-300 ${
+                    isCompleted
+                      ? "bg-gray-100 border-gray-200 cursor-not-allowed"
+                      : "bg-white hover:shadow-lg border-yellow-200 hover:border-yellow-300 cursor-pointer"
+                  }`}
                   disabled={isCompleted}
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                  onClick={() => !isCompleted && handleSubjectSelect(index)}
                 >
                   <div className="flex items-center gap-4">
-                    <div className={`w-12 h-12 ${subjectStyle.bg} bg-opacity-20 rounded-full flex items-center justify-center text-2xl`}>
+                    <div
+                      className={`w-12 h-12 ${subjectStyle.bg} bg-opacity-20 rounded-full flex items-center justify-center text-2xl`}
+                    >
                       {subject.icon}
                     </div>
                     <div className="flex-1 text-left">
@@ -664,46 +700,49 @@ export default function TrimestreDetails() {
                     )}
                   </div>
                   <div className="space-y-2">
-                    {question.options.map((option: string, optIndex: number) => {
-                      const isSelected = selectedAnswers[questionId] === option;
-                      const isValidated = validatedQuestions[questionId];
+                    {question.options.map(
+                      (option: string, optIndex: number) => {
+                        const isSelected =
+                          selectedAnswers[questionId] === option;
+                        const isValidated = validatedQuestions[questionId];
 
-                      return (
-                        <button
-                          key={optIndex}
-                          className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border transition-all duration-300 ${
-                            isSelected
-                              ? `${subjectStyle.bg} bg-opacity-20 ${subjectStyle.border} transform scale-[1.02]`
-                              : "bg-white/100 hover:bg-yellow-50 border-gray-100 hover:border-yellow-200 hover:scale-[1.01]"
-                          } ${
-                            isValidated
-                              ? "bg-gray-100 cursor-not-allowed"
-                              : "hover:shadow-md"
-                          }`}
-                          disabled={isValidated}
-                          onClick={() => handleAnswerSelect(index, option)}
-                        >
-                          <div className="flex items-center gap-2.5 sm:gap-3">
-                            <span
-                              className={`text-[13px] sm:text-[15px] ${
-                                isSelected
-                                  ? subjectStyle.text
-                                  : "text-yellow-600"
-                              } font-medium`}
-                            >
-                              {String.fromCharCode(65 + optIndex)}.
-                            </span>
-                            <span
-                              className={`text-[13px] sm:text-[15px] ${
-                                isSelected ? "text-gray-900" : "text-gray-700"
-                              }`}
-                            >
-                              {option}
-                            </span>
-                          </div>
-                        </button>
-                      );
-                    })}
+                        return (
+                          <button
+                            key={optIndex}
+                            className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border transition-all duration-300 ${
+                              isSelected
+                                ? `${subjectStyle.bg} bg-opacity-20 ${subjectStyle.border} transform scale-[1.02]`
+                                : "bg-white/100 hover:bg-yellow-50 border-gray-100 hover:border-yellow-200 hover:scale-[1.01]"
+                            } ${
+                              isValidated
+                                ? "bg-gray-100 cursor-not-allowed"
+                                : "hover:shadow-md"
+                            }`}
+                            disabled={isValidated}
+                            onClick={() => handleAnswerSelect(index, option)}
+                          >
+                            <div className="flex items-center gap-2.5 sm:gap-3">
+                              <span
+                                className={`text-[13px] sm:text-[15px] ${
+                                  isSelected
+                                    ? subjectStyle.text
+                                    : "text-yellow-600"
+                                } font-medium`}
+                              >
+                                {String.fromCharCode(65 + optIndex)}.
+                              </span>
+                              <span
+                                className={`text-[13px] sm:text-[15px] ${
+                                  isSelected ? "text-gray-900" : "text-gray-700"
+                                }`}
+                              >
+                                {option}
+                              </span>
+                            </div>
+                          </button>
+                        );
+                      },
+                    )}
                   </div>
                 </div>
               </motion.div>
@@ -719,8 +758,8 @@ export default function TrimestreDetails() {
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                 : "bg-yellow-500 text-white hover:bg-yellow-600"
             }`}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
             disabled={currentPage === 0}
+            onClick={() => setCurrentPage((prev) => prev - 1)}
           >
             ← Précédent
           </button>
@@ -738,8 +777,8 @@ export default function TrimestreDetails() {
                     ? "cursor-not-allowed opacity-50"
                     : ""
                 }`}
-                onClick={() => setCurrentPage(i)}
                 disabled={!areAllQuestionsAnswered(i)}
+                onClick={() => setCurrentPage(i)}
               >
                 {i + 1}
               </button>
@@ -748,12 +787,16 @@ export default function TrimestreDetails() {
 
           <button
             className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-              !areAllQuestionsAnswered(currentPage) || currentPage === getTotalPages() - 1
+              !areAllQuestionsAnswered(currentPage) ||
+              currentPage === getTotalPages() - 1
                 ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                 : "bg-yellow-500 text-white hover:bg-yellow-600"
             }`}
+            disabled={
+              !areAllQuestionsAnswered(currentPage) ||
+              currentPage === getTotalPages() - 1
+            }
             onClick={() => setCurrentPage((prev) => prev + 1)}
-            disabled={!areAllQuestionsAnswered(currentPage) || currentPage === getTotalPages() - 1}
           >
             Suivant →
           </button>
