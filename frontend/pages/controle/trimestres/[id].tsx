@@ -2,6 +2,8 @@ import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { Card, CardBody } from "@nextui-org/react";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
 
 import BackButton from "@/components/back";
@@ -24,6 +26,49 @@ interface TrimestreData {
   numero: number;
   subjects: Subject[];
 }
+
+const subjectColors = {
+  Mathématiques: {
+    bg: "bg-yellow-500",
+    text: "text-yellow-600",
+    border: "border-yellow-500",
+  },
+  Sciences: {
+    bg: "bg-green-500",
+    text: "text-green-600",
+    border: "border-green-500",
+  },
+  Français: {
+    bg: "bg-red-500",
+    text: "text-red-600",
+    border: "border-red-500",
+  },
+  Histoire: {
+    bg: "bg-indigo-500",
+    text: "text-indigo-600",
+    border: "border-indigo-500",
+  },
+  Géographie: {
+    bg: "bg-teal-500",
+    text: "text-teal-600",
+    border: "border-teal-500",
+  },
+  Langues: {
+    bg: "bg-pink-500",
+    text: "text-pink-600",
+    border: "border-pink-500",
+  },
+  "Arts Plastiques": {
+    bg: "bg-purple-500",
+    text: "text-purple-600",
+    border: "border-purple-500",
+  },
+  default: {
+    bg: "bg-gray-500",
+    text: "text-gray-600",
+    border: "border-gray-500",
+  },
+};
 
 export default function TrimestreDetails() {
   const router = useRouter();
@@ -122,6 +167,9 @@ export default function TrimestreDetails() {
       currentPage * QUESTIONS_PER_PAGE + questionIndex;
     const currentQuestion = currentSubject.questions[absoluteQuestionIndex];
     const questionId = `${currentSubjectIndex}-${absoluteQuestionIndex}`;
+    const subjectStyle =
+      subjectColors[currentSubject.name as keyof typeof subjectColors] ||
+      subjectColors.default;
 
     setSelectedAnswers((prev) => ({
       ...prev,
@@ -135,51 +183,42 @@ export default function TrimestreDetails() {
 
     if (correct) {
       setStreak((prev) => prev + 1);
-      await Swal.fire({
-        title: getEncouragement(true, streak),
-        icon: "success",
-        timer: 10800000,
-        position: "bottom-end",
-        showConfirmButton: false,
-        background: "#fff",
-        color: "#16a34a",
-        width: 300,
-        toast: true,
-        customClass: {
-          popup: "rounded-lg border border-green-100",
-          title: "text-[15px] font-medium",
-        },
-        showClass: {
-          popup: "animate__animated animate__fadeInRight",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutRight",
-        },
-      });
+      toast.success(
+        <div className={`${subjectStyle.text} font-medium`}>
+          {getEncouragement(true, streak)}
+        </div>,
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: `${subjectStyle.bg} bg-opacity-10 border ${subjectStyle.border} border-opacity-20`,
+        }
+      );
     } else {
       setStreak(0);
-      await Swal.fire({
-        title: getEncouragement(false, 0),
-        html: `<p class="text-[15px]">${getEncouragement(false, 0)}</p><p class="text-[13px] mt-1 opacity-90">La bonne réponse était : <span class="font-medium">${currentQuestion.answer}</span></p>`,
-        icon: "error",
-        timer: 10800000,
-        position: "bottom-end",
-        showConfirmButton: false,
-        background: "#fff",
-        color: "#dc2626",
-        width: 300,
-        toast: true,
-        customClass: {
-          popup: "rounded-lg border border-red-100",
-          title: "text-[15px] font-medium",
-        },
-        showClass: {
-          popup: "animate__animated animate__fadeInRight",
-        },
-        hideClass: {
-          popup: "animate__animated animate__fadeOutRight",
-        },
-      });
+      toast.error(
+        <div className="text-red-600 font-medium">
+          <p>{getEncouragement(false, 0)}</p>
+          <p className="text-sm mt-1 opacity-90">
+            La bonne réponse était :{" "}
+            <span className="font-medium">{currentQuestion.answer}</span>
+          </p>
+        </div>,
+        {
+          position: "bottom-right",
+          autoClose: 3000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: true,
+          draggable: true,
+          progress: undefined,
+          className: "bg-red-50 border border-red-200",
+        }
+      );
     }
 
     // Vérifier si toutes les questions de la page sont répondues
@@ -351,6 +390,7 @@ export default function TrimestreDetails() {
 
   return (
     <div className="min-h-screen bg-gray-50">
+      <ToastContainer />
       <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
         <div className="mb-6 sm:mb-8">
           <div className="flex items-center gap-2 mb-4 sm:mb-6">
@@ -395,41 +435,50 @@ export default function TrimestreDetails() {
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
           {currentQuestions.map((question, index) => {
             const questionId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + index}`;
-            const subjectColor = currentSubject.color || "bg-gray-400 dark:bg-gray-800";
-            const borderColor = subjectColor.split(' ')[0].replace('bg-', 'border-');
+            const subjectStyle =
+              subjectColors[
+                currentSubject.name as keyof typeof subjectColors
+              ] || subjectColors.default;
 
             return (
               <div
                 key={questionId}
-                className={`bg-white rounded-lg shadow-sm overflow-hidden border-l-4 ${borderColor}`}
+                className={`bg-white rounded-lg shadow-sm overflow-hidden border-l-4 ${subjectStyle.border}`}
               >
                 <div className="p-3 sm:p-4">
-                  <p className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectColor.split(' ')[0]} bg-opacity-10 rounded-lg p-3`}>
+                  <p
+                    className={`text-[14px] sm:text-[15px] font-medium text-gray-900 mb-3 sm:mb-4 ${subjectStyle.bg} bg-opacity-10 rounded-lg p-3`}
+                  >
                     {question.question}
                   </p>
                   <div className="space-y-2">
                     {question.options.map((option, optIndex) => {
                       const isSelected = selectedAnswers[questionId] === option;
+
                       return (
                         <button
                           key={optIndex}
-                          disabled={showFeedback}
-                          onClick={() => handleAnswerSelect(index, option)}
                           className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border ${
                             isSelected
-                              ? `${subjectColor.split(' ')[0]} bg-opacity-10 border-${borderColor}`
+                              ? `${subjectStyle.bg} bg-opacity-10 ${subjectStyle.border}`
                               : "bg-white border-gray-200 hover:bg-gray-50"
                           } transition-colors duration-200`}
+                          disabled={showFeedback}
+                          onClick={() => handleAnswerSelect(index, option)}
                         >
                           <div className="flex items-center gap-2.5 sm:gap-3">
-                            <span className={`text-[13px] sm:text-[15px] ${
-                              isSelected ? subjectColor.split(' ')[0].replace('bg-', 'text-') : 'text-gray-400'
-                            }`}>
+                            <span
+                              className={`text-[13px] sm:text-[15px] ${
+                                isSelected ? subjectStyle.text : "text-gray-400"
+                              }`}
+                            >
                               {String.fromCharCode(65 + optIndex)}.
                             </span>
-                            <span className={`text-[13px] sm:text-[15px] ${
-                              isSelected ? 'text-gray-900' : 'text-gray-700'
-                            }`}>
+                            <span
+                              className={`text-[13px] sm:text-[15px] ${
+                                isSelected ? "text-gray-900" : "text-gray-700"
+                              }`}
+                            >
                               {option}
                             </span>
                           </div>
