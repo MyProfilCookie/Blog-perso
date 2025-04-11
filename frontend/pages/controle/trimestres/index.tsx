@@ -34,8 +34,10 @@ const subjectColors = {
   Histoire: { bg: "rgba(52, 211, 153, 0.8)", icon: "⏳" },
   Géographie: { bg: "rgba(167, 139, 250, 0.8)", icon: "🌍" },
   Sciences: { bg: "rgba(251, 191, 36, 0.8)", icon: "🔬" },
-  Arts: { bg: "rgba(236, 72, 153, 0.8)", icon: "🎨" },
+  Art: { bg: "rgba(236, 72, 153, 0.8)", icon: "🎨" },
   Musique: { bg: "rgba(139, 92, 246, 0.8)", icon: "🎵" },
+  Langues: { bg: "rgba(2, 193, 7, 0.8)", icon: "🇫🇷" },
+  Technologie: { bg: "rgba(123, 1, 7, 0.8)", icon: "💻" },
   default: { bg: "rgba(107, 114, 128, 0.8)", icon: "📖" },
 };
 
