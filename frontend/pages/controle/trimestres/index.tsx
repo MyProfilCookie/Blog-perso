@@ -268,7 +268,7 @@ export default function TrimestresPage() {
                       <div className="mt-4">
                         <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
                           <div
-                            className="h-full bg-gradient-to-r from-dark to-dark rounded-full"
+                            className="h-full bg-gradient-to-r from-red-600 to-red-400 rounded-full hover:scale-[1.02]"
                             style={{ width: "100%" }}
                           />
                         </div>
