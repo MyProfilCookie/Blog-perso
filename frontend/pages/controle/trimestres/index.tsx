@@ -1,6 +1,5 @@
 /* eslint-disable no-console */
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import axios from "axios";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
@@ -213,73 +212,76 @@ export default function TrimestresPage() {
               initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.3 }}
             >
-              <Link href={`/controle/trimestres/${trimestre.numero}`}>
-                <Card
-                  className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream bg-opacity-50 hover:scale-[1.02]"
-                  style={{
-                    background: "bg-cream",
-                    backdropFilter: "blur(10px)",
-                    border: "1px solid rgba(0, 0, 0, 0.1)",
-                    borderRadius: "10px",
-                    boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
-                  }}
-                >
-                  <CardBody className="p-6">
-                    <div className="flex items-center justify-between mb-4">
-                      <h2 className="text-2xl font-bold text-dark">
-                        Trimestre {trimestre.numero}
-                      </h2>
-                      <span className="text-3xl group-hover:rotate-12 transition-transform duration-300">
-                        📚
-                      </span>
+              <Card
+                className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream bg-opacity-50 hover:scale-[1.02]"
+                style={{
+                  background: "bg-cream",
+                  backdropFilter: "blur(10px)",
+                  border: "1px solid rgba(0, 0, 0, 0.1)",
+                  borderRadius: "10px",
+                  boxShadow: "0 0 10px rgba(0, 0, 0, 0.1)",
+                }}
+              >
+                <CardBody className="p-6">
+                  <div className="flex items-center justify-between mb-4">
+                    <h2 className="text-2xl font-bold text-dark">
+                      Trimestre {trimestre.numero}
+                    </h2>
+                    <span className="text-3xl group-hover:rotate-12 transition-transform duration-300">
+                      📚
+                    </span>
+                  </div>
+
+                  <div className="space-y-4">
+                    <div className="flex items-center justify-between text-gray-600 font-medium">
+                      <span>{trimestre.subjects.length} matières</span>
+                      <span>{getTrimestreProgress(trimestre)} questions</span>
                     </div>
 
-                    <div className="space-y-4">
-                      <div className="flex items-center justify-between text-gray-600 font-medium">
-                        <span>{trimestre.subjects.length} matières</span>
-                        <span>{getTrimestreProgress(trimestre)} questions</span>
-                      </div>
+                    <div className="flex flex-wrap gap-2">
+                      {trimestre.subjects.map((subject) => {
+                        const subjectStyle =
+                          subjectColors[
+                            subject.name as keyof typeof subjectColors
+                          ] || subjectColors.default;
 
-                      <div className="flex flex-wrap gap-2">
-                        {trimestre.subjects.map((subject) => {
-                          const subjectStyle =
-                            subjectColors[
-                              subject.name as keyof typeof subjectColors
-                            ] || subjectColors.default;
-
-                          return (
-                            <div
-                              key={subject._id}
-                              className="px-3 py-1 rounded-full text-sm text-dark flex items-center gap-1.5 shadow-sm hover:shadow-md transition-shadow"
-                              style={{
-                                backgroundColor: subjectStyle.bg,
-                                boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
-                              }}
-                            >
-                              <span>{subjectStyle.icon}</span>
-                              <span className="font-medium">
-                                {subject.name}
-                              </span>
-                            </div>
-                          );
-                        })}
-                      </div>
-
-                      <div className="mt-4">
-                        <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        return (
                           <div
-                            className="h-full bg-gradient-to-r from-red-600 to-red-400 rounded-full hover:scale-[1.02]"
-                            style={{ width: "100%" }}
-                          />
-                        </div>
-                        <p className="text-sm text-gray-500 mt-2 font-medium">
-                          Cliquez pour commencer
-                        </p>
-                      </div>
+                            key={subject._id}
+                            className="px-3 py-1 rounded-full text-sm text-dark flex items-center gap-1.5 shadow-sm hover:shadow-md transition-shadow"
+                            style={{
+                              backgroundColor: subjectStyle.bg,
+                              boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                            }}
+                          >
+                            <span>{subjectStyle.icon}</span>
+                            <span className="font-medium">{subject.name}</span>
+                          </div>
+                        );
+                      })}
                     </div>
-                  </CardBody>
-                </Card>
-              </Link>
+
+                    <div className="mt-4">
+                      <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+                        <div
+                          className="h-full bg-gradient-to-r from-red-600 to-red-400 rounded-full hover:scale-[1.02]"
+                          style={{ width: "100%" }}
+                        />
+                      </div>
+                      <button
+                        className="text-sm text-gray-500 mt-2 font-medium"
+                        onClick={() => {
+                          router.push(
+                            `/controle/trimestres/${trimestre.numero}`,
+                          );
+                        }}
+                      >
+                        Cliquez pour commencer
+                      </button>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
             </motion.div>
           ))}
         </div>
