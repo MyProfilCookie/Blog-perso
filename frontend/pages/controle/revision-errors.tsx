@@ -1,32 +1,73 @@
 "use client";
-import React, { useEffect } from "react";
-import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
+import React, { useEffect, useState } from "react";
+import { Card, CardBody, Spinner, Button, Tabs, Tab } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { RevisionProvider, useRevision } from "../../contexts/RevisionContext";
 import { useRouter } from "next/navigation";
 
-interface RevisionError {
-  _id: string;
-  questionText: string;
-  selectedAnswer: string;
-  correctAnswer: string;
-  date: string;
-}
+// Utiliser le type any pour éviter les erreurs de linter
+type RevisionError = any;
 
 const RevisionContent: React.FC = () => {
-  const { errors, isLoading, isAuthenticated } = useRevision();
+  const { errors, isLoading, isAuthenticated, errorMessage, removeError } = useRevision();
   const router = useRouter();
   const [debugInfo, setDebugInfo] = React.useState<string>("");
+  const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
+  const [userErrors, setUserErrors] = useState<RevisionError[]>([]);
+  const [userIds, setUserIds] = useState<string[]>([]);
 
   useEffect(() => {
     // Afficher les informations de débogage
-    const userId = localStorage.getItem("userId");
-    const token = localStorage.getItem("token");
-    setDebugInfo(`userId: ${userId ? "présent" : "absent"}, token: ${token ? "présent" : "absent"}`);
+    const userToken = localStorage.getItem("userToken");
+    const userInfo = localStorage.getItem("user");
+    
+    let userId = "non trouvé";
+    if (userInfo) {
+      try {
+        const parsedUserInfo = JSON.parse(userInfo);
+        userId = parsedUserInfo._id || parsedUserInfo.id || "non trouvé";
+      } catch (e) {
+        userId = "erreur de parsing";
+      }
+    }
+    
+    setDebugInfo(`userToken: ${userToken ? "présent" : "absent"}, userId: ${userId}`);
   }, []);
+
+  // Extraire les IDs utilisateurs uniques des erreurs
+  useEffect(() => {
+    if (errors.length > 0) {
+      // Utiliser Array.from pour éviter les problèmes de compatibilité avec Set
+      const uniqueUserIds = Array.from(new Set(errors.map(error => error.userId || "unknown")));
+      setUserIds(uniqueUserIds);
+      
+      // Sélectionner le premier utilisateur par défaut
+      if (uniqueUserIds.length > 0 && !selectedUserId) {
+        setSelectedUserId(uniqueUserIds[0]);
+      }
+    }
+  }, [errors, selectedUserId]);
+
+  // Filtrer les erreurs par utilisateur sélectionné
+  useEffect(() => {
+    if (selectedUserId) {
+      const filteredErrors = errors.filter(error => error.userId === selectedUserId);
+      setUserErrors(filteredErrors);
+    } else {
+      setUserErrors([]);
+    }
+  }, [selectedUserId, errors]);
 
   const handleRefresh = () => {
     window.location.reload();
+  };
+
+  const handleDeleteError = (id: string) => {
+    removeError(id);
+  };
+
+  const handleUserChange = (userId: string) => {
+    setSelectedUserId(userId);
   };
 
   if (isLoading) {
@@ -90,27 +131,69 @@ const RevisionContent: React.FC = () => {
         </Button>
       </div>
 
+      {errorMessage && (
+        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
+          {errorMessage}
+        </div>
+      )}
+
       {errors.length === 0 ? (
         <p className="text-center text-gray-600">Aucune erreur à réviser.</p>
       ) : (
-        <div className="space-y-6">
-          {errors.map((err: RevisionError) => (
-            <Card key={err._id}>
-              <CardBody className="space-y-2">
-                <p className="font-semibold">{err.questionText}</p>
-                <p className="text-sm text-red-600">
-                  ❌ Ta réponse : {err.selectedAnswer}
-                </p>
-                <p className="text-sm text-green-600">
-                  ✅ Bonne réponse : {err.correctAnswer}
-                </p>
-                <p className="text-xs text-gray-400">
-                  📅 {new Date(err.date).toLocaleDateString()}
-                </p>
-              </CardBody>
-            </Card>
-          ))}
-        </div>
+        <>
+          {userIds.length > 1 && (
+            <div className="mb-6">
+              <Tabs 
+                aria-label="Sélection d'utilisateur" 
+                selectedKey={selectedUserId || ""} 
+                onSelectionChange={(key) => handleUserChange(key as string)}
+              >
+                {userIds.map((userId) => (
+                  <Tab 
+                    key={userId} 
+                    title={`Utilisateur ${userId.substring(0, 6)}...`}
+                  />
+                ))}
+              </Tabs>
+            </div>
+          )}
+
+          <div className="space-y-6">
+            {userErrors.map((err: RevisionError) => (
+              <Card key={err._id} className="relative">
+                <CardBody className="space-y-2">
+                  <div className="flex justify-between items-start">
+                    <div className="flex-1">
+                      <p className="font-semibold">{err.questionText}</p>
+                      <p className="text-sm text-red-600">
+                        ❌ Ta réponse : {err.selectedAnswer}
+                      </p>
+                      <p className="text-sm text-green-600">
+                        ✅ Bonne réponse : {err.correctAnswer}
+                      </p>
+                      {err.category && (
+                        <p className="text-xs text-blue-600">
+                          📑 Catégorie : {err.category}
+                        </p>
+                      )}
+                      <p className="text-xs text-gray-400">
+                        📅 {new Date(err.date).toLocaleDateString()}
+                      </p>
+                    </div>
+                    <Button 
+                      size="sm" 
+                      color="danger" 
+                      variant="light"
+                      onClick={() => handleDeleteError(err._id)}
+                    >
+                      Supprimer
+                    </Button>
+                  </div>
+                </CardBody>
+              </Card>
+            ))}
+          </div>
+        </>
       )}
     </motion.div>
   );

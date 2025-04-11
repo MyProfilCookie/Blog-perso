@@ -61,5 +61,21 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+// recuperer les erreurs par userId
+router.get('/user/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const errors = await RevisionError.find({ userId }).sort({ date: -1 });
+    res.status(200).json({ success: true, errors });
+  } catch (err) {
+    res.status(500).json({ success: false, message: 'Erreur lors de la récupération' });
+  }
+});
+
+
+
+
+
 
 module.exports = router;
