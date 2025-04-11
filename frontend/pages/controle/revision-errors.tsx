@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useEffect } from "react";
 import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { RevisionProvider, useRevision } from "../../contexts/RevisionContext";
@@ -16,6 +16,18 @@ interface RevisionError {
 const RevisionContent: React.FC = () => {
   const { errors, isLoading, isAuthenticated } = useRevision();
   const router = useRouter();
+  const [debugInfo, setDebugInfo] = React.useState<string>("");
+
+  useEffect(() => {
+    // Afficher les informations de débogage
+    const userId = localStorage.getItem("userId");
+    const token = localStorage.getItem("token");
+    setDebugInfo(`userId: ${userId ? "présent" : "absent"}, token: ${token ? "présent" : "absent"}`);
+  }, []);
+
+  const handleRefresh = () => {
+    window.location.reload();
+  };
 
   if (isLoading) {
     return (
@@ -38,12 +50,23 @@ const RevisionContent: React.FC = () => {
         <p className="mb-6 text-gray-600">
           Vous devez être connecté pour accéder à vos erreurs de révision.
         </p>
-        <Button 
-          color="primary" 
-          onClick={() => router.push("/users/login")}
-        >
-          Se connecter
-        </Button>
+        <div className="mb-4 text-xs text-gray-500">
+          {debugInfo}
+        </div>
+        <div className="flex justify-center gap-4">
+          <Button 
+            color="primary" 
+            onClick={() => router.push("/users/login")}
+          >
+            Se connecter
+          </Button>
+          <Button 
+            color="secondary" 
+            onClick={handleRefresh}
+          >
+            Rafraîchir
+          </Button>
+        </div>
       </motion.div>
     );
   }
@@ -54,9 +77,18 @@ const RevisionContent: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
     >
-      <h1 className="text-2xl font-bold mb-6 text-center">
-        📚 Questions à Revoir
-      </h1>
+      <div className="flex justify-between items-center mb-6">
+        <h1 className="text-2xl font-bold">
+          📚 Questions à Revoir
+        </h1>
+        <Button 
+          size="sm" 
+          color="secondary" 
+          onClick={handleRefresh}
+        >
+          Rafraîchir
+        </Button>
+      </div>
 
       {errors.length === 0 ? (
         <p className="text-center text-gray-600">Aucune erreur à réviser.</p>

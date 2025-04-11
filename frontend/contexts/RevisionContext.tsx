@@ -29,9 +29,16 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   useEffect(() => {
     const fetchErrors = async () => {
       try {
+        // Vérifier si nous sommes dans un environnement navigateur
+        if (typeof window === 'undefined') {
+          setIsLoading(false);
+          return;
+        }
+
         const userId = localStorage.getItem("userId");
         const token = localStorage.getItem("token");
         
+        // Vérifier si l'utilisateur est connecté
         if (!userId || !token) {
           console.log("Utilisateur non connecté, affichage des données de démonstration");
           setIsAuthenticated(false);
@@ -39,6 +46,7 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           return;
         }
 
+        // L'utilisateur est connecté
         setIsAuthenticated(true);
         
         try {
@@ -56,7 +64,8 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({ chil
           }
         } catch (error) {
           console.error("Erreur lors de la récupération des erreurs:", error);
-          // En cas d'erreur, on garde un tableau vide
+          // En cas d'erreur, on garde un tableau vide mais on considère toujours l'utilisateur comme authentifié
+          setIsAuthenticated(true);
         }
       } catch (error) {
         console.error("Erreur lors de l'accès au localStorage:", error);
