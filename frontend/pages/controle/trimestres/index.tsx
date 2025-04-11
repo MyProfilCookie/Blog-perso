@@ -269,14 +269,15 @@ export default function TrimestresPage() {
                         />
                       </div>
                       <button
-                        className="text-sm text-gray-500 mt-2 font-medium"
+                        className="w-full mt-4 px-4 py-2 bg-gradient-to-r from-red-600 to-red-400 text-white rounded-lg font-medium transform transition-all duration-300 hover:scale-[1.02] hover:shadow-lg flex items-center justify-center gap-2"
                         onClick={() => {
                           router.push(
                             `/controle/trimestres/${trimestre.numero}`,
                           );
                         }}
                       >
-                        Cliquez pour commencer
+                        <span>Commencer le trimestre</span>
+                        <span className="text-xl">→</span>
                       </button>
                     </div>
                   </div>
