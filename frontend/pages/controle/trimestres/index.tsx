@@ -213,7 +213,7 @@ export default function TrimestresPage() {
               transition={{ duration: 0.3 }}
             >
               <Card
-                className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream"
+                className="group hover:shadow-xl transition-all duration-300 overflow-hidden cursor-pointer border-none bg-cream dark:bg-gray-800"
                 style={{
                   backdropFilter: "blur(10px)",
                   borderRadius: "10px",
@@ -260,7 +260,7 @@ export default function TrimestresPage() {
                     </div>
 
                     <div className="mt-4">
-                      <div className="h-2 bg-cream rounded-full overflow-hidden">
+                      <div className="h-2 bg-cream rounded-full overflow-hidden dark:bg-gray-700">
                         <div
                           className="h-full bg-red-400 rounded-full"
                           style={{ width: "100%" }}
