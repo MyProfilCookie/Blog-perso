@@ -1,8 +1,28 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, CardBody, Spinner, Button, Tabs, Tab } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Spinner,
+  Button,
+  Tabs,
+  Tab,
+  Chip,
+  Divider,
+  Tooltip,
+} from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
+import {
+  FaTrash,
+  FaSync,
+  FaSignInAlt,
+  FaExclamationTriangle,
+  FaCheckCircle,
+  FaTimesCircle,
+  FaTag,
+  FaArrowLeft,
+} from "react-icons/fa";
 
 import { RevisionProvider, useRevision } from "../../contexts/RevisionContext";
 
@@ -82,10 +102,17 @@ const RevisionContent: React.FC = () => {
     setSelectedUserId(userId);
   };
 
+  const handleGoBack = () => {
+    router.back();
+  };
+
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center min-h-[50vh]">
+      <div className="flex flex-col justify-center items-center min-h-[70vh]">
         <Spinner color="primary" size="lg" />
+        <p className="mt-4 text-gray-500">
+          Chargement des erreurs de révision...
+        </p>
       </div>
     );
   }
@@ -93,21 +120,47 @@ const RevisionContent: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <motion.div
-        animate={{ opacity: 1 }}
-        className="max-w-4xl mx-auto p-6 text-center"
-        initial={{ opacity: 0 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="max-w-4xl mx-auto p-8 text-center bg-gradient-to-br from-white to-blue-50 rounded-xl shadow-lg"
+        initial={{ opacity: 0, y: 20 }}
+        transition={{ duration: 0.5 }}
       >
-        <h1 className="text-2xl font-bold mb-6">🔒 Connexion requise</h1>
-        <p className="mb-6 text-gray-600">
+        <div className="bg-blue-100 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
+          <FaSignInAlt className="text-blue-600 text-3xl" />
+        </div>
+        <h1 className="text-3xl font-bold mb-4 text-gray-800">
+          🔒 Connexion requise
+        </h1>
+        <p className="mb-6 text-gray-600 max-w-md mx-auto">
           Vous devez être connecté pour accéder à vos erreurs de révision.
         </p>
-        <div className="mb-4 text-xs text-gray-500">{debugInfo}</div>
+        <div className="mb-6 p-3 bg-gray-100 rounded-md text-xs text-gray-500 max-w-md mx-auto">
+          {debugInfo}
+        </div>
         <div className="flex justify-center gap-4">
-          <Button color="primary" onClick={() => router.push("/users/login")}>
+          <Button
+            className="px-6"
+            color="primary"
+            startContent={<FaSignInAlt />}
+            onClick={() => router.push("/users/login")}
+          >
             Se connecter
           </Button>
-          <Button color="secondary" onClick={handleRefresh}>
+          <Button
+            className="px-6"
+            color="secondary"
+            startContent={<FaSync />}
+            onClick={handleRefresh}
+          >
             Rafraîchir
+          </Button>
+          <Button
+            variant="flat"
+            onClick={handleGoBack}
+            className="px-6"
+            startContent={<FaArrowLeft />}
+          >
+            Retour
           </Button>
         </div>
       </motion.div>
@@ -119,35 +172,102 @@ const RevisionContent: React.FC = () => {
       animate={{ opacity: 1 }}
       className="max-w-4xl mx-auto p-6"
       initial={{ opacity: 0 }}
+      transition={{ duration: 0.5 }}
     >
-      <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">📚 Questions à Revoir</h1>
-        <Button color="secondary" size="sm" onClick={handleRefresh}>
+      <div className="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+        <div className="flex items-center gap-4">
+          <Button
+            isIconOnly
+            variant="light"
+            onClick={handleGoBack}
+            className="text-lg"
+          >
+            <FaArrowLeft />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800">
+              📚 Questions à Revoir
+            </h1>
+            <p className="text-gray-500 mt-1">
+              {userErrors.length} erreur{userErrors.length !== 1 ? "s" : ""} à
+              réviser
+            </p>
+          </div>
+        </div>
+        <Button
+          color="primary"
+          variant="flat"
+          onClick={handleRefresh}
+          startContent={<FaSync />}
+        >
           Rafraîchir
         </Button>
       </div>
 
       {errorMessage && (
-        <div className="mb-4 p-3 bg-red-100 text-red-700 rounded-md">
-          {errorMessage}
-        </div>
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg flex items-center gap-3"
+          initial={{ opacity: 0, y: -10 }}
+        >
+          <FaExclamationTriangle className="text-red-500" />
+          <p>{errorMessage}</p>
+        </motion.div>
       )}
 
       {errors.length === 0 ? (
-        <p className="text-center text-gray-600">Aucune erreur à réviser.</p>
+        <motion.div
+          animate={{ opacity: 1 }}
+          className="text-center py-12 bg-gray-50 rounded-xl"
+          initial={{ opacity: 0 }}
+          transition={{ delay: 0.2 }}
+        >
+          <div className="bg-green-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
+            <FaCheckCircle className="text-green-500 text-2xl" />
+          </div>
+          <p className="text-xl text-gray-600 font-medium">
+            Aucune erreur à réviser
+          </p>
+          <p className="text-gray-500 mt-2">
+            Vous avez bien répondu à toutes les questions !
+          </p>
+          <div className="mt-6">
+            <Button
+              variant="flat"
+              onClick={handleGoBack}
+              startContent={<FaArrowLeft />}
+            >
+              Retour
+            </Button>
+          </div>
+        </motion.div>
       ) : (
         <>
           {userIds.length > 1 && (
-            <div className="mb-6">
+            <div className="mb-6 bg-white p-2 rounded-lg shadow-sm">
               <Tabs
                 aria-label="Sélection d'utilisateur"
+                classNames={{
+                  tabList: "gap-6",
+                  cursor: "w-full bg-primary",
+                  tab: "max-w-fit px-0 h-12",
+                  tabContent: "group-data-[selected=true]:text-primary",
+                }}
                 selectedKey={selectedUserId || ""}
+                variant="underlined"
                 onSelectionChange={(key) => handleUserChange(key as string)}
               >
                 {userIds.map((userId) => (
                   <Tab
                     key={userId}
-                    title={`Utilisateur ${userId.substring(0, 6)}...`}
+                    title={
+                      <div className="flex items-center space-x-2">
+                        <span>Utilisateur</span>
+                        <Chip color="primary" size="sm" variant="flat">
+                          {userId.substring(0, 6)}...
+                        </Chip>
+                      </div>
+                    }
                   />
                 ))}
               </Tabs>
@@ -155,38 +275,87 @@ const RevisionContent: React.FC = () => {
           )}
 
           <div className="space-y-6">
-            {userErrors.map((err: RevisionError) => (
-              <Card key={err._id} className="relative">
-                <CardBody className="space-y-2">
-                  <div className="flex justify-between items-start">
-                    <div className="flex-1">
-                      <p className="font-semibold">{err.questionText}</p>
-                      <p className="text-sm text-red-600">
-                        ❌ Ta réponse : {err.selectedAnswer}
-                      </p>
-                      <p className="text-sm text-green-600">
-                        ✅ Bonne réponse : {err.correctAnswer}
-                      </p>
-                      {err.category && (
-                        <p className="text-xs text-blue-600">
-                          📑 Catégorie : {err.category}
-                        </p>
-                      )}
-                      <p className="text-xs text-gray-400">
-                        📅 {new Date(err.date).toLocaleDateString()}
-                      </p>
+            {userErrors.map((err: RevisionError, index) => (
+              <motion.div
+                key={err._id}
+                animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.3, delay: index * 0.05 }}
+              >
+                <Card className="border border-gray-200 hover:shadow-md transition-shadow">
+                  <CardBody className="p-5">
+                    <div className="flex flex-col md:flex-row justify-between gap-4">
+                      <div className="flex-1 space-y-3">
+                        <div className="flex items-start gap-3">
+                          <div className="bg-blue-100 p-2 rounded-full">
+                            <FaExclamationTriangle className="text-blue-500" />
+                          </div>
+                          <div>
+                            <p className="font-semibold text-lg">
+                              {err.questionText}
+                            </p>
+                            <div className="flex flex-wrap gap-2 mt-2">
+                              {err.category && (
+                                <Chip
+                                  color="primary"
+                                  size="sm"
+                                  startContent={<FaTag className="text-xs" />}
+                                  variant="flat"
+                                >
+                                  {err.category}
+                                </Chip>
+                              )}
+                              <Chip color="default" size="sm" variant="flat">
+                                {new Date(err.date).toLocaleDateString()}
+                              </Chip>
+                            </div>
+                          </div>
+                        </div>
+
+                        <Divider className="my-3" />
+
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                          <div className="bg-red-50 p-3 rounded-lg">
+                            <div className="flex items-center gap-2 mb-1">
+                              <FaTimesCircle className="text-red-500" />
+                              <p className="font-medium text-red-700">
+                                Ta réponse
+                              </p>
+                            </div>
+                            <p className="text-red-600">{err.selectedAnswer}</p>
+                          </div>
+
+                          <div className="bg-green-50 p-3 rounded-lg">
+                            <div className="flex items-center gap-2 mb-1">
+                              <FaCheckCircle className="text-green-500" />
+                              <p className="font-medium text-green-700">
+                                Bonne réponse
+                              </p>
+                            </div>
+                            <p className="text-green-600">
+                              {err.correctAnswer}
+                            </p>
+                          </div>
+                        </div>
+                      </div>
+
+                      <div className="flex justify-end">
+                        <Tooltip content="Supprimer cette erreur">
+                          <Button
+                            isIconOnly
+                            className="text-lg"
+                            color="danger"
+                            variant="light"
+                            onClick={() => handleDeleteError(err._id)}
+                          >
+                            <FaTrash />
+                          </Button>
+                        </Tooltip>
+                      </div>
                     </div>
-                    <Button
-                      color="danger"
-                      size="sm"
-                      variant="light"
-                      onClick={() => handleDeleteError(err._id)}
-                    >
-                      Supprimer
-                    </Button>
-                  </div>
-                </CardBody>
-              </Card>
+                  </CardBody>
+                </Card>
+              </motion.div>
             ))}
           </div>
         </>
