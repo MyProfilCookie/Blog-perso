@@ -354,20 +354,19 @@ export default function ControlePage() {
               whileTap={{ scale: 0.98 }}
               onClick={() => router.push(theme.route)}
             >
-              <Card className="h-full">
-                <CardBody className="flex flex-col items-center p-6">
-                  <div
-                    className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${theme.bgColor}`}
-                  >
+              <Card
+                isPressable
+                className={`w-full h-full min-h-[160px] ${theme.bgColor} flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:brightness-110`}
+              >
+                <CardBody className="p-4 flex flex-col justify-center h-full text-center items-center">
+                  <div className="flex items-center gap-2 mb-2">
                     <FontAwesomeIcon
-                      className={`text-2xl ${theme.iconColor}`}
+                      className={theme.iconColor}
                       icon={theme.icon}
                     />
+                    <h2 className="font-bold">{theme.title}</h2>
                   </div>
-                  <h3 className="text-xl font-semibold mb-2">{theme.title}</h3>
-                  <p className="text-gray-600 dark:text-gray-400 text-center">
-                    {theme.description}
-                  </p>
+                  <p className="text-sm">{theme.description}</p>
                 </CardBody>
               </Card>
             </motion.div>
