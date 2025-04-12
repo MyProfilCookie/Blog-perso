@@ -1,10 +1,11 @@
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button, Chip, Spinner } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
+import { FaCheckCircle, FaCrown, FaRegClock } from "react-icons/fa";
 
 import BackButton from "@/components/back";
 
@@ -195,112 +196,139 @@ const SubscriptionPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <Spinner color="primary" size="lg" />
-          <p className="mt-4 text-gray-600">
-            Chargement des informations d&rsquo;abonnement...
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-background to-default-100">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="text-center"
+        >
+          <Spinner size="lg" className="text-primary" />
+          <p className="mt-4 text-gray-600 animate-pulse">
+            Chargement de vos options d&rsquo;abonnement...
           </p>
-        </div>
+        </motion.div>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
-        <div className="bg-red-100 p-4 rounded-lg text-red-700 max-w-md text-center">
-          <p className="font-bold mb-2">⚠️ Erreur</p>
-          <p>{error}</p>
-        </div>
-        <Button
-          className="mt-4"
-          color="primary"
-          onClick={() => window.location.reload()}
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-background to-default-100 p-4">
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="bg-danger-50 p-6 rounded-xl shadow-xl border border-danger-200 max-w-md text-center"
         >
-          Réessayer
-        </Button>
+          <p className="font-bold mb-2 text-danger text-xl">⚠️ Erreur</p>
+          <p className="text-danger-600">{error}</p>
+          <Button 
+            className="mt-6 bg-gradient-to-r from-danger to-danger-500 text-white shadow-lg hover:opacity-90"
+            onClick={() => window.location.reload()}
+          >
+            Réessayer
+          </Button>
+        </motion.div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-8">
+    <div className="min-h-screen bg-gradient-to-br from-background to-default-100 py-8 px-4 sm:px-6 lg:px-8 relative overflow-hidden">
+      {/* Cercles décoratifs en arrière-plan */}
+      <div className="absolute top-0 left-0 w-64 h-64 bg-primary/10 rounded-full filter blur-3xl -translate-x-1/2 -translate-y-1/2" />
+      <div className="absolute bottom-0 right-0 w-96 h-96 bg-secondary/10 rounded-full filter blur-3xl translate-x-1/2 translate-y-1/2" />
+
+      <div className="max-w-7xl mx-auto relative">
+        <motion.div 
+          initial={{ opacity: 0, y: -20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="flex justify-between items-center mb-12"
+        >
           <BackButton />
-          <h1 className="text-3xl font-bold text-gray-900">Abonnements</h1>
-        </div>
+          <h1 className="text-5xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent text-center">
+            Choisissez votre plan
+          </h1>
+          <div className="w-[100px]" />
+        </motion.div>
 
         {subscriptionInfo && (
-          <div className="mb-8">
-            <Card className="bg-white shadow-lg">
-              <CardBody>
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="mb-12"
+          >
+            <Card className="bg-white/90 backdrop-blur-xl shadow-2xl border border-primary/20 overflow-hidden">
+              <CardBody className="p-6">
                 <div className="flex items-center justify-between">
-                  <div>
-                    <h2 className="text-xl font-semibold">
-                      Votre abonnement actuel
-                    </h2>
-                    <p className="text-gray-600">
-                      {subscriptionInfo.subscription.type === "premium"
-                        ? "Premium"
-                        : "Gratuit"}
-                    </p>
+                  <div className="flex items-center gap-4">
+                    {subscriptionInfo.subscription.type === "premium" ? (
+                      <FaCrown className="text-4xl text-primary" />
+                    ) : (
+                      <FaRegClock className="text-4xl text-gray-400" />
+                    )}
+                    <div>
+                      <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                        Votre abonnement actuel
+                      </h2>
+                      <p className="text-gray-600 mt-1">
+                        {subscriptionInfo.subscription.type === "premium" ? "Premium" : "Gratuit"}
+                      </p>
+                    </div>
                   </div>
                   <Chip
-                    color={
-                      subscriptionInfo.subscription.type === "premium"
-                        ? "success"
-                        : "default"
-                    }
-                    variant="flat"
+                    className={subscriptionInfo.subscription.type === "premium" 
+                      ? "bg-gradient-to-r from-primary to-secondary text-white shadow-lg"
+                      : "border-2 border-primary/30"}
+                    size="lg"
                   >
-                    {subscriptionInfo.subscription.type === "premium"
-                      ? "Actif"
-                      : "Gratuit"}
+                    {subscriptionInfo.subscription.type === "premium" ? "Premium" : "Gratuit"}
                   </Chip>
                 </div>
                 {subscriptionInfo.subscription.type === "premium" && (
-                  <div className="mt-4 text-sm text-gray-600">
-                    <p>
-                      Prochain renouvellement :{" "}
-                      {new Date(
-                        subscriptionInfo.subscription.endDate!,
-                      ).toLocaleDateString()}
-                    </p>
+                  <div className="mt-4 text-sm text-gray-600 flex items-center gap-2">
+                    <FaRegClock className="text-primary" />
+                    <p>Prochain renouvellement : {new Date(subscriptionInfo.subscription.endDate!).toLocaleDateString()}</p>
                   </div>
                 )}
               </CardBody>
             </Card>
-          </div>
+          </motion.div>
         )}
 
-        <div className="grid md:grid-cols-2 gap-8">
+        <div className="grid md:grid-cols-2 gap-8 mb-12">
           {/* Plan Gratuit */}
           <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5 }}
+            initial={{ opacity: 0, x: -20 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3 }}
           >
-            <Card className="h-full">
-              <CardBody className="flex flex-col">
-                <h3 className="text-2xl font-bold text-center mb-4">Gratuit</h3>
-                <div className="text-4xl font-bold text-center mb-6">
-                  0€<span className="text-lg font-normal">/mois</span>
+            <Card className="bg-white/90 backdrop-blur-xl shadow-2xl border-2 border-default-200 hover:border-primary/50 transition-all duration-300">
+              <CardBody className="p-8">
+                <h3 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  Gratuit
+                </h3>
+                <div className="text-5xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  0€<span className="text-lg font-normal text-gray-600">/mois</span>
                 </div>
-                <ul className="space-y-3 mb-8 flex-grow">
+                <ul className="space-y-4 mb-8">
                   {features.free.map((feature, index) => (
-                    <li key={index} className="flex items-center">
-                      <span className="text-green-500 mr-2">✓</span>
-                      {feature}
-                    </li>
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center text-gray-700 bg-default-50 p-3 rounded-lg"
+                    >
+                      <FaCheckCircle className="text-primary mr-3 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </motion.li>
                   ))}
                 </ul>
                 <Button
-                  className="w-full"
-                  color="default"
+                  className="w-full bg-gradient-to-r from-primary to-secondary text-white shadow-xl hover:shadow-2xl transition-all duration-300"
+                  size="lg"
                   isDisabled={subscriptionInfo?.subscription.type === "free"}
-                  variant="bordered"
                 >
                   Plan actuel
                 </Button>
@@ -310,58 +338,72 @@ const SubscriptionPage: React.FC = () => {
 
           {/* Plan Premium */}
           <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
+            initial={{ opacity: 0, x: 20 }}
+            animate={{ opacity: 1, x: 0 }}
+            whileHover={{ scale: 1.02 }}
+            transition={{ duration: 0.3, delay: 0.2 }}
           >
-            <Card className="h-full border-2 border-primary">
-              <CardBody className="flex flex-col">
-                <div className="absolute top-0 right-0">
-                  <Chip color="primary" variant="flat">
-                    Recommandé
-                  </Chip>
+            <Card className="bg-white/90 backdrop-blur-xl shadow-2xl border-2 border-primary relative overflow-visible">
+              <div className="absolute -top-4 right-4 z-10">
+                <Chip className="bg-gradient-to-r from-primary to-secondary text-white shadow-xl">
+                  Recommandé
+                </Chip>
+              </div>
+              <CardBody className="p-8">
+                <h3 className="text-3xl font-bold text-center mb-4 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  Premium
+                </h3>
+                <div className="text-5xl font-bold text-center mb-8 bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
+                  5€<span className="text-lg font-normal text-gray-600">/mois</span>
                 </div>
-                <h3 className="text-2xl font-bold text-center mb-4">Premium</h3>
-                <div className="text-4xl font-bold text-center mb-6">
-                  5€<span className="text-lg font-normal">/mois</span>
-                </div>
-                <ul className="space-y-3 mb-8 flex-grow">
+                <ul className="space-y-4 mb-8">
                   {features.premium.map((feature, index) => (
-                    <li key={index} className="flex items-center">
-                      <span className="text-green-500 mr-2">✓</span>
-                      {feature}
-                    </li>
+                    <motion.li
+                      key={index}
+                      initial={{ opacity: 0, x: 20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1 }}
+                      className="flex items-center text-gray-700 bg-primary/5 p-3 rounded-lg"
+                    >
+                      <FaCheckCircle className="text-primary mr-3 flex-shrink-0" />
+                      <span>{feature}</span>
+                    </motion.li>
                   ))}
                 </ul>
                 <Button
-                  className="w-full"
-                  color="primary"
+                  className="w-full bg-gradient-to-r from-primary to-secondary text-white shadow-xl hover:shadow-2xl transition-all duration-300"
+                  size="lg"
                   isDisabled={subscriptionInfo?.subscription.type === "premium"}
                   isLoading={processingPayment}
                   onClick={handleSubscribe}
                 >
-                  {subscriptionInfo?.subscription.type === "premium"
-                    ? "Plan actuel"
-                    : "Passer à Premium"}
+                  {subscriptionInfo?.subscription.type === "premium" ? "Plan actuel" : "Passer à Premium"}
                 </Button>
               </CardBody>
             </Card>
           </motion.div>
         </div>
 
-        <div className="mt-12 text-center text-sm text-gray-600">
-          <p>Paiement sécurisé par Stripe. Annulez à tout moment.</p>
-          <p className="mt-2">
-            Besoin d&apos;aide ?{" "}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, delay: 0.4 }}
+          className="text-center"
+        >
+          <p className="text-gray-600 text-lg">
+            🔒 Paiement sécurisé par Stripe • Annulation à tout moment
+          </p>
+          <p className="mt-4 text-gray-600">
+            Une question ? {" "}
             <Button
-              className="text-primary p-0 min-w-0 h-auto"
+              className="text-primary hover:text-secondary transition-colors inline-flex items-center gap-2"
               variant="light"
               onClick={() => router.push("/contact")}
             >
               Contactez-nous
             </Button>
           </p>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
