@@ -25,6 +25,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 import RevisionPage from "./revision";
 import StatsPage from "./stats";
@@ -344,40 +345,36 @@ export default function ControlePage() {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           {courseThemes.map((theme, index) => (
-            <motion.div
+            <Link 
+              href={theme.route} 
               key={theme.id}
-              animate={{ opacity: 1, y: 0 }}
-              className="cursor-pointer"
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
-              onClick={() => {
-                console.log("Clic sur le cours:", theme.title);
-                console.log("Route:", theme.route);
-                try {
-                  router.push(theme.route);
-                } catch (error) {
-                  console.error("Erreur lors de la navigation:", error);
-                }
-              }}
+              className="block"
             >
-              <Card
-                isPressable
-                className={`w-full h-full min-h-[160px] ${theme.bgColor} flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:brightness-110`}
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                className="cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
               >
-                <CardBody className="p-4 flex flex-col justify-center h-full text-center items-center">
-                  <div className="flex items-center gap-2 mb-2">
-                    <FontAwesomeIcon
-                      className={theme.iconColor}
-                      icon={theme.icon}
-                    />
-                    <h2 className="font-bold">{theme.title}</h2>
-                  </div>
-                  <p className="text-sm">{theme.description}</p>
-                </CardBody>
-              </Card>
-            </motion.div>
+                <Card
+                  isPressable
+                  className={`w-full h-full min-h-[160px] ${theme.bgColor} flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:brightness-110`}
+                >
+                  <CardBody className="p-4 flex flex-col justify-center h-full text-center items-center">
+                    <div className="flex items-center gap-2 mb-2">
+                      <FontAwesomeIcon
+                        className={theme.iconColor}
+                        icon={theme.icon}
+                      />
+                      <h2 className="font-bold">{theme.title}</h2>
+                    </div>
+                    <p className="text-sm">{theme.description}</p>
+                  </CardBody>
+                </Card>
+              </motion.div>
+            </Link>
           ))}
         </motion.div>
       </div>
