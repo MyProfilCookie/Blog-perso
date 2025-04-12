@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { motion } from "framer-motion";
 import axios from "axios";
+import { useTheme } from "next-themes";
 import {
   Card,
   CardHeader,
@@ -32,6 +33,8 @@ interface UserSubscription {
 
 const SubscriptionPage: React.FC = () => {
   const router = useRouter();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [subscriptionInfo, setSubscriptionInfo] =
@@ -39,6 +42,11 @@ const SubscriptionPage: React.FC = () => {
   const [processingPayment, setProcessingPayment] = useState(false);
   const [stripeLoaded, setStripeLoaded] = useState(false);
   const [stripe, setStripe] = useState<any>(null);
+
+  // Éviter le flash hydration
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -118,8 +126,14 @@ const SubscriptionPage: React.FC = () => {
       }
     };
 
-    checkAuth();
-  }, [router]);
+    if (mounted) {
+      checkAuth();
+    }
+  }, [mounted, router]);
+
+  if (!mounted) {
+    return null;
+  }
 
   const fetchSubscriptionInfo = async () => {
     try {
@@ -204,13 +218,13 @@ const SubscriptionPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
+      <div className="flex items-center justify-center min-h-screen bg-background">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
         >
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
+          <Loader2 className="h-8 w-8 animate-spin" />
           <p className="mt-4 text-muted-foreground">
             Chargement de vos options d&rsquo;abonnement...
           </p>
@@ -221,13 +235,13 @@ const SubscriptionPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
         >
-          <Card className="border-destructive">
+          <Card className="border-destructive bg-card">
             <CardHeader>
               <CardTitle className="text-destructive">⚠️ Erreur</CardTitle>
             </CardHeader>
@@ -250,7 +264,7 @@ const SubscriptionPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         <motion.div 
           initial={{ opacity: 0, y: -20 }}
@@ -258,7 +272,7 @@ const SubscriptionPage: React.FC = () => {
           className="flex justify-between items-center mb-12"
         >
           <BackButton />
-          <h1 className="text-4xl font-bold text-center">
+          <h1 className="text-4xl font-bold text-foreground text-center">
             Choisissez votre plan
           </h1>
           <div className="w-[100px]" />
@@ -270,7 +284,7 @@ const SubscriptionPage: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             className="mb-12"
           >
-            <Card>
+            <Card className="bg-card">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
@@ -278,7 +292,7 @@ const SubscriptionPage: React.FC = () => {
                       {subscriptionInfo.subscription.type === "premium" ? "👑" : "⭐"}
                     </span>
                     <div>
-                      <CardTitle className="text-2xl mb-1">
+                      <CardTitle className="text-xl text-foreground mb-1">
                         Votre abonnement actuel
                       </CardTitle>
                       <CardDescription>
@@ -309,9 +323,9 @@ const SubscriptionPage: React.FC = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <Card>
+            <Card className="bg-card">
               <CardHeader>
-                <CardTitle className="text-3xl text-center">Gratuit</CardTitle>
+                <CardTitle className="text-3xl text-foreground text-center">Gratuit</CardTitle>
                 <CardDescription className="text-4xl font-bold text-center">
                   0€<span className="text-lg font-normal text-muted-foreground">/mois</span>
                 </CardDescription>
@@ -324,7 +338,7 @@ const SubscriptionPage: React.FC = () => {
                       initial={{ opacity: 0, x: -20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-center p-3 rounded-lg bg-muted"
+                      className="flex items-center p-3 rounded-lg bg-muted text-foreground"
                     >
                       <span className="mr-3">✓</span>
                       <span>{feature}</span>
@@ -351,14 +365,14 @@ const SubscriptionPage: React.FC = () => {
             whileHover={{ scale: 1.02 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="relative">
+            <Card className="bg-card relative">
               <div className="absolute -top-2 right-4">
                 <Badge variant="default">
                   Recommandé
                 </Badge>
               </div>
               <CardHeader>
-                <CardTitle className="text-3xl text-center">Premium</CardTitle>
+                <CardTitle className="text-3xl text-foreground text-center">Premium</CardTitle>
                 <CardDescription className="text-4xl font-bold text-center">
                   5€<span className="text-lg font-normal text-muted-foreground">/mois</span>
                 </CardDescription>
@@ -371,7 +385,7 @@ const SubscriptionPage: React.FC = () => {
                       initial={{ opacity: 0, x: 20 }}
                       animate={{ opacity: 1, x: 0 }}
                       transition={{ delay: index * 0.1 }}
-                      className="flex items-center p-3 rounded-lg bg-muted"
+                      className="flex items-center p-3 rounded-lg bg-muted text-foreground"
                     >
                       <span className="mr-3">✓</span>
                       <span>{feature}</span>
