@@ -352,7 +352,15 @@ export default function ControlePage() {
               transition={{ delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => router.push(theme.route)}
+              onClick={() => {
+                console.log("Clic sur le cours:", theme.title);
+                console.log("Route:", theme.route);
+                try {
+                  router.push(theme.route);
+                } catch (error) {
+                  console.error("Erreur lors de la navigation:", error);
+                }
+              }}
             >
               <Card
                 isPressable

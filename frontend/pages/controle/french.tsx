@@ -6,7 +6,7 @@ import axios from "axios";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
@@ -32,28 +32,9 @@ interface Result {
 
 const FrenchPage: React.FC = () => {
   const router = useRouter();
-  const [exercises, setExercises] = useState<Exercise[]>([]);
-
-  useEffect(() => {
-    const fetchExercises = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/subjects/french`
-        );
-
-        setExercises(response.data.questions || []);
-        setLoading(false);
-      } catch (err) {
-        console.error(err);
-        setError("Erreur lors du chargement des exercices");
-        setLoading(false);
-      }
-    };
-
-    fetchExercises();
-  }, []);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
   const [results, setResults] = useState<Result[]>([]);
   const [finalScore, setFinalScore] = useState<number | null>(null);
@@ -116,7 +97,24 @@ const FrenchPage: React.FC = () => {
     }
   };
 
-  // Removed serverExercises useEffect as data is now fetched client-side.
+  useEffect(() => {
+    const fetchExercises = async () => {
+      try {
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/french`
+        );
+
+        setExercises(response.data.questions || []);
+        setLoading(false);
+      } catch (err) {
+        console.error(err);
+        setError("Erreur lors du chargement des exercices");
+        setLoading(false);
+      }
+    };
+
+    fetchExercises();
+  }, []);
 
   // Gestion du minuteur et des messages d'encouragement
   useEffect(() => {
