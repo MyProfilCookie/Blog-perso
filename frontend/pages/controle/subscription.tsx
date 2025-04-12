@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
-import { FaCrown as CrownIcon, FaRegClock as ClockIcon, FaCheckCircle as CheckIcon } from "react-icons/fa";
+import * as Icons from "react-icons/fa";
 
 import BackButton from "@/components/back";
 
@@ -262,9 +262,9 @@ const SubscriptionPage: React.FC = () => {
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     {subscriptionInfo.subscription.type === "premium" ? (
-                      <CrownIcon size={24} className="text-primary" />
+                      <Icons.FaCrown className="w-6 h-6 text-primary" />
                     ) : (
-                      <ClockIcon size={24} className="text-gray-400" />
+                      <Icons.FaRegClock className="w-6 h-6 text-gray-400" />
                     )}
                     <div>
                       <h2 className="text-2xl font-bold bg-gradient-to-r from-primary to-secondary bg-clip-text text-transparent">
@@ -286,7 +286,7 @@ const SubscriptionPage: React.FC = () => {
                 </div>
                 {subscriptionInfo.subscription.type === "premium" && (
                   <div className="mt-4 text-sm text-gray-600 flex items-center gap-2">
-                    <ClockIcon size={16} className="text-primary" />
+                    <Icons.FaRegClock className="w-4 h-4 text-primary" />
                     <p>Prochain renouvellement : {new Date(subscriptionInfo.subscription.endDate!).toLocaleDateString()}</p>
                   </div>
                 )}
@@ -320,7 +320,7 @@ const SubscriptionPage: React.FC = () => {
                       transition={{ delay: index * 0.1 }}
                       className="flex items-center text-gray-700 bg-default-50 p-3 rounded-lg"
                     >
-                      <CheckIcon size={20} className="text-primary mr-3 flex-shrink-0" />
+                      <Icons.FaCheckCircle className="w-5 h-5 text-primary mr-3 flex-shrink-0" />
                       <span>{feature}</span>
                     </motion.li>
                   ))}
@@ -365,7 +365,7 @@ const SubscriptionPage: React.FC = () => {
                       transition={{ delay: index * 0.1 }}
                       className="flex items-center text-gray-700 bg-primary/5 p-3 rounded-lg"
                     >
-                      <CheckIcon size={20} className="text-primary mr-3 flex-shrink-0" />
+                      <Icons.FaCheckCircle className="w-5 h-5 text-primary mr-3 flex-shrink-0" />
                       <span>{feature}</span>
                     </motion.li>
                   ))}
