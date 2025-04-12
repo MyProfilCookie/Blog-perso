@@ -195,10 +195,53 @@ export default function ControlePage() {
 
   useEffect(() => {
     const checkAuth = () => {
+      // Vérifier toutes les sources possibles d'authentification
       const token = localStorage.getItem("token") || localStorage.getItem("userToken");
       const userId = localStorage.getItem("userId");
+      const userInfo = localStorage.getItem("userInfo");
+      const user = localStorage.getItem("user");
       
-      if (!token || !userId) {
+      console.log("Vérification auth:", {
+        token: token ? "Présent" : "Absent",
+        userId: userId ? "Présent" : "Absent",
+        userInfo: userInfo ? "Présent" : "Absent",
+        user: user ? "Présent" : "Absent"
+      });
+
+      // Vérifier si l'utilisateur est connecté d'une manière ou d'une autre
+      let isAuthenticated = false;
+      
+      // Méthode 1: Token et userId
+      if (token && userId) {
+        isAuthenticated = true;
+      }
+      
+      // Méthode 2: userInfo contient un ID
+      if (userInfo) {
+        try {
+          const parsedUserInfo = JSON.parse(userInfo);
+          if (parsedUserInfo && parsedUserInfo._id) {
+            isAuthenticated = true;
+          }
+        } catch (e) {
+          console.error("Erreur parsing userInfo:", e);
+        }
+      }
+      
+      // Méthode 3: user contient un ID
+      if (user) {
+        try {
+          const parsedUser = JSON.parse(user);
+          if (parsedUser && (parsedUser._id || parsedUser.id)) {
+            isAuthenticated = true;
+          }
+        } catch (e) {
+          console.error("Erreur parsing user:", e);
+        }
+      }
+      
+      if (!isAuthenticated) {
+        console.log("Redirection vers login - Aucune authentification trouvée");
         router.push("/users/login");
         return;
       }
