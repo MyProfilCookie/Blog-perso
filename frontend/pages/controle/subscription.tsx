@@ -102,7 +102,27 @@ const SubscriptionPage: React.FC = () => {
       }
 
       try {
-        // Initialiser Stripe une seule fois
+        // Vérifier si l'utilisateur est admin
+        const userRole = localStorage.getItem("userRole");
+        const isAdmin = userRole === "admin";
+
+        if (isAdmin) {
+          // Si admin, définir automatiquement comme premium
+          setSubscriptionInfo({
+            subscription: {
+              type: "premium",
+              status: "active",
+              startDate: null,
+              endDate: null
+            },
+            role: "admin",
+            dailyExerciseCount: Infinity
+          });
+          setLoading(false);
+          return;
+        }
+
+        // Initialiser Stripe une seule fois (pour les non-admins)
         const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
         console.log("Clé Stripe:", stripeKey ? "Présente" : "Absente");
         
@@ -315,97 +335,120 @@ const SubscriptionPage: React.FC = () => {
           </motion.div>
         )}
 
-        <div className="grid md:grid-cols-2 gap-8 mb-12">
-          {/* Plan Gratuit */}
+        {subscriptionInfo?.role === "admin" ? (
           <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ scale: 1.02 }}
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.3 }}
+            className="text-center mb-12"
           >
-            <Card className="bg-card">
-              <CardHeader>
-                <CardTitle className="text-3xl text-foreground text-center">Gratuit</CardTitle>
-                <CardDescription className="text-4xl font-bold text-center">
-                  0€<span className="text-lg font-normal text-muted-foreground">/mois</span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4">
-                  {features.free.map((feature, index) => (
-                    <motion.li
-                      key={index}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex items-center p-3 rounded-lg bg-muted text-foreground"
-                    >
-                      <span className="mr-3">✓</span>
-                      <span>{feature}</span>
-                    </motion.li>
-                  ))}
-                </ul>
+            <Card className="bg-card border-primary">
+              <CardContent className="p-6">
+                <div className="flex items-center justify-center gap-4">
+                  <span className="text-2xl">👑</span>
+                  <CardTitle className="text-xl text-foreground">
+                    Accès Premium Administrateur
+                  </CardTitle>
+                </div>
+                <p className="mt-4 text-muted-foreground">
+                  En tant qu&apos;administrateur, vous avez automatiquement accès à toutes les fonctionnalités Premium.
+                </p>
               </CardContent>
-              <CardFooter>
-                <Button
-                  className="w-full"
-                  variant="outline"
-                  disabled={subscriptionInfo?.subscription.type === "free"}
-                >
-                  Plan actuel
-                </Button>
-              </CardFooter>
             </Card>
           </motion.div>
+        ) : (
+          <div className="grid md:grid-cols-2 gap-8 mb-12">
+            {/* Plan Gratuit */}
+            <motion.div
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Card className="bg-card">
+                <CardHeader>
+                  <CardTitle className="text-3xl text-foreground text-center">Gratuit</CardTitle>
+                  <CardDescription className="text-4xl font-bold text-center">
+                    0€<span className="text-lg font-normal text-muted-foreground">/mois</span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-4">
+                    {features.free.map((feature, index) => (
+                      <motion.li
+                        key={index}
+                        initial={{ opacity: 0, x: -20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-center p-3 rounded-lg bg-muted text-foreground"
+                      >
+                        <span className="mr-3">✓</span>
+                        <span>{feature}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    className="w-full"
+                    variant="outline"
+                    disabled={subscriptionInfo?.subscription.type === "free"}
+                  >
+                    Plan actuel
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
 
-          {/* Plan Premium */}
-          <motion.div
-            initial={{ opacity: 0, x: 20 }}
-            animate={{ opacity: 1, x: 0 }}
-            whileHover={{ scale: 1.02 }}
-            transition={{ duration: 0.3 }}
-          >
-            <Card className="bg-card relative">
-              <div className="absolute -top-2 right-4">
-                <Badge variant="default">
-                  Recommandé
-                </Badge>
-              </div>
-              <CardHeader>
-                <CardTitle className="text-3xl text-foreground text-center">Premium</CardTitle>
-                <CardDescription className="text-4xl font-bold text-center">
-                  5€<span className="text-lg font-normal text-muted-foreground">/mois</span>
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <ul className="space-y-4">
-                  {features.premium.map((feature, index) => (
-                    <motion.li
-                      key={index}
-                      initial={{ opacity: 0, x: 20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: index * 0.1 }}
-                      className="flex items-center p-3 rounded-lg bg-muted text-foreground"
-                    >
-                      <span className="mr-3">✓</span>
-                      <span>{feature}</span>
-                    </motion.li>
-                  ))}
-                </ul>
-              </CardContent>
-              <CardFooter>
-                <Button
-                  className="w-full"
-                  disabled={subscriptionInfo?.subscription.type === "premium"}
-                  onClick={handleSubscribe}
-                >
-                  {processingPayment && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                  {subscriptionInfo?.subscription.type === "premium" ? "Plan actuel" : "Passer à Premium"}
-                </Button>
-              </CardFooter>
-            </Card>
-          </motion.div>
-        </div>
+            {/* Plan Premium */}
+            <motion.div
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              whileHover={{ scale: 1.02 }}
+              transition={{ duration: 0.3 }}
+            >
+              <Card className="bg-card relative">
+                <div className="absolute -top-2 right-4">
+                  <Badge variant="default">
+                    Recommandé
+                  </Badge>
+                </div>
+                <CardHeader>
+                  <CardTitle className="text-3xl text-foreground text-center">Premium</CardTitle>
+                  <CardDescription className="text-4xl font-bold text-center">
+                    5€<span className="text-lg font-normal text-muted-foreground">/mois</span>
+                  </CardDescription>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-4">
+                    {features.premium.map((feature, index) => (
+                      <motion.li
+                        key={index}
+                        initial={{ opacity: 0, x: 20 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ delay: index * 0.1 }}
+                        className="flex items-center p-3 rounded-lg bg-muted text-foreground"
+                      >
+                        <span className="mr-3">✓</span>
+                        <span>{feature}</span>
+                      </motion.li>
+                    ))}
+                  </ul>
+                </CardContent>
+                <CardFooter>
+                  <Button
+                    className="w-full"
+                    disabled={subscriptionInfo?.subscription.type === "premium"}
+                    onClick={handleSubscribe}
+                  >
+                    {processingPayment && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
+                    {subscriptionInfo?.subscription.type === "premium" ? "Plan actuel" : "Passer à Premium"}
+                  </Button>
+                </CardFooter>
+              </Card>
+            </motion.div>
+          </div>
+        )}
 
         <motion.div
           initial={{ opacity: 0, y: 20 }}
