@@ -120,14 +120,15 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({
         );
 
         try {
-          // Utiliser la route /user/:userId pour récupérer les erreurs de l'utilisateur
+          // Revenir à la route de base avec paramètre de requête
           const response = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/revision-errors/user/${userId}`,
+            `${process.env.NEXT_PUBLIC_API_URL}/revision-errors`,
             {
+              params: { userId },
               headers: {
-                Authorization: `Bearer ${userToken}`,
-              },
-            },
+                Authorization: `Bearer ${userToken}`
+              }
+            }
           );
 
           // Traitement de la réponse selon la structure du contrôleur
