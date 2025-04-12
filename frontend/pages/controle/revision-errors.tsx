@@ -126,7 +126,7 @@ const RevisionContent: React.FC = () => {
         transition={{ duration: 0.5 }}
       >
         <div className="bg-blue-100 p-4 rounded-full w-20 h-20 mx-auto mb-6 flex items-center justify-center">
-          <FaSignInAlt className="text-blue-600 text-3xl" />
+          <span className="text-blue-600 text-3xl">🔒</span>
         </div>
         <h1 className="text-3xl font-bold mb-4 text-gray-800">
           🔒 Connexion requise
@@ -141,7 +141,6 @@ const RevisionContent: React.FC = () => {
           <Button
             className="px-6"
             color="primary"
-            startContent={<FaSignInAlt />}
             onClick={() => router.push("/users/login")}
           >
             Se connecter
@@ -149,7 +148,6 @@ const RevisionContent: React.FC = () => {
           <Button
             className="px-6"
             color="secondary"
-            startContent={<FaSync />}
             onClick={handleRefresh}
           >
             Rafraîchir
@@ -158,7 +156,6 @@ const RevisionContent: React.FC = () => {
             variant="flat"
             onClick={handleGoBack}
             className="px-6"
-            startContent={<FaArrowLeft />}
           >
             Retour
           </Button>
@@ -182,7 +179,7 @@ const RevisionContent: React.FC = () => {
             onClick={handleGoBack}
             className="text-lg"
           >
-            <FaArrowLeft />
+            <span>←</span>
           </Button>
           <div>
             <h1 className="text-3xl font-bold text-gray-800">
@@ -198,7 +195,6 @@ const RevisionContent: React.FC = () => {
           color="primary"
           variant="flat"
           onClick={handleRefresh}
-          startContent={<FaSync />}
         >
           Rafraîchir
         </Button>
@@ -210,7 +206,7 @@ const RevisionContent: React.FC = () => {
           className="mb-6 p-4 bg-red-100 text-red-700 rounded-lg flex items-center gap-3"
           initial={{ opacity: 0, y: -10 }}
         >
-          <FaExclamationTriangle className="text-red-500" />
+          <span className="text-red-500">⚠️</span>
           <p>{errorMessage}</p>
         </motion.div>
       )}
@@ -223,7 +219,7 @@ const RevisionContent: React.FC = () => {
           transition={{ delay: 0.2 }}
         >
           <div className="bg-green-100 p-4 rounded-full w-16 h-16 mx-auto mb-4 flex items-center justify-center">
-            <FaCheckCircle className="text-green-500 text-2xl" />
+            <span className="text-green-500 text-2xl">✅</span>
           </div>
           <p className="text-xl text-gray-600 font-medium">
             Aucune erreur à réviser
@@ -235,7 +231,6 @@ const RevisionContent: React.FC = () => {
             <Button
               variant="flat"
               onClick={handleGoBack}
-              startContent={<FaArrowLeft />}
             >
               Retour
             </Button>
@@ -263,7 +258,7 @@ const RevisionContent: React.FC = () => {
                     title={
                       <div className="flex items-center space-x-2">
                         <span>Utilisateur</span>
-                        <Chip color="primary" size="sm" variant="flat">
+                        <Chip size="sm" variant="flat" color="primary">
                           {userId.substring(0, 6)}...
                         </Chip>
                       </div>
@@ -288,7 +283,7 @@ const RevisionContent: React.FC = () => {
                       <div className="flex-1 space-y-3">
                         <div className="flex items-start gap-3">
                           <div className="bg-blue-100 p-2 rounded-full">
-                            <FaExclamationTriangle className="text-blue-500" />
+                            <span className="text-blue-500">⚠️</span>
                           </div>
                           <div>
                             <p className="font-semibold text-lg">
@@ -297,15 +292,18 @@ const RevisionContent: React.FC = () => {
                             <div className="flex flex-wrap gap-2 mt-2">
                               {err.category && (
                                 <Chip
-                                  color="primary"
                                   size="sm"
-                                  startContent={<FaTag className="text-xs" />}
                                   variant="flat"
+                                  color="primary"
                                 >
                                   {err.category}
                                 </Chip>
                               )}
-                              <Chip color="default" size="sm" variant="flat">
+                              <Chip
+                                size="sm"
+                                variant="flat"
+                                color="default"
+                              >
                                 {new Date(err.date).toLocaleDateString()}
                               </Chip>
                             </div>
@@ -317,7 +315,7 @@ const RevisionContent: React.FC = () => {
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                           <div className="bg-red-50 p-3 rounded-lg">
                             <div className="flex items-center gap-2 mb-1">
-                              <FaTimesCircle className="text-red-500" />
+                              <span className="text-red-500">❌</span>
                               <p className="font-medium text-red-700">
                                 Ta réponse
                               </p>
@@ -327,7 +325,7 @@ const RevisionContent: React.FC = () => {
 
                           <div className="bg-green-50 p-3 rounded-lg">
                             <div className="flex items-center gap-2 mb-1">
-                              <FaCheckCircle className="text-green-500" />
+                              <span className="text-green-500">✅</span>
                               <p className="font-medium text-green-700">
                                 Bonne réponse
                               </p>
@@ -343,12 +341,12 @@ const RevisionContent: React.FC = () => {
                         <Tooltip content="Supprimer cette erreur">
                           <Button
                             isIconOnly
-                            className="text-lg"
                             color="danger"
                             variant="light"
                             onClick={() => handleDeleteError(err._id)}
+                            className="text-lg"
                           >
-                            <FaTrash />
+                            🗑️
                           </Button>
                         </Tooltip>
                       </div>
