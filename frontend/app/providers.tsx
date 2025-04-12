@@ -1,7 +1,6 @@
 "use client";
 
 import * as React from "react";
-import { NextUIProvider } from "@nextui-org/system";
 import { useRouter } from "next/navigation";
 import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
@@ -23,22 +22,21 @@ export function Providers({ children, themeProps }: ProvidersProps) {
   }, []);
 
   return (
-    <NextUIProvider navigate={router.push}>
-      <NextThemesProvider
-        enableSystem
-        attribute="class"
-        defaultTheme="system"
-        storageKey="theme"
-        {...themeProps}
-      >
-        <UserProvider>
-          {mounted ? (
-            children
-          ) : (
-            <div style={{ visibility: "hidden" }}>{children}</div>
-          )}
-        </UserProvider>
-      </NextThemesProvider>
-    </NextUIProvider>
+    <NextThemesProvider
+      attribute="class"
+      defaultTheme="system"
+      enableSystem
+      disableTransitionOnChange
+      forcedTheme={themeProps?.forcedTheme}
+      themes={['light', 'dark']}
+    >
+      <UserProvider>
+        {mounted ? (
+          children
+        ) : (
+          <div style={{ visibility: "hidden" }}>{children}</div>
+        )}
+      </UserProvider>
+    </NextThemesProvider>
   );
 }
