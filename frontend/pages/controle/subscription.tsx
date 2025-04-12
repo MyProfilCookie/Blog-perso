@@ -29,6 +29,7 @@ const SubscriptionPage: React.FC = () => {
     useState<UserSubscription | null>(null);
   const [processingPayment, setProcessingPayment] = useState(false);
   const [stripeLoaded, setStripeLoaded] = useState(false);
+  const [stripe, setStripe] = useState<any>(null);
 
   useEffect(() => {
     const checkAuth = async () => {
@@ -84,14 +85,21 @@ const SubscriptionPage: React.FC = () => {
       }
 
       try {
-        // Initialiser Stripe
-        const stripe = await loadStripe(
-          process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-        );
-
-        if (!stripe) {
+        // Initialiser Stripe une seule fois
+        const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY;
+        console.log("Clé Stripe:", stripeKey ? "Présente" : "Absente");
+        
+        if (!stripeKey) {
+          throw new Error("Clé Stripe non trouvée");
+        }
+        
+        const stripeInstance = await loadStripe(stripeKey);
+        
+        if (!stripeInstance) {
           throw new Error("Impossible d'initialiser Stripe");
         }
+        
+        setStripe(stripeInstance);
         setStripeLoaded(true);
         await fetchSubscriptionInfo();
       } catch (err) {
@@ -135,16 +143,14 @@ const SubscriptionPage: React.FC = () => {
   };
 
   const handleSubscribe = async () => {
-    if (!stripeLoaded) {
+    if (!stripeLoaded || !stripe) {
       setError("Le service de paiement n'est pas encore initialisé");
-
       return;
     }
 
     try {
       setProcessingPayment(true);
-      const token =
-        localStorage.getItem("token") || localStorage.getItem("userToken");
+      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/subscription/create-checkout`,
@@ -156,14 +162,6 @@ const SubscriptionPage: React.FC = () => {
         },
       );
 
-      const stripe = await loadStripe(
-        process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY!,
-      );
-
-      if (!stripe) {
-        throw new Error("Impossible d'initialiser Stripe");
-      }
-
       const result = await stripe.redirectToCheckout({
         sessionId: response.data.sessionId,
       });
@@ -172,10 +170,7 @@ const SubscriptionPage: React.FC = () => {
         throw new Error(result.error.message);
       }
     } catch (err) {
-      console.error(
-        "Erreur lors de la création de la session de paiement:",
-        err,
-      );
+      console.error("Erreur lors de la création de la session de paiement:", err);
       setError("Erreur lors du traitement du paiement");
       setProcessingPayment(false);
     }
