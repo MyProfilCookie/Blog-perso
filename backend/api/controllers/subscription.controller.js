@@ -5,31 +5,55 @@ const subscriptionController = {
   // Obtenir les informations d'abonnement
   getSubscriptionInfo: async (req, res) => {
     try {
-      const user = await User.findById(req.user._id);
+      console.log("🔍 Début getSubscriptionInfo");
+      console.log("🔍 Headers:", req.headers);
+      console.log("🔍 User:", req.user);
+      console.log("🔍 ID utilisateur reçu:", req.user?.id);
+      
+      if (!req.user || !req.user.id) {
+        console.log("🚨 Utilisateur non trouvé dans la requête");
+        return res.status(401).json({
+          success: false,
+          message: "Utilisateur non authentifié"
+        });
+      }
+
+      const user = await User.findById(req.user.id);
+      console.log("🔍 Utilisateur trouvé:", user ? "Oui" : "Non");
       
       if (!user) {
+        console.log("🚨 Utilisateur non trouvé dans la base de données");
         return res.status(404).json({
           success: false,
           message: "Utilisateur non trouvé"
         });
       }
       
+      console.log("🔍 Informations d'abonnement:", {
+        type: user.subscription?.type,
+        status: user.subscription?.status,
+        startDate: user.subscription?.startDate,
+        endDate: user.subscription?.endDate
+      });
+      
       return res.json({
         success: true,
         subscription: {
-          type: user.subscription.type,
-          status: user.subscription.status,
-          startDate: user.subscription.startDate,
-          endDate: user.subscription.endDate
+          type: user.subscription?.type || 'free',
+          status: user.subscription?.status || 'active',
+          startDate: user.subscription?.startDate || null,
+          endDate: user.subscription?.endDate || null
         },
         role: user.role,
-        dailyExerciseCount: user.dailyExerciseCount
+        dailyExerciseCount: user.dailyExerciseCount || 0
       });
     } catch (error) {
-      console.error('Erreur lors de la récupération des informations d\'abonnement:', error);
+      console.error('🚨 Erreur détaillée:', error);
+      console.error('🚨 Stack trace:', error.stack);
       res.status(500).json({
         success: false,
-        message: "Erreur lors de la récupération des informations d'abonnement"
+        message: "Erreur lors de la récupération des informations d'abonnement",
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }
   },
@@ -37,15 +61,37 @@ const subscriptionController = {
   // Créer une session de paiement Stripe
   createCheckoutSession: async (req, res) => {
     try {
-      const user = await User.findById(req.user._id);
+      console.log("🔍 Début createCheckoutSession");
+      console.log("🔍 Vérification des variables d'environnement");
+      console.log("STRIPE_SECRET_KEY:", process.env.STRIPE_SECRET_KEY ? "✅ Présent" : "❌ Manquant");
+      console.log("STRIPE_PRICE_ID:", process.env.STRIPE_PRICE_ID ? "✅ Présent" : "❌ Manquant");
+      console.log("FRONTEND_URL:", process.env.FRONTEND_URL ? "✅ Présent" : "❌ Manquant");
+
+      if (!process.env.STRIPE_SECRET_KEY || !process.env.STRIPE_PRICE_ID || !process.env.FRONTEND_URL) {
+        throw new Error("Configuration Stripe incomplète");
+      }
+
+      const user = await User.findById(req.user.id);
+      console.log("🔍 Utilisateur trouvé:", user ? "Oui" : "Non");
       
       if (!user) {
+        console.log("🚨 Utilisateur non trouvé");
         return res.status(404).json({
           success: false,
           message: "Utilisateur non trouvé"
         });
       }
-      
+
+      // Vérifier si l'utilisateur a déjà un abonnement premium actif
+      if (user.subscription?.type === 'premium' && user.subscription?.status === 'active') {
+        console.log("ℹ️ L'utilisateur a déjà un abonnement premium actif");
+        return res.status(400).json({
+          success: false,
+          message: "Vous avez déjà un abonnement premium actif"
+        });
+      }
+
+      console.log("🔍 Création de la session Stripe");
       const session = await stripe.checkout.sessions.create({
         payment_method_types: ['card'],
         line_items: [{
@@ -57,19 +103,27 @@ const subscriptionController = {
         cancel_url: `${process.env.FRONTEND_URL}/subscription/cancel`,
         customer_email: user.email,
         metadata: {
-          userId: user._id.toString()
-        }
+          userId: user._id.toString(),
+          userEmail: user.email
+        },
+        allow_promotion_codes: true,
+        billing_address_collection: 'required',
+        locale: 'fr'
       });
+      
+      console.log("✅ Session Stripe créée avec succès:", session.id);
       
       res.json({
         success: true,
         sessionId: session.id
       });
     } catch (error) {
-      console.error('Erreur lors de la création de la session de paiement:', error);
+      console.error('🚨 Erreur détaillée:', error);
+      console.error('🚨 Stack trace:', error.stack);
       res.status(500).json({
         success: false,
-        message: "Erreur lors de la création de la session de paiement"
+        message: "Erreur lors de la création de la session de paiement",
+        error: process.env.NODE_ENV === 'development' ? error.message : undefined
       });
     }
   },
