@@ -122,7 +122,7 @@ const SubscriptionPage: React.FC = () => {
       }
 
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/api/subscriptions/info`,
+        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
