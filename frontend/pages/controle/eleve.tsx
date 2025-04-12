@@ -1,10 +1,25 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, CardBody, Button, Tabs, Tab, Table, TableHeader, TableColumn, TableBody, TableRow, TableCell, Spinner, Pagination } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Button,
+  Tabs,
+  Tab,
+  Table,
+  TableHeader,
+  TableColumn,
+  TableBody,
+  TableRow,
+  TableCell,
+  Spinner,
+  Pagination,
+} from "@nextui-org/react";
 import { motion } from "framer-motion";
-import BackButton from "@/components/back";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+
+import BackButton from "@/components/back";
 
 // Interface pour les notes par page
 interface PageScore {
@@ -55,43 +70,99 @@ const ElevePage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [userId, setUserId] = useState<string | null>(null);
+  const [debugInfo, setDebugInfo] = useState<string>("");
 
   // Récupérer l'ID de l'utilisateur depuis le localStorage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    const userInfo = localStorage.getItem("userInfo");
+    const userToken = localStorage.getItem("userToken");
+    const token = localStorage.getItem("token");
+
+    console.log("Données de débogage:", {
+      storedUser,
+      userInfo,
+      userToken,
+      token,
+    });
+
+    let foundUserId = null;
+
     if (storedUser) {
       try {
         const user = JSON.parse(storedUser);
-        setUserId(user.id);
+
+        foundUserId = user._id || user.id;
       } catch (err) {
-        console.error("Erreur lors de la récupération de l'utilisateur:", err);
+        console.error("Erreur lors du parsing de storedUser:", err);
       }
     }
+
+    if (!foundUserId && userInfo) {
+      try {
+        const user = JSON.parse(userInfo);
+
+        foundUserId = user._id || user.id;
+      } catch (err) {
+        console.error("Erreur lors du parsing de userInfo:", err);
+      }
+    }
+
+    setDebugInfo(
+      `userId: ${foundUserId}, token: ${token ? "présent" : "absent"}, userToken: ${userToken ? "présent" : "absent"}`,
+    );
+    setUserId(foundUserId);
   }, []);
 
   // Récupérer le profil de l'élève
   useEffect(() => {
     const fetchEleveProfile = async () => {
-      if (!userId) return;
-      
+      if (!userId) {
+        console.log("Pas d'userId disponible");
+
+        return;
+      }
+
       try {
         setLoading(true);
-        const token = localStorage.getItem("token");
+        const token =
+          localStorage.getItem("token") || localStorage.getItem("userToken");
+
+        if (!token) {
+          throw new Error("Token d'authentification non trouvé");
+        }
+
+        console.log("Tentative de récupération du profil avec:", {
+          userId,
+          token: token.substring(0, 10) + "...",
+          apiUrl: process.env.NEXT_PUBLIC_API_URL,
+        });
+
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/eleves/profile/${userId}`,
           {
             headers: {
-              Authorization: `Bearer ${token}`
-            }
-          }
+              Authorization: `Bearer ${token}`,
+            },
+          },
         );
-        
+
+        console.log("Réponse du serveur:", response.data);
         setEleveProfile(response.data);
         calculateDetailedStats(response.data);
         setLoading(false);
       } catch (err) {
-        console.error("Erreur lors de la récupération du profil:", err);
-        setError("Erreur lors du chargement des données");
+        console.error(
+          "Erreur détaillée lors de la récupération du profil:",
+          err,
+        );
+        if (axios.isAxiosError(err)) {
+          setError(
+            `Erreur ${err.response?.status}: ${err.response?.data?.message || err.message}`,
+          );
+        } else {
+          setError("Erreur lors du chargement des données");
+        }
         setLoading(false);
       }
     };
@@ -102,33 +173,37 @@ const ElevePage: React.FC = () => {
   // Calculer les statistiques détaillées
   const calculateDetailedStats = (profile: EleveProfile) => {
     if (!profile || !profile.subjects) return;
-    
-    const stats: DetailedStats[] = profile.subjects.map(subject => {
+
+    const stats: DetailedStats[] = profile.subjects.map((subject) => {
       const pages = subject.pages || [];
-      const scores = pages.map(page => page.score);
-      
+      const scores = pages.map((page) => page.score);
+
       return {
         subjectName: subject.subjectName,
         totalPages: pages.length,
         averageScore: subject.averageScore,
         bestPage: Math.max(...scores, 0),
         worstPage: Math.min(...scores, 100),
-        completionRate: pages.length > 0 ? (pages.filter(p => p.score >= 70).length / pages.length) * 100 : 0
+        completionRate:
+          pages.length > 0
+            ? (pages.filter((p) => p.score >= 70).length / pages.length) * 100
+            : 0,
       };
     });
-    
+
     setDetailedStats(stats);
   };
 
   // Formater la date
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
+
     return date.toLocaleDateString("fr-FR", {
       day: "2-digit",
       month: "2-digit",
       year: "numeric",
       hour: "2-digit",
-      minute: "2-digit"
+      minute: "2-digit",
     });
   };
 
@@ -136,6 +211,7 @@ const ElevePage: React.FC = () => {
   const formatTime = (seconds: number) => {
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
+
     return `${minutes} min ${remainingSeconds} sec`;
   };
 
@@ -144,6 +220,7 @@ const ElevePage: React.FC = () => {
     if (score >= 90) return "text-green-600";
     if (score >= 70) return "text-blue-600";
     if (score >= 50) return "text-yellow-600";
+
     return "text-red-600";
   };
 
@@ -152,34 +229,36 @@ const ElevePage: React.FC = () => {
     if (score >= 90) return "🌟";
     if (score >= 70) return "😊";
     if (score >= 50) return "😐";
+
     return "😢";
   };
 
   // Supprimer une note
   const handleDeleteScore = async (subjectName: string, pageNumber: number) => {
     if (!userId || !eleveProfile) return;
-    
+
     try {
       const token = localStorage.getItem("token");
+
       await axios.delete(
         `${process.env.NEXT_PUBLIC_API_URL}/eleves/score/${userId}/${subjectName}/${pageNumber}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
-      
+
       // Mettre à jour le profil après suppression
       const updatedResponse = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/eleves/profile/${userId}`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
-      
+
       setEleveProfile(updatedResponse.data);
       calculateDetailedStats(updatedResponse.data);
     } catch (err) {
@@ -191,44 +270,55 @@ const ElevePage: React.FC = () => {
   // Pagination pour les pages de notes
   const getPaginatedPages = () => {
     if (!eleveProfile || !selectedSubject) return [];
-    
-    const subject = eleveProfile.subjects.find(s => s.subjectName === selectedSubject);
+
+    const subject = eleveProfile.subjects.find(
+      (s) => s.subjectName === selectedSubject,
+    );
+
     if (!subject) return [];
-    
+
     const startIndex = (currentPage - 1) * 10;
     const endIndex = startIndex + 10;
-    
+
     setTotalPages(Math.ceil(subject.pages.length / 10));
+
     return subject.pages.slice(startIndex, endIndex);
   };
 
   if (loading) {
     return (
-      <motion.div 
-        animate={{ opacity: 1 }}
-        className="flex items-center justify-center min-h-screen"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <Spinner size="lg" color="primary" />
-      </motion.div>
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <Spinner color="primary" size="lg" />
+        <p className="mt-4 text-gray-500">Chargement du profil...</p>
+        {debugInfo && (
+          <div className="mt-4 p-2 bg-gray-100 rounded text-xs text-gray-500">
+            {debugInfo}
+          </div>
+        )}
+      </div>
     );
   }
 
   if (error) {
     return (
-      <motion.div 
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center min-h-screen gap-4"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
-        <div className="text-2xl text-red-600">⚠️</div>
-        <p className="text-lg text-gray-600">Erreur: {error}</p>
-        <Button color="primary" onClick={() => router.push("/controle")}>
-          Retour
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <div className="bg-red-100 p-4 rounded-lg text-red-700 max-w-md text-center">
+          <p className="font-bold mb-2">⚠️ Erreur</p>
+          <p>{error}</p>
+          {debugInfo && (
+            <div className="mt-4 p-2 bg-red-50 rounded text-xs">
+              {debugInfo}
+            </div>
+          )}
+        </div>
+        <Button
+          className="mt-4"
+          color="primary"
+          onClick={() => window.location.reload()}
+        >
+          Réessayer
         </Button>
-      </motion.div>
+      </div>
     );
   }
 
@@ -256,19 +346,25 @@ const ElevePage: React.FC = () => {
               </h2>
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <div className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg text-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Moyenne Globale</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Moyenne Globale
+                  </p>
                   <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                     {eleveProfile.overallAverage.toFixed(1)}%
                   </p>
                 </div>
                 <div className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg text-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Pages Complétées</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Pages Complétées
+                  </p>
                   <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                     {eleveProfile.totalPagesCompleted}
                   </p>
                 </div>
                 <div className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg text-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Matières Étudiées</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
+                    Matières Étudiées
+                  </p>
                   <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
                     {eleveProfile.subjects.length}
                   </p>
@@ -295,10 +391,13 @@ const ElevePage: React.FC = () => {
                 <TableBody>
                   {detailedStats.map((stat) => (
                     <TableRow key={stat.subjectName}>
-                      <TableCell className="font-medium">{stat.subjectName}</TableCell>
+                      <TableCell className="font-medium">
+                        {stat.subjectName}
+                      </TableCell>
                       <TableCell>{stat.totalPages}</TableCell>
                       <TableCell className={getScoreColor(stat.averageScore)}>
-                        {stat.averageScore.toFixed(1)}% {getScoreEmoji(stat.averageScore)}
+                        {stat.averageScore.toFixed(1)}%{" "}
+                        {getScoreEmoji(stat.averageScore)}
                       </TableCell>
                       <TableCell className="text-green-600">
                         {stat.bestPage}% 🌟
@@ -309,10 +408,10 @@ const ElevePage: React.FC = () => {
                       <TableCell>
                         <div className="flex items-center gap-2">
                           <div className="w-full bg-gray-200 rounded-full h-2.5">
-                            <div 
-                              className="bg-blue-600 h-2.5 rounded-full" 
+                            <div
+                              className="bg-blue-600 h-2.5 rounded-full"
                               style={{ width: `${stat.completionRate}%` }}
-                            ></div>
+                            />
                           </div>
                           <span>{stat.completionRate.toFixed(0)}%</span>
                         </div>
@@ -330,9 +429,9 @@ const ElevePage: React.FC = () => {
               <h2 className="text-xl font-bold mb-4 text-blue-700 dark:text-blue-300">
                 Détails des Notes
               </h2>
-              
-              <Tabs 
-                aria-label="Matières" 
+
+              <Tabs
+                aria-label="Matières"
                 className="mb-4"
                 onSelectionChange={(key) => {
                   setSelectedSubject(key as string);
@@ -340,12 +439,14 @@ const ElevePage: React.FC = () => {
                 }}
               >
                 {eleveProfile.subjects.map((subject) => (
-                  <Tab 
-                    key={subject.subjectName} 
+                  <Tab
+                    key={subject.subjectName}
                     title={
                       <div className="flex items-center gap-2">
                         <span>{subject.subjectName}</span>
-                        <span className={`px-2 py-1 rounded-full text-xs ${getScoreColor(subject.averageScore)}`}>
+                        <span
+                          className={`px-2 py-1 rounded-full text-xs ${getScoreColor(subject.averageScore)}`}
+                        >
                           {subject.averageScore.toFixed(1)}%
                         </span>
                       </div>
@@ -354,7 +455,9 @@ const ElevePage: React.FC = () => {
                     <div className="mt-4">
                       {subject.pages.length > 0 ? (
                         <>
-                          <Table aria-label={`Notes pour ${subject.subjectName}`}>
+                          <Table
+                            aria-label={`Notes pour ${subject.subjectName}`}
+                          >
                             <TableHeader>
                               <TableColumn>Page</TableColumn>
                               <TableColumn>Score</TableColumn>
@@ -367,19 +470,30 @@ const ElevePage: React.FC = () => {
                               {getPaginatedPages().map((page) => (
                                 <TableRow key={page.pageNumber}>
                                   <TableCell>Page {page.pageNumber}</TableCell>
-                                  <TableCell className={getScoreColor(page.score)}>
+                                  <TableCell
+                                    className={getScoreColor(page.score)}
+                                  >
                                     {page.score}% {getScoreEmoji(page.score)}
                                   </TableCell>
                                   <TableCell>
                                     {page.correctAnswers}/{page.totalQuestions}
                                   </TableCell>
-                                  <TableCell>{formatTime(page.timeSpent)}</TableCell>
-                                  <TableCell>{formatDate(page.completedAt)}</TableCell>
                                   <TableCell>
-                                    <Button 
-                                      color="danger" 
+                                    {formatTime(page.timeSpent)}
+                                  </TableCell>
+                                  <TableCell>
+                                    {formatDate(page.completedAt)}
+                                  </TableCell>
+                                  <TableCell>
+                                    <Button
+                                      color="danger"
                                       size="sm"
-                                      onClick={() => handleDeleteScore(subject.subjectName, page.pageNumber)}
+                                      onClick={() =>
+                                        handleDeleteScore(
+                                          subject.subjectName,
+                                          page.pageNumber,
+                                        )
+                                      }
                                     >
                                       Supprimer
                                     </Button>
@@ -388,13 +502,13 @@ const ElevePage: React.FC = () => {
                               ))}
                             </TableBody>
                           </Table>
-                          
+
                           <div className="flex justify-center mt-4">
                             <Pagination
-                              total={totalPages}
-                              page={currentPage}
-                              onChange={setCurrentPage}
                               showControls
+                              page={currentPage}
+                              total={totalPages}
+                              onChange={setCurrentPage}
                             />
                           </div>
                         </>
@@ -413,11 +527,12 @@ const ElevePage: React.FC = () => {
       ) : (
         <div className="text-center py-8">
           <p className="text-lg text-gray-600">
-            Aucun profil d&apos;élève trouvé. Commencez à répondre aux questions pour créer votre profil.
+            Aucun profil d&apos;élève trouvé. Commencez à répondre aux questions
+            pour créer votre profil.
           </p>
-          <Button 
-            color="primary" 
+          <Button
             className="mt-4"
+            color="primary"
             onClick={() => router.push("/controle")}
           >
             Retour aux exercices
@@ -428,4 +543,4 @@ const ElevePage: React.FC = () => {
   );
 };
 
-export default ElevePage; 
+export default ElevePage;
