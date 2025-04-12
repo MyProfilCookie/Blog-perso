@@ -2,14 +2,16 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Spinner, Button, Tabs, Tab } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import { RevisionProvider, useRevision } from "../../contexts/RevisionContext";
 import { useRouter } from "next/navigation";
+
+import { RevisionProvider, useRevision } from "../../contexts/RevisionContext";
 
 // Utiliser le type any pour éviter les erreurs de linter
 type RevisionError = any;
 
 const RevisionContent: React.FC = () => {
-  const { errors, isLoading, isAuthenticated, errorMessage, removeError } = useRevision();
+  const { errors, isLoading, isAuthenticated, errorMessage, removeError } =
+    useRevision();
   const router = useRouter();
   const [debugInfo, setDebugInfo] = React.useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
@@ -20,27 +22,34 @@ const RevisionContent: React.FC = () => {
     // Afficher les informations de débogage
     const userToken = localStorage.getItem("userToken");
     const userInfo = localStorage.getItem("user");
-    
+
     let userId = "non trouvé";
+
     if (userInfo) {
       try {
         const parsedUserInfo = JSON.parse(userInfo);
+
         userId = parsedUserInfo._id || parsedUserInfo.id || "non trouvé";
       } catch (e) {
         userId = "erreur de parsing";
       }
     }
-    
-    setDebugInfo(`userToken: ${userToken ? "présent" : "absent"}, userId: ${userId}`);
+
+    setDebugInfo(
+      `userToken: ${userToken ? "présent" : "absent"}, userId: ${userId}`,
+    );
   }, []);
 
   // Extraire les IDs utilisateurs uniques des erreurs
   useEffect(() => {
     if (errors.length > 0) {
       // Utiliser Array.from pour éviter les problèmes de compatibilité avec Set
-      const uniqueUserIds = Array.from(new Set(errors.map(error => error.userId || "unknown")));
+      const uniqueUserIds = Array.from(
+        new Set(errors.map((error) => error.userId || "unknown")),
+      );
+
       setUserIds(uniqueUserIds);
-      
+
       // Sélectionner le premier utilisateur par défaut
       if (uniqueUserIds.length > 0 && !selectedUserId) {
         setSelectedUserId(uniqueUserIds[0]);
@@ -51,7 +60,10 @@ const RevisionContent: React.FC = () => {
   // Filtrer les erreurs par utilisateur sélectionné
   useEffect(() => {
     if (selectedUserId) {
-      const filteredErrors = errors.filter(error => error.userId === selectedUserId);
+      const filteredErrors = errors.filter(
+        (error) => error.userId === selectedUserId,
+      );
+
       setUserErrors(filteredErrors);
     } else {
       setUserErrors([]);
@@ -73,7 +85,7 @@ const RevisionContent: React.FC = () => {
   if (isLoading) {
     return (
       <div className="flex justify-center items-center min-h-[50vh]">
-        <Spinner size="lg" color="primary" />
+        <Spinner color="primary" size="lg" />
       </div>
     );
   }
@@ -81,30 +93,20 @@ const RevisionContent: React.FC = () => {
   if (!isAuthenticated) {
     return (
       <motion.div
+        animate={{ opacity: 1 }}
         className="max-w-4xl mx-auto p-6 text-center"
         initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
       >
-        <h1 className="text-2xl font-bold mb-6">
-          🔒 Connexion requise
-        </h1>
+        <h1 className="text-2xl font-bold mb-6">🔒 Connexion requise</h1>
         <p className="mb-6 text-gray-600">
           Vous devez être connecté pour accéder à vos erreurs de révision.
         </p>
-        <div className="mb-4 text-xs text-gray-500">
-          {debugInfo}
-        </div>
+        <div className="mb-4 text-xs text-gray-500">{debugInfo}</div>
         <div className="flex justify-center gap-4">
-          <Button 
-            color="primary" 
-            onClick={() => router.push("/users/login")}
-          >
+          <Button color="primary" onClick={() => router.push("/users/login")}>
             Se connecter
           </Button>
-          <Button 
-            color="secondary" 
-            onClick={handleRefresh}
-          >
+          <Button color="secondary" onClick={handleRefresh}>
             Rafraîchir
           </Button>
         </div>
@@ -114,19 +116,13 @@ const RevisionContent: React.FC = () => {
 
   return (
     <motion.div
+      animate={{ opacity: 1 }}
       className="max-w-4xl mx-auto p-6"
       initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
     >
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">
-          📚 Questions à Revoir
-        </h1>
-        <Button 
-          size="sm" 
-          color="secondary" 
-          onClick={handleRefresh}
-        >
+        <h1 className="text-2xl font-bold">📚 Questions à Revoir</h1>
+        <Button color="secondary" size="sm" onClick={handleRefresh}>
           Rafraîchir
         </Button>
       </div>
@@ -143,14 +139,14 @@ const RevisionContent: React.FC = () => {
         <>
           {userIds.length > 1 && (
             <div className="mb-6">
-              <Tabs 
-                aria-label="Sélection d'utilisateur" 
-                selectedKey={selectedUserId || ""} 
+              <Tabs
+                aria-label="Sélection d'utilisateur"
+                selectedKey={selectedUserId || ""}
                 onSelectionChange={(key) => handleUserChange(key as string)}
               >
                 {userIds.map((userId) => (
-                  <Tab 
-                    key={userId} 
+                  <Tab
+                    key={userId}
                     title={`Utilisateur ${userId.substring(0, 6)}...`}
                   />
                 ))}
@@ -180,9 +176,9 @@ const RevisionContent: React.FC = () => {
                         📅 {new Date(err.date).toLocaleDateString()}
                       </p>
                     </div>
-                    <Button 
-                      size="sm" 
-                      color="danger" 
+                    <Button
+                      color="danger"
+                      size="sm"
                       variant="light"
                       onClick={() => handleDeleteError(err._id)}
                     >
@@ -207,4 +203,4 @@ const RevisionPage: React.FC = () => {
   );
 };
 
-export default RevisionPage; 
+export default RevisionPage;
