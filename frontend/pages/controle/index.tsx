@@ -195,16 +195,14 @@ export default function ControlePage() {
 
   useEffect(() => {
     const checkAuth = () => {
-      const token =
-        localStorage.getItem("token") || localStorage.getItem("userToken");
+      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
       const userId = localStorage.getItem("userId");
-
+      
       if (!token || !userId) {
         router.push("/users/login");
-
         return;
       }
-
+      
       setLoading(false);
       setMounted(true);
     };
