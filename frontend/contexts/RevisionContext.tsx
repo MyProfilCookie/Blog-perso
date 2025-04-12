@@ -90,7 +90,7 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({
         setIsAuthenticated(true);
 
         // Récupérer l'ID utilisateur depuis les informations utilisateur
-        let userId = null;
+        let userId: string | null = null;
 
         try {
           const parsedUserInfo = JSON.parse(userInfo);
@@ -209,7 +209,7 @@ export const RevisionProvider: React.FC<{ children: React.ReactNode }> = ({
       }
 
       // Récupérer l'ID utilisateur
-      let userId = null;
+      let userId: string | null = null;
 
       try {
         const parsedUserInfo = JSON.parse(userInfo);
