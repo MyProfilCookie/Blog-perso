@@ -1,4 +1,6 @@
-import { useRouter } from "next/router";
+/* eslint-disable @typescript-eslint/no-unused-vars */
+"use client";
+import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -20,8 +22,11 @@ import {
   faExclamationTriangle,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card, CardBody, Tabs, Tab, Spinner, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
+
+import RevisionPage from "./revision";
+import StatsPage from "./stats";
 
 import BackButton from "@/components/back";
 
@@ -184,102 +189,137 @@ const courseThemes = [
 export default function ControlePage() {
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("exercices");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    setMounted(true);
-  }, []);
+    const checkAuth = () => {
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("userToken");
+      const userId = localStorage.getItem("userId");
 
-  if (!mounted) {
+      if (!token || !userId) {
+        router.push("/users/login");
+
+        return;
+      }
+
+      setLoading(false);
+      setMounted(true);
+    };
+
+    checkAuth();
+  }, [router]);
+
+  const handleTabChange = (key: string) => {
+    setSelectedTab(key);
+    if (key === "subscription") {
+      router.push("/controle/subscription");
+    }
+  };
+
+  const renderContent = () => {
+    switch (selectedTab) {
+      case "exercices":
+        return (
+          <motion.div
+            animate={{ opacity: 1 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl"
+            initial={{ opacity: 0 }}
+            transition={{ duration: 0.5, delay: 0.2 }}
+          >
+            {courseThemes.map((theme, index) => (
+              <motion.div
+                key={theme.id}
+                animate={{ opacity: 1, y: 0 }}
+                className="cursor-pointer"
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ delay: index * 0.1 }}
+                whileHover={{ scale: 1.02 }}
+                whileTap={{ scale: 0.98 }}
+                onClick={() => router.push(theme.route)}
+              >
+                <Card className="h-full">
+                  <CardBody className="flex flex-col items-center p-6">
+                    <div
+                      className={`w-16 h-16 rounded-full flex items-center justify-center mb-4 ${theme.bgColor}`}
+                    >
+                      <FontAwesomeIcon
+                        className={`text-2xl ${theme.iconColor}`}
+                        icon={theme.icon}
+                      />
+                    </div>
+                    <h3 className="text-xl font-semibold mb-2">
+                      {theme.title}
+                    </h3>
+                    <p className="text-gray-600 dark:text-gray-400 text-center">
+                      {theme.description}
+                    </p>
+                  </CardBody>
+                </Card>
+              </motion.div>
+            ))}
+          </motion.div>
+        );
+      case "revision":
+        return <RevisionPage />;
+      case "stats":
+        return <StatsPage />;
+      default:
+        return null;
+    }
+  };
+
+  if (!mounted || loading) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <p>Chargement...</p>
+        <div className="text-center">
+          <Spinner color="primary" size="lg" />
+          <p className="mt-4 text-gray-600">Chargement...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+        <div className="bg-red-100 p-4 rounded-lg text-red-700 max-w-md text-center">
+          <p className="font-bold mb-2">⚠️ Erreur</p>
+          <p>{error}</p>
+        </div>
+        <Button
+          className="mt-4"
+          color="primary"
+          onClick={() => window.location.reload()}
+        >
+          Réessayer
+        </Button>
       </div>
     );
   }
 
   return (
-    <div className="flex flex-col min-h-screen p-4">
-      <div className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
-          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
-            <motion.div
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-4 sm:mb-6"
-              initial={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
-            >
-              <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-                Contrôle
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-                Exercices de contrôle
-              </p>
-            </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
-            </div>
-          </div>
+    <div className="min-h-screen bg-gray-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <BackButton />
+          <h1 className="text-3xl font-bold text-gray-900">Contrôle</h1>
+        </div>
 
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
-            {stats.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg text-center"
-                initial={{ opacity: 0, y: 20 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <FontAwesomeIcon
-                  className={`text-2xl mb-2 ${stat.color}`}
-                  icon={stat.icon}
-                />
-                <h3 className="text-lg font-semibold">{stat.value}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {stat.label}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        <motion.div
-          animate={{ opacity: 1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl"
-          initial={{ opacity: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
+        <Tabs
+          className="mb-8"
+          selectedKey={selectedTab}
+          onSelectionChange={(key) => handleTabChange(key.toString())}
         >
-          {courseThemes.map((theme, index) => (
-            <motion.div
-              key={theme.id}
-              animate={{ opacity: 1, y: 0 }}
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              whileHover={{ scale: 1.02 }}
-            >
-              <Card
-                isPressable
-                className={`w-full h-full min-h-[160px] ${theme.bgColor} flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:brightness-110`}
-                onClick={() => {
-                  if (theme.route && router.pathname !== theme.route) {
-                    router.push(theme.route);
-                  }
-                }}
-              >
-                <CardBody className="p-4 flex flex-col justify-center h-full text-center items-center">
-                  <div className="flex items-center gap-2 mb-2">
-                    <FontAwesomeIcon
-                      className={theme.iconColor}
-                      icon={theme.icon}
-                    />
-                    <h2 className="font-bold">{theme.title}</h2>
-                  </div>
-                  <p className="text-sm">{theme.description}</p>
-                </CardBody>
-              </Card>
-            </motion.div>
-          ))}
-        </motion.div>
+          <Tab key="exercices" title="Exercices" />
+          <Tab key="revision" title="Révision" />
+          <Tab key="stats" title="Statistiques" />
+          <Tab key="subscription" title="Abonnement" />
+        </Tabs>
+
+        {renderContent()}
       </div>
     </div>
   );
