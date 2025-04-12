@@ -26,10 +26,11 @@ const adminRoutes = require("./api/routes/admin.routes");
 const monthlyRoutes = require("./api/routes/monthly_courses.routes");
 const subjectRoutes = require("./api/routes/subject.routes"); // Nouvelle route pour les matières
 const reportRoutes = require("./api/routes/reportRoutes"); // Nouvelle route pour les rapports
-const revisionErrorRoutes = require("./api/routes/revisionError.routes"); // Nouvelle route pour les erreurs de révision // Nouvelle route pour les erreurs de révision
+const revisionErrorRoutes = require("./api/routes/revisionError.routes"); // Nouvelle route pour les erreurs de révision
 const Payment = require("./api/models/payments"); // Modèle de paiement
 const trimestreRoutes = require("./api/routes/trimestre.routes"); // Nouvelle route pour les trimestres
 const eleveRoutes = require("./api/routes/eleve.routes"); // Nouvelle route pour les élèves
+const subscriptionRoutes = require("./api/routes/subscription.routes"); // Nouvelle route pour les abonnements
 
 // 🔍 Vérification des variables d'environnement
 console.log("🔍 Chargement des variables d'environnement...");
@@ -144,11 +145,12 @@ app.use("/api/messages", messageRoutes);
 app.use("/api/blogs", blogRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/monthly", monthlyRoutes);
-app.use("/api/subjects", subjectRoutes); // Nouvelle route pour les matières // Nouvelle route pour les rapports
+app.use("/api/subjects", subjectRoutes); // Nouvelle route pour les matières
 app.use("/api/reports", reportRoutes); // Nouvelle route pour les rapports
 app.use("/api/revision-errors", revisionErrorRoutes ); // Nouvelle route pour les erreurs de révision
 app.use("/api/trimestres", trimestreRoutes); // Nouvelle route pour les trimestres
 app.use("/api/eleves", eleveRoutes); // Nouvelle route pour les élèves
+app.use("/api/subscriptions", subscriptionRoutes); // Nouvelle route pour les abonnements
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   console.log('Headers:', req.headers);

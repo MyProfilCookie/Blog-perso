@@ -122,7 +122,7 @@ const SubscriptionPage: React.FC = () => {
       }
 
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscription/info`,
+        `${process.env.NEXT_PUBLIC_API_URL}/api/subscriptions/info`,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -153,7 +153,7 @@ const SubscriptionPage: React.FC = () => {
       const token = localStorage.getItem("token") || localStorage.getItem("userToken");
 
       const response = await axios.post(
-        `${process.env.NEXT_PUBLIC_API_URL}/subscription/create-checkout`,
+        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create-checkout-session`,
         {},
         {
           headers: {
