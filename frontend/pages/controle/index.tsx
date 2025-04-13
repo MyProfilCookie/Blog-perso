@@ -131,6 +131,7 @@ const courseThemes = [
     icon: faTrophy,
     bgColor: "bg-orange-100 dark:bg-orange-800",
     iconColor: "text-orange-600 dark:text-orange-300",
+    isPremium: true,
   },
   {
     id: 9,
@@ -140,6 +141,7 @@ const courseThemes = [
     icon: faClipboardList,
     bgColor: "bg-gray-100 dark:bg-gray-800",
     iconColor: "text-gray-600 dark:text-gray-300",
+    isPremium: true,
   },
   {
     id: 10,
@@ -176,6 +178,7 @@ const courseThemes = [
     icon: faBookOpen,
     bgColor: "bg-blue-100 dark:bg-blue-800",
     iconColor: "text-blue-600 dark:text-blue-300",
+    isPremium: true,
   },
   {
     id: 14,
@@ -371,6 +374,14 @@ export default function ControlePage() {
                       <h2 className="font-bold">{theme.title}</h2>
                     </div>
                     <p className="text-sm">{theme.description}</p>
+                    {theme.isPremium && (
+                      <div className="mt-2">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200">
+                          <FontAwesomeIcon icon={faStar} className="mr-1" />
+                          Premium
+                        </span>
+                      </div>
+                    )}
                   </CardBody>
                 </Card>
               </motion.div>
