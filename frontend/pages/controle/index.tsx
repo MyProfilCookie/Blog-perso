@@ -315,100 +315,60 @@ export default function ControlePage() {
   ];
 
   return (
-    <div className="flex flex-col min-h-screen p-4">
-      <div className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8">
-        <section className="flex flex-col items-center justify-center gap-6 py-4 sm:py-8 md:py-10">
-          <div className="w-full max-w-7xl mx-auto px-2 sm:px-6 mb-4 sm:mb-6 relative">
+    <div className="w-full">
+      <div className="flex justify-between items-center mb-8">
+        <BackButton />
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tableau de bord</h1>
+      </div>
+
+      {loading ? (
+        <div className="flex items-center justify-center min-h-[60vh]">
+          <Spinner size="lg" />
+        </div>
+      ) : error ? (
+        <div className="text-center text-red-600">{error}</div>
+      ) : (
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          {courseThemes.map((theme) => (
             <motion.div
+              key={theme.id}
+              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-4 sm:mb-6"
-              initial={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.5 }}
+              transition={{ duration: 0.3 }}
+              className="group"
             >
-              <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400 mb-2">
-                Contrôle
-              </h1>
-              <p className="text-gray-600 dark:text-gray-400 text-sm sm:text-base">
-                Exercices de contrôle
-              </p>
-            </motion.div>
-            <div className="flex justify-center mb-4">
-              <BackButton />
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
-            {statsCards.map((stat, index) => (
-              <motion.div
-                key={stat.label}
-                animate={{ opacity: 1, y: 0 }}
-                className="bg-white dark:bg-gray-800 p-4 rounded-lg shadow-lg text-center"
-                initial={{ opacity: 0, y: 20 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.05 }}
-              >
-                <FontAwesomeIcon
-                  className={`text-2xl mb-2 ${stat.color}`}
-                  icon={stat.icon}
-                />
-                <h3 className="text-lg font-semibold">{stat.value}</h3>
-                <p className="text-sm text-gray-600 dark:text-gray-400">
-                  {stat.label}
-                </p>
-              </motion.div>
-            ))}
-          </div>
-        </section>
-
-        <motion.div
-          animate={{ opacity: 1 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 w-full max-w-7xl"
-          initial={{ opacity: 0 }}
-          transition={{ duration: 0.5, delay: 0.2 }}
-        >
-          {courseThemes.map((theme, index) => (
-            <Link key={theme.id} className="block" href={theme.route}>
-              <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                className="cursor-pointer"
-                initial={{ opacity: 0, y: 20 }}
-                transition={{ delay: index * 0.1 }}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-              >
-                <Card
-                  isPressable
-                  className={`w-full h-full min-h-[160px] ${theme.bgColor} flex flex-col justify-between transition-all duration-200 hover:shadow-xl hover:brightness-110`}
+              <Link href={theme.route}>
+                <Card 
+                  className={`cursor-pointer transform transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl
+                    ${theme.bgColor} border-2 border-opacity-50 dark:border-opacity-20`}
                 >
-                  <CardBody className="p-4 flex flex-col justify-center h-full text-center items-center">
-                    <div className="flex items-center gap-2 mb-2">
-                      <FontAwesomeIcon
-                        className={theme.iconColor}
-                        icon={theme.icon}
-                      />
-                      <h2 className="font-bold">{theme.title}</h2>
-                    </div>
-                    <p className="text-sm">{theme.description}</p>
-                    <div className="mt-2">
-                      {theme.isPremium ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800 dark:bg-violet-800 dark:text-violet-100 border border-violet-200 dark:border-violet-400 shadow-sm">
-                          <FontAwesomeIcon className="mr-1 text-yellow-500" icon={faStar} />
-                          Premium
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 border border-green-200 dark:border-green-400 shadow-sm">
-                          <FontAwesomeIcon className="mr-1" icon={faCheck} />
-                          Gratuit
-                        </span>
-                      )}
+                  <CardBody className="p-6">
+                    <div className="flex items-center space-x-4">
+                      <div className={`p-3 rounded-full ${theme.iconColor}`}>
+                        <FontAwesomeIcon icon={theme.icon} className="h-6 w-6" />
+                      </div>
+                      <div>
+                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200">
+                          {theme.title}
+                          {theme.isPremium && (
+                            <FontAwesomeIcon
+                              icon={faStar}
+                              className="ml-2 text-yellow-400"
+                            />
+                          )}
+                        </h2>
+                        <p className="text-gray-600 dark:text-gray-300">
+                          {theme.description}
+                        </p>
+                      </div>
                     </div>
                   </CardBody>
                 </Card>
-              </motion.div>
-            </Link>
+              </Link>
+            </motion.div>
           ))}
-        </motion.div>
-      </div>
+        </div>
+      )}
     </div>
   );
 }

@@ -2,6 +2,7 @@ const express = require('express');
 const router = express.Router();
 const Score = require('../models/Score');
 const { isAuthenticated } = require('../middlewares/authMiddleware');
+const Eleve = require('../models/Eleve');
 
 // Obtenir le profil d'un élève
 router.get('/profile/:userId', isAuthenticated, async (req, res) => {
@@ -163,6 +164,30 @@ router.delete('/score/:userId/:subjectName/:pageNumber', isAuthenticated, async 
   } catch (error) {
     console.error("Erreur lors de la suppression de la note:", error);
     res.status(500).json({ message: "Erreur serveur" });
+  }
+});
+
+// obtenir le nombre d'eleve
+router.get('/', isAuthenticated, async (req, res) => {
+  try {
+    // Compter le nombre total d'élèves
+    const totalEleves = await Eleve.countDocuments();
+    
+    // Log pour debug
+    console.log("📊 Nombre total d'élèves:", totalEleves);
+    
+    res.status(200).json({
+      success: true,
+      total: totalEleves,
+      message: `Nombre total d'élèves: ${totalEleves}`
+    });
+  } catch (error) {
+    console.error("❌ Erreur lors de la récupération du nombre d'élèves:", error);
+    res.status(500).json({ 
+      success: false,
+      message: "Erreur lors de la récupération du nombre d'élèves",
+      error: process.env.NODE_ENV === 'development' ? error.message : undefined
+    });
   }
 });
 
