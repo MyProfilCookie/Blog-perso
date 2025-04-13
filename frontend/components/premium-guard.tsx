@@ -103,8 +103,8 @@ export function withPremiumGuard<P extends object>(
 
     if (!hasAccess) {
       return (
-        <div className="flex items-center justify-center min-h-screen bg-cream p-4">
-          <Card className="w-full max-w-md">
+        <div className="flex items-center justify-center min-h-screen bg-cream p-4 dark:bg-background">
+          <Card className="w-full max-w-md bg-cream dark:bg-background">
             <CardHeader>
               <CardTitle className="text-2xl font-bold text-center">
                 Accès Premium Requis
