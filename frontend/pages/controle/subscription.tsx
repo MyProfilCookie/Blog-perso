@@ -1,3 +1,4 @@
+/* eslint-disable no-console */
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
@@ -5,6 +6,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useTheme } from "next-themes";
+import { Loader2 } from "lucide-react";
+
 import {
   Card,
   CardHeader,
@@ -15,7 +18,6 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Loader2 } from "lucide-react";
 import BackButton from "@/components/back";
 
 interface SubscriptionInfo {
@@ -51,30 +53,32 @@ const SubscriptionPage: React.FC = () => {
   useEffect(() => {
     const checkAuth = async () => {
       // Vérifier toutes les sources possibles d'authentification
-      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("userToken");
       const userId = localStorage.getItem("userId");
       const userInfo = localStorage.getItem("userInfo");
       const user = localStorage.getItem("user");
-      
+
       console.log("Vérification auth:", {
         token: token ? "Présent" : "Absent",
         userId: userId ? "Présent" : "Absent",
         userInfo: userInfo ? "Présent" : "Absent",
-        user: user ? "Présent" : "Absent"
+        user: user ? "Présent" : "Absent",
       });
 
       // Vérifier si l'utilisateur est connecté d'une manière ou d'une autre
       let isAuthenticated = false;
-      
+
       // Méthode 1: Token et userId
       if (token && userId) {
         isAuthenticated = true;
       }
-      
+
       // Méthode 2: userInfo contient un ID
       if (userInfo) {
         try {
           const parsedUserInfo = JSON.parse(userInfo);
+
           if (parsedUserInfo && parsedUserInfo._id) {
             isAuthenticated = true;
           }
@@ -82,11 +86,12 @@ const SubscriptionPage: React.FC = () => {
           console.error("Erreur parsing userInfo:", e);
         }
       }
-      
+
       // Méthode 3: user contient un ID
       if (user) {
         try {
           const parsedUser = JSON.parse(user);
+
           if (parsedUser && (parsedUser._id || parsedUser.id)) {
             isAuthenticated = true;
           }
@@ -94,10 +99,11 @@ const SubscriptionPage: React.FC = () => {
           console.error("Erreur parsing user:", e);
         }
       }
-      
+
       if (!isAuthenticated) {
         console.log("Redirection vers login - Aucune authentification trouvée");
         router.push("/users/login");
+
         return;
       }
 
@@ -113,29 +119,31 @@ const SubscriptionPage: React.FC = () => {
               type: "premium",
               status: "active",
               startDate: null,
-              endDate: null
+              endDate: null,
             },
             role: "admin",
-            dailyExerciseCount: Infinity
+            dailyExerciseCount: Infinity,
           });
           setLoading(false);
+
           return;
         }
 
         // Initialiser Stripe une seule fois (pour les non-admins)
         const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
+
         console.log("Clé Stripe:", stripeKey ? "Présente" : "Absente");
-        
+
         if (!stripeKey) {
           throw new Error("Clé Stripe non trouvée");
         }
-        
+
         const stripeInstance = await loadStripe(stripeKey);
-        
+
         if (!stripeInstance) {
           throw new Error("Impossible d'initialiser Stripe");
         }
-        
+
         setStripe(stripeInstance);
         setStripeLoaded(true);
         await fetchSubscriptionInfo();
@@ -188,12 +196,14 @@ const SubscriptionPage: React.FC = () => {
   const handleSubscribe = async () => {
     if (!stripeLoaded || !stripe) {
       setError("Le service de paiement n'est pas encore initialisé");
+
       return;
     }
 
     try {
       setProcessingPayment(true);
-      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("userToken");
 
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create-checkout-session`,
@@ -213,7 +223,10 @@ const SubscriptionPage: React.FC = () => {
         throw new Error(result.error.message);
       }
     } catch (err) {
-      console.error("Erreur lors de la création de la session de paiement:", err);
+      console.error(
+        "Erreur lors de la création de la session de paiement:",
+        err,
+      );
       setError("Erreur lors du traitement du paiement");
       setProcessingPayment(false);
     }
@@ -238,11 +251,11 @@ const SubscriptionPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-background">
+      <div className="flex items-center justify-center min-h-screen bg-cream">
         <motion.div
-          initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
+          initial={{ opacity: 0, scale: 0.9 }}
         >
           <Loader2 className="h-8 w-8 animate-spin" />
           <p className="mt-4 text-muted-foreground">
@@ -255,11 +268,11 @@ const SubscriptionPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-background p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-cream p-4">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
+          initial={{ opacity: 0, y: 20 }}
         >
           <Card className="border-destructive bg-card">
             <CardHeader>
@@ -269,9 +282,9 @@ const SubscriptionPage: React.FC = () => {
               <p className="text-destructive">{error}</p>
             </CardContent>
             <CardFooter>
-              <Button 
-                variant="destructive"
+              <Button
                 className="w-full"
+                variant="destructive"
                 onClick={() => window.location.reload()}
               >
                 Réessayer
@@ -284,12 +297,12 @@ const SubscriptionPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-background py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-cream py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
-        <motion.div 
-          initial={{ opacity: 0, y: -20 }}
+        <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="flex justify-between items-center mb-12"
+          initial={{ opacity: 0, y: -20 }}
         >
           <BackButton />
           <h1 className="text-4xl font-bold text-foreground text-center">
@@ -300,34 +313,51 @@ const SubscriptionPage: React.FC = () => {
 
         {subscriptionInfo && (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="mb-12"
+            initial={{ opacity: 0, y: 20 }}
           >
             <Card className="bg-card">
               <CardContent className="p-6">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-4">
                     <span className="text-2xl">
-                      {subscriptionInfo.subscription.type === "premium" ? "👑" : "⭐"}
+                      {subscriptionInfo.subscription.type === "premium"
+                        ? "👑"
+                        : "⭐"}
                     </span>
                     <div>
                       <CardTitle className="text-xl text-foreground mb-1">
                         Votre abonnement actuel
                       </CardTitle>
                       <CardDescription>
-                        {subscriptionInfo.subscription.type === "premium" ? "Premium" : "Gratuit"}
+                        {subscriptionInfo.subscription.type === "premium"
+                          ? "Premium"
+                          : "Gratuit"}
                       </CardDescription>
                     </div>
                   </div>
-                  <Badge variant={subscriptionInfo.subscription.type === "premium" ? "default" : "secondary"}>
-                    {subscriptionInfo.subscription.type === "premium" ? "Premium" : "Gratuit"}
+                  <Badge
+                    variant={
+                      subscriptionInfo.subscription.type === "premium"
+                        ? "default"
+                        : "secondary"
+                    }
+                  >
+                    {subscriptionInfo.subscription.type === "premium"
+                      ? "Premium"
+                      : "Gratuit"}
                   </Badge>
                 </div>
                 {subscriptionInfo.subscription.type === "premium" && (
                   <div className="mt-4 text-sm text-muted-foreground flex items-center gap-2">
                     <span className="text-xl">⏰</span>
-                    <p>Prochain renouvellement : {new Date(subscriptionInfo.subscription.endDate!).toLocaleDateString()}</p>
+                    <p>
+                      Prochain renouvellement :{" "}
+                      {new Date(
+                        subscriptionInfo.subscription.endDate!,
+                      ).toLocaleDateString()}
+                    </p>
                   </div>
                 )}
               </CardContent>
@@ -337,10 +367,10 @@ const SubscriptionPage: React.FC = () => {
 
         {subscriptionInfo?.role === "admin" ? (
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
             className="text-center mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.3 }}
           >
             <Card className="bg-card border-primary">
               <CardContent className="p-6">
@@ -351,7 +381,8 @@ const SubscriptionPage: React.FC = () => {
                   </CardTitle>
                 </div>
                 <p className="mt-4 text-muted-foreground">
-                  En tant qu&apos;administrateur, vous avez automatiquement accès à toutes les fonctionnalités Premium.
+                  En tant qu&apos;administrateur, vous avez automatiquement
+                  accès à toutes les fonctionnalités Premium.
                 </p>
               </CardContent>
             </Card>
@@ -360,16 +391,21 @@ const SubscriptionPage: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             {/* Plan Gratuit */}
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
-              whileHover={{ scale: 1.02 }}
+              initial={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.02 }}
             >
               <Card className="bg-card">
                 <CardHeader>
-                  <CardTitle className="text-3xl text-foreground text-center">Gratuit</CardTitle>
+                  <CardTitle className="text-3xl text-foreground text-center">
+                    Gratuit
+                  </CardTitle>
                   <CardDescription className="text-4xl font-bold text-center">
-                    0€<span className="text-lg font-normal text-muted-foreground">/mois</span>
+                    0€
+                    <span className="text-lg font-normal text-muted-foreground">
+                      /mois
+                    </span>
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -377,10 +413,10 @@ const SubscriptionPage: React.FC = () => {
                     {features.free.map((feature, index) => (
                       <motion.li
                         key={index}
-                        initial={{ opacity: 0, x: -20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
                         className="flex items-center p-3 rounded-lg bg-muted text-foreground"
+                        initial={{ opacity: 0, x: -20 }}
+                        transition={{ delay: index * 0.1 }}
                       >
                         <span className="mr-3">✓</span>
                         <span>{feature}</span>
@@ -391,8 +427,8 @@ const SubscriptionPage: React.FC = () => {
                 <CardFooter>
                   <Button
                     className="w-full"
-                    variant="outline"
                     disabled={subscriptionInfo?.subscription.type === "free"}
+                    variant="outline"
                   >
                     Plan actuel
                   </Button>
@@ -402,21 +438,24 @@ const SubscriptionPage: React.FC = () => {
 
             {/* Plan Premium */}
             <motion.div
-              initial={{ opacity: 0, x: 20 }}
               animate={{ opacity: 1, x: 0 }}
-              whileHover={{ scale: 1.02 }}
+              initial={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.3 }}
+              whileHover={{ scale: 1.02 }}
             >
               <Card className="bg-card relative">
                 <div className="absolute -top-2 right-4">
-                  <Badge variant="default">
-                    Recommandé
-                  </Badge>
+                  <Badge variant="default">Recommandé</Badge>
                 </div>
                 <CardHeader>
-                  <CardTitle className="text-3xl text-foreground text-center">Premium</CardTitle>
+                  <CardTitle className="text-3xl text-foreground text-center">
+                    Premium
+                  </CardTitle>
                   <CardDescription className="text-4xl font-bold text-center">
-                    5€<span className="text-lg font-normal text-muted-foreground">/mois</span>
+                    5€
+                    <span className="text-lg font-normal text-muted-foreground">
+                      /mois
+                    </span>
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -424,10 +463,10 @@ const SubscriptionPage: React.FC = () => {
                     {features.premium.map((feature, index) => (
                       <motion.li
                         key={index}
-                        initial={{ opacity: 0, x: 20 }}
                         animate={{ opacity: 1, x: 0 }}
-                        transition={{ delay: index * 0.1 }}
                         className="flex items-center p-3 rounded-lg bg-muted text-foreground"
+                        initial={{ opacity: 0, x: 20 }}
+                        transition={{ delay: index * 0.1 }}
                       >
                         <span className="mr-3">✓</span>
                         <span>{feature}</span>
@@ -441,8 +480,12 @@ const SubscriptionPage: React.FC = () => {
                     disabled={subscriptionInfo?.subscription.type === "premium"}
                     onClick={handleSubscribe}
                   >
-                    {processingPayment && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-                    {subscriptionInfo?.subscription.type === "premium" ? "Plan actuel" : "Passer à Premium"}
+                    {processingPayment && (
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                    )}
+                    {subscriptionInfo?.subscription.type === "premium"
+                      ? "Plan actuel"
+                      : "Passer à Premium"}
                   </Button>
                 </CardFooter>
               </Card>
@@ -451,19 +494,16 @@ const SubscriptionPage: React.FC = () => {
         )}
 
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
+          initial={{ opacity: 0, y: 20 }}
         >
           <p className="text-muted-foreground">
             🔒 Paiement sécurisé par Stripe • Annulation à tout moment
           </p>
           <p className="mt-4 text-muted-foreground">
-            Une question ? {" "}
-            <Button
-              variant="link"
-              onClick={() => router.push("/contact")}
-            >
+            Une question ?{" "}
+            <Button variant="link" onClick={() => router.push("/contact")}>
               Contactez-nous
             </Button>
           </p>

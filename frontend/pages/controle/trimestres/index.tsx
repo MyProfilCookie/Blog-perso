@@ -4,6 +4,7 @@ import axios from "axios";
 import { Card, CardBody, Input, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/router";
+import { withPremiumGuard } from "@/components/premium-guard";
 
 interface Question {
   _id: string;
@@ -40,7 +41,7 @@ const subjectColors = {
   default: { bg: "rgba(107, 114, 128, 0.8)", icon: "📖" },
 };
 
-export default function TrimestresPage() {
+const TrimestresPage = () => {
   const router = useRouter();
   const [trimestres, setTrimestres] = useState<Trimestre[]>([]);
   const [error, setError] = useState<string | null>(null);
@@ -320,4 +321,6 @@ export default function TrimestresPage() {
       </div>
     </div>
   );
-}
+};
+
+export default withPremiumGuard(TrimestresPage);

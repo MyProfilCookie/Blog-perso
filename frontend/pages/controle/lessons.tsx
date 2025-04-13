@@ -23,6 +23,7 @@ import Image from "next/image";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
+import { withPremiumGuard } from "@/components/premium-guard";
 
 // Configuration de la locale française
 dayjs.locale("fr");
@@ -48,7 +49,7 @@ type LessonData = {
   lessons: Lesson[];
 };
 
-export default function LessonOfTheDay() {
+const LessonsPage: React.FC = () => {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const today = dayjs().format("YYYY-MM-DD");
@@ -632,4 +633,6 @@ export default function LessonOfTheDay() {
       </div>
     </div>
   );
-}
+};
+
+export default withPremiumGuard(LessonsPage);

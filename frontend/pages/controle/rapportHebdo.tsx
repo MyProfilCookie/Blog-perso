@@ -11,6 +11,7 @@ import axios from "axios";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import ProgressBar from "@/components/ProgressBar";
+import { withPremiumGuard } from "@/components/premium-guard";
 
 // Interface pour les exercices
 interface Exercise {
@@ -1314,4 +1315,4 @@ const WeeklyReport: React.FC = () => {
   );
 };
 
-export default WeeklyReport;
+export default withPremiumGuard(WeeklyReport);
