@@ -374,12 +374,12 @@ export default function ControlePage() {
                     <p className="text-sm">{theme.description}</p>
                     <div className="mt-2">
                       {theme.isPremium ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800 dark:bg-violet-400 dark:text-violet-950 border border-violet-200 dark:border-violet-500">
                           <FontAwesomeIcon className="mr-1" icon={faStar} />
                           Premium
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-400 dark:text-green-950 border border-green-200 dark:border-green-500">
                           <FontAwesomeIcon className="mr-1" icon={faCheck} />
                           Gratuit
                         </span>
