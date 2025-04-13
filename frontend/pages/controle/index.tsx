@@ -28,9 +28,6 @@ import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 
-import RevisionPage from "./revision";
-import StatsPage from "./stats";
-
 import BackButton from "@/components/back";
 
 const stats = [
@@ -210,30 +207,32 @@ export default function ControlePage() {
   useEffect(() => {
     const checkAuth = () => {
       // Vérifier toutes les sources possibles d'authentification
-      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("userToken");
       const userId = localStorage.getItem("userId");
       const userInfo = localStorage.getItem("userInfo");
       const user = localStorage.getItem("user");
-      
+
       console.log("Vérification auth:", {
         token: token ? "Présent" : "Absent",
         userId: userId ? "Présent" : "Absent",
         userInfo: userInfo ? "Présent" : "Absent",
-        user: user ? "Présent" : "Absent"
+        user: user ? "Présent" : "Absent",
       });
 
       // Vérifier si l'utilisateur est connecté d'une manière ou d'une autre
       let isAuthenticated = false;
-      
+
       // Méthode 1: Token et userId
       if (token && userId) {
         isAuthenticated = true;
       }
-      
+
       // Méthode 2: userInfo contient un ID
       if (userInfo) {
         try {
           const parsedUserInfo = JSON.parse(userInfo);
+
           if (parsedUserInfo && parsedUserInfo._id) {
             isAuthenticated = true;
           }
@@ -241,11 +240,12 @@ export default function ControlePage() {
           console.error("Erreur parsing userInfo:", e);
         }
       }
-      
+
       // Méthode 3: user contient un ID
       if (user) {
         try {
           const parsedUser = JSON.parse(user);
+
           if (parsedUser && (parsedUser._id || parsedUser.id)) {
             isAuthenticated = true;
           }
@@ -253,13 +253,14 @@ export default function ControlePage() {
           console.error("Erreur parsing user:", e);
         }
       }
-      
+
       if (!isAuthenticated) {
         console.log("Redirection vers login - Aucune authentification trouvée");
         router.push("/users/login");
+
         return;
       }
-      
+
       setLoading(false);
       setMounted(true);
     };
@@ -271,7 +272,7 @@ export default function ControlePage() {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Spinner size="lg" color="primary" />
+          <Spinner color="primary" size="lg" />
           <p className="mt-4 text-gray-600">Chargement...</p>
         </div>
       </div>
@@ -285,9 +286,9 @@ export default function ControlePage() {
           <p className="font-bold mb-2">⚠️ Erreur</p>
           <p>{error}</p>
         </div>
-        <Button 
-          color="primary" 
+        <Button
           className="mt-4"
+          color="primary"
           onClick={() => window.location.reload()}
         >
           Réessayer
@@ -349,11 +350,7 @@ export default function ControlePage() {
           transition={{ duration: 0.5, delay: 0.2 }}
         >
           {courseThemes.map((theme, index) => (
-            <Link 
-              href={theme.route} 
-              key={theme.id}
-              className="block"
-            >
+            <Link key={theme.id} className="block" href={theme.route}>
               <motion.div
                 animate={{ opacity: 1, y: 0 }}
                 className="cursor-pointer"
@@ -378,12 +375,12 @@ export default function ControlePage() {
                     <div className="mt-2">
                       {theme.isPremium ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200">
-                          <FontAwesomeIcon icon={faStar} className="mr-1" />
+                          <FontAwesomeIcon className="mr-1" icon={faStar} />
                           Premium
                         </span>
                       ) : (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                          <FontAwesomeIcon icon={faCheck} className="mr-1" />
+                          <FontAwesomeIcon className="mr-1" icon={faCheck} />
                           Gratuit
                         </span>
                       )}
