@@ -13,7 +13,7 @@ const path = require("path");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY); // Stripe
 
 // ✅ Importation des routes
-const userRoutes = require("./api/routes/user.routes");
+const userRoutes = require("./api/routes/User.routes");
 const paymentRoutes = require("./api/routes/payment.routes");
 const orderRoutes = require("./api/routes/order.routes");
 const productRoutes = require("./api/routes/products.routes");

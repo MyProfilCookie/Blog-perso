@@ -318,7 +318,10 @@ export default function ControlePage() {
     <div className="w-full">
       <div className="flex justify-between items-center mb-8">
         <BackButton />
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">Tableau de bord</h1>
+        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          {/* afficher le nom de l'eleve */}
+          Controle
+        </h1>
       </div>
 
       {loading ? (
