@@ -1,10 +1,18 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { Loader2 } from "lucide-react";
 import { motion } from "framer-motion";
+
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface SubscriptionInfo {
   type: string;
@@ -16,13 +24,14 @@ interface SubscriptionInfo {
 type ReactComponent = React.ComponentType<any>;
 
 export function withPremiumGuard<P extends object>(
-  WrappedComponent: ReactComponent
+  WrappedComponent: ReactComponent,
 ) {
   return function WithPremiumGuardComponent(props: P) {
     const router = useRouter();
     const [isLoading, setIsLoading] = useState(true);
     const [hasAccess, setHasAccess] = useState(false);
-    const [subscriptionInfo, setSubscriptionInfo] = useState<SubscriptionInfo | null>(null);
+    const [subscriptionInfo, setSubscriptionInfo] =
+      useState<SubscriptionInfo | null>(null);
 
     useEffect(() => {
       const checkAccess = async () => {
@@ -32,6 +41,7 @@ export function withPremiumGuard<P extends object>(
 
           if (!token) {
             router.push("/users/login");
+
             return;
           }
 
@@ -39,6 +49,7 @@ export function withPremiumGuard<P extends object>(
           if (userRole === "admin") {
             setHasAccess(true);
             setIsLoading(false);
+
             return;
           }
 
@@ -49,10 +60,11 @@ export function withPremiumGuard<P extends object>(
               headers: {
                 Authorization: `Bearer ${token}`,
               },
-            }
+            },
           );
 
           const info = response.data;
+
           setSubscriptionInfo(info);
 
           // Accès si l'abonnement est premium et actif
@@ -60,7 +72,10 @@ export function withPremiumGuard<P extends object>(
             setHasAccess(true);
           }
         } catch (error) {
-          console.error("Erreur lors de la vérification de l'abonnement:", error);
+          console.error(
+            "Erreur lors de la vérification de l'abonnement:",
+            error,
+          );
         } finally {
           setIsLoading(false);
         }
@@ -73,9 +88,9 @@ export function withPremiumGuard<P extends object>(
       return (
         <div className="flex items-center justify-center min-h-screen bg-cream">
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             className="text-center"
+            initial={{ opacity: 0, scale: 0.9 }}
           >
             <Loader2 className="h-8 w-8 animate-spin" />
             <p className="mt-4 text-muted-foreground">
@@ -100,13 +115,19 @@ export function withPremiumGuard<P extends object>(
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-center text-muted-foreground">
-                Pour accéder à cette fonctionnalité, veuillez mettre à niveau votre abonnement.
+                Pour accéder à cette fonctionnalité, veuillez mettre à niveau
+                votre abonnement.
               </p>
               {subscriptionInfo && (
                 <div className="text-center text-sm text-muted-foreground">
                   Votre abonnement actuel: {subscriptionInfo.type}
                   {subscriptionInfo.expiresAt && (
-                    <div>Expire le: {new Date(subscriptionInfo.expiresAt).toLocaleDateString()}</div>
+                    <div>
+                      Expire le:{" "}
+                      {new Date(
+                        subscriptionInfo.expiresAt,
+                      ).toLocaleDateString()}
+                    </div>
                   )}
                 </div>
               )}
@@ -119,8 +140,8 @@ export function withPremiumGuard<P extends object>(
                 Mettre à niveau
               </Button>
               <Button
-                variant="outline"
                 className="w-full"
+                variant="outline"
                 onClick={() => router.push("/controle")}
               >
                 Retour au tableau de bord
@@ -134,4 +155,4 @@ export function withPremiumGuard<P extends object>(
     // Si l'utilisateur a accès, afficher le composant enveloppé
     return <WrappedComponent {...props} />;
   };
-} 
+}

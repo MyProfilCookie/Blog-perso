@@ -22,6 +22,7 @@ import {
   faExclamationTriangle,
   faUser,
   faCreditCard,
+  faCheck,
 } from "@fortawesome/free-solid-svg-icons";
 import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
@@ -374,14 +375,19 @@ export default function ControlePage() {
                       <h2 className="font-bold">{theme.title}</h2>
                     </div>
                     <p className="text-sm">{theme.description}</p>
-                    {theme.isPremium && (
-                      <div className="mt-2">
+                    <div className="mt-2">
+                      {theme.isPremium ? (
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800 dark:bg-violet-900 dark:text-violet-200">
                           <FontAwesomeIcon icon={faStar} className="mr-1" />
                           Premium
                         </span>
-                      </div>
-                    )}
+                      ) : (
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                          <FontAwesomeIcon icon={faCheck} className="mr-1" />
+                          Gratuit
+                        </span>
+                      )}
+                    </div>
                   </CardBody>
                 </Card>
               </motion.div>
