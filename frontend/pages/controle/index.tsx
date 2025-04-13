@@ -27,35 +27,9 @@ import {
 import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import axios from "axios";
 
 import BackButton from "@/components/back";
-
-const stats = [
-  {
-    icon: faStar,
-    label: "Moyenne Générale",
-    value: "15.5/20",
-    color: "text-yellow-500 dark:text-yellow-400",
-  },
-  {
-    icon: faClock,
-    label: "Temps d'étude",
-    value: "2h/jour",
-    color: "text-blue-500 dark:text-blue-400",
-  },
-  {
-    icon: faUsers,
-    label: "Élèves actifs",
-    value: "24",
-    color: "text-green-500 dark:text-green-400",
-  },
-  {
-    icon: faChartBar,
-    label: "Progression",
-    value: "+12%",
-    color: "text-purple-500 dark:text-purple-400",
-  },
-];
 
 const courseThemes = [
   {
@@ -203,8 +177,22 @@ export default function ControlePage() {
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [stats, setStats] = useState({
+    totalEleves: 0,
+    averageScore: "0",
+    progression: "0"
+  });
 
   useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/stats`);
+        setStats(response.data);
+      } catch (err) {
+        console.error("Erreur lors de la récupération des statistiques:", err);
+      }
+    };
+
     const checkAuth = () => {
       // Vérifier toutes les sources possibles d'authentification
       const token =
@@ -266,6 +254,7 @@ export default function ControlePage() {
     };
 
     checkAuth();
+    fetchStats();
   }, [router]);
 
   if (!mounted || loading) {
@@ -297,6 +286,34 @@ export default function ControlePage() {
     );
   }
 
+  // Remplacer le tableau stats statique par les données dynamiques
+  const statsCards = [
+    {
+      icon: faStar,
+      label: "Moyenne Générale",
+      value: `${stats.averageScore}/20`,
+      color: "text-yellow-500 dark:text-yellow-400",
+    },
+    {
+      icon: faClock,
+      label: "Temps d'étude",
+      value: "2h/jour",
+      color: "text-blue-500 dark:text-blue-400",
+    },
+    {
+      icon: faUsers,
+      label: "Élèves actifs",
+      value: stats.totalEleves.toString(),
+      color: "text-green-500 dark:text-green-400",
+    },
+    {
+      icon: faChartBar,
+      label: "Progression",
+      value: `${stats.progression}%`,
+      color: "text-purple-500 dark:text-purple-400",
+    },
+  ];
+
   return (
     <div className="flex flex-col min-h-screen p-4">
       <div className="flex-1 w-full mx-auto px-4 sm:px-6 lg:px-8">
@@ -321,7 +338,7 @@ export default function ControlePage() {
           </div>
 
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 w-full max-w-4xl">
-            {stats.map((stat, index) => (
+            {statsCards.map((stat, index) => (
               <motion.div
                 key={stat.label}
                 animate={{ opacity: 1, y: 0 }}

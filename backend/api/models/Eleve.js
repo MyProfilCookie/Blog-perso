@@ -120,6 +120,48 @@ EleveSchema.methods.addPageScore = function(subjectName, pageData) {
   return subject;
 };
 
+// Méthode statique pour calculer les statistiques
+EleveSchema.statics.getStats = async function() {
+  // Calculer la moyenne générale de tous les élèves
+  const allEleves = await this.find();
+  const totalAverage = allEleves.reduce((sum, eleve) => sum + (eleve.overallAverage || 0), 0);
+  const averageScore = allEleves.length > 0 ? totalAverage / allEleves.length : 0;
+
+  // Calculer la progression (comparaison avec le mois précédent)
+  const oneMonthAgo = new Date();
+  oneMonthAgo.setMonth(oneMonthAgo.getMonth() - 1);
+  
+  const previousCount = await this.countDocuments({
+    createdAt: { $lt: oneMonthAgo }
+  });
+  
+  const currentCount = allEleves.length;
+  const progression = previousCount > 0 
+    ? ((currentCount - previousCount) / previousCount) * 100 
+    : 100;
+
+  return {
+    averageScore: averageScore.toFixed(2),
+    progression: progression.toFixed(2)
+  };
+};
+
+// Middleware pour créer automatiquement un élève pour les admins
+EleveSchema.statics.createForAdmin = async function(userId) {
+  const existingEleve = await this.findOne({ userId });
+  if (!existingEleve) {
+    const newEleve = new this({
+      userId,
+      subjects: [],
+      overallAverage: 0,
+      totalPagesCompleted: 0
+    });
+    await newEleve.save();
+    return newEleve;
+  }
+  return existingEleve;
+};
+
 const Eleve = mongoose.model('Eleve', EleveSchema);
 
 module.exports = Eleve; 
