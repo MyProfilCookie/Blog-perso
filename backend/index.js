@@ -13,7 +13,7 @@ const path = require("path");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY); // Stripe
 
 // ✅ Importation des routes
-const userRoutes = require("./api/routes/User.routes");
+const userRoutes = require("./api/routes/user.routes");
 const paymentRoutes = require("./api/routes/payment.routes");
 const orderRoutes = require("./api/routes/order.routes");
 const productRoutes = require("./api/routes/products.routes");
@@ -31,6 +31,7 @@ const Payment = require("./api/models/payments"); // Modèle de paiement
 const trimestreRoutes = require("./api/routes/trimestre.routes"); // Nouvelle route pour les trimestres
 const eleveRoutes = require("./api/routes/eleve.routes"); // Nouvelle route pour les élèves
 const subscriptionRoutes = require("./api/routes/subscription.routes"); // Nouvelle route pour les abonnements
+const statsRoutes = require("./api/routes/stats.routes"); // Route pour les statistiques
 
 // 🔍 Vérification des variables d'environnement
 console.log("🔍 Chargement des variables d'environnement...");
@@ -151,6 +152,7 @@ app.use("/api/revision-errors", revisionErrorRoutes ); // Nouvelle route pour le
 app.use("/api/trimestres", trimestreRoutes); // Nouvelle route pour les trimestres
 app.use("/api/eleves", eleveRoutes); // Nouvelle route pour les élèves
 app.use("/api/subscriptions", subscriptionRoutes); // Nouvelle route pour les abonnements
+app.use("/api/stats", statsRoutes); // Route pour les statistiques
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   console.log('Headers:', req.headers);

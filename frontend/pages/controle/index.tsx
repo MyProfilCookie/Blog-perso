@@ -186,7 +186,7 @@ export default function ControlePage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/stats`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/stats`);
         setStats(response.data);
       } catch (err) {
         console.error("Erreur lors de la récupération des statistiques:", err);
@@ -391,12 +391,12 @@ export default function ControlePage() {
                     <p className="text-sm">{theme.description}</p>
                     <div className="mt-2">
                       {theme.isPremium ? (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800 dark:bg-violet-400 dark:text-violet-950 border border-violet-200 dark:border-violet-500">
-                          <FontAwesomeIcon className="mr-1" icon={faStar} />
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-800 dark:bg-violet-800 dark:text-violet-100 border border-violet-200 dark:border-violet-400 shadow-sm">
+                          <FontAwesomeIcon className="mr-1 text-yellow-500" icon={faStar} />
                           Premium
                         </span>
                       ) : (
-                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-400 dark:text-green-950 border border-green-200 dark:border-green-500">
+                        <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-800 dark:bg-green-800 dark:text-green-100 border border-green-200 dark:border-green-400 shadow-sm">
                           <FontAwesomeIcon className="mr-1" icon={faCheck} />
                           Gratuit
                         </span>

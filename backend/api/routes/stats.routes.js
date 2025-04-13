@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
+const { authMiddleware } = require('../middlewares/authMiddleware');
 const statsController = require('../controllers/stats.controller');
-const { authenticateToken } = require('../middleware/auth.middleware');
 
-// Route protégée pour obtenir les statistiques
-router.get('/', authenticateToken, statsController.getStats);
+// Route pour obtenir les statistiques
+router.get('/', authMiddleware, statsController.getStats);
 
 module.exports = router; 
