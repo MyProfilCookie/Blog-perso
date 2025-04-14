@@ -4,6 +4,7 @@ import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { toast } from "sonner";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
@@ -48,6 +49,7 @@ const TechnologyPage: React.FC = () => {
   const correctSound =
     typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
   const [timeSpent, setTimeSpent] = useState(0);
+  const [rating, setRating] = useState<number | null>(null);
 
   const encouragementMessages = [
     "💻 Tu es un vrai geek !",
@@ -224,6 +226,11 @@ const TechnologyPage: React.FC = () => {
     return results.some((r) => r.exerciseId === exerciseId && r.isCorrect);
   };
 
+  const handleRating = (exerciseId: string, value: number) => {
+    setRating(value);
+    toast.success(`Merci d'avoir noté cet exercice ! Difficulté : ${value}/5`);
+  };
+
   if (loading) {
     return (
       <motion.div
@@ -365,13 +372,32 @@ const TechnologyPage: React.FC = () => {
                   Soumettre
                 </Button>
                 {isAnswerSubmitted(ex._id) && (
-                  <p
-                    className={`mt-3 text-center font-semibold text-lg ${
-                      isAnswerCorrect(ex._id) ? "text-green-600" : "text-red-500"
-                    }`}
-                  >
-                    {isAnswerCorrect(ex._id) ? "Bonne réponse !" : "Mauvaise réponse"}
-                  </p>
+                  <>
+                    <p
+                      className={`mt-3 text-center font-semibold text-lg ${
+                        isAnswerCorrect(ex._id) ? "text-green-600" : "text-red-500"
+                      }`}
+                    >
+                      {isAnswerCorrect(ex._id) ? "Bonne réponse !" : "Mauvaise réponse"}
+                    </p>
+                    <div className="mt-4">
+                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Noter la difficulté de cet exercice :</p>
+                      <div className="grid grid-cols-5 gap-2">
+                        {[1, 2, 3, 4, 5].map((value) => (
+                          <Button
+                            key={value}
+                            size="lg"
+                            color="default"
+                            variant="flat"
+                            onClick={() => handleRating(ex._id, value)}
+                            className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                          >
+                            {value}
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </>
                 )}
               </CardBody>
             </Card>

@@ -10,6 +10,7 @@ import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { toast } from "sonner";
 
 // Interface pour les exercices d'histoire
 interface Exercise {
@@ -51,6 +52,7 @@ const HistoryPage: React.FC = () => {
   const correctSound =
     typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
   const [timeSpent, setTimeSpent] = useState(0);
+  const [rating, setRating] = useState<number | null>(null);
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -240,6 +242,11 @@ const HistoryPage: React.FC = () => {
   );
   const categories = ["Tout", ...uniqueCategories];
 
+  const handleRating = (exerciseId: string, value: number) => {
+    setRating(value);
+    toast.success(`Merci d'avoir noté cet exercice ! Difficulté : ${value}/5`);
+  };
+
   if (loading) {
     return (
       <motion.div
@@ -396,6 +403,59 @@ const HistoryPage: React.FC = () => {
                     value={userAnswers[ex._id] || ""}
                     onChange={(e) => handleChange(e, ex._id)}
                   />
+                )}
+
+                {isAnswerSubmitted(ex._id) && (
+                  <div className="mt-4">
+                    <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Noter la difficulté de cet exercice :</p>
+                    <div className="grid grid-cols-5 gap-2">
+                      <Button
+                        size="lg"
+                        color="default"
+                        variant="flat"
+                        onClick={() => handleRating(ex._id, 1)}
+                        className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                      >
+                        1
+                      </Button>
+                      <Button
+                        size="lg"
+                        color="default"
+                        variant="flat"
+                        onClick={() => handleRating(ex._id, 2)}
+                        className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                      >
+                        2
+                      </Button>
+                      <Button
+                        size="lg"
+                        color="default"
+                        variant="flat"
+                        onClick={() => handleRating(ex._id, 3)}
+                        className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                      >
+                        3
+                      </Button>
+                      <Button
+                        size="lg"
+                        color="default"
+                        variant="flat"
+                        onClick={() => handleRating(ex._id, 4)}
+                        className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                      >
+                        4
+                      </Button>
+                      <Button
+                        size="lg"
+                        color="default"
+                        variant="flat"
+                        onClick={() => handleRating(ex._id, 5)}
+                        className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                      >
+                        5
+                      </Button>
+                    </div>
+                  </div>
                 )}
 
                 <Button

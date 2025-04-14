@@ -92,10 +92,12 @@ export function withPremiumGuard<P extends object>(
         <div className="flex items-center justify-center min-h-screen bg-cream">
           <motion.div
             animate={{ opacity: 1, scale: 1 }}
-            className="text-center"
+            className="flex flex-col items-center justify-center text-center"
             initial={{ opacity: 0, scale: 0.9 }}
           >
-            <Loader2 className="h-8 w-8 animate-spin" />
+            <div className="flex justify-center">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+            </div>
             <p className="mt-4 text-muted-foreground">
               Vérification de votre abonnement...
             </p>
