@@ -10,8 +10,8 @@ exports.createRapportHebdo = async (req, res) => {
         }
 
         const rapportHebdo = new RapportHebdo({
-            ...req.body,
-            createdBy: req.user.id
+            week: req.body.week,
+            subjects: req.body.subjects
         });
 
         await rapportHebdo.save();
@@ -25,7 +25,6 @@ exports.createRapportHebdo = async (req, res) => {
 exports.getAllRapportsHebdos = async (req, res) => {
     try {
         const rapports = await RapportHebdo.find()
-            .populate('createdBy', 'name email')
             .sort({ week: -1, createdAt: -1 });
         res.status(200).json(rapports);
     } catch (error) {
@@ -36,8 +35,7 @@ exports.getAllRapportsHebdos = async (req, res) => {
 // Récupérer un rapport hebdomadaire par ID
 exports.getRapportHebdoById = async (req, res) => {
     try {
-        const rapport = await RapportHebdo.findById(req.params.id)
-            .populate('createdBy', 'name email');
+        const rapport = await RapportHebdo.findById(req.params.id);
         
         if (!rapport) {
             return res.status(404).json({ message: "Rapport hebdomadaire non trouvé" });
@@ -57,8 +55,7 @@ exports.getRapportHebdoByWeek = async (req, res) => {
             return res.status(400).json({ message: "Numéro de semaine invalide" });
         }
 
-        const rapport = await RapportHebdo.findOne({ week })
-            .populate('createdBy', 'name email');
+        const rapport = await RapportHebdo.findOne({ week });
         
         if (!rapport) {
             return res.status(404).json({ message: "Rapport hebdomadaire non trouvé pour cette semaine" });
@@ -78,22 +75,18 @@ exports.updateRapportHebdo = async (req, res) => {
             return res.status(400).json({ errors: errors.array() });
         }
 
-        const rapport = await RapportHebdo.findById(req.params.id);
-        
-        if (!rapport) {
-            return res.status(404).json({ message: "Rapport hebdomadaire non trouvé" });
-        }
-
-        // Vérifier si l'utilisateur est autorisé à modifier
-        if (rapport.createdBy.toString() !== req.user.id && req.user.role !== 'admin') {
-            return res.status(403).json({ message: "Non autorisé à modifier ce rapport" });
-        }
-
         const updatedRapport = await RapportHebdo.findByIdAndUpdate(
             req.params.id,
-            { ...req.body, updatedAt: Date.now() },
+            {
+                week: req.body.week,
+                subjects: req.body.subjects
+            },
             { new: true }
         );
+
+        if (!updatedRapport) {
+            return res.status(404).json({ message: "Rapport hebdomadaire non trouvé" });
+        }
 
         res.status(200).json(updatedRapport);
     } catch (error) {
@@ -104,18 +97,12 @@ exports.updateRapportHebdo = async (req, res) => {
 // Supprimer un rapport hebdomadaire
 exports.deleteRapportHebdo = async (req, res) => {
     try {
-        const rapport = await RapportHebdo.findById(req.params.id);
+        const rapport = await RapportHebdo.findByIdAndDelete(req.params.id);
         
         if (!rapport) {
             return res.status(404).json({ message: "Rapport hebdomadaire non trouvé" });
         }
 
-        // Vérifier si l'utilisateur est autorisé à supprimer
-        if (rapport.createdBy.toString() !== req.user.id && req.user.role !== 'admin') {
-            return res.status(403).json({ message: "Non autorisé à supprimer ce rapport" });
-        }
-
-        await rapport.remove();
         res.status(200).json({ message: "Rapport hebdomadaire supprimé avec succès" });
     } catch (error) {
         res.status(500).json({ message: "Erreur lors de la suppression du rapport", error: error.message });

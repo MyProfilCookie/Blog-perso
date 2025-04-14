@@ -1,62 +1,40 @@
 const mongoose = require('mongoose');
 
+const questionSchema = new mongoose.Schema({
+    _id: {
+        type: String
+    }
+}, { _id: false });
+
+const subjectSchema = new mongoose.Schema({
+    name: {
+        type: String,
+        required: true
+    },
+    icon: {
+        type: String
+    },
+    color: {
+        type: String
+    },
+    questions: [questionSchema]
+}, { _id: false });
+
 const rapportHebdoSchema = new mongoose.Schema({
     week: {
         type: Number,
-        required: [true, 'Le numéro de la semaine est requis']
-    },
-    subjects: [{
-        type: String,
-        required: [true, 'Au moins une matière est requise']
-    }],
-    titre: {
-        type: String,
-        required: [true, 'Le titre est requis'],
-        trim: true
-    },
-    description: {
-        type: String,
-        required: [true, 'La description est requise']
-    },
-    dateDebut: {
-        type: Date,
-        required: [true, 'La date de début est requise']
-    },
-    dateFin: {
-        type: Date,
-        required: [true, 'La date de fin est requise']
-    },
-    objectifs: [{
-        type: String,
-        required: [true, 'Au moins un objectif est requis']
-    }],
-    realisations: [{
-        type: String,
-        required: [true, 'Au moins une réalisation est requise']
-    }],
-    difficultes: [{
-        type: String
-    }],
-    solutions: [{
-        type: String
-    }],
-    createdBy: {
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'User',
         required: true
     },
-    status: {
-        type: String,
-        enum: ['brouillon', 'en_revision', 'approuve', 'rejete'],
-        default: 'brouillon'
+    subjects: [subjectSchema],
+    __v: {
+        type: Number,
+        default: 0
     }
 }, {
     timestamps: true
 });
 
 // Index pour améliorer les performances des requêtes
-rapportHebdoSchema.index({ createdBy: 1, dateDebut: -1 });
-rapportHebdoSchema.index({ status: 1 });
 rapportHebdoSchema.index({ week: 1 });
 
 // Vérifier si le modèle existe déjà avant de le créer
