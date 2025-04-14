@@ -18,6 +18,11 @@ interface SubscriptionInfo {
   type: string;
   status: string;
   expiresAt?: string;
+  role?: string;
+  subscription?: {
+    type: string;
+    status: string;
+  };
 }
 
 // Définition du type pour les composants React
@@ -45,15 +50,7 @@ export function withPremiumGuard<P extends object>(
             return;
           }
 
-          // Les administrateurs ont toujours accès
-          if (userRole === "admin") {
-            setHasAccess(true);
-            setIsLoading(false);
-
-            return;
-          }
-
-          // Vérifier l'abonnement
+          // Vérifier l'abonnement et le rôle via l'API
           const response = await axios.get(
             `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
             {
@@ -64,11 +61,17 @@ export function withPremiumGuard<P extends object>(
           );
 
           const info = response.data;
-
           setSubscriptionInfo(info);
 
-          // Accès si l'abonnement est premium et actif
-          if (info.type === "premium" && info.status === "active") {
+          // Accès si admin (soit dans localStorage soit dans la réponse API)
+          if (userRole === "admin" || info.role === "admin") {
+            setHasAccess(true);
+            setIsLoading(false);
+            return;
+          }
+
+          // Sinon, accès si l'abonnement est premium et actif
+          if (info.subscription?.type === "premium" && info.subscription?.status === "active") {
             setHasAccess(true);
           }
         } catch (error) {
