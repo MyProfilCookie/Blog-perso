@@ -27,14 +27,14 @@ interface Exercise {
 
 interface Result {
   isCorrect: boolean;
-  exerciseId: string;
+  answer: string;
 }
 
 const MusicPage: React.FC = () => {
   const router = useRouter();
-  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [exercises, setExercises] = useState<Exercise[]>([]);
   const [userAnswers, setUserAnswers] = useState<{ [key: string]: string }>({});
   const [results, setResults] = useState<Result[]>([]);
   const [finalScore, setFinalScore] = useState<number | null>(null);
@@ -102,10 +102,10 @@ const MusicPage: React.FC = () => {
     const fetchExercises = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/subjects/music`,
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/music`
         );
 
-        setExercises(response.data.questions);
+        setExercises(response.data.questions || []);
         setLoading(false);
       } catch (err) {
         console.error(err);
@@ -137,10 +137,9 @@ const MusicPage: React.FC = () => {
       // Messages d'encouragement toutes les 10 minutes
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
-        // Utiliser l'état emoji existant pour afficher temporairement le message
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
-        setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
-      }, 900000); // 900000ms = 15 minutes
+        setTimeout(() => setEmoji(""), 5000);
+      }, 900000);
     } else if (timeLeft === 0) {
       setIsFinished(true);
       setShowResults(true);
@@ -151,13 +150,6 @@ const MusicPage: React.FC = () => {
       clearInterval(encouragementTimer);
     };
   }, [timeLeft, isFinished, currentPage]);
-
-  // Fonction pour formater le temps restant
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -170,7 +162,7 @@ const MusicPage: React.FC = () => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
 
-    setResults([...results, { isCorrect, exerciseId: id }]);
+    setResults([...results, { isCorrect, answer: correctAnswer }]);
     
     if (isCorrect) {
       correctSound?.play();
@@ -224,14 +216,6 @@ const MusicPage: React.FC = () => {
     }
   };
 
-  const isAnswerSubmitted = (exerciseId: string) => {
-    return results.some((r) => r.exerciseId === exerciseId);
-  };
-
-  const isAnswerCorrect = (exerciseId: string) => {
-    return results.some((r) => r.exerciseId === exerciseId && r.isCorrect);
-  };
-
   const filteredAllExercises =
     selectedCategory === "Tout"
       ? exercises
@@ -248,6 +232,14 @@ const MusicPage: React.FC = () => {
     new Set(exercises.map((ex) => ex.category)),
   );
   const categories = ["Tout", ...uniqueCategories];
+
+  const isAnswerSubmitted = (exerciseId: string) => {
+    return results.some((r) => r.answer === exerciseId);
+  };
+
+  const isAnswerCorrect = (exerciseId: string) => {
+    return results.some((r) => r.answer === exerciseId && r.isCorrect);
+  };
 
   const handleRating = (exerciseId: string, value: number) => {
     setRating(value);
@@ -282,222 +274,205 @@ const MusicPage: React.FC = () => {
   }
 
   return (
-    <div className="p-4 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
-      <div className="flex justify-between items-center mb-4">
-        <BackButton />
-        <Timer timeLeft={timeLeft} />
-      </div>
+    <div className="min-h-screen bg-cream p-4 sm:p-6 lg:p-8 dark:bg-background">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col gap-4">
+          {/* Header avec retour et titre */}
+          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
+            <BackButton />
+            <h1 className="text-2xl sm:text-3xl font-bold text-center">Musique</h1>
+          </div>
 
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-4"
-        initial={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.4 }}
-      >
-        <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-          Musique 🎵
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">
-          Exercices interactifs
-        </p>
-      </motion.div>
+          {/* Timer et Progression */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
+            <div className="w-full sm:w-auto">
+              <Timer timeLeft={timeLeft} />
+            </div>
+            <div className="w-full sm:w-auto flex-1">
+              <ProgressBar 
+                totalQuestions={exercises.length}
+                correctAnswers={completedExercises}
+                onProgressComplete={() => {
+                  if (completedExercises === exercises.length) {
+                    calculateFinalScore();
+                  }
+                }}
+              />
+            </div>
+          </div>
 
-      <ProgressBar
-        correctAnswers={completedExercises}
-        totalQuestions={exercises.length}
-        onProgressComplete={() => {
-          if (completedExercises === exercises.length) {
-            calculateFinalScore();
-          }
-        }}
-      />
+          {/* Filtres et catégories */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <select
+              className="w-full sm:w-auto p-3 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-base"
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <option value="Tout">Toutes les catégories</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
 
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.3 }}
-        className="mb-4"
-      >
-        <select
-          className="w-full sm:w-80 p-4 text-lg font-semibold rounded-2xl border border-blue-400 bg-blue-50 dark:bg-gray-900 shadow-md focus:ring-2 focus:ring-blue-500"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-      </motion.div>
-
-      <div className="flex justify-center my-4 gap-2">
-        {Array.from({ length: totalPages }).map((_, idx) => (
-          <button
-            key={idx}
-            className={`px-4 py-2 rounded-full font-semibold transition-transform transform border shadow-sm hover:scale-105 hover:bg-blue-200 ${
-              currentPage === idx + 1
-                ? "bg-blue-500 text-white"
-                : "bg-white text-blue-500"
-            }`}
-            onClick={() => setCurrentPage(idx + 1)}
-          >
-            {idx + 1}
-          </button>
-        ))}
-      </div>
-
-      {emoji && (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-5 text-lg rounded-xl shadow-xl border-2 border-blue-300 z-50 font-semibold text-blue-600 dark:text-blue-400"
-          initial={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          whileHover={{ scale: 1.05 }}
-        >
-          <p className="text-lg">{emoji}</p>
-        </motion.div>
-      )}
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        {paginatedExercises.map((ex, idx) => (
-          <motion.div
-            key={ex._id}
-            animate={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ delay: idx * 0.1 }}
-            whileHover={{ scale: 1.02 }}
-          >
-            <Card className="w-full border border-blue-200">
-              <CardBody className="p-4">
-                <h3 className="font-bold mb-3 text-lg sm:text-xl text-blue-700 dark:text-blue-300">
-                  {getEmojiForCategory(ex.category)} {ex.title}
-                </h3>
-                <p className="mb-2">{ex.content}</p>
-                <p className="mb-4">{ex.question}</p>
-                {ex.image && (
-                  <div className="mb-4">
-                    <Image
-                      alt={ex.title}
-                      className="rounded-lg object-cover w-full h-48"
-                      height={200}
-                      src={`/assets/music/${ex.image}`}
-                      width={300}
-                    />
-                  </div>
-                )}
-                {ex.options ? (
-                  <select
-                    className="w-full mb-2 p-4 text-base rounded-xl border border-blue-300 dark:bg-gray-700 font-medium shadow-md focus:ring-2 focus:ring-blue-400"
-                    disabled={isAnswerSubmitted(ex._id)}
-                    value={userAnswers[ex._id] || ""}
-                    onChange={(e) => handleChange(e, ex._id)}
-                  >
-                    <option value="">Sélectionner une réponse</option>
-                    {ex.options.map((option, optIdx) => (
-                      <option key={optIdx} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    className="w-full mb-2"
-                    disabled={isAnswerSubmitted(ex._id)}
-                    type="text"
-                    value={userAnswers[ex._id] || ""}
-                    onChange={(e) => handleChange(e, ex._id)}
-                  />
-                )}
-                <Button
-                  className="w-full bg-gradient-to-r from-blue-500 to-indigo-500 text-white font-bold py-2 rounded-xl hover:brightness-110 transition"
-                  disabled={isAnswerSubmitted(ex._id)}
-                  onClick={() => handleSubmit(ex._id, ex.answer)}
+          {/* Liste des exercices */}
+          <div className="grid grid-cols-1 gap-6">
+            {exercises
+              .filter(
+                (exercise) =>
+                  selectedCategory === "Tout" ||
+                  exercise.category === selectedCategory
+              )
+              .slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
+              .map((exercise) => (
+                <Card
+                  key={exercise._id}
+                  className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
                 >
-                  Soumettre
-                </Button>
-                {isAnswerSubmitted(ex._id) && (
-                  <>
-                    <p
-                      className={`mt-3 text-center font-semibold text-lg ${
-                        isAnswerCorrect(ex._id) ? "text-green-600" : "text-red-500"
-                      }`}
-                    >
-                      {isAnswerCorrect(ex._id) ? "Bonne réponse !" : "Mauvaise réponse"}
-                    </p>
-                    <div className="mt-4">
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Noter la difficulté de cet exercice :</p>
-                      <div className="grid grid-cols-5 gap-2">
-                        {[1, 2, 3, 4, 5].map((value) => (
-                          <Button
-                            key={value}
-                            size="lg"
-                            color="default"
-                            variant="flat"
-                            onClick={() => handleRating(ex._id, value)}
-                            className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
-                          >
-                            {value}
-                          </Button>
-                        ))}
+                  <CardBody className="p-4 sm:p-6">
+                    <div className="flex flex-col gap-4">
+                      {/* Titre et catégorie */}
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <h3 className="text-lg font-semibold">
+                          {exercise.title}
+                        </h3>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {exercise.category}
+                        </span>
+                      </div>
+
+                      {/* Contenu et question */}
+                      <div className="space-y-4">
+                        <p className="text-gray-700 dark:text-gray-300">{exercise.content}</p>
+                        <p className="font-medium">{exercise.question}</p>
+                      </div>
+
+                      {/* Options ou champ de réponse */}
+                      <div className="space-y-4">
+                        {exercise.options ? (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {exercise.options.map((option, index) => (
+                              <label
+                                key={index}
+                                className="flex items-center space-x-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                              >
+                                <input
+                                  type="radio"
+                                  name={exercise._id}
+                                  value={option}
+                                  onChange={(e) => handleChange(e, exercise._id)}
+                                  disabled={isAnswerSubmitted(exercise._id)}
+                                  className="form-radio h-5 w-5"
+                                />
+                                <span className="text-base">{option}</span>
+                              </label>
+                            ))}
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            placeholder="Votre réponse"
+                            className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-base"
+                            onChange={(e) => handleChange(e, exercise._id)}
+                            disabled={isAnswerSubmitted(exercise._id)}
+                          />
+                        )}
+                      </div>
+
+                      {/* Bouton de soumission et résultat */}
+                      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                        <Button
+                          size="lg"
+                          color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
+                          onClick={() => handleSubmit(exercise._id, exercise.answer)}
+                          disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
+                          className="w-full sm:w-auto py-3 px-6"
+                        >
+                          {isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "Correct ✓" : "Incorrect ✗") : "Valider"}
+                        </Button>
+
+                        {isAnswerSubmitted(exercise._id) && (
+                          <div className="flex flex-wrap sm:flex-nowrap gap-2">
+                            <Button
+                              size="lg"
+                              color="default"
+                              variant="flat"
+                              onClick={() => handleRating(exercise._id, 1)}
+                              className="w-full sm:w-auto py-3"
+                            >
+                              1
+                            </Button>
+                            <Button
+                              size="lg"
+                              color="default"
+                              variant="flat"
+                              onClick={() => handleRating(exercise._id, 2)}
+                              className="w-full sm:w-auto py-3"
+                            >
+                              2
+                            </Button>
+                            <Button
+                              size="lg"
+                              color="default"
+                              variant="flat"
+                              onClick={() => handleRating(exercise._id, 3)}
+                              className="w-full sm:w-auto py-3"
+                            >
+                              3
+                            </Button>
+                            <Button
+                              size="lg"
+                              color="default"
+                              variant="flat"
+                              onClick={() => handleRating(exercise._id, 4)}
+                              className="w-full sm:w-auto py-3"
+                            >
+                              4
+                            </Button>
+                            <Button
+                              size="lg"
+                              color="default"
+                              variant="flat"
+                              onClick={() => handleRating(exercise._id, 5)}
+                              className="w-full sm:w-auto py-3"
+                            >
+                              5
+                            </Button>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </>
-                )}
-              </CardBody>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
+                  </CardBody>
+                </Card>
+              ))}
+          </div>
 
-      {showResults && (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4"
-          initial={{ opacity: 0, y: 20 }}
-        >
-          <div className="bg-white dark:bg-gray-800 rounded-xl p-6 sm:p-8 max-w-md w-full">
-            <h2 className="text-2xl sm:text-3xl font-bold text-center text-violet-600 dark:text-violet-400 mb-4">
-              Résultats {emoji}
-            </h2>
-            <p className="text-center text-xl mb-6">
-              Score final : {finalScore?.toFixed(1)}%
-            </p>
-            <div className="space-y-4">
-              {badges.perfectScore && (
-                <div className="flex items-center gap-2 text-yellow-500">
-                  <span>🌟</span>
-                  <p>Score parfait !</p>
-                </div>
-              )}
-              {badges.streakMaster && (
-                <div className="flex items-center gap-2 text-orange-500">
-                  <span>🔥</span>
-                  <p>Maître des séries !</p>
-                </div>
-              )}
-              {badges.musicExpert && (
-                <div className="flex items-center gap-2 text-blue-500">
-                  <span>🎵</span>
-                  <p>Expert en musique !</p>
-                </div>
-              )}
-              {badges.quickLearner && (
-                <div className="flex items-center gap-2 text-green-500">
-                  <span>⚡</span>
-                  <p>Apprenant rapide !</p>
-                </div>
-              )}
-            </div>
+          {/* Pagination */}
+          <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
             <Button
-              className="w-full mt-6 bg-violet-500 text-white hover:bg-violet-600"
-              onClick={() => setShowResults(false)}
+              size="lg"
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
+              className="w-full sm:w-auto py-3"
             >
-              Fermer
+              Précédent
+            </Button>
+            <span className="flex items-center px-4 text-base">
+              Page {currentPage} sur {Math.ceil(exercises.length / questionsPerPage)}
+            </span>
+            <Button
+              size="lg"
+              onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
+              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
+              className="w-full sm:w-auto py-3"
+            >
+              Suivant
             </Button>
           </div>
-        </motion.div>
-      )}
+        </div>
+      </div>
     </div>
   );
 };
