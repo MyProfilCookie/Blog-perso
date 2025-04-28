@@ -37,16 +37,16 @@ import {
 
 // Composant de contenu du layout qui utilise le contexte
 function ShopLayoutContent({ children }: { children: React.ReactNode }) {
-    const { 
-        cartItems, 
-        increaseQuantity, 
-        decreaseQuantity, 
-        removeFromCart, 
-        calculateTotalItems, 
+    const {
+        cartItems,
+        increaseQuantity,
+        decreaseQuantity,
+        removeFromCart,
+        calculateTotalItems,
         calculateTotal,
-        user 
+        user
     } = useCart();
-    
+
     const router = useRouter();
     const [isDesktop, setIsDesktop] = useState(false);
     const [isLoginAlertOpen, setIsLoginAlertOpen] = useState(false);
