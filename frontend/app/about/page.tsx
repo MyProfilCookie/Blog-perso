@@ -19,14 +19,14 @@ const colorVariants = [
 
 const AboutUsPage = () => {
   const familyMembers = [
-    { name: "Jessica", img: "/assets/family/avatar/jessica.jpg" },
-    { name: "Joshua", img: "/assets/family/avatar/Joshua.jpg" },
-    { name: "Maeva", img: "/assets/family/avatar/Maeva.jpg" },
-    { name: "Maman", img: "/assets/family/avatar/maman.jpg" },
-    { name: "Nini", img: "/assets/family/avatar/nini.jpg" },
-    { name: "Papa", img: "/assets/family/avatar/papa.jpg" },
-    { name: "Pauline", img: "/assets/family/avatar/pauline.jpg" },
-    { name: "Titi", img: "/assets/family/avatar/titi.jpg" },
+    { name: "Jessica", img: "/assets/family/avatar/jessica.png" },
+    { name: "Joshua", img: "/assets/family/avatar/joshua.png" },
+    { name: "Maeva", img: "/assets/family/avatar/maeva.png" },
+    { name: "Maman", img: "/assets/family/avatar/chantal.png" },
+    { name: "Nini", img: "/assets/family/avatar/virginie.png" },
+    { name: "Papa", img: "/assets/family/avatar/paul.png" },
+    { name: "Pauline", img: "/assets/family/avatar/pauline.png" },
+    { name: "Titi", img: "/assets/family/avatar/vanessa.png" },
   ];
 
   // ✅ Attribution aléatoire des couleurs
@@ -149,6 +149,7 @@ const AboutUsPage = () => {
                   key={index}
                   isBordered
                   alt={member.name}
+                  className="aspect-square w-full h-full"
                   color="primary"
                   size="lg"
                   src={member.img}
