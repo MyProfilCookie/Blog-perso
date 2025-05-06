@@ -180,7 +180,11 @@ export default function ControlePage() {
   const [stats, setStats] = useState({
     totalEleves: 0,
     averageScore: "0",
-    progression: "0"
+    progression: "0",
+    eleve: {
+      nom: "",
+      prenom: ""
+    }
   });
 
   useEffect(() => {
@@ -316,12 +320,16 @@ export default function ControlePage() {
 
   return (
     <div className="w-full">
-      <div className="flex justify-between items-center mb-8">
-        <BackButton />
-        <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
-          {/* afficher le nom de l'eleve */}
-          Controle
+      <div className="flex flex-col items-center justify-center mb-8">
+        <div className="self-start">
+          <BackButton />
+        </div>
+        <h1 className="text-4xl font-bold text-center text-gray-900 dark:text-white mt-4 animate-bounce">
+          🌟 Bonjour {stats.eleve.prenom} ! 🌟
         </h1>
+        <p className="text-xl text-center text-gray-600 dark:text-gray-300 mt-2">
+          Bienvenue dans ton espace d&apos;apprentissage magique ! ✨
+        </p>
       </div>
 
       {loading ? (
