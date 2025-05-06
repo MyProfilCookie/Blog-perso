@@ -77,7 +77,7 @@ export default function Home() {
     {
       name: "Ayivor Virginie",
       role: "Sœur de Maeva",
-      img: "/assets/family/nini.png",
+      img: "/assets/family/virginie.png",
     },
     {
       name: "Ayivor Joshua",
