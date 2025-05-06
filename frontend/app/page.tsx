@@ -430,7 +430,7 @@ export default function Home() {
                     }}
                   >
                     <CardBody className="text-center">
-                      
+                      <div className="relative w-72 h-72 mx-auto mb-6 overflow-hidden border-4 border-violet-200 dark:border-violet-700">
                         <Avatar
                            isBordered
                            alt={member.name}
@@ -439,6 +439,7 @@ export default function Home() {
                            size="lg"
                            src={member.img}
                         />
+                      </div>
                       <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{member.name}</h4>
                       <p className="text-gray-500 dark:text-gray-300">{member.role}</p>
                     </CardBody>
