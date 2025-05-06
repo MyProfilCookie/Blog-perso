@@ -87,7 +87,7 @@ export default function Home() {
     {
       name: "Ayivor Vanessa",
       role: "Soeur de Maeva",
-      img: "/assets/family/titi.png",
+      img: "/assets/family/vanessa.png",
     },
     {
       name: "Ayivor Pauline",
@@ -102,7 +102,7 @@ export default function Home() {
     {
       name: "Ayivor Maeva",
       role: "Inspiratrice de la plateforme",
-      img: "/assets/family/Maeva.png",
+      img: "/assets/family/maeva.png",
     },
   ];
 
