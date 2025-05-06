@@ -13,6 +13,7 @@ import {
   CardBody,
   Button,
   Image,
+  Avatar,
 } from "@nextui-org/react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -430,12 +431,10 @@ export default function Home() {
                   >
                     <CardBody className="text-center">
                       <div className="relative w-40 h-40 mx-auto mb-6 overflow-hidden rounded-full border-4 border-violet-200 dark:border-violet-700">
-                        <Image
+                        <Avatar
                           src={member.img}
                           alt={member.name}
                           className="aspect-square w-full h-full"
-                          width={160}
-                          height={160}
                         />
                       </div>
                       <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{member.name}</h4>
