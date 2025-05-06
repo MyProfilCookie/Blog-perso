@@ -295,14 +295,24 @@ const SciencesPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-cream p-4 dark:bg-background">
       <div className="max-w-7xl mx-auto">
-        <div className="flex flex-col gap-4">
-          {/* Header avec retour et titre */}
-          <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
-            <BackButton />
-            <h1 className="text-2xl sm:text-3xl font-bold text-center">
-              Sciences {getEmojiForCategory(selectedCategory)}
-            </h1>
-          </div>
+      <div className="flex justify-between items-center mb-4">
+        <BackButton />
+        <Timer timeLeft={timeLeft} />
+      </div>
+
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-4"
+        initial={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.4 }}
+      >
+        <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
+          Sciences {getEmojiForCategory(selectedCategory)}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
+          Exercices interactifs
+        </p>
+      </motion.div>
 
           {/* Timer et Progression */}
           <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
@@ -526,7 +536,6 @@ const SciencesPage: React.FC = () => {
           </div>
         </div>
       </div>
-    </div>
   );
 };
 
