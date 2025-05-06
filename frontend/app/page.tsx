@@ -82,7 +82,7 @@ export default function Home() {
     {
       name: "Ayivor Joshua",
       role: "Frère de Maeva",
-      img: "/assets/family/Joshua.png",
+      img: "/assets/family/joshua.png",
     },
     {
       name: "Ayivor Vanessa",
@@ -92,7 +92,7 @@ export default function Home() {
     {
       name: "Ayivor Pauline",
       role: "Soeur de Maeva",
-      img: "/assets/family/Pauline.png",
+      img: "/assets/family/pauline.png",
     },
     {
       name: "Ayivor Jessica",
