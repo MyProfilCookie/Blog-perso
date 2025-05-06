@@ -67,42 +67,42 @@ export default function Home() {
     {
       name: "Paul Ayivor",
       role: "Père de famille",
-      img: "/assets/family/papa.jpg",
+      img: "/assets/family/paul.png",
     },
     {
       name: "Ayivor Chantal",
       role: "Mère de famille",
-      img: "/assets/family/maman.JPG",
+      img: "/assets/family/chantal.png",
     },
     {
       name: "Ayivor Virginie",
       role: "Sœur de Maeva",
-      img: "/assets/family/nini.jpg",
+      img: "/assets/family/nini.png",
     },
     {
       name: "Ayivor Joshua",
       role: "Frère de Maeva",
-      img: "/assets/family/Joshua.jpg",
+      img: "/assets/family/Joshua.png",
     },
     {
       name: "Ayivor Vanessa",
       role: "Soeur de Maeva",
-      img: "/assets/family/titi.jpg",
+      img: "/assets/family/titi.png",
     },
     {
       name: "Ayivor Pauline",
       role: "Soeur de Maeva",
-      img: "/assets/family/Pauline.jpg",
+      img: "/assets/family/Pauline.png",
     },
     {
       name: "Ayivor Jessica",
       role: "Soeur de Maeva",
-      img: "/assets/family/jessica.jpg",
+      img: "/assets/family/jessica.png",
     },
     {
       name: "Ayivor Maeva",
       role: "Inspiratrice de la plateforme",
-      img: "/assets/family/Maeva.jpg",
+      img: "/assets/family/Maeva.png",
     },
   ];
 
