@@ -149,7 +149,7 @@ const AboutUsPage = () => {
                   key={index}
                   isBordered
                   alt={member.name}
-                  className="aspect-square w-full h-full"
+                  className="aspect-ratio w-full h-full"
                   color="primary"
                   size="lg"
                   src={member.img}
