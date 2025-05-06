@@ -432,9 +432,12 @@ export default function Home() {
                     <CardBody className="text-center">
                       <div className="relative w-40 h-40 mx-auto mb-6 overflow-hidden rounded-full border-4 border-violet-200 dark:border-violet-700">
                         <Avatar
-                          src={member.img}
-                          alt={member.name}
-                          className="aspect-square w-full h-full"
+                           isBordered
+                           alt={member.name}
+                           className="aspect-ratio w-full h-full"
+                           color="primary"
+                           size="lg"
+                           src={member.img}
                         />
                       </div>
                       <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{member.name}</h4>
