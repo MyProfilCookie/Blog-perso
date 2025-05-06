@@ -214,6 +214,7 @@ export default function ControlePage() {
 
       // Vérifier si l'utilisateur est connecté d'une manière ou d'une autre
       let isAuthenticated = false;
+      let userData = null;
 
       // Méthode 1: Token et userId
       if (token && userId) {
@@ -224,9 +225,9 @@ export default function ControlePage() {
       if (userInfo) {
         try {
           const parsedUserInfo = JSON.parse(userInfo);
-
           if (parsedUserInfo && parsedUserInfo._id) {
             isAuthenticated = true;
+            userData = parsedUserInfo;
           }
         } catch (e) {
           console.error("Erreur parsing userInfo:", e);
@@ -237,9 +238,9 @@ export default function ControlePage() {
       if (user) {
         try {
           const parsedUser = JSON.parse(user);
-
           if (parsedUser && (parsedUser._id || parsedUser.id)) {
             isAuthenticated = true;
+            userData = parsedUser;
           }
         } catch (e) {
           console.error("Erreur parsing user:", e);
@@ -249,8 +250,18 @@ export default function ControlePage() {
       if (!isAuthenticated) {
         console.log("Redirection vers login - Aucune authentification trouvée");
         router.push("/users/login");
-
         return;
+      }
+
+      // Mettre à jour les informations de l'élève
+      if (userData) {
+        setStats(prevStats => ({
+          ...prevStats,
+          eleve: {
+            nom: userData.nom || "",
+            prenom: userData.prenom || ""
+          }
+        }));
       }
 
       setLoading(false);
