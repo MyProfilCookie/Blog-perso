@@ -433,7 +433,7 @@ export default function Home() {
                         <Image
                           src={member.img}
                           alt={member.name}
-                          className="aspect-ratio w-full h-full"
+                          className="aspect-square w-full h-full"
                           width={160}
                           height={160}
                         />
