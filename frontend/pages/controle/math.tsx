@@ -280,7 +280,9 @@ const MathPage: React.FC = () => {
           {/* Header avec retour et titre */}
           <div className="flex flex-col sm:flex-row justify-between items-center gap-4 mb-4">
             <BackButton />
-            <h1 className="text-2xl sm:text-3xl font-bold text-center">Mathématiques</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold text-center">
+              Mathématiques {getEmojiForCategory(selectedCategory)}
+            </h1>
           </div>
 
           {/* Timer et Progression */}
