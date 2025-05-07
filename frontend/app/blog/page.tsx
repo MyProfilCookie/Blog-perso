@@ -83,16 +83,26 @@ export default function BlogPage() {
         `${process.env.NEXT_PUBLIC_API_URL}/blogs?page=${pageNum}&limit=${blogsPerPage}`,
       );
 
-      if (!response.ok)
+      if (!response.ok) {
+        if (response.status === 404) {
+          throw new Error("Aucun article trouvé");
+        }
         throw new Error("Erreur lors de la récupération des articles");
+      }
 
       const data = await response.json();
+
+      if (!data.blogs || !Array.isArray(data.blogs)) {
+        throw new Error("Format de données invalide");
+      }
 
       setBlogs(data.blogs);
       setTotalPages(data.totalPages || 1);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Une erreur est survenue");
       console.error("❌ Erreur :", err);
+      setBlogs([]);
+      setTotalPages(1);
     } finally {
       setLoading(false);
     }
