@@ -47,6 +47,8 @@ interface User {
   image?: string;
   prenom?: string;
   nom?: string;
+  modificationsCount?: number;
+  lastModificationDate?: string;
 }
 
 interface OrderItem {
@@ -727,7 +729,6 @@ const ProfilePage = () => {
       setLoading(true);
 
       try {
-        // Get token from localStorage
         const token = localStorage.getItem("userToken");
 
         if (!token) {
@@ -738,28 +739,23 @@ const ProfilePage = () => {
             icon: "error",
             confirmButtonText: "OK",
           }).then(() => router.push("/users/login"));
-
           return;
         }
 
-        // Build API URL
         const apiUrl = (
           process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
         ).replace(/\/$/, "");
 
-        // Configure headers with token
         const headers = {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         };
 
-        // Fetch user data with fetch API
         const userResponse = await fetch(`${apiUrl}/users/me`, {
           method: "GET",
           headers,
         });
 
-        // Check for error response
         if (!userResponse.ok) {
           throw new Error(`HTTP error! Status: ${userResponse.status}`);
         }
@@ -767,38 +763,40 @@ const ProfilePage = () => {
         const userData = await userResponse.json();
 
         if (userData.user) {
-          setUser(userData.user);
+          // Initialiser les compteurs de modification s'ils n'existent pas
+          const userInfo = {
+            ...userData.user,
+            modificationsCount: userData.user.modificationsCount || 0,
+            lastModificationDate: userData.user.lastModificationDate || new Date(0).toISOString()
+          };
 
-          // Set profile form fields
-          setFirstName(userData.user.firstName || userData.user.prenom || "");
-          setLastName(userData.user.lastName || userData.user.nom || "");
-          setPhone(userData.user.phone || "");
+          setUser(userInfo);
+          setFirstName(userInfo.firstName || userInfo.prenom || "");
+          setLastName(userInfo.lastName || userInfo.nom || "");
+          setPhone(userInfo.phone || "");
           setAddress(
-            userData.user.deliveryAddress || {
+            userInfo.deliveryAddress || {
               street: "",
               city: "",
               postalCode: "",
               country: "France",
-            },
+            }
           );
 
-          setCreatedAt(dayjs(userData.user.createdAt).format("DD/MM/YYYY"));
+          setCreatedAt(dayjs(userInfo.createdAt).format("DD/MM/YYYY"));
 
-          // Store updated user data
-          localStorage.setItem("user", JSON.stringify(userData.user));
+          // Stocker les données utilisateur mises à jour
+          localStorage.setItem("user", JSON.stringify(userInfo));
+          localStorage.setItem("userInfo", JSON.stringify(userInfo));
 
-          // Fetch user orders
-          if (userData.user._id) {
-            fetchUserOrders(userData.user._id, token);
+          if (userInfo._id) {
+            fetchUserOrders(userInfo._id, token);
           }
         }
       } catch (error) {
         console.error("Error in fetchUserData:", error);
-        // Check if it's an authentication error (401)
         if (error instanceof Error && error.message.includes("401")) {
-          // Remove invalid token
           localStorage.removeItem("userToken");
-
           Swal.fire({
             title: "Session expirée",
             text: "Votre session a expiré. Veuillez vous reconnecter.",
@@ -865,7 +863,6 @@ const ProfilePage = () => {
         icon: "error",
         confirmButtonText: "OK",
       });
-
       return;
     }
 
@@ -877,18 +874,41 @@ const ProfilePage = () => {
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
       ).replace(/\/$/, "");
 
+      const currentModificationsCount = user.modificationsCount || 0;
+      const lastModificationDate = user.lastModificationDate || new Date(0).toISOString();
+      
+      const lastModification = new Date(lastModificationDate);
+      const currentDate = new Date();
+      const monthDiff = (currentDate.getFullYear() - lastModification.getFullYear()) * 12 + 
+                       (currentDate.getMonth() - lastModification.getMonth());
+
+      if (monthDiff < 1 && currentModificationsCount >= 3) {
+        Swal.fire({
+          title: "Limite atteinte",
+          text: "Vous avez atteint la limite de 3 modifications par mois. Veuillez réessayer le mois prochain.",
+          icon: "warning",
+          confirmButtonText: "OK",
+        });
+        setSaving(false);
+        return;
+      }
+
+      const updateData = {
+        firstName,
+        lastName,
+        phone,
+        deliveryAddress: address,
+        modificationsCount: currentModificationsCount + 1,
+        lastModificationDate: new Date().toISOString()
+      };
+
       const updateResponse = await fetch(`${apiUrl}/users/${user._id}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          phone,
-          deliveryAddress: address,
-        }),
+        body: JSON.stringify(updateData),
       });
 
       if (!updateResponse.ok) {
@@ -897,13 +917,12 @@ const ProfilePage = () => {
 
       const updatedUser = {
         ...user,
-        firstName,
-        lastName,
-        phone,
-        deliveryAddress: address,
+        ...updateData
       };
 
       localStorage.setItem("user", JSON.stringify(updatedUser));
+      localStorage.setItem("userInfo", JSON.stringify(updatedUser));
+      
       setUser(updatedUser);
 
       Swal.fire({

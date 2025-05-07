@@ -28,6 +28,7 @@ import { Card, CardBody, Spinner, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
 import axios from "axios";
+import Swal from "sweetalert2";
 
 import BackButton from "@/components/back";
 
@@ -183,7 +184,9 @@ export default function ControlePage() {
     progression: "0",
     eleve: {
       nom: "",
-      prenom: ""
+      prenom: "",
+      modificationsCount: 0,
+      lastModificationDate: ""
     }
   });
 
@@ -259,7 +262,9 @@ export default function ControlePage() {
           ...prevStats,
           eleve: {
             nom: userData.nom || "",
-            prenom: userData.prenom || ""
+            prenom: userData.prenom || "",
+            modificationsCount: 0,
+            lastModificationDate: ""
           }
         }));
       }
@@ -271,6 +276,52 @@ export default function ControlePage() {
     checkAuth();
     fetchStats();
   }, [router]);
+
+  // Fonction pour vérifier si la modification est possible
+  const canModifyProfile = () => {
+    const lastModification = new Date(stats.eleve.lastModificationDate);
+    const currentDate = new Date();
+    const monthDiff = (currentDate.getFullYear() - lastModification.getFullYear()) * 12 + 
+                     (currentDate.getMonth() - lastModification.getMonth());
+    
+    return monthDiff >= 1 || stats.eleve.modificationsCount < 3;
+  };
+
+  // Fonction pour mettre à jour le profil
+  const updateProfile = async (newData: any) => {
+    if (!canModifyProfile()) {
+      Swal.fire({
+        title: "Limite atteinte",
+        text: "Vous avez atteint la limite de 3 modifications par mois. Veuillez réessayer le mois prochain.",
+        icon: "warning",
+        confirmButtonText: "OK"
+      });
+      return false;
+    }
+
+    try {
+      const response = await axios.put(`${process.env.NEXT_PUBLIC_API_URL}/api/users/profile`, {
+        ...newData,
+        modificationsCount: stats.eleve.modificationsCount + 1,
+        lastModificationDate: new Date().toISOString()
+      });
+
+      setStats(prevStats => ({
+        ...prevStats,
+        eleve: {
+          ...prevStats.eleve,
+          ...newData,
+          modificationsCount: prevStats.eleve.modificationsCount + 1,
+          lastModificationDate: new Date().toISOString()
+        }
+      }));
+
+      return true;
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du profil:", error);
+      return false;
+    }
+  };
 
   if (!mounted || loading) {
     return (
