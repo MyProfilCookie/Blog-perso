@@ -169,8 +169,19 @@ const MathPage: React.FC = () => {
       setCompletedExercises(prev => prev + 1);
       setTotalPoints(prev => prev + 10);
       setCurrentStreak(prev => prev + 1);
+
+      // Messages d'encouragement pour les bonnes réponses
+      if (currentStreak >= 3) {
+        toast.success(`Super ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 🔢`);
+      } else if (currentStreak >= 5) {
+        toast.success(`Incroyable ! ${currentStreak + 1} bonnes réponses d'affilée ! 📐`);
+      } else {
+        toast.success("Bonne réponse ! Continue à explorer les mathématiques ! 🧮");
+      }
     } else {
       setCurrentStreak(0);
+      // Messages d'encouragement pour les mauvaises réponses
+      toast.error("Ce n'est pas la bonne réponse, mais les maths sont faites d'essais ! Essaie encore ! 📏");
     }
   };
 
@@ -181,14 +192,29 @@ const MathPage: React.FC = () => {
       
       if (!userId || !token) {
         console.error("Utilisateur non connecté");
+        toast.error("Vous devez être connecté pour sauvegarder votre score");
         return;
+      }
+
+      const correctAnswers = results.filter((r: Result) => r.isCorrect).length;
+      const scorePercentage = (correctAnswers / exercises.length) * 100;
+
+      // Messages de fin basés sur le score
+      if (scorePercentage >= 90) {
+        toast.success("Excellent travail ! Tu es un véritable mathématicien ! 🔢");
+      } else if (scorePercentage >= 70) {
+        toast.success("Très bon travail ! Ta logique mathématique est impressionnante ! 📐");
+      } else if (scorePercentage >= 50) {
+        toast.success("Bon travail ! Continue à explorer les maths ! 🧮");
+      } else {
+        toast.info("Ne te décourage pas ! Les maths sont un voyage passionnant ! 📏");
       }
 
       const pageData = {
         pageNumber: currentPage,
         score: finalScore,
         timeSpent: timeSpent,
-        correctAnswers: results.filter((r: Result) => r.isCorrect).length,
+        correctAnswers: correctAnswers,
         totalQuestions: exercises.length
       };
 
@@ -213,6 +239,7 @@ const MathPage: React.FC = () => {
       router.push(`/eleve/${userId}`);
     } catch (error) {
       console.error("Erreur:", error);
+      toast.error("Une erreur est survenue lors de la sauvegarde de ton score");
     }
   };
 
