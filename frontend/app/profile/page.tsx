@@ -893,14 +893,17 @@ const ProfilePage = () => {
         return;
       }
 
+      // Préparer les données à envoyer
       const updateData = {
-        firstName,
-        lastName,
+        prenom: firstName,
+        nom: lastName,
         phone,
         deliveryAddress: address,
         modificationsCount: currentModificationsCount + 1,
         lastModificationDate: new Date().toISOString()
       };
+
+      console.log("Données envoyées au serveur:", updateData);
 
       const updateResponse = await fetch(`${apiUrl}/users/${user._id}`, {
         method: "PUT",
@@ -912,12 +915,22 @@ const ProfilePage = () => {
       });
 
       if (!updateResponse.ok) {
+        const errorData = await updateResponse.json();
+        console.error("Erreur serveur:", errorData);
         throw new Error(`HTTP error! Status: ${updateResponse.status}`);
       }
 
+      const responseData = await updateResponse.json();
+      console.log("Réponse du serveur:", responseData);
+
       const updatedUser = {
         ...user,
-        ...updateData
+        prenom: firstName,
+        nom: lastName,
+        phone,
+        deliveryAddress: address,
+        modificationsCount: currentModificationsCount + 1,
+        lastModificationDate: new Date().toISOString()
       };
 
       localStorage.setItem("user", JSON.stringify(updatedUser));
