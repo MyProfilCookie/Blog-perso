@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Input, Button, Select, SelectItem } from "@nextui-org/react";
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
+
 import ArticleCard from "./ArticleCard";
 
 interface Article {
@@ -32,11 +33,16 @@ export default function ArticlesList() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
+        const apiUrl = (
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+        ).replace(/\/$/, "");
         const response = await axios.get(`${apiUrl}/articles`);
+
         setArticles(response.data);
       } catch (err) {
-        setError(err instanceof Error ? err.message : "Une erreur est survenue");
+        setError(
+          err instanceof Error ? err.message : "Une erreur est survenue",
+        );
       } finally {
         setLoading(false);
       }
@@ -49,9 +55,11 @@ export default function ArticlesList() {
   const sortArticles = (articles: Article[]) => {
     return [...articles].sort((a, b) => {
       let comparison = 0;
+
       switch (sortBy) {
         case "date":
-          comparison = new Date(a["📅 date"]).getTime() - new Date(b["📅 date"]).getTime();
+          comparison =
+            new Date(a["📅 date"]).getTime() - new Date(b["📅 date"]).getTime();
           break;
         case "titre":
           comparison = a["📌 titre"].localeCompare(b["📌 titre"]);
@@ -63,22 +71,30 @@ export default function ArticlesList() {
           comparison = a["📂 category"].localeCompare(b["📂 category"]);
           break;
       }
+
       return sortOrder === "asc" ? comparison : -comparison;
     });
   };
 
   // Filtrage et tri des articles
   const filteredArticles = articles
-    .filter((article) =>
-      article["📌 titre"].toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article["📝 sous-titre"].toLowerCase().includes(searchQuery.toLowerCase()) ||
-      article["🧠 description"].toLowerCase().includes(searchQuery.toLowerCase())
+    .filter(
+      (article) =>
+        article["📌 titre"].toLowerCase().includes(searchQuery.toLowerCase()) ||
+        article["📝 sous-titre"]
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()) ||
+        article["🧠 description"]
+          .toLowerCase()
+          .includes(searchQuery.toLowerCase()),
     )
     .sort((a, b) => {
       let comparison = 0;
+
       switch (sortBy) {
         case "date":
-          comparison = new Date(a["📅 date"]).getTime() - new Date(b["📅 date"]).getTime();
+          comparison =
+            new Date(a["📅 date"]).getTime() - new Date(b["📅 date"]).getTime();
           break;
         case "titre":
           comparison = a["📌 titre"].localeCompare(b["📌 titre"]);
@@ -90,19 +106,20 @@ export default function ArticlesList() {
           comparison = a["📂 category"].localeCompare(b["📂 category"]);
           break;
       }
+
       return sortOrder === "asc" ? comparison : -comparison;
     });
 
   const totalPages = Math.ceil(filteredArticles.length / articlesPerPage);
   const paginatedArticles = filteredArticles.slice(
     (currentPage - 1) * articlesPerPage,
-    currentPage * articlesPerPage
+    currentPage * articlesPerPage,
   );
 
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-[60vh]">
-        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600"></div>
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-violet-600" />
       </div>
     );
   }
@@ -121,10 +138,8 @@ export default function ArticlesList() {
       {/* Barre de recherche et options de tri */}
       <div className="flex flex-col md:flex-row gap-4 mb-8">
         <Input
-          placeholder="Rechercher un article..."
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
           className="flex-1"
+          placeholder="Rechercher un article..."
           startContent={
             <svg
               className="text-gray-400"
@@ -141,23 +156,33 @@ export default function ArticlesList() {
               <line x1="21" x2="16.65" y1="21" y2="16.65" />
             </svg>
           }
+          value={searchQuery}
+          onChange={(e) => setSearchQuery(e.target.value)}
         />
         <div className="flex gap-2">
           <Select
+            className="w-40"
             placeholder="Trier par"
             selectedKeys={[sortBy]}
             onChange={(e) => setSortBy(e.target.value as SortOption)}
-            className="w-40"
           >
-            <SelectItem key="date" value="date">Date</SelectItem>
-            <SelectItem key="titre" value="titre">Titre</SelectItem>
-            <SelectItem key="auteur" value="auteur">Auteur</SelectItem>
-            <SelectItem key="category" value="category">Catégorie</SelectItem>
+            <SelectItem key="date" value="date">
+              Date
+            </SelectItem>
+            <SelectItem key="titre" value="titre">
+              Titre
+            </SelectItem>
+            <SelectItem key="auteur" value="auteur">
+              Auteur
+            </SelectItem>
+            <SelectItem key="category" value="category">
+              Catégorie
+            </SelectItem>
           </Select>
           <Button
             isIconOnly
-            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
             className="bg-violet-600 text-white"
+            onClick={() => setSortOrder(sortOrder === "asc" ? "desc" : "asc")}
           >
             {sortOrder === "asc" ? "↑" : "↓"}
           </Button>
@@ -168,24 +193,24 @@ export default function ArticlesList() {
       <AnimatePresence mode="wait">
         <motion.div
           key={currentPage}
-          initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          exit={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
           className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+          exit={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0, y: 20 }}
+          transition={{ duration: 0.3 }}
         >
           {paginatedArticles.map((article, index) => (
             <motion.div
               key={index}
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
+              initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
               <ArticleCard
                 id={index.toString()}
-                title={article["📌 titre"]}
-                subtitle={article["📝 sous-titre"]}
                 img={article["🔗 imageUrl"]}
+                subtitle={article["📝 sous-titre"]}
+                title={article["📌 titre"]}
               />
             </motion.div>
           ))}
@@ -196,9 +221,9 @@ export default function ArticlesList() {
       {totalPages > 1 && (
         <div className="flex justify-center gap-2 mt-8">
           <Button
+            className="bg-violet-600 text-white"
             isDisabled={currentPage === 1}
             onClick={() => setCurrentPage(currentPage - 1)}
-            className="bg-violet-600 text-white"
           >
             Précédent
           </Button>
@@ -207,21 +232,21 @@ export default function ArticlesList() {
               <Button
                 key={page}
                 isIconOnly
-                onClick={() => setCurrentPage(page)}
                 className={`${
                   currentPage === page
                     ? "bg-violet-600 text-white"
                     : "bg-gray-200 text-gray-700 hover:bg-gray-300"
                 }`}
+                onClick={() => setCurrentPage(page)}
               >
                 {page}
               </Button>
             ))}
           </div>
           <Button
+            className="bg-violet-600 text-white"
             isDisabled={currentPage === totalPages}
             onClick={() => setCurrentPage(currentPage + 1)}
-            className="bg-violet-600 text-white"
           >
             Suivant
           </Button>
@@ -238,4 +263,4 @@ export default function ArticlesList() {
       )}
     </div>
   );
-} 
+}
