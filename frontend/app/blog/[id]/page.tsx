@@ -82,7 +82,7 @@ export default function BlogPostPage() {
         <p className="text-red-600 dark:text-red-400 font-semibold text-xl mb-4">
           {error}
         </p>
-        <Link href="/blogs">
+        <Link href="/blog">
           <motion.button
             className="px-4 py-2 bg-violet-600 dark:bg-violet-700 text-white rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors"
             whileHover={{ scale: 1.05 }}
@@ -101,7 +101,7 @@ export default function BlogPostPage() {
         <p className="text-center text-red-600 dark:text-red-400 font-semibold text-xl mb-4">
           ❌ Article introuvable...
         </p>
-        <Link href="/blogs">
+        <Link href="/blog">
           <motion.button
             className="px-4 py-2 bg-violet-600 dark:bg-violet-700 text-white rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors"
             whileHover={{ scale: 1.05 }}
@@ -136,7 +136,7 @@ export default function BlogPostPage() {
         initial={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.5 }}
       >
-        <Link href="/blogs">
+        <Link href="/blog">
           <motion.button
             className="px-4 py-2 mb-6 bg-violet-600 dark:bg-violet-700 text-white rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors flex items-center gap-2"
             whileHover={{ scale: 1.05 }}
@@ -210,7 +210,7 @@ export default function BlogPostPage() {
       </motion.div>
 
       <div className="w-full max-w-3xl mt-8 flex justify-center">
-        <Link href="/blogs">
+        <Link href="/blog">
           <motion.button
             className="px-6 py-3 bg-violet-600 dark:bg-violet-700 text-white rounded-lg hover:bg-violet-700 dark:hover:bg-violet-800 transition-colors shadow-md"
             whileHover={{ scale: 1.05 }}
