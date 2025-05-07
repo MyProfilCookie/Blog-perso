@@ -29,7 +29,7 @@ export const siteConfig = {
     },
     {
       label: "Blog",
-      href: "/blog",
+      href: "/blogs",
     },
   ],
   navMenuItems: [
