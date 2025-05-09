@@ -17,7 +17,8 @@ const AIAssistant: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: "assistant",
-      content: "Bonjour ! Je suis ton assistant d'apprentissage. Je peux t'aider à comprendre tes leçons, répondre à tes questions et t'accompagner dans ton parcours éducatif. Comment puis-je t'aider aujourd'hui ?",
+      content:
+        "Bonjour ! Je suis ton assistant d'apprentissage. Je peux t'aider à comprendre tes leçons, répondre à tes questions et t'accompagner dans ton parcours éducatif. Comment puis-je t'aider aujourd'hui ?",
     },
   ]);
   const [input, setInput] = useState("");
@@ -25,7 +26,7 @@ const AIAssistant: React.FC = () => {
 
   const getAIResponse = async (userMessage: string) => {
     try {
-      // Préparation du contexte pour l'IA
+      // Intégration de l'appel à l'API route /api/chat vers Mistral
       const context = `Tu es un assistant éducatif spécialisé dans l'aide aux enfants autistes. 
       Réponds de manière claire, simple et bienveillante. 
       Utilise des phrases courtes et évite le jargon complexe.
@@ -33,35 +34,32 @@ const AIAssistant: React.FC = () => {
       Si tu ne comprends pas une question, demande poliment des précisions.
       Question de l'utilisateur: ${userMessage}`;
 
-      console.log("Clé API Hugging Face :", process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY);
-
-      const response = await fetch(
-        "https://api-inference.huggingface.co/models/microsoft/phi-1_5",
-        {
-          method: "POST",
-          headers: {
-            Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY}`,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ inputs: context }),
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({ prompt: context }),
+      });
 
       if (!response.ok) {
         throw new Error("Erreur lors de la communication avec l'IA");
       }
 
       const data = await response.json();
-      
+
       // Si la réponse est vide ou invalide, on renvoie un message par défaut
-      if (!data.generated_text || data.generated_text.trim() === "") {
+      if (!data.reply || data.reply.trim() === "") {
         return "Je ne suis pas sûr de comprendre ta question. Peux-tu la reformuler différemment ?";
       }
 
-      return data.generated_text;
+      return data.reply;
     } catch (error) {
       console.error("Erreur:", error);
-      toast.error("Désolé, je n'ai pas pu traiter ta demande. Essaie à nouveau dans quelques instants.");
+      toast.error(
+        "Désolé, je n'ai pas pu traiter ta demande. Essaie à nouveau dans quelques instants.",
+      );
+
       return "Je suis désolé, je n'ai pas pu traiter ta demande. Peux-tu réessayer ?";
     }
   };
@@ -71,12 +69,14 @@ const AIAssistant: React.FC = () => {
     if (!input.trim()) return;
 
     const userMessage = input.trim();
+
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
 
     try {
       const aiResponse = await getAIResponse(userMessage);
+
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: aiResponse },
