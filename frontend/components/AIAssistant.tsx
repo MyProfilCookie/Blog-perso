@@ -33,8 +33,10 @@ const AIAssistant: React.FC = () => {
       Si tu ne comprends pas une question, demande poliment des précisions.
       Question de l'utilisateur: ${userMessage}`;
 
+      console.log("Clé API Hugging Face :", process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY);
+
       const response = await fetch(
-        "https://api-inference.huggingface.co/models/facebook/blenderbot-3B",
+        "https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium",
         {
           method: "POST",
           headers: {
