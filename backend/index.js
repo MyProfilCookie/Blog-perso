@@ -33,6 +33,7 @@ const trimestreRoutes = require("./api/routes/trimestre.routes"); // Nouvelle ro
 const eleveRoutes = require("./api/routes/eleve.routes"); // Nouvelle route pour les élèves
 const subscriptionRoutes = require("./api/routes/subscription.routes"); // Nouvelle route pour les abonnements
 const statsRoutes = require("./api/routes/stats.routes"); // Route pour les statistiques
+const aiConversationRoutes = require("./api/routes/aiConversations.routes"); // Nouvelle route pour les conversations AI
 
 // 🔍 Vérification des variables d'environnement
 console.log("🔍 Chargement des variables d'environnement...");
@@ -155,6 +156,7 @@ app.use("/api/eleves", eleveRoutes); // Nouvelle route pour les élèves
 app.use("/api/subscriptions", subscriptionRoutes); // Nouvelle route pour les abonnements
 app.use("/api/rapport-hebdo", rapportHebdoRoutes); // Nouvelle route pour les rapports hebdomadaires
 app.use("/api/stats", statsRoutes); // Route pour les statistiques
+app.use("/api/ai-conversations", aiConversationRoutes); // Nouvelle route pour les conversations AI
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   console.log('Headers:', req.headers);
