@@ -598,63 +598,19 @@ export default function Home() {
         </div>
       </motion.div>
 
-      {/* New Section: Testimonials */}
+      {/* AI Assistant Section */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="w-full max-w-[1200px] mt-16 text-center mx-auto px-4"
         initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 2 }}
+        transition={{ duration: 0.8, delay: 2.5 }}
       >
-        <h2 className="text-3xl font-bold text-blue-700 dark:text-blue-400">Témoignages</h2>
-        <p className="mt-4 text-lg text-blue-500 dark:text-blue-300">
-          Ce que disent les parents et les professionnels à propos de notre plateforme.
+        <h2 className="text-3xl font-bold text-violet-700 dark:text-violet-400">Assistant d'apprentissage IA</h2>
+        <p className="mt-4 text-lg text-violet-500 dark:text-violet-300">
+          Posez vos questions à notre assistant intelligent pour obtenir de l'aide personnalisée
         </p>
-
-        <div className="grid grid-cols-1 gap-8 mt-8 md:grid-cols-3">
-          {/* Testimonial 1 */}
-          <Card className="p-6 transition-transform transform bg-blue-100 dark:bg-blue-900/30 shadow-lg rounded-xl hover:scale-105 border border-transparent dark:border-blue-800">
-            <CardBody>
-              <div className="mb-4 text-blue-500 dark:text-blue-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto opacity-50" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-              </div>
-              <p className="italic text-gray-700 dark:text-gray-300">
-                "AutiStudy a complètement transformé la façon dont mon enfant apprend. Les ressources sont parfaitement adaptées à ses besoins."
-              </p>
-              <p className="mt-4 font-bold text-blue-700 dark:text-blue-400">- Marie, Maman de Léo</p>
-            </CardBody>
-          </Card>
-
-          {/* Testimonial 2 */}
-          <Card className="p-6 transition-transform transform bg-blue-100 dark:bg-blue-900/30 shadow-lg rounded-xl hover:scale-105 border border-transparent dark:border-blue-800">
-            <CardBody>
-              <div className="mb-4 text-blue-500 dark:text-blue-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto opacity-50" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-              </div>
-              <p className="italic text-gray-700 dark:text-gray-300">
-                "En tant qu'éducateur, je trouve les outils proposés très complets et adaptés aux enfants autistes. Cela a fait une grande différence."
-              </p>
-              <p className="mt-4 font-bold text-blue-700 dark:text-blue-400">- Pierre, Enseignant spécialisé</p>
-            </CardBody>
-          </Card>
-
-          {/* Testimonial 3 */}
-          <Card className="p-6 transition-transform transform bg-blue-100 dark:bg-blue-900/30 shadow-lg rounded-xl hover:scale-105 border border-transparent dark:border-blue-800">
-            <CardBody>
-              <div className="mb-4 text-blue-500 dark:text-blue-300">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-10 h-10 mx-auto opacity-50" fill="currentColor" viewBox="0 0 24 24">
-                  <path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" />
-                </svg>
-              </div>
-              <p className="italic text-gray-700 dark:text-gray-300">
-                "L'accompagnement proposé par AutiStudy est inestimable. J'ai enfin trouvé un endroit où ma fille est comprise et aidée."
-              </p>
-              <p className="mt-4 font-bold text-blue-700 dark:text-blue-400">- Sarah, Maman de Julia</p>
-            </CardBody>
-          </Card>
+        <div className="mt-8">
+          <AIAssistant />
         </div>
       </motion.div>
 
@@ -751,10 +707,6 @@ export default function Home() {
       >
         <ScrollToTopButton />
       </motion.div>
-
-      <div className="relative flex place-items-center">
-        <AIAssistant />
-      </div>
     </section>
   );
 }

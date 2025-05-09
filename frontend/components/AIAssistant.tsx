@@ -14,21 +14,34 @@ interface Message {
 }
 
 const AIAssistant: React.FC = () => {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<Message[]>([
+    {
+      role: "assistant",
+      content: "Bonjour ! Je suis ton assistant d'apprentissage. Je peux t'aider à comprendre tes leçons, répondre à tes questions et t'accompagner dans ton parcours éducatif. Comment puis-je t'aider aujourd'hui ?",
+    },
+  ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
 
   const getAIResponse = async (userMessage: string) => {
     try {
+      // Préparation du contexte pour l'IA
+      const context = `Tu es un assistant éducatif spécialisé dans l'aide aux enfants autistes. 
+      Réponds de manière claire, simple et bienveillante. 
+      Utilise des phrases courtes et évite le jargon complexe.
+      Sois patient et encourageant.
+      Si tu ne comprends pas une question, demande poliment des précisions.
+      Question de l'utilisateur: ${userMessage}`;
+
       const response = await fetch(
-        "https://api-inference.huggingface.co/models/facebook/blenderbot-400M-distill",
+        "https://api-inference.huggingface.co/models/facebook/blenderbot-3B",
         {
           method: "POST",
           headers: {
             Authorization: `Bearer ${process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({ inputs: userMessage }),
+          body: JSON.stringify({ inputs: context }),
         },
       );
 
@@ -37,13 +50,17 @@ const AIAssistant: React.FC = () => {
       }
 
       const data = await response.json();
+      
+      // Si la réponse est vide ou invalide, on renvoie un message par défaut
+      if (!data.generated_text || data.generated_text.trim() === "") {
+        return "Je ne suis pas sûr de comprendre ta question. Peux-tu la reformuler différemment ?";
+      }
 
       return data.generated_text;
     } catch (error) {
       console.error("Erreur:", error);
-      toast.error("Désolé, je n'ai pas pu traiter votre demande.");
-
-      return "Je suis désolé, je n'ai pas pu traiter votre demande. Pouvez-vous reformuler ?";
+      toast.error("Désolé, je n'ai pas pu traiter ta demande. Essaie à nouveau dans quelques instants.");
+      return "Je suis désolé, je n'ai pas pu traiter ta demande. Peux-tu réessayer ?";
     }
   };
 
@@ -52,14 +69,12 @@ const AIAssistant: React.FC = () => {
     if (!input.trim()) return;
 
     const userMessage = input.trim();
-
     setInput("");
     setMessages((prev) => [...prev, { role: "user", content: userMessage }]);
     setIsLoading(true);
 
     try {
       const aiResponse = await getAIResponse(userMessage);
-
       setMessages((prev) => [
         ...prev,
         { role: "assistant", content: aiResponse },
@@ -110,7 +125,7 @@ const AIAssistant: React.FC = () => {
         <Input
           className="flex-1"
           disabled={isLoading}
-          placeholder="Posez votre question..."
+          placeholder="Pose ta question ici..."
           value={input}
           onChange={(e) => setInput(e.target.value)}
         />
