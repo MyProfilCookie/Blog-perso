@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const AIConversation = require('../../models/AIConversation');
+const AIConversation = require('../models/AIConversation');
 const { authMiddleware: auth } = require('../middlewares/authMiddleware');
 
 // Sauvegarder une nouvelle conversation et obtenir une réponse de l'IA
