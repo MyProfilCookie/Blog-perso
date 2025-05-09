@@ -36,7 +36,7 @@ const AIAssistant: React.FC = () => {
       console.log("Clé API Hugging Face :", process.env.NEXT_PUBLIC_HUGGINGFACE_API_KEY);
 
       const response = await fetch(
-        "https://api-inference.huggingface.co/models/gpt2",
+        "https://api-inference.huggingface.co/models/bigscience/bloomz-560m",
         {
           method: "POST",
           headers: {
