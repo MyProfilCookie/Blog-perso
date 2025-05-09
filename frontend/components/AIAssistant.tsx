@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Loader2, Send, Bot } from "lucide-react";
 import { toast } from "sonner";
 
@@ -23,24 +23,32 @@ const AIAssistant: React.FC = () => {
   ]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  const [userId, setUserId] = useState<string | null>(null);
+
+  useEffect(() => {
+    // Récupérer l'ID de l'utilisateur depuis le localStorage
+    const storedUser = localStorage.getItem("user");
+
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+
+      setUserId(user._id);
+    }
+  }, []);
 
   const getAIResponse = async (userMessage: string) => {
     try {
-      // Intégration de l'appel à l'API route /api/chat vers Mistral
-      const context = `Tu es un assistant éducatif spécialisé dans l'aide aux enfants autistes. 
-      Réponds de manière claire, simple et bienveillante. 
-      Utilise des phrases courtes et évite le jargon complexe.
-      Sois patient et encourageant.
-      Si tu ne comprends pas une question, demande poliment des précisions.
-      Question de l'utilisateur: ${userMessage}`;
-
-      const response = await fetch("/api/chat", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/ai-conversations`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+          body: JSON.stringify({ message: userMessage }),
         },
-        body: JSON.stringify({ prompt: context }),
-      });
+      );
 
       if (!response.ok) {
         throw new Error("Erreur lors de la communication avec l'IA");
@@ -49,11 +57,11 @@ const AIAssistant: React.FC = () => {
       const data = await response.json();
 
       // Si la réponse est vide ou invalide, on renvoie un message par défaut
-      if (!data.reply || data.reply.trim() === "") {
+      if (!data.message || data.message.trim() === "") {
         return "Je ne suis pas sûr de comprendre ta question. Peux-tu la reformuler différemment ?";
       }
 
-      return data.reply;
+      return data.message;
     } catch (error) {
       console.error("Erreur:", error);
       toast.error(
