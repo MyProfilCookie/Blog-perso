@@ -4,13 +4,16 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import Image from "next/image";
-import BackButton from "@/components/back";
-import Timer from "@/components/Timer";
-import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
+
+import BackButton from "@/components/back";
+import Timer from "@/components/Timer";
+import { ProgressBar } from "@/components/progress/ProgressBar";
+
+// AI
+import AIAssistant from "@/components/AIAssistant";
 
 // Interface pour les exercices d'histoire
 interface Exercise {
@@ -128,8 +131,10 @@ const HistoryPage: React.FC = () => {
         setTimeLeft(prev => {
           if (prev <= 1) {
             calculateFinalScore();
+
             return 0;
           }
+
           return prev - 1;
         });
       }, 1000);
@@ -137,6 +142,7 @@ const HistoryPage: React.FC = () => {
       // Messages d'encouragement toutes les 10 minutes
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
         setTimeout(() => setEmoji(""), 5000);
       }, 900000);
@@ -193,6 +199,7 @@ const HistoryPage: React.FC = () => {
       if (!userId || !token) {
         console.error("Utilisateur non connecté");
         toast.error("Vous devez être connecté pour sauvegarder votre score");
+
         return;
       }
 
@@ -321,7 +328,7 @@ const HistoryPage: React.FC = () => {
           Exercices interactifs
         </p>
       </motion.div>
-
+      <AIAssistant />
           {/* Timer et Progression */}
           <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
             <div className="w-full sm:w-auto">
@@ -329,8 +336,8 @@ const HistoryPage: React.FC = () => {
             </div>
             <div className="w-full sm:w-auto flex-1">
               <ProgressBar 
-                totalQuestions={exercises.length}
                 correctAnswers={completedExercises}
+                totalQuestions={exercises.length}
                 onProgressComplete={() => {
                   if (completedExercises === exercises.length) {
                     calculateFinalScore();
@@ -398,12 +405,12 @@ const HistoryPage: React.FC = () => {
                                 className="flex items-center space-x-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                               >
                                 <input
-                                  type="radio"
+                                  className="form-radio h-5 w-5"
+                                  disabled={isAnswerSubmitted(exercise._id)}
                                   name={exercise._id}
+                                  type="radio"
                                   value={option}
                                   onChange={(e) => handleChange(e, exercise._id)}
-                                  disabled={isAnswerSubmitted(exercise._id)}
-                                  className="form-radio h-5 w-5"
                                 />
                                 <span className="text-base">{option}</span>
                               </label>
@@ -411,11 +418,11 @@ const HistoryPage: React.FC = () => {
                           </div>
                         ) : (
                           <input
-                            type="text"
-                            placeholder="Votre réponse"
                             className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-base"
-                            onChange={(e) => handleChange(e, exercise._id)}
                             disabled={isAnswerSubmitted(exercise._id)}
+                            placeholder="Votre réponse"
+                            type="text"
+                            onChange={(e) => handleChange(e, exercise._id)}
                           />
                         )}
                       </div>
@@ -423,11 +430,11 @@ const HistoryPage: React.FC = () => {
                       {/* Bouton de soumission et résultat */}
                       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
                         <Button
-                          size="lg"
-                          color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
-                          onClick={() => handleSubmit(exercise._id, exercise.answer)}
-                          disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
                           className="w-full sm:w-auto py-3 px-6"
+                          color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
+                          disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
+                          size="lg"
+                          onClick={() => handleSubmit(exercise._id, exercise.answer)}
                         >
                           {isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "Correct ✓" : "Incorrect ✗") : "Valider"}
                         </Button>
@@ -435,47 +442,47 @@ const HistoryPage: React.FC = () => {
                         {isAnswerSubmitted(exercise._id) && (
                           <div className="flex flex-wrap sm:flex-nowrap gap-2">
                             <Button
-                              size="lg"
+                              className="w-full sm:w-auto py-3"
                               color="default"
+                              size="lg"
                               variant="flat"
                               onClick={() => handleRating(exercise._id, 1)}
-                              className="w-full sm:w-auto py-3"
                             >
                               1
                             </Button>
                             <Button
-                              size="lg"
+                              className="w-full sm:w-auto py-3"
                               color="default"
+                              size="lg"
                               variant="flat"
                               onClick={() => handleRating(exercise._id, 2)}
-                              className="w-full sm:w-auto py-3"
                             >
                               2
                             </Button>
                             <Button
-                              size="lg"
+                              className="w-full sm:w-auto py-3"
                               color="default"
+                              size="lg"
                               variant="flat"
                               onClick={() => handleRating(exercise._id, 3)}
-                              className="w-full sm:w-auto py-3"
                             >
                               3
                             </Button>
                             <Button
-                              size="lg"
+                              className="w-full sm:w-auto py-3"
                               color="default"
+                              size="lg"
                               variant="flat"
                               onClick={() => handleRating(exercise._id, 4)}
-                              className="w-full sm:w-auto py-3"
                             >
                               4
                             </Button>
                             <Button
-                              size="lg"
+                              className="w-full sm:w-auto py-3"
                               color="default"
+                              size="lg"
                               variant="flat"
                               onClick={() => handleRating(exercise._id, 5)}
-                              className="w-full sm:w-auto py-3"
                             >
                               5
                             </Button>
@@ -491,10 +498,10 @@ const HistoryPage: React.FC = () => {
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
             <Button
+              className="w-full sm:w-auto py-3"
+              disabled={currentPage === 1}
               size="lg"
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-              className="w-full sm:w-auto py-3"
             >
               Précédent
             </Button>
@@ -502,10 +509,10 @@ const HistoryPage: React.FC = () => {
               Page {currentPage} sur {Math.ceil(exercises.length / questionsPerPage)}
             </span>
             <Button
+              className="w-full sm:w-auto py-3"
+              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
               size="lg"
               onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
-              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
-              className="w-full sm:w-auto py-3"
             >
               Suivant
             </Button>

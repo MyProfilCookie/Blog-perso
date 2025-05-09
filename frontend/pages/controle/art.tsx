@@ -12,6 +12,8 @@ import { toast } from "sonner";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
+// AI
+import AIAssistant from "@/components/AIAssistant";
 
 // Interface pour les exercices d'art
 interface Exercise {
@@ -322,6 +324,7 @@ const ArtPage: React.FC = () => {
           Exercices interactifs
         </p>
       </motion.div>
+      <AIAssistant />
 
           {/* Timer et Progression */}
           <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">

@@ -24,7 +24,7 @@ import Image from "next/image";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { withPremiumGuard } from "@/components/premium-guard";
-
+import AIAssistant from "@/components/AIAssistant";
 // Configuration de la locale française
 dayjs.locale("fr");
 
@@ -71,6 +71,7 @@ const LessonsPage: React.FC = () => {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const [currentLesson, setCurrentLesson] = useState(0);
   const [score, setScore] = useState(0);
+
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
@@ -307,6 +308,7 @@ const LessonsPage: React.FC = () => {
                   </div>
                 </div>
               </motion.div>
+              <AIAssistant />
 
               <motion.div 
                 className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 shadow-lg border border-violet-200 dark:border-violet-700"

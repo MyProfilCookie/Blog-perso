@@ -12,6 +12,7 @@ import { toast } from "sonner";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
+import AIAssistant from "@/components/AIAssistant";
 
 // Interface pour les exercices de langues
 interface Exercise {
@@ -322,7 +323,7 @@ const LanguagePage: React.FC = () => {
           Exercices interactifs
         </p>
       </motion.div>
-
+      <AIAssistant />
           {/* Timer et Progression */}
           <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
             <div className="w-full sm:w-auto">
