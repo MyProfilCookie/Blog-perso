@@ -24,6 +24,7 @@ import ScrollToTopButton from "@/components/ScrollToTopButton";
 import HeaderAutisme from "@/components/headerAutisme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faClock, faCrown, faEnvelope, faMapMarkerAlt, faPhone, faQuestionCircle, faUser } from "@fortawesome/free-solid-svg-icons"; // Import des icônes
+import AIAssistant from "@/components/AIAssistant";
 
 
 export default function Home() {
@@ -750,6 +751,10 @@ export default function Home() {
       >
         <ScrollToTopButton />
       </motion.div>
+
+      <div className="relative flex place-items-center">
+        <AIAssistant />
+      </div>
     </section>
   );
 }
