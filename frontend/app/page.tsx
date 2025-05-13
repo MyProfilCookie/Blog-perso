@@ -66,42 +66,42 @@ export default function Home() {
   // Tableau des membres de l'équipe
   const teamMembers = [
     {
-      name: "Paul Ayivor",
+      name: "Papa",
       role: "Père de famille",
       img: "/assets/family/paul.png",
     },
     {
-      name: "Ayivor Chantal",
+      name: "Maman",
       role: "Mère de famille",
       img: "/assets/family/chantal.png",
     },
     {
-      name: "Ayivor Virginie",
+      name: "Virginie",
       role: "Sœur de Maeva",
       img: "/assets/family/virginie.png",
     },
     {
-      name: "Ayivor Joshua",
+      name: "Joshua",
       role: "Frère de Maeva",
       img: "/assets/family/joshua.png",
     },
     {
-      name: "Ayivor Vanessa",
+      name: "Vanessa",
       role: "Soeur de Maeva",
       img: "/assets/family/vanessa.png",
     },
     {
-      name: "Ayivor Pauline",
+      name: "Pauline",
       role: "Soeur de Maeva",
       img: "/assets/family/pauline.png",
     },
     {
-      name: "Ayivor Jessica",
+      name: "Jessica",
       role: "Soeur de Maeva",
       img: "/assets/family/jessica.png",
     },
     {
-      name: "Ayivor Maeva",
+      name: "Maeva",
       role: "Inspiratrice de la plateforme",
       img: "/assets/family/maeva.png",
     },
