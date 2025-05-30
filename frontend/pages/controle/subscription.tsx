@@ -59,75 +59,153 @@ const SubscriptionPage: React.FC = () => {
       // Vérifier si nous sommes dans un environnement navigateur
       if (typeof window === "undefined") return;
 
-      // Vérifier le token directement depuis localStorage
-      const token = localStorage.getItem("userToken");
-      
-      // Ajouter un log pour déboguer
-      console.log("Token trouvé:", token ? "Oui" : "Non");
+      // Vérifier toutes les sources possibles de tokens
+      const userToken = localStorage.getItem("userToken");
+      const accessToken = localStorage.getItem("accessToken");
+      const token = userToken || accessToken;
+
+      // Ajouter des logs détaillés pour déboguer
+      console.log("=== VÉRIFICATION D'AUTHENTIFICATION ===");
+      console.log("userToken:", userToken ? "Présent" : "Absent");
+      console.log("accessToken:", accessToken ? "Présent" : "Absent");
+      console.log("Token utilisé:", token ? "Présent" : "Absent");
+
+      // Vérifier si l'utilisateur est déjà sur la page de login pour éviter les boucles
+      const isLoginPage = window.location.pathname === "/users/login";
+
+      console.log("Est sur la page de login:", isLoginPage);
+
+      // Si déjà sur la page de login, ne pas continuer la vérification
+      if (isLoginPage) {
+        console.log("Déjà sur la page de login, arrêt de la vérification");
+
+        return;
+      }
+
+      // Si pas de token du tout, rediriger vers login
+      if (!token) {
+        console.log("Aucun token trouvé, redirection vers login");
+        router.push("/users/login");
+
+        return;
+      }
 
       // Vérifier si le token est expiré
-      const isTokenExpired = (token: string): boolean => {
+      const isTokenExpired = (tokenToCheck: string): boolean => {
         try {
-          const base64Url = token.split(".")[1];
+          const base64Url = tokenToCheck.split(".")[1];
           const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
           const payload = JSON.parse(atob(base64));
 
           // Vérifier si le token a une date d'expiration
-          if (!payload.exp) return true;
+          if (!payload.exp) {
+            console.log("Token sans date d'expiration");
+
+            return true;
+          }
 
           // Comparer la date d'expiration avec la date actuelle
           const currentTime = Math.floor(Date.now() / 1000);
-          
-          // Ajouter un log pour déboguer
-          console.log("Expiration du token:", new Date(payload.exp * 1000).toLocaleString());
-          console.log("Heure actuelle:", new Date(currentTime * 1000).toLocaleString());
-          console.log("Token expiré:", payload.exp < currentTime);
+          const isExpired = payload.exp < currentTime;
 
-          return payload.exp < currentTime;
+          console.log(
+            "Expiration du token:",
+            new Date(payload.exp * 1000).toLocaleString(),
+          );
+          console.log(
+            "Heure actuelle:",
+            new Date(currentTime * 1000).toLocaleString(),
+          );
+          console.log("Token expiré:", isExpired);
+
+          return isExpired;
         } catch (error) {
           console.error("Erreur lors de la vérification du token:", error);
+
           return true; // En cas d'erreur, considérer le token comme expiré
         }
       };
 
-      // Si pas de token ou token expiré, rediriger vers login
-      if (!token || (token && isTokenExpired(token))) {
-        console.log("Redirection vers login - Token absent ou expiré");
-        
-        // Nettoyer les données de souscription
+      // Si le token est expiré, essayer de le rafraîchir avant de rediriger
+      if (isTokenExpired(token)) {
+        console.log("Token expiré, tentative de rafraîchissement...");
+
+        // Vérifier si un refreshToken est disponible
+        const refreshToken = localStorage.getItem("refreshToken");
+
+        if (refreshToken) {
+          try {
+            console.log("RefreshToken trouvé, tentative de rafraîchissement");
+
+            // Tenter de rafraîchir le token (cette partie dépend de votre API)
+            // Cette implémentation est un exemple, adaptez-la à votre API
+            const response = await fetch(
+              `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
+              {
+                method: "POST",
+                headers: {
+                  "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ refreshToken }),
+              },
+            );
+
+            if (response.ok) {
+              const data = await response.json();
+
+              if (data.accessToken) {
+                console.log("Token rafraîchi avec succès");
+                localStorage.setItem("userToken", data.accessToken);
+                localStorage.setItem("accessToken", data.accessToken);
+
+                if (data.refreshToken) {
+                  localStorage.setItem("refreshToken", data.refreshToken);
+                }
+
+                // Continuer avec le token rafraîchi
+                await fetchSubscriptionInfo();
+
+                return;
+              }
+            }
+
+            console.log("Échec du rafraîchissement du token");
+          } catch (error) {
+            console.error("Erreur lors du rafraîchissement du token:", error);
+          }
+        }
+
+        // Si le rafraîchissement a échoué ou n'était pas possible, rediriger vers login
+        console.log("Redirection vers login après échec de rafraîchissement");
         setSubscriptionInfo(null);
-        
-        // Éviter les redirections en boucle en vérifiant si nous sommes déjà sur la page de login
-        if (window.location.pathname !== "/users/login") {
-          // Rediriger vers la page de connexion
-          router.push("/users/login");
-        }
+        router.push("/users/login");
+
         return;
       }
-      
-      // Vérifier si isAuthenticated() est disponible et l'utiliser comme vérification supplémentaire
-      if (typeof isAuthenticated === 'function' && !isAuthenticated()) {
-        console.log("Redirection vers login - isAuthenticated() a retourné false");
-        
-        // Éviter les redirections en boucle
-        if (window.location.pathname !== "/users/login") {
-          router.push("/users/login");
-        }
-        return;
-      }
+
+      // À ce stade, nous avons un token valide
+      console.log("Token valide, vérification du rôle...");
 
       try {
         // Vérifier si l'utilisateur est admin via le contexte ou localStorage
         const userRole = localStorage.getItem("userRole");
+        const userObj = localStorage.getItem("user")
+          ? JSON.parse(localStorage.getItem("user") || "{}")
+          : null;
+
         const isUserAdmin =
           userRole === "admin" ||
-          (user &&
-            typeof user === "object" &&
-            (("role" in user && (user as { role: string }).role === "admin") ||
-              ("isAdmin" in user && (user as { isAdmin: boolean }).isAdmin)));
+          (userObj && (userObj.role === "admin" || userObj.isAdmin === true));
+
+        console.log(
+          "Rôle utilisateur:",
+          userRole || userObj?.role || "non défini",
+        );
+        console.log("Est admin:", isUserAdmin);
 
         if (isUserAdmin) {
           // Si admin, définir automatiquement comme premium
+          console.log("Utilisateur admin, définition comme premium");
           setSubscriptionInfo({
             subscription: {
               type: "premium",
@@ -143,10 +221,9 @@ const SubscriptionPage: React.FC = () => {
           return;
         }
 
-        // Initialiser Stripe une seule fois (pour les non-admins)
+        // Pour les utilisateurs non-admin, initialiser Stripe et charger les infos d'abonnement
+        console.log("Utilisateur non-admin, initialisation de Stripe");
         const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
-
-        console.log("Clé Stripe:", stripeKey ? "Présente" : "Absente");
 
         if (!stripeKey) {
           throw new Error("Clé Stripe non trouvée");
@@ -160,6 +237,9 @@ const SubscriptionPage: React.FC = () => {
 
         setStripe(stripeInstance);
         setStripeLoaded(true);
+
+        // Charger les informations d'abonnement
+        console.log("Chargement des informations d'abonnement");
         await fetchSubscriptionInfo();
       } catch (err) {
         console.error("Erreur d'initialisation:", err);
@@ -178,10 +258,19 @@ const SubscriptionPage: React.FC = () => {
   }
 
   const fetchSubscriptionInfo = async () => {
+    console.log("=== RÉCUPÉRATION DES INFORMATIONS D'ABONNEMENT ===");
     try {
+      console.log(
+        "Appel API:",
+        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
+      );
+
       const response = await authenticatedGet(
         `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
       );
+
+      console.log("Réponse API reçue:", response.status);
+      console.log("Données d'abonnement:", response.data);
 
       setSubscriptionInfo(response.data);
       setLoading(false);
@@ -191,11 +280,26 @@ const SubscriptionPage: React.FC = () => {
         err,
       );
 
-      // Si l'erreur est liée à l'authentification, l'intercepteur s'en chargera
-      // Sinon, afficher l'erreur
-      if ((err as any).response?.status !== 401) {
+      // Vérifier si l'erreur est liée à l'authentification
+      const status = (err as any).response?.status;
+
+      console.log("Code d'erreur:", status);
+
+      if (status === 401) {
+        console.log("Erreur 401 - Non autorisé");
+        // L'intercepteur devrait gérer cette erreur, mais au cas où:
+        setError("Session expirée. Veuillez vous reconnecter.");
+
+        // Éviter les redirections en boucle
+        if (window.location.pathname !== "/users/login") {
+          setTimeout(() => {
+            router.push("/users/login");
+          }, 2000); // Délai pour éviter les redirections trop rapides
+        }
+      } else {
         setError("Erreur lors du chargement des informations d'abonnement");
       }
+
       setLoading(false);
     }
   };
