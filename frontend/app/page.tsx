@@ -385,21 +385,21 @@ export default function Home() {
         </div>
       </motion.div>
 
-      {/* Team Section */}
+      {/* Remplacer la section "Notre Équipe" par "Nos Approches Pédagogiques" */}
       <motion.div
         className="w-full max-w-5xl mx-auto mt-8 sm:mt-16 text-center px-2 sm:px-4"
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
       >
-        {/* 🏆 Titre */}
-        <h2 className="text-2xl sm:text-4xl font-bold text-violet-700 dark:text-violet-400">Notre Équipe</h2>
+        {/* Titre */}
+        <h2 className="text-2xl sm:text-4xl font-bold text-violet-700 dark:text-violet-400">Nos Approches Pédagogiques</h2>
         <p className="mt-2 sm:mt-3 text-base sm:text-lg text-gray-500 dark:text-gray-400">
-          Une équipe dédiée à offrir un apprentissage adapté à tous.
+          Des méthodes adaptées aux besoins spécifiques des enfants autistes
         </p>
 
         <div className="relative flex items-center justify-center mt-6 sm:mt-10 px-2 sm:px-12">
-          {/* 🔙 Bouton précédent */}
+          {/* Bouton précédent */}
           <Button
             isIconOnly
             className="absolute left-0 md:left-8 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all flex items-center justify-center"
@@ -408,7 +408,7 @@ export default function Home() {
             <span className="text-xl">&lt;</span>
           </Button>
 
-          {/* 👥 Contenu des membres */}
+          {/* Contenu des approches */}
           <div className="w-full max-w-4xl mx-8">
             <AnimatePresence mode="wait">
               <motion.div
@@ -419,7 +419,56 @@ export default function Home() {
                 transition={{ duration: 0.6 }}
                 className="grid grid-cols-1 gap-8 sm:grid-cols-2"
               >
-                {teamGroups[currentTeamIndex].map((member, index) => (
+                {[
+                  {
+                    title: "Méthode TEACCH",
+                    description: "Structuration de l'environnement et des activités pour favoriser l'autonomie et la compréhension",
+                    icon: "/assets/icons/structure.svg",
+                    color: "bg-blue-500"
+                  },
+                  {
+                    title: "Communication Visuelle",
+                    description: "Utilisation de supports visuels pour faciliter la communication et la compréhension",
+                    icon: "/assets/icons/visual.svg",
+                    color: "bg-green-500"
+                  },
+                  {
+                    title: "Approche Sensorielle",
+                    description: "Prise en compte des particularités sensorielles pour adapter l'environnement d'apprentissage",
+                    icon: "/assets/icons/sensory.svg",
+                    color: "bg-purple-500"
+                  },
+                  {
+                    title: "Apprentissage Structuré",
+                    description: "Décomposition des tâches en étapes simples et progressives pour faciliter l'acquisition",
+                    icon: "/assets/icons/learning.svg",
+                    color: "bg-orange-500"
+                  },
+                  {
+                    title: "Intérêts Spécifiques",
+                    description: "Utilisation des centres d'intérêt de l'enfant comme levier d'apprentissage et de motivation",
+                    icon: "/assets/icons/interest.svg",
+                    color: "bg-red-500"
+                  },
+                  {
+                    title: "Gestion Émotionnelle",
+                    description: "Outils et stratégies pour aider à identifier et gérer les émotions",
+                    icon: "/assets/icons/emotion.svg",
+                    color: "bg-teal-500"
+                  },
+                  {
+                    title: "Autonomie Quotidienne",
+                    description: "Développement des compétences pratiques pour favoriser l'indépendance",
+                    icon: "/assets/icons/autonomy.svg",
+                    color: "bg-indigo-500"
+                  },
+                  {
+                    title: "Socialisation Adaptée",
+                    description: "Apprentissage progressif des compétences sociales dans un cadre bienveillant",
+                    icon: "/assets/icons/social.svg",
+                    color: "bg-pink-500"
+                  }
+                ].slice(currentTeamIndex*2, currentTeamIndex*2+2).map((approach, index) => (
                   <Card
                     key={index}
                     className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl hover:shadow-xl hover:border-violet-500"
@@ -429,17 +478,23 @@ export default function Home() {
                     }}
                   >
                     <CardBody className="text-center">
-                      <div className="relative w-40 h-40 mx-auto mb-6 overflow-hidden rounded-full border-4 border-violet-200 dark:border-violet-700">
-                        <Image
-                          src={member.img}
-                          alt={member.name}
-                          className="aspect-auto w-full h-full"
-                          width={160}
-                          height={160}
+                      <div className={`relative w-20 h-20 mx-auto mb-6 overflow-hidden rounded-full ${approach.color} flex items-center justify-center`}>
+                        <FontAwesomeIcon 
+                          icon={
+                            index % 8 === 0 ? faUser : 
+                            index % 8 === 1 ? faQuestionCircle : 
+                            index % 8 === 2 ? faClock : 
+                            index % 8 === 3 ? faEnvelope : 
+                            index % 8 === 4 ? faMapMarkerAlt : 
+                            index % 8 === 5 ? faPhone : 
+                            index % 8 === 6 ? faCrown : 
+                            faUser
+                          } 
+                          className="text-white text-3xl"
                         />
                       </div>
-                      <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{member.name}</h4>
-                      <p className="text-gray-500 dark:text-gray-300">{member.role}</p>
+                      <h4 className="text-xl font-bold text-gray-800 dark:text-white mb-2">{approach.title}</h4>
+                      <p className="text-gray-500 dark:text-gray-300">{approach.description}</p>
                     </CardBody>
                   </Card>
                 ))}
@@ -447,13 +502,24 @@ export default function Home() {
             </AnimatePresence>
           </div>
 
-          {/* 🔜 Bouton suivant */}
+          {/* Bouton suivant */}
           <Button
             isIconOnly
             className="absolute right-0 md:right-8 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all flex items-center justify-center"
             onClick={nextTeamSlide}
           >
             <span className="text-xl">&gt;</span>
+          </Button>
+        </div>
+        
+        {/* Bouton pour en savoir plus */}
+        <div className="mt-8">
+          <Button
+            as={Link}
+            href="/approches"
+            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700"
+          >
+            Découvrir toutes nos approches
           </Button>
         </div>
       </motion.div>
