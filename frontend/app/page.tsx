@@ -473,125 +473,165 @@ export default function Home() {
           <Card className="shadow-md bg-blue-50 dark:bg-blue-900/30 border border-transparent dark:border-blue-800">
             <CardBody className="text-left text-blue-700 dark:text-blue-300">
               <h3 className="text-center"><strong>L'accompagnement de l'enfant autiste</strong></h3>
-              <div className="bg-cream dark:bg-blue-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  isZoomed
-                  width={600}
-                  height={200}
-                  alt="Learning"
-                  className="h-14 w-14 object-contain"
-                  src="/assets/online-learning.webp"
-                />
-              </div>
-              <p>
-                L'éducation des enfants autistes demande patience et organisation. Nos fiches pédagogiques aident à chaque étape, de l'apprentissage de la propreté au développement de l'autonomie.
+              <p className="mt-4">
+                L'accompagnement des enfants autistes nécessite une approche personnalisée qui tient compte de leurs besoins spécifiques. Nos ressources éducatives sont conçues pour:
               </p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Respecter le rythme d'apprentissage de chaque enfant</li>
+                <li>Proposer des activités adaptées à leurs centres d'intérêt</li>
+                <li>Utiliser des supports visuels pour faciliter la compréhension</li>
+                <li>Établir des routines structurées et prévisibles</li>
+              </ul>
+              <Link href="/resources" className="block mt-2 text-center text-blue-500 dark:text-blue-300 hover:underline">
+                En savoir plus
+              </Link>
             </CardBody>
           </Card>
-
+          
           {/* Card 2 */}
+          <Card className="shadow-md bg-violet-50 dark:bg-violet-900/30 border border-transparent dark:border-violet-800">
+            <CardBody className="text-left text-violet-700 dark:text-violet-300">
+              <h3 className="text-center"><strong>Stratégies éducatives adaptées</strong></h3>
+              <p className="mt-4">
+                Nos stratégies éducatives s'inspirent des meilleures pratiques et méthodes reconnues pour l'éducation des personnes autistes:
+              </p>
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Méthode TEACCH pour structurer l'environnement</li>
+                <li>Communication visuelle et alternative</li>
+                <li>Approche ABA adaptée et bienveillante</li>
+                <li>Intégration sensorielle et régulation émotionnelle</li>
+              </ul>
+              <Link href="/strategies" className="block mt-2 text-center text-violet-500 dark:text-violet-300 hover:underline">
+                Découvrir nos méthodes
+              </Link>
+            </CardBody>
+          </Card>
+          
+          {/* Card 3 */}
           <Card className="shadow-md bg-green-50 dark:bg-green-900/30 border border-transparent dark:border-green-800">
             <CardBody className="text-left text-green-700 dark:text-green-300">
-              <h3 className="text-center"><strong>L'accompagnement de l'adulte autiste</strong></h3>
-              <div className="bg-cream dark:bg-green-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  isZoomed
-                  width={600}
-                  height={200}
-                  alt="Learning"
-                  className="h-14 w-14 object-contain"
-                  src="/assets/accompagnement.webp"
-                />
-              </div>
-              <p>
-                L'accompagnement de l'adulte autiste est essentiel pour la vie professionnelle et sociale. Nos ressources les guident vers une plus grande autonomie et une meilleure qualité de vie.
+              <h3 className="text-center"><strong>Soutien aux familles</strong></h3>
+              <p className="mt-4">
+                Nous reconnaissons l'importance du soutien aux familles dans l'accompagnement des personnes autistes:
               </p>
-            </CardBody>
-          </Card>
-
-          {/* Card 3 */}
-          <Card className="shadow-md bg-purple-50 dark:bg-purple-900/30 border border-transparent dark:border-purple-800">
-            <CardBody className="text-left text-purple-700 dark:text-purple-300">
-              <h3 className="text-center"><strong>Travailler avec des enfants autistes</strong></h3>
-              <div className="bg-cream dark:bg-purple-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  isZoomed
-                  width={600}
-                  height={200}
-                  alt="Learning"
-                  className="h-14 w-14 object-contain"
-                  src="/assets/online-learn.webp"
-                />
-              </div>
-              <p>
-                Les méthodes éducatives telles que ABA et TEACCH sont recommandées pour favoriser le développement et l'épanouissement de l'enfant autiste. Découvrez-en plus dans nos ressources.
-              </p>
-            </CardBody>
-          </Card>
-
-          {/* Card 4 */}
-          <Card className="shadow-md bg-orange-50 dark:bg-orange-900/30 border border-transparent dark:border-orange-800">
-            <CardBody className="text-left text-orange-700 dark:text-orange-300">
-              <h3 className="text-center"><strong>Interventions et thérapies</strong></h3>
-              <div className="bg-cream dark:bg-orange-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  isZoomed
-                  width={600}
-                  height={200}
-                  alt="Learning"
-                  className="h-14 w-14 object-contain"
-                  src="/assets/Interventions.webp"
-                />
-              </div>
-              <p>
-                Un large éventail de thérapies est disponible pour accompagner les personnes autistes. Nos recommandations issues de la HAS vous aident à choisir les plus adaptées.
-              </p>
-            </CardBody>
-          </Card>
-
-          {/* Card 5 */}
-          <Card className="shadow-md bg-red-50 dark:bg-red-900/30 border border-transparent dark:border-red-800">
-            <CardBody className="text-left text-red-700 dark:text-red-300">
-              <h3 className="text-center"><strong>Ressources web</strong></h3>
-              <div className="bg-cream dark:bg-red-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  isZoomed
-                  width={600}
-                  height={200}
-                  alt="Learning"
-                  className="h-14 w-14 object-contain"
-                  src="/assets/ressources.webp"
-                />
-              </div>
-              <p>
-                Des outils numériques et sites dédiés à l'autisme sont disponibles. Consultez, achetez ou téléchargez nos supports pédagogiques pour un apprentissage adapté.
-              </p>
-              <Link href="/resources" className="block mt-2 text-center text-blue-500 dark:text-blue-300 hover:underline">
-                En savoir plus
+              <ul className="list-disc pl-5 mt-2 space-y-1">
+                <li>Ressources pour comprendre l'autisme</li>
+                <li>Conseils pratiques pour le quotidien</li>
+                <li>Groupes de soutien et d'échange entre parents</li>
+                <li>Formations et webinaires spécialisés</li>
+              </ul>
+              <Link href="/family-support" className="block mt-2 text-center text-green-500 dark:text-green-300 hover:underline">
+                Accéder aux ressources
               </Link>
             </CardBody>
           </Card>
+        </div>
+      </motion.div>
 
-          {/* Card 6 */}
-          <Card className="shadow-md bg-yellow-50 dark:bg-yellow-900/30 border border-transparent dark:border-yellow-800">
-            <CardBody className="text-left text-yellow-700 dark:text-yellow-300">
-              <h3 className="text-center"><strong>Supports pédagogiques</strong></h3>
-              <div className="bg-cream dark:bg-yellow-800/30 p-3 rounded-full w-20 h-20 mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  isZoomed
-                  width={600}
-                  height={200}
-                  alt="Learning"
-                  className="h-14 w-14 object-contain"
-                  src="/assets/support.webp"
-                />
+      {/* Section: Témoignages et succès */}
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-[1200px] mt-16 mx-auto px-4"
+        initial={{ opacity: 0, y: 50 }}
+        transition={{ duration: 0.8, delay: 2 }}
+      >
+        <h2 className={title({ color: "orange", class: "text-center dark:text-orange-400" })}>
+          Témoignages et histoires de réussite
+        </h2>
+        <p className="text-center text-gray-600 dark:text-gray-300 mt-4 mb-8 max-w-2xl mx-auto">
+          Découvrez comment notre plateforme a aidé des enfants autistes à progresser dans leur parcours d'apprentissage
+        </p>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Témoignage 1 */}
+          <Card className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border border-orange-100 dark:border-orange-800/50 shadow-md">
+            <CardBody className="p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-16 h-16 rounded-full bg-orange-200 dark:bg-orange-800 flex items-center justify-center mr-4">
+                  <FontAwesomeIcon icon={faUser} className="text-orange-600 dark:text-orange-300 text-2xl" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-orange-700 dark:text-orange-300">Famille Martin</h3>
+                  <p className="text-orange-600 dark:text-orange-400 text-sm">Parents de Lucas, 8 ans</p>
+                </div>
               </div>
-              <p>
-                Des outils numériques et sites dédiés à l'autisme sont disponibles. Consultez, achetez ou déchargez nos supports pédagogiques pour un apprentissage adapté.
+              <p className="italic text-gray-700 dark:text-gray-300">
+                "Grâce à AutiStudy, Lucas a fait d'énormes progrès en mathématiques, une matière qu'il trouvait auparavant très difficile. Les exercices visuels et la structure claire l'ont vraiment aidé à comprendre les concepts."
               </p>
-              <Link href="/resources" className="block mt-2 text-center text-blue-500 dark:text-blue-300 hover:underline">
-                En savoir plus
-              </Link>
+            </CardBody>
+          </Card>
+          
+          {/* Témoignage 2 */}
+          <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/20 dark:to-cyan-900/20 border border-teal-100 dark:border-teal-800/50 shadow-md">
+            <CardBody className="p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-16 h-16 rounded-full bg-teal-200 dark:bg-teal-800 flex items-center justify-center mr-4">
+                  <FontAwesomeIcon icon={faUser} className="text-teal-600 dark:text-teal-300 text-2xl" />
+                </div>
+                <div>
+                  <h3 className="font-bold text-teal-700 dark:text-teal-300">Sophie Dubois</h3>
+                  <p className="text-teal-600 dark:text-teal-400 text-sm">Éducatrice spécialisée</p>
+                </div>
+              </div>
+              <p className="italic text-gray-700 dark:text-gray-300">
+                "J'utilise AutiStudy avec plusieurs enfants que j'accompagne. La possibilité d'adapter le contenu à chaque profil est inestimable. Les rapports hebdomadaires me permettent de suivre précisément leurs progrès."
+              </p>
+            </CardBody>
+          </Card>
+        </div>
+        
+        <div className="text-center mt-8">
+          <Button
+            as={Link}
+            href="/temoignages"
+            className="bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 dark:from-orange-600 dark:to-amber-600 dark:hover:from-orange-500 dark:hover:to-amber-500"
+          >
+            Voir plus de témoignages
+          </Button>
+        </div>
+      </motion.div>
+
+      {/* Section: Statistiques et impact */}
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-[1200px] mt-16 mx-auto px-4"
+        initial={{ opacity: 0, y: 50 }}
+        transition={{ duration: 0.8, delay: 2.2 }}
+      >
+        <h2 className={title({ color: "indigo", class: "text-center dark:text-indigo-400" })}>
+          Notre impact
+        </h2>
+        
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+          {/* Stat 1 */}
+          <Card className="bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-md">
+            <CardBody className="p-6 text-center">
+              <div className="text-4xl font-bold text-indigo-600 dark:text-indigo-300 mb-2">500+</div>
+              <p className="text-indigo-700 dark:text-indigo-400">Enfants accompagnés</p>
+            </CardBody>
+          </Card>
+          
+          {/* Stat 2 */}
+          <Card className="bg-blue-50 dark:bg-blue-900/30 border border-blue-100 dark:border-blue-800 shadow-md">
+            <CardBody className="p-6 text-center">
+              <div className="text-4xl font-bold text-blue-600 dark:text-blue-300 mb-2">85%</div>
+              <p className="text-blue-700 dark:text-blue-400">Progression moyenne</p>
+            </CardBody>
+          </Card>
+          
+          {/* Stat 3 */}
+          <Card className="bg-violet-50 dark:bg-violet-900/30 border border-violet-100 dark:border-violet-800 shadow-md">
+            <CardBody className="p-6 text-center">
+              <div className="text-4xl font-bold text-violet-600 dark:text-violet-300 mb-2">1000+</div>
+              <p className="text-violet-700 dark:text-violet-400">Ressources éducatives</p>
+            </CardBody>
+          </Card>
+          
+          {/* Stat 4 */}
+          <Card className="bg-purple-50 dark:bg-purple-900/30 border border-purple-100 dark:border-purple-800 shadow-md">
+            <CardBody className="p-6 text-center">
+              <div className="text-4xl font-bold text-purple-600 dark:text-purple-300 mb-2">24/7</div>
+              <p className="text-purple-700 dark:text-purple-400">Support disponible</p>
             </CardBody>
           </Card>
         </div>
