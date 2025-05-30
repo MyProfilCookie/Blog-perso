@@ -14,9 +14,17 @@ export const UserProvider = ({ children }) => {
   // Charger l'utilisateur depuis le localStorage au montage
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
+    const storedToken = localStorage.getItem("userToken");
 
-    if (storedUser) {
-      setUser(JSON.parse(storedUser)); // Charger l'utilisateur depuis localStorage
+    if (storedUser && storedToken) {
+      try {
+        setUser(JSON.parse(storedUser)); // Charger l'utilisateur depuis localStorage
+      } catch (error) {
+        console.error("Erreur lors du parsing des données utilisateur:", error);
+        // En cas d'erreur de parsing, nettoyer les données corrompues
+        localStorage.removeItem("user");
+        localStorage.removeItem("userToken");
+      }
     }
     setLoading(false);
   }, []);
@@ -34,8 +42,9 @@ export const UserProvider = ({ children }) => {
   const logoutUser = () => {
     setUser(null);
     localStorage.removeItem("user"); // Supprimer l'utilisateur du localStorage
+    localStorage.removeItem("userToken"); // Supprimer le token
     router.replace("/"); // Rediriger après déconnexion
-    setTimeout(() => window.location.reload(), 500);
+    // Suppression du reload automatique pour éviter les problèmes
   };
 
   if (loading) {

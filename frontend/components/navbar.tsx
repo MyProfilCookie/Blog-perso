@@ -236,6 +236,7 @@ export const Navbar = () => {
         const userId = user?.id;
 
         localStorage.removeItem("user");
+        localStorage.removeItem("userToken");
         if (userId) {
           localStorage.removeItem(`cart_${userId}`);
         }
@@ -252,38 +253,12 @@ export const Navbar = () => {
   };
 
   /**
-   * Check token validity
+   * Check token validity - DÉSACTIVÉ pour éviter les déconnexions automatiques
    */
   const checkTokenValidity = async () => {
-    if (isVerifyingToken) return;
-
-    setIsVerifyingToken(true);
-
-    const storedUser = localStorage.getItem("user");
-
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        const token = parsedUser.token;
-
-        if (!token) {
-          console.warn("No token found in user data");
-          setIsVerifyingToken(false);
-
-          return;
-        }
-
-        const isValid = await verifyToken(token);
-
-        if (!isValid) {
-          handleTokenInvalid();
-        }
-      } catch (error) {
-        console.error("Error checking token validity:", error);
-      }
-    }
-
-    setIsVerifyingToken(false);
+    // Fonction désactivée pour éviter les déconnexions lors du rafraîchissement
+    // La vérification du token se fera uniquement lors des requêtes API
+    return;
   };
 
   /**
@@ -306,10 +281,8 @@ export const Navbar = () => {
       }
     }
 
-    // Check token validity every 30 minutes
-    const intervalId = setInterval(checkTokenValidity, 30 * 60 * 1000);
-
-    return () => clearInterval(intervalId);
+    // Vérification automatique du token désactivée pour éviter les déconnexions
+    // lors du rafraîchissement de la page
   }, []);
 
   console.log(
@@ -330,7 +303,7 @@ export const Navbar = () => {
           setUser(parsedUser);
           const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
           setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
-          
+
           // Mettre à jour les compteurs de commandes immédiatement après la connexion
           fetchOrderCount();
         } catch (error) {

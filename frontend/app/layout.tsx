@@ -53,7 +53,14 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Providers themeProps={{ attribute: "class", defaultTheme: "system", enableSystem: true, storageKey: "theme" }}>
+        <Providers
+          themeProps={{
+            attribute: "class",
+            defaultTheme: "system",
+            enableSystem: true,
+            storageKey: "theme",
+          }}
+        >
           {/* Utilisation de flex-col + min-h-screen pour assurer que la page prend toute la hauteur */}
           <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
             <Navbar />
@@ -61,11 +68,8 @@ export default function RootLayout({
               {children}
               <SpeedInsights />
             </main>
-            {/* Correction : Footer bien collé en bas */}
             <Footer />
           </div>
-          
-          {/* Utilisation du composant ToasterThemeAware pour gérer le thème correctement */}
           <ToasterThemeAware />
         </Providers>
       </body>

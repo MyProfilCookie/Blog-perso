@@ -19,7 +19,6 @@ import { AnimatePresence, motion } from "framer-motion";
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
 // eslint-disable-next-line import/order
-import { GithubIcon } from "@/components/icons";
 import ScrollToTopButton from "@/components/ScrollToTopButton";
 import HeaderAutisme from "@/components/headerAutisme";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -166,7 +165,7 @@ export default function Home() {
       />
 
       {/* CTA Buttons */}
-      <motion.div
+      {/* <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col items-center gap-4 md:flex-row"
         initial={{ opacity: 0, y: 20 }}
@@ -187,7 +186,7 @@ export default function Home() {
           <GithubIcon className="mr-2" size={20} />
           Code source sur GitHub
         </Button>
-      </motion.div>
+      </motion.div> */}
 
       {/* Image and Info Card Section */}
       {/* <motion.div
@@ -541,7 +540,7 @@ export default function Home() {
                   height={200}
                   alt="Learning"
                   className="h-14 w-14 object-contain"
-                  src="/assets/interventions.webp"
+                  src="/assets/Interventions.webp"
                 />
               </div>
               <p>
