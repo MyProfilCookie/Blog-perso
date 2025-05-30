@@ -64,35 +64,26 @@ const SubscriptionPage: React.FC = () => {
       const accessToken = localStorage.getItem("accessToken");
       const token = userToken || accessToken;
 
-      // Ajouter des logs détaillés pour déboguer
-      console.log("=== VÉRIFICATION D'AUTHENTIFICATION ===");
-      console.log("userToken:", userToken ? "Présent" : "Absent");
-      console.log("accessToken:", accessToken ? "Présent" : "Absent");
-      console.log("Token utilisé:", token ? "Présent" : "Absent");
+      // Si pas de token du tout, rediriger vers login sans afficher de logs
+      if (!token) {
+        router.push("/users/login");
+        return;
+      }
 
       // Vérifier si l'utilisateur est déjà sur la page de login pour éviter les boucles
       const isLoginPage = window.location.pathname === "/users/login";
 
-      console.log("Est sur la page de login:", isLoginPage);
-
       // Si déjà sur la page de login, ne pas continuer la vérification
       if (isLoginPage) {
-        console.log("Déjà sur la page de login, arrêt de la vérification");
         return;
       }
 
-      // Si pas de token du tout, rediriger vers login
-      if (!token) {
-        console.log("Aucun token trouvé, redirection vers login");
-        setSubscriptionInfo(null);
-        localStorage.removeItem("userToken");
-        localStorage.removeItem("accessToken");
-        localStorage.removeItem("refreshToken");
-        localStorage.removeItem("userRole");
-        localStorage.removeItem("user");
-        router.push("/users/login");
-        return;
-      }
+      // À partir d'ici, on sait qu'il y a un token, on peut afficher les logs
+      console.log("=== VÉRIFICATION D'AUTHENTIFICATION ===");
+      console.log("userToken:", userToken ? "Présent" : "Absent");
+      console.log("accessToken:", accessToken ? "Présent" : "Absent");
+      console.log("Token utilisé:", token ? "Présent" : "Absent");
+      console.log("Est sur la page de login:", isLoginPage);
 
       // Vérifier si le token est expiré
       const isTokenExpired = (tokenToCheck: string): boolean => {
@@ -124,7 +115,7 @@ const SubscriptionPage: React.FC = () => {
           return isExpired;
         } catch (error) {
           console.error("Erreur lors de la vérification du token:", error);
-          return true; // En cas d'erreur, considérer le token comme expiré
+          return true;
         }
       };
 
@@ -190,25 +181,14 @@ const SubscriptionPage: React.FC = () => {
       console.log("Token valide, vérification du rôle...");
 
       try {
-        // Vérifier si l'utilisateur est admin via le contexte ou localStorage
-        const userRole = localStorage.getItem("userRole");
-        const userObj = localStorage.getItem("user")
-          ? JSON.parse(localStorage.getItem("user") || "{}")
-          : null;
-
-        const isUserAdmin =
-          userRole === "admin" ||
-          (userObj && (userObj.role === "admin" || userObj.isAdmin === true));
-
-        console.log(
-          "Rôle utilisateur:",
-          userRole || userObj?.role || "non défini",
+        // Récupérer les informations d'abonnement d'abord
+        console.log("Chargement des informations d'abonnement");
+        const subscriptionResponse = await authenticatedGet(
+          `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
         );
-        console.log("Est admin:", isUserAdmin);
 
-        if (isUserAdmin) {
-          // Si admin, définir automatiquement comme premium
-          console.log("Utilisateur admin, définition comme premium");
+        if (subscriptionResponse.data && subscriptionResponse.data.role === "admin") {
+          console.log("Utilisateur identifié comme admin via l'API");
           setSubscriptionInfo({
             subscription: {
               type: "premium",
@@ -260,19 +240,17 @@ const SubscriptionPage: React.FC = () => {
   }
 
   const fetchSubscriptionInfo = async () => {
-    console.log("=== RÉCUPÉRATION DES INFORMATIONS D'ABONNEMENT ===");
-    try {
-      console.log(
-        "Appel API:",
-        `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
-      );
+    const token = localStorage.getItem("userToken") || localStorage.getItem("accessToken");
+    if (!token) {
+      setError("Session expirée. Veuillez vous reconnecter.");
+      router.push("/users/login");
+      return;
+    }
 
+    try {
       const response = await authenticatedGet(
         `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
       );
-
-      console.log("Réponse API reçue:", response.status);
-      console.log("Données d'abonnement:", response.data);
 
       if (!response.data || !response.data.subscription) {
         throw new Error("Données d'abonnement invalides");
@@ -302,10 +280,7 @@ const SubscriptionPage: React.FC = () => {
       // Vérifier si l'erreur est liée à l'authentification
       const status = (err as any).response?.status;
 
-      console.log("Code d'erreur:", status);
-
       if (status === 401) {
-        console.log("Erreur 401 - Non autorisé");
         setError("Session expirée. Veuillez vous reconnecter.");
         
         // Nettoyer le stockage local
