@@ -615,9 +615,8 @@ export const Navbar = () => {
 
   // Récupérer le compteur de commandes au chargement
   useEffect(() => {
-    console.log("Configuration du suivi des commandes");
+    let intervalId: NodeJS.Timeout | null = null;
 
-    // Utiliser la fonction robuste pour configurer le suivi des commandes
     const setupOrderTracking = () => {
       const userData = getUserData();
 
@@ -625,29 +624,32 @@ export const Navbar = () => {
         console.warn(
           "Données utilisateur insuffisantes pour le suivi des commandes",
         );
-        handleTokenInvalid();
-
         return;
       }
-
-      console.log(
-        "Suivi des commandes configuré pour l'utilisateur:",
-        userData.id,
-      );
 
       // Récupération initiale
       fetchOrderCount();
 
       // Configurer l'intervalle pour rafraîchir le compteur de commandes
-      const intervalId = setInterval(() => {
-        console.log("Rafraîchissement automatique des compteurs de commandes");
+      intervalId = setInterval(() => {
+        const currentUserData = getUserData();
+        if (!currentUserData || !currentUserData.id || !currentUserData.token) {
+          if (intervalId) {
+            clearInterval(intervalId);
+            intervalId = null;
+          }
+          return;
+        }
         fetchOrderCount();
       }, 15000); // Vérifier toutes les 15 secondes
 
       // Rafraîchir également lors du focus sur la page
       const handleVisibilityChange = () => {
         if (!document.hidden) {
-          console.log("Focus sur l'onglet, rafraîchissement des compteurs");
+          const currentUserData = getUserData();
+          if (!currentUserData || !currentUserData.id || !currentUserData.token) {
+            return;
+          }
           fetchOrderCount();
         }
       };
@@ -656,7 +658,10 @@ export const Navbar = () => {
 
       // Nettoyer l'intervalle lorsque le composant est démonté
       return () => {
-        clearInterval(intervalId);
+        if (intervalId) {
+          clearInterval(intervalId);
+          intervalId = null;
+        }
         document.removeEventListener(
           "visibilitychange",
           handleVisibilityChange,
@@ -664,38 +669,66 @@ export const Navbar = () => {
       };
     };
 
-    setupOrderTracking();
+    const cleanup = setupOrderTracking();
+
+    // Nettoyer lors du démontage
+    return () => {
+      if (cleanup) cleanup();
+      if (intervalId) {
+        clearInterval(intervalId);
+        intervalId = null;
+      }
+    };
   }, []); // Exécuter une fois au montage
 
   // Vérifier la validité du token toutes les 5 minutes
   useEffect(() => {
-    const tokenCheckInterval = setInterval(
-      () => {
+    let tokenCheckInterval: NodeJS.Timeout | null = null;
+
+    const setupTokenCheck = () => {
+      const userData = getUserData();
+      if (!userData || !userData.token) {
+        return;
+      }
+
+      tokenCheckInterval = setInterval(() => {
+        const currentUserData = getUserData();
+        if (!currentUserData || !currentUserData.token) {
+          if (tokenCheckInterval) {
+            clearInterval(tokenCheckInterval);
+            tokenCheckInterval = null;
+          }
+          return;
+        }
         checkTokenValidity();
-      },
-      5 * 60 * 1000,
-    ); // 5 minutes
+      }, 5 * 60 * 1000); // 5 minutes
+    };
 
-    return () => clearInterval(tokenCheckInterval);
-  }, []);
+    setupTokenCheck();
 
-  // Vérifier le token au montage du composant
-  useEffect(() => {
-    checkTokenValidity();
+    return () => {
+      if (tokenCheckInterval) {
+        clearInterval(tokenCheckInterval);
+        tokenCheckInterval = null;
+      }
+    };
   }, []);
 
   // Vérification du token au chargement et périodiquement
   useEffect(() => {
+    let tokenCheckInterval: NodeJS.Timeout | null = null;
+
     const checkTokenValidity = async () => {
-      const token = localStorage.getItem("userToken");
-      if (!token) return;
+      const userData = getUserData();
+      if (!userData || !userData.token) {
+        return;
+      }
 
       try {
         // Vérifier si le token est expiré
-        const isExpired = isTokenExpired(token);
+        const isExpired = isTokenExpired(userData.token);
         
         if (isExpired) {
-          console.log("Token expiré détecté dans la navbar");
           // Nettoyer les données utilisateur
           const userId = user?.id;
           localStorage.removeItem("user");
@@ -753,9 +786,24 @@ export const Navbar = () => {
     checkTokenValidity();
 
     // Vérifier périodiquement
-    const interval = setInterval(checkTokenValidity, 5 * 60 * 1000); // Toutes les 5 minutes
+    tokenCheckInterval = setInterval(() => {
+      const userData = getUserData();
+      if (!userData || !userData.token) {
+        if (tokenCheckInterval) {
+          clearInterval(tokenCheckInterval);
+          tokenCheckInterval = null;
+        }
+        return;
+      }
+      checkTokenValidity();
+    }, 5 * 60 * 1000); // Toutes les 5 minutes
     
-    return () => clearInterval(interval);
+    return () => {
+      if (tokenCheckInterval) {
+        clearInterval(tokenCheckInterval);
+        tokenCheckInterval = null;
+      }
+    };
   }, [router, user]);
 
   return (
