@@ -58,13 +58,41 @@ const SubscriptionPage: React.FC = () => {
     const checkAuth = async () => {
       // Vérifier si nous sommes dans un environnement navigateur
       if (typeof window === "undefined") return;
-      
+
       // Vérifier le token directement depuis localStorage
       const token = localStorage.getItem("userToken");
-      
-      // Utiliser le contexte d'authentification comme fallback
-      if (!token && !isAuthenticated()) {
-        console.log("Redirection vers login - Utilisateur non authentifié");
+
+      // Vérifier si le token est expiré
+      const isTokenExpired = (token: string): boolean => {
+        try {
+          const base64Url = token.split(".")[1];
+          const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
+          const payload = JSON.parse(atob(base64));
+
+          // Vérifier si le token a une date d'expiration
+          if (!payload.exp) return true;
+
+          // Comparer la date d'expiration avec la date actuelle
+          const currentTime = Math.floor(Date.now() / 1000);
+
+          return payload.exp < currentTime;
+        } catch (error) {
+          console.error("Erreur lors de la vérification du token:", error);
+
+          return true; // En cas d'erreur, considérer le token comme expiré
+        }
+      };
+
+      // Si pas de token ou token expiré, rediriger vers login
+      if (!token || (token && isTokenExpired(token)) || !isAuthenticated()) {
+        console.log(
+          "Redirection vers login - Utilisateur non authentifié ou token expiré",
+        );
+
+        // Nettoyer les données de souscription
+        setSubscriptionInfo(null);
+
+        // Rediriger vers la page de connexion
         router.push("/users/login");
 
         return;
