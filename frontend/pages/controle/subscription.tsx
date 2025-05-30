@@ -56,8 +56,14 @@ const SubscriptionPage: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      // Utiliser le contexte d'authentification pour vérifier l'état
-      if (!isAuthenticated()) {
+      // Vérifier si nous sommes dans un environnement navigateur
+      if (typeof window === "undefined") return;
+      
+      // Vérifier le token directement depuis localStorage
+      const token = localStorage.getItem("userToken");
+      
+      // Utiliser le contexte d'authentification comme fallback
+      if (!token && !isAuthenticated()) {
         console.log("Redirection vers login - Utilisateur non authentifié");
         router.push("/users/login");
 
