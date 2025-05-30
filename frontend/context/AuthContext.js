@@ -6,16 +6,20 @@ import Swal from "sweetalert2";
 // Créez un contexte d'authentification
 const AuthContext = createContext(null);
 
+// Exporter le contexte pour l'utiliser dans d'autres composants
+export { AuthContext };
+
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [initialized, setInitialized] = useState(false);
   const router = useRouter();
 
-  // Configurer l'intercepteur Axios pour ajouter automatiquement le token
+  // Configurer les intercepteurs Axios pour ajouter automatiquement le token et gérer les erreurs 401
   useEffect(() => {
-    const interceptor = axios.interceptors.request.use((config) => {
-      const token = localStorage.getItem("userToken");
+    // Intercepteur de requête pour ajouter le token
+    const requestInterceptor = axios.interceptors.request.use((config) => {
+      const token = localStorage.getItem("userToken") || localStorage.getItem("accessToken");
 
       if (token) {
         config.headers.Authorization = `Bearer ${token}`;
@@ -24,8 +28,65 @@ export const AuthProvider = ({ children }) => {
       return config;
     });
 
+    // Intercepteur de réponse pour gérer les erreurs 401 et tenter le refresh
+    const responseInterceptor = axios.interceptors.response.use(
+      (response) => response,
+      async (error) => {
+        const originalRequest = error.config;
+
+        // Si l'erreur est 401 et qu'on n'a pas déjà tenté de refresh
+        if (error.response?.status === 401 && !originalRequest._retry) {
+          originalRequest._retry = true;
+
+          try {
+            // Tenter de rafraîchir le token
+            const refreshToken = localStorage.getItem("refreshToken");
+            if (refreshToken) {
+              console.log("🔄 Tentative de rafraîchissement du token...");
+
+              const apiUrl = (
+                process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+              ).replace(/\/$/, "");
+
+              const refreshResponse = await axios.post(`${apiUrl}/auth/refresh-token`, {
+                refreshToken: refreshToken
+              });
+
+              if (refreshResponse.data?.accessToken) {
+                // Sauvegarder les nouveaux tokens
+                localStorage.setItem("userToken", refreshResponse.data.accessToken);
+                localStorage.setItem("accessToken", refreshResponse.data.accessToken);
+
+                if (refreshResponse.data.refreshToken) {
+                  localStorage.setItem("refreshToken", refreshResponse.data.refreshToken);
+                }
+
+                // Mettre à jour l'en-tête de la requête originale
+                originalRequest.headers.Authorization = `Bearer ${refreshResponse.data.accessToken}`;
+
+                console.log("✅ Token rafraîchi avec succès");
+
+                // Relancer la requête originale
+                return axios(originalRequest);
+              }
+            }
+          } catch (refreshError) {
+            console.error("❌ Échec du rafraîchissement du token:", refreshError);
+
+            // Si le refresh échoue, déconnecter l'utilisateur
+            logout();
+            return Promise.reject(refreshError);
+          }
+        }
+
+        // Si ce n'est pas une erreur 401 ou si le refresh a échoué, rejeter l'erreur
+        return Promise.reject(error);
+      }
+    );
+
     return () => {
-      axios.interceptors.request.eject(interceptor);
+      axios.interceptors.request.eject(requestInterceptor);
+      axios.interceptors.response.eject(responseInterceptor);
     };
   }, []);
 
@@ -198,8 +259,17 @@ export const AuthProvider = ({ children }) => {
   // Fonction pour se déconnecter
   const logout = () => {
     setUser(null);
+    // Nettoyer tous les tokens et données utilisateur
     localStorage.removeItem("userToken");
+    localStorage.removeItem("accessToken");
+    localStorage.removeItem("refreshToken");
     localStorage.removeItem("user");
+    localStorage.removeItem("userId");
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("userRole");
+
+    console.log("🚪 Déconnexion effectuée - Redirection vers login");
+
     // Rediriger vers la page de connexion
     router.push("/users/login");
   };

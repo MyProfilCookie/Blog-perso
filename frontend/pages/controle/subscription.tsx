@@ -4,10 +4,10 @@ import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { motion } from "framer-motion";
-import axios from "axios";
-import { useTheme } from "next-themes";
 import { Loader2 } from "lucide-react";
 
+import { useAuth } from "@/context/AuthContext";
+import { useAuthenticatedApi } from "@/hooks/useAuthenticatedApi";
 import {
   Card,
   CardHeader,
@@ -35,7 +35,11 @@ interface UserSubscription {
 
 const SubscriptionPage: React.FC = () => {
   const router = useRouter();
-  const { theme, setTheme } = useTheme();
+  const { user, isAuthenticated } = useAuth() || {
+    user: null,
+    isAuthenticated: () => false,
+  };
+  const { authenticatedGet, authenticatedPost } = useAuthenticatedApi();
   const [mounted, setMounted] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -52,67 +56,25 @@ const SubscriptionPage: React.FC = () => {
 
   useEffect(() => {
     const checkAuth = async () => {
-      // Vérifier toutes les sources possibles d'authentification
-      const token =
-        localStorage.getItem("token") || localStorage.getItem("userToken");
-      const userId = localStorage.getItem("userId");
-      const userInfo = localStorage.getItem("userInfo");
-      const user = localStorage.getItem("user");
-
-      console.log("Vérification auth:", {
-        token: token ? "Présent" : "Absent",
-        userId: userId ? "Présent" : "Absent",
-        userInfo: userInfo ? "Présent" : "Absent",
-        user: user ? "Présent" : "Absent",
-      });
-
-      // Vérifier si l'utilisateur est connecté d'une manière ou d'une autre
-      let isAuthenticated = false;
-
-      // Méthode 1: Token et userId
-      if (token && userId) {
-        isAuthenticated = true;
-      }
-
-      // Méthode 2: userInfo contient un ID
-      if (userInfo) {
-        try {
-          const parsedUserInfo = JSON.parse(userInfo);
-
-          if (parsedUserInfo && parsedUserInfo._id) {
-            isAuthenticated = true;
-          }
-        } catch (e) {
-          console.error("Erreur parsing userInfo:", e);
-        }
-      }
-
-      // Méthode 3: user contient un ID
-      if (user) {
-        try {
-          const parsedUser = JSON.parse(user);
-
-          if (parsedUser && (parsedUser._id || parsedUser.id)) {
-            isAuthenticated = true;
-          }
-        } catch (e) {
-          console.error("Erreur parsing user:", e);
-        }
-      }
-
-      if (!isAuthenticated) {
-        console.log("Redirection vers login - Aucune authentification trouvée");
+      // Utiliser le contexte d'authentification pour vérifier l'état
+      if (!isAuthenticated()) {
+        console.log("Redirection vers login - Utilisateur non authentifié");
         router.push("/users/login");
 
         return;
       }
 
       try {
-        // Vérifier si l'utilisateur est admin
+        // Vérifier si l'utilisateur est admin via le contexte ou localStorage
         const userRole = localStorage.getItem("userRole");
-        const isAdmin = userRole === "admin";
+        const isUserAdmin =
+          userRole === "admin" ||
+          (user &&
+            typeof user === "object" &&
+            (("role" in user && (user as { role: string }).role === "admin") ||
+              ("isAdmin" in user && (user as { isAdmin: boolean }).isAdmin)));
 
-        if (isAdmin) {
+        if (isUserAdmin) {
           // Si admin, définir automatiquement comme premium
           setSubscriptionInfo({
             subscription: {
@@ -165,30 +127,23 @@ const SubscriptionPage: React.FC = () => {
 
   const fetchSubscriptionInfo = async () => {
     try {
-      const token =
-        localStorage.getItem("token") || localStorage.getItem("userToken");
-
-      if (!token) {
-        throw new Error("Token d'authentification non trouvé");
-      }
-
-      const response = await axios.get(
+      const response = await authenticatedGet(
         `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
       );
 
       setSubscriptionInfo(response.data);
       setLoading(false);
     } catch (err) {
       console.error(
-        "Erreur lors de la récupération des informations d&apos;abonnement:",
+        "Erreur lors de la récupération des informations d'abonnement:",
         err,
       );
-      setError("Erreur lors du chargement des informations d&apos;abonnement");
+
+      // Si l'erreur est liée à l'authentification, l'intercepteur s'en chargera
+      // Sinon, afficher l'erreur
+      if ((err as any).response?.status !== 401) {
+        setError("Erreur lors du chargement des informations d'abonnement");
+      }
       setLoading(false);
     }
   };
@@ -202,17 +157,10 @@ const SubscriptionPage: React.FC = () => {
 
     try {
       setProcessingPayment(true);
-      const token =
-        localStorage.getItem("token") || localStorage.getItem("userToken");
 
-      const response = await axios.post(
+      const response = await authenticatedPost(
         `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/create-checkout-session`,
         {},
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        },
       );
 
       const result = await stripe.redirectToCheckout({
@@ -227,7 +175,12 @@ const SubscriptionPage: React.FC = () => {
         "Erreur lors de la création de la session de paiement:",
         err,
       );
-      setError("Erreur lors du traitement du paiement");
+
+      // Si l'erreur est liée à l'authentification, l'intercepteur s'en chargera
+      // Sinon, afficher l'erreur
+      if ((err as any).response?.status !== 401) {
+        setError("Erreur lors du traitement du paiement");
+      }
       setProcessingPayment(false);
     }
   };
