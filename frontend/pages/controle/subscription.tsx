@@ -78,15 +78,19 @@ const SubscriptionPage: React.FC = () => {
       // Si déjà sur la page de login, ne pas continuer la vérification
       if (isLoginPage) {
         console.log("Déjà sur la page de login, arrêt de la vérification");
-
         return;
       }
 
       // Si pas de token du tout, rediriger vers login
       if (!token) {
         console.log("Aucun token trouvé, redirection vers login");
+        setSubscriptionInfo(null);
+        localStorage.removeItem("userToken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("user");
         router.push("/users/login");
-
         return;
       }
 
@@ -100,7 +104,6 @@ const SubscriptionPage: React.FC = () => {
           // Vérifier si le token a une date d'expiration
           if (!payload.exp) {
             console.log("Token sans date d'expiration");
-
             return true;
           }
 
@@ -121,7 +124,6 @@ const SubscriptionPage: React.FC = () => {
           return isExpired;
         } catch (error) {
           console.error("Erreur lors de la vérification du token:", error);
-
           return true; // En cas d'erreur, considérer le token comme expiré
         }
       };
@@ -137,8 +139,6 @@ const SubscriptionPage: React.FC = () => {
           try {
             console.log("RefreshToken trouvé, tentative de rafraîchissement");
 
-            // Tenter de rafraîchir le token (cette partie dépend de votre API)
-            // Cette implémentation est un exemple, adaptez-la à votre API
             const response = await fetch(
               `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
               {
@@ -164,7 +164,6 @@ const SubscriptionPage: React.FC = () => {
 
                 // Continuer avec le token rafraîchi
                 await fetchSubscriptionInfo();
-
                 return;
               }
             }
@@ -175,11 +174,15 @@ const SubscriptionPage: React.FC = () => {
           }
         }
 
-        // Si le rafraîchissement a échoué ou n'était pas possible, rediriger vers login
-        console.log("Redirection vers login après échec de rafraîchissement");
+        // Si le rafraîchissement a échoué ou n'était pas possible, déconnecter l'utilisateur
+        console.log("Déconnexion après échec de rafraîchissement");
         setSubscriptionInfo(null);
+        localStorage.removeItem("userToken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("user");
         router.push("/users/login");
-
         return;
       }
 
@@ -217,7 +220,6 @@ const SubscriptionPage: React.FC = () => {
             dailyExerciseCount: Infinity,
           });
           setLoading(false);
-
           return;
         }
 
@@ -272,7 +274,24 @@ const SubscriptionPage: React.FC = () => {
       console.log("Réponse API reçue:", response.status);
       console.log("Données d'abonnement:", response.data);
 
-      setSubscriptionInfo(response.data);
+      if (!response.data || !response.data.subscription) {
+        throw new Error("Données d'abonnement invalides");
+      }
+
+      // Vérifier si l'abonnement est expiré
+      if (response.data.subscription.status === "expired") {
+        setSubscriptionInfo({
+          ...response.data,
+          subscription: {
+            ...response.data.subscription,
+            type: "free",
+            status: "expired",
+          },
+        });
+      } else {
+        setSubscriptionInfo(response.data);
+      }
+      
       setLoading(false);
     } catch (err) {
       console.error(
@@ -287,17 +306,34 @@ const SubscriptionPage: React.FC = () => {
 
       if (status === 401) {
         console.log("Erreur 401 - Non autorisé");
-        // L'intercepteur devrait gérer cette erreur, mais au cas où:
         setError("Session expirée. Veuillez vous reconnecter.");
-
+        
+        // Nettoyer le stockage local
+        localStorage.removeItem("userToken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("user");
+        
         // Éviter les redirections en boucle
         if (window.location.pathname !== "/users/login") {
           setTimeout(() => {
             router.push("/users/login");
-          }, 2000); // Délai pour éviter les redirections trop rapides
+          }, 2000);
         }
       } else {
         setError("Erreur lors du chargement des informations d'abonnement");
+        // En cas d'erreur, définir l'utilisateur comme non premium
+        setSubscriptionInfo({
+          subscription: {
+            type: "free",
+            status: "active",
+            startDate: null,
+            endDate: null,
+          },
+          role: "user",
+          dailyExerciseCount: 3,
+        });
       }
 
       setLoading(false);
