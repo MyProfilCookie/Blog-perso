@@ -210,7 +210,7 @@ const SubscriptionPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-cream">
+      <div className="flex items-center justify-center min-h-screen bg-cream dark:bg-gray-900">
         <motion.div
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
