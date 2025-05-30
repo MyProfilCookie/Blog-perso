@@ -337,27 +337,40 @@ export const Navbar = () => {
       cancelButtonText: "Annuler",
     }).then((result) => {
       if (result.isConfirmed) {
+        // Nettoyer toutes les données du localStorage
         const userId = user?.id;
-
+        
+        // Supprimer toutes les données liées à l'utilisateur
         localStorage.removeItem("user");
+        localStorage.removeItem("userToken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userInfo");
+        localStorage.removeItem("serInfo");
+        localStorage.removeItem("token");
+        
+        // Supprimer les données du panier
         if (userId) {
           localStorage.removeItem(`cart_${userId}`);
         }
+        
+        // Réinitialiser l'état
         setUser(null);
         setCartItemsCount(0);
+        setOrderCount({
+          pending: 0,
+          shipped: 0,
+          delivered: 0,
+          total: 0
+        });
 
+        // Notifier les autres composants
         const event = new CustomEvent("userUpdate");
-
         window.dispatchEvent(event);
 
-        Swal.fire({
-          title: "Déconnexion réussie",
-          text: "Vous avez été déconnecté(e).",
-          icon: "success",
-          confirmButtonText: "Ok",
-        }).then(() => {
-          router.push("/");
-        });
+        // Forcer le rechargement de la page pour s'assurer que tout est nettoyé
+        window.location.href = "/";
       }
     });
   };
@@ -735,6 +748,10 @@ export const Navbar = () => {
           localStorage.removeItem("userToken");
           localStorage.removeItem("accessToken");
           localStorage.removeItem("refreshToken");
+          localStorage.removeItem("userRole");
+          localStorage.removeItem("userInfo");
+          localStorage.removeItem("serInfo");
+          localStorage.removeItem("token");
           if (userId) {
             localStorage.removeItem(`cart_${userId}`);
           }

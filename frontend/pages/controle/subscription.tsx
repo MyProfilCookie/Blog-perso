@@ -59,23 +59,35 @@ const SubscriptionPage: React.FC = () => {
       // Vérifier si nous sommes dans un environnement navigateur
       if (typeof window === "undefined") return;
 
-      // Vérifier toutes les sources possibles de tokens
+      // Vérifier toutes les sources possibles de tokens et données utilisateur
       const userToken = localStorage.getItem("userToken");
       const accessToken = localStorage.getItem("accessToken");
+      const userInfo = localStorage.getItem("userInfo");
+      const serInfo = localStorage.getItem("serInfo");
+      const user = localStorage.getItem("user");
       const token = userToken || accessToken;
 
-      // Si pas de token du tout, rediriger vers login sans afficher de logs
-      if (!token) {
+      // Vérifier si toutes les données nécessaires sont présentes
+      const hasValidAuth = token && (userInfo || serInfo || user);
+
+      // Si pas de données d'authentification valides, rediriger vers login
+      if (!hasValidAuth) {
         setSubscriptionInfo(null);
         setLoading(false);
+        // Nettoyer le localStorage
+        localStorage.removeItem("userToken");
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("refreshToken");
+        localStorage.removeItem("userRole");
+        localStorage.removeItem("userInfo");
+        localStorage.removeItem("serInfo");
+        localStorage.removeItem("user");
         router.push("/users/login");
         return;
       }
 
-      // Vérifier si l'utilisateur est déjà sur la page de login pour éviter les boucles
+      // Vérifier si l'utilisateur est déjà sur la page de login
       const isLoginPage = window.location.pathname === "/users/login";
-
-      // Si déjà sur la page de login, ne pas continuer la vérification
       if (isLoginPage) {
         setSubscriptionInfo(null);
         setLoading(false);
@@ -89,12 +101,8 @@ const SubscriptionPage: React.FC = () => {
           const base64 = base64Url.replace(/-/g, "+").replace(/_/g, "/");
           const payload = JSON.parse(atob(base64));
 
-          // Vérifier si le token a une date d'expiration
-          if (!payload.exp) {
-            return true;
-          }
+          if (!payload.exp) return true;
 
-          // Comparer la date d'expiration avec la date actuelle
           const currentTime = Math.floor(Date.now() / 1000);
           return payload.exp < currentTime;
         } catch (error) {
@@ -102,9 +110,8 @@ const SubscriptionPage: React.FC = () => {
         }
       };
 
-      // Si le token est expiré, essayer de le rafraîchir avant de rediriger
+      // Si le token est expiré, essayer de le rafraîchir
       if (isTokenExpired(token)) {
-        // Vérifier si un refreshToken est disponible
         const refreshToken = localStorage.getItem("refreshToken");
 
         if (refreshToken) {
@@ -131,7 +138,6 @@ const SubscriptionPage: React.FC = () => {
                   localStorage.setItem("refreshToken", data.refreshToken);
                 }
 
-                // Continuer avec le token rafraîchi
                 await fetchSubscriptionInfo();
                 return;
               }
@@ -141,12 +147,14 @@ const SubscriptionPage: React.FC = () => {
           }
         }
 
-        // Si le rafraîchissement a échoué ou n'était pas possible, déconnecter l'utilisateur
+        // Si le rafraîchissement a échoué, déconnecter l'utilisateur
         setSubscriptionInfo(null);
         localStorage.removeItem("userToken");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("userRole");
+        localStorage.removeItem("userInfo");
+        localStorage.removeItem("serInfo");
         localStorage.removeItem("user");
         setLoading(false);
         router.push("/users/login");
@@ -154,7 +162,6 @@ const SubscriptionPage: React.FC = () => {
       }
 
       try {
-        // Récupérer les informations d'abonnement d'abord
         const subscriptionResponse = await authenticatedGet(
           `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
         );
@@ -175,7 +182,6 @@ const SubscriptionPage: React.FC = () => {
             dailyExerciseCount: Infinity,
           });
         } else {
-          // Pour les utilisateurs non-admin, initialiser Stripe et charger les infos d'abonnement
           const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
 
           if (!stripeKey) {
@@ -191,7 +197,6 @@ const SubscriptionPage: React.FC = () => {
           setStripe(stripeInstance);
           setStripeLoaded(true);
 
-          // Charger les informations d'abonnement
           await fetchSubscriptionInfo();
         }
       } catch (err) {
