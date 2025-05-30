@@ -66,6 +66,8 @@ const SubscriptionPage: React.FC = () => {
 
       // Si pas de token du tout, rediriger vers login sans afficher de logs
       if (!token) {
+        setSubscriptionInfo(null);
+        setLoading(false);
         router.push("/users/login");
         return;
       }
@@ -75,15 +77,10 @@ const SubscriptionPage: React.FC = () => {
 
       // Si déjà sur la page de login, ne pas continuer la vérification
       if (isLoginPage) {
+        setSubscriptionInfo(null);
+        setLoading(false);
         return;
       }
-
-      // À partir d'ici, on sait qu'il y a un token, on peut afficher les logs
-      console.log("=== VÉRIFICATION D'AUTHENTIFICATION ===");
-      console.log("userToken:", userToken ? "Présent" : "Absent");
-      console.log("accessToken:", accessToken ? "Présent" : "Absent");
-      console.log("Token utilisé:", token ? "Présent" : "Absent");
-      console.log("Est sur la page de login:", isLoginPage);
 
       // Vérifier si le token est expiré
       const isTokenExpired = (tokenToCheck: string): boolean => {
@@ -94,42 +91,24 @@ const SubscriptionPage: React.FC = () => {
 
           // Vérifier si le token a une date d'expiration
           if (!payload.exp) {
-            console.log("Token sans date d'expiration");
             return true;
           }
 
           // Comparer la date d'expiration avec la date actuelle
           const currentTime = Math.floor(Date.now() / 1000);
-          const isExpired = payload.exp < currentTime;
-
-          console.log(
-            "Expiration du token:",
-            new Date(payload.exp * 1000).toLocaleString(),
-          );
-          console.log(
-            "Heure actuelle:",
-            new Date(currentTime * 1000).toLocaleString(),
-          );
-          console.log("Token expiré:", isExpired);
-
-          return isExpired;
+          return payload.exp < currentTime;
         } catch (error) {
-          console.error("Erreur lors de la vérification du token:", error);
           return true;
         }
       };
 
       // Si le token est expiré, essayer de le rafraîchir avant de rediriger
       if (isTokenExpired(token)) {
-        console.log("Token expiré, tentative de rafraîchissement...");
-
         // Vérifier si un refreshToken est disponible
         const refreshToken = localStorage.getItem("refreshToken");
 
         if (refreshToken) {
           try {
-            console.log("RefreshToken trouvé, tentative de rafraîchissement");
-
             const response = await fetch(
               `${process.env.NEXT_PUBLIC_API_URL}/auth/refresh-token`,
               {
@@ -145,7 +124,6 @@ const SubscriptionPage: React.FC = () => {
               const data = await response.json();
 
               if (data.accessToken) {
-                console.log("Token rafraîchi avec succès");
                 localStorage.setItem("userToken", data.accessToken);
                 localStorage.setItem("accessToken", data.accessToken);
 
@@ -158,37 +136,34 @@ const SubscriptionPage: React.FC = () => {
                 return;
               }
             }
-
-            console.log("Échec du rafraîchissement du token");
           } catch (error) {
             console.error("Erreur lors du rafraîchissement du token:", error);
           }
         }
 
         // Si le rafraîchissement a échoué ou n'était pas possible, déconnecter l'utilisateur
-        console.log("Déconnexion après échec de rafraîchissement");
         setSubscriptionInfo(null);
         localStorage.removeItem("userToken");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("userRole");
         localStorage.removeItem("user");
+        setLoading(false);
         router.push("/users/login");
         return;
       }
 
-      // À ce stade, nous avons un token valide
-      console.log("Token valide, vérification du rôle...");
-
       try {
         // Récupérer les informations d'abonnement d'abord
-        console.log("Chargement des informations d'abonnement");
         const subscriptionResponse = await authenticatedGet(
           `${process.env.NEXT_PUBLIC_API_URL}/subscriptions/info`,
         );
 
-        if (subscriptionResponse.data && subscriptionResponse.data.role === "admin") {
-          console.log("Utilisateur identifié comme admin via l'API");
+        if (!subscriptionResponse.data) {
+          throw new Error("Données d'abonnement invalides");
+        }
+
+        if (subscriptionResponse.data.role === "admin") {
           setSubscriptionInfo({
             subscription: {
               type: "premium",
@@ -199,33 +174,31 @@ const SubscriptionPage: React.FC = () => {
             role: "admin",
             dailyExerciseCount: Infinity,
           });
-          setLoading(false);
-          return;
+        } else {
+          // Pour les utilisateurs non-admin, initialiser Stripe et charger les infos d'abonnement
+          const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
+
+          if (!stripeKey) {
+            throw new Error("Clé Stripe non trouvée");
+          }
+
+          const stripeInstance = await loadStripe(stripeKey);
+
+          if (!stripeInstance) {
+            throw new Error("Impossible d'initialiser Stripe");
+          }
+
+          setStripe(stripeInstance);
+          setStripeLoaded(true);
+
+          // Charger les informations d'abonnement
+          await fetchSubscriptionInfo();
         }
-
-        // Pour les utilisateurs non-admin, initialiser Stripe et charger les infos d'abonnement
-        console.log("Utilisateur non-admin, initialisation de Stripe");
-        const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
-
-        if (!stripeKey) {
-          throw new Error("Clé Stripe non trouvée");
-        }
-
-        const stripeInstance = await loadStripe(stripeKey);
-
-        if (!stripeInstance) {
-          throw new Error("Impossible d'initialiser Stripe");
-        }
-
-        setStripe(stripeInstance);
-        setStripeLoaded(true);
-
-        // Charger les informations d'abonnement
-        console.log("Chargement des informations d'abonnement");
-        await fetchSubscriptionInfo();
       } catch (err) {
         console.error("Erreur d'initialisation:", err);
         setError("Erreur lors de l'initialisation du service de paiement");
+        setSubscriptionInfo(null);
+      } finally {
         setLoading(false);
       }
     };
@@ -243,6 +216,7 @@ const SubscriptionPage: React.FC = () => {
     const token = localStorage.getItem("userToken") || localStorage.getItem("accessToken");
     if (!token) {
       setError("Session expirée. Veuillez vous reconnecter.");
+      setSubscriptionInfo(null);
       router.push("/users/login");
       return;
     }
@@ -269,8 +243,6 @@ const SubscriptionPage: React.FC = () => {
       } else {
         setSubscriptionInfo(response.data);
       }
-      
-      setLoading(false);
     } catch (err) {
       console.error(
         "Erreur lors de la récupération des informations d'abonnement:",
@@ -282,6 +254,7 @@ const SubscriptionPage: React.FC = () => {
 
       if (status === 401) {
         setError("Session expirée. Veuillez vous reconnecter.");
+        setSubscriptionInfo(null);
         
         // Nettoyer le stockage local
         localStorage.removeItem("userToken");
@@ -310,7 +283,7 @@ const SubscriptionPage: React.FC = () => {
           dailyExerciseCount: 3,
         });
       }
-
+    } finally {
       setLoading(false);
     }
   };
