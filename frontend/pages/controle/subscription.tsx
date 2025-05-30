@@ -216,7 +216,7 @@ const SubscriptionPage: React.FC = () => {
           className="text-center"
           initial={{ opacity: 0, scale: 0.9 }}
         >
-          <Loader2 className="h-8 w-8 animate-spin" />
+          <Loader2 className="h-8 w-8 animate-spin text-primary" />
           <p className="mt-4 text-muted-foreground">
             Chargement de vos options d&rsquo;abonnement...
           </p>

@@ -684,6 +684,80 @@ export const Navbar = () => {
     checkTokenValidity();
   }, []);
 
+  // Vérification du token au chargement et périodiquement
+  useEffect(() => {
+    const checkTokenValidity = async () => {
+      const token = localStorage.getItem("userToken");
+      if (!token) return;
+
+      try {
+        // Vérifier si le token est expiré
+        const isExpired = isTokenExpired(token);
+        
+        if (isExpired) {
+          console.log("Token expiré détecté dans la navbar");
+          // Nettoyer les données utilisateur
+          const userId = user?.id;
+          localStorage.removeItem("user");
+          localStorage.removeItem("userToken");
+          localStorage.removeItem("accessToken");
+          localStorage.removeItem("refreshToken");
+          if (userId) {
+            localStorage.removeItem(`cart_${userId}`);
+          }
+          setUser(null);
+          setCartItemsCount(0);
+
+          // Notifier les autres composants
+          const event = new CustomEvent("userUpdate");
+          window.dispatchEvent(event);
+
+          // Afficher une alerte à l'utilisateur
+          Swal.fire({
+            title: "Session expirée",
+            text: "Votre session a expiré. Veuillez vous reconnecter pour continuer.",
+            icon: "warning",
+            confirmButtonColor: "#4169E1",
+            confirmButtonText: "Se connecter",
+          }).then((result) => {
+            if (result.isConfirmed) {
+              router.push("/users/login");
+            }
+          });
+        }
+      } catch (error) {
+        console.error("Erreur lors de la vérification du token:", error);
+      }
+    };
+
+    // Fonction pour vérifier si le token est expiré
+    const isTokenExpired = (token: string): boolean => {
+      try {
+        const base64Url = token.split('.')[1];
+        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
+        const payload = JSON.parse(atob(base64));
+        
+        // Vérifier si le token a une date d'expiration
+        if (!payload.exp) return true;
+        
+        // Comparer la date d'expiration avec la date actuelle
+        const currentTime = Math.floor(Date.now() / 1000);
+        return payload.exp < currentTime;
+      } catch (error) {
+        console.error("Erreur lors de la vérification du token:", error);
+        return true; // En cas d'erreur, considérer le token comme expiré
+      }
+    };
+
+    // Vérifier au chargement
+    checkTokenValidity();
+
+    // Vérifier périodiquement
+    const interval = setInterval(checkTokenValidity, 5 * 60 * 1000); // Toutes les 5 minutes
+    
+    return () => clearInterval(interval);
+  }, [router, user]);
+
   return (
     <NextUINavbar
       className="dark:bg-gray-900 bg-white/70 backdrop-blur-sm font-sans"
