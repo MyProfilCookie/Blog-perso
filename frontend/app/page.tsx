@@ -697,6 +697,119 @@ export default function Home() {
         </div>
       </motion.div>
 
+      {/* Nouvelle section: Parcours d'apprentissage personnalisés */}
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="w-full max-w-[1200px] mt-16 px-4 mx-auto"
+        initial={{ opacity: 0, y: 50 }}
+        transition={{ duration: 0.8 }}
+      >
+        <h2 className={title({ color: "violet", class: "text-center dark:text-violet-400 mb-8" })}>
+          Parcours d'apprentissage personnalisés
+        </h2>
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          {/* Carte 1: Évaluation des besoins */}
+          <Card className="bg-gradient-to-br from-blue-50 to-violet-50 dark:from-blue-900/30 dark:to-violet-900/30 border border-blue-200 dark:border-blue-800 shadow-md hover:shadow-lg transition-all">
+            <CardBody className="p-6">
+              <div className="flex flex-col items-center text-center mb-4">
+                <div className="bg-blue-100 dark:bg-blue-800/50 p-4 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                  <FontAwesomeIcon icon={faUser} className="h-10 w-10 text-blue-600 dark:text-blue-300" />
+                </div>
+                <h3 className="text-xl font-bold text-blue-700 dark:text-blue-300">Évaluation personnalisée</h3>
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                Notre plateforme commence par évaluer les besoins spécifiques de chaque enfant autiste pour créer un parcours d'apprentissage adapté à ses forces et ses défis particuliers.
+              </p>
+              <div className="mt-6 text-center">
+                <Button
+                  as={Link}
+                  href="/evaluation"
+                  className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
+                >
+                  Découvrir l'évaluation
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+          
+          {/* Carte 2: Contenu adapté */}
+          <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/30 dark:to-pink-900/30 border border-purple-200 dark:border-purple-800 shadow-md hover:shadow-lg transition-all">
+            <CardBody className="p-6">
+              <div className="flex flex-col items-center text-center mb-4">
+                <div className="bg-purple-100 dark:bg-purple-800/50 p-4 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                  <FontAwesomeIcon icon={faQuestionCircle} className="h-10 w-10 text-purple-600 dark:text-purple-300" />
+                </div>
+                <h3 className="text-xl font-bold text-purple-700 dark:text-purple-300">Contenu adapté aux besoins</h3>
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                Nos ressources pédagogiques sont conçues pour s'adapter aux différentes sensibilités sensorielles et styles d'apprentissage, avec des options visuelles, auditives et kinesthésiques.
+              </p>
+              <div className="mt-6 text-center">
+                <Button
+                  as={Link}
+                  href="/ressources"
+                  className="bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600"
+                >
+                  Explorer nos ressources
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+        
+        {/* Deuxième rangée */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+          {/* Carte 3: Suivi des progrès */}
+          <Card className="bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/30 dark:to-teal-900/30 border border-green-200 dark:border-green-800 shadow-md hover:shadow-lg transition-all">
+            <CardBody className="p-6">
+              <div className="flex flex-col items-center text-center mb-4">
+                <div className="bg-green-100 dark:bg-green-800/50 p-4 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                  <FontAwesomeIcon icon={faClock} className="h-10 w-10 text-green-600 dark:text-green-300" />
+                </div>
+                <h3 className="text-xl font-bold text-green-700 dark:text-green-300">Suivi des progrès en temps réel</h3>
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                Notre système de suivi permet aux parents et éducateurs de visualiser les progrès de l'enfant, d'identifier les domaines de réussite et ceux nécessitant plus d'attention.
+              </p>
+              <div className="mt-6 text-center">
+                <Button
+                  as={Link}
+                  href="/progres"
+                  className="bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
+                >
+                  Voir le suivi
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+          
+          {/* Carte 4: Communauté de soutien */}
+          <Card className="bg-gradient-to-br from-orange-50 to-yellow-50 dark:from-orange-900/30 dark:to-yellow-900/30 border border-orange-200 dark:border-orange-800 shadow-md hover:shadow-lg transition-all">
+            <CardBody className="p-6">
+              <div className="flex flex-col items-center text-center mb-4">
+                <div className="bg-orange-100 dark:bg-orange-800/50 p-4 rounded-full w-20 h-20 flex items-center justify-center mb-4">
+                  <FontAwesomeIcon icon={faEnvelope} className="h-10 w-10 text-orange-600 dark:text-orange-300" />
+                </div>
+                <h3 className="text-xl font-bold text-orange-700 dark:text-orange-300">Communauté de soutien</h3>
+              </div>
+              <p className="text-gray-700 dark:text-gray-300">
+                Rejoignez notre communauté de parents, éducateurs et professionnels pour partager des expériences, des conseils et trouver du soutien dans votre parcours avec l'autisme.
+              </p>
+              <div className="mt-6 text-center">
+                <Button
+                  as={Link}
+                  href="/soutien"
+                  className="bg-orange-600 text-white hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600"
+                >
+                  Rejoindre la communauté
+                </Button>
+              </div>
+            </CardBody>
+          </Card>
+        </div>
+      </motion.div>
+
       {/* Scroll to top button */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
