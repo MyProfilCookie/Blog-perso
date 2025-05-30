@@ -61,6 +61,9 @@ const SubscriptionPage: React.FC = () => {
 
       // Vérifier le token directement depuis localStorage
       const token = localStorage.getItem("userToken");
+      
+      // Ajouter un log pour déboguer
+      console.log("Token trouvé:", token ? "Oui" : "Non");
 
       // Vérifier si le token est expiré
       const isTokenExpired = (token: string): boolean => {
@@ -74,27 +77,42 @@ const SubscriptionPage: React.FC = () => {
 
           // Comparer la date d'expiration avec la date actuelle
           const currentTime = Math.floor(Date.now() / 1000);
+          
+          // Ajouter un log pour déboguer
+          console.log("Expiration du token:", new Date(payload.exp * 1000).toLocaleString());
+          console.log("Heure actuelle:", new Date(currentTime * 1000).toLocaleString());
+          console.log("Token expiré:", payload.exp < currentTime);
 
           return payload.exp < currentTime;
         } catch (error) {
           console.error("Erreur lors de la vérification du token:", error);
-
           return true; // En cas d'erreur, considérer le token comme expiré
         }
       };
 
       // Si pas de token ou token expiré, rediriger vers login
-      if (!token || (token && isTokenExpired(token)) || !isAuthenticated()) {
-        console.log(
-          "Redirection vers login - Utilisateur non authentifié ou token expiré",
-        );
-
+      if (!token || (token && isTokenExpired(token))) {
+        console.log("Redirection vers login - Token absent ou expiré");
+        
         // Nettoyer les données de souscription
         setSubscriptionInfo(null);
-
-        // Rediriger vers la page de connexion
-        router.push("/users/login");
-
+        
+        // Éviter les redirections en boucle en vérifiant si nous sommes déjà sur la page de login
+        if (window.location.pathname !== "/users/login") {
+          // Rediriger vers la page de connexion
+          router.push("/users/login");
+        }
+        return;
+      }
+      
+      // Vérifier si isAuthenticated() est disponible et l'utiliser comme vérification supplémentaire
+      if (typeof isAuthenticated === 'function' && !isAuthenticated()) {
+        console.log("Redirection vers login - isAuthenticated() a retourné false");
+        
+        // Éviter les redirections en boucle
+        if (window.location.pathname !== "/users/login") {
+          router.push("/users/login");
+        }
         return;
       }
 
