@@ -1,7 +1,7 @@
 import React from "react";
 import { BaseQuestion } from "./BaseQuestion";
 
-interface MathQuestionProps {
+interface ScienceQuestionProps {
   questionId: string;
   title: string;
   content: string;
@@ -13,7 +13,7 @@ interface MathQuestionProps {
   onRating: (questionId: string, value: number) => void;
 }
 
-export const MathQuestion: React.FC<MathQuestionProps> = ({
+export const ScienceQuestion: React.FC<ScienceQuestionProps> = ({
   questionId,
   title,
   content,
@@ -26,16 +26,16 @@ export const MathQuestion: React.FC<MathQuestionProps> = ({
 }) => {
   const getEmojiForCategory = (category: string) => {
     switch (category) {
-      case "arithmétique":
-        return "🔢";
-      case "géométrie":
-        return "📐";
-      case "algèbre":
-        return "📊";
-      case "statistiques":
-        return "📈";
+      case "physique":
+        return "⚡";
+      case "chimie":
+        return "🧪";
+      case "biologie":
+        return "🧬";
+      case "astronomie":
+        return "🌌";
       default:
-        return "📝";
+        return "🔬";
     }
   };
 
@@ -48,8 +48,8 @@ export const MathQuestion: React.FC<MathQuestionProps> = ({
       options={options}
       image={image}
       answer={answer}
-      category="mathématiques"
-      imagePath="/assets/math"
+      category="sciences"
+      imagePath="/assets/sciences"
       onAnswer={onAnswer}
       getEmojiForCategory={getEmojiForCategory}
       onRating={onRating}

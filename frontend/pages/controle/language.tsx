@@ -2,12 +2,13 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, CardBody, Button } from "@nextui-org/react";
+import { Card, CardBody, Button, Spinner } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
+import { useRevision } from "@/app/RevisionContext";
 
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
@@ -34,6 +35,17 @@ interface Result {
   answer: string;
 }
 
+interface Question {
+  _id: string;
+  title: string;
+  content: string;
+  question: string;
+  options?: string[];
+  image?: string;
+  answer: string;
+  category: string;
+}
+
 const LanguagePage: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -57,6 +69,9 @@ const LanguagePage: React.FC = () => {
     typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
   const [timeSpent, setTimeSpent] = useState(0);
   const [rating, setRating] = useState<number | null>(null);
+  const [questions, setQuestions] = useState<Question[]>([]);
+  const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
+  const { addError } = useRevision();
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -121,6 +136,24 @@ const LanguagePage: React.FC = () => {
     fetchExercises();
   }, []);
 
+  useEffect(() => {
+    const fetchQuestions = async () => {
+      try {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions?category=language`);
+        if (response.ok) {
+          const data = await response.json();
+          setQuestions(data.questions);
+        } else {
+          toast.error("Erreur lors du chargement des questions");
+        }
+      } catch (error) {
+        toast.error("Erreur lors du chargement des questions");
+      }
+    };
+
+    fetchQuestions();
+  }, []);
+
   // Gestion du minuteur et des messages d'encouragement
   useEffect(() => {
     let timer: NodeJS.Timeout;
@@ -181,6 +214,19 @@ const LanguagePage: React.FC = () => {
     } else {
       toast.error("Mauvaise réponse. Essayez encore !");
       setCurrentStreak(0);
+      const question = questions.find(q => q._id === questionId);
+      if (question) {
+        addError({
+          _id: `${questionId}-${Date.now()}`,
+          questionId,
+          questionText: question.question,
+          selectedAnswer,
+          correctAnswer: question.answer,
+          category: "language",
+          date: new Date().toISOString(),
+          attempts: 1
+        });
+      }
     }
   };
 
@@ -267,7 +313,7 @@ const LanguagePage: React.FC = () => {
     return results.some((r) => r.answer === exerciseId && r.isCorrect);
   };
 
-  const handleRating = (exerciseId: string, value: number) => {
+  const handleRating = (questionId: string, value: number) => {
     setRating(value);
     toast.success(`Merci d'avoir noté cet exercice ! Difficulté : ${value}/5`);
   };
@@ -298,6 +344,20 @@ const LanguagePage: React.FC = () => {
       </motion.div>
     );
   }
+
+  if (questions.length === 0) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <Card className="max-w-md">
+          <CardBody>
+            <p className="text-center">Aucune question disponible pour le moment.</p>
+          </CardBody>
+        </Card>
+      </div>
+    );
+  }
+
+  const currentQuestion = questions[currentQuestionIndex];
 
   return (
     <div className="min-h-screen bg-cream p-4 sm:p-6 lg:p-8 dark:bg-background">
