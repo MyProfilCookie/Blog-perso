@@ -567,3 +567,4 @@ const SciencesPage: React.FC = () => {
 };
 
 export default SciencesPage;
+
