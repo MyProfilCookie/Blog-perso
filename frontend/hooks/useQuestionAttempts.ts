@@ -1,5 +1,6 @@
-import { useRevision } from "@/app/RevisionContext";
 import { useState } from "react";
+
+import { useRevision } from "@/app/RevisionContext";
 
 interface UseQuestionAttemptsProps {
   questionId: string;
@@ -10,26 +11,31 @@ interface UseQuestionAttemptsReturn {
   canAttempt: boolean;
   attempts: number;
   remainingAttempts: number;
-  handleAttempt: (isCorrect: boolean) => void;
+  handleAttempt: (isCorrect: boolean) => boolean;
   isAnswered: boolean;
 }
 
 export const useQuestionAttempts = ({
   questionId,
-  onMaxAttemptsReached
+  onMaxAttemptsReached,
 }: UseQuestionAttemptsProps): UseQuestionAttemptsReturn => {
-  const { addAttempt, canAttempt: canAttemptQuestion, getAttempts, addError } = useRevision();
+  const {
+    addAttempt,
+    canAttempt: canAttemptQuestion,
+    getAttempts,
+    addError,
+  } = useRevision();
   const [isAnswered, setIsAnswered] = useState(false);
 
   const attempts = getAttempts(questionId);
   const remainingAttempts = 2 - attempts;
   const canAttempt = canAttemptQuestion(questionId) && !isAnswered;
 
-  const handleAttempt = (isCorrect: boolean) => {
-    if (!canAttempt) return;
+  const handleAttempt = (isCorrect: boolean): boolean => {
+    if (!canAttempt) return false;
 
     const hasMoreAttempts = addAttempt(questionId);
-    
+
     if (!isCorrect) {
       addError({
         _id: `${questionId}-${Date.now()}`,
@@ -39,7 +45,7 @@ export const useQuestionAttempts = ({
         correctAnswer: "", // À remplir par le composant parent
         category: "", // À remplir par le composant parent
         date: new Date().toISOString(),
-        attempts: attempts + 1
+        attempts: attempts + 1,
       });
     }
 
@@ -49,6 +55,8 @@ export const useQuestionAttempts = ({
         onMaxAttemptsReached();
       }
     }
+
+    return hasMoreAttempts;
   };
 
   return {
@@ -56,6 +64,6 @@ export const useQuestionAttempts = ({
     attempts,
     remainingAttempts,
     handleAttempt,
-    isAnswered
+    isAnswered,
   };
-}; 
+};

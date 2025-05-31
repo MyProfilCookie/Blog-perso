@@ -53,8 +53,31 @@ export const BaseQuestion: React.FC<BaseQuestionProps> = ({
     }
 
     const isCorrect = selectedAnswer === answer;
-    handleAttempt(isCorrect);
-    onAnswer(questionId, selectedAnswer, isCorrect);
+    const hasMoreAttempts = handleAttempt(isCorrect);
+
+    if (!isCorrect) {
+      // Enregistrer l'erreur dans le contexte de révision
+      const error = {
+        _id: `${questionId}-${Date.now()}`,
+        questionId,
+        questionText: question,
+        selectedAnswer,
+        correctAnswer: answer,
+        category,
+        date: new Date().toISOString(),
+        attempts: attempts + 1
+      };
+      onAnswer(questionId, selectedAnswer, isCorrect);
+
+      if (!hasMoreAttempts) {
+        toast.error("Vous avez épuisé toutes vos tentatives. La bonne réponse était : " + answer);
+      } else {
+        toast.error("Mauvaise réponse. Il vous reste " + (remainingAttempts - 1) + " tentative(s).");
+      }
+    } else {
+      toast.success("Bonne réponse !");
+      onAnswer(questionId, selectedAnswer, isCorrect);
+    }
   };
 
   return (

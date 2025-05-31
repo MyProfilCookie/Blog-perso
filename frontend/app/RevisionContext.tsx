@@ -83,10 +83,56 @@ export const RevisionProvider: React.FC<RevisionProviderProps> = ({ children }) 
 
   const addError = (error: RevisionError) => {
     setErrors(prev => [...prev, error]);
+
+    // Sauvegarder l'erreur dans l'API
+    const saveError = async () => {
+      const user = localStorage.getItem("user");
+      const token = localStorage.getItem("userToken");
+
+      if (!user || !token) return;
+
+      try {
+        const userId = JSON.parse(user)._id;
+        await fetch(`${baseUrl}/revision-errors`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            ...error,
+            userId
+          }),
+        });
+      } catch (error) {
+        console.error('Erreur lors de la sauvegarde de l\'erreur:', error);
+      }
+    };
+
+    saveError();
   };
 
   const removeError = (id: string) => {
     setErrors(prev => prev.filter(error => error._id !== id));
+
+    // Supprimer l'erreur de l'API
+    const deleteError = async () => {
+      const token = localStorage.getItem("userToken");
+      if (!token) return;
+
+      try {
+        await fetch(`${baseUrl}/revision-errors/${id}`, {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+      } catch (error) {
+        console.error('Erreur lors de la suppression de l\'erreur:', error);
+      }
+    };
+
+    deleteError();
   };
 
   const clearErrors = () => {
