@@ -9,13 +9,24 @@ interface RevisionError {
   correctAnswer: string;
   category: string;
   date: string;
+  attempts: number;
+}
+
+interface QuestionAttempt {
+  questionId: string;
+  attempts: number;
+  lastAttempt: string;
 }
 
 interface RevisionContextType {
   errors: RevisionError[];
+  questionAttempts: Record<string, QuestionAttempt>;
   addError: (error: RevisionError) => void;
   removeError: (id: string) => void;
   clearErrors: () => void;
+  addAttempt: (questionId: string) => boolean;
+  canAttempt: (questionId: string) => boolean;
+  getAttempts: (questionId: string) => number;
 }
 
 const RevisionContext = createContext<RevisionContextType | undefined>(undefined);
@@ -34,6 +45,7 @@ interface RevisionProviderProps {
 
 export const RevisionProvider: React.FC<RevisionProviderProps> = ({ children }) => {
   const [errors, setErrors] = useState<RevisionError[]>([]);
+  const [questionAttempts, setQuestionAttempts] = useState<Record<string, QuestionAttempt>>({});
 
   const baseUrl =
           process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
@@ -81,8 +93,49 @@ export const RevisionProvider: React.FC<RevisionProviderProps> = ({ children }) 
     setErrors([]);
   };
 
+  const addAttempt = (questionId: string): boolean => {
+    setQuestionAttempts(prev => {
+      const currentAttempts = prev[questionId]?.attempts || 0;
+      const newAttempts = currentAttempts + 1;
+      
+      if (newAttempts > 2) {
+        return prev;
+      }
+
+      return {
+        ...prev,
+        [questionId]: {
+          questionId,
+          attempts: newAttempts,
+          lastAttempt: new Date().toISOString()
+        }
+      };
+    });
+
+    return getAttempts(questionId) < 2;
+  };
+
+  const canAttempt = (questionId: string): boolean => {
+    return getAttempts(questionId) < 2;
+  };
+
+  const getAttempts = (questionId: string): number => {
+    return questionAttempts[questionId]?.attempts || 0;
+  };
+
   return (
-    <RevisionContext.Provider value={{ errors, addError, removeError, clearErrors }}>
+    <RevisionContext.Provider 
+      value={{ 
+        errors, 
+        questionAttempts,
+        addError, 
+        removeError, 
+        clearErrors,
+        addAttempt,
+        canAttempt,
+        getAttempts
+      }}
+    >
       {children}
     </RevisionContext.Provider>
   );
