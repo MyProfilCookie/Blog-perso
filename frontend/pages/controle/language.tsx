@@ -2,19 +2,17 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 import React, { useEffect, useState } from "react";
-import { Card, CardBody, Button, Spinner } from "@nextui-org/react";
+import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
-import { useRevision } from "@/app/RevisionContext";
 
+import { useRevision } from "@/app/RevisionContext";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import AIAssistant from "@/components/AIAssistant";
-import { useQuestionAttempts } from "@/hooks/useQuestionAttempts";
 import { LanguageQuestion } from "@/components/questions/LanguageQuestion";
 
 // Interface pour les exercices de langues
@@ -140,8 +138,10 @@ const LanguagePage: React.FC = () => {
     const fetchQuestions = async () => {
       try {
         const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions?category=language`);
+
         if (response.ok) {
           const data = await response.json();
+
           setQuestions(data.questions);
         } else {
           toast.error("Erreur lors du chargement des questions");
@@ -165,8 +165,10 @@ const LanguagePage: React.FC = () => {
         setTimeLeft(prev => {
           if (prev <= 1) {
             calculateFinalScore();
+
             return 0;
           }
+
           return prev - 1;
         });
       }, 1000);
@@ -174,6 +176,7 @@ const LanguagePage: React.FC = () => {
       // Messages d'encouragement toutes les 10 minutes
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
         setTimeout(() => setEmoji(""), 5000);
       }, 900000);
@@ -215,6 +218,7 @@ const LanguagePage: React.FC = () => {
       toast.error("Mauvaise réponse. Essayez encore !");
       setCurrentStreak(0);
       const question = questions.find(q => q._id === questionId);
+
       if (question) {
         addError({
           _id: `${questionId}-${Date.now()}`,
@@ -238,6 +242,7 @@ const LanguagePage: React.FC = () => {
       if (!userId || !token) {
         console.error("Utilisateur non connecté");
         toast.error("Vous devez être connecté pour sauvegarder votre score");
+
         return;
       }
 
@@ -388,8 +393,8 @@ const LanguagePage: React.FC = () => {
             </div>
             <div className="w-full sm:w-auto flex-1">
               <ProgressBar 
-                totalQuestions={exercises.length}
                 correctAnswers={completedExercises}
+                totalQuestions={exercises.length}
                 onProgressComplete={() => {
                   if (completedExercises === exercises.length) {
                     calculateFinalScore();
@@ -428,8 +433,8 @@ const LanguagePage: React.FC = () => {
                 <LanguageQuestion
                   key={exercise._id}
                   exercise={exercise}
-                  onAnswer={handleAnswer}
                   getEmojiForCategory={getEmojiForCategory}
+                  onAnswer={handleAnswer}
                   onRating={handleRating}
                 />
               ))}
@@ -438,10 +443,10 @@ const LanguagePage: React.FC = () => {
           {/* Pagination */}
           <div className="flex flex-col sm:flex-row justify-center items-center gap-4 mt-6">
             <Button
+              className="w-full sm:w-auto py-3"
+              disabled={currentPage === 1}
               size="lg"
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-              className="w-full sm:w-auto py-3"
             >
               Précédent
             </Button>
@@ -449,10 +454,10 @@ const LanguagePage: React.FC = () => {
               Page {currentPage} sur {Math.ceil(exercises.length / questionsPerPage)}
             </span>
             <Button
+              className="w-full sm:w-auto py-3"
+              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
               size="lg"
               onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
-              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
-              className="w-full sm:w-auto py-3"
             >
               Suivant
             </Button>

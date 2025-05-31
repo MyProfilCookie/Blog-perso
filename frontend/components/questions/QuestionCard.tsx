@@ -1,6 +1,7 @@
 import React from "react";
-import { useQuestionAttempts } from "@/hooks/useQuestionAttempts";
 import { toast } from "react-hot-toast";
+
+import { useQuestionAttempts } from "@/hooks/useQuestionAttempts";
 
 interface QuestionCardProps {
   questionId: string;
@@ -17,28 +18,29 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
   options,
   correctAnswer,
   category,
-  onAnswer
+  onAnswer,
 }) => {
-  const {
-    canAttempt,
-    attempts,
-    remainingAttempts,
-    handleAttempt,
-    isAnswered
-  } = useQuestionAttempts({
-    questionId,
-    onMaxAttemptsReached: () => {
-      toast.error("Vous avez atteint le nombre maximum de tentatives pour cette question.");
-    }
-  });
+  const { canAttempt, attempts, remainingAttempts, handleAttempt, isAnswered } =
+    useQuestionAttempts({
+      questionId,
+      onMaxAttemptsReached: () => {
+        toast.error(
+          "Vous avez atteint le nombre maximum de tentatives pour cette question.",
+        );
+      },
+    });
 
   const handleAnswer = (selectedAnswer: string) => {
     if (!canAttempt) {
-      toast.error(`Vous ne pouvez plus répondre à cette question. Il vous restait ${remainingAttempts} tentative(s).`);
+      toast.error(
+        `Vous ne pouvez plus répondre à cette question. Il vous restait ${remainingAttempts} tentative(s).`,
+      );
+
       return;
     }
 
     const isCorrect = selectedAnswer === correctAnswer;
+
     handleAttempt(isCorrect);
 
     if (isCorrect) {
@@ -61,23 +63,21 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
         {options.map((option, index) => (
           <button
             key={index}
-            onClick={() => handleAnswer(option)}
-            disabled={!canAttempt}
             className={`w-full p-3 text-left rounded-md transition-colors ${
               !canAttempt
                 ? "bg-gray-100 cursor-not-allowed"
                 : "hover:bg-blue-50"
             }`}
+            disabled={!canAttempt}
+            onClick={() => handleAnswer(option)}
           >
             {option}
           </button>
         ))}
       </div>
       {!canAttempt && (
-        <p className="mt-2 text-sm text-gray-500">
-          Tentatives : {attempts}/2
-        </p>
+        <p className="mt-2 text-sm text-gray-500">Tentatives : {attempts}/2</p>
       )}
     </div>
   );
-}; 
+};

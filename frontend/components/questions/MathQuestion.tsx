@@ -1,4 +1,5 @@
 import React from "react";
+
 import { BaseQuestion } from "./BaseQuestion";
 
 interface MathQuestionProps {
@@ -9,7 +10,11 @@ interface MathQuestionProps {
   options?: string[];
   image?: string;
   answer: string;
-  onAnswer: (questionId: string, selectedAnswer: string, isCorrect: boolean) => void;
+  onAnswer: (
+    questionId: string,
+    selectedAnswer: string,
+    isCorrect: boolean,
+  ) => void;
   onRating: (questionId: string, value: number) => void;
 }
 
@@ -22,7 +27,7 @@ export const MathQuestion: React.FC<MathQuestionProps> = ({
   image,
   answer,
   onAnswer,
-  onRating
+  onRating,
 }) => {
   const getEmojiForCategory = (category: string) => {
     switch (category) {
@@ -41,18 +46,18 @@ export const MathQuestion: React.FC<MathQuestionProps> = ({
 
   return (
     <BaseQuestion
-      questionId={questionId}
-      title={title}
-      content={content}
-      question={question}
-      options={options}
-      image={image}
       answer={answer}
       category="mathématiques"
-      imagePath="/assets/math"
-      onAnswer={onAnswer}
+      content={content}
       getEmojiForCategory={getEmojiForCategory}
+      image={image}
+      imagePath="/assets/math"
+      options={options}
+      question={question}
+      questionId={questionId}
+      title={title}
+      onAnswer={onAnswer}
       onRating={onRating}
     />
   );
-}; 
+};
