@@ -1,4 +1,5 @@
 import React from "react";
+
 import { BaseQuestion } from "./BaseQuestion";
 
 interface LanguageQuestionProps {
@@ -12,7 +13,11 @@ interface LanguageQuestionProps {
     answer: string;
     category: string;
   };
-  onAnswer: (questionId: string, selectedAnswer: string, isCorrect: boolean) => void;
+  onAnswer: (
+    questionId: string,
+    selectedAnswer: string,
+    isCorrect: boolean,
+  ) => void;
   getEmojiForCategory: (category: string) => string;
   onRating: (exerciseId: string, value: number) => void;
 }
@@ -21,22 +26,22 @@ export const LanguageQuestion: React.FC<LanguageQuestionProps> = ({
   exercise,
   onAnswer,
   getEmojiForCategory,
-  onRating
+  onRating,
 }) => {
   return (
     <BaseQuestion
-      questionId={exercise._id}
-      title={exercise.title}
-      content={exercise.content}
-      question={exercise.question}
-      options={exercise.options}
-      image={exercise.image}
       answer={exercise.answer}
       category={exercise.category}
-      imagePath="/assets/language"
-      onAnswer={onAnswer}
+      content={exercise.content}
       getEmojiForCategory={getEmojiForCategory}
+      image={exercise.image}
+      imagePath="/assets/language"
+      options={exercise.options}
+      question={exercise.question}
+      questionId={exercise._id}
+      title={exercise.title}
+      onAnswer={onAnswer}
       onRating={onRating}
     />
   );
-}; 
+};

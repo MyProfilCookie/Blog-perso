@@ -1,11 +1,8 @@
-/* eslint-disable prettier/prettier */
-/* eslint-disable react/no-unescaped-entities */
 "use client";
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 import { toast } from "sonner";
 
 import { useRevision } from "@/app/RevisionContext";
@@ -13,10 +10,9 @@ import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import AIAssistant from "@/components/AIAssistant";
-import { GeographyQuestion } from "@/components/questions/GeographyQuestion";
+import { FrenchQuestion } from "@/components/questions/FrenchQuestion";
 
-// Interface pour les exercices de géographie
-interface Exercise {
+interface Question {
   _id: string;
   title: string;
   content: string;
@@ -24,18 +20,12 @@ interface Exercise {
   options?: string[];
   image?: string;
   answer: string;
-  difficulty?: string;
   category: string;
 }
 
-interface Result {
-  isCorrect: boolean;
-  answer: string;
-}
-
-const GeographyPage: React.FC = () => {
+const FrancaisPage: React.FC = () => {
   const router = useRouter();
-  const [questions, setQuestions] = useState<Exercise[]>([]);
+  const [questions, setQuestions] = useState<Question[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [completedQuestions, setCompletedQuestions] = useState<number>(0);
@@ -49,18 +39,18 @@ const GeographyPage: React.FC = () => {
 
   // Messages d'encouragement
   const encouragementMessages = [
-    "🌍 Tu es un vrai géographe !",
-    "Excellent sens de l'espace !",
-    "🗺️ Continue d'explorer le monde !",
-    "🏔️ Tes connaissances géographiques s'améliorent !",
-    "🌆 Tu deviens un expert en géographie !",
-    "🌎 Tu progresses comme un pro !",
+    "📚 Tu es un excellent francophone !",
+    "🎯 Ta maîtrise du français s'améliore !",
+    "✍️ Continue à perfectionner ton français !",
+    "📝 Tes compétences linguistiques sont impressionnantes !",
+    "🎨 Tu deviens un expert en français !",
+    "🌟 Tu progresses comme un pro !",
   ];
 
   useEffect(() => {
     const fetchQuestions = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions?category=geography`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions?category=french`);
         if (response.ok) {
           const data = await response.json();
           setQuestions(data.questions);
@@ -112,9 +102,9 @@ const GeographyPage: React.FC = () => {
       setCurrentStreak(prev => prev + 1);
 
       if (currentStreak >= 3) {
-        toast.success(`Super ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 🌍`);
+        toast.success(`Super ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 📚`);
       } else if (currentStreak >= 5) {
-        toast.success(`Incroyable ! ${currentStreak + 1} bonnes réponses d'affilée ! 🗺️`);
+        toast.success(`Incroyable ! ${currentStreak + 1} bonnes réponses d'affilée ! ✍️`);
       }
     } else {
       toast.error("Mauvaise réponse. Essayez encore !");
@@ -127,7 +117,7 @@ const GeographyPage: React.FC = () => {
           questionText: question.question,
           selectedAnswer,
           correctAnswer: question.answer,
-          category: "geography",
+          category: "french",
           date: new Date().toISOString(),
           attempts: 1
         });
@@ -205,7 +195,7 @@ const GeographyPage: React.FC = () => {
           transition={{ duration: 0.4 }}
         >
           <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
-            Géographie
+            Français
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Exercices interactifs
@@ -261,7 +251,7 @@ const GeographyPage: React.FC = () => {
         {/* Liste des questions */}
         <div className="grid grid-cols-1 gap-6">
           {paginatedQuestions.map((question) => (
-            <GeographyQuestion
+            <FrenchQuestion
               key={question._id}
               questionId={question._id}
               title={question.title}
@@ -303,4 +293,4 @@ const GeographyPage: React.FC = () => {
   );
 };
 
-export default GeographyPage;
+export default FrancaisPage; 

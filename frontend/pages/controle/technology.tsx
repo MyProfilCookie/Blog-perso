@@ -6,9 +6,12 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 
+import { useRevision } from "@/app/RevisionContext";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
+import AIAssistant from "@/components/AIAssistant";
+import { TechnologyQuestion } from "@/components/questions/TechnologyQuestion";
 
 interface Exercise {
   _id: string;
@@ -50,14 +53,15 @@ const TechnologyPage: React.FC = () => {
     typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
   const [timeSpent, setTimeSpent] = useState(0);
   const [rating, setRating] = useState<number | null>(null);
+  const { addError } = useRevision();
 
   const encouragementMessages = [
-    "💻 Tu es un vrai geek !",
-    "🔧 Excellent esprit technique !",
-    "🌐 Continue d'explorer la technologie !",
-    "⚡ Tes connaissances techniques s'améliorent !",
-    "🤖 Tu deviens un expert en tech !",
-    "🚀 Tu progresses comme un pro !",
+    "💻 Tu es un excellent technologue !",
+    "🔧 Ta compréhension technique s'améliore !",
+    "⚡ Continue à explorer la technologie !",
+    "🔌 Tes connaissances technologiques sont impressionnantes !",
+    "🎮 Tu deviens un expert en technologie !",
+    "🌟 Tu progresses comme un pro !",
   ];
 
   const getEmojiForCategory = (category: string) => {
@@ -168,6 +172,19 @@ const TechnologyPage: React.FC = () => {
       setCurrentStreak(0);
       // Messages d'encouragement pour les mauvaises réponses
       toast.error("Ce n'est pas la bonne réponse, mais la tech est faite d'expérimentation ! Essaie encore ! 🌐");
+      const question = exercises.find(ex => ex._id === id);
+      if (question) {
+        addError({
+          _id: `${id}-${Date.now()}`,
+          questionId: id,
+          questionText: question.question,
+          selectedAnswer: userAnswer,
+          correctAnswer: question.answer,
+          category: "technology",
+          date: new Date().toISOString(),
+          attempts: 1
+        });
+      }
     }
   };
 

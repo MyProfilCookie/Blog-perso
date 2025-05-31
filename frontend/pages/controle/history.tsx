@@ -8,12 +8,12 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 
+import { useRevision } from "@/app/RevisionContext";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
-
-// AI
 import AIAssistant from "@/components/AIAssistant";
+import { HistoryQuestion } from "@/components/questions/HistoryQuestion";
 
 // Interface pour les exercices d'histoire
 interface Exercise {
@@ -56,6 +56,7 @@ const HistoryPage: React.FC = () => {
     typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
   const [timeSpent, setTimeSpent] = useState(0);
   const [rating, setRating] = useState<number | null>(null);
+  const { addError } = useRevision();
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -188,6 +189,19 @@ const HistoryPage: React.FC = () => {
       setCurrentStreak(0);
       // Messages d'encouragement pour les mauvaises réponses
       toast.error("Ce n'est pas la bonne réponse, mais l'histoire est faite d'apprentissages ! Essaie encore ! ⚔️");
+      const question = exercises.find(q => q._id === id);
+      if (question) {
+        addError({
+          _id: `${id}-${Date.now()}`,
+          questionId: id,
+          questionText: question.question,
+          selectedAnswer: userAnswer,
+          correctAnswer: correctAnswer,
+          category: "history",
+          date: new Date().toISOString(),
+          attempts: 1
+        });
+      }
     }
   };
 
@@ -373,125 +387,18 @@ const HistoryPage: React.FC = () => {
               )
               .slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
               .map((exercise) => (
-                <Card
+                <HistoryQuestion
                   key={exercise._id}
-                  className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
-                >
-                  <CardBody className="p-4 sm:p-6">
-                    <div className="flex flex-col gap-4">
-                      {/* Titre et catégorie */}
-                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                        <h3 className="text-lg font-semibold">
-                          {exercise.title}
-                        </h3>
-                        <span className="text-sm text-gray-500 dark:text-gray-400">
-                          {exercise.category}
-                        </span>
-                      </div>
-
-                      {/* Contenu et question */}
-                      <div className="space-y-4">
-                        <p className="text-gray-700 dark:text-gray-300">{exercise.content}</p>
-                        <p className="font-medium">{exercise.question}</p>
-                      </div>
-
-                      {/* Options ou champ de réponse */}
-                      <div className="space-y-4">
-                        {exercise.options ? (
-                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                            {exercise.options.map((option, index) => (
-                              <label
-                                key={index}
-                                className="flex items-center space-x-2 p-3 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
-                              >
-                                <input
-                                  className="form-radio h-5 w-5"
-                                  disabled={isAnswerSubmitted(exercise._id)}
-                                  name={exercise._id}
-                                  type="radio"
-                                  value={option}
-                                  onChange={(e) => handleChange(e, exercise._id)}
-                                />
-                                <span className="text-base">{option}</span>
-                              </label>
-                            ))}
-                          </div>
-                        ) : (
-                          <input
-                            className="w-full p-3 rounded-lg border border-gray-300 dark:border-gray-600 text-base"
-                            disabled={isAnswerSubmitted(exercise._id)}
-                            placeholder="Votre réponse"
-                            type="text"
-                            onChange={(e) => handleChange(e, exercise._id)}
-                          />
-                        )}
-                      </div>
-
-                      {/* Bouton de soumission et résultat */}
-                      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                        <Button
-                          className="w-full sm:w-auto py-3 px-6"
-                          color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
-                          disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
-                          size="lg"
-                          onClick={() => handleSubmit(exercise._id, exercise.answer)}
-                        >
-                          {isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "Correct ✓" : "Incorrect ✗") : "Valider"}
-                        </Button>
-
-                        {isAnswerSubmitted(exercise._id) && (
-                          <div className="flex flex-wrap sm:flex-nowrap gap-2">
-                            <Button
-                              className="w-full sm:w-auto py-3"
-                              color="default"
-                              size="lg"
-                              variant="flat"
-                              onClick={() => handleRating(exercise._id, 1)}
-                            >
-                              1
-                            </Button>
-                            <Button
-                              className="w-full sm:w-auto py-3"
-                              color="default"
-                              size="lg"
-                              variant="flat"
-                              onClick={() => handleRating(exercise._id, 2)}
-                            >
-                              2
-                            </Button>
-                            <Button
-                              className="w-full sm:w-auto py-3"
-                              color="default"
-                              size="lg"
-                              variant="flat"
-                              onClick={() => handleRating(exercise._id, 3)}
-                            >
-                              3
-                            </Button>
-                            <Button
-                              className="w-full sm:w-auto py-3"
-                              color="default"
-                              size="lg"
-                              variant="flat"
-                              onClick={() => handleRating(exercise._id, 4)}
-                            >
-                              4
-                            </Button>
-                            <Button
-                              className="w-full sm:w-auto py-3"
-                              color="default"
-                              size="lg"
-                              variant="flat"
-                              onClick={() => handleRating(exercise._id, 5)}
-                            >
-                              5
-                            </Button>
-                          </div>
-                        )}
-                      </div>
-                    </div>
-                  </CardBody>
-                </Card>
+                  questionId={exercise._id}
+                  title={exercise.title}
+                  content={exercise.content}
+                  question={exercise.question}
+                  options={exercise.options}
+                  image={exercise.image}
+                  answer={exercise.answer}
+                  onAnswer={(id, selectedAnswer) => handleSubmit(id, selectedAnswer)}
+                  onRating={(id, value) => handleRating(id, value)}
+                />
               ))}
           </div>
 
