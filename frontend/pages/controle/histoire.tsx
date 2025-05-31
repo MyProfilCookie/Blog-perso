@@ -1,5 +1,4 @@
-"use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -10,7 +9,7 @@ import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import AIAssistant from "@/components/AIAssistant";
-import { FrenchQuestion } from "@/components/questions/FrenchQuestion";
+import { HistoryQuestion } from "@/components/questions/HistoryQuestion";
 
 interface Exercise {
   _id: string;
@@ -24,11 +23,16 @@ interface Exercise {
   category: string;
 }
 
-const FrancaisPage: React.FC = () => {
+const HistoirePage: React.FC = () => {
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
+  const [results, setResults] = useState<
+    Array<{ isCorrect: boolean; answer: string }>
+  >([]);
+  const [correctSound] = useState(new Audio("/sounds/correct.mp3"));
   const [completedExercises, setCompletedExercises] = useState(0);
   const [totalPoints, setTotalPoints] = useState(0);
   const [currentStreak, setCurrentStreak] = useState(0);
@@ -38,26 +42,27 @@ const FrancaisPage: React.FC = () => {
   const questionsPerPage = 20;
   const [emoji, setEmoji] = useState<string>("");
   const { addError, addAttempt, canAttempt } = useRevision();
-  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
-  const [results, setResults] = useState<Array<{ isCorrect: boolean; answer: string }>>([]);
-  const [correctSound] = useState(new Audio('/sounds/correct.mp3'));
 
   // Messages d'encouragement
   const encouragementMessages = [
-    "📚 Tu es un excellent francophone !",
-    "🎯 Ta maîtrise du français s'améliore !",
-    "✍️ Continue à perfectionner ton français !",
-    "📝 Tes compétences linguistiques sont impressionnantes !",
-    "🎨 Tu deviens un expert en français !",
+    "📜 Tu es un excellent historien !",
+    "🏛️ Ta connaissance de l'histoire s'améliore !",
+    "⏳ Continue à explorer le passé !",
+    "📚 Tes compétences historiques sont impressionnantes !",
+    "🎯 Tu deviens un expert en histoire !",
     "🌟 Tu progresses comme un pro !",
   ];
 
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions?category=french`);
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/questions?category=history`,
+        );
+
         if (response.ok) {
           const data = await response.json();
+
           setExercises(data.questions);
         } else {
           toast.error("Erreur lors du chargement des exercices");
@@ -79,16 +84,21 @@ const FrancaisPage: React.FC = () => {
 
     if (timeLeft > 0) {
       timer = setInterval(() => {
-        setTimeLeft(prev => {
+        setTimeLeft((prev) => {
           if (prev <= 1) {
             return 0;
           }
+
           return prev - 1;
         });
       }, 1000);
 
       encouragementTimer = setInterval(() => {
-        const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+        const randomMessage =
+          encouragementMessages[
+            Math.floor(Math.random() * encouragementMessages.length)
+          ];
+
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
         setTimeout(() => setEmoji(""), 5000);
       }, 900000); // 15 minutes
@@ -102,19 +112,24 @@ const FrancaisPage: React.FC = () => {
 
   const handleSubmit = (id: string, correctAnswer: string) => {
     if (!canAttempt(id)) {
-      toast.error("Tu as déjà utilisé tes deux tentatives pour cette question ! 📚");
+      toast.error(
+        "Tu as déjà utilisé tes deux tentatives pour cette question ! 📚",
+      );
+
       return;
     }
 
     const userAnswer = userAnswers[id];
-    const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
+    const isCorrect =
+      userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
     const exerciseIndex = exercises.findIndex((ex: Exercise) => ex._id === id);
-    
+
     if (exerciseIndex !== -1) {
       const newResults = [...results];
-      newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
+
+      newResults[exerciseIndex] = { isCorrect, answer: userAnswer || "" };
       setResults(newResults);
-      
+
       if (isCorrect) {
         correctSound?.play();
         setCompletedExercises((prev: number) => prev + 1);
@@ -123,17 +138,24 @@ const FrancaisPage: React.FC = () => {
 
         // Messages d'encouragement pour les bonnes réponses
         if (currentStreak >= 3) {
-          toast.success(`Excellent ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 📚`);
+          toast.success(
+            `Excellent ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 📜`,
+          );
         } else if (currentStreak >= 5) {
-          toast.success(`Impressionnant ! ${currentStreak + 1} bonnes réponses d'affilée ! ✍️`);
+          toast.success(
+            `Impressionnant ! ${currentStreak + 1} bonnes réponses d'affilée ! 🏛️`,
+          );
         } else {
-          toast.success("Bonne réponse ! Continue à explorer la langue française ! 📖");
+          toast.success("Bonne réponse ! Continue à explorer l'histoire ! 📚");
         }
       } else {
         setCurrentStreak(0);
         // Messages d'encouragement pour les mauvaises réponses
-        toast.error("Ce n'est pas la bonne réponse, mais l'apprentissage est fait d'essais ! Essaie encore ! 📝");
+        toast.error(
+          "Ce n'est pas la bonne réponse, mais l'histoire s'apprend par l'expérience ! Essaie encore ! ⏳",
+        );
         const question = exercises.find((q: Exercise) => q._id === id);
+
         if (question) {
           addError({
             _id: `${id}-${Date.now()}`,
@@ -141,9 +163,9 @@ const FrancaisPage: React.FC = () => {
             questionText: question.question,
             selectedAnswer: userAnswer,
             correctAnswer: correctAnswer,
-            category: "francais",
+            category: "histoire",
             date: new Date().toISOString(),
-            attempts: 1
+            attempts: 1,
           });
         }
       }
@@ -157,7 +179,7 @@ const FrancaisPage: React.FC = () => {
 
   if (loading) {
     return (
-      <motion.div 
+      <motion.div
         animate={{ opacity: 1 }}
         className="flex items-center justify-center min-h-screen"
         initial={{ opacity: 0 }}
@@ -170,7 +192,7 @@ const FrancaisPage: React.FC = () => {
 
   if (error) {
     return (
-      <motion.div 
+      <motion.div
         animate={{ opacity: 1 }}
         className="flex flex-col items-center justify-center min-h-screen gap-4"
         initial={{ opacity: 0 }}
@@ -187,24 +209,30 @@ const FrancaisPage: React.FC = () => {
       <div className="flex justify-center items-center min-h-screen">
         <Card className="max-w-md">
           <CardBody>
-            <p className="text-center">Aucune question disponible pour le moment.</p>
+            <p className="text-center">
+              Aucune question disponible pour le moment.
+            </p>
           </CardBody>
         </Card>
       </div>
     );
   }
 
-  const filteredExercises = selectedCategory === "Tout"
-    ? exercises
-    : exercises.filter(q => q.category === selectedCategory);
+  const filteredExercises =
+    selectedCategory === "Tout"
+      ? exercises
+      : exercises.filter((q) => q.category === selectedCategory);
 
   const totalPages = Math.ceil(filteredExercises.length / questionsPerPage);
   const paginatedExercises = filteredExercises.slice(
     (currentPage - 1) * questionsPerPage,
-    currentPage * questionsPerPage
+    currentPage * questionsPerPage,
   );
 
-  const categories = ["Tout", ...Array.from(new Set(exercises.map(q => q.category)))];
+  const categories = [
+    "Tout",
+    ...Array.from(new Set(exercises.map((q) => q.category))),
+  ];
 
   return (
     <div className="min-h-screen bg-cream p-4 dark:bg-background">
@@ -221,7 +249,7 @@ const FrancaisPage: React.FC = () => {
           transition={{ duration: 0.4 }}
         >
           <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
-            Français
+            Histoire
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Exercices interactifs
@@ -236,12 +264,14 @@ const FrancaisPage: React.FC = () => {
             <Timer timeLeft={timeLeft} />
           </div>
           <div className="w-full sm:w-auto flex-1">
-            <ProgressBar 
-              totalQuestions={exercises.length}
+            <ProgressBar
               correctAnswers={completedExercises}
+              totalQuestions={exercises.length}
               onProgressComplete={() => {
                 if (completedExercises === exercises.length) {
-                  toast.success("Félicitations ! Vous avez terminé tous les exercices !");
+                  toast.success(
+                    "Félicitations ! Vous avez terminé tous les exercices !",
+                  );
                 }
               }}
             />
@@ -251,9 +281,9 @@ const FrancaisPage: React.FC = () => {
         {/* Message d'encouragement */}
         {emoji && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center text-lg font-medium text-primary mb-4"
+            initial={{ opacity: 0, y: -20 }}
           >
             {emoji}
           </motion.div>
@@ -277,15 +307,15 @@ const FrancaisPage: React.FC = () => {
         {/* Liste des questions */}
         <div className="grid grid-cols-1 gap-6">
           {paginatedExercises.map((question) => (
-            <FrenchQuestion
+            <HistoryQuestion
               key={question._id}
+              answer={question.answer}
+              content={question.content}
+              image={question.image}
+              options={question.options}
+              question={question.question}
               questionId={question._id}
               title={question.title}
-              content={question.content}
-              question={question.question}
-              options={question.options}
-              image={question.image}
-              answer={question.answer}
               onAnswer={handleSubmit}
               onRating={handleRating}
             />
@@ -298,7 +328,7 @@ const FrancaisPage: React.FC = () => {
             className="w-full sm:w-auto py-3"
             disabled={currentPage === 1}
             size="lg"
-            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            onClick={() => setCurrentPage((prev) => Math.max(1, prev - 1))}
           >
             Précédent
           </Button>
@@ -309,7 +339,9 @@ const FrancaisPage: React.FC = () => {
             className="w-full sm:w-auto py-3"
             disabled={currentPage >= totalPages}
             size="lg"
-            onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+            onClick={() =>
+              setCurrentPage((prev) => Math.min(totalPages, prev + 1))
+            }
           >
             Suivant
           </Button>
@@ -319,4 +351,4 @@ const FrancaisPage: React.FC = () => {
   );
 };
 
-export default FrancaisPage; 
+export default HistoirePage;

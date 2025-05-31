@@ -57,7 +57,7 @@ const MathPage: React.FC = () => {
     typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
   const [timeSpent, setTimeSpent] = useState(0);
   const [rating, setRating] = useState<number | null>(null);
-  const { addError } = useRevision();
+  const { addError, addAttempt, canAttempt } = useRevision();
 
   // Statistiques et badges
   const [badges, setBadges] = useState<{
@@ -164,42 +164,53 @@ const MathPage: React.FC = () => {
   };
 
   const handleSubmit = (id: string, correctAnswer: string) => {
+    if (!canAttempt(id)) {
+      toast.error("Tu as déjà utilisé tes deux tentatives pour cette question ! 🔢");
+      return;
+    }
+
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
-
-    setResults([...results, { isCorrect, answer: correctAnswer }]);
+    const exerciseIndex = exercises.findIndex(ex => ex._id === id);
     
-    if (isCorrect) {
-      correctSound?.play();
-      setCompletedExercises(prev => prev + 1);
-      setTotalPoints(prev => prev + 10);
-      setCurrentStreak(prev => prev + 1);
+    if (exerciseIndex !== -1) {
+      const newResults = [...results];
+      newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
+      setResults(newResults);
+      
+      if (isCorrect) {
+        correctSound?.play();
+        setCompletedExercises(prev => prev + 1);
+        setTotalPoints(prev => prev + 10);
+        setCurrentStreak(prev => prev + 1);
 
-      // Messages d'encouragement pour les bonnes réponses
-      if (currentStreak >= 3) {
-        toast.success(`Super ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 🔢`);
-      } else if (currentStreak >= 5) {
-        toast.success(`Incroyable ! ${currentStreak + 1} bonnes réponses d'affilée ! 📐`);
+        // Messages d'encouragement pour les bonnes réponses
+        if (currentStreak >= 3) {
+          toast.success(`Excellent ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 🔢`);
+        } else if (currentStreak >= 5) {
+          toast.success(`Impressionnant ! ${currentStreak + 1} bonnes réponses d'affilée ! 📐`);
+        } else {
+          toast.success("Bonne réponse ! Continue à explorer les mathématiques ! 🧮");
+        }
       } else {
-        toast.success("Bonne réponse ! Continue à explorer les mathématiques ! 🧮");
+        setCurrentStreak(0);
+        // Messages d'encouragement pour les mauvaises réponses
+        toast.error("Ce n'est pas la bonne réponse, mais les maths sont faites d'essais ! Essaie encore ! 📏");
+        const question = exercises.find(q => q._id === id);
+        if (question) {
+          addError({
+            _id: `${id}-${Date.now()}`,
+            questionId: id,
+            questionText: question.question,
+            selectedAnswer: userAnswer,
+            correctAnswer: correctAnswer,
+            category: "math",
+            date: new Date().toISOString(),
+            attempts: 1
+          });
+        }
       }
-    } else {
-      setCurrentStreak(0);
-      // Messages d'encouragement pour les mauvaises réponses
-      toast.error("Ce n'est pas la bonne réponse, mais les maths sont faites d'essais ! Essaie encore ! 📏");
-      const question = exercises.find(ex => ex._id === id);
-      if (question) {
-        addError({
-          _id: `${id}-${Date.now()}`,
-          questionId: id,
-          questionText: question.question,
-          selectedAnswer: userAnswer,
-          correctAnswer: correctAnswer,
-          category: "math",
-          date: new Date().toISOString(),
-          attempts: 1
-        });
-      }
+      addAttempt(id);
     }
   };
 

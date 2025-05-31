@@ -1,5 +1,4 @@
-"use client";
-import React, { useEffect, useState } from "react";
+import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -10,7 +9,7 @@ import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import AIAssistant from "@/components/AIAssistant";
-import { FrenchQuestion } from "@/components/questions/FrenchQuestion";
+import { GeographyQuestion } from "@/components/questions/GeographyQuestion";
 
 interface Exercise {
   _id: string;
@@ -24,11 +23,14 @@ interface Exercise {
   category: string;
 }
 
-const FrancaisPage: React.FC = () => {
+const GeographiePage: React.FC = () => {
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
+  const [results, setResults] = useState<Array<{ isCorrect: boolean; answer: string }>>([]);
+  const [correctSound] = useState(new Audio('/sounds/correct.mp3'));
   const [completedExercises, setCompletedExercises] = useState(0);
   const [totalPoints, setTotalPoints] = useState(0);
   const [currentStreak, setCurrentStreak] = useState(0);
@@ -38,24 +40,21 @@ const FrancaisPage: React.FC = () => {
   const questionsPerPage = 20;
   const [emoji, setEmoji] = useState<string>("");
   const { addError, addAttempt, canAttempt } = useRevision();
-  const [userAnswers, setUserAnswers] = useState<Record<string, string>>({});
-  const [results, setResults] = useState<Array<{ isCorrect: boolean; answer: string }>>([]);
-  const [correctSound] = useState(new Audio('/sounds/correct.mp3'));
 
   // Messages d'encouragement
   const encouragementMessages = [
-    "📚 Tu es un excellent francophone !",
-    "🎯 Ta maîtrise du français s'améliore !",
-    "✍️ Continue à perfectionner ton français !",
-    "📝 Tes compétences linguistiques sont impressionnantes !",
-    "🎨 Tu deviens un expert en français !",
+    "🌍 Tu es un excellent géographe !",
+    "🗺️ Ta connaissance du monde s'améliore !",
+    "🏔️ Continue à explorer la géographie !",
+    "🌎 Tes compétences géographiques sont impressionnantes !",
+    "🎯 Tu deviens un expert en géographie !",
     "🌟 Tu progresses comme un pro !",
   ];
 
   useEffect(() => {
     const fetchExercises = async () => {
       try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions?category=french`);
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/questions?category=geography`);
         if (response.ok) {
           const data = await response.json();
           setExercises(data.questions);
@@ -102,7 +101,7 @@ const FrancaisPage: React.FC = () => {
 
   const handleSubmit = (id: string, correctAnswer: string) => {
     if (!canAttempt(id)) {
-      toast.error("Tu as déjà utilisé tes deux tentatives pour cette question ! 📚");
+      toast.error("Tu as déjà utilisé tes deux tentatives pour cette question ! 🌍");
       return;
     }
 
@@ -123,16 +122,16 @@ const FrancaisPage: React.FC = () => {
 
         // Messages d'encouragement pour les bonnes réponses
         if (currentStreak >= 3) {
-          toast.success(`Excellent ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 📚`);
+          toast.success(`Excellent ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 🌍`);
         } else if (currentStreak >= 5) {
-          toast.success(`Impressionnant ! ${currentStreak + 1} bonnes réponses d'affilée ! ✍️`);
+          toast.success(`Impressionnant ! ${currentStreak + 1} bonnes réponses d'affilée ! 🗺️`);
         } else {
-          toast.success("Bonne réponse ! Continue à explorer la langue française ! 📖");
+          toast.success("Bonne réponse ! Continue à explorer la géographie ! 🌎");
         }
       } else {
         setCurrentStreak(0);
         // Messages d'encouragement pour les mauvaises réponses
-        toast.error("Ce n'est pas la bonne réponse, mais l'apprentissage est fait d'essais ! Essaie encore ! 📝");
+        toast.error("Ce n'est pas la bonne réponse, mais la géographie s'apprend en explorant ! Essaie encore ! 🏔️");
         const question = exercises.find((q: Exercise) => q._id === id);
         if (question) {
           addError({
@@ -141,7 +140,7 @@ const FrancaisPage: React.FC = () => {
             questionText: question.question,
             selectedAnswer: userAnswer,
             correctAnswer: correctAnswer,
-            category: "francais",
+            category: "geographie",
             date: new Date().toISOString(),
             attempts: 1
           });
@@ -221,7 +220,7 @@ const FrancaisPage: React.FC = () => {
           transition={{ duration: 0.4 }}
         >
           <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
-            Français
+            Géographie
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Exercices interactifs
@@ -277,7 +276,7 @@ const FrancaisPage: React.FC = () => {
         {/* Liste des questions */}
         <div className="grid grid-cols-1 gap-6">
           {paginatedExercises.map((question) => (
-            <FrenchQuestion
+            <GeographyQuestion
               key={question._id}
               questionId={question._id}
               title={question.title}
@@ -319,4 +318,4 @@ const FrancaisPage: React.FC = () => {
   );
 };
 
-export default FrancaisPage; 
+export default GeographiePage; 
