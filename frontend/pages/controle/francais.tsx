@@ -102,7 +102,6 @@ const FrancaisPage: React.FC = () => {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/subjects/francais`
         );
-
         setExercises(response.data.questions);
         setLoading(false);
       } catch (err) {
@@ -111,7 +110,6 @@ const FrancaisPage: React.FC = () => {
         setLoading(false);
       }
     };
-
     fetchExercises();
   }, []);
 
@@ -119,9 +117,7 @@ const FrancaisPage: React.FC = () => {
   useEffect(() => {
     let timer: NodeJS.Timeout;
     let encouragementTimer: NodeJS.Timeout;
-
     if (timeLeft > 0 && !isFinished) {
-      // Minuteur principal
       timer = setInterval(() => {
         setTimeLeft(prev => {
           if (prev <= 1) {
@@ -131,18 +127,15 @@ const FrancaisPage: React.FC = () => {
           return prev - 1;
         });
       }, 1000);
-
-      // Messages d'encouragement toutes les 15 minutes
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
-        setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
-      }, 900000); // 900000ms = 15 minutes
+        setTimeout(() => setEmoji(""), 5000);
+      }, 900000);
     } else if (timeLeft === 0) {
       setIsFinished(true);
       calculateFinalScore();
     }
-
     return () => {
       clearInterval(timer);
       clearInterval(encouragementTimer);
@@ -160,19 +153,15 @@ const FrancaisPage: React.FC = () => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
     const exerciseIndex = exercises.findIndex(ex => ex._id === id);
-    
     if (exerciseIndex !== -1) {
       const newResults = [...results];
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
       setResults(newResults);
-      
       if (isCorrect) {
         correctSound?.play();
         setCompletedExercises(prev => prev + 1);
         setTotalPoints(prev => prev + 10);
         setCurrentStreak(prev => prev + 1);
-
-        // Messages d'encouragement pour les bonnes réponses
         if (currentStreak >= 3) {
           toast.success(`Super ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 📚`);
         } else if (currentStreak >= 5) {
@@ -182,7 +171,6 @@ const FrancaisPage: React.FC = () => {
         }
       } else {
         setCurrentStreak(0);
-        // Messages d'encouragement pour les mauvaises réponses
         toast.error("Ce n'est pas la bonne réponse, mais le français s'apprend en pratiquant ! Essaie encore ! 📖");
       }
     }
@@ -192,17 +180,13 @@ const FrancaisPage: React.FC = () => {
     try {
       const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("token");
-      
       if (!userId || !token) {
         console.error("Utilisateur non connecté");
         toast.error("Vous devez être connecté pour sauvegarder votre score");
         return;
       }
-
       const correctAnswers = results.filter((r: Result) => r.isCorrect).length;
       const scorePercentage = (correctAnswers / exercises.length) * 100;
-
-      // Messages de fin basés sur le score
       if (scorePercentage >= 90) {
         toast.success("Excellent travail ! Tu es un véritable francophone ! 📚");
       } else if (scorePercentage >= 70) {
@@ -212,7 +196,6 @@ const FrancaisPage: React.FC = () => {
       } else {
         toast.info("Ne te décourage pas ! Le français est une langue magnifique à apprendre ! 📖");
       }
-
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/scores`,
         {
@@ -230,12 +213,9 @@ const FrancaisPage: React.FC = () => {
           }
         }
       );
-
       if (response.status !== 200) {
         throw new Error("Erreur lors de la sauvegarde de la note");
       }
-
-      // Rediriger vers le profil de l'élève
       router.push(`/eleve/${userId}`);
     } catch (error) {
       console.error("Erreur:", error);
