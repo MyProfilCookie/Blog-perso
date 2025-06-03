@@ -379,7 +379,7 @@ const GeographiePage: React.FC = () => {
         ) : error ? (
           <div className="text-red-500 text-center p-4">{error}</div>
         ) : (
-          <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-6">
             {exercises
               .filter(
                 (exercise) =>
@@ -522,8 +522,8 @@ const GeographiePage: React.FC = () => {
                     </div>
                   </CardBody>
                 </Card>
-              ))}
-          </div>
+          ))}
+        </div>
         )}
 
         {/* Pagination */}

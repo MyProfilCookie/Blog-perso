@@ -162,12 +162,12 @@ const HistoirePage: React.FC = () => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
     const exerciseIndex = exercises.findIndex(ex => ex._id === id);
-    
+
     if (exerciseIndex !== -1) {
       const newResults = [...results];
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
       setResults(newResults);
-      
+
       if (isCorrect) {
         correctSound?.play();
         setCompletedExercises(prev => prev + 1);
@@ -279,7 +279,7 @@ const HistoirePage: React.FC = () => {
 
   if (loading) {
     return (
-      <motion.div 
+      <motion.div
         animate={{ opacity: 1 }}
         className="flex items-center justify-center min-h-screen"
         initial={{ opacity: 0 }}
@@ -292,7 +292,7 @@ const HistoirePage: React.FC = () => {
 
   if (error) {
     return (
-      <motion.div 
+      <motion.div
         animate={{ opacity: 1 }}
         className="flex flex-col items-center justify-center min-h-screen gap-4"
         initial={{ opacity: 0 }}
@@ -332,7 +332,7 @@ const HistoirePage: React.FC = () => {
             <Timer timeLeft={timeLeft} />
           </div>
           <div className="w-full sm:w-auto flex-1">
-            <ProgressBar 
+            <ProgressBar
               totalQuestions={exercises.length}
               correctAnswers={completedExercises}
               onProgressComplete={() => {
@@ -379,7 +379,7 @@ const HistoirePage: React.FC = () => {
         ) : error ? (
           <div className="text-red-500 text-center p-4">{error}</div>
         ) : (
-          <div className="grid grid-cols-1 gap-6">
+        <div className="grid grid-cols-1 gap-6">
             {exercises
               .filter(
                 (exercise) =>
@@ -522,8 +522,8 @@ const HistoirePage: React.FC = () => {
                     </div>
                   </CardBody>
                 </Card>
-              ))}
-          </div>
+          ))}
+        </div>
         )}
 
         {/* Pagination */}

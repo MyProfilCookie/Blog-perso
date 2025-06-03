@@ -245,10 +245,10 @@ const MathPage: React.FC = () => {
           userId,
           token,
           pageId: "math",
-          score: finalScore,
+        score: finalScore,
           timeSpent,
           correctAnswers: results.filter((r: Result) => r.isCorrect).length,
-          totalQuestions: exercises.length
+        totalQuestions: exercises.length
         },
         {
           headers: {
@@ -331,42 +331,42 @@ const MathPage: React.FC = () => {
   return (
     <div className="min-h-screen bg-cream p-4 dark:bg-background">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-4">
-          <BackButton />
-          <Timer timeLeft={timeLeft} />
-        </div>
+      <div className="flex justify-between items-center mb-4">
+        <BackButton />
+        <Timer timeLeft={timeLeft} />
+      </div>
 
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-4"
-          initial={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.4 }}
-        >
-          <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
-            Mathématiques {getEmojiForCategory(selectedCategory)}
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 text-sm">
-            Exercices interactifs
-          </p>
-        </motion.div>
+      <motion.div
+        animate={{ opacity: 1, y: 0 }}
+        className="text-center mb-4"
+        initial={{ opacity: 0, y: -10 }}
+        transition={{ duration: 0.4 }}
+      >
+        <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
+          Mathématiques {getEmojiForCategory(selectedCategory)}
+        </h1>
+        <p className="text-gray-600 dark:text-gray-400 text-sm">
+          Exercices interactifs
+        </p>
+      </motion.div>
 
-        {/* Timer et Progression */}
-        <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
-          <div className="w-full sm:w-auto">
-            <Timer timeLeft={timeLeft} />
+          {/* Timer et Progression */}
+          <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
+            <div className="w-full sm:w-auto">
+              <Timer timeLeft={timeLeft} />
+            </div>
+            <div className="w-full sm:w-auto flex-1">
+              <ProgressBar 
+                totalQuestions={exercises.length}
+                correctAnswers={completedExercises}
+                onProgressComplete={() => {
+                  if (completedExercises === exercises.length) {
+                    calculateFinalScore();
+                  }
+                }}
+              />
+            </div>
           </div>
-          <div className="w-full sm:w-auto flex-1">
-            <ProgressBar 
-              totalQuestions={exercises.length}
-              correctAnswers={completedExercises}
-              onProgressComplete={() => {
-                if (completedExercises === exercises.length) {
-                  calculateFinalScore();
-                }
-              }}
-            />
-          </div>
-        </div>
 
         {/* Message d'encouragement */}
         {emoji && (
@@ -379,23 +379,23 @@ const MathPage: React.FC = () => {
           </motion.div>
         )}
 
-        {/* Filtres et catégories */}
-        <div className="flex flex-col sm:flex-row gap-4 mb-6">
-          <select
+          {/* Filtres et catégories */}
+          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+            <select
             className="w-full sm:w-auto p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
-            value={selectedCategory}
-            onChange={(e) => setSelectedCategory(e.target.value)}
-          >
-            <option value="Tout">Toutes les catégories</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
+              value={selectedCategory}
+              onChange={(e) => setSelectedCategory(e.target.value)}
+            >
+              <option value="Tout">Toutes les catégories</option>
+              {categories.map((cat) => (
+                <option key={cat} value={cat}>
+                  {cat}
+                </option>
+              ))}
+            </select>
+          </div>
 
-        {/* Liste des exercices */}
+          {/* Liste des exercices */}
         {loading ? (
           <div className="flex justify-center items-center min-h-[200px]">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
@@ -550,28 +550,28 @@ const MathPage: React.FC = () => {
           </div>
         )}
 
-        {/* Pagination */}
+          {/* Pagination */}
         <div className="flex justify-center gap-2 mt-6">
-          <Button
-            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            disabled={currentPage === 1}
+            <Button
+              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+              disabled={currentPage === 1}
             className="w-auto"
-          >
-            Précédent
-          </Button>
+            >
+              Précédent
+            </Button>
           <span className="flex items-center px-4">
-            Page {currentPage} sur {Math.ceil(exercises.length / questionsPerPage)}
-          </span>
-          <Button
-            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
-            disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
+              Page {currentPage} sur {Math.ceil(exercises.length / questionsPerPage)}
+            </span>
+            <Button
+              onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
+              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
             className="w-auto"
-          >
-            Suivant
-          </Button>
+            >
+              Suivant
+            </Button>
+          </div>
         </div>
       </div>
-    </div>
   );
 };
 
