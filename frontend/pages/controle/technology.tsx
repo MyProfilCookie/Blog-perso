@@ -2,14 +2,15 @@
 import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import Image from "next/image";
+import BackButton from "@/components/back";
+import Timer from "@/components/Timer";
+import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 
 import { useRevision } from "@/app/RevisionContext";
-import BackButton from "@/components/back";
-import Timer from "@/components/Timer";
-import { ProgressBar } from "@/components/progress/ProgressBar";
 import AIAssistant from "@/components/AIAssistant";
 import { TechnologyQuestion } from "@/components/questions/TechnologyQuestion";
 
@@ -27,7 +28,7 @@ interface Exercise {
 
 interface Result {
   isCorrect: boolean;
-  exerciseId: string;
+  answer: string;
 }
 
 const TechnologyPage: React.FC = () => {
@@ -57,32 +58,31 @@ const TechnologyPage: React.FC = () => {
 
   const encouragementMessages = [
     "💻 Tu es un excellent technologue !",
-    "🔧 Ta compréhension technique s'améliore !",
+    "🔧 Ta compréhension technique est impressionnante !",
     "⚡ Continue à explorer la technologie !",
-    "🔌 Tes connaissances technologiques sont impressionnantes !",
-    "🎮 Tu deviens un expert en technologie !",
-    "🌟 Tu progresses comme un pro !",
+    "🔌 Tes compétences techniques s'améliorent !",
+    "💡 Tu deviens un expert en technologie !",
+    "🚀 Tu progresses comme un pro !",
   ];
 
   const getEmojiForCategory = (category: string) => {
     switch (category.toLowerCase()) {
-      case "hardware":
+      case "informatique":
         return "💻";
-      case "software":
-        return "🧠";
-      case "internet":
-        return "🌐";
-      case "mobile":
-        return "📱";
-      case "sécurité":
-      case "securité":
-        return "🔒";
-      case "programming":
-        return "🖥️";
-      case "innovation":
-        return "🚀";
-      default:
+      case "electronique":
+        return "🔌";
+      case "mecanique":
         return "🔧";
+      case "robotique":
+        return "🤖";
+      case "programmation":
+        return "👨‍💻";
+      case "reseau":
+        return "🌐";
+      case "innovation":
+        return "💡";
+      default:
+        return "💻";
     }
   };
 
@@ -90,7 +90,7 @@ const TechnologyPage: React.FC = () => {
     const fetchExercises = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/subjects/technology`,
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/technology`
         );
 
         setExercises(response.data.questions);
@@ -111,15 +111,17 @@ const TechnologyPage: React.FC = () => {
 
     if (timeLeft > 0 && !isFinished) {
       timer = setInterval(() => {
-        setTimeLeft((prev) => (prev <= 1 ? 0 : prev - 1));
+        setTimeLeft(prev => {
+          if (prev <= 1) {
+            calculateFinalScore();
+            return 0;
+          }
+          return prev - 1;
+        });
       }, 1000);
 
       encouragementTimer = setInterval(() => {
-        const randomMessage =
-          encouragementMessages[
-            Math.floor(Math.random() * encouragementMessages.length)
-          ];
-
+        const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
         setTimeout(() => setEmoji(""), 5000);
       }, 900000);
@@ -134,13 +136,6 @@ const TechnologyPage: React.FC = () => {
     };
   }, [timeLeft, isFinished, currentPage]);
 
-  const formatTime = (seconds: number): string => {
-    const minutes = Math.floor(seconds / 60);
-    const remainingSeconds = seconds % 60;
-
-    return `${minutes.toString().padStart(2, "0")}:${remainingSeconds.toString().padStart(2, "0")}`;
-  };
-
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
     id: string,
@@ -150,40 +145,45 @@ const TechnologyPage: React.FC = () => {
 
   const handleSubmit = (id: string, correctAnswer: string) => {
     const userAnswer = userAnswers[id];
-    const isCorrect =
-      userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
+    const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
+    const exerciseIndex = exercises.findIndex(ex => ex._id === id);
+    
+    if (exerciseIndex !== -1) {
+      const newResults = [...results];
+      newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
+      setResults(newResults);
+      
+      if (isCorrect) {
+        correctSound?.play();
+        setCompletedExercises(prev => prev + 1);
+        setTotalPoints(prev => prev + 10);
+        setCurrentStreak(prev => prev + 1);
 
-    setResults([...results, { isCorrect, exerciseId: id }]);
-    if (isCorrect) {
-      correctSound?.play();
-      setCompletedExercises((prev) => prev + 1);
-      setTotalPoints((prev) => prev + 10);
-      setCurrentStreak((prev) => prev + 1);
-
-      // Messages d'encouragement pour les bonnes réponses
-      if (currentStreak >= 3) {
-        toast.success(`Super ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 💻`);
-      } else if (currentStreak >= 5) {
-        toast.success(`Incroyable ! ${currentStreak + 1} bonnes réponses d'affilée ! 🚀`);
+        // Messages d'encouragement pour les bonnes réponses
+        if (currentStreak >= 3) {
+          toast.success(`Super ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 💻`);
+        } else if (currentStreak >= 5) {
+          toast.success(`Incroyable ! ${currentStreak + 1} bonnes réponses d'affilée ! 🔧`);
+        } else {
+          toast.success("Bonne réponse ! Continue à explorer la technologie ! ⚡");
+        }
       } else {
-        toast.success("Bonne réponse ! Continue à explorer la technologie ! 🔧");
-      }
-    } else {
-      setCurrentStreak(0);
-      // Messages d'encouragement pour les mauvaises réponses
-      toast.error("Ce n'est pas la bonne réponse, mais la tech est faite d'expérimentation ! Essaie encore ! 🌐");
-      const question = exercises.find(ex => ex._id === id);
-      if (question) {
-        addError({
-          _id: `${id}-${Date.now()}`,
-          questionId: id,
-          questionText: question.question,
-          selectedAnswer: userAnswer,
-          correctAnswer: question.answer,
-          category: "technology",
-          date: new Date().toISOString(),
-          attempts: 1
-        });
+        setCurrentStreak(0);
+        // Messages d'encouragement pour les mauvaises réponses
+        toast.error("Ce n'est pas la bonne réponse, mais la technologie s'apprend en expérimentant ! Essaie encore ! 🔌");
+        const question = exercises.find(ex => ex._id === id);
+        if (question) {
+          addError({
+            _id: `${id}-${Date.now()}`,
+            questionId: id,
+            questionText: question.question,
+            selectedAnswer: userAnswer,
+            correctAnswer: question.answer,
+            category: "technology",
+            date: new Date().toISOString(),
+            attempts: 1
+          });
+        }
       }
     }
   };
@@ -204,37 +204,34 @@ const TechnologyPage: React.FC = () => {
 
       // Messages de fin basés sur le score
       if (scorePercentage >= 90) {
-        toast.success("Excellent travail ! Tu es un véritable expert en tech ! 💻");
+        toast.success("Excellent travail ! Tu es un véritable technologue ! 💻");
       } else if (scorePercentage >= 70) {
-        toast.success("Très bon travail ! Tes connaissances techniques sont impressionnantes ! 🚀");
+        toast.success("Très bon travail ! Ta compréhension technique est impressionnante ! 🔧");
       } else if (scorePercentage >= 50) {
-        toast.success("Bon travail ! Continue à explorer la technologie ! 🔧");
+        toast.success("Bon travail ! Continue à explorer la technologie ! ⚡");
       } else {
-        toast.info("Ne te décourage pas ! La tech est un voyage passionnant ! 🌐");
+        toast.info("Ne te décourage pas ! La technologie est un domaine passionnant à découvrir ! 🔌");
       }
 
-      const pageData = {
-        pageNumber: currentPage,
-        score: finalScore,
-        timeSpent: timeSpent,
-        correctAnswers: correctAnswers,
-        totalQuestions: exercises.length
-      };
-
-      const response = await fetch("/api/eleves/score", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify({
+      const response = await axios.post(
+        `${process.env.NEXT_PUBLIC_API_URL}/scores`,
+        {
           userId,
-          subjectName: "technology",
-          pageData
-        })
-      });
+          token,
+          pageId: "technology",
+          score: finalScore,
+          timeSpent,
+          correctAnswers: results.filter((r: Result) => r.isCorrect).length,
+          totalQuestions: exercises.length
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${token}`
+          }
+        }
+      );
 
-      if (!response.ok) {
+      if (response.status !== 200) {
         throw new Error("Erreur lors de la sauvegarde de la note");
       }
 
@@ -263,11 +260,13 @@ const TechnologyPage: React.FC = () => {
   const categories = ["Tout", ...uniqueCategories];
 
   const isAnswerSubmitted = (exerciseId: string) => {
-    return results.some((r) => r.exerciseId === exerciseId);
+    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
+    return exerciseIndex !== -1 && results[exerciseIndex] !== undefined;
   };
 
   const isAnswerCorrect = (exerciseId: string) => {
-    return results.some((r) => r.exerciseId === exerciseId && r.isCorrect);
+    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
+    return exerciseIndex !== -1 && results[exerciseIndex]?.isCorrect;
   };
 
   const handleRating = (exerciseId: string, value: number) => {
@@ -292,161 +291,237 @@ const TechnologyPage: React.FC = () => {
   }
 
   return (
-    <div className="p-4 bg-gradient-to-br from-white to-violet-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
-      <div className="flex justify-between items-center mb-4">
-        <BackButton />
-        <Timer timeLeft={timeLeft} />
-      </div>
+    <div className="min-h-screen bg-cream p-4 dark:bg-background">
+      <div className="max-w-7xl mx-auto">
+        <div className="flex justify-between items-center mb-4">
+          <BackButton />
+          <Timer timeLeft={timeLeft} />
+        </div>
 
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-4"
-        initial={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.4 }}
-      >
-        <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
-          Technologie {getEmojiForCategory(selectedCategory)}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">
-          Exercices interactifs
-        </p>
-      </motion.div>
-
-      <ProgressBar
-        correctAnswers={completedExercises}
-        totalQuestions={exercises.length}
-        onProgressComplete={() => {
-          if (completedExercises === exercises.length) {
-            calculateFinalScore();
-          }
-        }}
-      />
-
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.3 }}
-        className="mb-4"
-      >
-        <select
-          className="w-full sm:w-80 p-4 text-lg font-semibold rounded-2xl border border-violet-400 bg-violet-50 dark:bg-gray-900 shadow-md focus:ring-2 focus:ring-violet-500"
-          value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-        >
-          {categories.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
-      </motion.div>
-
-      <div className="flex justify-center my-4 gap-2">
-        {Array.from({ length: totalPages }).map((_, idx) => (
-          <button
-            key={idx}
-            className={`px-4 py-2 rounded-full font-semibold transition-transform transform border shadow-sm hover:scale-105 hover:bg-violet-200 ${
-              currentPage === idx + 1
-                ? "bg-violet-500 text-white"
-                : "bg-white text-violet-500"
-            }`}
-            onClick={() => setCurrentPage(idx + 1)}
-          >
-            {idx + 1}
-          </button>
-        ))}
-      </div>
-
-      {emoji && (
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="fixed top-4 right-4 bg-white dark:bg-gray-800 p-5 text-lg rounded-xl shadow-xl border-2 border-violet-300 z-50 font-semibold text-violet-600 dark:text-violet-400"
-          initial={{ opacity: 0, y: -20 }}
-          transition={{ duration: 0.3 }}
-          whileHover={{ scale: 1.05 }}
+          className="text-center mb-4"
+          initial={{ opacity: 0, y: -10 }}
+          transition={{ duration: 0.4 }}
         >
-          <p className="text-lg">{emoji}</p>
+          <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
+            Technologie {getEmojiForCategory(selectedCategory)}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            Exercices interactifs
+          </p>
         </motion.div>
-      )}
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 mt-6">
-        {paginatedExercises.map((ex, idx) => (
+        <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
+          <div className="w-full sm:w-auto">
+            <Timer timeLeft={timeLeft} />
+          </div>
+          <div className="w-full sm:w-auto flex-1">
+            <ProgressBar
+              totalQuestions={exercises.length}
+              correctAnswers={completedExercises}
+              onProgressComplete={() => {
+                if (completedExercises === exercises.length) {
+                  calculateFinalScore();
+                }
+              }}
+            />
+          </div>
+        </div>
+
+        {emoji && (
           <motion.div
-            key={ex._id}
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ delay: idx * 0.1 }}
-            whileHover={{ scale: 1.02 }}
+            className="text-center text-lg font-medium text-primary mb-4"
           >
-            <Card className="w-full border border-violet-200">
-              <CardBody className="p-4">
-                <h3 className="font-bold mb-3 text-lg sm:text-xl text-violet-700 dark:text-violet-300">
-                  {getEmojiForCategory(ex.category)} {ex.title}
-                </h3>
-                <p className="mb-2">{ex.content}</p>
-                <p className="mb-4">{ex.question}</p>
-                {ex.options ? (
-                  <select
-                    className="w-full mb-2 p-4 text-base rounded-xl border border-violet-300 dark:bg-gray-700 font-medium shadow-md focus:ring-2 focus:ring-violet-400"
-                    disabled={isAnswerSubmitted(ex._id)}
-                    value={userAnswers[ex._id] || ""}
-                    onChange={(e) => handleChange(e, ex._id)}
-                  >
-                    <option value="">Sélectionner une réponse</option>
-                    {ex.options.map((option, optIdx) => (
-                      <option key={optIdx} value={option}>
-                        {option}
-                      </option>
-                    ))}
-                  </select>
-                ) : (
-                  <input
-                    className="w-full mb-2"
-                    disabled={isAnswerSubmitted(ex._id)}
-                    type="text"
-                    value={userAnswers[ex._id] || ""}
-                    onChange={(e) => handleChange(e, ex._id)}
-                  />
-                )}
-                <Button
-                  className="w-full bg-gradient-to-r from-violet-500 to-purple-500 text-white font-bold py-2 rounded-xl hover:brightness-110 transition"
-                  disabled={isAnswerSubmitted(ex._id)}
-                  onClick={() => handleSubmit(ex._id, ex.answer)}
+            {emoji}
+          </motion.div>
+        )}
+
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <select
+            className="w-full sm:w-auto p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="Tout">Toutes les catégories</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {loading ? (
+          <div className="flex justify-center items-center min-h-[200px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
+          </div>
+        ) : error ? (
+          <div className="text-red-500 text-center p-4">{error}</div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6">
+            {exercises
+              .filter(
+                (exercise) =>
+                  selectedCategory === "Tout" ||
+                  exercise.category === selectedCategory
+              )
+              .slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
+              .map((exercise) => (
+                <Card
+                  key={exercise._id}
+                  className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
                 >
-                  Soumettre
-                </Button>
-                {isAnswerSubmitted(ex._id) && (
-                  <>
-                    <p
-                      className={`mt-3 text-center font-semibold text-lg ${
-                        isAnswerCorrect(ex._id) ? "text-green-600" : "text-red-500"
-                      }`}
-                    >
-                      {isAnswerCorrect(ex._id) ? "Bonne réponse !" : "Mauvaise réponse"}
-                    </p>
-                    <div className="mt-4">
-                      <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Noter la difficulté de cet exercice :</p>
-                      <div className="grid grid-cols-5 gap-2">
-                        {[1, 2, 3, 4, 5].map((value) => (
-                          <Button
-                            key={value}
-                            size="lg"
-                            color="default"
-                            variant="flat"
-                            onClick={() => handleRating(ex._id, value)}
-                            className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
-                          >
-                            {value}
-                          </Button>
-                        ))}
+                  <CardBody className="p-4 sm:p-6">
+                    <div className="flex flex-col gap-4">
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <h3 className="text-lg font-semibold">
+                          {getEmojiForCategory(exercise.category)} {exercise.title}
+                        </h3>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {exercise.category}
+                        </span>
+                      </div>
+
+                      {exercise.image && (
+                        <div className="relative w-full h-48 sm:h-64">
+                          <Image
+                            src={exercise.image}
+                            alt={exercise.title}
+                            layout="fill"
+                            objectFit="cover"
+                            className="rounded-lg"
+                          />
+                        </div>
+                      )}
+
+                      <div className="space-y-4">
+                        <p className="text-gray-700 dark:text-gray-300">{exercise.content}</p>
+                        <p className="font-medium">{exercise.question}</p>
+                      </div>
+
+                      <div className="space-y-4">
+                        {exercise.options ? (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {exercise.options.map((option, index) => (
+                              <label
+                                key={index}
+                                className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                              >
+                                <input
+                                  type="radio"
+                                  name={exercise._id}
+                                  value={option}
+                                  onChange={(e) => handleChange(e, exercise._id)}
+                                  disabled={isAnswerSubmitted(exercise._id)}
+                                  className="form-radio"
+                                />
+                                <span>{option}</span>
+                              </label>
+                            ))}
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            placeholder="Votre réponse"
+                            className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600"
+                            onChange={(e) => handleChange(e, exercise._id)}
+                            disabled={isAnswerSubmitted(exercise._id)}
+                          />
+                        )}
+                      </div>
+
+                      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                        <Button
+                          color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
+                          onClick={() => handleSubmit(exercise._id, exercise.answer)}
+                          disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
+                          className="w-full sm:w-auto"
+                        >
+                          {isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "Correct ✓" : "Incorrect ✗") : "Valider"}
+                        </Button>
+
+                        {isAnswerSubmitted(exercise._id) && (
+                          <div className="mt-4">
+                            <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Noter la difficulté de cet exercice :</p>
+                            <div className="grid grid-cols-5 gap-2">
+                              <Button
+                                size="lg"
+                                color="default"
+                                variant="flat"
+                                onClick={() => handleRating(exercise._id, 1)}
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                              >
+                                1
+                              </Button>
+                              <Button
+                                size="lg"
+                                color="default"
+                                variant="flat"
+                                onClick={() => handleRating(exercise._id, 2)}
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                              >
+                                2
+                              </Button>
+                              <Button
+                                size="lg"
+                                color="default"
+                                variant="flat"
+                                onClick={() => handleRating(exercise._id, 3)}
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                              >
+                                3
+                              </Button>
+                              <Button
+                                size="lg"
+                                color="default"
+                                variant="flat"
+                                onClick={() => handleRating(exercise._id, 4)}
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                              >
+                                4
+                              </Button>
+                              <Button
+                                size="lg"
+                                color="default"
+                                variant="flat"
+                                onClick={() => handleRating(exercise._id, 5)}
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                              >
+                                5
+                              </Button>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </div>
-                  </>
-                )}
-              </CardBody>
-            </Card>
-          </motion.div>
-        ))}
+                  </CardBody>
+                </Card>
+              ))}
+          </div>
+        )}
+
+        <div className="flex justify-center gap-2 mt-6">
+          <Button
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className="w-auto"
+          >
+            Précédent
+          </Button>
+          <span className="flex items-center px-4">
+            Page {currentPage} sur {Math.ceil(exercises.length / questionsPerPage)}
+          </span>
+          <Button
+            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
+            disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
+            className="w-auto"
+          >
+            Suivant
+          </Button>
+        </div>
       </div>
     </div>
   );
