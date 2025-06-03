@@ -10,10 +10,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 
-import { useRevision } from "@/app/RevisionContext";
-import AIAssistant from "@/components/AIAssistant";
-import { TechnologyQuestion } from "@/components/questions/TechnologyQuestion";
-
+// Interface pour les exercices de français
 interface Exercise {
   _id: string;
   title: string;
@@ -46,7 +43,7 @@ const TechnologyPage: React.FC = () => {
   const [totalPoints, setTotalPoints] = useState<number>(0);
   const [selectedCategory, setSelectedCategory] = useState<string>("Tout");
   const [showTips, setShowTips] = useState<boolean>(true);
-  const [timeLeft, setTimeLeft] = useState(3600);
+  const [timeLeft, setTimeLeft] = useState(3600); // 1 hour
   const [isFinished, setIsFinished] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 20;
@@ -54,35 +51,48 @@ const TechnologyPage: React.FC = () => {
     typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
   const [timeSpent, setTimeSpent] = useState(0);
   const [rating, setRating] = useState<number | null>(null);
-  const { addError } = useRevision();
 
+  // Statistiques et badges
+  const [badges, setBadges] = useState<{
+    perfectScore: boolean;
+    streakMaster: boolean;
+    frenchExpert: boolean;
+    quickLearner: boolean;
+  }>({
+    perfectScore: false,
+    streakMaster: false,
+    frenchExpert: false,
+    quickLearner: false,
+  });
+
+  // Messages d'encouragement
   const encouragementMessages = [
-    "💻 Tu es un excellent technologue !",
-    "🔧 Ta compréhension technique est impressionnante !",
-    "⚡ Continue à explorer la technologie !",
-    "🔌 Tes compétences techniques s'améliorent !",
-    "💡 Tu deviens un expert en technologie !",
-    "🚀 Tu progresses comme un pro !",
+    "📚 Tu es un excellent francophone !",
+    "✍️ Ta maîtrise du français est impressionnante !",
+    "📝 Continue à perfectionner ton français !",
+    "🎯 Tes compétences linguistiques s'améliorent !",
+    "🌟 Tu deviens un expert en français !",
+    "💫 Tu progresses comme un pro !",
   ];
 
   const getEmojiForCategory = (category: string) => {
     switch (category.toLowerCase()) {
-      case "informatique":
-        return "💻";
-      case "electronique":
-        return "🔌";
-      case "mecanique":
-        return "🔧";
-      case "robotique":
-        return "🤖";
-      case "programmation":
-        return "👨‍💻";
-      case "reseau":
-        return "🌐";
-      case "innovation":
-        return "💡";
+      case "grammaire":
+        return "📝";
+      case "orthographe":
+        return "✍️";
+      case "conjugaison":
+        return "📚";
+      case "vocabulaire":
+        return "📖";
+      case "comprehension":
+        return "🧠";
+      case "redaction":
+        return "✒️";
+      case "litterature":
+        return "📚";
       default:
-        return "💻";
+        return "📚";
     }
   };
 
@@ -92,7 +102,6 @@ const TechnologyPage: React.FC = () => {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/subjects/technology`
         );
-
         setExercises(response.data.questions);
         setLoading(false);
       } catch (err) {
@@ -101,14 +110,13 @@ const TechnologyPage: React.FC = () => {
         setLoading(false);
       }
     };
-
     fetchExercises();
   }, []);
 
+  // Gestion du minuteur et des messages d'encouragement
   useEffect(() => {
     let timer: NodeJS.Timeout;
     let encouragementTimer: NodeJS.Timeout;
-
     if (timeLeft > 0 && !isFinished) {
       timer = setInterval(() => {
         setTimeLeft(prev => {
@@ -119,7 +127,6 @@ const TechnologyPage: React.FC = () => {
           return prev - 1;
         });
       }, 1000);
-
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
@@ -129,7 +136,6 @@ const TechnologyPage: React.FC = () => {
       setIsFinished(true);
       calculateFinalScore();
     }
-
     return () => {
       clearInterval(timer);
       clearInterval(encouragementTimer);
@@ -147,43 +153,25 @@ const TechnologyPage: React.FC = () => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
     const exerciseIndex = exercises.findIndex(ex => ex._id === id);
-    
     if (exerciseIndex !== -1) {
       const newResults = [...results];
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
       setResults(newResults);
-      
       if (isCorrect) {
         correctSound?.play();
         setCompletedExercises(prev => prev + 1);
         setTotalPoints(prev => prev + 10);
         setCurrentStreak(prev => prev + 1);
-
-        // Messages d'encouragement pour les bonnes réponses
         if (currentStreak >= 3) {
-          toast.success(`Super ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 💻`);
+          toast.success(`Super ! Tu es en série de ${currentStreak + 1} bonnes réponses ! 📚`);
         } else if (currentStreak >= 5) {
-          toast.success(`Incroyable ! ${currentStreak + 1} bonnes réponses d'affilée ! 🔧`);
+          toast.success(`Incroyable ! ${currentStreak + 1} bonnes réponses d'affilée ! ✍️`);
         } else {
-          toast.success("Bonne réponse ! Continue à explorer la technologie ! ⚡");
+          toast.success("Bonne réponse ! Continue à perfectionner ton français ! 📝");
         }
       } else {
         setCurrentStreak(0);
-        // Messages d'encouragement pour les mauvaises réponses
-        toast.error("Ce n'est pas la bonne réponse, mais la technologie s'apprend en expérimentant ! Essaie encore ! 🔌");
-        const question = exercises.find(ex => ex._id === id);
-        if (question) {
-          addError({
-            _id: `${id}-${Date.now()}`,
-            questionId: id,
-            questionText: question.question,
-            selectedAnswer: userAnswer,
-            correctAnswer: question.answer,
-            category: "technology",
-            date: new Date().toISOString(),
-            attempts: 1
-          });
-        }
+        toast.error("Ce n'est pas la bonne réponse, mais le français s'apprend en pratiquant ! Essaie encore ! 📖");
       }
     }
   };
@@ -192,27 +180,22 @@ const TechnologyPage: React.FC = () => {
     try {
       const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("token");
-      
       if (!userId || !token) {
         console.error("Utilisateur non connecté");
         toast.error("Vous devez être connecté pour sauvegarder votre score");
         return;
       }
-
       const correctAnswers = results.filter((r: Result) => r.isCorrect).length;
       const scorePercentage = (correctAnswers / exercises.length) * 100;
-
-      // Messages de fin basés sur le score
       if (scorePercentage >= 90) {
-        toast.success("Excellent travail ! Tu es un véritable technologue ! 💻");
+        toast.success("Excellent travail ! Tu es un véritable francophone ! 📚");
       } else if (scorePercentage >= 70) {
-        toast.success("Très bon travail ! Ta compréhension technique est impressionnante ! 🔧");
+        toast.success("Très bon travail ! Ta maîtrise du français est impressionnante ! ✍️");
       } else if (scorePercentage >= 50) {
-        toast.success("Bon travail ! Continue à explorer la technologie ! ⚡");
+        toast.success("Bon travail ! Continue à perfectionner ton français ! 📝");
       } else {
-        toast.info("Ne te décourage pas ! La technologie est un domaine passionnant à découvrir ! 🔌");
+        toast.info("Ne te décourage pas ! Le français est une langue magnifique à apprendre ! 📖");
       }
-
       const response = await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/scores`,
         {
@@ -230,17 +213,24 @@ const TechnologyPage: React.FC = () => {
           }
         }
       );
-
       if (response.status !== 200) {
         throw new Error("Erreur lors de la sauvegarde de la note");
       }
-
-      // Rediriger vers le profil de l'élève
       router.push(`/eleve/${userId}`);
     } catch (error) {
       console.error("Erreur:", error);
       toast.error("Une erreur est survenue lors de la sauvegarde de ton score");
     }
+  };
+
+  const isAnswerSubmitted = (exerciseId: string) => {
+    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
+    return exerciseIndex !== -1 && results[exerciseIndex] !== undefined;
+  };
+
+  const isAnswerCorrect = (exerciseId: string) => {
+    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
+    return exerciseIndex !== -1 && results[exerciseIndex]?.isCorrect;
   };
 
   const filteredAllExercises =
@@ -254,20 +244,11 @@ const TechnologyPage: React.FC = () => {
     currentPage * questionsPerPage,
   );
 
+  // Extraction des catégories uniques
   const uniqueCategories = Array.from(
     new Set(exercises.map((ex) => ex.category)),
   );
   const categories = ["Tout", ...uniqueCategories];
-
-  const isAnswerSubmitted = (exerciseId: string) => {
-    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
-    return exerciseIndex !== -1 && results[exerciseIndex] !== undefined;
-  };
-
-  const isAnswerCorrect = (exerciseId: string) => {
-    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
-    return exerciseIndex !== -1 && results[exerciseIndex]?.isCorrect;
-  };
 
   const handleRating = (exerciseId: string, value: number) => {
     setRating(value);
@@ -276,7 +257,7 @@ const TechnologyPage: React.FC = () => {
 
   if (loading) {
     return (
-      <motion.div
+      <motion.div 
         animate={{ opacity: 1 }}
         className="flex items-center justify-center min-h-screen"
         initial={{ opacity: 0 }}
@@ -286,8 +267,19 @@ const TechnologyPage: React.FC = () => {
       </motion.div>
     );
   }
+
   if (error) {
-    return <div>Erreur : {error}</div>;
+    return (
+      <motion.div 
+        animate={{ opacity: 1 }}
+        className="flex flex-col items-center justify-center min-h-screen gap-4"
+        initial={{ opacity: 0 }}
+        transition={{ duration: 0.5 }}
+      >
+        <div className="text-2xl text-red-600">⚠️</div>
+        <p className="text-lg text-gray-600">Erreur: {error}</p>
+      </motion.div>
+    );
   }
 
   return (
@@ -312,12 +304,13 @@ const TechnologyPage: React.FC = () => {
           </p>
         </motion.div>
 
+        {/* Timer et Progression */}
         <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
           <div className="w-full sm:w-auto">
             <Timer timeLeft={timeLeft} />
           </div>
           <div className="w-full sm:w-auto flex-1">
-            <ProgressBar
+            <ProgressBar 
               totalQuestions={exercises.length}
               correctAnswers={completedExercises}
               onProgressComplete={() => {
@@ -329,6 +322,7 @@ const TechnologyPage: React.FC = () => {
           </div>
         </div>
 
+        {/* Message d'encouragement */}
         {emoji && (
           <motion.div
             initial={{ opacity: 0, y: -20 }}
@@ -339,6 +333,7 @@ const TechnologyPage: React.FC = () => {
           </motion.div>
         )}
 
+        {/* Filtres et catégories */}
         <div className="flex flex-col sm:flex-row gap-4 mb-6">
           <select
             className="w-full sm:w-auto p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
@@ -354,6 +349,7 @@ const TechnologyPage: React.FC = () => {
           </select>
         </div>
 
+        {/* Liste des exercices */}
         {loading ? (
           <div className="flex justify-center items-center min-h-[200px]">
             <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
@@ -376,6 +372,7 @@ const TechnologyPage: React.FC = () => {
                 >
                   <CardBody className="p-4 sm:p-6">
                     <div className="flex flex-col gap-4">
+                      {/* Titre et catégorie */}
                       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
                         <h3 className="text-lg font-semibold">
                           {getEmojiForCategory(exercise.category)} {exercise.title}
@@ -385,6 +382,7 @@ const TechnologyPage: React.FC = () => {
                         </span>
                       </div>
 
+                      {/* Image si présente */}
                       {exercise.image && (
                         <div className="relative w-full h-48 sm:h-64">
                           <Image
@@ -397,11 +395,13 @@ const TechnologyPage: React.FC = () => {
                         </div>
                       )}
 
+                      {/* Contenu et question */}
                       <div className="space-y-4">
                         <p className="text-gray-700 dark:text-gray-300">{exercise.content}</p>
                         <p className="font-medium">{exercise.question}</p>
                       </div>
 
+                      {/* Options ou champ de réponse */}
                       <div className="space-y-4">
                         {exercise.options ? (
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -433,6 +433,7 @@ const TechnologyPage: React.FC = () => {
                         )}
                       </div>
 
+                      {/* Bouton de soumission et résultat */}
                       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
                         <Button
                           color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
@@ -503,6 +504,7 @@ const TechnologyPage: React.FC = () => {
           </div>
         )}
 
+        {/* Pagination */}
         <div className="flex justify-center gap-2 mt-6">
           <Button
             onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
