@@ -102,7 +102,7 @@ const GeographiePage: React.FC = () => {
     const fetchExercises = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/subjects/geographie`
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/geography`
         );
         setExercises(response.data.questions);
         setLoading(false);

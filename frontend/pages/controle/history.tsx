@@ -102,7 +102,7 @@ const HistoirePage: React.FC = () => {
     const fetchExercises = async () => {
       try {
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/subjects/histoire`
+          `${process.env.NEXT_PUBLIC_API_URL}/subjects/history`
         );
 
         setExercises(response.data.questions);
