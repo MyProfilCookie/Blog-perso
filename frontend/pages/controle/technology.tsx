@@ -104,6 +104,57 @@ const TechnologyPage: React.FC = () => {
         );
         setExercises(response.data.questions);
         setLoading(false);
+
+        // Charger l'historique des réponses seulement si pas de données dans le localStorage
+        const savedUserAnswers = localStorage.getItem('technology_userAnswers');
+        const savedResults = localStorage.getItem('technology_results');
+        const savedValidatedExercises = localStorage.getItem('technology_validatedExercises');
+        
+        if (!savedUserAnswers || !savedResults || !savedValidatedExercises) {
+          const userId = localStorage.getItem("userId");
+          const token = localStorage.getItem("token");
+          
+          if (userId && token) {
+            const answersResponse = await axios.get(
+              `${process.env.NEXT_PUBLIC_API_URL}/answers/${userId}/technology`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              }
+            );
+
+            // Mettre à jour les réponses et les résultats
+            const userAnswersMap: { [key: string]: string } = {};
+            const resultsMap: Result[] = [];
+            const validatedExercises: { [key: string]: boolean } = {};
+
+            answersResponse.data.forEach((answer: any) => {
+              userAnswersMap[answer.exerciseId] = answer.userAnswer;
+              validatedExercises[answer.exerciseId] = true;
+              const exerciseIndex = response.data.questions.findIndex(
+                (ex: Exercise) => ex._id === answer.exerciseId
+              );
+              if (exerciseIndex !== -1) {
+                resultsMap[exerciseIndex] = {
+                  isCorrect: answer.isCorrect,
+                  answer: answer.userAnswer
+                };
+              }
+            });
+
+            setUserAnswers(userAnswersMap);
+            setResults(resultsMap);
+            
+            // Sauvegarder dans le localStorage
+            localStorage.setItem('technology_userAnswers', JSON.stringify(userAnswersMap));
+            localStorage.setItem('technology_results', JSON.stringify(resultsMap));
+            localStorage.setItem('technology_validatedExercises', JSON.stringify(validatedExercises));
+            
+            // Mettre à jour le nombre d'exercices complétés
+            setCompletedExercises(Object.values(validatedExercises).filter(Boolean).length);
+          }
+        }
       } catch (err) {
         console.error(err);
         setError("Erreur lors du chargement des exercices");
@@ -149,7 +200,7 @@ const TechnologyPage: React.FC = () => {
     setUserAnswers({ ...userAnswers, [id]: e.target.value });
   };
 
-  const handleSubmit = (id: string, correctAnswer: string) => {
+  const handleSubmit = async (id: string, correctAnswer: string) => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
     const exerciseIndex = exercises.findIndex(ex => ex._id === id);
@@ -157,6 +208,46 @@ const TechnologyPage: React.FC = () => {
       const newResults = [...results];
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
       setResults(newResults);
+
+      // Sauvegarder dans le localStorage
+      const updatedUserAnswers = { ...userAnswers, [id]: userAnswer };
+      const updatedResults = [...newResults];
+      localStorage.setItem('technology_userAnswers', JSON.stringify(updatedUserAnswers));
+      localStorage.setItem('technology_results', JSON.stringify(updatedResults));
+      
+      // Sauvegarder l'état de validation
+      const validatedExercises = JSON.parse(localStorage.getItem('technology_validatedExercises') || '{}');
+      validatedExercises[id] = true;
+      localStorage.setItem('technology_validatedExercises', JSON.stringify(validatedExercises));
+
+      // Sauvegarder la réponse dans la base de données
+      try {
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
+        
+        if (userId && token) {
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/answers`,
+            {
+              userId,
+              exerciseId: id,
+              userAnswer,
+              isCorrect,
+              subject: "technology",
+              timestamp: new Date().toISOString()
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          );
+        }
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde de la réponse:", error);
+        toast.error("Erreur lors de la sauvegarde de ta réponse");
+      }
+
       if (isCorrect) {
         correctSound?.play();
         setCompletedExercises(prev => prev + 1);
@@ -224,8 +315,8 @@ const TechnologyPage: React.FC = () => {
   };
 
   const isAnswerSubmitted = (exerciseId: string) => {
-    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
-    return exerciseIndex !== -1 && results[exerciseIndex] !== undefined;
+    const validatedExercises = JSON.parse(localStorage.getItem('technology_validatedExercises') || '{}');
+    return validatedExercises[exerciseId] === true;
   };
 
   const isAnswerCorrect = (exerciseId: string) => {

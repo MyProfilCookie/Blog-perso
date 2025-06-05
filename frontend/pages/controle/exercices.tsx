@@ -35,7 +35,18 @@ const ExercicesPage: React.FC = () => {
       const token = localStorage.getItem("token") || localStorage.getItem("userToken");
       
       if (!token) {
-        throw new Error("Token d&apos;authentification non trouvé");
+        throw new Error("Token d'authentification non trouvé");
+      }
+
+      // Vérifier d'abord le localStorage
+      const savedExercises = localStorage.getItem('exercices_list');
+      const savedRemainingExercises = localStorage.getItem('exercices_remaining');
+      
+      if (savedExercises && savedRemainingExercises) {
+        setExercises(JSON.parse(savedExercises));
+        setRemainingExercises(parseInt(savedRemainingExercises));
+        setLoading(false);
+        return;
       }
       
       const response = await axios.get(
@@ -52,9 +63,15 @@ const ExercicesPage: React.FC = () => {
         return;
       }
       
-      setExercises(response.data.exercises || []);
+      const exercisesData = response.data.exercises || [];
+      setExercises(exercisesData);
       setTotalPages(response.data.totalPages || 1);
       setRemainingExercises(response.data.remainingExercises || 3);
+      
+      // Sauvegarder dans le localStorage
+      localStorage.setItem('exercices_list', JSON.stringify(exercisesData));
+      localStorage.setItem('exercices_remaining', response.data.remainingExercises.toString());
+      
       setLoading(false);
     } catch (err) {
       console.error("Erreur lors de la récupération des exercices:", err);
@@ -81,16 +98,47 @@ const ExercicesPage: React.FC = () => {
         }
       );
       
+      // Mettre à jour l'état de l'exercice dans le localStorage
+      const savedExercises = localStorage.getItem('exercices_list');
+      if (savedExercises) {
+        const exercises = JSON.parse(savedExercises);
+        const updatedExercises = exercises.map((ex: Exercise) => 
+          ex._id === exerciseId ? { ...ex, completed: true } : ex
+        );
+        localStorage.setItem('exercices_list', JSON.stringify(updatedExercises));
+        setExercises(updatedExercises);
+      }
+      
+      // Mettre à jour le nombre d'exercices restants
+      const currentRemaining = parseInt(localStorage.getItem('exercices_remaining') || '3');
+      const newRemaining = Math.max(0, currentRemaining - 1);
+      localStorage.setItem('exercices_remaining', newRemaining.toString());
+      setRemainingExercises(newRemaining);
+      
       router.push(`/controle/exercices/${exerciseId}`);
     } catch (err) {
-      console.error("Erreur lors du démarrage de l&apos;exercice:", err);
+      console.error("Erreur lors du démarrage de l'exercice:", err);
       if (axios.isAxiosError(err) && err.response?.data?.upgradeRequired) {
         setDailyLimitReached(true);
       } else {
-        setError("Erreur lors du démarrage de l&apos;exercice");
+        setError("Erreur lors du démarrage de l'exercice");
       }
     }
   };
+
+  // Ajouter un nouvel useEffect pour charger les données du localStorage au démarrage
+  useEffect(() => {
+    const savedExercises = localStorage.getItem('exercices_list');
+    const savedRemainingExercises = localStorage.getItem('exercices_remaining');
+    
+    if (savedExercises) {
+      setExercises(JSON.parse(savedExercises));
+    }
+    
+    if (savedRemainingExercises) {
+      setRemainingExercises(parseInt(savedRemainingExercises));
+    }
+  }, []);
 
   const getDifficultyColor = (difficulty: string) => {
     switch (difficulty) {
@@ -140,7 +188,7 @@ const ExercicesPage: React.FC = () => {
         <Card className="max-w-md w-full">
           <CardBody className="text-center">
             <h2 className="text-2xl font-bold mb-4">Limite quotidienne atteinte</h2>
-            <p className="mb-6">Vous avez atteint votre limite d&apos;exercices gratuits pour aujourd&apos;hui.</p>
+            <p className="mb-6">Vous avez atteint votre limite d'exercices gratuits pour aujourd'hui.</p>
             <div className="flex flex-col gap-4">
               <Button 
                 color="primary" 
@@ -167,7 +215,7 @@ const ExercicesPage: React.FC = () => {
         <div className="flex justify-between items-center mb-8">
           <h1 className="text-3xl font-bold text-gray-900">Exercices</h1>
           <Chip color="primary" variant="flat">
-            {remainingExercises} exercices restants aujourd&apos;hui
+            {remainingExercises} exercices restants aujourd'hui
           </Chip>
         </div>
 

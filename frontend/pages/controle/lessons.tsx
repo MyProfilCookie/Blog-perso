@@ -72,6 +72,45 @@ const LessonsPage: React.FC = () => {
   const [currentLesson, setCurrentLesson] = useState(0);
   const [score, setScore] = useState(0);
 
+  // Charger les données du localStorage au démarrage
+  useEffect(() => {
+    const savedNotes = localStorage.getItem(`lessons_notes_${selectedDate}`);
+    const savedRatings = localStorage.getItem(`lessons_ratings_${selectedDate}`);
+    const savedProgress = localStorage.getItem(`lessons_progress_${selectedDate}`);
+    
+    if (savedNotes) {
+      setNotes(savedNotes);
+    }
+    
+    if (savedRatings) {
+      setRatings(JSON.parse(savedRatings));
+    }
+    
+    if (savedProgress) {
+      setProgress(JSON.parse(savedProgress));
+    }
+  }, [selectedDate]);
+
+  // Sauvegarder les notes dans le localStorage
+  useEffect(() => {
+    if (notes) {
+      localStorage.setItem(`lessons_notes_${selectedDate}`, notes);
+    }
+  }, [notes, selectedDate]);
+
+  // Sauvegarder les évaluations dans le localStorage
+  useEffect(() => {
+    if (Object.values(ratings).some(value => value > 0)) {
+      localStorage.setItem(`lessons_ratings_${selectedDate}`, JSON.stringify(ratings));
+    }
+  }, [ratings, selectedDate]);
+
+  // Sauvegarder la progression dans le localStorage
+  useEffect(() => {
+    if (progress > 0) {
+      localStorage.setItem(`lessons_progress_${selectedDate}`, JSON.stringify(progress));
+    }
+  }, [progress, selectedDate]);
 
   const handleLogout = () => {
     localStorage.removeItem("userToken");
@@ -162,10 +201,17 @@ const LessonsPage: React.FC = () => {
   const [encouragementMessage, setEncouragementMessage] = useState<string>("");
 
   const handleLessonRating = (rating: "Facile" | "Moyen" | "Difficile") => {
-    setRatings((prevRatings) => ({
-      ...prevRatings,
-      [rating]: prevRatings[rating] + 1,
-    }));
+    setRatings((prevRatings) => {
+      const newRatings = {
+        ...prevRatings,
+        [rating]: prevRatings[rating] + 1,
+      };
+      
+      // Sauvegarder dans le localStorage
+      localStorage.setItem(`lessons_ratings_${selectedDate}`, JSON.stringify(newRatings));
+      
+      return newRatings;
+    });
 
     if (rating === "Facile") {
       setCorrectAnswers(prev => prev + 1);
@@ -196,6 +242,11 @@ const LessonsPage: React.FC = () => {
     // Sélection aléatoire d'un message d'encouragement
     const randomMessage = messages[rating][Math.floor(Math.random() * messages[rating].length)];
     setEncouragementMessage(randomMessage);
+
+    // Sauvegarder la progression
+    const newProgress = progress + 1;
+    setProgress(newProgress);
+    localStorage.setItem(`lessons_progress_${selectedDate}`, JSON.stringify(newProgress));
   };
 
   const calculateFinalScore = () => {
@@ -571,7 +622,10 @@ const LessonsPage: React.FC = () => {
                               rows={4}
                               placeholder="Prenez des notes pendant la leçon..."
                               value={notes}
-                              onChange={(e) => setNotes(e.target.value)}
+                              onChange={(e) => {
+                                setNotes(e.target.value);
+                                localStorage.setItem(`lessons_notes_${selectedDate}`, e.target.value);
+                              }}
                             />
                           </div>
 

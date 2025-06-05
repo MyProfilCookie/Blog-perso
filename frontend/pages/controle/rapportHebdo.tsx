@@ -575,35 +575,45 @@ const WeeklyReport: React.FC = () => {
 
         if (!token || isTokenExpired(token)) {
           router.push("/users/login");
-
           return;
         }
 
-        try {
-          // Tentative de récupération du rapport depuis l'API
-          const report = await getUserWeeklyReport(userId, selectedWeek, token);
+        // Vérifier d'abord le localStorage
+        const savedResults = localStorage.getItem('rapportHebdo_results');
+        const savedValidatedExercises = localStorage.getItem('rapportHebdo_validatedExercises');
+        
+        if (!savedResults || !savedValidatedExercises) {
+          try {
+            // Tentative de récupération du rapport depuis l'API
+            const report = await getUserWeeklyReport(userId, selectedWeek, token);
 
-          if (report && report.items && report.items.length > 0) {
-            console.log("Rapport chargé depuis l'API");
-            setReportItems(report.items);
-            setReportId(report._id);
+            if (report && report.items && report.items.length > 0) {
+              console.log("Rapport chargé depuis l'API");
+              setReportItems(report.items);
+              setReportId(report._id);
 
-            // Charger les réponses aux questions
-            if (report.questionAnswers) {
-              setSelectedAnswers(report.questionAnswers);
+              // Charger les réponses aux questions
+              if (report.questionAnswers) {
+                setSelectedAnswers(report.questionAnswers);
+                // Sauvegarder dans le localStorage
+                localStorage.setItem('rapportHebdo_answers', JSON.stringify(report.questionAnswers));
+              }
+            } else {
+              // Création d'un nouveau rapport local
+              console.log("Création d'un rapport vide local");
+              createEmptyReport();
             }
-          } else {
-            // Création d'un nouveau rapport local
-            console.log("Création d'un rapport vide local");
+          } catch (apiError) {
+            // En cas d'erreur API, créer un rapport vide local
+            console.log("Erreur API, création d'un rapport vide local:", apiError);
             createEmptyReport();
           }
-        } catch (apiError) {
-          // En cas d'erreur API, créer un rapport vide local
-          console.log(
-            "Erreur API, création d'un rapport vide local:",
-            apiError,
-          );
-          createEmptyReport();
+        } else {
+          // Charger les données du localStorage
+          setResults(JSON.parse(savedResults));
+          const validatedExercises = JSON.parse(savedValidatedExercises);
+          const completedCount = Object.values(validatedExercises).filter(Boolean).length;
+          setCompletedExercises(completedCount);
         }
 
         setLoading(false);
@@ -665,14 +675,17 @@ const WeeklyReport: React.FC = () => {
         text: "Tu ne peux plus répondre à cette question ou tu as atteint la limite d'erreurs.",
         background: "#f0f4ff",
       });
-
       return;
     }
 
-    setSelectedAnswers((prev) => ({
-      ...prev,
-      [questionId]: answer,
-    }));
+    const newSelectedAnswers = {
+      ...selectedAnswers,
+      [questionId]: answer
+    };
+    setSelectedAnswers(newSelectedAnswers);
+    
+    // Sauvegarder dans le localStorage
+    localStorage.setItem('rapportHebdo_answers', JSON.stringify(newSelectedAnswers));
 
     setAnswerAttempts((prev) => ({
       ...prev,
@@ -860,11 +873,20 @@ const WeeklyReport: React.FC = () => {
     URL.revokeObjectURL(url);
   };
 
-  const handleSubmit = (id: string, correctAnswer: string) => {
+  const handleSubmit = async (id: string, correctAnswer: string) => {
     const userAnswer = selectedAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
 
-    setResults([...results, { isCorrect, exerciseId: id }]);
+    const newResults = [...results, { isCorrect, exerciseId: id }];
+    setResults(newResults);
+    
+    // Sauvegarder dans le localStorage
+    localStorage.setItem('rapportHebdo_results', JSON.stringify(newResults));
+    
+    // Sauvegarder l'état de validation
+    const validatedExercises = JSON.parse(localStorage.getItem('rapportHebdo_validatedExercises') || '{}');
+    validatedExercises[id] = true;
+    localStorage.setItem('rapportHebdo_validatedExercises', JSON.stringify(validatedExercises));
     
     if (isCorrect) {
       setCompletedExercises(prev => prev + 1);
@@ -918,7 +940,8 @@ const WeeklyReport: React.FC = () => {
   };
 
   const isAnswerSubmitted = (exerciseId: string) => {
-    return results.some((r) => r.exerciseId === exerciseId);
+    const validatedExercises = JSON.parse(localStorage.getItem('rapportHebdo_validatedExercises') || '{}');
+    return validatedExercises[exerciseId] === true;
   };
 
   const isAnswerCorrect = (exerciseId: string) => {
