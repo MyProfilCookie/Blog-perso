@@ -108,39 +108,48 @@ const SciencesPage: React.FC = () => {
         setExercises(response.data.questions);
         setLoading(false);
 
-        // Charger l'historique des réponses
-        const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("token");
+        // Charger l'historique des réponses seulement si pas de données dans le localStorage
+        const savedUserAnswers = localStorage.getItem('sciences_userAnswers');
+        const savedResults = localStorage.getItem('sciences_results');
         
-        if (userId && token) {
-          const answersResponse = await axios.get(
-            `${process.env.NEXT_PUBLIC_API_URL}/answers/${userId}/sciences`,
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
+        if (!savedUserAnswers || !savedResults) {
+          const userId = localStorage.getItem("userId");
+          const token = localStorage.getItem("token");
+          
+          if (userId && token) {
+            const answersResponse = await axios.get(
+              `${process.env.NEXT_PUBLIC_API_URL}/answers/${userId}/sciences`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
               }
-            }
-          );
-
-          // Mettre à jour les réponses et les résultats
-          const userAnswersMap: { [key: string]: string } = {};
-          const resultsMap: Result[] = [];
-
-          answersResponse.data.forEach((answer: any) => {
-            userAnswersMap[answer.exerciseId] = answer.userAnswer;
-            const exerciseIndex = response.data.questions.findIndex(
-              (ex: Exercise) => ex._id === answer.exerciseId
             );
-            if (exerciseIndex !== -1) {
-              resultsMap[exerciseIndex] = {
-                isCorrect: answer.isCorrect,
-                answer: answer.userAnswer
-              };
-            }
-          });
 
-          setUserAnswers(userAnswersMap);
-          setResults(resultsMap);
+            // Mettre à jour les réponses et les résultats
+            const userAnswersMap: { [key: string]: string } = {};
+            const resultsMap: Result[] = [];
+
+            answersResponse.data.forEach((answer: any) => {
+              userAnswersMap[answer.exerciseId] = answer.userAnswer;
+              const exerciseIndex = response.data.questions.findIndex(
+                (ex: Exercise) => ex._id === answer.exerciseId
+              );
+              if (exerciseIndex !== -1) {
+                resultsMap[exerciseIndex] = {
+                  isCorrect: answer.isCorrect,
+                  answer: answer.userAnswer
+                };
+              }
+            });
+
+            setUserAnswers(userAnswersMap);
+            setResults(resultsMap);
+            
+            // Sauvegarder dans le localStorage
+            localStorage.setItem('sciences_userAnswers', JSON.stringify(userAnswersMap));
+            localStorage.setItem('sciences_results', JSON.stringify(resultsMap));
+          }
         }
       } catch (err) {
         console.error(err);
@@ -209,6 +218,12 @@ const SciencesPage: React.FC = () => {
       const newResults = [...results];
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
       setResults(newResults);
+      
+      // Sauvegarder dans le localStorage
+      const updatedUserAnswers = { ...userAnswers, [id]: userAnswer };
+      const updatedResults = [...newResults];
+      localStorage.setItem('sciences_userAnswers', JSON.stringify(updatedUserAnswers));
+      localStorage.setItem('sciences_results', JSON.stringify(updatedResults));
       
       // Sauvegarder la réponse dans la base de données
       try {
