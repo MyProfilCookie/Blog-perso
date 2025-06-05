@@ -20,6 +20,8 @@ import { Providers } from "./providers";
 // 📌 5. Import du composant ToasterThemeAware
 import ToasterThemeAware from "@/components/toaster-theme-aware";
 
+import { RevisionProvider } from "./RevisionContext";
+
 export const metadata: Metadata = {
   title: {
     default: siteConfig.name,
@@ -53,25 +55,27 @@ export default function RootLayout({
           fontSans.variable
         )}
       >
-        <Providers
-          themeProps={{
-            attribute: "class",
-            defaultTheme: "system",
-            enableSystem: true,
-            storageKey: "theme",
-          }}
-        >
-          {/* Utilisation de flex-col + min-h-screen pour assurer que la page prend toute la hauteur */}
-          <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
-            <Navbar />
-            <main className="flex-grow px-6 pt-16 mx-auto max-w-7xl w-full">
-              {children}
-              <SpeedInsights />
-            </main>
-            <Footer />
-          </div>
-          <ToasterThemeAware />
-        </Providers>
+        <RevisionProvider>
+          <Providers
+            themeProps={{
+              attribute: "class",
+              defaultTheme: "system",
+              enableSystem: true,
+              storageKey: "theme",
+            }}
+          >
+            {/* Utilisation de flex-col + min-h-screen pour assurer que la page prend toute la hauteur */}
+            <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
+              <Navbar />
+              <main className="flex-grow px-6 pt-16 mx-auto max-w-7xl w-full">
+                {children}
+                <SpeedInsights />
+              </main>
+              <Footer />
+            </div>
+            <ToasterThemeAware />
+          </Providers>
+        </RevisionProvider>
       </body>
     </html>
   );
