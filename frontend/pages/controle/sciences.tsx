@@ -107,6 +107,41 @@ const SciencesPage: React.FC = () => {
 
         setExercises(response.data.questions);
         setLoading(false);
+
+        // Charger l'historique des réponses
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
+        
+        if (userId && token) {
+          const answersResponse = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/answers/${userId}/sciences`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          );
+
+          // Mettre à jour les réponses et les résultats
+          const userAnswersMap: { [key: string]: string } = {};
+          const resultsMap: Result[] = [];
+
+          answersResponse.data.forEach((answer: any) => {
+            userAnswersMap[answer.exerciseId] = answer.userAnswer;
+            const exerciseIndex = response.data.questions.findIndex(
+              (ex: Exercise) => ex._id === answer.exerciseId
+            );
+            if (exerciseIndex !== -1) {
+              resultsMap[exerciseIndex] = {
+                isCorrect: answer.isCorrect,
+                answer: answer.userAnswer
+              };
+            }
+          });
+
+          setUserAnswers(userAnswersMap);
+          setResults(resultsMap);
+        }
       } catch (err) {
         console.error(err);
         setError("Erreur lors du chargement des exercices");
@@ -165,7 +200,7 @@ const SciencesPage: React.FC = () => {
     setUserAnswers({ ...userAnswers, [id]: e.target.value });
   };
 
-  const handleSubmit = (id: string, correctAnswer: string) => {
+  const handleSubmit = async (id: string, correctAnswer: string) => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
     const exerciseIndex = exercises.findIndex(ex => ex._id === id);
@@ -174,6 +209,34 @@ const SciencesPage: React.FC = () => {
       const newResults = [...results];
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
       setResults(newResults);
+      
+      // Sauvegarder la réponse dans la base de données
+      try {
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
+        
+        if (userId && token) {
+          await axios.post(
+            `${process.env.NEXT_PUBLIC_API_URL}/answers`,
+            {
+              userId,
+              exerciseId: id,
+              userAnswer,
+              isCorrect,
+              subject: "sciences",
+              timestamp: new Date().toISOString()
+            },
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
+              }
+            }
+          );
+        }
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde de la réponse:", error);
+        toast.error("Erreur lors de la sauvegarde de ta réponse");
+      }
       
       if (isCorrect) {
         correctSound?.play();
