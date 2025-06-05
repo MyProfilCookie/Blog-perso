@@ -1,6 +1,14 @@
+/* eslint-disable react/no-unescaped-entities */
 "use client";
 import React, { useState, useEffect } from "react";
-import { Card, CardBody, Button, Spinner, Chip, Pagination } from "@nextui-org/react";
+import {
+  Card,
+  CardBody,
+  Button,
+  Spinner,
+  Chip,
+  Pagination,
+} from "@nextui-org/react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -32,46 +40,55 @@ const ExercicesPage: React.FC = () => {
   const fetchExercises = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
-      
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("userToken");
+
       if (!token) {
         throw new Error("Token d'authentification non trouvé");
       }
 
       // Vérifier d'abord le localStorage
-      const savedExercises = localStorage.getItem('exercices_list');
-      const savedRemainingExercises = localStorage.getItem('exercices_remaining');
-      
+      const savedExercises = localStorage.getItem("exercices_list");
+      const savedRemainingExercises = localStorage.getItem(
+        "exercices_remaining",
+      );
+
       if (savedExercises && savedRemainingExercises) {
         setExercises(JSON.parse(savedExercises));
         setRemainingExercises(parseInt(savedRemainingExercises));
         setLoading(false);
+
         return;
       }
-      
+
       const response = await axios.get(
         `${process.env.NEXT_PUBLIC_API_URL}/exercises?page=${currentPage}&limit=10`,
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
-      
+
       if (response.data.upgradeRequired) {
         setDailyLimitReached(true);
+
         return;
       }
-      
+
       const exercisesData = response.data.exercises || [];
+
       setExercises(exercisesData);
       setTotalPages(response.data.totalPages || 1);
       setRemainingExercises(response.data.remainingExercises || 3);
-      
+
       // Sauvegarder dans le localStorage
-      localStorage.setItem('exercices_list', JSON.stringify(exercisesData));
-      localStorage.setItem('exercices_remaining', response.data.remainingExercises.toString());
-      
+      localStorage.setItem("exercices_list", JSON.stringify(exercisesData));
+      localStorage.setItem(
+        "exercices_remaining",
+        response.data.remainingExercises.toString(),
+      );
+
       setLoading(false);
     } catch (err) {
       console.error("Erreur lors de la récupération des exercices:", err);
@@ -86,35 +103,44 @@ const ExercicesPage: React.FC = () => {
 
   const handleStartExercise = async (exerciseId: string) => {
     try {
-      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
-      
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("userToken");
+
       await axios.post(
         `${process.env.NEXT_PUBLIC_API_URL}/exercises/${exerciseId}/start`,
         {},
         {
           headers: {
-            Authorization: `Bearer ${token}`
-          }
-        }
+            Authorization: `Bearer ${token}`,
+          },
+        },
       );
-      
+
       // Mettre à jour l'état de l'exercice dans le localStorage
-      const savedExercises = localStorage.getItem('exercices_list');
+      const savedExercises = localStorage.getItem("exercices_list");
+
       if (savedExercises) {
         const exercises = JSON.parse(savedExercises);
-        const updatedExercises = exercises.map((ex: Exercise) => 
-          ex._id === exerciseId ? { ...ex, completed: true } : ex
+        const updatedExercises = exercises.map((ex: Exercise) =>
+          ex._id === exerciseId ? { ...ex, completed: true } : ex,
         );
-        localStorage.setItem('exercices_list', JSON.stringify(updatedExercises));
+
+        localStorage.setItem(
+          "exercices_list",
+          JSON.stringify(updatedExercises),
+        );
         setExercises(updatedExercises);
       }
-      
+
       // Mettre à jour le nombre d'exercices restants
-      const currentRemaining = parseInt(localStorage.getItem('exercices_remaining') || '3');
+      const currentRemaining = parseInt(
+        localStorage.getItem("exercices_remaining") || "3",
+      );
       const newRemaining = Math.max(0, currentRemaining - 1);
-      localStorage.setItem('exercices_remaining', newRemaining.toString());
+
+      localStorage.setItem("exercices_remaining", newRemaining.toString());
       setRemainingExercises(newRemaining);
-      
+
       router.push(`/controle/exercices/${exerciseId}`);
     } catch (err) {
       console.error("Erreur lors du démarrage de l'exercice:", err);
@@ -128,13 +154,13 @@ const ExercicesPage: React.FC = () => {
 
   // Ajouter un nouvel useEffect pour charger les données du localStorage au démarrage
   useEffect(() => {
-    const savedExercises = localStorage.getItem('exercices_list');
-    const savedRemainingExercises = localStorage.getItem('exercices_remaining');
-    
+    const savedExercises = localStorage.getItem("exercices_list");
+    const savedRemainingExercises = localStorage.getItem("exercices_remaining");
+
     if (savedExercises) {
       setExercises(JSON.parse(savedExercises));
     }
-    
+
     if (savedRemainingExercises) {
       setRemainingExercises(parseInt(savedRemainingExercises));
     }
@@ -157,7 +183,7 @@ const ExercicesPage: React.FC = () => {
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
-          <Spinner size="lg" color="primary" />
+          <Spinner color="primary" size="lg" />
           <p className="mt-4 text-gray-600">Chargement des exercices...</p>
         </div>
       </div>
@@ -171,9 +197,9 @@ const ExercicesPage: React.FC = () => {
           <p className="font-bold mb-2">⚠️ Erreur</p>
           <p>{error}</p>
         </div>
-        <Button 
-          color="primary" 
+        <Button
           className="mt-4"
+          color="primary"
           onClick={() => window.location.reload()}
         >
           Réessayer
@@ -187,17 +213,22 @@ const ExercicesPage: React.FC = () => {
       <div className="flex flex-col items-center justify-center min-h-screen p-4">
         <Card className="max-w-md w-full">
           <CardBody className="text-center">
-            <h2 className="text-2xl font-bold mb-4">Limite quotidienne atteinte</h2>
-            <p className="mb-6">Vous avez atteint votre limite d'exercices gratuits pour aujourd'hui.</p>
+            <h2 className="text-2xl font-bold mb-4">
+              Limite quotidienne atteinte
+            </h2>
+            <p className="mb-6">
+              Vous avez atteint votre limite d'exercices gratuits pour
+              aujourd'hui.
+            </p>
             <div className="flex flex-col gap-4">
-              <Button 
-                color="primary" 
+              <Button
+                color="primary"
                 onClick={() => router.push("/controle/subscription")}
               >
                 Passer à Premium
               </Button>
-              <Button 
-                variant="bordered" 
+              <Button
+                variant="bordered"
                 onClick={() => router.push("/controle")}
               >
                 Retour au tableau de bord
@@ -222,12 +253,13 @@ const ExercicesPage: React.FC = () => {
         {exercises.length === 0 ? (
           <Card className="bg-white shadow-lg">
             <CardBody className="text-center py-12">
-              <h3 className="text-xl font-semibold mb-2">Aucun exercice disponible</h3>
-              <p className="text-gray-600 mb-6">Revenez plus tard pour de nouveaux exercices.</p>
-              <Button 
-                color="primary" 
-                onClick={() => router.push("/controle")}
-              >
+              <h3 className="text-xl font-semibold mb-2">
+                Aucun exercice disponible
+              </h3>
+              <p className="text-gray-600 mb-6">
+                Revenez plus tard pour de nouveaux exercices.
+              </p>
+              <Button color="primary" onClick={() => router.push("/controle")}>
                 Retour au tableau de bord
               </Button>
             </CardBody>
@@ -238,40 +270,44 @@ const ExercicesPage: React.FC = () => {
               {exercises.map((exercise, index) => (
                 <motion.div
                   key={exercise._id}
-                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
+                  initial={{ opacity: 0, y: 20 }}
                   transition={{ duration: 0.3, delay: index * 0.1 }}
                 >
                   <Card className="h-full hover:shadow-lg transition-shadow">
                     <CardBody>
                       <div className="flex justify-between items-start mb-4">
-                        <h3 className="text-xl font-semibold">{exercise.title}</h3>
-                        <Chip 
-                          color={getDifficultyColor(exercise.difficulty)} 
-                          variant="flat"
+                        <h3 className="text-xl font-semibold">
+                          {exercise.title}
+                        </h3>
+                        <Chip
+                          color={getDifficultyColor(exercise.difficulty)}
                           size="sm"
+                          variant="flat"
                         >
                           {exercise.difficulty}
                         </Chip>
                       </div>
-                      <p className="text-gray-600 mb-6 flex-grow">{exercise.description}</p>
+                      <p className="text-gray-600 mb-6 flex-grow">
+                        {exercise.description}
+                      </p>
                       <div className="flex justify-between items-center">
-                        <Chip variant="flat" size="sm">
+                        <Chip size="sm" variant="flat">
                           {exercise.category}
                         </Chip>
-                        <Button 
-                          color="primary" 
+                        <Button
+                          color="primary"
+                          isDisabled={exercise.completed}
                           size="sm"
                           onClick={() => handleStartExercise(exercise._id)}
-                          isDisabled={exercise.completed}
                         >
                           {exercise.completed ? "Terminé" : "Commencer"}
                         </Button>
                       </div>
                       {exercise.completed && exercise.score !== undefined && (
                         <div className="mt-4 text-center">
-                          <Chip 
-                            color={exercise.score >= 70 ? "success" : "warning"} 
+                          <Chip
+                            color={exercise.score >= 70 ? "success" : "warning"}
                             variant="flat"
                           >
                             Score: {exercise.score}%
@@ -283,14 +319,14 @@ const ExercicesPage: React.FC = () => {
                 </motion.div>
               ))}
             </div>
-            
+
             {totalPages > 1 && (
               <div className="flex justify-center mt-8">
                 <Pagination
-                  total={totalPages}
-                  page={currentPage}
-                  onChange={setCurrentPage}
                   color="primary"
+                  page={currentPage}
+                  total={totalPages}
+                  onChange={setCurrentPage}
                 />
               </div>
             )}
@@ -301,4 +337,4 @@ const ExercicesPage: React.FC = () => {
   );
 };
 
-export default ExercicesPage; 
+export default ExercicesPage;

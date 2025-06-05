@@ -35,6 +35,12 @@ interface Result {
   answer: string;
 }
 
+interface Answer {
+  exerciseId: string;
+  userAnswer: string;
+  isCorrect: boolean;
+}
+
 const ArtPage: React.FC = () => {
   const router = useRouter();
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -137,7 +143,7 @@ const ArtPage: React.FC = () => {
             const resultsMap: Result[] = [];
             const validatedExercises: { [key: string]: boolean } = {};
 
-            answersResponse.data.forEach((answer: any) => {
+            answersResponse.data.forEach((answer: Answer) => {
               userAnswersMap[answer.exerciseId] = answer.userAnswer;
               validatedExercises[answer.exerciseId] = true;
               const exerciseIndex = response.data.questions.findIndex(
