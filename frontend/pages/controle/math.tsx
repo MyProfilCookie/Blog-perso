@@ -11,6 +11,7 @@ import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
+import { useRevision } from "@/app/RevisionContext";
 
 // Interface pour les exercices de mathématiques
 interface Exercise {
@@ -32,6 +33,7 @@ interface Result {
 
 const MathPage: React.FC = () => {
   const router = useRouter();
+  const { addError } = useRevision();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -206,6 +208,7 @@ const MathPage: React.FC = () => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
     const exerciseIndex = exercises.findIndex(ex => ex._id === id);
+    
     if (exerciseIndex !== -1) {
       const newResults = [...results];
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
@@ -244,6 +247,21 @@ const MathPage: React.FC = () => {
               }
             }
           );
+
+          // Si la réponse est incorrecte, enregistrer l'erreur dans le RevisionContext
+          if (!isCorrect) {
+            const exercise = exercises[exerciseIndex];
+            addError({
+              _id: id,
+              questionId: id,
+              questionText: exercise.question,
+              selectedAnswer: userAnswer || '',
+              correctAnswer: correctAnswer,
+              category: exercise.category,
+              date: new Date().toISOString(),
+              attempts: 1
+            });
+          }
         }
       } catch (error) {
         console.error("Erreur lors de la sauvegarde de la réponse:", error);
