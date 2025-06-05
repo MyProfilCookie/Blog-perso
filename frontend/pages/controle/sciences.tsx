@@ -111,8 +111,9 @@ const SciencesPage: React.FC = () => {
         // Charger l'historique des réponses seulement si pas de données dans le localStorage
         const savedUserAnswers = localStorage.getItem('sciences_userAnswers');
         const savedResults = localStorage.getItem('sciences_results');
+        const savedValidatedExercises = localStorage.getItem('sciences_validatedExercises');
         
-        if (!savedUserAnswers || !savedResults) {
+        if (!savedUserAnswers || !savedResults || !savedValidatedExercises) {
           const userId = localStorage.getItem("userId");
           const token = localStorage.getItem("token");
           
@@ -129,9 +130,11 @@ const SciencesPage: React.FC = () => {
             // Mettre à jour les réponses et les résultats
             const userAnswersMap: { [key: string]: string } = {};
             const resultsMap: Result[] = [];
+            const validatedExercises: { [key: string]: boolean } = {};
 
             answersResponse.data.forEach((answer: any) => {
               userAnswersMap[answer.exerciseId] = answer.userAnswer;
+              validatedExercises[answer.exerciseId] = true;
               const exerciseIndex = response.data.questions.findIndex(
                 (ex: Exercise) => ex._id === answer.exerciseId
               );
@@ -149,6 +152,10 @@ const SciencesPage: React.FC = () => {
             // Sauvegarder dans le localStorage
             localStorage.setItem('sciences_userAnswers', JSON.stringify(userAnswersMap));
             localStorage.setItem('sciences_results', JSON.stringify(resultsMap));
+            localStorage.setItem('sciences_validatedExercises', JSON.stringify(validatedExercises));
+            
+            // Mettre à jour le nombre d'exercices complétés
+            setCompletedExercises(Object.values(validatedExercises).filter(Boolean).length);
           }
         }
       } catch (err) {
@@ -224,6 +231,11 @@ const SciencesPage: React.FC = () => {
       const updatedResults = [...newResults];
       localStorage.setItem('sciences_userAnswers', JSON.stringify(updatedUserAnswers));
       localStorage.setItem('sciences_results', JSON.stringify(updatedResults));
+      
+      // Sauvegarder l'état de validation
+      const validatedExercises = JSON.parse(localStorage.getItem('sciences_validatedExercises') || '{}');
+      validatedExercises[id] = true;
+      localStorage.setItem('sciences_validatedExercises', JSON.stringify(validatedExercises));
       
       // Sauvegarder la réponse dans la base de données
       try {
@@ -339,8 +351,8 @@ const SciencesPage: React.FC = () => {
   };
 
   const isAnswerSubmitted = (exerciseId: string) => {
-    const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
-    return exerciseIndex !== -1 && results[exerciseIndex] !== undefined;
+    const validatedExercises = JSON.parse(localStorage.getItem('sciences_validatedExercises') || '{}');
+    return validatedExercises[exerciseId] === true;
   };
 
   const isAnswerCorrect = (exerciseId: string) => {
