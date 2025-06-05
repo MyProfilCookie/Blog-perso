@@ -49,7 +49,7 @@ type LessonData = {
   lessons: Lesson[];
 };
 
-const LessonsPage: React.FC = () => {
+const LessonsPage: React.FC = (): JSX.Element => {
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
   const today = dayjs().format("YYYY-MM-DD");
@@ -71,23 +71,23 @@ const LessonsPage: React.FC = () => {
   const [userAnswer, setUserAnswer] = useState<string | null>(null);
   const [currentLesson, setCurrentLesson] = useState(0);
   const [score, setScore] = useState(0);
+  const [lessons, setLessons] = useState<Lesson[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [ratings, setRatings] = useState<{ [key: string]: number }>({});
 
-  // Charger les données du localStorage au démarrage
+  // Charger les notes du localStorage
   useEffect(() => {
     const savedNotes = localStorage.getItem(`lessons_notes_${selectedDate}`);
-    const savedRatings = localStorage.getItem(`lessons_ratings_${selectedDate}`);
-    const savedProgress = localStorage.getItem(`lessons_progress_${selectedDate}`);
-    
     if (savedNotes) {
       setNotes(savedNotes);
     }
-    
+  }, [selectedDate]);
+
+  // Charger les notes du localStorage
+  useEffect(() => {
+    const savedRatings = localStorage.getItem(`lessons_ratings_${selectedDate}`);
     if (savedRatings) {
       setRatings(JSON.parse(savedRatings));
-    }
-    
-    if (savedProgress) {
-      setProgress(JSON.parse(savedProgress));
     }
   }, [selectedDate]);
 
@@ -98,16 +98,16 @@ const LessonsPage: React.FC = () => {
     }
   }, [notes, selectedDate]);
 
-  // Sauvegarder les évaluations dans le localStorage
+  // Sauvegarder les notes dans le localStorage
   useEffect(() => {
-    if (Object.values(ratings).some(value => value > 0)) {
+    if (Object.keys(ratings).length > 0) {
       localStorage.setItem(`lessons_ratings_${selectedDate}`, JSON.stringify(ratings));
     }
   }, [ratings, selectedDate]);
 
   // Sauvegarder la progression dans le localStorage
   useEffect(() => {
-    if (progress > 0) {
+    if (Object.keys(progress).length > 0) {
       localStorage.setItem(`lessons_progress_${selectedDate}`, JSON.stringify(progress));
     }
   }, [progress, selectedDate]);
@@ -187,16 +187,6 @@ const LessonsPage: React.FC = () => {
   useEffect(() => {
     if (isLoggedIn) fetchLessonOfTheDay(selectedDate);
   }, [selectedDate, isLoggedIn]);
-
-  const [ratings, setRatings] = useState<{
-    Facile: number;
-    Moyen: number;
-    Difficile: number;
-  }>({
-    Facile: 0,
-    Moyen: 0,
-    Difficile: 0,
-  });
 
   const [encouragementMessage, setEncouragementMessage] = useState<string>("");
 
