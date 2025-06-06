@@ -194,6 +194,8 @@ const MusicPage: React.FC = () => {
       localStorage.setItem('music_validatedExercises', JSON.stringify(validatedExercises));
       
       // Sauvegarder l'erreur dans la base de données (revision-errors)
+      let erreurEnregistreeServeur = false;
+
       try {
         const user = localStorage.getItem("user");
         const token = localStorage.getItem("userToken");
@@ -221,6 +223,7 @@ const MusicPage: React.FC = () => {
                 }
               }
             );
+            erreurEnregistreeServeur = true;
           }
         }
       } catch (error) {
@@ -228,8 +231,8 @@ const MusicPage: React.FC = () => {
         toast.error("Erreur lors de la sauvegarde de l'erreur de révision");
       }
       
-      // Enregistrement local dans le RevisionContext (toujours, même si l'API échoue)
-      if (!isCorrect) {
+      // Enregistrement local UNIQUEMENT si la sauvegarde serveur a échoué
+      if (!isCorrect && !erreurEnregistreeServeur) {
         const exercise = exercises[exerciseIndex];
         const errorData = {
           _id: id,
