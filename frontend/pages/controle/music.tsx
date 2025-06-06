@@ -5,16 +5,14 @@ import React, { useEffect, useState } from "react";
 import { Card, CardBody, Button } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Image from "next/image";
-import BackButton from "@/components/back";
-import Timer from "@/components/Timer";
-import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 
+import BackButton from "@/components/back";
+import Timer from "@/components/Timer";
+import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRevision } from "@/app/RevisionContext";
-import AIAssistant from "@/components/AIAssistant";
-import { MusicQuestion } from "@/components/questions/MusicQuestion";
 
 // Interface pour les exercices de musique
 interface Exercise {
@@ -143,6 +141,7 @@ const MusicPage: React.FC = () => {
               const exerciseIndex = response.data.questions.findIndex(
                 (ex: Exercise) => ex._id === answer.exerciseId
               );
+
               if (exerciseIndex !== -1) {
                 resultsMap[exerciseIndex] = {
                   isCorrect: answer.isCorrect,
@@ -191,6 +190,7 @@ const MusicPage: React.FC = () => {
       const validatedExercises = JSON.parse(savedValidatedExercises);
       // Calculer le nombre d'exercices complétés
       const completedCount = Object.values(validatedExercises).filter(Boolean).length;
+
       setCompletedExercises(completedCount);
     }
   }, []);
@@ -206,8 +206,10 @@ const MusicPage: React.FC = () => {
         setTimeLeft(prev => {
           if (prev <= 1) {
             calculateFinalScore();
+
             return 0;
           }
+
           return prev - 1;
         });
       }, 1000);
@@ -215,6 +217,7 @@ const MusicPage: React.FC = () => {
       // Messages d'encouragement toutes les 15 minutes
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
+
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
         setTimeout(() => setEmoji(""), 5000); // Le message disparaît après 5 secondes
       }, 900000); // 900000ms = 15 minutes
@@ -259,10 +262,11 @@ const MusicPage: React.FC = () => {
       
       // Sauvegarder la réponse dans la base de données
       try {
-        const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("token");
+        const user = localStorage.getItem("user");
+        const token = localStorage.getItem("userToken");
         
-        if (userId && token) {
+        if (user && token) {
+          const userId = JSON.parse(user)._id;
           await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/answers`,
             {
@@ -282,8 +286,9 @@ const MusicPage: React.FC = () => {
 
           // Si la réponse est incorrecte, enregistrer l'erreur dans le RevisionContext
           if (!isCorrect) {
+            console.log("Tentative d'enregistrement d'une erreur...");
             const exercise = exercises[exerciseIndex];
-            addError({
+            const errorData = {
               _id: id,
               questionId: id,
               questionText: exercise.question,
@@ -292,7 +297,14 @@ const MusicPage: React.FC = () => {
               category: exercise.category,
               date: new Date().toISOString(),
               attempts: 1
-            });
+            };
+            console.log("Données de l'erreur:", errorData);
+            try {
+              addError(errorData);
+              console.log("Erreur enregistrée avec succès dans le RevisionContext");
+            } catch (error) {
+              console.error("Erreur lors de l'enregistrement dans le RevisionContext:", error);
+            }
           }
         }
       } catch (error) {
@@ -330,6 +342,7 @@ const MusicPage: React.FC = () => {
       if (!userId || !token) {
         console.error("Utilisateur non connecté");
         toast.error("Vous devez être connecté pour sauvegarder votre score");
+
         return;
       }
 
@@ -379,11 +392,13 @@ const MusicPage: React.FC = () => {
 
   const isAnswerSubmitted = (exerciseId: string) => {
     const validatedExercises = JSON.parse(localStorage.getItem('music_validatedExercises') || '{}');
+
     return validatedExercises[exerciseId] === true;
   };
 
   const isAnswerCorrect = (exerciseId: string) => {
     const exerciseIndex = exercises.findIndex(ex => ex._id === exerciseId);
+
     return exerciseIndex !== -1 && results[exerciseIndex]?.isCorrect;
   };
 
@@ -465,8 +480,8 @@ const MusicPage: React.FC = () => {
           </div>
           <div className="w-full sm:w-auto flex-1">
             <ProgressBar 
-              totalQuestions={exercises.length}
               correctAnswers={completedExercises}
+              totalQuestions={exercises.length}
               onProgressComplete={() => {
                 if (completedExercises === exercises.length) {
                   calculateFinalScore();
@@ -479,9 +494,9 @@ const MusicPage: React.FC = () => {
         {/* Message d'encouragement */}
         {emoji && (
           <motion.div
-            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center text-lg font-medium text-primary mb-4"
+            initial={{ opacity: 0, y: -20 }}
           >
             {emoji}
           </motion.div>
@@ -506,7 +521,7 @@ const MusicPage: React.FC = () => {
         {/* Liste des exercices */}
         {loading ? (
           <div className="flex justify-center items-center min-h-[200px]">
-            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary" />
           </div>
         ) : error ? (
           <div className="text-red-500 text-center p-4">{error}</div>
@@ -540,11 +555,11 @@ const MusicPage: React.FC = () => {
                       {exercise.image && (
                         <div className="relative w-full h-48 sm:h-64">
                           <Image
-                            src={exercise.image}
                             alt={exercise.title}
+                            className="rounded-lg"
                             layout="fill"
                             objectFit="cover"
-                            className="rounded-lg"
+                            src={exercise.image}
                           />
                         </div>
                       )}
@@ -565,12 +580,12 @@ const MusicPage: React.FC = () => {
                                 className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                               >
                                 <input
-                                  type="radio"
+                                  className="form-radio"
+                                  disabled={isAnswerSubmitted(exercise._id)}
                                   name={exercise._id}
+                                  type="radio"
                                   value={option}
                                   onChange={(e) => handleChange(e, exercise._id)}
-                                  disabled={isAnswerSubmitted(exercise._id)}
-                                  className="form-radio"
                                 />
                                 <span>{option}</span>
                               </label>
@@ -578,11 +593,11 @@ const MusicPage: React.FC = () => {
                           </div>
                         ) : (
                           <input
-                            type="text"
-                            placeholder="Votre réponse"
                             className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600"
-                            onChange={(e) => handleChange(e, exercise._id)}
                             disabled={isAnswerSubmitted(exercise._id)}
+                            placeholder="Votre réponse"
+                            type="text"
+                            onChange={(e) => handleChange(e, exercise._id)}
                           />
                         )}
                       </div>
@@ -590,10 +605,10 @@ const MusicPage: React.FC = () => {
                       {/* Bouton de soumission et résultat */}
                       <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
                         <Button
-                          color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
-                          onClick={() => handleSubmit(exercise._id, exercise.answer)}
-                          disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
                           className="w-full sm:w-auto"
+                          color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
+                          disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
+                          onClick={() => handleSubmit(exercise._id, exercise.answer)}
                         >
                           {isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "Correct ✓" : "Incorrect ✗") : "Valider"}
                         </Button>
@@ -603,47 +618,47 @@ const MusicPage: React.FC = () => {
                             <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Noter la difficulté de cet exercice :</p>
                             <div className="grid grid-cols-5 gap-2">
                               <Button
-                                size="lg"
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 color="default"
+                                size="lg"
                                 variant="flat"
                                 onClick={() => handleRating(exercise._id, 1)}
-                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                               >
                                 1
                               </Button>
                               <Button
-                                size="lg"
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 color="default"
+                                size="lg"
                                 variant="flat"
                                 onClick={() => handleRating(exercise._id, 2)}
-                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                               >
                                 2
                               </Button>
                               <Button
-                                size="lg"
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 color="default"
+                                size="lg"
                                 variant="flat"
                                 onClick={() => handleRating(exercise._id, 3)}
-                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                               >
                                 3
                               </Button>
                               <Button
-                                size="lg"
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 color="default"
+                                size="lg"
                                 variant="flat"
                                 onClick={() => handleRating(exercise._id, 4)}
-                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                               >
                                 4
                               </Button>
                               <Button
-                                size="lg"
+                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 color="default"
+                                size="lg"
                                 variant="flat"
                                 onClick={() => handleRating(exercise._id, 5)}
-                                className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                               >
                                 5
                               </Button>
@@ -661,9 +676,9 @@ const MusicPage: React.FC = () => {
         {/* Pagination */}
         <div className="flex justify-center gap-2 mt-6">
           <Button
-            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-            disabled={currentPage === 1}
             className="w-auto"
+            disabled={currentPage === 1}
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
           >
             Précédent
           </Button>
@@ -671,9 +686,9 @@ const MusicPage: React.FC = () => {
             Page {currentPage} sur {Math.ceil(exercises.length / questionsPerPage)}
           </span>
           <Button
-            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
-            disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
             className="w-auto"
+            disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
+            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
           >
             Suivant
           </Button>
