@@ -101,6 +101,9 @@ const MusicPage: React.FC = () => {
     }
   };
 
+  // Ajouter un log pour vérifier l'initialisation
+  console.log("RevisionContext initialisé avec addError:", !!addError);
+
   useEffect(() => {
     const fetchExercises = async () => {
       try {
@@ -265,8 +268,12 @@ const MusicPage: React.FC = () => {
         const user = localStorage.getItem("user");
         const token = localStorage.getItem("userToken");
         
+        console.log("Données de l'utilisateur:", { user, token });
+        
         if (user && token) {
           const userId = JSON.parse(user)._id;
+          console.log("ID de l'utilisateur:", userId);
+          
           await axios.post(
             `${process.env.NEXT_PUBLIC_API_URL}/answers`,
             {
@@ -300,12 +307,18 @@ const MusicPage: React.FC = () => {
             };
             console.log("Données de l'erreur:", errorData);
             try {
-              addError(errorData);
-              console.log("Erreur enregistrée avec succès dans le RevisionContext");
+              if (typeof addError === 'function') {
+                addError(errorData);
+                console.log("Erreur enregistrée avec succès dans le RevisionContext");
+              } else {
+                console.error("addError n'est pas une fonction:", addError);
+              }
             } catch (error) {
               console.error("Erreur lors de l'enregistrement dans le RevisionContext:", error);
             }
           }
+        } else {
+          console.error("Données utilisateur manquantes:", { user, token });
         }
       } catch (error) {
         console.error("Erreur lors de la sauvegarde de la réponse:", error);
