@@ -305,9 +305,10 @@ const MusicPage: React.FC = () => {
               date: new Date().toISOString(),
               attempts: 1
             };
-            console.log("Données de l'erreur:", errorData);
+            console.log("Données de l'erreur à enregistrer:", errorData);
             try {
               if (typeof addError === 'function') {
+                console.log("Appel de la fonction addError...");
                 addError(errorData);
                 console.log("Erreur enregistrée avec succès dans le RevisionContext");
               } else {

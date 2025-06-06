@@ -100,19 +100,32 @@ export const RevisionProvider: React.FC<RevisionProviderProps> = ({
   }, []);
 
   const addError = (error: RevisionError) => {
-    setErrors((prev) => [...prev, error]);
+    console.log("Début de l'ajout d'une erreur:", error);
+    setErrors((prev) => {
+      console.log("État précédent des erreurs:", prev);
+      const newErrors = [...prev, error];
+      console.log("Nouvel état des erreurs:", newErrors);
+      return newErrors;
+    });
 
     // Sauvegarder l'erreur dans l'API
     const saveError = async () => {
+      console.log("Début de la sauvegarde de l'erreur dans l'API");
       const user = localStorage.getItem("user");
       const token = localStorage.getItem("userToken");
 
-      if (!user || !token) return;
+      console.log("Données d'authentification:", { user, token });
+
+      if (!user || !token) {
+        console.error("Données d'authentification manquantes");
+        return;
+      }
 
       try {
         const userId = JSON.parse(user)._id;
+        console.log("Tentative de sauvegarde de l'erreur pour l'utilisateur:", userId);
 
-        await fetch(`${baseUrl}/revision-errors`, {
+        const response = await fetch(`${baseUrl}/revision-errors`, {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
@@ -123,6 +136,13 @@ export const RevisionProvider: React.FC<RevisionProviderProps> = ({
             userId,
           }),
         });
+
+        if (!response.ok) {
+          throw new Error(`Erreur HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+        console.log("Erreur sauvegardée avec succès:", data);
       } catch (error) {
         console.error("Erreur lors de la sauvegarde de l'erreur:", error);
       }
