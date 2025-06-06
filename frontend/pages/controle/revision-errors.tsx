@@ -13,16 +13,6 @@ import {
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import {
-  FaTrash,
-  FaSync,
-  FaSignInAlt,
-  FaExclamationTriangle,
-  FaCheckCircle,
-  FaTimesCircle,
-  FaTag,
-  FaArrowLeft,
-} from "react-icons/fa";
 
 import { RevisionProvider, useRevision } from "../../contexts/RevisionContext";
 
@@ -37,6 +27,52 @@ const RevisionContent: React.FC = () => {
   const [selectedUserId, setSelectedUserId] = useState<string | null>(null);
   const [userErrors, setUserErrors] = useState<RevisionError[]>([]);
   const [userIds, setUserIds] = useState<string[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>("Toutes");
+  const [search, setSearch] = useState("");
+  const [corrected, setCorrected] = useState<string[]>([]);
+  const [notes, setNotes] = useState<Record<string, string>>({});
+
+  // Extraire toutes les catégories présentes dans les erreurs de l'utilisateur
+  const categories = Array.from(
+    new Set(userErrors.map((err) => err.category || "Autre")),
+  );
+
+  // Statistiques
+  const stats = {
+    total: userErrors.length,
+    byCategory: categories.reduce(
+      (acc, cat) => {
+        acc[cat] = userErrors.filter((e) => e.category === cat).length;
+
+        return acc;
+      },
+      {} as Record<string, number>,
+    ),
+    mostErrors: (() => {
+      const sorted = categories
+        .slice()
+        .sort(
+          (a, b) =>
+            userErrors.filter((e) => e.category === b).length -
+            userErrors.filter((e) => e.category === a).length,
+        );
+
+      return sorted[0] || "";
+    })(),
+  };
+
+  // Filtrage dynamique par matière, recherche et erreurs non corrigées
+  const filteredErrors = userErrors.filter((err) => {
+    const matchCategory =
+      selectedCategory === "Toutes" || err.category === selectedCategory;
+    const matchSearch =
+      err.questionText?.toLowerCase().includes(search.toLowerCase()) ||
+      err.selectedAnswer?.toLowerCase().includes(search.toLowerCase()) ||
+      err.correctAnswer?.toLowerCase().includes(search.toLowerCase());
+    const notCorrected = !corrected.includes(err._id);
+
+    return matchCategory && matchSearch && notCorrected;
+  });
 
   useEffect(() => {
     // Afficher les informations de débogage
@@ -145,18 +181,10 @@ const RevisionContent: React.FC = () => {
           >
             Se connecter
           </Button>
-          <Button
-            className="px-6"
-            color="secondary"
-            onClick={handleRefresh}
-          >
+          <Button className="px-6" color="secondary" onClick={handleRefresh}>
             Rafraîchir
           </Button>
-          <Button
-            variant="flat"
-            onClick={handleGoBack}
-            className="px-6"
-          >
+          <Button className="px-6" variant="flat" onClick={handleGoBack}>
             Retour
           </Button>
         </div>
@@ -175,9 +203,9 @@ const RevisionContent: React.FC = () => {
         <div className="flex items-center gap-4">
           <Button
             isIconOnly
+            className="text-lg"
             variant="light"
             onClick={handleGoBack}
-            className="text-lg"
           >
             <span>←</span>
           </Button>
@@ -186,18 +214,47 @@ const RevisionContent: React.FC = () => {
               📚 Questions à Revoir
             </h1>
             <p className="text-gray-500 mt-1">
-              {userErrors.length} erreur{userErrors.length !== 1 ? "s" : ""} à
-              réviser
+              {filteredErrors.length} erreur
+              {filteredErrors.length !== 1 ? "s" : ""} à réviser
             </p>
           </div>
         </div>
+        <div className="flex flex-col md:flex-row gap-2 items-center">
+          {/* Barre de recherche */}
+          <input
+            className="px-3 py-2 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-100"
+            placeholder="Rechercher une question, une réponse..."
+            style={{ minWidth: 220 }}
+            type="text"
+            value={search}
+            onChange={(e) => setSearch(e.target.value)}
+          />
+          <Button color="primary" variant="flat" onClick={handleRefresh}>
+            Rafraîchir
+          </Button>
+        </div>
+      </div>
+      {/* Filtres par matière */}
+      <div className="flex flex-wrap gap-2 mb-6">
         <Button
-          color="primary"
-          variant="flat"
-          onClick={handleRefresh}
+          color={selectedCategory === "Toutes" ? "primary" : "default"}
+          size="sm"
+          variant={selectedCategory === "Toutes" ? "solid" : "flat"}
+          onClick={() => setSelectedCategory("Toutes")}
         >
-          Rafraîchir
+          Toutes
         </Button>
+        {categories.map((cat) => (
+          <Button
+            key={cat}
+            color={selectedCategory === cat ? "primary" : "default"}
+            size="sm"
+            variant={selectedCategory === cat ? "solid" : "flat"}
+            onClick={() => setSelectedCategory(cat)}
+          >
+            {cat}
+          </Button>
+        ))}
       </div>
 
       {errorMessage && (
@@ -210,6 +267,39 @@ const RevisionContent: React.FC = () => {
           <p>{errorMessage}</p>
         </motion.div>
       )}
+
+      {/* Statistiques */}
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <Card className="bg-white dark:bg-gray-800">
+          <CardBody>
+            <h3 className="text-lg font-semibold mb-2">Total des erreurs</h3>
+            <p className="text-3xl font-bold text-violet-600">{stats.total}</p>
+          </CardBody>
+        </Card>
+        <Card className="bg-white dark:bg-gray-800">
+          <CardBody>
+            <h3 className="text-lg font-semibold mb-2">
+              Matière la plus difficile
+            </h3>
+            <div className="flex items-center gap-2">
+              <span className="text-xl">📚</span>
+              <p className="text-xl font-bold">{stats.mostErrors}</p>
+            </div>
+          </CardBody>
+        </Card>
+        <Card className="bg-white dark:bg-gray-800">
+          <CardBody>
+            <h3 className="text-lg font-semibold mb-2">Erreurs par matière</h3>
+            <ul className="text-sm">
+              {Object.entries(stats.byCategory).map(([cat, count]) => (
+                <li key={cat}>
+                  {cat} : {count as number}
+                </li>
+              ))}
+            </ul>
+          </CardBody>
+        </Card>
+      </div>
 
       {errors.length === 0 ? (
         <motion.div
@@ -228,10 +318,7 @@ const RevisionContent: React.FC = () => {
             Vous avez bien répondu à toutes les questions !
           </p>
           <div className="mt-6">
-            <Button
-              variant="flat"
-              onClick={handleGoBack}
-            >
+            <Button variant="flat" onClick={handleGoBack}>
               Retour
             </Button>
           </div>
@@ -258,7 +345,7 @@ const RevisionContent: React.FC = () => {
                     title={
                       <div className="flex items-center space-x-2">
                         <span>Utilisateur</span>
-                        <Chip size="sm" variant="flat" color="primary">
+                        <Chip color="primary" size="sm" variant="flat">
                           {userId.substring(0, 6)}...
                         </Chip>
                       </div>
@@ -270,7 +357,7 @@ const RevisionContent: React.FC = () => {
           )}
 
           <div className="space-y-6">
-            {userErrors.map((err: RevisionError, index) => (
+            {filteredErrors.map((err: RevisionError, index) => (
               <motion.div
                 key={err._id}
                 animate={{ opacity: 1, y: 0 }}
@@ -291,19 +378,11 @@ const RevisionContent: React.FC = () => {
                             </p>
                             <div className="flex flex-wrap gap-2 mt-2">
                               {err.category && (
-                                <Chip
-                                  size="sm"
-                                  variant="flat"
-                                  color="primary"
-                                >
+                                <Chip color="primary" size="sm" variant="flat">
                                   {err.category}
                                 </Chip>
                               )}
-                              <Chip
-                                size="sm"
-                                variant="flat"
-                                color="default"
-                              >
+                              <Chip color="default" size="sm" variant="flat">
                                 {new Date(err.date).toLocaleDateString()}
                               </Chip>
                             </div>
@@ -337,8 +416,23 @@ const RevisionContent: React.FC = () => {
                         </div>
                       </div>
 
-                      <div className="flex justify-end">
-                        <Tooltip content="Supprimer cette erreur">
+                      <div className="flex justify-end gap-2">
+                        <Tooltip
+                          content={<span>Corriger (masquer cette erreur)</span>}
+                        >
+                          <Button
+                            isIconOnly
+                            color="success"
+                            variant="light"
+                            onClick={() =>
+                              setCorrected([...corrected, err._id])
+                            }
+                            className="text-lg"
+                          >
+                            <span role="img" aria-label="Corrigé">✅</span>
+                          </Button>
+                        </Tooltip>
+                        <Tooltip content={<span>Supprimer cette erreur</span>}>
                           <Button
                             isIconOnly
                             color="danger"
@@ -346,9 +440,22 @@ const RevisionContent: React.FC = () => {
                             onClick={() => handleDeleteError(err._id)}
                             className="text-lg"
                           >
-                            🗑️
+                            <span role="img" aria-label="Supprimer">🗑️</span>
                           </Button>
                         </Tooltip>
+                      </div>
+
+                      {/* Champ de note personnelle */}
+                      <div className="mt-4">
+                        <label htmlFor={`note-${err._id}`} className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Note personnelle :</label>
+                        <textarea
+                          id={`note-${err._id}`}
+                          className="w-full rounded-md border border-gray-300 dark:border-gray-700 bg-gray-50 dark:bg-gray-900 p-2 text-sm text-gray-800 dark:text-gray-100 focus:outline-none focus:ring-2 focus:ring-primary-500"
+                          rows={2}
+                          placeholder="Ajoutez une remarque, une astuce, un rappel..."
+                          value={notes[err._id] || ""}
+                          onChange={e => setNotes({ ...notes, [err._id]: e.target.value })}
+                        />
                       </div>
                     </div>
                   </CardBody>
