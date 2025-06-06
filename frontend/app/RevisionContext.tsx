@@ -34,6 +34,7 @@ interface RevisionContextType {
   addAttempt: (questionId: string) => boolean;
   canAttempt: (questionId: string) => boolean;
   getAttempts: (questionId: string) => number;
+  getErrorsByCategory: () => Record<string, RevisionError[]>;
 }
 
 const RevisionContext = createContext<RevisionContextType | undefined>(
@@ -209,6 +210,17 @@ export const RevisionProvider: React.FC<RevisionProviderProps> = ({
     return questionAttempts[questionId]?.attempts || 0;
   };
 
+  const getErrorsByCategory = () => {
+    return errors.reduce((acc, error) => {
+      const category = error.category;
+      if (!acc[category]) {
+        acc[category] = [];
+      }
+      acc[category].push(error);
+      return acc;
+    }, {} as Record<string, RevisionError[]>);
+  };
+
   return (
     <RevisionContext.Provider
       value={{
@@ -220,6 +232,7 @@ export const RevisionProvider: React.FC<RevisionProviderProps> = ({
         addAttempt,
         canAttempt,
         getAttempts,
+        getErrorsByCategory,
       }}
     >
       {children}

@@ -1,6 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Button } from "@nextui-org/react";
 import { useRouter } from "next/router";
+import { useRevision } from "@/app/RevisionContext";
+import { toast } from "sonner";
+import axios from "axios";
 
 interface Question {
   _id: string;
@@ -30,6 +33,7 @@ const TrimestrePage = () => {
   const [results, setResults] = useState<{ [questionId: string]: boolean }>({});
   const router = useRouter();
   const { id } = router.query;
+  const { addError } = useRevision();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -62,11 +66,88 @@ const TrimestrePage = () => {
     setAnswers({ ...answers, [questionId]: e.target.value });
   };
 
-  const handleSubmit = (questionId: string, correct: string) => {
+  const handleSubmit = async (questionId: string, correct: string) => {
     const userAnswer = answers[questionId]?.toLowerCase().trim();
     const correctAnswer = correct.toLowerCase();
+    const isCorrect = userAnswer === correctAnswer;
 
-    setResults({ ...results, [questionId]: userAnswer === correctAnswer });
+    setResults({ ...results, [questionId]: isCorrect });
+
+    // Sauvegarder l'erreur dans la base de données (revision-errors)
+    let erreurEnregistreeServeur = false;
+    if (!isCorrect) {
+      try {
+        const user = localStorage.getItem("user");
+        const token = localStorage.getItem("userToken");
+        if (user && token) {
+          const userId = JSON.parse(user)._id;
+          const question = trimestre?.subjects
+            .flatMap(subject => subject.questions)
+            .find(q => q._id === questionId);
+
+          if (question) {
+            await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/revision-errors`,
+              {
+                userId,
+                questionId: questionId,
+                questionText: question.question,
+                selectedAnswer: userAnswer || '',
+                correctAnswer: correctAnswer,
+                category: trimestre?.subjects.find(s => 
+                  s.questions.some(q => q._id === questionId)
+                )?.name || 'Trimestre'
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
+              }
+            );
+            erreurEnregistreeServeur = true;
+          }
+        }
+      } catch (error) {
+        console.error("Erreur lors de la sauvegarde de l'erreur de révision:", error);
+        toast.error("Erreur lors de la sauvegarde de l'erreur de révision");
+      }
+
+      // Enregistrement local UNIQUEMENT si la sauvegarde serveur a échoué
+      if (!erreurEnregistreeServeur) {
+        const question = trimestre?.subjects
+          .flatMap(subject => subject.questions)
+          .find(q => q._id === questionId);
+
+        if (question) {
+          const errorData = {
+            _id: questionId,
+            questionId: questionId,
+            questionText: question.question,
+            selectedAnswer: userAnswer || '',
+            correctAnswer: correctAnswer,
+            category: trimestre?.subjects.find(s => 
+              s.questions.some(q => q._id === questionId)
+            )?.name || 'Trimestre',
+            date: new Date().toISOString(),
+            attempts: 1
+          };
+          try {
+            if (typeof addError === 'function') {
+              addError(errorData);
+            }
+          } catch (error) {
+            console.error("Erreur lors de l'enregistrement dans le RevisionContext:", error);
+          }
+        }
+      }
+    }
+
+    // Afficher un message de feedback
+    if (isCorrect) {
+      toast.success("Bonne réponse !");
+    } else {
+      toast.error(`Mauvaise réponse. Réponse correcte : ${correct}`);
+    }
   };
 
   if (loading) return <p className="text-center mt-10">Chargement...</p>;

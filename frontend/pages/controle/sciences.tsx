@@ -11,6 +11,7 @@ import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
+import { useRevision } from "@/app/RevisionContext";
 
 // Interface pour les exercices de sciences
 interface Exercise {
@@ -32,6 +33,7 @@ interface Result {
 
 const SciencesPage: React.FC = () => {
   const router = useRouter();
+  const { addError } = useRevision();
   const [exercises, setExercises] = useState<Exercise[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -237,32 +239,61 @@ const SciencesPage: React.FC = () => {
       validatedExercises[id] = true;
       localStorage.setItem('sciences_validatedExercises', JSON.stringify(validatedExercises));
       
-      // Sauvegarder la réponse dans la base de données
+      // Sauvegarder l'erreur dans la base de données (revision-errors)
+      let erreurEnregistreeServeur = false;
       try {
-        const userId = localStorage.getItem("userId");
-        const token = localStorage.getItem("token");
+        const user = localStorage.getItem("user");
+        const token = localStorage.getItem("userToken");
         
-        if (userId && token) {
-          await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/answers`,
-            {
-              userId,
-              exerciseId: id,
-              userAnswer,
-              isCorrect,
-              subject: "sciences",
-              timestamp: new Date().toISOString()
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
+        if (user && token) {
+          const userId = JSON.parse(user)._id;
+          // On n'enregistre que si la réponse est incorrecte
+          if (!isCorrect) {
+            const exercise = exercises[exerciseIndex];
+            await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/revision-errors`,
+              {
+                userId,
+                questionId: id,
+                questionText: exercise.question,
+                selectedAnswer: userAnswer || '',
+                correctAnswer: correctAnswer,
+                category: exercise.category
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
               }
-            }
-          );
+            );
+            erreurEnregistreeServeur = true;
+          }
         }
       } catch (error) {
-        console.error("Erreur lors de la sauvegarde de la réponse:", error);
-        toast.error("Erreur lors de la sauvegarde de ta réponse");
+        console.error("Erreur lors de la sauvegarde de l'erreur de révision:", error);
+        toast.error("Erreur lors de la sauvegarde de l'erreur de révision");
+      }
+      
+      // Enregistrement local UNIQUEMENT si la sauvegarde serveur a échoué
+      if (!isCorrect && !erreurEnregistreeServeur) {
+        const exercise = exercises[exerciseIndex];
+        const errorData = {
+          _id: id,
+          questionId: id,
+          questionText: exercise.question,
+          selectedAnswer: userAnswer || '',
+          correctAnswer: correctAnswer,
+          category: exercise.category,
+          date: new Date().toISOString(),
+          attempts: 1
+        };
+        try {
+          if (typeof addError === 'function') {
+            addError(errorData);
+          }
+        } catch (error) {
+          console.error("Erreur lors de l'enregistrement dans le RevisionContext:", error);
+        }
       }
       
       if (isCorrect) {
