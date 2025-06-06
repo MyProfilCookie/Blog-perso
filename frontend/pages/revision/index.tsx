@@ -2,7 +2,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card, CardBody, Button, Chip, Progress } from "@nextui-org/react";
 import { motion } from "framer-motion";
-import RevisionErrors from "@/components/RevisionErrors";
 import { useRevision } from "@/app/RevisionContext";
 import { toast } from "sonner";
 
@@ -161,7 +160,9 @@ const RevisionPage: React.FC = () => {
         </div>
 
         {/* Liste des erreurs */}
-        <RevisionErrors />
+        <div className="text-center text-gray-500 py-12">
+          Le composant de révision a été supprimé. Veuillez utiliser la page Contrôle &gt; Questions à Revoir pour accéder à vos erreurs.
+        </div>
       </div>
     </div>
   );
