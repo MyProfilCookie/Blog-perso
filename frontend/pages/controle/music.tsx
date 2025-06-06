@@ -114,57 +114,7 @@ const MusicPage: React.FC = () => {
         setExercises(response.data.questions);
         setLoading(false);
 
-        // Charger l'historique des réponses seulement si pas de données dans le localStorage
-        const savedUserAnswers = localStorage.getItem('music_userAnswers');
-        const savedResults = localStorage.getItem('music_results');
-        const savedValidatedExercises = localStorage.getItem('music_validatedExercises');
-        
-        if (!savedUserAnswers || !savedResults || !savedValidatedExercises) {
-          const userId = localStorage.getItem("userId");
-          const token = localStorage.getItem("token");
-          
-          if (userId && token) {
-            const answersResponse = await axios.get(
-              `${process.env.NEXT_PUBLIC_API_URL}/answers/${userId}/music`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`
-                }
-              }
-            );
-
-            // Mettre à jour les réponses et les résultats
-            const userAnswersMap: { [key: string]: string } = {};
-            const resultsMap: Result[] = [];
-            const validatedExercises: { [key: string]: boolean } = {};
-
-            answersResponse.data.forEach((answer: any) => {
-              userAnswersMap[answer.exerciseId] = answer.userAnswer;
-              validatedExercises[answer.exerciseId] = true;
-              const exerciseIndex = response.data.questions.findIndex(
-                (ex: Exercise) => ex._id === answer.exerciseId
-              );
-
-              if (exerciseIndex !== -1) {
-                resultsMap[exerciseIndex] = {
-                  isCorrect: answer.isCorrect,
-                  answer: answer.userAnswer
-                };
-              }
-            });
-
-            setUserAnswers(userAnswersMap);
-            setResults(resultsMap);
-            
-            // Sauvegarder dans le localStorage
-            localStorage.setItem('music_userAnswers', JSON.stringify(userAnswersMap));
-            localStorage.setItem('music_results', JSON.stringify(resultsMap));
-            localStorage.setItem('music_validatedExercises', JSON.stringify(validatedExercises));
-            
-            // Mettre à jour le nombre d'exercices complétés
-            setCompletedExercises(Object.values(validatedExercises).filter(Boolean).length);
-          }
-        }
+        // On garde uniquement la logique de récupération/sauvegarde dans le localStorage
       } catch (err) {
         console.error(err);
         setError("Erreur lors du chargement des exercices");
@@ -173,29 +123,6 @@ const MusicPage: React.FC = () => {
     };
 
     fetchExercises();
-  }, []);
-
-  // Ajouter un nouvel useEffect pour charger les données du localStorage
-  useEffect(() => {
-    const savedUserAnswers = localStorage.getItem('music_userAnswers');
-    const savedResults = localStorage.getItem('music_results');
-    const savedValidatedExercises = localStorage.getItem('music_validatedExercises');
-    
-    if (savedUserAnswers) {
-      setUserAnswers(JSON.parse(savedUserAnswers));
-    }
-    
-    if (savedResults) {
-      setResults(JSON.parse(savedResults));
-    }
-    
-    if (savedValidatedExercises) {
-      const validatedExercises = JSON.parse(savedValidatedExercises);
-      // Calculer le nombre d'exercices complétés
-      const completedCount = Object.values(validatedExercises).filter(Boolean).length;
-
-      setCompletedExercises(completedCount);
-    }
   }, []);
 
   // Gestion du minuteur et des messages d'encouragement
@@ -249,81 +176,79 @@ const MusicPage: React.FC = () => {
     
     if (exerciseIndex !== -1) {
       const newResults = [...results];
+
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
       setResults(newResults);
       
       // Sauvegarder dans le localStorage
       const updatedUserAnswers = { ...userAnswers, [id]: userAnswer };
       const updatedResults = [...newResults];
+
       localStorage.setItem('music_userAnswers', JSON.stringify(updatedUserAnswers));
       localStorage.setItem('music_results', JSON.stringify(updatedResults));
       
       // Sauvegarder l'état de validation
       const validatedExercises = JSON.parse(localStorage.getItem('music_validatedExercises') || '{}');
+
       validatedExercises[id] = true;
       localStorage.setItem('music_validatedExercises', JSON.stringify(validatedExercises));
       
-      // Sauvegarder la réponse dans la base de données
+      // Sauvegarder l'erreur dans la base de données (revision-errors)
       try {
         const user = localStorage.getItem("user");
         const token = localStorage.getItem("userToken");
         
-        console.log("Données de l'utilisateur:", { user, token });
-        
         if (user && token) {
           const userId = JSON.parse(user)._id;
-          console.log("ID de l'utilisateur:", userId);
-          
-          await axios.post(
-            `${process.env.NEXT_PUBLIC_API_URL}/answers`,
-            {
-              userId,
-              exerciseId: id,
-              userAnswer,
-              isCorrect,
-              subject: "music",
-              timestamp: new Date().toISOString()
-            },
-            {
-              headers: {
-                Authorization: `Bearer ${token}`
-              }
-            }
-          );
 
-          // Si la réponse est incorrecte, enregistrer l'erreur dans le RevisionContext
+          // On n'enregistre que si la réponse est incorrecte
           if (!isCorrect) {
-            console.log("Tentative d'enregistrement d'une erreur...");
             const exercise = exercises[exerciseIndex];
-            const errorData = {
-              _id: id,
-              questionId: id,
-              questionText: exercise.question,
-              selectedAnswer: userAnswer || '',
-              correctAnswer: correctAnswer,
-              category: exercise.category,
-              date: new Date().toISOString(),
-              attempts: 1
-            };
-            console.log("Données de l'erreur à enregistrer:", errorData);
-            try {
-              if (typeof addError === 'function') {
-                console.log("Appel de la fonction addError...");
-                addError(errorData);
-                console.log("Erreur enregistrée avec succès dans le RevisionContext");
-              } else {
-                console.error("addError n'est pas une fonction:", addError);
+
+            await axios.post(
+              `${process.env.NEXT_PUBLIC_API_URL}/revision-errors`,
+              {
+                userId,
+                questionId: id,
+                questionText: exercise.question,
+                selectedAnswer: userAnswer || '',
+                correctAnswer: correctAnswer,
+                category: exercise.category
+              },
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`
+                }
               }
-            } catch (error) {
-              console.error("Erreur lors de l'enregistrement dans le RevisionContext:", error);
-            }
+            );
           }
-        } else {
-          console.error("Données utilisateur manquantes:", { user, token });
         }
       } catch (error) {
-        console.error("Erreur lors de la sauvegarde de la réponse:", error);
-        toast.error("Erreur lors de la sauvegarde de ta réponse");
+        console.error("Erreur lors de la sauvegarde de l'erreur de révision:", error);
+        toast.error("Erreur lors de la sauvegarde de l'erreur de révision");
+      }
+      
+      // Enregistrement local dans le RevisionContext (toujours, même si l'API échoue)
+      if (!isCorrect) {
+        const exercise = exercises[exerciseIndex];
+        const errorData = {
+          _id: id,
+          questionId: id,
+          questionText: exercise.question,
+          selectedAnswer: userAnswer || '',
+          correctAnswer: correctAnswer,
+          category: exercise.category,
+          date: new Date().toISOString(),
+          attempts: 1
+        };
+
+        try {
+          if (typeof addError === 'function') {
+            addError(errorData);
+          }
+        } catch (error) {
+          console.error("Erreur lors de l'enregistrement dans le RevisionContext:", error);
+        }
       }
       
       if (isCorrect) {
