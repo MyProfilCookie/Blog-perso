@@ -200,10 +200,17 @@ export default function ControlePage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/stats`);
+        const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+        const userId = localStorage.getItem("userId") || JSON.parse(localStorage.getItem("user") || '{}')._id;
+        if (!token || !userId) throw new Error("Utilisateur non authentifié");
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/stats/${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } }
+        );
         setStats(response.data);
       } catch (err) {
         console.error("Erreur lors de la récupération des statistiques:", err);
+        setError("Erreur lors de la récupération des statistiques. Veuillez vous reconnecter.");
       }
     };
 
