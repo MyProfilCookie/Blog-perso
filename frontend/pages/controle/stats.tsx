@@ -327,14 +327,14 @@ const StatsPage: React.FC = () => {
                 <h3 className="text-lg font-semibold mb-2">Réponses correctes</h3>
                 <p className="text-3xl font-bold">{stats.totalCorrect}</p>
                 <p className="text-sm text-gray-500">
-                  {((stats.totalCorrect / stats.totalExercises) * 100).toFixed(1)}% de réussite
+                  {(Number(stats.totalCorrect) / Number(stats.totalExercises) * 100).toFixed(1)}% de réussite
                 </p>
               </CardBody>
             </Card>
             <Card className="bg-white shadow-lg">
               <CardBody>
                 <h3 className="text-lg font-semibold mb-2">Score moyen</h3>
-                <p className="text-3xl font-bold">{stats.averageScore.toFixed(1)}%</p>
+                <p className="text-3xl font-bold">{Number(stats.averageScore).toFixed(1)}%</p>
               </CardBody>
             </Card>
           </div>
@@ -435,7 +435,7 @@ const StatsPage: React.FC = () => {
                       <div className="flex items-center gap-2">
                         <span className="text-sm text-gray-500">{category.count} exercices</span>
                         <Chip size="sm" variant="flat">
-                          {category.percentage.toFixed(1)}%
+                          {Number(category.percentage).toFixed(1)}%
                         </Chip>
                       </div>
                     </div>
