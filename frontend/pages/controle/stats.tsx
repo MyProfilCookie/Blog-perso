@@ -202,7 +202,7 @@ const StatsPage: React.FC = () => {
           callback: (value: any, index: number, values: any): string | number | undefined => {
             // Affiche moins de labels sur mobile
             if (typeof window !== 'undefined' && window.innerWidth < 640 && index % 2 !== 0) return '';
-            return value?.toString();
+            return value !== undefined && value !== null ? value.toString() : '';
           }
         }
       },
