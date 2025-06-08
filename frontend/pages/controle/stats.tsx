@@ -88,7 +88,7 @@ const StatsPage: React.FC = () => {
       }
       
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/stats?userId=${userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/stats/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`

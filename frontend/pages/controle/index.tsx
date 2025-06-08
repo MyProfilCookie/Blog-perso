@@ -200,7 +200,7 @@ export default function ControlePage() {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/stats`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/stats`);
         setStats(response.data);
       } catch (err) {
         console.error("Erreur lors de la récupération des statistiques:", err);
