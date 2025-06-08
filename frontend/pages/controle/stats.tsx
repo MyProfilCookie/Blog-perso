@@ -82,7 +82,7 @@ const StatsPage: React.FC = () => {
         throw new Error("Token d&apos;authentification non trouvé");
       }
       
-      const userId = localStorage.getItem("userId");
+      const userId = localStorage.getItem("userId") || JSON.parse(localStorage.getItem("user") || '{}')._id;
       if (!userId) {
         throw new Error("ID utilisateur non trouvé");
       }
@@ -104,7 +104,7 @@ const StatsPage: React.FC = () => {
       
       setStats(response.data);
       setLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Erreur lors de la récupération des statistiques:", err);
       if (axios.isAxiosError(err) && err.response?.data?.upgradeRequired) {
         setUpgradeRequired(true);
@@ -119,17 +119,17 @@ const StatsPage: React.FC = () => {
     if (!stats) return null;
     
     return {
-      labels: stats.dailyStats.map(stat => new Date(stat.date).toLocaleDateString()),
+      labels: stats.dailyStats.map((stat: any) => new Date(stat.date).toLocaleDateString()),
       datasets: [
         {
           label: "Score moyen",
-          data: stats.dailyStats.map(stat => stat.averageScore),
+          data: stats.dailyStats.map((stat: any) => stat.averageScore),
           borderColor: "rgb(75, 192, 192)",
           tension: 0.1,
         },
         {
           label: "Exercices complétés",
-          data: stats.dailyStats.map(stat => stat.exercisesCompleted),
+          data: stats.dailyStats.map((stat: any) => stat.exercisesCompleted),
           borderColor: "rgb(255, 99, 132)",
           tension: 0.1,
         },
@@ -141,11 +141,11 @@ const StatsPage: React.FC = () => {
     if (!stats) return null;
     
     return {
-      labels: stats.subjects.map(subject => subject.subject),
+      labels: stats.subjects.map((subject: any) => subject.subject),
       datasets: [
         {
           label: "Score moyen",
-          data: stats.subjects.map(subject => subject.averageScore),
+          data: stats.subjects.map((subject: any) => subject.averageScore),
           backgroundColor: [
             "rgba(255, 99, 132, 0.5)",
             "rgba(54, 162, 235, 0.5)",
@@ -162,10 +162,10 @@ const StatsPage: React.FC = () => {
     if (!stats) return null;
     
     return {
-      labels: stats.categoryStats.map(category => category.category),
+      labels: stats.categoryStats.map((category: any) => category.category),
       datasets: [
         {
-          data: stats.categoryStats.map(category => category.count),
+          data: stats.categoryStats.map((category: any) => category.count),
           backgroundColor: [
             "rgba(255, 99, 132, 0.5)",
             "rgba(54, 162, 235, 0.5)",
@@ -176,6 +176,42 @@ const StatsPage: React.FC = () => {
         },
       ],
     };
+  };
+
+  // Options responsives pour les graphiques
+  const chartOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          font: { size: 12 },
+        },
+      },
+      tooltip: {
+        bodyFont: { size: 12 },
+        titleFont: { size: 13 },
+      },
+    },
+    scales: {
+      x: {
+        ticks: {
+          font: { size: 11 },
+          maxRotation: 45,
+          minRotation: 0,
+          callback: (value: any, index: number, values: any): string | number | undefined => {
+            // Affiche moins de labels sur mobile
+            if (typeof window !== 'undefined' && window.innerWidth < 640 && index % 2 !== 0) return '';
+            return value?.toString();
+          }
+        }
+      },
+      y: {
+        ticks: {
+          font: { size: 11 },
+        }
+      }
+    }
   };
 
   if (loading) {
@@ -349,6 +385,23 @@ const StatsPage: React.FC = () => {
                 </Card>
               </motion.div>
             ))}
+            <Card className="bg-white shadow-lg">
+              <CardBody>
+                <h3 className="text-xl font-semibold mb-4">Scores par matière</h3>
+                {stats.subjects.length > 0 ? (
+                  <div className="h-64 w-full overflow-x-auto">
+                    <div className="min-w-[350px] w-full" style={{height: '260px'}}>
+                      <Bar 
+                        data={prepareBarChartData()!} 
+                        options={chartOptions}
+                      />
+                    </div>
+                  </div>
+                ) : (
+                  <p className="text-center text-gray-500">Aucune donnée disponible</p>
+                )}
+              </CardBody>
+            </Card>
           </div>
         )}
 
@@ -359,14 +412,13 @@ const StatsPage: React.FC = () => {
               <CardBody>
                 <h3 className="text-xl font-semibold mb-4">Répartition par catégorie</h3>
                 {stats.categoryStats.length > 0 ? (
-                  <div className="h-64">
-                    <Doughnut 
-                      data={prepareDoughnutChartData()!} 
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                      }}
-                    />
+                  <div className="h-64 w-full overflow-x-auto">
+                    <div className="min-w-[300px] w-full" style={{height: '260px'}}>
+                      <Doughnut 
+                        data={prepareDoughnutChartData()!} 
+                        options={chartOptions}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <p className="text-center text-gray-500">Aucune donnée disponible</p>
@@ -377,7 +429,7 @@ const StatsPage: React.FC = () => {
               <CardBody>
                 <h3 className="text-xl font-semibold mb-4">Détails par catégorie</h3>
                 <div className="space-y-4">
-                  {stats.categoryStats.map((category, index) => (
+                  {stats.categoryStats.map((category: any, index: number) => (
                     <div key={index} className="flex justify-between items-center">
                       <span>{category.category}</span>
                       <div className="flex items-center gap-2">
@@ -401,14 +453,13 @@ const StatsPage: React.FC = () => {
               <CardBody>
                 <h3 className="text-xl font-semibold mb-4">Évolution des scores</h3>
                 {stats.dailyStats.length > 0 ? (
-                  <div className="h-64">
-                    <Line 
-                      data={prepareLineChartData()!} 
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                      }}
-                    />
+                  <div className="h-64 w-full overflow-x-auto">
+                    <div className="min-w-[350px] w-full" style={{height: '260px'}}>
+                      <Line 
+                        data={prepareLineChartData()!} 
+                        options={chartOptions}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <p className="text-center text-gray-500">Aucune donnée disponible</p>
@@ -419,14 +470,13 @@ const StatsPage: React.FC = () => {
               <CardBody>
                 <h3 className="text-xl font-semibold mb-4">Comparaison par matière</h3>
                 {stats.subjects.length > 0 ? (
-                  <div className="h-64">
-                    <Bar 
-                      data={prepareBarChartData()!} 
-                      options={{
-                        responsive: true,
-                        maintainAspectRatio: false,
-                      }}
-                    />
+                  <div className="h-64 w-full overflow-x-auto">
+                    <div className="min-w-[350px] w-full" style={{height: '260px'}}>
+                      <Bar 
+                        data={prepareBarChartData()!} 
+                        options={chartOptions}
+                      />
+                    </div>
                   </div>
                 ) : (
                   <p className="text-center text-gray-500">Aucune donnée disponible</p>

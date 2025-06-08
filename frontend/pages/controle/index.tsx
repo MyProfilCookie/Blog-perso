@@ -171,6 +171,13 @@ const courseThemes = [
     bgColor: "bg-blue-100 dark:bg-blue-800",
     iconColor: "text-blue-600 dark:text-blue-300",
   },
+  {
+    id: 16,
+    title: "Stats",
+    description: "Accéder à vos statistiques",
+    route: "/controle/stats",
+    icon: faChartBar,
+  },
 ];
 
 export default function ControlePage() {
