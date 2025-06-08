@@ -204,7 +204,7 @@ export default function ControlePage() {
         const userId = localStorage.getItem("userId") || JSON.parse(localStorage.getItem("user") || '{}')._id;
         if (!token || !userId) throw new Error("Utilisateur non authentifié");
         const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/stats/${userId}`,
+          `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } }
         );
         setStats(response.data);
