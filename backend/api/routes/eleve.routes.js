@@ -95,22 +95,37 @@ router.get('/stats/:userId/:subjectName', isAuthenticated, async (req, res) => {
 router.get('/stats/:userId', isAuthenticated, async (req, res) => {
   try {
     const { userId } = req.params;
-    
     // Vérifier que l'utilisateur est autorisé à voir ces statistiques
     if (req.user.id !== userId && req.user.role !== "admin") {
       return res.status(403).json({ message: "Non autorisé" });
     }
-    
     // Récupérer toutes les notes de l'élève
     const scores = await Score.find({ userId });
-    
     // Calculer la moyenne globale
     const overallAverage = await Score.calculateOverallAverage(userId);
-    
+
+    // Calculs pour le frontend
+    const totalExercises = scores.length;
+    const totalCorrect = scores.reduce((sum, s) => sum + (s.correctAnswers || 0), 0);
+    const averageScore = overallAverage || 0;
+    // Regroupe par matière
+    const subjectsMap = {};
+    scores.forEach(s => {
+      if (!subjectsMap[s.subjectName]) subjectsMap[s.subjectName] = [];
+      subjectsMap[s.subjectName].push(s);
+    });
+    const subjects = Object.entries(subjectsMap).map(([subject, arr]) => ({
+      subject,
+      averageScore: arr.reduce((sum, s) => sum + (s.score || 0), 0) / arr.length
+    }));
+
     res.json({
       userId,
-      scores,
-      overallAverage
+      totalExercises,
+      totalCorrect,
+      averageScore,
+      subjects,
+      scores
     });
   } catch (error) {
     console.error("Erreur lors de la récupération des statistiques:", error);
