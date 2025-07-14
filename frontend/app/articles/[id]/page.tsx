@@ -127,9 +127,12 @@ const ArticlePage = () => {
             <Image
               alt={article["📌 titre"]}
               className="object-cover w-full h-auto max-h-[500px] rounded-lg shadow-md dark:shadow-gray-800"
-              height={0}
+              height={500}
+              width={800}
               src={article["🔗 imageUrl"]}
-              width={0}
+              priority
+              quality={90}
+              sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
             />
           </div>
         </motion.div>
