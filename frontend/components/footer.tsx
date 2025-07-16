@@ -65,7 +65,7 @@ const Footer = () => {
               Navigation
             </h4>
             <nav className="flex flex-col space-y-2">
-              <NextLink href="/blogs" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">
+              <NextLink href="/blog" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">
                 Blog
               </NextLink>
               <NextLink href="/about" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">

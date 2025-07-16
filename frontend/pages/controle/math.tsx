@@ -532,7 +532,7 @@ const MathPage: React.FC = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               {exercise.options.map((option, index) => (
                                 <label
-                                  key={index}
+                                  key={`${exercise._id}-option-${index}`}
                                   className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                                 >
                                   <input

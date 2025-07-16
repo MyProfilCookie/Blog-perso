@@ -174,6 +174,8 @@ const courseThemes = [
     id: 16,
     title: "Stats",
     description: "Accéder à vos statistiques",
+    bgColor: "bg-gray-100 dark:bg-gray-800",
+    iconColor: "text-gray-600 dark:text-gray-300",
     route: "/controle/stats",
     icon: faChartBar,
   },

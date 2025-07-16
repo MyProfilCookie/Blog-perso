@@ -74,6 +74,352 @@ export const AutismLogo: React.FC<IconSvgProps> = ({
   );
 };
 
+// Nouvelle icône de menu burger personnalisée pour AutiStudy
+export const AutiStudyMenuIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Fond circulaire avec dégradé */}
+      <defs>
+        <linearGradient id="menuGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#0066cc" />
+          <stop offset="50%" stopColor="#33cc33" />
+          <stop offset="100%" stopColor="#ff9900" />
+        </linearGradient>
+      </defs>
+      
+      {/* Cercle de fond */}
+      <circle cx="16" cy="16" r="15" fill="url(#menuGradient)" opacity="0.1" />
+      
+      {/* Ligne supérieure avec cercle coloré */}
+      <g transform="translate(8, 10)">
+        <circle cx="2" cy="2" r="2" fill="#0066cc" />
+        <rect x="6" y="1.5" width="10" height="1" rx="0.5" fill="currentColor" />
+      </g>
+      
+      {/* Ligne centrale avec cercle coloré */}
+      <g transform="translate(8, 15)">
+        <circle cx="2" cy="2" r="2" fill="#ff9900" />
+        <rect x="6" y="1.5" width="10" height="1" rx="0.5" fill="currentColor" />
+      </g>
+      
+      {/* Ligne inférieure avec cercle coloré */}
+      <g transform="translate(8, 20)">
+        <circle cx="2" cy="2" r="2" fill="#33cc33" />
+        <rect x="6" y="1.5" width="10" height="1" rx="0.5" fill="currentColor" />
+      </g>
+      
+      {/* Petit cercle rouge en haut à droite */}
+      <circle cx="24" cy="8" r="3" fill="#cc3300" opacity="0.8" />
+    </svg>
+  );
+};
+
+// Icône pour les commandes en cours (remplace ⏳)
+export const PendingOrdersIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Cercle de fond */}
+      <circle cx="16" cy="16" r="14" fill="#ffeb3b" opacity="0.2" />
+      
+      {/* Horloge stylisée */}
+      <circle cx="16" cy="16" r="12" fill="none" stroke="#ff9800" strokeWidth="2" />
+      <circle cx="16" cy="16" r="2" fill="#ff9800" />
+      
+      {/* Aiguilles de l'horloge */}
+      <line x1="16" y1="16" x2="16" y2="8" stroke="#ff9800" strokeWidth="2" strokeLinecap="round" />
+      <line x1="16" y1="16" x2="20" y2="16" stroke="#ff9800" strokeWidth="2" strokeLinecap="round" />
+      
+      {/* Points de suspension animés */}
+      <circle cx="8" cy="8" r="1.5" fill="#ff9800" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite" />
+      </circle>
+      <circle cx="12" cy="8" r="1.5" fill="#ff9800" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite" begin="0.5s" />
+      </circle>
+      <circle cx="16" cy="8" r="1.5" fill="#ff9800" opacity="0.8">
+        <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1.5s" repeatCount="indefinite" begin="1s" />
+      </circle>
+    </svg>
+  );
+};
+
+// Icône pour les commandes envoyées (remplace 🚚)
+export const ShippedOrdersIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Fond */}
+      <rect x="4" y="12" width="20" height="8" rx="2" fill="#2196f3" opacity="0.2" />
+      
+      {/* Camion stylisé */}
+      <rect x="6" y="14" width="12" height="4" rx="1" fill="#2196f3" />
+      <rect x="18" y="14" width="4" height="4" rx="1" fill="#1976d2" />
+      
+      {/* Roues */}
+      <circle cx="10" cy="20" r="2" fill="#424242" />
+      <circle cx="22" cy="20" r="2" fill="#424242" />
+      <circle cx="10" cy="20" r="1" fill="#9e9e9e" />
+      <circle cx="22" cy="20" r="1" fill="#9e9e9e" />
+      
+      {/* Phares */}
+      <circle cx="8" cy="16" r="0.5" fill="#ffeb3b" />
+      <circle cx="24" cy="16" r="0.5" fill="#ffeb3b" />
+      
+      {/* Traces de mouvement */}
+      <path d="M4 20 Q8 18 12 20" stroke="#2196f3" strokeWidth="1" fill="none" opacity="0.6" />
+      <path d="M12 20 Q16 18 20 20" stroke="#2196f3" strokeWidth="1" fill="none" opacity="0.6" />
+    </svg>
+  );
+};
+
+// Icône pour les commandes livrées (remplace ✅)
+export const DeliveredOrdersIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Cercle de fond */}
+      <circle cx="16" cy="16" r="14" fill="#4caf50" opacity="0.2" />
+      
+      {/* Cercle principal */}
+      <circle cx="16" cy="16" r="10" fill="none" stroke="#4caf50" strokeWidth="2" />
+      
+      {/* Coches de validation */}
+      <path d="M12 16 L14 18 L20 12" stroke="#4caf50" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
+      
+      {/* Étoiles décoratives */}
+      <path d="M8 8 L9 10 L11 10 L9.5 11.5 L10 13.5 L8 12 L6 13.5 L6.5 11.5 L5 10 L7 10 Z" fill="#4caf50" opacity="0.6" />
+      <path d="M24 8 L25 10 L27 10 L25.5 11.5 L26 13.5 L24 12 L22 13.5 L22.5 11.5 L21 10 L23 10 Z" fill="#4caf50" opacity="0.6" />
+      
+      {/* Animation de pulsation */}
+      <circle cx="16" cy="16" r="10" fill="none" stroke="#4caf50" strokeWidth="1" opacity="0.3">
+        <animate attributeName="r" values="10;12;10" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite" />
+      </circle>
+    </svg>
+  );
+};
+
+// Icône de fermeture personnalisée (remplace le X)
+export const CloseMenuIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Cercle de fond */}
+      <circle cx="16" cy="16" r="14" fill="#f44336" opacity="0.1" />
+      
+      {/* Croix stylisée */}
+      <path d="M10 10 L22 22 M22 10 L10 22" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      
+      {/* Cercle décoratif */}
+      <circle cx="16" cy="16" r="8" fill="none" stroke="#f44336" strokeWidth="1" opacity="0.3" />
+    </svg>
+  );
+};
+
+// Nouvelle icône de menu burger originale pour AutiStudy
+export const AutiStudyBurgerIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Fond avec dégradé subtil */}
+      <defs>
+        <linearGradient id="burgerGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stopColor="#0066cc" stopOpacity="0.1" />
+          <stop offset="50%" stopColor="#33cc33" stopOpacity="0.1" />
+          <stop offset="100%" stopColor="#ff9900" stopOpacity="0.1" />
+        </linearGradient>
+      </defs>
+      
+      {/* Rectangle de fond arrondi */}
+      <rect x="4" y="6" width="24" height="20" rx="10" fill="url(#burgerGradient)" />
+      
+      {/* Ligne supérieure avec cercle coloré */}
+      <g transform="translate(8, 10)">
+        <circle cx="2" cy="2" r="2" fill="#0066cc" />
+        <rect x="6" y="1.5" width="10" height="1" rx="0.5" fill="currentColor" />
+        <circle cx="18" cy="2" r="1" fill="#cc3300" opacity="0.8" />
+      </g>
+      
+      {/* Ligne centrale avec cercle coloré */}
+      <g transform="translate(8, 15)">
+        <circle cx="2" cy="2" r="2" fill="#ff9900" />
+        <rect x="6" y="1.5" width="10" height="1" rx="0.5" fill="currentColor" />
+        <circle cx="18" cy="2" r="1" fill="#33cc33" opacity="0.8" />
+      </g>
+      
+      {/* Ligne inférieure avec cercle coloré */}
+      <g transform="translate(8, 20)">
+        <circle cx="2" cy="2" r="2" fill="#33cc33" />
+        <rect x="6" y="1.5" width="10" height="1" rx="0.5" fill="currentColor" />
+        <circle cx="18" cy="2" r="1" fill="#0066cc" opacity="0.8" />
+      </g>
+      
+      {/* Petits points décoratifs */}
+      <circle cx="6" cy="6" r="0.5" fill="#ff9900" opacity="0.6" />
+      <circle cx="26" cy="6" r="0.5" fill="#cc3300" opacity="0.6" />
+      <circle cx="6" cy="26" r="0.5" fill="#33cc33" opacity="0.6" />
+      <circle cx="26" cy="26" r="0.5" fill="#0066cc" opacity="0.6" />
+    </svg>
+  );
+};
+
+// Icône de menu burger alternative plus simple mais originale
+export const SimpleAutiStudyBurgerIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Ligne supérieure avec cercle */}
+      <g>
+        <circle cx="8" cy="12" r="2" fill="#0066cc" />
+        <rect x="12" y="11.5" width="12" height="1" rx="0.5" fill="currentColor" />
+        <circle cx="26" cy="12" r="1" fill="#cc3300" />
+      </g>
+      
+      {/* Ligne centrale avec cercle */}
+      <g>
+        <circle cx="8" cy="16" r="2" fill="#ff9900" />
+        <rect x="12" y="15.5" width="12" height="1" rx="0.5" fill="currentColor" />
+        <circle cx="26" cy="16" r="1" fill="#33cc33" />
+      </g>
+      
+      {/* Ligne inférieure avec cercle */}
+      <g>
+        <circle cx="8" cy="20" r="2" fill="#33cc33" />
+        <rect x="12" y="19.5" width="12" height="1" rx="0.5" fill="currentColor" />
+        <circle cx="26" cy="20" r="1" fill="#0066cc" />
+      </g>
+    </svg>
+  );
+};
+
+// Icône de menu burger avec design puzzle/pièces
+export const PuzzleBurgerIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Pièce supérieure gauche */}
+      <path d="M6 10 L10 10 L10 14 L14 14 L14 10 L18 10 L18 14 L14 14 L14 18 L10 18 L10 14 L6 14 Z" fill="#0066cc" />
+      
+      {/* Pièce centrale */}
+      <path d="M12 14 L16 14 L16 18 L20 18 L20 14 L24 14 L24 18 L20 18 L20 22 L16 22 L16 18 L12 18 Z" fill="#ff9900" />
+      
+      {/* Pièce inférieure droite */}
+      <path d="M18 18 L22 18 L22 22 L26 22 L26 18 L30 18 L30 22 L26 22 L26 26 L22 26 L22 22 L18 22 Z" fill="#33cc33" />
+      
+      {/* Points de connexion */}
+      <circle cx="14" cy="14" r="1" fill="white" opacity="0.8" />
+      <circle cx="20" cy="18" r="1" fill="white" opacity="0.8" />
+      <circle cx="26" cy="22" r="1" fill="white" opacity="0.8" />
+    </svg>
+  );
+};
+
+// Icône de menu burger simple et visible
+export const VisibleBurgerIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Ligne supérieure avec cercle bleu */}
+      <rect x="4" y="8" width="20" height="2" rx="1" fill="currentColor" />
+      <circle cx="28" cy="9" r="3" fill="#0066cc" />
+      
+      {/* Ligne centrale avec cercle orange */}
+      <rect x="4" y="15" width="20" height="2" rx="1" fill="currentColor" />
+      <circle cx="28" cy="16" r="3" fill="#ff9900" />
+      
+      {/* Ligne inférieure avec cercle vert */}
+      <rect x="4" y="22" width="20" height="2" rx="1" fill="currentColor" />
+      <circle cx="28" cy="23" r="3" fill="#33cc33" />
+      
+      {/* Petit cercle rouge décoratif */}
+      <circle cx="6" cy="6" r="2" fill="#cc3300" />
+    </svg>
+  );
+};
+
 export const TwitterIcon: React.FC<IconSvgProps> = ({
   size = 24,
   width,

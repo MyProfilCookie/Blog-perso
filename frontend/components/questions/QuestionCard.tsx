@@ -62,7 +62,7 @@ export const QuestionCard: React.FC<QuestionCardProps> = ({
       <div className="space-y-3">
         {options.map((option, index) => (
           <button
-            key={index}
+            key={`${questionId}-option-${index}`}
             className={`w-full p-3 text-left rounded-md transition-colors ${
               !canAttempt
                 ? "bg-gray-100 cursor-not-allowed"

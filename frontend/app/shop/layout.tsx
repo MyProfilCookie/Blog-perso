@@ -81,11 +81,11 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="min-h-screen px-4 py-8 md:px-10 bg-cream dark:bg-gray-900 transition-colors">
-            <div className="mb-6 text-center">
+        <div className="min-h-screen px-2 py-4 md:px-4 lg:px-6 bg-cream dark:bg-gray-900 transition-colors">
+            <div className="mb-4 md:mb-6 text-center">
                 <motion.h1
                     animate={{ opacity: 1, y: 0 }}
-                    className="text-3xl font-bold text-gray-800 dark:text-white mb-2"
+                    className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2"
                     initial={{ opacity: 0, y: -20 }}
                     transition={{ duration: 0.5 }}
                 >
@@ -94,7 +94,7 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
                 </motion.h1>
                 <motion.p
                     animate={{ opacity: 1 }}
-                    className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+                    className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto px-4"
                     initial={{ opacity: 0 }}
                     transition={{ duration: 0.5, delay: 0.2 }}
                 >
@@ -103,113 +103,140 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
             </div>
 
             <div className="fixed right-4 bottom-4 z-50">
-                <Popover>
-                    <PopoverTrigger asChild>
-                        <Button
-                            className="relative bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white p-4 h-14 w-14 rounded-full shadow-lg transition-colors"
-                            variant="default"
-                        >
-                            <FontAwesomeIcon className="text-xl" icon={faShoppingCart} />
-                            {calculateTotalItems() > 0 && (
-                                <div className="absolute -top-3 -right-3">
-                                    <Badge
-                                        className="bg-red-600 hover:bg-red-600 text-white font-bold min-w-[24px] h-6 flex items-center justify-center rounded-full px-2 border-2 border-white dark:border-gray-900"
-                                    >
-                                        {calculateTotalItems()}
-                                    </Badge>
-                                </div>
-                            )}
-                        </Button>
-                    </PopoverTrigger>
-                    <PopoverContent align="end" className="w-[90vw] sm:w-[400px] p-0" sideOffset={5}>
-                        <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
-                            <h3 className="text-xl font-bold mb-4 text-center text-violet-600 dark:text-violet-400">
-                                Votre Panier
-                            </h3>
-
-                            {cartItems.length === 0 ? (
-                                <div className="text-center py-6">
-                                    <FontAwesomeIcon
-                                        className="text-4xl text-gray-400 dark:text-gray-600 mb-3"
-                                        icon={faShoppingCart}
-                                    />
-                                    <p className="text-gray-600 dark:text-gray-400">
-                                        Votre panier est vide
-                                    </p>
-                                </div>
-                            ) : (
-                                <div className="max-h-[60vh] overflow-y-auto">
-                                    <ul className="space-y-3">
-                                        {cartItems.map((item) => (
-                                            <li
-                                                key={item._id}
-                                                className="flex items-center gap-3 border-b dark:border-gray-700 pb-3"
-                                            >
-                                                <img
-                                                    alt={item.title}
-                                                    className="w-16 h-16 object-cover rounded-md border border-gray-200 dark:border-gray-700"
-                                                    src={item.imageUrl}
-                                                />
-                                                <div className="flex-1 min-w-0">
-                                                    <p className="text-sm font-semibold text-gray-800 dark:text-white truncate">
-                                                        {item.title}
-                                                    </p>
-                                                    <p className="text-xs text-gray-500 dark:text-gray-400">
-                                                        {item.quantity} × {item.price.toFixed(2)} €
-                                                    </p>
-                                                </div>
-                                                <div className="flex items-center gap-1 flex-shrink-0">
-                                                    <Button
-                                                        className="h-8 w-8 bg-blue-500 hover:bg-blue-600 text-white"
-                                                        size="icon"
-                                                        variant="default"
-                                                        onClick={() => increaseQuantity(item._id)}
-                                                    >
-                                                        <FontAwesomeIcon icon={faPlus} />
-                                                    </Button>
-                                                    <Button
-                                                        className="h-8 w-8"
-                                                        disabled={item.quantity === 1}
-                                                        size="icon"
-                                                        variant="secondary"
-                                                        onClick={() => decreaseQuantity(item._id)}
-                                                    >
-                                                        <FontAwesomeIcon icon={faMinus} />
-                                                    </Button>
-                                                    <Button
-                                                        className="h-8 w-8"
-                                                        size="icon"
-                                                        variant="destructive"
-                                                        onClick={() => removeFromCart(item._id)}
-                                                    >
-                                                        <FontAwesomeIcon icon={faTrash} />
-                                                    </Button>
-                                                </div>
-                                            </li>
-                                        ))}
-                                    </ul>
-                                </div>
-                            )}
-
-                            <div className="mt-4 pt-3 border-t dark:border-gray-700">
-                                <div className="flex justify-between items-center mb-4">
-                                    <span className="text-gray-600 dark:text-gray-400">Total:</span>
-                                    <span className="font-bold text-lg text-gray-800 dark:text-white">
-                                        {calculateTotal()} €
-                                    </span>
-                                </div>
-
-                                <Button
-                                    className="w-full bg-green-600 hover:bg-green-700 text-white font-bold"
-                                    disabled={cartItems.length === 0}
-                                    onClick={handleCheckout}
+                <motion.div
+                    initial={{ scale: 0, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ 
+                        type: "spring", 
+                        stiffness: 200, 
+                        damping: 20,
+                        delay: 0.5 
+                    }}
+                    whileHover={{ scale: 1.1 }}
+                    whileTap={{ scale: 0.9 }}
+                >
+                    <Popover>
+                        <PopoverTrigger asChild>
+                            <Button
+                                className="relative bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white p-4 h-14 w-14 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl"
+                                variant="default"
+                            >
+                                <motion.div
+                                    animate={{ rotate: [0, 5, -5, 0] }}
+                                    transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 3 }}
                                 >
-                                    Passer au paiement
-                                </Button>
+                                    <FontAwesomeIcon className="text-xl" icon={faShoppingCart} />
+                                </motion.div>
+                                {calculateTotalItems() > 0 && (
+                                    <motion.div 
+                                        className="absolute -top-3 -right-3"
+                                        initial={{ scale: 0, opacity: 0 }}
+                                        animate={{ scale: 1, opacity: 1 }}
+                                        transition={{ 
+                                            type: "spring", 
+                                            stiffness: 300, 
+                                            damping: 15 
+                                        }}
+                                    >
+                                        <Badge
+                                            className="bg-red-600 hover:bg-red-600 text-white font-bold min-w-[24px] h-6 flex items-center justify-center rounded-full px-2 border-2 border-white dark:border-gray-900"
+                                        >
+                                            {calculateTotalItems()}
+                                        </Badge>
+                                    </motion.div>
+                                )}
+                            </Button>
+                        </PopoverTrigger>
+                        <PopoverContent align="end" className="w-[90vw] sm:w-[400px] p-0" sideOffset={5}>
+                            <div className="p-4 bg-white dark:bg-gray-800 rounded-lg">
+                                <h3 className="text-xl font-bold mb-4 text-center text-violet-600 dark:text-violet-400">
+                                    Votre Panier
+                                </h3>
+
+                                {cartItems.length === 0 ? (
+                                    <div className="text-center py-6">
+                                        <FontAwesomeIcon
+                                            className="text-4xl text-gray-400 dark:text-gray-600 mb-3"
+                                            icon={faShoppingCart}
+                                        />
+                                        <p className="text-gray-600 dark:text-gray-400">
+                                            Votre panier est vide
+                                        </p>
+                                    </div>
+                                ) : (
+                                    <div className="max-h-[60vh] overflow-y-auto">
+                                        <ul className="space-y-3">
+                                            {cartItems.map((item) => (
+                                                <li
+                                                    key={item._id}
+                                                    className="flex items-center gap-3 border-b dark:border-gray-700 pb-3"
+                                                >
+                                                    <img
+                                                        alt={item.title}
+                                                        className="w-16 h-16 object-cover rounded-md border border-gray-200 dark:border-gray-700"
+                                                        src={item.imageUrl}
+                                                    />
+                                                    <div className="flex-1 min-w-0">
+                                                        <p className="text-sm font-semibold text-gray-800 dark:text-white truncate">
+                                                            {item.title}
+                                                        </p>
+                                                        <p className="text-xs text-gray-500 dark:text-gray-400">
+                                                            {item.quantity} × {item.price.toFixed(2)} €
+                                                        </p>
+                                                    </div>
+                                                    <div className="flex items-center gap-1 flex-shrink-0">
+                                                        <Button
+                                                            className="h-8 w-8 bg-blue-500 hover:bg-blue-600 text-white"
+                                                            size="icon"
+                                                            variant="default"
+                                                            onClick={() => increaseQuantity(item._id)}
+                                                        >
+                                                            <FontAwesomeIcon icon={faPlus} />
+                                                        </Button>
+                                                        <Button
+                                                            className="h-8 w-8"
+                                                            disabled={item.quantity === 1}
+                                                            size="icon"
+                                                            variant="secondary"
+                                                            onClick={() => decreaseQuantity(item._id)}
+                                                        >
+                                                            <FontAwesomeIcon icon={faMinus} />
+                                                        </Button>
+                                                        <Button
+                                                            className="h-8 w-8"
+                                                            size="icon"
+                                                            variant="destructive"
+                                                            onClick={() => removeFromCart(item._id)}
+                                                        >
+                                                            <FontAwesomeIcon icon={faTrash} />
+                                                        </Button>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                )}
+
+                                <div className="mt-4 pt-3 border-t dark:border-gray-700">
+                                    <div className="flex justify-between items-center mb-4">
+                                        <span className="text-gray-600 dark:text-gray-400">Total:</span>
+                                        <span className="font-bold text-lg text-gray-800 dark:text-white">
+                                            {calculateTotal()} €
+                                        </span>
+                                    </div>
+
+                                    <Button
+                                        className="w-full bg-green-600 hover:bg-green-700 text-white font-bold"
+                                        disabled={cartItems.length === 0}
+                                        onClick={handleCheckout}
+                                    >
+                                        Passer au paiement
+                                    </Button>
+                                </div>
                             </div>
-                        </div>
-                    </PopoverContent>
-                </Popover>
+                        </PopoverContent>
+                    </Popover>
+                </motion.div>
             </div>
 
             {/* Alert pour connexion */}

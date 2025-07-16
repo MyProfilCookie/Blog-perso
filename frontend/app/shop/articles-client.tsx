@@ -86,14 +86,14 @@ export default function ArticlesClient() {
   }
 
   return (
-    <section className="min-h-screen px-6 py-12 lg:px-12 xl:px-20 bg-cream dark:bg-gray-900 transition-colors">
+    <section className="min-h-screen px-2 py-6 md:px-4 lg:px-6 bg-cream dark:bg-gray-900 transition-colors">
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="mb-12 text-center"
+        className="mb-8 md:mb-12 text-center"
         initial={{ opacity: 0, y: -20 }}
         transition={{ duration: 0.4 }}
       >
-        <h2 className="text-3xl font-bold text-gray-800 dark:text-white">
+        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
           Nos articles
         </h2>
         <p className="mt-2 text-gray-600 dark:text-gray-400">
@@ -101,62 +101,112 @@ export default function ArticlesClient() {
         </p>
       </motion.div>
 
-      <div className="max-w-7xl mx-auto">
-        <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="w-full">
+        <div className="grid grid-cols-1 gap-4 sm:gap-6 md:gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
           {articles.map((article, index) => (
             <motion.div
               key={article.productId || index}
-              animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
               className="h-full"
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.4, delay: index * 0.1 }}
-              whileHover={{ y: -5, transition: { duration: 0.2 } }}
+              initial={{ opacity: 0, y: 50, scale: 0.8 }}
+              transition={{ 
+                duration: 0.6, 
+                delay: index * 0.1,
+                type: "spring",
+                stiffness: 100,
+                damping: 15
+              }}
+              whileHover={{ 
+                y: -8, 
+                scale: 1.02,
+                transition: { 
+                  duration: 0.3,
+                  type: "spring",
+                  stiffness: 300
+                } 
+              }}
+              whileTap={{ scale: 0.98 }}
             >
-              <Card className="overflow-hidden bg-cream dark:bg-gray-800 border-transparent dark:border-gray-700 shadow-lg hover:shadow-xl transition-shadow duration-300 h-full flex flex-col">
-                <div className="relative">
+              <Card className="overflow-hidden bg-cream dark:bg-gray-800 border-transparent dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col group">
+                <motion.div 
+                  className="relative overflow-hidden"
+                  whileHover={{ scale: 1.05 }}
+                  transition={{ duration: 0.3 }}
+                >
                   <img
                     alt={article.title}
-                    className="object-cover object-center w-full h-52"
+                    className="object-cover object-center w-full h-64 md:h-72 lg:h-80 transition-transform duration-700 group-hover:scale-110"
                     src={article.imageUrl}
                   />
-                  <div className="absolute top-2 right-2">
-                    <Badge className="bg-amber-500 hover:bg-amber-600 px-3 py-1 text-base font-bold text-white">
+                  <motion.div 
+                    className="absolute top-3 right-3"
+                    initial={{ opacity: 0, scale: 0.5 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    transition={{ delay: 0.5 + index * 0.1, duration: 0.3 }}
+                  >
+                    <Badge className="bg-amber-500 hover:bg-amber-600 px-4 py-2 text-lg font-bold text-white shadow-lg">
                       {article.price} €
                     </Badge>
-                  </div>
-                </div>
+                  </motion.div>
+                </motion.div>
 
-                <CardHeader className="p-5 pb-0">
-                  <h3 className="mb-2 text-lg font-bold text-center text-gray-800 dark:text-white">
+                <CardHeader className="p-6 pb-0">
+                  <motion.h3 
+                    className="mb-3 text-xl md:text-2xl font-bold text-center text-gray-800 dark:text-white"
+                    whileHover={{ color: "#7c3aed" }}
+                    transition={{ duration: 0.3 }}
+                  >
                     {article.title}
-                  </h3>
+                  </motion.h3>
                 </CardHeader>
 
-                <CardContent className="p-5 pt-2 flex-grow">
-                  <p className="text-sm text-center text-gray-600 dark:text-gray-300 line-clamp-3">
+                <CardContent className="p-6 pt-2 flex-grow">
+                  <motion.p 
+                    className="text-base md:text-lg text-center text-gray-600 dark:text-gray-300 line-clamp-4"
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
+                  >
                     {article.description}
-                  </p>
+                  </motion.p>
                 </CardContent>
 
-                <CardFooter className="p-5 pt-0 flex flex-col space-y-3">
-                  <Button
-                    asChild
-                    className="w-full bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white"
-                    variant="default"
+                <CardFooter className="p-6 pt-0 flex flex-col space-y-4">
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400 }}
                   >
-                    <NextLink href={`/products/${article._id}`}>
-                      Voir cet article
-                    </NextLink>
-                  </Button>
+                    <Button
+                      asChild
+                      className="w-full bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white text-base md:text-lg py-3 transition-all duration-300 hover:shadow-lg"
+                      variant="default"
+                    >
+                      <NextLink href={`/products/${article._id}`}>
+                        Voir cet article
+                      </NextLink>
+                    </Button>
+                  </motion.div>
 
-                  <Button
-                    className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white"
-                    variant="default"
-                    onClick={() => addToCart(article)}
+                  <motion.div
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    transition={{ type: "spring", stiffness: 400 }}
                   >
-                    <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
-                    Ajouter au panier
-                  </Button>
+                    <Button
+                      className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white text-base md:text-lg py-3 transition-all duration-300 hover:shadow-lg"
+                      variant="default"
+                      onClick={() => addToCart(article)}
+                    >
+                      <motion.div
+                        animate={{ rotate: [0, 10, -10, 0] }}
+                        transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
+                      >
+                        <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
+                      </motion.div>
+                      Ajouter au panier
+                    </Button>
+                  </motion.div>
                 </CardFooter>
               </Card>
             </motion.div>

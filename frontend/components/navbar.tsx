@@ -35,9 +35,21 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "next-themes";
 
-import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
+import { 
+  SunFilledIcon, 
+  MoonFilledIcon, 
+  AutismLogo, 
+  AutiStudyMenuIcon,
+  AutiStudyBurgerIcon,
+  SimpleAutiStudyBurgerIcon,
+  PuzzleBurgerIcon,
+  VisibleBurgerIcon,
+  PendingOrdersIcon,
+  ShippedOrdersIcon,
+  DeliveredOrdersIcon,
+  CloseMenuIcon
+} from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { AutismLogo } from "@/components/icons";
 
 // Type definition for user
 type User = {
@@ -202,7 +214,11 @@ export const Navbar = () => {
   // Close menu when clicking outside
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
+      // Vérifier si le clic est sur le bouton du menu
+      const target = event.target as HTMLElement;
+      const isMenuButton = target.closest('button[aria-label="Toggle navigation"]');
+      
+      if (menuRef.current && !menuRef.current.contains(target) && !isMenuButton) {
         setIsMenuOpen(false);
       }
     }
@@ -215,6 +231,20 @@ export const Navbar = () => {
 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMenuOpen]);
+
+  // Close menu when navigating
+  useEffect(() => {
+    const handleRouteChange = () => {
+      setIsMenuOpen(false);
+    };
+
+    // Écouter les changements de route
+    window.addEventListener('popstate', handleRouteChange);
+    
+    return () => {
+      window.removeEventListener('popstate', handleRouteChange);
+    };
+  }, []);
 
   /**
    * Handle invalid token
@@ -841,14 +871,19 @@ export const Navbar = () => {
           </NextLink>
         </NavbarBrand>
 
-        {/* Bouton menu mobile */}
-        <NavbarMenuToggle
+        {/* Bouton menu mobile avec icône burger visible */}
+        <button
           aria-label="Toggle navigation"
-          className="lg:hidden"
+          className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <FontAwesomeIcon icon={faBars} />
-        </NavbarMenuToggle>
+          <VisibleBurgerIcon 
+            size={24} 
+            className={`text-blue-800 dark:text-white hover:text-blue-500 transition-colors duration-200 ${
+              isMenuOpen ? 'rotate-90' : ''
+            }`}
+          />
+        </button>
 
         {/* Conteneur pour centrer la navigation */}
         <div className="hidden lg:flex flex-grow justify-center">
@@ -976,21 +1011,13 @@ export const Navbar = () => {
                     Navigation
                   </p>
                   <button
-                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400"
+                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-all duration-200"
                     onClick={() => setIsMenuOpen(false)}
                   >
-                    <svg
-                      className="w-6 h-6"
-                      fill="none"
-                      stroke="currentColor"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth="2"
-                      viewBox="0 0 24 24"
-                    >
-                      <line x1="18" x2="6" y1="6" y2="18" />
-                      <line x1="6" x2="18" y1="6" y2="18" />
-                    </svg>
+                    <CloseMenuIcon 
+                      size={24} 
+                      className="text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400"
+                    />
                   </button>
                 </div>
 
@@ -1009,7 +1036,10 @@ export const Navbar = () => {
                         <div className="space-y-3">
                           <div className="flex items-center justify-between p-3 rounded-lg border-2 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                             <div className="flex items-center gap-3">
-                              <span className="text-xl">⏳</span>
+                              <PendingOrdersIcon 
+                                size={28} 
+                                className="text-yellow-600 dark:text-yellow-400"
+                              />
                               <div className="flex flex-col">
                                 <div className="font-medium text-yellow-600 dark:text-yellow-400">
                                   En cours
@@ -1026,7 +1056,10 @@ export const Navbar = () => {
 
                           <div className="flex items-center justify-between p-3 rounded-lg border-2 border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                             <div className="flex items-center gap-3">
-                              <span className="text-xl">🚚</span>
+                              <ShippedOrdersIcon 
+                                size={28} 
+                                className="text-blue-600 dark:text-blue-400"
+                              />
                               <div className="flex flex-col">
                                 <div className="font-medium text-blue-600 dark:text-blue-400">
                                   Envoyées
@@ -1043,7 +1076,10 @@ export const Navbar = () => {
 
                           <div className="flex items-center justify-between p-3 rounded-lg border-2 border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                             <div className="flex items-center gap-3">
-                              <span className="text-xl">✅</span>
+                              <DeliveredOrdersIcon 
+                                size={28} 
+                                className="text-green-600 dark:text-green-400"
+                              />
                               <div className="flex flex-col">
                                 <div className="font-medium text-green-600 dark:text-green-400">
                                   Livrées
