@@ -1005,11 +1005,8 @@ export const Navbar = () => {
               transition={{ duration: 0.4, ease: "easeInOut" }}
             >
               <div className="p-4 space-y-4">
-                {/* En-tête du menu */}
-                <div className="flex items-center justify-between pb-3 border-b-2 border-gray-200 dark:border-gray-700">
-                  <p className="font-bold text-lg text-blue-700 dark:text-blue-400">
-                    Navigation
-                  </p>
+                {/* Bouton de fermeture en haut à droite */}
+                <div className="flex justify-end">
                   <button
                     className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-all duration-200"
                     onClick={() => setIsMenuOpen(false)}
