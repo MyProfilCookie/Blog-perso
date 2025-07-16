@@ -254,7 +254,6 @@ export default function ProductPage() {
           </motion.div>
         </div>
       </motion.div>
-      <Footer />
     </section>
   );
 }

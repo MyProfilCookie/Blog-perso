@@ -993,37 +993,62 @@ export const Navbar = () => {
           </div>
         </div>
 
-        {/* Menu burger pour mobile amélioré avec des icônes */}
+        {/* Menu burger pour mobile avec animations améliorées */}
         <AnimatePresence>
           {isMenuOpen && (
             <motion.div
               ref={menuRef}
-              animate={{ height: "auto", opacity: 1, y: 0, scale: 1 }}
-              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-lg absolute top-full left-0 z-20 max-h-[80vh] overflow-y-auto rounded-b-lg border-t border-gray-200 dark:border-gray-700"
-              exit={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
-              initial={{ height: 0, opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.4, ease: "easeInOut" }}
+              animate={{ 
+                height: "auto", 
+                opacity: 1, 
+                y: 0, 
+                scale: 1,
+                rotateX: 0
+              }}
+              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-lg absolute top-full left-0 z-20 max-h-[80vh] overflow-y-auto rounded-b-lg border-t border-gray-200 dark:border-gray-700 backdrop-blur-sm"
+              exit={{ 
+                height: 0, 
+                opacity: 0, 
+                y: -20, 
+                scale: 0.9,
+                rotateX: -15
+              }}
+              initial={{ 
+                height: 0, 
+                opacity: 0, 
+                y: -20, 
+                scale: 0.9,
+                rotateX: -15
+              }}
+              transition={{ 
+                duration: 0.5, 
+                ease: [0.4, 0.0, 0.2, 1],
+                staggerChildren: 0.1
+              }}
             >
-              <div className="p-4 space-y-4">
-                {/* Bouton de fermeture en haut à droite */}
-                <div className="flex justify-end">
-                  <button
-                    className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-800 text-gray-500 dark:text-gray-400 transition-all duration-200"
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    <CloseMenuIcon 
-                      size={24} 
-                      className="text-gray-500 dark:text-gray-400 hover:text-red-500 dark:hover:text-red-400"
-                    />
-                  </button>
-                </div>
+              <motion.div 
+                className="p-4 space-y-4"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ delay: 0.2, duration: 0.3 }}
+              >
 
                 {/* Section utilisateur */}
                 {user && (
-                  <div className="space-y-4">
-                    <h3 className="text-md font-semibold text-gray-600 dark:text-gray-300 px-2">
+                  <motion.div 
+                    className="space-y-4"
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.3, duration: 0.4 }}
+                  >
+                    <motion.h3 
+                      className="text-md font-semibold text-gray-600 dark:text-gray-300 px-2"
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: 0.4, duration: 0.3 }}
+                    >
                       Mon compte
-                    </h3>
+                    </motion.h3>
                     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
                       <NextLink
                         className="block w-full"
@@ -1144,9 +1169,9 @@ export const Navbar = () => {
                         <span className="font-medium">Déconnexion</span>
                       </button>
                     </div>
-                  </div>
+                  </motion.div>
                 )}
-              </div>
+              </motion.div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -1158,30 +1183,7 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
 
-        {/* Bouton de forçage de mise à jour des commandes */}
-        {user && (
-          <NavbarItem className="flex items-center">
-            <button
-              aria-label="Rafraîchir les compteurs"
-              className="p-1 rounded-full text-gray-500 hover:text-blue-500 hover:bg-gray-100 dark:hover:bg-gray-700"
-              disabled={isLoadingOrders}
-              onClick={fetchOrderCount}
-            >
-              <FontAwesomeIcon icon={faSyncAlt} spin={isLoadingOrders} />
-            </button>
-          </NavbarItem>
-        )}
 
-        {/* Debug pour les compteurs */}
-        {user && process.env.NODE_ENV !== "production" && (
-          <NavbarItem className="hidden md:flex">
-            <div className="text-xs bg-gray-100 dark:bg-gray-800 p-1 rounded mx-1">
-              {isLoadingOrders
-                ? "..."
-                : `P:${orderCount.pending} S:${orderCount.shipped} T:${orderCount.total}`}
-            </div>
-          </NavbarItem>
-        )}
 
         {user && (
           <NavbarItem className="hidden md:flex">
@@ -1274,16 +1276,6 @@ export const Navbar = () => {
                     <span className="ml-2 hidden xl:inline dark:text-white">
                       {user?.pseudo || "Utilisateur"}
                     </span>
-
-                    {/* Badge combiné pour les commandes */}
-                    {(orderCount.pending > 0 || orderCount.shipped > 0) && (
-                      <Badge
-                        className="absolute -top-2 -right-2"
-                        color="danger"
-                      >
-                        {orderCount.total}
-                      </Badge>
-                    )}
                   </Button>
                 </DropdownTrigger>
                 <DropdownMenu>
