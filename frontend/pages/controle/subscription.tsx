@@ -722,7 +722,7 @@ const SubscriptionPage: React.FC = () => {
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="text-center">
                   <Shield className="h-12 w-12 text-green-500 dark:text-green-400 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
                     Paiement Sécurisé
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -732,7 +732,7 @@ const SubscriptionPage: React.FC = () => {
                 </div>
                 <div className="text-center">
                   <Heart className="h-12 w-12 text-red-500 dark:text-red-400 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
                     Annulation Libre
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -741,7 +741,7 @@ const SubscriptionPage: React.FC = () => {
                 </div>
                 <div className="text-center">
                   <Users className="h-12 w-12 text-blue-500 dark:text-blue-400 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-2">
                     Communauté Bienveillante
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
