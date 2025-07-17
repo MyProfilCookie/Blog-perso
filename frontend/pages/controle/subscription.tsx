@@ -452,9 +452,9 @@ const SubscriptionPage: React.FC = () => {
                     <span className="text-xl">⏰</span>
                     <p>
                       Prochain renouvellement :{" "}
-                      {new Date(
-                        subscriptionInfo.subscription.endDate!,
-                      ).toLocaleDateString()}
+                      {subscriptionInfo.subscription.endDate && subscriptionInfo.subscription.endDate !== "1970-01-01T00:00:00.000Z"
+                        ? new Date(subscriptionInfo.subscription.endDate).toLocaleDateString()
+                        : "31 décembre 3000"}
                     </p>
                   </div>
                 )}

@@ -855,7 +855,7 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar
-      className="dark:bg-gray-900 bg-white/70 backdrop-blur-sm font-sans"
+      className="dark:bg-gray-900 bg-white/70 backdrop-blur-sm font-sans relative"
       maxWidth="xl"
       position="sticky"
       style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
@@ -992,189 +992,6 @@ export const Navbar = () => {
             </ul>
           </div>
         </div>
-
-        {/* Menu burger pour mobile avec animations améliorées */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div
-              ref={menuRef}
-              animate={{ 
-                height: "auto", 
-                opacity: 1, 
-                y: 0, 
-                scale: 1,
-                rotateX: 0
-              }}
-              className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-lg absolute top-full left-0 z-20 max-h-[80vh] overflow-y-auto rounded-b-lg border-t border-gray-200 dark:border-gray-700 backdrop-blur-sm"
-              exit={{ 
-                height: 0, 
-                opacity: 0, 
-                y: -20, 
-                scale: 0.9,
-                rotateX: -15
-              }}
-              initial={{ 
-                height: 0, 
-                opacity: 0, 
-                y: -20, 
-                scale: 0.9,
-                rotateX: -15
-              }}
-              transition={{ 
-                duration: 0.5, 
-                ease: [0.4, 0.0, 0.2, 1],
-                staggerChildren: 0.1
-              }}
-            >
-              <motion.div 
-                className="p-4 space-y-4"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.2, duration: 0.3 }}
-              >
-
-                {/* Section utilisateur */}
-                {user && (
-                  <motion.div 
-                    className="space-y-4"
-                    initial={{ opacity: 0, y: 20 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: 0.3, duration: 0.4 }}
-                  >
-                    <motion.h3 
-                      className="text-md font-semibold text-gray-600 dark:text-gray-300 px-2"
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.4, duration: 0.3 }}
-                    >
-                      Mon compte
-                    </motion.h3>
-                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
-                      <NextLink
-                        className="block w-full"
-                        href="/orders"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        <div className="space-y-3">
-                          <div className="flex items-center justify-between p-3 rounded-lg border-2 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
-                            <div className="flex items-center gap-3">
-                              <PendingOrdersIcon 
-                                size={28} 
-                                className="text-yellow-600 dark:text-yellow-400"
-                              />
-                              <div className="flex flex-col">
-                                <div className="font-medium text-yellow-600 dark:text-yellow-400">
-                                  En cours
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">
-                                  Commandes en traitement
-                                </div>
-                              </div>
-                            </div>
-                            <span className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 min-w-[2rem] text-center">
-                              {orderCount.pending || 0}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center justify-between p-3 rounded-lg border-2 border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
-                            <div className="flex items-center gap-3">
-                              <ShippedOrdersIcon 
-                                size={28} 
-                                className="text-blue-600 dark:text-blue-400"
-                              />
-                              <div className="flex flex-col">
-                                <div className="font-medium text-blue-600 dark:text-blue-400">
-                                  Envoyées
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">
-                                  En cours de livraison
-                                </div>
-                              </div>
-                            </div>
-                            <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
-                              {orderCount.shipped || 0}
-                            </span>
-                          </div>
-
-                          <div className="flex items-center justify-between p-3 rounded-lg border-2 border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
-                            <div className="flex items-center gap-3">
-                              <DeliveredOrdersIcon 
-                                size={28} 
-                                className="text-green-600 dark:text-green-400"
-                              />
-                              <div className="flex flex-col">
-                                <div className="font-medium text-green-600 dark:text-green-400">
-                                  Livrées
-                                </div>
-                                <div className="text-xs text-gray-500 dark:text-gray-400">
-                                  Commandes terminées
-                                </div>
-                              </div>
-                            </div>
-                            <span className="text-lg font-semibold text-green-600 dark:text-green-400 min-w-[2rem] text-center">
-                              {orderCount.delivered || 0}
-                            </span>
-                          </div>
-                        </div>
-                      </NextLink>
-
-                      {/* Dashboard */}
-                      <NextLink
-                        className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
-                        href={
-                          user.role === "admin"
-                            ? "/admin/dashboard"
-                            : "/dashboard"
-                        }
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        <FontAwesomeIcon
-                          className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                          icon={
-                            user.role === "admin" ? faCrown : faTachometerAlt
-                          }
-                        />
-                        <span className="font-medium">
-                          {user.role === "admin"
-                            ? "Dashboard Admin"
-                            : "Dashboard"}
-                        </span>
-                      </NextLink>
-
-                      {/* Contrôle */}
-                      <NextLink
-                        className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
-                        href="/controle"
-                        onClick={() => setIsMenuOpen(false)}
-                      >
-                        <FontAwesomeIcon
-                          className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                          icon={faNewspaper}
-                        />
-                        <span className="font-medium">Contrôle</span>
-                      </NextLink>
-
-                      {/* Déconnexion */}
-                      <button
-                        className="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
-                        onClick={() => {
-                          setIsMenuOpen(false);
-                          handleLogout();
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                          icon={faSignOutAlt}
-                        />
-                        <span className="font-medium">Déconnexion</span>
-                      </button>
-                    </div>
-                  </motion.div>
-                )}
-              </motion.div>
-            </motion.div>
-          )}
-        </AnimatePresence>
       </NavbarContent>
 
       <NavbarContent className="sm:flex basis-1/5 sm:basis-full" justify="end">
@@ -1182,8 +999,6 @@ export const Navbar = () => {
         <NavbarItem className="flex lg:hidden">
           <ThemeSwitch />
         </NavbarItem>
-
-
 
         {user && (
           <NavbarItem className="hidden md:flex">
@@ -1481,6 +1296,263 @@ export const Navbar = () => {
           </>
         )}
       </NavbarContent>
+
+      {/* Menu burger pour mobile avec animations améliorées - DÉPLACÉ EN DEHORS DU NavbarContent */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div
+            ref={menuRef}
+            animate={{ 
+              height: "auto", 
+              opacity: 1, 
+              y: 0, 
+              scale: 1,
+              rotateX: 0
+            }}
+            className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-lg absolute top-full left-0 z-50 max-h-[80vh] overflow-y-auto rounded-b-lg border-t border-gray-200 dark:border-gray-700 backdrop-blur-sm"
+            exit={{ 
+              height: 0, 
+              opacity: 0, 
+              y: -20, 
+              scale: 0.9,
+              rotateX: -15
+            }}
+            initial={{ 
+              height: 0, 
+              opacity: 0, 
+              y: -20, 
+              scale: 0.9,
+              rotateX: -15
+            }}
+            transition={{ 
+              duration: 0.5, 
+              ease: [0.4, 0.0, 0.2, 1],
+              staggerChildren: 0.1
+            }}
+          >
+            <motion.div 
+              className="p-4 space-y-4"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ delay: 0.2, duration: 0.3 }}
+            >
+
+              {/* Section utilisateur */}
+              {user && (
+                <motion.div 
+                  className="space-y-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.4 }}
+                >
+                  <motion.h3 
+                    className="text-md font-semibold text-gray-600 dark:text-gray-300 px-2"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4, duration: 0.3 }}
+                  >
+                    Mon compte
+                  </motion.h3>
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
+                    <NextLink
+                      className="block w-full"
+                      href="/orders"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <div className="space-y-3">
+                        <div className="flex items-center justify-between p-3 rounded-lg border-2 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                          <div className="flex items-center gap-3">
+                            <PendingOrdersIcon 
+                              size={28} 
+                              className="text-yellow-600 dark:text-yellow-400"
+                            />
+                            <div className="flex flex-col">
+                              <div className="font-medium text-yellow-600 dark:text-yellow-400">
+                                En cours
+                              </div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">
+                                Commandes en traitement
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-lg font-semibold text-yellow-600 dark:text-yellow-400 min-w-[2rem] text-center">
+                            {orderCount.pending || 0}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-3 rounded-lg border-2 border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                          <div className="flex items-center gap-3">
+                            <ShippedOrdersIcon 
+                              size={28} 
+                              className="text-blue-600 dark:text-blue-400"
+                            />
+                            <div className="flex flex-col">
+                              <div className="font-medium text-blue-600 dark:text-blue-400">
+                                Envoyées
+                              </div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">
+                                En cours de livraison
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
+                            {orderCount.shipped || 0}
+                          </span>
+                        </div>
+
+                        <div className="flex items-center justify-between p-3 rounded-lg border-2 border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                          <div className="flex items-center gap-3">
+                            <DeliveredOrdersIcon 
+                              size={28} 
+                              className="text-green-600 dark:text-green-400"
+                            />
+                            <div className="flex flex-col">
+                              <div className="font-medium text-green-600 dark:text-green-400">
+                                Livrées
+                              </div>
+                              <div className="text-xs text-gray-500 dark:text-gray-400">
+                                Commandes terminées
+                              </div>
+                            </div>
+                          </div>
+                          <span className="text-lg font-semibold text-green-600 dark:text-green-400 min-w-[2rem] text-center">
+                            {orderCount.delivered || 0}
+                          </span>
+                        </div>
+                      </div>
+                    </NextLink>
+
+                    {/* Dashboard */}
+                    <NextLink
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      href={
+                        user.role === "admin"
+                          ? "/admin/dashboard"
+                          : "/dashboard"
+                      }
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <FontAwesomeIcon
+                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        icon={
+                          user.role === "admin" ? faCrown : faTachometerAlt
+                        }
+                      />
+                      <span className="font-medium">
+                        {user.role === "admin"
+                          ? "Dashboard Admin"
+                          : "Dashboard"}
+                      </span>
+                    </NextLink>
+
+                    {/* Contrôle */}
+                    <NextLink
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      href="/controle"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <FontAwesomeIcon
+                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        icon={faNewspaper}
+                      />
+                      <span className="font-medium">Contrôle</span>
+                    </NextLink>
+
+                    {/* Déconnexion */}
+                    <button
+                      className="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      onClick={() => {
+                        setIsMenuOpen(false);
+                        handleLogout();
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        icon={faSignOutAlt}
+                      />
+                      <span className="font-medium">Déconnexion</span>
+                    </button>
+                  </div>
+                </motion.div>
+              )}
+
+              {/* Navigation mobile pour les utilisateurs non connectés */}
+              {!user && (
+                <motion.div 
+                  className="space-y-4"
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.3, duration: 0.4 }}
+                >
+                  <motion.h3 
+                    className="text-md font-semibold text-gray-600 dark:text-gray-300 px-2"
+                    initial={{ opacity: 0, x: -20 }}
+                    animate={{ opacity: 1, x: 0 }}
+                    transition={{ delay: 0.4, duration: 0.3 }}
+                  >
+                    Navigation
+                  </motion.h3>
+                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
+                    <NextLink
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      href="/"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span className="text-xl mr-3">🏠</span>
+                      <span className="font-medium">Accueil</span>
+                    </NextLink>
+                    
+                    <NextLink
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      href="/about"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span className="text-xl mr-3">ℹ️</span>
+                      <span className="font-medium">À propos</span>
+                    </NextLink>
+                    
+                    <NextLink
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      href="/articles"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span className="text-xl mr-3">📚</span>
+                      <span className="font-medium">Articles</span>
+                    </NextLink>
+                    
+                    <NextLink
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      href="/controle"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span className="text-xl mr-3">🎮</span>
+                      <span className="font-medium">Contrôle</span>
+                    </NextLink>
+                    
+                    <NextLink
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      href="/shop"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span className="text-xl mr-3">🛒</span>
+                      <span className="font-medium">Shop</span>
+                    </NextLink>
+                    
+                    <NextLink
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      href="/contact"
+                      onClick={() => setIsMenuOpen(false)}
+                    >
+                      <span className="text-xl mr-3">📞</span>
+                      <span className="font-medium">Contact</span>
+                    </NextLink>
+                  </div>
+                </motion.div>
+              )}
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </NextUINavbar>
   );
 };
