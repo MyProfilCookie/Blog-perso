@@ -1223,9 +1223,14 @@ export const Navbar = () => {
                           key="light"
                           textValue="Mode clair"
                           onClick={() => {
+                            // Nettoyer le localStorage du mode automatique
+                            localStorage.removeItem("themeMode");
+                            localStorage.removeItem("autoModeHours");
+                            
+                            // Appliquer le mode clair
                             document.documentElement.classList.remove("dark");
                             localStorage.setItem("theme", "light");
-                            localStorage.setItem("themeMode", "manual");
+                            setTheme("light");
                             setAvatarColorIndex((prev) => prev);
                           }}
                         >
@@ -1241,9 +1246,14 @@ export const Navbar = () => {
                           key="dark"
                           textValue="Mode sombre"
                           onClick={() => {
+                            // Nettoyer le localStorage du mode automatique
+                            localStorage.removeItem("themeMode");
+                            localStorage.removeItem("autoModeHours");
+                            
+                            // Appliquer le mode sombre
                             document.documentElement.classList.add("dark");
                             localStorage.setItem("theme", "dark");
-                            localStorage.setItem("themeMode", "manual");
+                            setTheme("dark");
                             setAvatarColorIndex((prev) => prev);
                           }}
                         >
@@ -1259,18 +1269,25 @@ export const Navbar = () => {
                           key="auto"
                           textValue="Mode automatique"
                           onClick={() => {
+                            // Récupérer les heures sauvegardées ou utiliser les valeurs par défaut
+                            const savedHours = localStorage.getItem("autoModeHours");
+                            const autoModeHours = savedHours ? JSON.parse(savedHours) : { start: 20, end: 7 };
+                            
                             localStorage.setItem("themeMode", "auto");
-                            // Apply theme based on current time
+                            localStorage.setItem("autoModeHours", JSON.stringify(autoModeHours));
+                            
+                            // Appliquer le thème basé sur l'heure actuelle
                             const currentHour = new Date().getHours();
-                            const isDayTime =
-                              currentHour >= 6 && currentHour < 18;
+                            const shouldBeDark = currentHour >= autoModeHours.start || currentHour < autoModeHours.end;
 
-                            if (isDayTime) {
-                              document.documentElement.classList.remove("dark");
-                              localStorage.setItem("theme", "light");
-                            } else {
+                            if (shouldBeDark) {
                               document.documentElement.classList.add("dark");
                               localStorage.setItem("theme", "dark");
+                              setTheme("dark");
+                            } else {
+                              document.documentElement.classList.remove("dark");
+                              localStorage.setItem("theme", "light");
+                              setTheme("light");
                             }
                             setAvatarColorIndex((prev) => prev);
                           }}

@@ -1,10 +1,22 @@
+/* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-console */
 "use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
 import { motion } from "framer-motion";
-import { Loader2 } from "lucide-react";
+import {
+  Loader2,
+  Heart,
+  Star,
+  Users,
+  Sparkles,
+  Shield,
+  Gift,
+  Crown,
+  CheckCircle,
+  ArrowRight,
+} from "lucide-react";
 
 import { useAuth } from "@/context/AuthContext";
 import { useAuthenticatedApi } from "@/hooks/useAuthenticatedApi";
@@ -83,14 +95,17 @@ const SubscriptionPage: React.FC = () => {
         localStorage.removeItem("serInfo");
         localStorage.removeItem("user");
         router.push("/users/login");
+
         return;
       }
 
       // Vérifier si l'utilisateur est déjà sur la page de login
       const isLoginPage = window.location.pathname === "/users/login";
+
       if (isLoginPage) {
         setSubscriptionInfo(null);
         setLoading(false);
+
         return;
       }
 
@@ -104,6 +119,7 @@ const SubscriptionPage: React.FC = () => {
           if (!payload.exp) return true;
 
           const currentTime = Math.floor(Date.now() / 1000);
+
           return payload.exp < currentTime;
         } catch (error) {
           return true;
@@ -139,6 +155,7 @@ const SubscriptionPage: React.FC = () => {
                 }
 
                 await fetchSubscriptionInfo();
+
                 return;
               }
             }
@@ -158,6 +175,7 @@ const SubscriptionPage: React.FC = () => {
         localStorage.removeItem("user");
         setLoading(false);
         router.push("/users/login");
+
         return;
       }
 
@@ -218,11 +236,14 @@ const SubscriptionPage: React.FC = () => {
   }
 
   const fetchSubscriptionInfo = async () => {
-    const token = localStorage.getItem("userToken") || localStorage.getItem("accessToken");
+    const token =
+      localStorage.getItem("userToken") || localStorage.getItem("accessToken");
+
     if (!token) {
       setError("Session expirée. Veuillez vous reconnecter.");
       setSubscriptionInfo(null);
       router.push("/users/login");
+
       return;
     }
 
@@ -260,14 +281,14 @@ const SubscriptionPage: React.FC = () => {
       if (status === 401) {
         setError("Session expirée. Veuillez vous reconnecter.");
         setSubscriptionInfo(null);
-        
+
         // Nettoyer le stockage local
         localStorage.removeItem("userToken");
         localStorage.removeItem("accessToken");
         localStorage.removeItem("refreshToken");
         localStorage.removeItem("userRole");
         localStorage.removeItem("user");
-        
+
         // Éviter les redirections en boucle
         if (window.location.pathname !== "/users/login") {
           setTimeout(() => {
@@ -332,32 +353,41 @@ const SubscriptionPage: React.FC = () => {
 
   const features = {
     free: [
-      "3 exercices par jour",
-      "Statistiques basiques",
-      "Accès aux corrections",
-      "Support par email",
+      "3 exercices par jour pour commencer en douceur",
+      "Accès aux corrections détaillées",
+      "Statistiques de progression basiques",
+      "Support communautaire bienveillant",
+      "Ressources éducatives adaptées",
     ],
     premium: [
-      "Exercices illimités",
-      "Statistiques détaillées",
-      "Historique complet",
-      "Export des données",
-      "Support prioritaire",
+      "Exercices illimités pour un apprentissage sans limites",
+      "Statistiques détaillées et personnalisées",
+      "Historique complet de progression",
+      "Export des données pour le suivi",
+      "Support prioritaire et personnalisé",
       "Accès anticipé aux nouvelles fonctionnalités",
+      "Contenu exclusif et avancé",
+      "Accompagnement personnalisé",
     ],
   };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-cream dark:bg-gray-900">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
         <motion.div
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
           initial={{ opacity: 0, scale: 0.9 }}
         >
-          <Loader2 className="h-8 w-8 animate-spin text-primary" />
-          <p className="mt-4 text-muted-foreground">
-            Chargement de vos options d&rsquo;abonnement...
+          <div className="relative">
+            <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
+            <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-purple-400 animate-pulse" />
+          </div>
+          <p className="mt-6 text-lg text-gray-600 dark:text-gray-300 font-medium">
+            Préparation de votre espace d'apprentissage...
+          </p>
+          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+            Nous adaptons tout spécialement pour vous
           </p>
         </motion.div>
       </div>
@@ -366,26 +396,32 @@ const SubscriptionPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-cream p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 p-4">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
           initial={{ opacity: 0, y: 20 }}
         >
-          <Card className="border-destructive bg-card">
-            <CardHeader>
-              <CardTitle className="text-destructive">⚠️ Erreur</CardTitle>
+          <Card className="border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800">
+            <CardHeader className="text-center">
+              <div className="mx-auto mb-4 p-3 bg-red-100 dark:bg-red-800/30 rounded-full w-fit">
+                <Heart className="h-8 w-8 text-red-500" />
+              </div>
+              <CardTitle className="text-red-700 dark:text-red-300">
+                Oups ! Une petite difficulté
+              </CardTitle>
             </CardHeader>
             <CardContent>
-              <p className="text-destructive">{error}</p>
+              <p className="text-red-600 dark:text-red-400 text-center">
+                {error}
+              </p>
             </CardContent>
             <CardFooter>
               <Button
-                className="w-full"
-                variant="destructive"
+                className="w-full bg-red-500 hover:bg-red-600 text-white"
                 onClick={() => window.location.reload()}
               >
-                Réessayer
+                Réessayer avec bienveillance
               </Button>
             </CardFooter>
           </Card>
@@ -395,47 +431,80 @@ const SubscriptionPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
+        {/* Header avec philosophie du site */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="flex justify-between items-center mb-12"
+          className="text-center mb-12"
           initial={{ opacity: 0, y: -20 }}
         >
           <BackButton />
-          <h1 className="text-4xl font-bold text-foreground text-center">
-            Choisissez votre plan
-          </h1>
-          <div className="w-[100px]" />
+          <div className="mt-8">
+            <motion.div
+              animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.05, 1] }}
+              className="inline-flex items-center gap-2 mb-4"
+              transition={{ duration: 2, repeat: Infinity }}
+            >
+              <Sparkles className="h-8 w-8 text-purple-500" />
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+                Choisissez votre chemin d'apprentissage
+              </h1>
+              <Sparkles className="h-8 w-8 text-purple-500" />
+            </motion.div>
+            <p className="text-xl text-gray-600 dark:text-gray-300 mt-4 max-w-3xl mx-auto">
+              Chez AutiStudy, nous croyons que chaque enfant mérite un
+              apprentissage adapté à ses besoins. Choisissez le plan qui
+              correspond le mieux à votre situation familiale.
+            </p>
+            <div className="flex justify-center items-center gap-4 mt-6">
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Heart className="h-4 w-4 text-red-400" />
+                <span>Bienveillance</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Users className="h-4 w-4 text-blue-400" />
+                <span>Inclusion</span>
+              </div>
+              <div className="flex items-center gap-2 text-sm text-gray-500">
+                <Star className="h-4 w-4 text-yellow-400" />
+                <span>Adaptation</span>
+              </div>
+            </div>
+          </div>
         </motion.div>
 
+        {/* Statut actuel de l'abonnement */}
         {subscriptionInfo && (
           <motion.div
             animate={{ opacity: 1, y: 0 }}
             className="mb-12"
             initial={{ opacity: 0, y: 20 }}
           >
-            <Card className="bg-card">
-              <CardContent className="p-6">
+            <Card className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 border-2 border-blue-200 dark:border-blue-800">
+              <CardContent className="p-8">
                 <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
-                    <span className="text-2xl">
-                      {subscriptionInfo.subscription.type === "premium"
-                        ? "👑"
-                        : "⭐"}
-                    </span>
+                  <div className="flex items-center gap-6">
+                    <div className="p-4 bg-white dark:bg-gray-800 rounded-full shadow-lg">
+                      {subscriptionInfo.subscription.type === "premium" ? (
+                        <Crown className="h-8 w-8 text-yellow-500" />
+                      ) : (
+                        <Heart className="h-8 w-8 text-blue-500" />
+                      )}
+                    </div>
                     <div>
-                      <CardTitle className="text-xl text-foreground mb-1">
-                        Votre abonnement actuel
+                      <CardTitle className="text-2xl text-gray-800 dark:text-gray-200 mb-2">
+                        Votre accompagnement actuel
                       </CardTitle>
-                      <CardDescription>
+                      <CardDescription className="text-lg">
                         {subscriptionInfo.subscription.type === "premium"
-                          ? "Premium"
-                          : "Gratuit"}
+                          ? "Vous bénéficiez de notre accompagnement Premium"
+                          : "Vous utilisez notre version d'essai bienveillante"}
                       </CardDescription>
                     </div>
                   </div>
                   <Badge
+                    className="text-lg px-4 py-2"
                     variant={
                       subscriptionInfo.subscription.type === "premium"
                         ? "default"
@@ -448,14 +517,24 @@ const SubscriptionPage: React.FC = () => {
                   </Badge>
                 </div>
                 {subscriptionInfo.subscription.type === "premium" && (
-                  <div className="mt-4 text-sm text-muted-foreground flex items-center gap-2">
-                    <span className="text-xl">⏰</span>
-                    <p>
-                      Prochain renouvellement :{" "}
-                      {subscriptionInfo.subscription.endDate && subscriptionInfo.subscription.endDate !== "1970-01-01T00:00:00.000Z"
-                        ? new Date(subscriptionInfo.subscription.endDate).toLocaleDateString()
-                        : "31 décembre 3000"}
-                    </p>
+                  <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg">
+                    <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
+                      <Gift className="h-5 w-5 text-purple-500" />
+                      <p>
+                        Prochain renouvellement :{" "}
+                        {subscriptionInfo.subscription.endDate &&
+                        subscriptionInfo.subscription.endDate !==
+                          "1970-01-01T00:00:00.000Z"
+                          ? new Date(
+                              subscriptionInfo.subscription.endDate,
+                            ).toLocaleDateString("fr-FR", {
+                              year: "numeric",
+                              month: "long",
+                              day: "numeric",
+                            })
+                          : "31 décembre 3000"}
+                      </p>
+                    </div>
                   </div>
                 )}
               </CardContent>
@@ -463,6 +542,7 @@ const SubscriptionPage: React.FC = () => {
           </motion.div>
         )}
 
+        {/* Message spécial pour les administrateurs */}
         {subscriptionInfo?.role === "admin" ? (
           <motion.div
             animate={{ opacity: 1, y: 0 }}
@@ -470,41 +550,49 @@ const SubscriptionPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="bg-card border-primary">
-              <CardContent className="p-6">
-                <div className="flex items-center justify-center gap-4">
-                  <span className="text-2xl">👑</span>
-                  <CardTitle className="text-xl text-foreground">
+            <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 border-2 border-yellow-200 dark:border-yellow-800">
+              <CardContent className="p-8">
+                <div className="flex items-center justify-center gap-4 mb-4">
+                  <Crown className="h-10 w-10 text-yellow-600" />
+                  <CardTitle className="text-2xl text-gray-800 dark:text-gray-200">
                     Accès Premium Administrateur
                   </CardTitle>
                 </div>
-                <p className="mt-4 text-muted-foreground">
-                  En tant qu&apos;administrateur, vous avez automatiquement
-                  accès à toutes les fonctionnalités Premium.
+                <p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+                  En tant qu'administrateur de notre communauté bienveillante,
+                  vous avez automatiquement accès à toutes les fonctionnalités
+                  Premium pour accompagner au mieux les familles.
                 </p>
               </CardContent>
             </Card>
           </motion.div>
         ) : (
+          /* Plans d'abonnement */
           <div className="grid md:grid-cols-2 gap-8 mb-12">
-            {/* Plan Gratuit */}
+            {/* Plan Gratuit - Bienveillant */}
             <motion.div
               animate={{ opacity: 1, x: 0 }}
               initial={{ opacity: 0, x: -20 }}
               transition={{ duration: 0.3 }}
               whileHover={{ scale: 1.02 }}
             >
-              <Card className="bg-card">
-                <CardHeader>
-                  <CardTitle className="text-3xl text-foreground text-center">
-                    Gratuit
+              <Card className="bg-white dark:bg-gray-800 border-2 border-blue-200 dark:border-blue-700 shadow-xl">
+                <CardHeader className="text-center pb-4">
+                  <div className="mx-auto mb-4 p-4 bg-blue-100 dark:bg-blue-900/30 rounded-full w-fit">
+                    <Heart className="h-8 w-8 text-blue-600" />
+                  </div>
+                  <CardTitle className="text-3xl text-gray-800 dark:text-gray-200">
+                    Découverte Bienveillante
                   </CardTitle>
-                  <CardDescription className="text-4xl font-bold text-center">
+                  <CardDescription className="text-2xl font-bold text-blue-600 mt-2">
                     0€
-                    <span className="text-lg font-normal text-muted-foreground">
-                      /mois
+                    <span className="text-lg font-normal text-gray-500 ml-2">
+                      pour toujours
                     </span>
                   </CardDescription>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Parfait pour commencer votre voyage d'apprentissage
+                  </p>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-4">
@@ -512,49 +600,71 @@ const SubscriptionPage: React.FC = () => {
                       <motion.li
                         key={index}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center p-3 rounded-lg bg-muted text-foreground"
+                        className="flex items-start gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20"
                         initial={{ opacity: 0, x: -20 }}
                         transition={{ delay: index * 0.1 }}
                       >
-                        <span className="mr-3">✓</span>
-                        <span>{feature}</span>
+                        <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {feature}
+                        </span>
                       </motion.li>
                     ))}
                   </ul>
                 </CardContent>
                 <CardFooter>
                   <Button
-                    className="w-full"
+                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3"
                     disabled={subscriptionInfo?.subscription.type === "free"}
-                    variant="outline"
+                    variant={
+                      subscriptionInfo?.subscription.type === "free"
+                        ? "outline"
+                        : "default"
+                    }
                   >
-                    Plan actuel
+                    {subscriptionInfo?.subscription.type === "free" ? (
+                      <>
+                        <CheckCircle className="mr-2 h-4 w-4" />
+                        Plan actuel
+                      </>
+                    ) : (
+                      "Plan actuel"
+                    )}
                   </Button>
                 </CardFooter>
               </Card>
             </motion.div>
 
-            {/* Plan Premium */}
+            {/* Plan Premium - Accompagnement complet */}
             <motion.div
               animate={{ opacity: 1, x: 0 }}
               initial={{ opacity: 0, x: 20 }}
               transition={{ duration: 0.3 }}
               whileHover={{ scale: 1.02 }}
             >
-              <Card className="bg-card relative">
-                <div className="absolute -top-2 right-4">
-                  <Badge variant="default">Recommandé</Badge>
+              <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-300 dark:border-purple-600 shadow-xl relative">
+                <div className="absolute -top-3 right-6">
+                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1">
+                    Recommandé par les familles
+                  </Badge>
                 </div>
-                <CardHeader>
-                  <CardTitle className="text-3xl text-foreground text-center">
-                    Premium
+                <CardHeader className="text-center pb-4">
+                  <div className="mx-auto mb-4 p-4 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-full w-fit">
+                    <Crown className="h-8 w-8 text-purple-600" />
+                  </div>
+                  <CardTitle className="text-3xl text-gray-800 dark:text-gray-200">
+                    Accompagnement Complet
                   </CardTitle>
-                  <CardDescription className="text-4xl font-bold text-center">
+                  <CardDescription className="text-2xl font-bold text-purple-600 mt-2">
                     5€
-                    <span className="text-lg font-normal text-muted-foreground">
-                      /mois
+                    <span className="text-lg font-normal text-gray-500 ml-2">
+                      par mois
                     </span>
                   </CardDescription>
+                  <p className="text-sm text-gray-500 mt-2">
+                    Pour un apprentissage sans limites et un soutien
+                    personnalisé
+                  </p>
                 </CardHeader>
                 <CardContent>
                   <ul className="space-y-4">
@@ -562,28 +672,38 @@ const SubscriptionPage: React.FC = () => {
                       <motion.li
                         key={index}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex items-center p-3 rounded-lg bg-muted text-foreground"
+                        className="flex items-start gap-3 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm"
                         initial={{ opacity: 0, x: 20 }}
                         transition={{ delay: index * 0.1 }}
                       >
-                        <span className="mr-3">✓</span>
-                        <span>{feature}</span>
+                        <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700 dark:text-gray-300">
+                          {feature}
+                        </span>
                       </motion.li>
                     ))}
                   </ul>
                 </CardContent>
                 <CardFooter>
                   <Button
-                    className="w-full"
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-3"
                     disabled={subscriptionInfo?.subscription.type === "premium"}
                     onClick={handleSubscribe}
                   >
                     {processingPayment && (
                       <Loader2 className="mr-2 h-4 w-4 animate-spin" />
                     )}
-                    {subscriptionInfo?.subscription.type === "premium"
-                      ? "Plan actuel"
-                      : "Passer à Premium"}
+                    {subscriptionInfo?.subscription.type === "premium" ? (
+                      <>
+                        <CheckCircle className="mr-2 h-4 w-4" />
+                        Plan actuel
+                      </>
+                    ) : (
+                      <>
+                        Commencer l'accompagnement
+                        <ArrowRight className="ml-2 h-4 w-4" />
+                      </>
+                    )}
                   </Button>
                 </CardFooter>
               </Card>
@@ -591,20 +711,81 @@ const SubscriptionPage: React.FC = () => {
           </div>
         )}
 
+        {/* Section valeurs et engagement */}
+        <motion.div
+          animate={{ opacity: 1, y: 0 }}
+          className="text-center mb-12"
+          initial={{ opacity: 0, y: 20 }}
+        >
+          <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-2 border-green-200 dark:border-green-700">
+            <CardContent className="p-8">
+              <div className="grid md:grid-cols-3 gap-6">
+                <div className="text-center">
+                  <Shield className="h-12 w-12 text-green-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                    Paiement Sécurisé
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    Vos données sont protégées par Stripe, leader mondial du
+                    paiement en ligne
+                  </p>
+                </div>
+                <div className="text-center">
+                  <Heart className="h-12 w-12 text-red-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                    Annulation Libre
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    Arrêtez quand vous voulez, sans engagement ni frais cachés
+                  </p>
+                </div>
+                <div className="text-center">
+                  <Users className="h-12 w-12 text-blue-500 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                    Communauté Bienveillante
+                  </h3>
+                  <p className="text-gray-600 dark:text-gray-300 text-sm">
+                    Rejoignez une communauté de familles qui se soutiennent
+                    mutuellement
+                  </p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Appel à l'action final */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="text-center"
           initial={{ opacity: 0, y: 20 }}
         >
-          <p className="text-muted-foreground">
-            🔒 Paiement sécurisé par Stripe • Annulation à tout moment
-          </p>
-          <p className="mt-4 text-muted-foreground">
-            Une question ?{" "}
-            <Button variant="link" onClick={() => router.push("/contact")}>
-              Contactez-nous
-            </Button>
-          </p>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border-2 border-purple-200 dark:border-purple-700">
+            <Sparkles className="h-12 w-12 text-purple-500 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+              Une question ? Nous sommes là pour vous accompagner
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
+              Notre équipe familiale est disponible pour répondre à toutes vos
+              questions et vous guider dans le choix du plan le plus adapté à
+              vos besoins.
+            </p>
+            <div className="flex flex-col sm:flex-row gap-4 justify-center">
+              <Button
+                className="border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20"
+                variant="outline"
+                onClick={() => router.push("/contact")}
+              >
+                Nous contacter
+              </Button>
+              <Button
+                className="bg-purple-500 hover:bg-purple-600 text-white"
+                onClick={() => router.push("/faq")}
+              >
+                Voir les questions fréquentes
+              </Button>
+            </div>
+          </div>
         </motion.div>
       </div>
     </div>

@@ -26,7 +26,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     if (typeof window !== 'undefined') {
       return localStorage.getItem("themeMode") === "auto";
     }
-    return true;
+    return false;
   });
   const [autoModeHours, setAutoModeHours] = useState(() => {
     if (typeof window !== 'undefined') {
@@ -58,25 +58,46 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     return () => clearInterval(intervalId);
   }, [isAutoMode, theme, setTheme, autoModeHours]);
 
+  // Synchroniser l'état du mode automatique avec le localStorage
+  useEffect(() => {
+    if (mounted) {
+      const savedThemeMode = localStorage.getItem("themeMode");
+      setIsAutoMode(savedThemeMode === "auto");
+    }
+  }, [mounted]);
+
   const onThemeChange = () => {
     if (isAutoMode) return;
     const newTheme = isDarkMode ? "light" : "dark";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
-    localStorage.setItem("themeMode", "manual");
+    // Nettoyer le localStorage du mode automatique
+    localStorage.removeItem("themeMode");
+    localStorage.removeItem("autoModeHours");
   };
 
   const toggleAutoMode = () => {
     const newAutoMode = !isAutoMode;
     setIsAutoMode(newAutoMode);
-    localStorage.setItem("themeMode", newAutoMode ? "auto" : "manual");
-
+    
     if (newAutoMode) {
+      // Activer le mode automatique
+      localStorage.setItem("themeMode", "auto");
+      localStorage.setItem("autoModeHours", JSON.stringify(autoModeHours));
+      
       const currentHour = new Date().getHours();
       const shouldBeDark = currentHour >= autoModeHours.start || currentHour < autoModeHours.end;
       const newTheme = shouldBeDark ? "dark" : "light";
       setTheme(newTheme);
       localStorage.setItem("theme", newTheme);
+    } else {
+      // Désactiver le mode automatique et nettoyer le localStorage
+      localStorage.removeItem("themeMode");
+      localStorage.removeItem("autoModeHours");
+      
+      // Garder le thème actuel mais en mode manuel
+      const currentTheme = theme === "dark" ? "dark" : "light";
+      localStorage.setItem("theme", currentTheme);
     }
   };
 
