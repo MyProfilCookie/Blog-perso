@@ -373,17 +373,17 @@ const SubscriptionPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800">
+      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
         <motion.div
           animate={{ opacity: 1, scale: 1 }}
           className="text-center"
           initial={{ opacity: 0, scale: 0.9 }}
         >
           <div className="relative">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-500" />
-            <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-purple-400 animate-pulse" />
+            <Loader2 className="h-12 w-12 animate-spin text-blue-500 dark:text-blue-400" />
+            <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-purple-400 dark:text-purple-300 animate-pulse" />
           </div>
-          <p className="mt-6 text-lg text-gray-600 dark:text-gray-300 font-medium">
+          <p className="mt-6 text-lg text-gray-600 dark:text-gray-200 font-medium">
             Préparation de votre espace d'apprentissage...
           </p>
           <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
@@ -396,16 +396,16 @@ const SubscriptionPage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-900 dark:to-gray-800 p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800 p-4">
         <motion.div
           animate={{ opacity: 1, y: 0 }}
           className="w-full max-w-md"
           initial={{ opacity: 0, y: 20 }}
         >
-          <Card className="border-red-200 bg-red-50 dark:bg-red-900/20 dark:border-red-800">
+          <Card className="border-red-200 bg-red-50 dark:bg-red-950/50 dark:border-red-800 shadow-xl">
             <CardHeader className="text-center">
-              <div className="mx-auto mb-4 p-3 bg-red-100 dark:bg-red-800/30 rounded-full w-fit">
-                <Heart className="h-8 w-8 text-red-500" />
+              <div className="mx-auto mb-4 p-3 bg-red-100 dark:bg-red-900/50 rounded-full w-fit border border-red-200 dark:border-red-700">
+                <Heart className="h-8 w-8 text-red-500 dark:text-red-400" />
               </div>
               <CardTitle className="text-red-700 dark:text-red-300">
                 Oups ! Une petite difficulté
@@ -418,7 +418,7 @@ const SubscriptionPage: React.FC = () => {
             </CardContent>
             <CardFooter>
               <Button
-                className="w-full bg-red-500 hover:bg-red-600 text-white"
+                className="w-full bg-red-500 hover:bg-red-600 dark:bg-red-600 dark:hover:bg-red-700 text-white"
                 onClick={() => window.location.reload()}
               >
                 Réessayer avec bienveillance
@@ -431,7 +431,7 @@ const SubscriptionPage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 py-8 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800 py-8 px-4 sm:px-6 lg:px-8">
       <div className="max-w-7xl mx-auto">
         {/* Header avec philosophie du site */}
         <motion.div
@@ -446,28 +446,28 @@ const SubscriptionPage: React.FC = () => {
               className="inline-flex items-center gap-2 mb-4"
               transition={{ duration: 2, repeat: Infinity }}
             >
-              <Sparkles className="h-8 w-8 text-purple-500" />
-              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 bg-clip-text text-transparent">
+              <Sparkles className="h-8 w-8 text-purple-500 dark:text-purple-400" />
+              <h1 className="text-4xl md:text-5xl font-bold bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 bg-clip-text text-transparent">
                 Choisissez votre chemin d'apprentissage
               </h1>
-              <Sparkles className="h-8 w-8 text-purple-500" />
+              <Sparkles className="h-8 w-8 text-purple-500 dark:text-purple-400" />
             </motion.div>
-            <p className="text-xl text-gray-600 dark:text-gray-300 mt-4 max-w-3xl mx-auto">
+            <p className="text-xl text-gray-700 dark:text-gray-200 mt-4 max-w-3xl mx-auto">
               Chez AutiStudy, nous croyons que chaque enfant mérite un
               apprentissage adapté à ses besoins. Choisissez le plan qui
               correspond le mieux à votre situation familiale.
             </p>
             <div className="flex justify-center items-center gap-4 mt-6">
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <Heart className="h-4 w-4 text-red-400" />
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                <Heart className="h-4 w-4 text-red-500 dark:text-red-400" />
                 <span>Bienveillance</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <Users className="h-4 w-4 text-blue-400" />
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                <Users className="h-4 w-4 text-blue-500 dark:text-blue-400" />
                 <span>Inclusion</span>
               </div>
-              <div className="flex items-center gap-2 text-sm text-gray-500">
-                <Star className="h-4 w-4 text-yellow-400" />
+              <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-300">
+                <Star className="h-4 w-4 text-yellow-500 dark:text-yellow-400" />
                 <span>Adaptation</span>
               </div>
             </div>
@@ -481,22 +481,22 @@ const SubscriptionPage: React.FC = () => {
             className="mb-12"
             initial={{ opacity: 0, y: 20 }}
           >
-            <Card className="bg-gradient-to-r from-blue-100 to-purple-100 dark:from-blue-900/30 dark:to-purple-900/30 border-2 border-blue-200 dark:border-blue-800">
+            <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/50 dark:to-purple-950/50 border-2 border-blue-200 dark:border-blue-700 shadow-xl">
               <CardContent className="p-8">
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-6">
-                    <div className="p-4 bg-white dark:bg-gray-800 rounded-full shadow-lg">
+                    <div className="p-4 bg-white dark:bg-gray-800 rounded-full shadow-lg border border-gray-200 dark:border-gray-700">
                       {subscriptionInfo.subscription.type === "premium" ? (
-                        <Crown className="h-8 w-8 text-yellow-500" />
+                        <Crown className="h-8 w-8 text-yellow-500 dark:text-yellow-400" />
                       ) : (
-                        <Heart className="h-8 w-8 text-blue-500" />
+                        <Heart className="h-8 w-8 text-blue-500 dark:text-blue-400" />
                       )}
                     </div>
                     <div>
-                      <CardTitle className="text-2xl text-gray-800 dark:text-gray-200 mb-2">
+                      <CardTitle className="text-2xl text-gray-800 dark:text-gray-100 mb-2">
                         Votre accompagnement actuel
                       </CardTitle>
-                      <CardDescription className="text-lg">
+                      <CardDescription className="text-lg text-gray-600 dark:text-gray-300">
                         {subscriptionInfo.subscription.type === "premium"
                           ? "Vous bénéficiez de notre accompagnement Premium"
                           : "Vous utilisez notre version d'essai bienveillante"}
@@ -517,9 +517,9 @@ const SubscriptionPage: React.FC = () => {
                   </Badge>
                 </div>
                 {subscriptionInfo.subscription.type === "premium" && (
-                  <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg">
+                  <div className="mt-6 p-4 bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700">
                     <div className="flex items-center gap-3 text-gray-600 dark:text-gray-300">
-                      <Gift className="h-5 w-5 text-purple-500" />
+                      <Gift className="h-5 w-5 text-purple-500 dark:text-purple-400" />
                       <p>
                         Prochain renouvellement :{" "}
                         {subscriptionInfo.subscription.endDate &&
@@ -550,11 +550,11 @@ const SubscriptionPage: React.FC = () => {
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.3 }}
           >
-            <Card className="bg-gradient-to-r from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30 border-2 border-yellow-200 dark:border-yellow-800">
+            <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/50 dark:to-orange-950/50 border-2 border-yellow-200 dark:border-yellow-700 shadow-xl">
               <CardContent className="p-8">
                 <div className="flex items-center justify-center gap-4 mb-4">
-                  <Crown className="h-10 w-10 text-yellow-600" />
-                  <CardTitle className="text-2xl text-gray-800 dark:text-gray-200">
+                  <Crown className="h-10 w-10 text-yellow-600 dark:text-yellow-400" />
+                  <CardTitle className="text-2xl text-gray-800 dark:text-gray-100">
                     Accès Premium Administrateur
                   </CardTitle>
                 </div>
@@ -576,21 +576,21 @@ const SubscriptionPage: React.FC = () => {
               transition={{ duration: 0.3 }}
               whileHover={{ scale: 1.02 }}
             >
-              <Card className="bg-white dark:bg-gray-800 border-2 border-blue-200 dark:border-blue-700 shadow-xl">
+              <Card className="bg-white dark:bg-gray-900 border-2 border-blue-200 dark:border-blue-700 shadow-xl">
                 <CardHeader className="text-center pb-4">
-                  <div className="mx-auto mb-4 p-4 bg-blue-100 dark:bg-blue-900/30 rounded-full w-fit">
-                    <Heart className="h-8 w-8 text-blue-600" />
+                  <div className="mx-auto mb-4 p-4 bg-blue-100 dark:bg-blue-900/50 rounded-full w-fit border border-blue-200 dark:border-blue-700">
+                    <Heart className="h-8 w-8 text-blue-600 dark:text-blue-400" />
                   </div>
-                  <CardTitle className="text-3xl text-gray-800 dark:text-gray-200">
+                  <CardTitle className="text-3xl text-gray-800 dark:text-gray-100">
                     Découverte Bienveillante
                   </CardTitle>
-                  <CardDescription className="text-2xl font-bold text-blue-600 mt-2">
+                  <CardDescription className="text-2xl font-bold text-blue-600 dark:text-blue-400 mt-2">
                     0€
-                    <span className="text-lg font-normal text-gray-500 ml-2">
+                    <span className="text-lg font-normal text-gray-500 dark:text-gray-400 ml-2">
                       pour toujours
                     </span>
                   </CardDescription>
-                  <p className="text-sm text-gray-500 mt-2">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     Parfait pour commencer votre voyage d'apprentissage
                   </p>
                 </CardHeader>
@@ -600,12 +600,12 @@ const SubscriptionPage: React.FC = () => {
                       <motion.li
                         key={index}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex items-start gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-900/20"
+                        className="flex items-start gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800"
                         initial={{ opacity: 0, x: -20 }}
                         transition={{ delay: index * 0.1 }}
                       >
-                        <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700 dark:text-gray-300">
+                        <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700 dark:text-gray-200">
                           {feature}
                         </span>
                       </motion.li>
@@ -614,7 +614,7 @@ const SubscriptionPage: React.FC = () => {
                 </CardContent>
                 <CardFooter>
                   <Button
-                    className="w-full bg-blue-500 hover:bg-blue-600 text-white font-medium py-3"
+                    className="w-full bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white font-medium py-3"
                     disabled={subscriptionInfo?.subscription.type === "free"}
                     variant={
                       subscriptionInfo?.subscription.type === "free"
@@ -642,26 +642,26 @@ const SubscriptionPage: React.FC = () => {
               transition={{ duration: 0.3 }}
               whileHover={{ scale: 1.02 }}
             >
-              <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20 border-2 border-purple-300 dark:border-purple-600 shadow-xl relative">
+              <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/50 dark:to-pink-950/50 border-2 border-purple-300 dark:border-purple-600 shadow-xl relative">
                 <div className="absolute -top-3 right-6">
-                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-4 py-1">
+                  <Badge className="bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-400 dark:to-pink-400 text-white dark:text-gray-900 px-4 py-1">
                     Recommandé par les familles
                   </Badge>
                 </div>
                 <CardHeader className="text-center pb-4">
-                  <div className="mx-auto mb-4 p-4 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/30 dark:to-pink-900/30 rounded-full w-fit">
-                    <Crown className="h-8 w-8 text-purple-600" />
+                  <div className="mx-auto mb-4 p-4 bg-gradient-to-r from-purple-100 to-pink-100 dark:from-purple-900/50 dark:to-pink-900/50 rounded-full w-fit border border-purple-200 dark:border-purple-700">
+                    <Crown className="h-8 w-8 text-purple-600 dark:text-purple-400" />
                   </div>
-                  <CardTitle className="text-3xl text-gray-800 dark:text-gray-200">
+                  <CardTitle className="text-3xl text-gray-800 dark:text-gray-100">
                     Accompagnement Complet
                   </CardTitle>
-                  <CardDescription className="text-2xl font-bold text-purple-600 mt-2">
+                  <CardDescription className="text-2xl font-bold text-purple-600 dark:text-purple-400 mt-2">
                     5€
-                    <span className="text-lg font-normal text-gray-500 ml-2">
+                    <span className="text-lg font-normal text-gray-500 dark:text-gray-400 ml-2">
                       par mois
                     </span>
                   </CardDescription>
-                  <p className="text-sm text-gray-500 mt-2">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-2">
                     Pour un apprentissage sans limites et un soutien
                     personnalisé
                   </p>
@@ -672,12 +672,12 @@ const SubscriptionPage: React.FC = () => {
                       <motion.li
                         key={index}
                         animate={{ opacity: 1, x: 0 }}
-                        className="flex items-start gap-3 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm"
+                        className="flex items-start gap-3 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700"
                         initial={{ opacity: 0, x: 20 }}
                         transition={{ delay: index * 0.1 }}
                       >
-                        <CheckCircle className="h-5 w-5 text-green-500 mt-0.5 flex-shrink-0" />
-                        <span className="text-gray-700 dark:text-gray-300">
+                        <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
+                        <span className="text-gray-700 dark:text-gray-200">
                           {feature}
                         </span>
                       </motion.li>
@@ -686,7 +686,7 @@ const SubscriptionPage: React.FC = () => {
                 </CardContent>
                 <CardFooter>
                   <Button
-                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 text-white font-medium py-3"
+                    className="w-full bg-gradient-to-r from-purple-500 to-pink-500 hover:from-purple-600 hover:to-pink-600 dark:from-purple-600 dark:to-pink-600 dark:hover:from-purple-700 dark:hover:to-pink-700 text-white font-medium py-3"
                     disabled={subscriptionInfo?.subscription.type === "premium"}
                     onClick={handleSubscribe}
                   >
@@ -717,12 +717,12 @@ const SubscriptionPage: React.FC = () => {
           className="text-center mb-12"
           initial={{ opacity: 0, y: 20 }}
         >
-          <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-900/20 dark:to-blue-900/20 border-2 border-green-200 dark:border-green-700">
+          <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/50 dark:to-blue-950/50 border-2 border-green-200 dark:border-green-700 shadow-xl">
             <CardContent className="p-8">
               <div className="grid md:grid-cols-3 gap-6">
                 <div className="text-center">
-                  <Shield className="h-12 w-12 text-green-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                  <Shield className="h-12 w-12 text-green-500 dark:text-green-400 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
                     Paiement Sécurisé
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -731,8 +731,8 @@ const SubscriptionPage: React.FC = () => {
                   </p>
                 </div>
                 <div className="text-center">
-                  <Heart className="h-12 w-12 text-red-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                  <Heart className="h-12 w-12 text-red-500 dark:text-red-400 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
                     Annulation Libre
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -740,8 +740,8 @@ const SubscriptionPage: React.FC = () => {
                   </p>
                 </div>
                 <div className="text-center">
-                  <Users className="h-12 w-12 text-blue-500 mx-auto mb-3" />
-                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-200 mb-2">
+                  <Users className="h-12 w-12 text-blue-500 dark:text-blue-400 mx-auto mb-3" />
+                  <h3 className="text-lg font-semibold text-gray-800 dark:text-gray-100 mb-2">
                     Communauté Bienveillante
                   </h3>
                   <p className="text-gray-600 dark:text-gray-300 text-sm">
@@ -760,9 +760,9 @@ const SubscriptionPage: React.FC = () => {
           className="text-center"
           initial={{ opacity: 0, y: 20 }}
         >
-          <div className="bg-white dark:bg-gray-800 rounded-2xl p-8 shadow-xl border-2 border-purple-200 dark:border-purple-700">
-            <Sparkles className="h-12 w-12 text-purple-500 mx-auto mb-4" />
-            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-4">
+          <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border-2 border-purple-200 dark:border-purple-700">
+            <Sparkles className="h-12 w-12 text-purple-500 dark:text-purple-400 mx-auto mb-4" />
+            <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-100 mb-4">
               Une question ? Nous sommes là pour vous accompagner
             </h2>
             <p className="text-gray-600 dark:text-gray-300 mb-6 max-w-2xl mx-auto">
@@ -772,14 +772,14 @@ const SubscriptionPage: React.FC = () => {
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
-                className="border-purple-500 text-purple-600 hover:bg-purple-50 dark:hover:bg-purple-900/20"
+                className="border-purple-500 text-purple-600 hover:bg-purple-50 dark:border-purple-400 dark:text-purple-400 dark:hover:bg-purple-900/20"
                 variant="outline"
                 onClick={() => router.push("/contact")}
               >
                 Nous contacter
               </Button>
               <Button
-                className="bg-purple-500 hover:bg-purple-600 text-white"
+                className="bg-purple-500 hover:bg-purple-600 dark:bg-purple-600 dark:hover:bg-purple-700 text-white"
                 onClick={() => router.push("/faq")}
               >
                 Voir les questions fréquentes
