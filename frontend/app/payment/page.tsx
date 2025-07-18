@@ -115,7 +115,16 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             }).then(() => {
                 // Dernière vérification avant redirection
                 const finalStoredId = localStorage.getItem("orderId");
-                console.log("Vérification avant redirection - ID stocké:", finalStoredId);
+                console.log("🔍 Vérification avant redirection - ID stocké:", finalStoredId);
+                
+                if (!finalStoredId) {
+                    console.error("❌ ALERTE: ID de commande manquant avant redirection !");
+                    // Essayer de récupérer l'ID depuis la réponse de l'API
+                    if (orderData && orderData.order && orderData.order._id) {
+                        localStorage.setItem("orderId", orderData.order._id);
+                        console.log("✅ ID de commande récupéré et stocké:", orderData.order._id);
+                    }
+                }
                 
                 onPaymentSuccess(); // Update cart immediately
                 router.push("/payment-confirmations");
@@ -229,15 +238,15 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             
             // Vérifier toutes les possibilités pour l'emplacement de l'ID
             let orderId = null;
-            if (createdOrder._id) {
+            if (createdOrder.order && createdOrder.order._id) {
+                console.log("ID trouvé sous order._id:", createdOrder.order._id);
+                orderId = createdOrder.order._id;
+            } else if (createdOrder._id) {
                 console.log("ID trouvé sous _id:", createdOrder._id);
                 orderId = createdOrder._id;
             } else if (createdOrder.id) {
                 console.log("ID trouvé sous id:", createdOrder.id);
                 orderId = createdOrder.id;
-            } else if (createdOrder.order && createdOrder.order._id) {
-                console.log("ID trouvé sous order._id:", createdOrder.order._id);
-                orderId = createdOrder.order._id;
             } else {
                 console.error("Aucun ID trouvé dans la réponse:", createdOrder);
             }

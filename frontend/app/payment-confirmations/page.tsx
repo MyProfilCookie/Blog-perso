@@ -114,9 +114,15 @@ const OrderConfirmationPage = () => {
       try {
         const orderId = localStorage.getItem("orderId");
 
-        console.log("Récupération de la commande avec ID:", orderId);
+        console.log("🔍 Récupération de la commande avec ID:", orderId);
+        console.log("🔍 Contenu complet du localStorage:", {
+          orderId: localStorage.getItem("orderId"),
+          userToken: localStorage.getItem("userToken") ? "Présent" : "Absent",
+          cartItems: localStorage.getItem("cartItems") ? "Présent" : "Absent"
+        });
 
         if (!orderId) {
+          console.error("❌ Aucun ID de commande trouvé dans localStorage");
           setError(
             "Aucun ID de commande trouvé. Veuillez passer une commande."
           );
@@ -129,10 +135,10 @@ const OrderConfirmationPage = () => {
           `${process.env.NEXT_PUBLIC_API_URL}/orders/${orderId}`,
         );
 
-        console.log("Données de commande récupérées:", orderData);
+        console.log("✅ Données de commande récupérées:", orderData);
         setOrder(orderData as Order);
       } catch (error) {
-        console.error("Erreur lors de la récupération de la commande:", error);
+        console.error("❌ Erreur lors de la récupération de la commande:", error);
         const errorMessage = error instanceof Error
           ? error.message
           : "Une erreur s'est produite lors de la récupération de la commande.";
@@ -148,9 +154,34 @@ const OrderConfirmationPage = () => {
 
   const handleBack = () => {
     // Nettoyer les données de commande lors du retour à l'accueil
+    console.log("🧹 Nettoyage du localStorage avant retour à l'accueil");
     localStorage.removeItem("orderId");
     localStorage.removeItem("cartItems");
     localStorage.removeItem("totalPrice");
+    
+    // Nettoyer également les paniers utilisateur spécifiques
+    const userToken = localStorage.getItem("userToken");
+    if (userToken) {
+      try {
+        // Essayer de récupérer les informations utilisateur pour nettoyer le bon panier
+        fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+          headers: { Authorization: `Bearer ${userToken}` },
+        })
+        .then(response => response.json())
+        .then(userData => {
+          if (userData.user && userData.user.pseudo) {
+            localStorage.removeItem(`cartItems_${userData.user.pseudo}`);
+            console.log("🧹 Panier utilisateur nettoyé:", `cartItems_${userData.user.pseudo}`);
+          }
+        })
+        .catch(error => {
+          console.log("⚠️ Impossible de récupérer les infos utilisateur pour le nettoyage:", error);
+        });
+      } catch (error) {
+        console.log("⚠️ Erreur lors du nettoyage du panier utilisateur:", error);
+      }
+    }
+    
     router.push("/");
   };
 
