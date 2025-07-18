@@ -78,14 +78,23 @@ exports.checkout = async (req, res) => {
  */
 exports.createOrder = async (req, res) => {
   try {
+    console.log("📥 Données reçues pour création de commande:", JSON.stringify(req.body, null, 2));
+    
     const { userId, ...orderData } = req.body;
 
     // Vérifier que l'ID utilisateur est fourni
     if (!userId) {
+      console.error("❌ ID utilisateur manquant");
       return res.status(400).json({ 
         message: "L'ID utilisateur est requis pour créer une commande" 
       });
     }
+
+    console.log("🔍 Validation des données de commande...");
+    console.log("👤 UserID:", userId);
+    console.log("📦 Items:", orderData.items?.length || 0);
+    console.log("💰 Total:", orderData.totalAmount);
+    console.log("🚚 Méthode de livraison:", orderData.deliveryMethod);
 
     // Création de la commande avec l'userId explicitement spécifié
     const newOrder = new Order({
@@ -93,15 +102,32 @@ exports.createOrder = async (req, res) => {
       userId: userId
     });
 
+    console.log("✅ Commande créée, sauvegarde en cours...");
+
     // Sauvegarde de la commande
     const savedOrder = await newOrder.save();
+
+    console.log("✅ Commande sauvegardée avec succès, ID:", savedOrder._id);
 
     res.status(201).json({ 
       message: "Commande créée avec succès", 
       order: savedOrder 
     });
   } catch (error) {
-    console.error("Erreur lors de la création de la commande:", error);
+    console.error("❌ Erreur détaillée lors de la création de la commande:", error);
+    console.error("❌ Stack trace:", error.stack);
+    
+    // Si c'est une erreur de validation Mongoose, retourner les détails
+    if (error.name === 'ValidationError') {
+      const validationErrors = Object.values(error.errors).map(err => err.message);
+      console.error("❌ Erreurs de validation:", validationErrors);
+      return res.status(400).json({
+        message: "Erreur de validation des données",
+        errors: validationErrors,
+        details: error.message
+      });
+    }
+    
     res.status(500).json({
       message: "Erreur lors de la création de la commande",
       error: error.message || error,

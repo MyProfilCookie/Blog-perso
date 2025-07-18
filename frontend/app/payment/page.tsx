@@ -178,7 +178,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
         }
     
         try {
-            // Get user data
+            // Get user data first to validate required fields
             const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
                 headers: { Authorization: `Bearer ${token}` },
             });
@@ -190,6 +190,48 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             const userData = await userResponse.json();
             setUser(userData.user); // Store user for later use
             console.log("✅ Données utilisateur récupérées :", userData);
+    
+            // Validation des champs obligatoires
+            const missingFields = [];
+            
+            // Vérifier le numéro de téléphone
+            if (!userData.user.phone || userData.user.phone.trim() === "") {
+                missingFields.push("numéro de téléphone");
+            }
+            
+            // Vérifier l'adresse de livraison
+            if (!userData.user.deliveryAddress) {
+                missingFields.push("adresse de livraison");
+            } else {
+                const address = userData.user.deliveryAddress;
+                if (!address.street || !address.city || !address.postalCode || !address.country) {
+                    missingFields.push("adresse de livraison complète");
+                }
+            }
+            
+            // Si des champs manquent, afficher l'erreur
+            if (missingFields.length > 0) {
+                const fieldsText = missingFields.join(" et ");
+                Swal.fire({
+                    title: "Informations manquantes",
+                    html: `
+                        <p>Veuillez compléter votre profil avec les informations suivantes :</p>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            ${missingFields.map(field => `<li>• ${field}</li>`).join('')}
+                        </ul>
+                        <p>Vous pouvez les ajouter dans votre <strong>profil utilisateur</strong>.</p>
+                    `,
+                    icon: "warning",
+                    confirmButtonText: "Aller au profil",
+                    showCancelButton: true,
+                    cancelButtonText: "Annuler",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        router.push("/profile");
+                    }
+                });
+                return null;
+            }
     
             // Format order items
             const formattedItems = items.map((item) => ({
@@ -204,7 +246,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 firstName: userData.user.prenom,
                 lastName: userData.user.nom,
                 email: userData.user.email,
-                phone: userData.user.phone,
+                phone: userData.user.phone || "Non renseigné", // Valeur par défaut si vide
                 userId: userData.user._id,
                 deliveryAddress: userData.user.deliveryAddress,
                 items: formattedItems,
@@ -216,6 +258,8 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             };
     
             // Create order
+            console.log("📤 Envoi de la commande à l'API:", JSON.stringify(orderData, null, 2));
+            
             const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
                 method: "POST",
                 headers: {
@@ -226,7 +270,20 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
     
             if (!orderResponse.ok) {
-                throw new Error("Erreur lors de la création de la commande.");
+                const errorData = await orderResponse.json().catch(() => ({}));
+                console.error("❌ Erreur API:", orderResponse.status, errorData);
+                
+                // Afficher le message d'erreur spécifique si disponible
+                let errorMessage = "Erreur lors de la création de la commande.";
+                if (errorData.error) {
+                    errorMessage = errorData.error;
+                } else if (errorData.message) {
+                    errorMessage = errorData.message;
+                } else if (errorData.details) {
+                    errorMessage = errorData.details;
+                }
+                
+                throw new Error(errorMessage);
             }
     
             // Parse response to get the order with its ID
@@ -432,6 +489,45 @@ const PaymentPage = () => {
             console.log("✅ Utilisateur authentifié :", userData);
             setUser(userData.user);
 
+            // Validation des informations obligatoires
+            const missingFields = [];
+            
+            // Vérifier le numéro de téléphone
+            if (!userData.user.phone || userData.user.phone.trim() === "") {
+                missingFields.push("numéro de téléphone");
+            }
+            
+            // Vérifier l'adresse de livraison
+            if (!userData.user.deliveryAddress) {
+                missingFields.push("adresse de livraison");
+            } else {
+                const address = userData.user.deliveryAddress;
+                if (!address.street || !address.city || !address.postalCode || !address.country) {
+                    missingFields.push("adresse de livraison complète");
+                }
+            }
+            
+            // Si des champs manquent, afficher l'erreur et rediriger
+            if (missingFields.length > 0) {
+                const fieldsText = missingFields.join(" et ");
+                Swal.fire({
+                    title: "Informations manquantes",
+                    html: `
+                        <p>Pour passer une commande, vous devez compléter votre profil avec :</p>
+                        <ul style="text-align: left; margin: 10px 0;">
+                            ${missingFields.map(field => `<li>• ${field}</li>`).join('')}
+                        </ul>
+                        <p>Vous serez redirigé vers votre <strong>profil utilisateur</strong>.</p>
+                    `,
+                    icon: "warning",
+                    confirmButtonText: "Aller au profil",
+                    allowOutsideClick: false,
+                }).then(() => {
+                    router.push("/profile");
+                });
+                return;
+            }
+
             // Charger le panier correspondant au pseudo de l'utilisateur
             const userCartKey = `cartItems_${userData.user.pseudo}`;
             const storedCart = localStorage.getItem(userCartKey);
@@ -507,10 +603,38 @@ const PaymentPage = () => {
                     <p className="text-gray-500 dark:text-white"><strong>Prénom :</strong> {user.prenom}</p>
                     <p className="text-gray-500 dark:text-white"><strong>Pseudo :</strong> {user.pseudo}</p>
                     <p className="text-gray-500 dark:text-white">
-                        <strong>Adresse de livraison :</strong> {`${user.deliveryAddress.street}, ${user.deliveryAddress.city}, ${user.deliveryAddress.postalCode}, ${user.deliveryAddress.country}`}
+                        <strong>Adresse de livraison :</strong> {
+                            user.deliveryAddress ? 
+                            `${user.deliveryAddress.street}, ${user.deliveryAddress.city}, ${user.deliveryAddress.postalCode}, ${user.deliveryAddress.country}` :
+                            <span className="text-red-500">⚠️ Adresse manquante</span>
+                        }
+                    </p>
+                    <p className="text-gray-500 dark:text-white">
+                        <strong>Téléphone :</strong> {
+                            user.phone && user.phone.trim() !== "" ? 
+                            user.phone : 
+                            <span className="text-red-500">⚠️ Téléphone manquant</span>
+                        }
                     </p>
                     <p className="text-gray-500 dark:text-white"><strong>Email :</strong> {user.email}</p>
-                    <p className="text-gray-500 dark:text-white"><strong>Téléphone :</strong> {user.phone}</p>
+                    
+                    {/* Vérifier s'il y a des informations manquantes */}
+                    {(!user.phone || user.phone.trim() === "" || !user.deliveryAddress || 
+                      !user.deliveryAddress.street || !user.deliveryAddress.city || 
+                      !user.deliveryAddress.postalCode || !user.deliveryAddress.country) && (
+                        <div className="mt-4 p-3 bg-yellow-100 border border-yellow-400 rounded-lg">
+                            <p className="text-yellow-800 mb-2">
+                                ⚠️ Certaines informations sont manquantes pour la livraison.
+                            </p>
+                            <Button 
+                                color="warning" 
+                                size="sm"
+                                onClick={() => router.push("/profile")}
+                            >
+                                Compléter mon profil
+                            </Button>
+                        </div>
+                    )}
                 </motion.div>
             )}
 
