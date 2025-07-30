@@ -9,5 +9,6 @@
         "Utilisateur"
     ],
     "inlineChat.accessibleDiffView": "on",
-    "inlineChat.finishOnType": true
+    "inlineChat.finishOnType": true,
+    "kiroAgent.configureMCP": "Enabled"
 }
