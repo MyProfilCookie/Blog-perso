@@ -14,10 +14,31 @@ import {
   TableCell,
   Spinner,
   Pagination,
+  Progress,
+  Chip,
+  Avatar,
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBookOpen,
+  faFlask,
+  faCalculator,
+  faLanguage,
+  faPalette,
+  faLandmark,
+  faGlobe,
+  faMicrochip,
+  faMusic,
+  faChartBar,
+  faTrophy,
+  faClock,
+  faUser,
+  faStar,
+  faExclamationTriangle,
+} from "@fortawesome/free-solid-svg-icons";
 
 import BackButton from "@/components/back";
 
@@ -58,7 +79,90 @@ interface DetailedStats {
   bestPage: number;
   worstPage: number;
   completionRate: number;
+  icon: any;
+  color: string;
 }
+
+// Configuration des matières selon votre projet
+const SUBJECTS_CONFIG = {
+  math: {
+    name: "Mathématiques",
+    icon: faCalculator,
+    color:
+      "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+    bgColor: "bg-yellow-50 dark:bg-yellow-900/20",
+  },
+  french: {
+    name: "Français",
+    icon: faBookOpen,
+    color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+    bgColor: "bg-red-50 dark:bg-red-900/20",
+  },
+  sciences: {
+    name: "Sciences",
+    icon: faFlask,
+    color:
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+    bgColor: "bg-green-50 dark:bg-green-900/20",
+  },
+  art: {
+    name: "Arts Plastiques",
+    icon: faPalette,
+    color:
+      "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+    bgColor: "bg-purple-50 dark:bg-purple-900/20",
+  },
+  history: {
+    name: "Histoire",
+    icon: faLandmark,
+    color:
+      "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300",
+    bgColor: "bg-indigo-50 dark:bg-indigo-900/20",
+  },
+  geography: {
+    name: "Géographie",
+    icon: faGlobe,
+    color: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300",
+    bgColor: "bg-teal-50 dark:bg-teal-900/20",
+  },
+  language: {
+    name: "Langues",
+    icon: faLanguage,
+    color: "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300",
+    bgColor: "bg-pink-50 dark:bg-pink-900/20",
+  },
+  technology: {
+    name: "Technologie",
+    icon: faMicrochip,
+    color: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300",
+    bgColor: "bg-cyan-50 dark:bg-cyan-900/20",
+  },
+  music: {
+    name: "Musique",
+    icon: faMusic,
+    color: "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300",
+    bgColor: "bg-rose-50 dark:bg-rose-900/20",
+  },
+  rapportHebdo: {
+    name: "Rapport Hebdo",
+    icon: faChartBar,
+    color: "bg-gray-100 text-gray-800 dark:bg-gray-800/50 dark:text-gray-300",
+    bgColor: "bg-gray-50 dark:bg-gray-900/20",
+  },
+  revision: {
+    name: "Révision",
+    icon: faClock,
+    color:
+      "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
+    bgColor: "bg-orange-50 dark:bg-orange-900/20",
+  },
+  revisionErrors: {
+    name: "Erreurs de Révision",
+    icon: faExclamationTriangle,
+    color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+    bgColor: "bg-red-50 dark:bg-red-900/20",
+  },
+};
 
 const ElevePage: React.FC = () => {
   const router = useRouter();
@@ -70,7 +174,7 @@ const ElevePage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
   const [userId, setUserId] = useState<string | null>(null);
-  const [debugInfo, setDebugInfo] = useState<string>("");
+  const [userInfo, setUserInfo] = useState<any>(null);
 
   // Récupérer l'ID de l'utilisateur depuis le localStorage
   useEffect(() => {
@@ -79,20 +183,15 @@ const ElevePage: React.FC = () => {
     const userToken = localStorage.getItem("userToken");
     const token = localStorage.getItem("token");
 
-    console.log("Données de débogage:", {
-      storedUser,
-      userInfo,
-      userToken,
-      token,
-    });
-
     let foundUserId = null;
+    let foundUserInfo = null;
 
     if (storedUser) {
       try {
         const user = JSON.parse(storedUser);
 
         foundUserId = user._id || user.id;
+        foundUserInfo = user;
       } catch (err) {
         console.error("Erreur lors du parsing de storedUser:", err);
       }
@@ -103,15 +202,14 @@ const ElevePage: React.FC = () => {
         const user = JSON.parse(userInfo);
 
         foundUserId = user._id || user.id;
+        foundUserInfo = user;
       } catch (err) {
         console.error("Erreur lors du parsing de userInfo:", err);
       }
     }
 
-    setDebugInfo(
-      `userId: ${foundUserId}, token: ${token ? "présent" : "absent"}, userToken: ${userToken ? "présent" : "absent"}`,
-    );
     setUserId(foundUserId);
+    setUserInfo(foundUserInfo);
   }, []);
 
   // Récupérer le profil de l'élève
@@ -177,6 +275,10 @@ const ElevePage: React.FC = () => {
     const stats: DetailedStats[] = profile.subjects.map((subject) => {
       const pages = subject.pages || [];
       const scores = pages.map((page) => page.score);
+      const subjectKey = subject.subjectName.toLowerCase().replace(/\s+/g, "");
+      const config =
+        SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG] ||
+        SUBJECTS_CONFIG.math;
 
       return {
         subjectName: subject.subjectName,
@@ -188,6 +290,8 @@ const ElevePage: React.FC = () => {
           pages.length > 0
             ? (pages.filter((p) => p.score >= 70).length / pages.length) * 100
             : 0,
+        icon: config.icon,
+        color: config.color,
       };
     });
 
@@ -217,11 +321,11 @@ const ElevePage: React.FC = () => {
 
   // Obtenir la couleur en fonction du score
   const getScoreColor = (score: number) => {
-    if (score >= 90) return "text-green-600";
-    if (score >= 70) return "text-blue-600";
-    if (score >= 50) return "text-yellow-600";
+    if (score >= 90) return "success";
+    if (score >= 70) return "primary";
+    if (score >= 50) return "warning";
 
-    return "text-red-600";
+    return "danger";
   };
 
   // Obtenir l'emoji en fonction du score
@@ -285,31 +389,37 @@ const ElevePage: React.FC = () => {
     return subject.pages.slice(startIndex, endIndex);
   };
 
+  // Obtenir la configuration d'une matière
+  const getSubjectConfig = (subjectName: string) => {
+    const subjectKey = subjectName.toLowerCase().replace(/\s+/g, "");
+
+    return (
+      SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG] ||
+      SUBJECTS_CONFIG.math
+    );
+  };
+
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
         <Spinner color="primary" size="lg" />
-        <p className="mt-4 text-gray-500">Chargement du profil...</p>
-        {debugInfo && (
-          <div className="mt-4 p-2 bg-gray-100 rounded text-xs text-gray-500">
-            {debugInfo}
-          </div>
-        )}
+        <p className="mt-4 text-gray-600 dark:text-gray-300">
+          Chargement du profil...
+        </p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4">
-        <div className="bg-red-100 p-4 rounded-lg text-red-700 max-w-md text-center">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+        <div className="bg-red-100 p-6 rounded-lg text-red-700 max-w-md text-center dark:bg-red-900/30 dark:text-red-300">
+          <FontAwesomeIcon
+            className="text-2xl mb-4"
+            icon={faExclamationTriangle}
+          />
           <p className="font-bold mb-2">⚠️ Erreur</p>
           <p>{error}</p>
-          {debugInfo && (
-            <div className="mt-4 p-2 bg-red-50 rounded text-xs">
-              {debugInfo}
-            </div>
-          )}
         </div>
         <Button
           className="mt-4"
@@ -323,222 +433,374 @@ const ElevePage: React.FC = () => {
   }
 
   return (
-    <div className="p-4 bg-gradient-to-br from-white to-blue-50 dark:from-gray-900 dark:to-gray-800 min-h-screen">
-      <div className="flex justify-between items-center mb-4">
-        <BackButton />
-        <h1 className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-          Profil Élève 📚
-        </h1>
-      </div>
-
-      {eleveProfile ? (
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="space-y-6"
-          initial={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.4 }}
-        >
-          {/* Résumé général */}
-          <Card className="w-full border border-blue-200">
-            <CardBody className="p-6">
-              <h2 className="text-xl font-bold mb-4 text-blue-700 dark:text-blue-300">
-                Résumé Général
-              </h2>
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg text-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Moyenne Globale
-                  </p>
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                    {eleveProfile.overallAverage.toFixed(1)}%
-                  </p>
-                </div>
-                <div className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg text-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Pages Complétées
-                  </p>
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                    {eleveProfile.totalPagesCompleted}
-                  </p>
-                </div>
-                <div className="bg-blue-50 dark:bg-gray-800 p-4 rounded-lg text-center">
-                  <p className="text-sm text-gray-600 dark:text-gray-400">
-                    Matières Étudiées
-                  </p>
-                  <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                    {eleveProfile.subjects.length}
-                  </p>
-                </div>
-              </div>
-            </CardBody>
-          </Card>
-
-          {/* Statistiques détaillées */}
-          <Card className="w-full border border-blue-200">
-            <CardBody className="p-6">
-              <h2 className="text-xl font-bold mb-4 text-blue-700 dark:text-blue-300">
-                Statistiques par Matière
-              </h2>
-              <Table aria-label="Statistiques par matière">
-                <TableHeader>
-                  <TableColumn>Matière</TableColumn>
-                  <TableColumn>Pages</TableColumn>
-                  <TableColumn>Moyenne</TableColumn>
-                  <TableColumn>Meilleure Note</TableColumn>
-                  <TableColumn>Note Minimale</TableColumn>
-                  <TableColumn>Taux de Réussite</TableColumn>
-                </TableHeader>
-                <TableBody>
-                  {detailedStats.map((stat) => (
-                    <TableRow key={stat.subjectName}>
-                      <TableCell className="font-medium">
-                        {stat.subjectName}
-                      </TableCell>
-                      <TableCell>{stat.totalPages}</TableCell>
-                      <TableCell className={getScoreColor(stat.averageScore)}>
-                        {stat.averageScore.toFixed(1)}%{" "}
-                        {getScoreEmoji(stat.averageScore)}
-                      </TableCell>
-                      <TableCell className="text-green-600">
-                        {stat.bestPage}% 🌟
-                      </TableCell>
-                      <TableCell className="text-red-600">
-                        {stat.worstPage}% 😢
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <div className="w-full bg-gray-200 rounded-full h-2.5">
-                            <div
-                              className="bg-blue-600 h-2.5 rounded-full"
-                              style={{ width: `${stat.completionRate}%` }}
-                            />
-                          </div>
-                          <span>{stat.completionRate.toFixed(0)}%</span>
-                        </div>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </CardBody>
-          </Card>
-
-          {/* Détails des notes par matière */}
-          <Card className="w-full border border-blue-200">
-            <CardBody className="p-6">
-              <h2 className="text-xl font-bold mb-4 text-blue-700 dark:text-blue-300">
-                Détails des Notes
-              </h2>
-
-              <Tabs
-                aria-label="Matières"
-                className="mb-4"
-                onSelectionChange={(key) => {
-                  setSelectedSubject(key as string);
-                  setCurrentPage(1);
-                }}
-              >
-                {eleveProfile.subjects.map((subject) => (
-                  <Tab
-                    key={subject.subjectName}
-                    title={
-                      <div className="flex items-center gap-2">
-                        <span>{subject.subjectName}</span>
-                        <span
-                          className={`px-2 py-1 rounded-full text-xs ${getScoreColor(subject.averageScore)}`}
-                        >
-                          {subject.averageScore.toFixed(1)}%
-                        </span>
-                      </div>
-                    }
-                  >
-                    <div className="mt-4">
-                      {subject.pages.length > 0 ? (
-                        <>
-                          <Table
-                            aria-label={`Notes pour ${subject.subjectName}`}
-                          >
-                            <TableHeader>
-                              <TableColumn>Page</TableColumn>
-                              <TableColumn>Score</TableColumn>
-                              <TableColumn>Réponses Correctes</TableColumn>
-                              <TableColumn>Temps</TableColumn>
-                              <TableColumn>Date</TableColumn>
-                              <TableColumn>Actions</TableColumn>
-                            </TableHeader>
-                            <TableBody>
-                              {getPaginatedPages().map((page) => (
-                                <TableRow key={page.pageNumber}>
-                                  <TableCell>Page {page.pageNumber}</TableCell>
-                                  <TableCell
-                                    className={getScoreColor(page.score)}
-                                  >
-                                    {page.score}% {getScoreEmoji(page.score)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {page.correctAnswers}/{page.totalQuestions}
-                                  </TableCell>
-                                  <TableCell>
-                                    {formatTime(page.timeSpent)}
-                                  </TableCell>
-                                  <TableCell>
-                                    {formatDate(page.completedAt)}
-                                  </TableCell>
-                                  <TableCell>
-                                    <Button
-                                      color="danger"
-                                      size="sm"
-                                      onClick={() =>
-                                        handleDeleteScore(
-                                          subject.subjectName,
-                                          page.pageNumber,
-                                        )
-                                      }
-                                    >
-                                      Supprimer
-                                    </Button>
-                                  </TableCell>
-                                </TableRow>
-                              ))}
-                            </TableBody>
-                          </Table>
-
-                          <div className="flex justify-center mt-4">
-                            <Pagination
-                              showControls
-                              page={currentPage}
-                              total={totalPages}
-                              onChange={setCurrentPage}
-                            />
-                          </div>
-                        </>
-                      ) : (
-                        <div className="text-center py-8 text-gray-500">
-                          Aucune note disponible pour cette matière
-                        </div>
-                      )}
-                    </div>
-                  </Tab>
-                ))}
-              </Tabs>
-            </CardBody>
-          </Card>
-        </motion.div>
-      ) : (
-        <div className="text-center py-8">
-          <p className="text-lg text-gray-600">
-            Aucun profil d&apos;élève trouvé. Commencez à répondre aux questions
-            pour créer votre profil.
-          </p>
-          <Button
-            className="mt-4"
-            color="primary"
-            onClick={() => router.push("/controle")}
-          >
-            Retour aux exercices
-          </Button>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-900 dark:to-gray-800">
+      <div className="container mx-auto p-4">
+        <div className="flex justify-between items-center mb-6">
+          <BackButton />
+          <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400 flex items-center gap-2">
+            <FontAwesomeIcon icon={faUser} />
+            Profil Élève 📚
+          </h1>
         </div>
-      )}
+
+        {eleveProfile ? (
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            className="space-y-6"
+            initial={{ opacity: 0, y: -10 }}
+            transition={{ duration: 0.4 }}
+          >
+            {/* Informations utilisateur */}
+            {userInfo && (
+              <Card className="w-full border border-blue-200 dark:border-blue-800">
+                <CardBody className="p-6">
+                  <div className="flex items-center gap-4 mb-4">
+                    <Avatar
+                      className="ring-2 ring-blue-200 dark:ring-blue-800"
+                      size="lg"
+                      src={userInfo.avatar || "/assets/default-avatar.webp"}
+                    />
+                    <div>
+                      <h2 className="text-xl font-bold text-gray-800 dark:text-gray-200">
+                        {userInfo.prenom} {userInfo.nom}
+                      </h2>
+                      <p className="text-gray-600 dark:text-gray-400">
+                        {userInfo.email}
+                      </p>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            )}
+
+            {/* Résumé général */}
+            <Card className="w-full border border-blue-200 dark:border-blue-800">
+              <CardBody className="p-6">
+                <h2 className="text-xl font-bold mb-6 text-blue-700 dark:text-blue-300 flex items-center gap-2">
+                  <FontAwesomeIcon icon={faChartBar} />
+                  Résumé Général
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                  <div className="bg-gradient-to-br from-blue-50 to-blue-100 dark:from-blue-900/30 dark:to-blue-800/30 p-4 rounded-lg text-center border border-blue-200 dark:border-blue-700">
+                    <FontAwesomeIcon
+                      className="text-2xl text-blue-600 dark:text-blue-400 mb-2"
+                      icon={faStar}
+                    />
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Moyenne Globale
+                    </p>
+                    <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">
+                      {eleveProfile.overallAverage.toFixed(1)}%
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-green-50 to-green-100 dark:from-green-900/30 dark:to-green-800/30 p-4 rounded-lg text-center border border-green-200 dark:border-green-700">
+                    <FontAwesomeIcon
+                      className="text-2xl text-green-600 dark:text-green-400 mb-2"
+                      icon={faBookOpen}
+                    />
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Pages Complétées
+                    </p>
+                    <p className="text-3xl font-bold text-green-600 dark:text-green-400">
+                      {eleveProfile.totalPagesCompleted}
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-4 rounded-lg text-center border border-purple-200 dark:border-purple-700">
+                    <FontAwesomeIcon
+                      className="text-2xl text-purple-600 dark:text-purple-400 mb-2"
+                      icon={faTrophy}
+                    />
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Matières Étudiées
+                    </p>
+                    <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                      {eleveProfile.subjects.length}
+                    </p>
+                  </div>
+                  <div className="bg-gradient-to-br from-orange-50 to-orange-100 dark:from-orange-900/30 dark:to-orange-800/30 p-4 rounded-lg text-center border border-orange-200 dark:border-orange-700">
+                    <FontAwesomeIcon
+                      className="text-2xl text-orange-600 dark:text-orange-400 mb-2"
+                      icon={faClock}
+                    />
+                    <p className="text-sm text-gray-600 dark:text-gray-400">
+                      Dernière Activité
+                    </p>
+                    <p className="text-lg font-bold text-orange-600 dark:text-orange-400">
+                      {eleveProfile.updatedAt
+                        ? formatDate(eleveProfile.updatedAt)
+                        : "N/A"}
+                    </p>
+                  </div>
+                </div>
+              </CardBody>
+            </Card>
+
+            {/* Statistiques détaillées */}
+            <Card className="w-full border border-blue-200 dark:border-blue-800">
+              <CardBody className="p-6">
+                <h2 className="text-xl font-bold mb-6 text-blue-700 dark:text-blue-300 flex items-center gap-2">
+                  <FontAwesomeIcon icon={faChartBar} />
+                  Statistiques par Matière
+                </h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {detailedStats.map((stat) => {
+                    const config = getSubjectConfig(stat.subjectName);
+
+                    return (
+                      <Card
+                        key={stat.subjectName}
+                        className={`${config.bgColor} border border-gray-200 dark:border-gray-700`}
+                      >
+                        <CardBody className="p-4">
+                          <div className="flex items-center gap-3 mb-3">
+                            <div className={`p-2 rounded-lg ${config.color}`}>
+                              <FontAwesomeIcon
+                                className="text-lg"
+                                icon={config.icon}
+                              />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+                                {stat.subjectName}
+                              </h3>
+                              <p className="text-sm text-gray-600 dark:text-gray-400">
+                                {stat.totalPages} pages
+                              </p>
+                            </div>
+                          </div>
+
+                          <div className="space-y-2">
+                            <div className="flex justify-between items-center">
+                              <span className="text-sm text-gray-600 dark:text-gray-400">
+                                Moyenne
+                              </span>
+                              <Chip
+                                color={getScoreColor(stat.averageScore)}
+                                size="sm"
+                                variant="flat"
+                              >
+                                {stat.averageScore.toFixed(1)}%{" "}
+                                {getScoreEmoji(stat.averageScore)}
+                              </Chip>
+                            </div>
+
+                            <Progress
+                              className="w-full"
+                              color={getScoreColor(stat.averageScore)}
+                              size="sm"
+                              value={stat.averageScore}
+                            />
+
+                            <div className="grid grid-cols-2 gap-2 text-xs">
+                              <div>
+                                <span className="text-green-600 dark:text-green-400">
+                                  Meilleure: {stat.bestPage}%
+                                </span>
+                              </div>
+                              <div>
+                                <span className="text-red-600 dark:text-red-400">
+                                  Minimale: {stat.worstPage}%
+                                </span>
+                              </div>
+                            </div>
+
+                            <div className="flex justify-between items-center">
+                              <span className="text-xs text-gray-500 dark:text-gray-400">
+                                Taux de réussite
+                              </span>
+                              <span className="text-xs font-medium">
+                                {stat.completionRate.toFixed(0)}%
+                              </span>
+                            </div>
+                          </div>
+                        </CardBody>
+                      </Card>
+                    );
+                  })}
+                </div>
+              </CardBody>
+            </Card>
+
+            {/* Détails des notes par matière */}
+            <Card className="w-full border border-blue-200 dark:border-blue-800">
+              <CardBody className="p-6">
+                <h2 className="text-xl font-bold mb-6 text-blue-700 dark:text-blue-300 flex items-center gap-2">
+                  <FontAwesomeIcon icon={faBookOpen} />
+                  Détails des Notes
+                </h2>
+
+                <Tabs
+                  aria-label="Matières"
+                  className="mb-4"
+                  classNames={{
+                    tabList:
+                      "gap-6 w-full relative rounded-none p-0 border-b border-divider",
+                    cursor: "w-full bg-blue-500",
+                    tab: "max-w-fit px-0 h-12",
+                    tabContent: "group-data-[selected=true]:text-blue-500",
+                  }}
+                  onSelectionChange={(key) => {
+                    setSelectedSubject(key as string);
+                    setCurrentPage(1);
+                  }}
+                >
+                  {eleveProfile.subjects.map((subject) => {
+                    const config = getSubjectConfig(subject.subjectName);
+
+                    return (
+                      <Tab
+                        key={subject.subjectName}
+                        title={
+                          <div className="flex items-center gap-2">
+                            <FontAwesomeIcon
+                              className="text-sm"
+                              icon={config.icon}
+                            />
+                            <span>{subject.subjectName}</span>
+                            <Chip
+                              color={getScoreColor(subject.averageScore)}
+                              size="sm"
+                              variant="flat"
+                            >
+                              {subject.averageScore.toFixed(1)}%
+                            </Chip>
+                          </div>
+                        }
+                      >
+                        <div className="mt-6">
+                          {subject.pages.length > 0 ? (
+                            <>
+                              <Table
+                                aria-label={`Notes pour ${subject.subjectName}`}
+                                classNames={{
+                                  wrapper: "min-h-[400px]",
+                                }}
+                              >
+                                <TableHeader>
+                                  <TableColumn>Page</TableColumn>
+                                  <TableColumn>Score</TableColumn>
+                                  <TableColumn>Réponses</TableColumn>
+                                  <TableColumn>Temps</TableColumn>
+                                  <TableColumn>Date</TableColumn>
+                                  <TableColumn>Actions</TableColumn>
+                                </TableHeader>
+                                <TableBody>
+                                  {getPaginatedPages().map((page) => (
+                                    <TableRow key={page.pageNumber}>
+                                      <TableCell>
+                                        <span className="font-medium">
+                                          Page {page.pageNumber}
+                                        </span>
+                                      </TableCell>
+                                      <TableCell>
+                                        <Chip
+                                          color={getScoreColor(page.score)}
+                                          size="sm"
+                                          variant="flat"
+                                        >
+                                          {page.score}%{" "}
+                                          {getScoreEmoji(page.score)}
+                                        </Chip>
+                                      </TableCell>
+                                      <TableCell>
+                                        <span className="text-sm">
+                                          {page.correctAnswers}/
+                                          {page.totalQuestions}
+                                        </span>
+                                      </TableCell>
+                                      <TableCell>
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                                          {formatTime(page.timeSpent)}
+                                        </span>
+                                      </TableCell>
+                                      <TableCell>
+                                        <span className="text-sm text-gray-600 dark:text-gray-400">
+                                          {formatDate(page.completedAt)}
+                                        </span>
+                                      </TableCell>
+                                      <TableCell>
+                                        <Button
+                                          color="danger"
+                                          size="sm"
+                                          variant="flat"
+                                          onClick={() =>
+                                            handleDeleteScore(
+                                              subject.subjectName,
+                                              page.pageNumber,
+                                            )
+                                          }
+                                        >
+                                          Supprimer
+                                        </Button>
+                                      </TableCell>
+                                    </TableRow>
+                                  ))}
+                                </TableBody>
+                              </Table>
+
+                              {totalPages > 1 && (
+                                <div className="flex justify-center mt-6">
+                                  <Pagination
+                                    showControls
+                                    color="primary"
+                                    page={currentPage}
+                                    total={totalPages}
+                                    onChange={setCurrentPage}
+                                  />
+                                </div>
+                              )}
+                            </>
+                          ) : (
+                            <div className="text-center py-12">
+                              <FontAwesomeIcon
+                                className="text-4xl text-gray-400 mb-4"
+                                icon={config.icon}
+                              />
+                              <p className="text-lg text-gray-500 dark:text-gray-400">
+                                Aucune note disponible pour cette matière
+                              </p>
+                              <Button
+                                className="mt-4"
+                                color="primary"
+                                variant="flat"
+                                onClick={() => router.push("/controle")}
+                              >
+                                Commencer les exercices
+                              </Button>
+                            </div>
+                          )}
+                        </div>
+                      </Tab>
+                    );
+                  })}
+                </Tabs>
+              </CardBody>
+            </Card>
+          </motion.div>
+        ) : (
+          <div className="text-center py-12">
+            <FontAwesomeIcon
+              className="text-6xl text-gray-400 mb-6"
+              icon={faUser}
+            />
+            <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-300 mb-4">
+              Aucun profil d&apos;élève trouvé
+            </h2>
+            <p className="text-lg text-gray-600 dark:text-gray-400 mb-6">
+              Commencez à répondre aux questions pour créer votre profil et
+              suivre vos progrès.
+            </p>
+            <Button
+              className="mt-4"
+              color="primary"
+              size="lg"
+              onClick={() => router.push("/controle")}
+            >
+              Commencer les exercices
+            </Button>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
