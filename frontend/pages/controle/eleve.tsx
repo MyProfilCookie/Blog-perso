@@ -268,20 +268,18 @@ const ElevePage: React.FC = () => {
     const fetchEleveProfile = async () => {
       if (!userId) {
         console.log("Pas d'userId disponible");
-
         return;
       }
 
       try {
         setLoading(true);
-        const token =
-          localStorage.getItem("token") || localStorage.getItem("userToken");
+        const token = localStorage.getItem("token") || localStorage.getItem("userToken");
 
         if (!token) {
           throw new Error("Token d'authentification non trouvé");
         }
 
-        console.log("Tentative de récupération du profil avec:", {
+        console.log("🔍 Tentative de récupération du profil avec:", {
           userId,
           token: token.substring(0, 10) + "...",
           apiUrl: process.env.NEXT_PUBLIC_API_URL,
@@ -296,7 +294,22 @@ const ElevePage: React.FC = () => {
           },
         );
 
-        console.log("Réponse du serveur:", response.data);
+        console.log("✅ Réponse du serveur:", response.data);
+        
+        // Vérifier si les données sont valides
+        if (response.data) {
+          console.log("📊 Données du profil:", {
+            overallAverage: response.data.overallAverage,
+            totalPagesCompleted: response.data.totalPagesCompleted,
+            subjectsCount: response.data.subjects?.length || 0,
+            subjects: response.data.subjects?.map((s: any) => ({
+              name: s.subjectName,
+              pages: s.pages?.length || 0,
+              average: s.averageScore
+            }))
+          });
+        }
+        
         setEleveProfile(response.data);
         calculateDetailedStats(response.data);
         
@@ -305,10 +318,7 @@ const ElevePage: React.FC = () => {
         
         setLoading(false);
       } catch (err) {
-        console.error(
-          "Erreur détaillée lors de la récupération du profil:",
-          err,
-        );
+        console.error("❌ Erreur détaillée lors de la récupération du profil:", err);
         if (axios.isAxiosError(err)) {
           setError(
             `Erreur ${err.response?.status}: ${err.response?.data?.message || err.message}`,
@@ -630,6 +640,8 @@ const ElevePage: React.FC = () => {
   // Fonction pour récupérer toutes les statistiques avancées
   const fetchAllAdvancedStats = async () => {
     try {
+      console.log("🔍 Début de la récupération des statistiques avancées");
+      
       // Récupérer les données de toutes les matières depuis le localStorage
       const allSubjectsData: { [key: string]: any } = {};
 
@@ -640,13 +652,29 @@ const ElevePage: React.FC = () => {
         }
       });
 
+      console.log("📚 Matières standard trouvées:", Object.keys(allSubjectsData));
+
       // Ajouter tous les trimestres trouvés
       const trimestres = getAllTrimestres();
+      console.log("📅 Trimestres trouvés:", trimestres);
 
       trimestres.forEach((trimestreId) => {
         allSubjectsData[`trimestre-${trimestreId}`] = getLocalStorageData(
           `trimestre-${trimestreId}`,
         );
+      });
+
+      // Log des données trouvées pour chaque matière
+      Object.keys(allSubjectsData).forEach((subject) => {
+        const data = allSubjectsData[subject];
+        console.log(`📊 Données pour ${subject}:`, {
+          hasUserAnswers: !!data.userAnswers,
+          hasResults: !!data.results,
+          hasValidatedExercises: !!data.validatedExercises,
+          hasScores: !!data.scores,
+          resultsCount: data.results?.length || 0,
+          validatedCount: data.validatedExercises ? Object.keys(data.validatedExercises).length : 0
+        });
       });
 
       // Calculer les statistiques pour chaque matière
@@ -658,11 +686,20 @@ const ElevePage: React.FC = () => {
         const subjectData = allSubjectsData[subject];
         const stats = calculateSubjectStats(subject, subjectData);
 
+        console.log(`📈 Stats calculées pour ${subject}:`, stats);
+
         if (stats.totalExercises > 0 || stats.exercisesCompleted > 0) {
           subjectsStats.push(stats);
           totalExercises += stats.totalExercises;
           totalCorrect += stats.correctAnswers;
         }
+      });
+
+      console.log("📊 Statistiques finales:", {
+        totalExercises,
+        totalCorrect,
+        subjectsCount: subjectsStats.length,
+        subjects: subjectsStats.map(s => ({ name: s.subject, exercises: s.exercisesCompleted, score: s.averageScore }))
       });
 
       // Calculer la moyenne globale
@@ -730,9 +767,10 @@ const ElevePage: React.FC = () => {
         subscriptionType: "free", // Par défaut
       };
 
+      console.log("✅ Statistiques avancées finales:", finalStats);
       setAdvancedStats(finalStats);
     } catch (err: any) {
-      console.error("Erreur lors de la récupération des statistiques avancées:", err);
+      console.error("❌ Erreur lors de la récupération des statistiques avancées:", err);
     }
   };
 
@@ -1372,265 +1410,289 @@ const ElevePage: React.FC = () => {
                     Statistiques Avancées
                   </h2>
 
-                  <Tabs 
-                    className="mb-8"
-                    selectedKey={selectedTab} 
-                    onSelectionChange={(key) => setSelectedTab(key.toString())}
-                    classNames={{
-                      tabList: "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
-                      tab: "text-gray-700 dark:text-gray-300 data-[hover=true]:bg-gray-100 dark:data-[hover=true]:bg-gray-700",
-                      tabContent: "text-gray-700 dark:text-gray-300",
-                      cursor: "bg-blue-500 dark:bg-blue-400",
-                    }}
-                  >
-                    <Tab key="overview" title="Vue d'ensemble" />
-                    <Tab key="subjects" title="Par matière" />
-                    <Tab key="categories" title="Par catégorie" />
-                    <Tab key="progress" title="Progression" />
-                  </Tabs>
-
-                  {/* Vue d'ensemble */}
-                  {selectedTab === "overview" && (
-                    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
-                        <CardBody>
-                          <h3 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">
-                            Total des exercices
-                          </h3>
-                          <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{advancedStats.totalExercises}</p>
-                        </CardBody>
-                      </Card>
-                      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
-                        <CardBody>
-                          <h3 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">
-                            Réponses correctes
-                          </h3>
-                          <p className="text-3xl font-bold text-green-600 dark:text-green-400">{advancedStats.totalCorrect}</p>
-                          <p className="text-sm text-gray-500 dark:text-gray-400">
-                            {advancedStats.totalExercises > 0
-                              ? (
-                                  (Number(advancedStats.totalCorrect) /
-                                    Number(advancedStats.totalExercises)) *
-                                  100
-                                ).toFixed(1)
-                              : 0}
-                            % de réussite
-                          </p>
-                        </CardBody>
-                      </Card>
-                      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
-                        <CardBody>
-                          <h3 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">Score moyen</h3>
-                          <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-                            {Number(advancedStats.averageScore).toFixed(1)}%
-                          </p>
-                        </CardBody>
-                      </Card>
+                  {/* Message si aucune donnée */}
+                  {advancedStats.totalExercises === 0 && (
+                    <div className="text-center py-8 mb-6">
+                      <FontAwesomeIcon icon={faChartBar} className="text-4xl text-gray-400 mb-4" />
+                      <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                        Aucune donnée d&apos;exercices trouvée
+                      </h3>
+                      <p className="text-gray-600 dark:text-gray-400 mb-4">
+                        Commencez à faire des exercices pour voir vos statistiques ici.
+                      </p>
+                      <Button
+                        color="primary"
+                        variant="flat"
+                        onClick={() => router.push("/controle")}
+                      >
+                        Commencer les exercices
+                      </Button>
                     </div>
                   )}
 
-                  {/* Par matière */}
-                  {selectedTab === "subjects" && (
-                    <div className="grid grid-cols-1 gap-6 mb-8">
-                      {advancedStats.subjects.map((subject, index) => (
-                        <motion.div
-                          key={subject.subject}
-                          animate={{ opacity: 1, y: 0 }}
-                          initial={{ opacity: 0, y: 20 }}
-                          transition={{ duration: 0.3, delay: index * 0.1 }}
-                        >
+                  {advancedStats.totalExercises > 0 && (
+                    <>
+                      <Tabs 
+                        className="mb-8"
+                        selectedKey={selectedTab} 
+                        onSelectionChange={(key) => setSelectedTab(key.toString())}
+                        classNames={{
+                          tabList: "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
+                          tab: "text-gray-700 dark:text-gray-300 data-[hover=true]:bg-gray-100 dark:data-[hover=true]:bg-gray-700",
+                          tabContent: "text-gray-700 dark:text-gray-300",
+                          cursor: "bg-blue-500 dark:bg-blue-400",
+                        }}
+                      >
+                        <Tab key="overview" title="Vue d'ensemble" />
+                        <Tab key="subjects" title="Par matière" />
+                        <Tab key="categories" title="Par catégorie" />
+                        <Tab key="progress" title="Progression" />
+                      </Tabs>
+
+                      {/* Vue d'ensemble */}
+                      {selectedTab === "overview" && (
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
                           <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
                             <CardBody>
-                              <div className="flex justify-between items-center mb-4">
-                                <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
-                                  {subject.subject}
-                                </h3>
-                                <Chip 
-                                  color={
-                                    subject.averageScore >= 70 ? "success" : "warning"
-                                  }
-                                  variant="flat"
-                                  className="dark:bg-opacity-80"
-                                >
-                                  {subject.averageScore.toFixed(1)}%
-                                </Chip>
-                              </div>
-                              <div className="mb-4">
-                                <div className="flex justify-between text-sm mb-1">
-                                  <span className="text-gray-600 dark:text-gray-300">Progression</span>
-                                  <span className="text-gray-600 dark:text-gray-300">
-                                    {subject.exercisesCompleted} / {subject.totalExercises} exercices
-                                    ({subject.progress.toFixed(1)}%)
-                                  </span>
+                              <h3 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">
+                                Total des exercices
+                              </h3>
+                              <p className="text-3xl font-bold text-blue-600 dark:text-blue-400">{advancedStats.totalExercises}</p>
+                            </CardBody>
+                          </Card>
+                          <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
+                            <CardBody>
+                              <h3 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">
+                                Réponses correctes
+                              </h3>
+                              <p className="text-3xl font-bold text-green-600 dark:text-green-400">{advancedStats.totalCorrect}</p>
+                              <p className="text-sm text-gray-500 dark:text-gray-400">
+                                {advancedStats.totalExercises > 0
+                                  ? (
+                                      (Number(advancedStats.totalCorrect) /
+                                        Number(advancedStats.totalExercises)) *
+                                      100
+                                    ).toFixed(1)
+                                  : 0}
+                                % de réussite
+                              </p>
+                            </CardBody>
+                          </Card>
+                          <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
+                            <CardBody>
+                              <h3 className="text-lg font-semibold mb-2 text-gray-700 dark:text-gray-200">Score moyen</h3>
+                              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                                {Number(advancedStats.averageScore).toFixed(1)}%
+                              </p>
+                            </CardBody>
+                          </Card>
+                        </div>
+                      )}
+
+                      {/* Par matière */}
+                      {selectedTab === "subjects" && (
+                        <div className="grid grid-cols-1 gap-6 mb-8">
+                          {advancedStats.subjects.map((subject, index) => (
+                            <motion.div
+                              key={subject.subject}
+                              animate={{ opacity: 1, y: 0 }}
+                              initial={{ opacity: 0, y: 20 }}
+                              transition={{ duration: 0.3, delay: index * 0.1 }}
+                            >
+                              <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700 hover:shadow-xl transition-shadow">
+                                <CardBody>
+                                  <div className="flex justify-between items-center mb-4">
+                                    <h3 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
+                                      {subject.subject}
+                                    </h3>
+                                    <Chip 
+                                      color={
+                                        subject.averageScore >= 70 ? "success" : "warning"
+                                      }
+                                      variant="flat"
+                                      className="dark:bg-opacity-80"
+                                    >
+                                      {subject.averageScore.toFixed(1)}%
+                                    </Chip>
+                                  </div>
+                                  <div className="mb-4">
+                                    <div className="flex justify-between text-sm mb-1">
+                                      <span className="text-gray-600 dark:text-gray-300">Progression</span>
+                                      <span className="text-gray-600 dark:text-gray-300">
+                                        {subject.exercisesCompleted} / {subject.totalExercises} exercices
+                                        ({subject.progress.toFixed(1)}%)
+                                      </span>
+                                    </div>
+                                    <Progress 
+                                      value={subject.progress} 
+                                      color={
+                                        subject.totalExercises > 0
+                                          ? subject.correctAnswers / subject.totalExercises >= 0.7
+                                            ? "success"
+                                            : subject.correctAnswers / subject.totalExercises >= 0.4
+                                              ? "warning"
+                                              : "danger"
+                                          : "default"
+                                      }
+                                      className="dark:bg-gray-700"
+                                    />
+                                  </div>
+                                  <div className="grid grid-cols-2 gap-4 text-sm">
+                                    <div>
+                                      <p className="text-gray-500 dark:text-gray-400">Exercices complétés</p>
+                                      <p className="font-medium text-gray-800 dark:text-gray-100">
+                                        {subject.exercisesCompleted}
+                                      </p>
+                                    </div>
+                                    <div>
+                                      <p className="text-gray-500 dark:text-gray-400">Réponses correctes</p>
+                                      <p className="font-medium text-gray-800 dark:text-gray-100">{subject.correctAnswers}</p>
+                                      <p className="text-xs text-gray-400 dark:text-gray-500">
+                                        {subject.correctAnswers} / {subject.totalExercises} bonnes réponses
+                                        ({subject.totalExercises > 0 ? ((subject.correctAnswers / subject.totalExercises) * 100).toFixed(1) : 0}%)
+                                      </p>
+                                    </div>
+                                  </div>
+                                </CardBody>
+                              </Card>
+                            </motion.div>
+                          ))}
+                          <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+                            <CardBody>
+                              <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+                                Scores par matière
+                              </h3>
+                              {advancedStats.subjects.length > 0 ? (
+                                <div className="h-64 w-full overflow-x-auto">
+                                  <div
+                                    className="min-w-[350px] w-full"
+                                    style={{ height: "260px" }}
+                                  >
+                                    <Bar 
+                                      data={prepareBarChartData()!} 
+                                      options={chartOptions}
+                                    />
+                                  </div>
                                 </div>
-                                <Progress 
-                                  value={subject.progress} 
-                                  color={
-                                    subject.totalExercises > 0
-                                      ? subject.correctAnswers / subject.totalExercises >= 0.7
-                                        ? "success"
-                                        : subject.correctAnswers / subject.totalExercises >= 0.4
-                                          ? "warning"
-                                          : "danger"
-                                      : "default"
-                                  }
-                                  className="dark:bg-gray-700"
-                                />
-                              </div>
-                              <div className="grid grid-cols-2 gap-4 text-sm">
-                                <div>
-                                  <p className="text-gray-500 dark:text-gray-400">Exercices complétés</p>
-                                  <p className="font-medium text-gray-800 dark:text-gray-100">
-                                    {subject.exercisesCompleted}
-                                  </p>
+                              ) : (
+                                <p className="text-center text-gray-500 dark:text-gray-400">
+                                  Aucune donnée disponible
+                                </p>
+                              )}
+                            </CardBody>
+                          </Card>
+                        </div>
+                      )}
+
+                      {/* Par catégorie */}
+                      {selectedTab === "categories" && (
+                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                          <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+                            <CardBody>
+                              <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+                                Répartition par catégorie
+                              </h3>
+                              {advancedStats.categoryStats.length > 0 ? (
+                                <div className="h-64 w-full overflow-x-auto">
+                                  <div
+                                    className="min-w-[300px] w-full"
+                                    style={{ height: "260px" }}
+                                  >
+                                    <Doughnut 
+                                      data={prepareDoughnutChartData()!} 
+                                      options={chartOptions}
+                                    />
+                                  </div>
                                 </div>
-                                <div>
-                                  <p className="text-gray-500 dark:text-gray-400">Réponses correctes</p>
-                                  <p className="font-medium text-gray-800 dark:text-gray-100">{subject.correctAnswers}</p>
-                                  <p className="text-xs text-gray-400 dark:text-gray-500">
-                                    {subject.correctAnswers} / {subject.totalExercises} bonnes réponses
-                                    ({subject.totalExercises > 0 ? ((subject.correctAnswers / subject.totalExercises) * 100).toFixed(1) : 0}%)
-                                  </p>
-                                </div>
+                              ) : (
+                                <p className="text-center text-gray-500 dark:text-gray-400">
+                                  Aucune donnée disponible
+                                </p>
+                              )}
+                            </CardBody>
+                          </Card>
+                          <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+                            <CardBody>
+                              <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+                                Détails par catégorie
+                              </h3>
+                              <div className="space-y-4">
+                                {advancedStats.categoryStats.map((category: any, index: number) => (
+                                  <div
+                                    key={index}
+                                    className="flex justify-between items-center"
+                                  >
+                                    <span className="text-gray-700 dark:text-gray-200">{category.category}</span>
+                                    <div className="flex items-center gap-2">
+                                      <span className="text-sm text-gray-500 dark:text-gray-400">
+                                        {category.count} exercices
+                                      </span>
+                                      <Chip size="sm" variant="flat" className="dark:bg-opacity-80">
+                                        {Number(category.percentage).toFixed(1)}%
+                                      </Chip>
+                                    </div>
+                                  </div>
+                                ))}
                               </div>
                             </CardBody>
                           </Card>
-                        </motion.div>
-                      ))}
-                      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-                        <CardBody>
-                          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                            Scores par matière
-                          </h3>
-                          {advancedStats.subjects.length > 0 ? (
-                            <div className="h-64 w-full overflow-x-auto">
-                              <div
-                                className="min-w-[350px] w-full"
-                                style={{ height: "260px" }}
-                              >
-                                <Bar 
-                                  data={prepareBarChartData()!} 
-                                  options={chartOptions}
-                                />
-                              </div>
-                            </div>
-                          ) : (
-                            <p className="text-center text-gray-500 dark:text-gray-400">
-                              Aucune donnée disponible
-                            </p>
-                          )}
-                        </CardBody>
-                      </Card>
-                    </div>
-                  )}
+                        </div>
+                      )}
 
-                  {/* Par catégorie */}
-                  {selectedTab === "categories" && (
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-                        <CardBody>
-                          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                            Répartition par catégorie
-                          </h3>
-                          {advancedStats.categoryStats.length > 0 ? (
-                            <div className="h-64 w-full overflow-x-auto">
-                              <div
-                                className="min-w-[300px] w-full"
-                                style={{ height: "260px" }}
-                              >
-                                <Doughnut 
-                                  data={prepareDoughnutChartData()!} 
-                                  options={chartOptions}
-                                />
-                              </div>
-                            </div>
-                          ) : (
-                            <p className="text-center text-gray-500 dark:text-gray-400">
-                              Aucune donnée disponible
-                            </p>
-                          )}
-                        </CardBody>
-                      </Card>
-                      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-                        <CardBody>
-                          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                            Détails par catégorie
-                          </h3>
-                          <div className="space-y-4">
-                            {advancedStats.categoryStats.map((category: any, index: number) => (
-                              <div
-                                key={index}
-                                className="flex justify-between items-center"
-                              >
-                                <span className="text-gray-700 dark:text-gray-200">{category.category}</span>
-                                <div className="flex items-center gap-2">
-                                  <span className="text-sm text-gray-500 dark:text-gray-400">
-                                    {category.count} exercices
-                                  </span>
-                                  <Chip size="sm" variant="flat" className="dark:bg-opacity-80">
-                                    {Number(category.percentage).toFixed(1)}%
-                                  </Chip>
+                      {/* Progression */}
+                      {selectedTab === "progress" && (
+                        <div className="grid grid-cols-1 gap-6 mb-8">
+                          <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+                            <CardBody>
+                              <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+                                Évolution des scores
+                              </h3>
+                              {advancedStats.dailyStats.length > 0 ? (
+                                <div className="h-64 w-full overflow-x-auto">
+                                  <div
+                                    className="min-w-[350px] w-full"
+                                    style={{ height: "260px" }}
+                                  >
+                                    <Line 
+                                      data={prepareLineChartData()!} 
+                                      options={chartOptions}
+                                    />
+                                  </div>
                                 </div>
-                              </div>
-                            ))}
-                          </div>
-                        </CardBody>
-                      </Card>
-                    </div>
-                  )}
-
-                  {/* Progression */}
-                  {selectedTab === "progress" && (
-                    <div className="grid grid-cols-1 gap-6 mb-8">
-                      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-                        <CardBody>
-                          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                            Évolution des scores
-                          </h3>
-                          {advancedStats.dailyStats.length > 0 ? (
-                            <div className="h-64 w-full overflow-x-auto">
-                              <div
-                                className="min-w-[350px] w-full"
-                                style={{ height: "260px" }}
-                              >
-                                <Line 
-                                  data={prepareLineChartData()!} 
-                                  options={chartOptions}
-                                />
-                              </div>
-                            </div>
-                          ) : (
-                            <p className="text-center text-gray-500 dark:text-gray-400">
-                              Aucune donnée disponible
-                            </p>
-                          )}
-                        </CardBody>
-                      </Card>
-                      <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
-                        <CardBody>
-                          <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
-                            Comparaison par matière
-                          </h3>
-                          {advancedStats.subjects.length > 0 ? (
-                            <div className="h-64 w-full overflow-x-auto">
-                              <div
-                                className="min-w-[350px] w-full"
-                                style={{ height: "260px" }}
-                              >
-                                <Bar 
-                                  data={prepareBarChartData()!} 
-                                  options={chartOptions}
-                                />
-                              </div>
-                            </div>
-                          ) : (
-                            <p className="text-center text-gray-500 dark:text-gray-400">
-                              Aucune donnée disponible
-                            </p>
-                          )}
-                        </CardBody>
-                      </Card>
-                    </div>
+                              ) : (
+                                <p className="text-center text-gray-500 dark:text-gray-400">
+                                  Aucune donnée disponible
+                                </p>
+                              )}
+                            </CardBody>
+                          </Card>
+                          <Card className="bg-white dark:bg-gray-800 shadow-lg border border-gray-200 dark:border-gray-700">
+                            <CardBody>
+                              <h3 className="text-xl font-semibold mb-4 text-gray-800 dark:text-gray-100">
+                                Comparaison par matière
+                              </h3>
+                              {advancedStats.subjects.length > 0 ? (
+                                <div className="h-64 w-full overflow-x-auto">
+                                  <div
+                                    className="min-w-[350px] w-full"
+                                    style={{ height: "260px" }}
+                                  >
+                                    <Bar 
+                                      data={prepareBarChartData()!} 
+                                      options={chartOptions}
+                                    />
+                                  </div>
+                                </div>
+                              ) : (
+                                <p className="text-center text-gray-500 dark:text-gray-400">
+                                  Aucune donnée disponible
+                                </p>
+                              )}
+                            </CardBody>
+                          </Card>
+                        </div>
+                      )}
+                    </>
                   )}
                 </CardBody>
               </Card>
