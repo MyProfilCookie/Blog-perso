@@ -93,7 +93,7 @@ interface DetailedStats {
   bestPage: number;
   worstPage: number;
   completionRate: number;
-  icon: import('@fortawesome/fontawesome-svg-core').IconDefinition;
+  icon: import("@fortawesome/fontawesome-svg-core").IconDefinition;
   color: string;
 }
 
@@ -1058,9 +1058,9 @@ const ElevePage: React.FC = () => {
             </Card>
 
             {/* Détails des notes par matière */}
-            <Card className="w-full border border-purple-200 dark:border-purple-800 bg-gradient-to-r from-teal-50 to-blue-50 dark:from-teal-900/50 dark:to-blue-900/50">
+            <Card className="w-full border border-purple-200 dark:border-purple-800 bg-gradient-to-r from-indigo-50 to-cyan-50 dark:from-indigo-900/50 dark:to-cyan-900/50">
               <CardBody className="p-6">
-                <h2 className="text-xl font-bold mb-6 text-teal-700 dark:text-teal-300 flex items-center gap-2">
+                <h2 className="text-xl font-bold mb-6 text-indigo-700 dark:text-indigo-300 flex items-center gap-2">
                   <FontAwesomeIcon icon={faBookOpen} />
                   Détails des Notes
                 </h2>
