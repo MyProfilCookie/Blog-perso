@@ -285,32 +285,32 @@ const ElevePage: React.FC = () => {
     const loadProfile = async () => {
       try {
         setLoading(true);
-        
+
         // Créer un profil temporaire simple
         const tempProfile = {
           _id: userId,
           userId: userId,
-          subjects: Object.keys(SUBJECTS_CONFIG).map(subject => ({
-            subjectName: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG].name,
+          subjects: Object.keys(SUBJECTS_CONFIG).map((subject) => ({
+            subjectName:
+              SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG].name,
             pages: [],
             averageScore: 0,
-            lastUpdated: new Date().toISOString()
+            lastUpdated: new Date().toISOString(),
           })),
           overallAverage: 0,
           totalPagesCompleted: 0,
           createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString()
+          updatedAt: new Date().toISOString(),
         };
-        
+
         setEleveProfile(tempProfile);
         setLoading(false);
-        
+
         // Charger les données en arrière-plan
         setTimeout(() => {
           loadLocalData();
           loadServerData();
         }, 100);
-        
       } catch (err) {
         console.error("❌ Erreur lors du chargement:", err);
         setError("Erreur lors du chargement des données");
@@ -325,14 +325,14 @@ const ElevePage: React.FC = () => {
   const loadLocalData = () => {
     try {
       console.log("📊 Chargement des données locales...");
-      
+
       // Récupérer les données localStorage de manière simple
       const allKeys = Object.keys(localStorage);
       const subjectData: { [key: string]: any } = {};
-      
+
       // Grouper par matière
-      allKeys.forEach(key => {
-        const parts = key.split('_');
+      allKeys.forEach((key) => {
+        const parts = key.split("_");
 
         if (parts.length > 1) {
           const subject = parts[0];
@@ -340,13 +340,13 @@ const ElevePage: React.FC = () => {
           if (!subjectData[subject]) {
             subjectData[subject] = {};
           }
-          
+
           try {
             const value = localStorage.getItem(key);
 
             if (value) {
               const parsed = JSON.parse(value);
-              const dataKey = key.replace(`${subject}_`, '');
+              const dataKey = key.replace(`${subject}_`, "");
 
               subjectData[subject][dataKey] = parsed;
             }
@@ -361,7 +361,7 @@ const ElevePage: React.FC = () => {
       let totalCorrect = 0;
       const subjectsStats: SubjectStats[] = [];
 
-      Object.keys(subjectData).forEach(subject => {
+      Object.keys(subjectData).forEach((subject) => {
         const data = subjectData[subject];
         let exercises = 0;
         let correct = 0;
@@ -369,10 +369,15 @@ const ElevePage: React.FC = () => {
         // Compter les exercices
         if (data.results && Array.isArray(data.results)) {
           exercises = data.results.length;
-          correct = data.results.filter((r: any) => r && r.isCorrect === true).length;
-        } else if (data.validatedExercises && typeof data.validatedExercises === 'object') {
+          correct = data.results.filter(
+            (r: any) => r && r.isCorrect === true,
+          ).length;
+        } else if (
+          data.validatedExercises &&
+          typeof data.validatedExercises === "object"
+        ) {
           exercises = Object.keys(data.validatedExercises).filter(
-            (key) => data.validatedExercises[key] === true
+            (key) => data.validatedExercises[key] === true,
           ).length;
           correct = Math.floor(exercises * 0.8); // Estimation
         }
@@ -380,9 +385,11 @@ const ElevePage: React.FC = () => {
         if (exercises > 0) {
           totalExercises += exercises;
           totalCorrect += correct;
-          
+
           subjectsStats.push({
-            subject: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name || subject,
+            subject:
+              SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name ||
+              subject,
             totalExercises: exercises,
             correctAnswers: correct,
             averageScore: exercises > 0 ? (correct / exercises) * 100 : 0,
@@ -394,19 +401,22 @@ const ElevePage: React.FC = () => {
       });
 
       // Mettre à jour les statistiques
-      const averageScore = totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 0;
-      
+      const averageScore =
+        totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 0;
+
       setAdvancedStats({
         totalExercises,
         totalCorrect,
         averageScore,
         subjects: subjectsStats,
         dailyStats: Array.from({ length: 7 }, (_, i) => ({
-          date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          date: new Date(Date.now() - i * 24 * 60 * 60 * 1000)
+            .toISOString()
+            .split("T")[0],
           exercisesCompleted: Math.max(Math.floor(totalExercises / 7), 1),
           averageScore: Math.max(averageScore, 70),
         })).reverse(),
-        categoryStats: subjectsStats.map(s => ({
+        categoryStats: subjectsStats.map((s) => ({
           category: s.subject,
           count: s.exercisesCompleted,
           percentage: s.averageScore,
@@ -423,7 +433,8 @@ const ElevePage: React.FC = () => {
   // Fonction simplifiée pour charger les données serveur
   const loadServerData = async () => {
     try {
-      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("userToken");
 
       if (!token || !userId) return;
 
@@ -446,30 +457,38 @@ const ElevePage: React.FC = () => {
 
   // Fonctions de préparation des graphiques corrigées
   const prepareLineChartData = () => {
-    if (!advancedStats || !advancedStats.dailyStats || advancedStats.dailyStats.length === 0) {
+    if (
+      !advancedStats ||
+      !advancedStats.dailyStats ||
+      advancedStats.dailyStats.length === 0
+    ) {
       return {
-        labels: ['Aucune donnée'],
-        datasets: [{
-          label: "Score moyen",
-          data: [0],
-          borderColor: "rgb(75, 192, 192)",
-          backgroundColor: "rgba(75, 192, 192, 0.1)",
-          tension: 0.1,
-        }],
+        labels: ["Aucune donnée"],
+        datasets: [
+          {
+            label: "Score moyen",
+            data: [0],
+            borderColor: "rgb(75, 192, 192)",
+            backgroundColor: "rgba(75, 192, 192, 0.1)",
+            tension: 0.1,
+          },
+        ],
       };
     }
-    
+
     return {
       labels: advancedStats.dailyStats.map((stat: any) =>
-        new Date(stat.date).toLocaleDateString('fr-FR', { 
-          month: 'short', 
-          day: 'numeric' 
+        new Date(stat.date).toLocaleDateString("fr-FR", {
+          month: "short",
+          day: "numeric",
         }),
       ),
       datasets: [
         {
           label: "Score moyen",
-          data: advancedStats.dailyStats.map((stat: any) => Math.round(stat.averageScore || 0)),
+          data: advancedStats.dailyStats.map((stat: any) =>
+            Math.round(stat.averageScore || 0),
+          ),
           borderColor: "rgb(75, 192, 192)",
           backgroundColor: "rgba(75, 192, 192, 0.1)",
           tension: 0.1,
@@ -477,7 +496,9 @@ const ElevePage: React.FC = () => {
         },
         {
           label: "Exercices complétés",
-          data: advancedStats.dailyStats.map((stat: any) => stat.exercisesCompleted || 0),
+          data: advancedStats.dailyStats.map(
+            (stat: any) => stat.exercisesCompleted || 0,
+          ),
           borderColor: "rgb(255, 99, 132)",
           backgroundColor: "rgba(255, 99, 132, 0.1)",
           tension: 0.1,
@@ -488,19 +509,25 @@ const ElevePage: React.FC = () => {
   };
 
   const prepareBarChartData = () => {
-    if (!advancedStats || !advancedStats.subjects || advancedStats.subjects.length === 0) {
+    if (
+      !advancedStats ||
+      !advancedStats.subjects ||
+      advancedStats.subjects.length === 0
+    ) {
       return {
-        labels: ['Aucune donnée'],
-        datasets: [{
-          label: "Score moyen",
-          data: [0],
-          backgroundColor: ["rgba(156, 163, 175, 0.5)"],
-          borderColor: ["rgba(156, 163, 175, 1)"],
-          borderWidth: 1,
-        }],
+        labels: ["Aucune donnée"],
+        datasets: [
+          {
+            label: "Score moyen",
+            data: [0],
+            backgroundColor: ["rgba(156, 163, 175, 0.5)"],
+            borderColor: ["rgba(156, 163, 175, 1)"],
+            borderWidth: 1,
+          },
+        ],
       };
     }
-    
+
     const colors = [
       "rgba(255, 99, 132, 0.5)",
       "rgba(54, 162, 235, 0.5)",
@@ -520,18 +547,18 @@ const ElevePage: React.FC = () => {
       "rgba(255, 159, 64, 1)",
       "rgba(201, 203, 207, 1)",
     ];
-    
+
     return {
-      labels: advancedStats.subjects.map((subject: any) => 
-        subject.subject.length > 10 
-          ? subject.subject.substring(0, 10) + '...' 
-          : subject.subject
+      labels: advancedStats.subjects.map((subject: any) =>
+        subject.subject.length > 10
+          ? subject.subject.substring(0, 10) + "..."
+          : subject.subject,
       ),
       datasets: [
         {
           label: "Score moyen (%)",
-          data: advancedStats.subjects.map((subject: any) => 
-            Math.round(subject.averageScore || 0)
+          data: advancedStats.subjects.map((subject: any) =>
+            Math.round(subject.averageScore || 0),
           ),
           backgroundColor: colors.slice(0, advancedStats.subjects.length),
           borderColor: borderColors.slice(0, advancedStats.subjects.length),
@@ -542,18 +569,24 @@ const ElevePage: React.FC = () => {
   };
 
   const prepareDoughnutChartData = () => {
-    if (!advancedStats || !advancedStats.categoryStats || advancedStats.categoryStats.length === 0) {
+    if (
+      !advancedStats ||
+      !advancedStats.categoryStats ||
+      advancedStats.categoryStats.length === 0
+    ) {
       return {
-        labels: ['Aucune donnée'],
-        datasets: [{
-          data: [1],
-          backgroundColor: ["rgba(156, 163, 175, 0.5)"],
-          borderColor: ["rgba(156, 163, 175, 1)"],
-          borderWidth: 1,
-        }],
+        labels: ["Aucune donnée"],
+        datasets: [
+          {
+            data: [1],
+            backgroundColor: ["rgba(156, 163, 175, 0.5)"],
+            borderColor: ["rgba(156, 163, 175, 1)"],
+            borderWidth: 1,
+          },
+        ],
       };
     }
-    
+
     const colors = [
       "rgba(255, 99, 132, 0.7)",
       "rgba(54, 162, 235, 0.7)",
@@ -565,12 +598,18 @@ const ElevePage: React.FC = () => {
     ];
 
     return {
-      labels: advancedStats.categoryStats.map((category: any) => category.category),
+      labels: advancedStats.categoryStats.map(
+        (category: any) => category.category,
+      ),
       datasets: [
         {
-          data: advancedStats.categoryStats.map((category: any) => category.count || 0),
+          data: advancedStats.categoryStats.map(
+            (category: any) => category.count || 0,
+          ),
           backgroundColor: colors.slice(0, advancedStats.categoryStats.length),
-          borderColor: colors.map(color => color.replace('0.7', '1')).slice(0, advancedStats.categoryStats.length),
+          borderColor: colors
+            .map((color) => color.replace("0.7", "1"))
+            .slice(0, advancedStats.categoryStats.length),
           borderWidth: 2,
         },
       ],
@@ -582,17 +621,19 @@ const ElevePage: React.FC = () => {
     responsive: true,
     maintainAspectRatio: false,
     interaction: {
-      mode: 'index' as const,
+      mode: "index" as const,
       intersect: false,
     },
     plugins: {
       legend: {
-        position: 'top' as const,
+        position: "top" as const,
         labels: {
           font: { size: 12 },
-          color: typeof window !== "undefined" && document.documentElement.classList.contains("dark") 
-            ? "#e5e7eb" 
-            : "#374151",
+          color:
+            typeof window !== "undefined" &&
+            document.documentElement.classList.contains("dark")
+              ? "#e5e7eb"
+              : "#374151",
           usePointStyle: true,
           padding: 15,
         },
@@ -601,18 +642,26 @@ const ElevePage: React.FC = () => {
         enabled: true,
         bodyFont: { size: 12 },
         titleFont: { size: 13 },
-        backgroundColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-          ? "rgba(17, 24, 39, 0.95)"
-          : "rgba(255, 255, 255, 0.95)",
-        titleColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-          ? "#e5e7eb"
-          : "#111827",
-        bodyColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-          ? "#d1d5db"
-          : "#374151",
-        borderColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-          ? "#374151"
-          : "#d1d5db",
+        backgroundColor:
+          typeof window !== "undefined" &&
+          document.documentElement.classList.contains("dark")
+            ? "rgba(17, 24, 39, 0.95)"
+            : "rgba(255, 255, 255, 0.95)",
+        titleColor:
+          typeof window !== "undefined" &&
+          document.documentElement.classList.contains("dark")
+            ? "#e5e7eb"
+            : "#111827",
+        bodyColor:
+          typeof window !== "undefined" &&
+          document.documentElement.classList.contains("dark")
+            ? "#d1d5db"
+            : "#374151",
+        borderColor:
+          typeof window !== "undefined" &&
+          document.documentElement.classList.contains("dark")
+            ? "#374151"
+            : "#d1d5db",
         borderWidth: 1,
         cornerRadius: 8,
         displayColors: true,
@@ -623,25 +672,35 @@ const ElevePage: React.FC = () => {
         display: true,
         grid: {
           display: true,
-          color: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-            ? "rgba(75, 85, 99, 0.3)"
-            : "rgba(209, 213, 219, 0.5)",
+          color:
+            typeof window !== "undefined" &&
+            document.documentElement.classList.contains("dark")
+              ? "rgba(75, 85, 99, 0.3)"
+              : "rgba(209, 213, 219, 0.5)",
         },
         ticks: {
           font: { size: 11 },
           maxRotation: 45,
           minRotation: 0,
-          color: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-            ? "#9ca3af"
-            : "#6b7280",
-          callback: function(value: any, index: number, ticks: any[]) {
+          color:
+            typeof window !== "undefined" &&
+            document.documentElement.classList.contains("dark")
+              ? "#9ca3af"
+              : "#6b7280",
+          callback: function (value: any, index: number, ticks: any[]) {
             // Masquer les labels alternés sur mobile pour éviter la surcharge
-            if (typeof window !== "undefined" && window.innerWidth < 640 && index % 2 !== 0) {
-              return '';
+            if (
+              typeof window !== "undefined" &&
+              window.innerWidth < 640 &&
+              index % 2 !== 0
+            ) {
+              return "";
             }
             // Retourner la valeur du label
             const chart = (this as any).chart;
-            const labels = chart?.data?.labels as (string | number)[] | undefined;
+            const labels = chart?.data?.labels as
+              | (string | number)[]
+              | undefined;
             return labels && labels[index] ? labels[index] : value;
           },
         },
@@ -651,16 +710,20 @@ const ElevePage: React.FC = () => {
         beginAtZero: true,
         grid: {
           display: true,
-          color: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-            ? "rgba(75, 85, 99, 0.3)"
-            : "rgba(209, 213, 219, 0.5)",
+          color:
+            typeof window !== "undefined" &&
+            document.documentElement.classList.contains("dark")
+              ? "rgba(75, 85, 99, 0.3)"
+              : "rgba(209, 213, 219, 0.5)",
         },
         ticks: {
           font: { size: 11 },
-          color: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-            ? "#9ca3af"
-            : "#6b7280",
-          callback: function(value: any) {
+          color:
+            typeof window !== "undefined" &&
+            document.documentElement.classList.contains("dark")
+              ? "#9ca3af"
+              : "#6b7280",
+          callback: function (value: any) {
             return Math.round(Number(value));
           },
         },
@@ -673,12 +736,14 @@ const ElevePage: React.FC = () => {
     maintainAspectRatio: false,
     plugins: {
       legend: {
-        position: 'bottom' as const,
+        position: "bottom" as const,
         labels: {
           font: { size: 11 },
-          color: typeof window !== "undefined" && document.documentElement.classList.contains("dark") 
-            ? "#e5e7eb" 
-            : "#374151",
+          color:
+            typeof window !== "undefined" &&
+            document.documentElement.classList.contains("dark")
+              ? "#e5e7eb"
+              : "#374151",
           usePointStyle: true,
           padding: 10,
         },
@@ -687,26 +752,38 @@ const ElevePage: React.FC = () => {
         enabled: true,
         bodyFont: { size: 12 },
         titleFont: { size: 13 },
-        backgroundColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-          ? "rgba(17, 24, 39, 0.95)"
-          : "rgba(255, 255, 255, 0.95)",
-        titleColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-          ? "#e5e7eb"
-          : "#111827",
-        bodyColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-          ? "#d1d5db"
-          : "#374151",
-        borderColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-          ? "#374151"
-          : "#d1d5db",
+        backgroundColor:
+          typeof window !== "undefined" &&
+          document.documentElement.classList.contains("dark")
+            ? "rgba(17, 24, 39, 0.95)"
+            : "rgba(255, 255, 255, 0.95)",
+        titleColor:
+          typeof window !== "undefined" &&
+          document.documentElement.classList.contains("dark")
+            ? "#e5e7eb"
+            : "#111827",
+        bodyColor:
+          typeof window !== "undefined" &&
+          document.documentElement.classList.contains("dark")
+            ? "#d1d5db"
+            : "#374151",
+        borderColor:
+          typeof window !== "undefined" &&
+          document.documentElement.classList.contains("dark")
+            ? "#374151"
+            : "#d1d5db",
         borderWidth: 1,
         cornerRadius: 8,
         callbacks: {
-          label: function(context: any) {
-            const label = context.label || '';
+          label: function (context: any) {
+            const label = context.label || "";
             const value = context.parsed || 0;
-            const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
-            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
+            const total = context.dataset.data.reduce(
+              (a: number, b: number) => a + b,
+              0,
+            );
+            const percentage =
+              total > 0 ? ((value / total) * 100).toFixed(1) : "0";
             return `${label}: ${value} (${percentage}%)`;
           },
         },
@@ -911,48 +988,55 @@ const ElevePage: React.FC = () => {
 
             {/* Résumé général */}
             <Card className="w-full border border-purple-200 dark:border-purple-800 bg-gradient-to-r from-pink-50 to-orange-50 dark:from-pink-900/50 dark:to-orange-900/50">
-            <CardBody className="p-6">
+              <CardBody className="p-6">
                 <h2 className="text-xl font-bold mb-6 text-pink-700 dark:text-pink-300 flex items-center gap-2">
                   <FontAwesomeIcon icon={faChartBar} />
-                Résumé Général
-              </h2>
+                  Résumé Général
+                </h2>
                 <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/30 dark:to-purple-800/30 p-4 rounded-lg text-center border border-purple-200 dark:border-purple-700">
+                  <div className="border-purple-200 dark:from-purple-900/30 dark:to-purple-800/30 p-4 rounded-lg text-center border border-purple-200 dark:border-purple-700">
                     <FontAwesomeIcon
                       className="text-2xl text-purple-600 dark:text-purple-400 mb-2"
                       icon={faStar}
                     />
-                  <p className="text-sm text-purple-600 dark:text-purple-400">
-                    Moyenne Globale
-                  </p>
-                  <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-                    {advancedStats ? advancedStats.averageScore.toFixed(1) : eleveProfile.overallAverage.toFixed(1)}%
-                  </p>
-                </div>
+                    <p className="text-sm text-purple-600 dark:text-purple-400">
+                      Moyenne Globale
+                    </p>
+                    <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                      {advancedStats
+                        ? advancedStats.averageScore.toFixed(1)
+                        : eleveProfile.overallAverage.toFixed(1)}
+                      %
+                    </p>
+                  </div>
                   <div className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30 p-4 rounded-lg text-center border border-emerald-200 dark:border-emerald-700">
                     <FontAwesomeIcon
                       className="text-2xl text-emerald-600 dark:text-emerald-400 mb-2"
                       icon={faBookOpen}
                     />
-                  <p className="text-sm text-emerald-600 dark:text-emerald-400">
-                    Pages Complétées
-                  </p>
+                    <p className="text-sm text-emerald-600 dark:text-emerald-400">
+                      Pages Complétées
+                    </p>
                     <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
-                    {advancedStats ? advancedStats.totalExercises : eleveProfile.totalPagesCompleted}
-                  </p>
-                </div>
+                      {advancedStats
+                        ? advancedStats.totalExercises
+                        : eleveProfile.totalPagesCompleted}
+                    </p>
+                  </div>
                   <div className="bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/30 dark:to-violet-800/30 p-4 rounded-lg text-center border border-violet-200 dark:border-violet-700">
                     <FontAwesomeIcon
                       className="text-2xl text-violet-600 dark:text-violet-400 mb-2"
                       icon={faTrophy}
                     />
-                  <p className="text-sm text-violet-600 dark:text-violet-400">
-                    Matières Étudiées
-                  </p>
+                    <p className="text-sm text-violet-600 dark:text-violet-400">
+                      Matières Étudiées
+                    </p>
                     <p className="text-3xl font-bold text-violet-600 dark:text-violet-400">
-                    {advancedStats ? advancedStats.subjects.length : eleveProfile.subjects.length}
-                  </p>
-                </div>
+                      {advancedStats
+                        ? advancedStats.subjects.length
+                        : eleveProfile.subjects.length}
+                    </p>
+                  </div>
                   <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/30 dark:to-amber-800/30 p-4 rounded-lg text-center border border-amber-200 dark:border-amber-700">
                     <FontAwesomeIcon
                       className="text-2xl text-amber-600 dark:text-amber-400 mb-2"
@@ -967,9 +1051,9 @@ const ElevePage: React.FC = () => {
                         : "Aujourd'hui"}
                     </p>
                   </div>
-              </div>
-            </CardBody>
-          </Card>
+                </div>
+              </CardBody>
+            </Card>
 
             {/* Statistiques détaillées */}
             <Card className="w-full border border-purple-200 dark:border-purple-800 bg-gradient-to-r from-indigo-50 to-cyan-50 dark:from-indigo-900/50 dark:to-cyan-900/50">
@@ -1071,7 +1155,8 @@ const ElevePage: React.FC = () => {
                   classNames={{
                     tabList:
                       "gap-6 w-full relative rounded-none p-0 border-b border-divider",
-                    cursor: "w-full bg-gradient-to-r from-purple-500 to-pink-500",
+                    cursor:
+                      "w-full bg-gradient-to-r from-purple-500 to-pink-500",
                     tab: "max-w-fit px-0 h-12",
                     tabContent: "group-data-[selected=true]:text-purple-500",
                   }}
@@ -1225,12 +1310,16 @@ const ElevePage: React.FC = () => {
                   {/* Message si aucune donnée */}
                   {advancedStats.totalExercises === 0 && (
                     <div className="text-center py-8 mb-6">
-                      <FontAwesomeIcon icon={faChartBar} className="text-4xl text-gray-400 mb-4" />
+                      <FontAwesomeIcon
+                        icon={faChartBar}
+                        className="text-4xl text-gray-400 mb-4"
+                      />
                       <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
                         Aucune donnée d&apos;exercices trouvée
                       </h3>
                       <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        Commencez à faire des exercices pour voir vos statistiques ici.
+                        Commencez à faire des exercices pour voir vos
+                        statistiques ici.
                       </p>
                       <Button
                         color="primary"
@@ -1244,15 +1333,19 @@ const ElevePage: React.FC = () => {
 
                   {advancedStats.totalExercises > 0 && (
                     <>
-                      <Tabs 
+                      <Tabs
                         className="mb-8"
-                        selectedKey={selectedTab} 
-                        onSelectionChange={(key) => setSelectedTab(key.toString())}
+                        selectedKey={selectedTab}
+                        onSelectionChange={(key) =>
+                          setSelectedTab(key.toString())
+                        }
                         classNames={{
-                          tabList: "bg-white dark:bg-gray-800 border border-purple-200 dark:border-purple-700",
+                          tabList:
+                            "bg-white dark:bg-gray-800 border border-purple-200 dark:border-purple-700",
                           tab: "text-purple-700 dark:text-purple-300 data-[hover=true]:bg-purple-100 dark:data-[hover=true]:bg-purple-700",
                           tabContent: "text-purple-700 dark:text-purple-300",
-                          cursor: "bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-400 dark:to-pink-400",
+                          cursor:
+                            "bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-400 dark:to-pink-400",
                         }}
                       >
                         <Tab key="overview" title="Vue d'ensemble" />
@@ -1264,12 +1357,14 @@ const ElevePage: React.FC = () => {
                       {/* Vue d'ensemble */}
                       {selectedTab === "overview" && (
                         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-                          <Card className="bg-gradient-to-br from-purple-50 to-purple-100 dark:from-purple-900/50 dark:to-purple-800/50 shadow-lg border border-purple-200 dark:border-purple-700 hover:shadow-xl transition-shadow">
+                          <Card className="dark:from-purple-900/50 dark:to-purple-800/50 shadow-lg border border-purple-200 dark:border-purple-700 hover:shadow-xl transition-shadow">
                             <CardBody>
                               <h3 className="text-lg font-semibold mb-2 text-purple-700 dark:text-purple-200">
                                 Total des exercices
                               </h3>
-                              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">{advancedStats.totalExercises}</p>
+                              <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
+                                {advancedStats.totalExercises}
+                              </p>
                             </CardBody>
                           </Card>
                           <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/50 dark:to-emerald-800/50 shadow-lg border border-emerald-200 dark:border-emerald-700 hover:shadow-xl transition-shadow">
@@ -1277,7 +1372,9 @@ const ElevePage: React.FC = () => {
                               <h3 className="text-lg font-semibold mb-2 text-emerald-700 dark:text-emerald-200">
                                 Réponses correctes
                               </h3>
-                              <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">{advancedStats.totalCorrect}</p>
+                              <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
+                                {advancedStats.totalCorrect}
+                              </p>
                               <p className="text-sm text-gray-500 dark:text-gray-400">
                                 {advancedStats.totalExercises > 0
                                   ? (
@@ -1292,7 +1389,9 @@ const ElevePage: React.FC = () => {
                           </Card>
                           <Card className="bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/50 dark:to-violet-800/50 shadow-lg border border-violet-200 dark:border-violet-700 hover:shadow-xl transition-shadow">
                             <CardBody>
-                              <h3 className="text-lg font-semibold mb-2 text-violet-700 dark:text-violet-200">Score moyen</h3>
+                              <h3 className="text-lg font-semibold mb-2 text-violet-700 dark:text-violet-200">
+                                Score moyen
+                              </h3>
                               <p className="text-3xl font-bold text-violet-600 dark:text-violet-400">
                                 {Number(advancedStats.averageScore).toFixed(1)}%
                               </p>
@@ -1317,9 +1416,11 @@ const ElevePage: React.FC = () => {
                                     <h3 className="text-xl font-semibold text-cyan-800 dark:text-cyan-100">
                                       {subject.subject}
                                     </h3>
-                                    <Chip 
+                                    <Chip
                                       color={
-                                        subject.averageScore >= 70 ? "success" : "warning"
+                                        subject.averageScore >= 70
+                                          ? "success"
+                                          : "warning"
                                       }
                                       variant="flat"
                                       className="dark:bg-opacity-80"
@@ -1329,19 +1430,26 @@ const ElevePage: React.FC = () => {
                                   </div>
                                   <div className="mb-4">
                                     <div className="flex justify-between text-sm mb-1">
-                                      <span className="text-cyan-600 dark:text-cyan-300">Progression</span>
                                       <span className="text-cyan-600 dark:text-cyan-300">
-                                        {subject.exercisesCompleted} / {subject.totalExercises} exercices
-                                        ({subject.progress.toFixed(1)}%)
+                                        Progression
+                                      </span>
+                                      <span className="text-cyan-600 dark:text-cyan-300">
+                                        {subject.exercisesCompleted} /{" "}
+                                        {subject.totalExercises} exercices (
+                                        {subject.progress.toFixed(1)}%)
                                       </span>
                                     </div>
-                                    <Progress 
-                                      value={subject.progress} 
+                                    <Progress
+                                      value={subject.progress}
                                       color={
                                         subject.totalExercises > 0
-                                          ? subject.correctAnswers / subject.totalExercises >= 0.7
+                                          ? subject.correctAnswers /
+                                              subject.totalExercises >=
+                                            0.7
                                             ? "success"
-                                            : subject.correctAnswers / subject.totalExercises >= 0.4
+                                            : subject.correctAnswers /
+                                                  subject.totalExercises >=
+                                                0.4
                                               ? "warning"
                                               : "danger"
                                           : "default"
@@ -1351,17 +1459,32 @@ const ElevePage: React.FC = () => {
                                   </div>
                                   <div className="grid grid-cols-2 gap-4 text-sm">
                                     <div>
-                                      <p className="text-cyan-500 dark:text-cyan-400">Exercices complétés</p>
+                                      <p className="text-cyan-500 dark:text-cyan-400">
+                                        Exercices complétés
+                                      </p>
                                       <p className="font-medium text-cyan-800 dark:text-cyan-100">
                                         {subject.exercisesCompleted}
                                       </p>
                                     </div>
                                     <div>
-                                      <p className="text-cyan-500 dark:text-cyan-400">Réponses correctes</p>
-                                      <p className="font-medium text-cyan-800 dark:text-cyan-100">{subject.correctAnswers}</p>
+                                      <p className="text-cyan-500 dark:text-cyan-400">
+                                        Réponses correctes
+                                      </p>
+                                      <p className="font-medium text-cyan-800 dark:text-cyan-100">
+                                        {subject.correctAnswers}
+                                      </p>
                                       <p className="text-xs text-cyan-400 dark:text-cyan-500">
-                                        {subject.correctAnswers} / {subject.totalExercises} bonnes réponses
-                                        ({subject.totalExercises > 0 ? ((subject.correctAnswers / subject.totalExercises) * 100).toFixed(1) : 0}%)
+                                        {subject.correctAnswers} /{" "}
+                                        {subject.totalExercises} bonnes réponses
+                                        (
+                                        {subject.totalExercises > 0
+                                          ? (
+                                              (subject.correctAnswers /
+                                                subject.totalExercises) *
+                                              100
+                                            ).toFixed(1)
+                                          : 0}
+                                        %)
                                       </p>
                                     </div>
                                   </div>
@@ -1369,7 +1492,7 @@ const ElevePage: React.FC = () => {
                               </Card>
                             </motion.div>
                           ))}
-                          
+
                           {/* Graphique des scores par matière - Conditionnel */}
                           {advancedStats.subjects.length > 0 && (
                             <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-800/50 shadow-lg border border-indigo-200 dark:border-indigo-700">
@@ -1379,8 +1502,8 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Bar 
-                                      data={prepareBarChartData()} 
+                                    <Bar
+                                      data={prepareBarChartData()}
                                       options={chartOptions}
                                     />
                                   </div>
@@ -1402,8 +1525,8 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Doughnut 
-                                      data={prepareDoughnutChartData()} 
+                                    <Doughnut
+                                      data={prepareDoughnutChartData()}
                                       options={doughnutOptions}
                                     />
                                   </div>
@@ -1411,29 +1534,40 @@ const ElevePage: React.FC = () => {
                               </CardBody>
                             </Card>
                           )}
-                          
+
                           <Card className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/50 dark:to-orange-800/50 shadow-lg border border-amber-200 dark:border-amber-700">
                             <CardBody>
                               <h3 className="text-xl font-semibold mb-4 text-amber-800 dark:text-amber-100">
                                 Détails par catégorie
                               </h3>
                               <div className="space-y-4">
-                                {advancedStats.categoryStats.map((category: any, index: number) => (
-                                  <div
-                                    key={index}
-                                    className="flex justify-between items-center"
-                                  >
-                                    <span className="text-amber-700 dark:text-amber-200">{category.category}</span>
-                                    <div className="flex items-center gap-2">
-                                      <span className="text-sm text-amber-500 dark:text-amber-400">
-                                        {category.count} exercices
+                                {advancedStats.categoryStats.map(
+                                  (category: any, index: number) => (
+                                    <div
+                                      key={index}
+                                      className="flex justify-between items-center"
+                                    >
+                                      <span className="text-amber-700 dark:text-amber-200">
+                                        {category.category}
                                       </span>
-                                      <Chip size="sm" variant="flat" className="dark:bg-opacity-80">
-                                        {Number(category.percentage).toFixed(1)}%
-                                      </Chip>
+                                      <div className="flex items-center gap-2">
+                                        <span className="text-sm text-amber-500 dark:text-amber-400">
+                                          {category.count} exercices
+                                        </span>
+                                        <Chip
+                                          size="sm"
+                                          variant="flat"
+                                          className="dark:bg-opacity-80"
+                                        >
+                                          {Number(category.percentage).toFixed(
+                                            1,
+                                          )}
+                                          %
+                                        </Chip>
+                                      </div>
                                     </div>
-                                  </div>
-                                ))}
+                                  ),
+                                )}
                               </div>
                             </CardBody>
                           </Card>
@@ -1451,8 +1585,8 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Line 
-                                      data={prepareLineChartData()} 
+                                    <Line
+                                      data={prepareLineChartData()}
                                       options={chartOptions}
                                     />
                                   </div>
@@ -1460,7 +1594,7 @@ const ElevePage: React.FC = () => {
                               </CardBody>
                             </Card>
                           )}
-                          
+
                           {advancedStats.subjects.length > 0 && (
                             <Card className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/50 dark:to-purple-800/50 shadow-lg border border-violet-200 dark:border-violet-700">
                               <CardBody>
@@ -1469,8 +1603,8 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Bar 
-                                      data={prepareBarChartData()} 
+                                    <Bar
+                                      data={prepareBarChartData()}
                                       options={chartOptions}
                                     />
                                   </div>
