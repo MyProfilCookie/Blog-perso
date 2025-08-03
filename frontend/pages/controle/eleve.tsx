@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef, useCallback } from "react";
 import {
   Card,
   CardBody,
@@ -228,7 +228,7 @@ const ElevePage: React.FC = () => {
   const [selectedTab, setSelectedTab] = useState<string>("overview");
 
   // Cache pour les données localStorage
-  const localStorageCache = new Map();
+  const localStorageCache = useRef<Map<string, any>>(new Map());
 
   // Récupérer l'ID de l'utilisateur depuis le localStorage
   useEffect(() => {
@@ -265,6 +265,7 @@ const ElevePage: React.FC = () => {
   }, []);
 
   // Chargement optimisé du profil
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   useEffect(() => {
     const loadProfile = async () => {
       if (!userId) return;
@@ -339,8 +340,8 @@ const ElevePage: React.FC = () => {
   // Fonction optimisée pour récupérer les données depuis le localStorage
   const getLocalStorageData = (subject: string) => {
     // Vérifier le cache d'abord
-    if (localStorageCache.has(subject)) {
-      return localStorageCache.get(subject);
+    if (localStorageCache.current.has(subject)) {
+      return localStorageCache.current.get(subject);
     }
 
     try {
@@ -375,7 +376,7 @@ const ElevePage: React.FC = () => {
       }
 
       // Mettre en cache le résultat
-      localStorageCache.set(subject, data);
+      localStorageCache.current.set(subject, data);
       return data;
     } catch (error) {
       console.error(`Erreur lors de la récupération des données pour ${subject}:`, error);
