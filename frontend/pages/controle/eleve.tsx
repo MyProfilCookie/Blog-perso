@@ -1,5 +1,5 @@
 "use client";
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Card,
   CardBody,
@@ -222,111 +222,80 @@ const ElevePage: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [userId, setUserId] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<any>(null);
-  
-  // Nouvelles variables pour les statistiques avancées
   const [advancedStats, setAdvancedStats] = useState<UserStats | null>(null);
   const [selectedTab, setSelectedTab] = useState<string>("overview");
 
-  // Cache pour les données localStorage
-  const localStorageCache = useRef<Map<string, any>>(new Map());
-
   // Récupérer l'ID de l'utilisateur depuis le localStorage
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const userInfo = localStorage.getItem("userInfo");
-    const userToken = localStorage.getItem("userToken");
-    const token = localStorage.getItem("token");
+    try {
+      const storedUser = localStorage.getItem("user");
+      const userInfo = localStorage.getItem("userInfo");
 
-    let foundUserId = null;
-    let foundUserInfo = null;
+      let foundUserId = null;
+      let foundUserInfo = null;
 
-    if (storedUser) {
-      try {
-        const user = JSON.parse(storedUser);
-        foundUserId = user._id || user.id;
-        foundUserInfo = user;
-      } catch (err) {
-        console.error("Erreur lors du parsing de storedUser:", err);
+      if (storedUser) {
+        try {
+          const user = JSON.parse(storedUser);
+          foundUserId = user._id || user.id;
+          foundUserInfo = user;
+        } catch (err) {
+          console.error("Erreur lors du parsing de storedUser:", err);
+        }
       }
-    }
 
-    if (!foundUserId && userInfo) {
-      try {
-        const user = JSON.parse(userInfo);
-        foundUserId = user._id || user.id;
-        foundUserInfo = user;
-      } catch (err) {
-        console.error("Erreur lors du parsing de userInfo:", err);
+      if (!foundUserId && userInfo) {
+        try {
+          const user = JSON.parse(userInfo);
+          foundUserId = user._id || user.id;
+          foundUserInfo = user;
+        } catch (err) {
+          console.error("Erreur lors du parsing de userInfo:", err);
+        }
       }
-    }
 
-    setUserId(foundUserId);
-    setUserInfo(foundUserInfo);
+      setUserId(foundUserId);
+      setUserInfo(foundUserInfo);
+    } catch (err) {
+      console.error("Erreur lors de la récupération de l'utilisateur:", err);
+      setError("Erreur lors de la récupération de l'utilisateur");
+      setLoading(false);
+    }
   }, []);
 
-  // Chargement optimisé du profil
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+  // Chargement simplifié du profil
   useEffect(() => {
-    const loadProfile = async () => {
-      if (!userId) return;
+    if (!userId) return;
 
+    const loadProfile = async () => {
       try {
         setLoading(true);
         
-        // Charger d'abord les données localStorage pour un affichage rapide
-        const localData = getAllLocalStorageData();
-        if (Object.keys(localData).length > 0) {
-          console.log("📊 Données locales trouvées, affichage immédiat");
-          
-          // Créer un profil temporaire avec les données locales
-          const tempProfile = {
-            _id: userId,
-            userId: userId,
-            subjects: Object.keys(SUBJECTS_CONFIG).map(subject => ({
-              subjectName: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG].name,
-              pages: [],
-              averageScore: 0,
-              lastUpdated: new Date().toISOString()
-            })),
-            overallAverage: 0,
-            totalPagesCompleted: 0,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString()
-          };
-          
-          setEleveProfile(tempProfile);
-          setLoading(false);
-          
-          // Charger les statistiques avancées en arrière-plan
-          fetchAllAdvancedStats().then(() => {
-            calculateDetailedStats(tempProfile);
-          });
-        }
-
-        // En parallèle, essayer de récupérer les données du serveur
-        const token = localStorage.getItem("token") || localStorage.getItem("userToken");
-        if (token) {
-          try {
-            const response = await axios.get(
-              `${process.env.NEXT_PUBLIC_API_URL}/eleves/profile/${userId}`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`,
-                },
-                timeout: 5000, // Timeout de 5 secondes
-              },
-            );
-
-            if (response.data) {
-              console.log("✅ Données serveur récupérées");
-              setEleveProfile(response.data);
-              calculateDetailedStats(response.data);
-            }
-          } catch (serverErr) {
-            console.warn("⚠️ Erreur serveur, utilisation des données locales:", serverErr);
-            // Les données locales sont déjà chargées
-          }
-        }
+        // Créer un profil temporaire simple
+        const tempProfile = {
+          _id: userId,
+          userId: userId,
+          subjects: Object.keys(SUBJECTS_CONFIG).map(subject => ({
+            subjectName: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG].name,
+            pages: [],
+            averageScore: 0,
+            lastUpdated: new Date().toISOString()
+          })),
+          overallAverage: 0,
+          totalPagesCompleted: 0,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString()
+        };
+        
+        setEleveProfile(tempProfile);
+        setLoading(false);
+        
+        // Charger les données en arrière-plan
+        setTimeout(() => {
+          loadLocalData();
+          loadServerData();
+        }, 100);
+        
       } catch (err) {
         console.error("❌ Erreur lors du chargement:", err);
         setError("Erreur lors du chargement des données");
@@ -337,405 +306,121 @@ const ElevePage: React.FC = () => {
     loadProfile();
   }, [userId]);
 
-  // Fonction optimisée pour récupérer les données depuis le localStorage
-  const getLocalStorageData = (subject: string) => {
-    // Vérifier le cache d'abord
-    if (localStorageCache.current.has(subject)) {
-      return localStorageCache.current.get(subject);
-    }
-
+  // Fonction simplifiée pour charger les données locales
+  const loadLocalData = () => {
     try {
-      const data: any = {};
-
-      // Récupérer toutes les clés localStorage en une seule fois
+      console.log("📊 Chargement des données locales...");
+      
+      // Récupérer les données localStorage de manière simple
       const allKeys = Object.keys(localStorage);
-      const subjectKeys = allKeys.filter(key => key.startsWith(`${subject}_`));
-
-      // Traitement par lots pour éviter les blocages
-      const batchSize = 10;
-      for (let i = 0; i < subjectKeys.length; i += batchSize) {
-        const batch = subjectKeys.slice(i, i + batchSize);
-        
-        batch.forEach(key => {
-          try {
-            const value = localStorage.getItem(key);
-            if (value) {
-              const parsed = JSON.parse(value);
-              const dataKey = key.replace(`${subject}_`, '');
-              data[dataKey] = parsed;
-            }
-          } catch (e) {
-            console.warn(`Erreur parsing ${key}:`, e);
-          }
-        });
-
-        // Permettre au navigateur de respirer
-        if (i + batchSize < subjectKeys.length) {
-          setTimeout(() => {}, 0);
-        }
-      }
-
-      // Mettre en cache le résultat
-      localStorageCache.current.set(subject, data);
-      return data;
-    } catch (error) {
-      console.error(`Erreur lors de la récupération des données pour ${subject}:`, error);
-      return {};
-    }
-  };
-
-  // Fonction optimisée pour récupérer toutes les données localStorage
-  const getAllLocalStorageData = () => {
-    const allSubjectsData: { [key: string]: any } = {};
-    
-    // Récupérer toutes les clés localStorage en une seule fois
-    const allKeys = Object.keys(localStorage);
-    
-    // Grouper les clés par matière
-    const subjectGroups = new Map();
-    
-    allKeys.forEach((key: string) => {
-      const parts = key.split('_');
-      if (parts.length > 1) {
-        const subject = parts[0];
-        if (!subjectGroups.has(subject)) {
-          subjectGroups.set(subject, []);
-        }
-        subjectGroups.get(subject)!.push(key);
-      }
-    });
-
-    // Traiter chaque matière
-    subjectGroups.forEach((keys, subject) => {
-      if (SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]) {
-        const data: any = {};
-        
-        keys.forEach((key: string) => {
-          try {
-            const value = localStorage.getItem(key);
-            if (value) {
-              const parsed = JSON.parse(value);
-              const dataKey = key.replace(`${subject}_`, '');
-              data[dataKey] = parsed;
-            }
-          } catch (e) {
-            console.warn(`Erreur parsing ${key}:`, e);
-          }
-        });
-        
-        allSubjectsData[subject] = data;
-      }
-    });
-
-    return allSubjectsData;
-  };
-
-  // Fonction pour calculer les statistiques détaillées
-  const calculateDetailedStats = (profile: EleveProfile) => {
-    if (!profile || !profile.subjects) return;
-
-    // Si les données du backend sont vides, utiliser les données localStorage
-    if (profile.overallAverage === 0 && profile.totalPagesCompleted === 0) {
-      console.log("📊 Données backend vides, utilisation des données localStorage pour le résumé");
+      const subjectData: { [key: string]: any } = {};
       
-      // Récupérer toutes les données localStorage
-      const allSubjectsData: { [key: string]: any } = {};
-      Object.keys(SUBJECTS_CONFIG).forEach((subject) => {
-        if (!subject.includes("trimestre")) {
-          allSubjectsData[subject] = getLocalStorageData(subject);
-        }
-      });
-
-      // Calculer les statistiques globales depuis localStorage
-      let totalExercises = 0;
-      let totalCorrect = 0;
-      let totalPages = 0;
-      let subjectsWithData = 0;
-
-      Object.keys(allSubjectsData).forEach((subject) => {
-        const data = allSubjectsData[subject];
-        const stats = calculateSubjectStats(subject, data);
-        
-        if (stats.totalExercises > 0 || stats.exercisesCompleted > 0) {
-          totalExercises += stats.totalExercises;
-          totalCorrect += stats.correctAnswers;
-          totalPages += stats.exercisesCompleted;
-          subjectsWithData++;
-        }
-      });
-
-      // Mettre à jour le profil avec les vraies données
-      const updatedProfile = {
-        ...profile,
-        overallAverage: totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 0,
-        totalPagesCompleted: totalPages,
-        subjects: profile.subjects.map(subject => {
-          const subjectKey = subject.subjectName.toLowerCase().replace(/\s+/g, "");
-          const data = allSubjectsData[subjectKey];
-          const stats = calculateSubjectStats(subjectKey, data);
+      // Grouper par matière
+      allKeys.forEach(key => {
+        const parts = key.split('_');
+        if (parts.length > 1) {
+          const subject = parts[0];
+          if (!subjectData[subject]) {
+            subjectData[subject] = {};
+          }
           
-          return {
-            ...subject,
-            averageScore: stats.averageScore,
-            pages: stats.exercisesCompleted > 0 ? Array.from({ length: stats.exercisesCompleted }, (_, i) => ({
-              pageNumber: i + 1,
-              score: stats.averageScore,
-              completedAt: new Date().toISOString(),
-              timeSpent: 300, // 5 minutes par défaut
-              correctAnswers: Math.floor(stats.averageScore / 100 * 10), // Estimation
-              totalQuestions: 10
-            })) : []
-          };
-        })
-      };
-
-      console.log("📊 Profil mis à jour avec les données localStorage:", {
-        overallAverage: updatedProfile.overallAverage,
-        totalPagesCompleted: updatedProfile.totalPagesCompleted,
-        subjectsCount: subjectsWithData
+          try {
+            const value = localStorage.getItem(key);
+            if (value) {
+              const parsed = JSON.parse(value);
+              const dataKey = key.replace(`${subject}_`, '');
+              subjectData[subject][dataKey] = parsed;
+            }
+          } catch (e) {
+            console.warn(`Erreur parsing ${key}:`, e);
+          }
+        }
       });
 
-      setEleveProfile(updatedProfile);
-      profile = updatedProfile;
-    }
-
-    const stats: DetailedStats[] = profile.subjects.map((subject) => {
-      const pages = subject.pages || [];
-      const scores = pages.map((page) => page.score);
-      const subjectKey = subject.subjectName.toLowerCase().replace(/\s+/g, "");
-      const config =
-        SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG] ||
-        SUBJECTS_CONFIG.math;
-
-      return {
-        subjectName: subject.subjectName,
-        totalPages: pages.length,
-        averageScore: subject.averageScore,
-        bestPage: Math.max(...scores, 0),
-        worstPage: Math.min(...scores, 100),
-        completionRate:
-          pages.length > 0
-            ? (pages.filter((p) => p.score >= 70).length / pages.length) * 100
-            : 0,
-        icon: config.icon,
-        color: config.color,
-      };
-    });
-
-    setDetailedStats(stats);
-  };
-
-  // Fonction pour calculer les statistiques d'une matière
-  const calculateSubjectStats = (subject: string, data: any): SubjectStats => {
-    let totalExercises = 0;
-    let correctAnswers = 0;
-    let exercisesCompleted = 0;
-    let lastActivity = "";
-    
-    // Vérifier que data est valide
-    if (!data || typeof data !== 'object') {
-      return {
-        subject: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name || subject,
-        totalExercises: 0,
-        correctAnswers: 0,
-        averageScore: 0,
-        progress: 0,
-        lastActivity: new Date().toISOString(),
-        exercisesCompleted: 0,
-      };
-    }
-    
-    // Calculer les statistiques selon le type de matière
-    if (subject === "lessons") {
-      // Pour les leçons, utiliser les évaluations et la progression
-      if (data.lessonsRatings && typeof data.lessonsRatings === 'object') {
-        exercisesCompleted = Object.values(data.lessonsRatings).reduce(
-          (sum: number, count: any) =>
-            sum + (typeof count === "number" ? count : 0),
-          0,
-        );
-        correctAnswers = data.lessonsRatings["Facile"] || 0;
-        totalExercises = exercisesCompleted;
-      }
-      if (data.lessonsProgress && typeof data.lessonsProgress === "number") {
-        exercisesCompleted = data.lessonsProgress;
-        totalExercises = Math.max(totalExercises, exercisesCompleted);
-      }
-    } else if (subject.includes("trimestre")) {
-      // Pour les trimestres, utiliser les données de progression
-      if (data.trimestreProgress && typeof data.trimestreProgress === 'object') {
-        exercisesCompleted = Object.keys(
-          data.trimestreProgress.completedSubjects || {},
-        ).length;
-        totalExercises = exercisesCompleted;
-        correctAnswers = exercisesCompleted; // Simplification
-      }
-    } else if (subject === "rapportHebdo") {
-      // Pour le rapport hebdo, utiliser les résultats
-      if (data.rapportResults && Array.isArray(data.rapportResults)) {
-        exercisesCompleted = data.rapportResults.length;
-        correctAnswers = data.rapportResults.filter(
-          (r: any) => r && r.isCorrect === true,
-        ).length;
-        totalExercises = exercisesCompleted;
-      }
-    } else {
-      // Pour les autres matières, utiliser les exercices validés et résultats
-      if (data.validatedExercises && typeof data.validatedExercises === 'object') {
-        exercisesCompleted = Object.keys(data.validatedExercises).filter(
-          (key) => data.validatedExercises[key] === true,
-        ).length;
-        totalExercises = exercisesCompleted;
-      }
-      
-      // Calculer les réponses correctes depuis les résultats
-      if (data.results && Array.isArray(data.results)) {
-        correctAnswers = data.results.filter(
-          (r: any) => r && r.isCorrect === true,
-        ).length;
-        totalExercises = Math.max(totalExercises, data.results.length);
-      }
-      
-      // Si pas de résultats mais des exercices validés, estimer les réponses correctes
-      if (correctAnswers === 0 && exercisesCompleted > 0) {
-        correctAnswers = Math.floor(exercisesCompleted * 0.8); // Estimation 80% de réussite
-      }
-    }
-    
-    const averageScore =
-      totalExercises > 0 ? (correctAnswers / totalExercises) * 100 : 0;
-    const progress =
-      totalExercises > 0 ? (exercisesCompleted / totalExercises) * 100 : 0;
-    
-    // Déterminer la dernière activité
-    if (data.userAnswers && typeof data.userAnswers === 'object' && Object.keys(data.userAnswers).length > 0) {
-      lastActivity = new Date().toISOString();
-    } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
-      lastActivity = new Date().toISOString();
-    } else if (
-      data.validatedExercises &&
-      typeof data.validatedExercises === 'object' &&
-      Object.keys(data.validatedExercises).length > 0
-    ) {
-      lastActivity = new Date().toISOString();
-    }
-    
-    return {
-      subject: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name || subject,
-      totalExercises,
-      correctAnswers,
-      averageScore,
-      progress,
-      lastActivity: lastActivity || new Date().toISOString(),
-      exercisesCompleted,
-    };
-  };
-
-  // Fonction pour récupérer tous les trimestres disponibles
-  const getAllTrimestres = () => {
-    const trimestres: string[] = [];
-
-    // Parcourir le localStorage pour trouver tous les trimestres
-    for (let i = 0; i < localStorage.length; i++) {
-      const key = localStorage.key(i);
-
-      if (key && key.startsWith("trimestre-") && key.endsWith("-progress")) {
-        const trimestreId = key
-          .replace("trimestre-", "")
-          .replace("-progress", "");
-
-        trimestres.push(trimestreId);
-      }
-    }
-
-    return trimestres;
-  };
-
-  // Fonction optimisée pour récupérer toutes les statistiques avancées
-  const fetchAllAdvancedStats = async () => {
-    try {
-      console.log("🔍 Début de la récupération des statistiques avancées");
-      
-      // Utiliser la fonction optimisée pour récupérer toutes les données
-      const allSubjectsData = getAllLocalStorageData();
-      
-      console.log("📚 Matières trouvées:", Object.keys(allSubjectsData));
-
-      // Calculer les statistiques en parallèle avec Web Workers si possible
-      const subjectsStats: SubjectStats[] = [];
+      // Calculer les statistiques simples
       let totalExercises = 0;
       let totalCorrect = 0;
+      const subjectsStats: SubjectStats[] = [];
 
-      // Traitement par lots pour éviter les blocages
-      const subjects = Object.keys(allSubjectsData);
-      const batchSize = 5;
-      
-      for (let i = 0; i < subjects.length; i += batchSize) {
-        const batch = subjects.slice(i, i + batchSize);
-        
-        // Traiter le lot en parallèle
-        const batchPromises = batch.map(async (subject) => {
-          const subjectData = allSubjectsData[subject];
-          return calculateSubjectStats(subject, subjectData);
-        });
-        
-        const batchResults = await Promise.all(batchPromises);
-        
-        batchResults.forEach((stats) => {
-          if (stats.totalExercises > 0 || stats.exercisesCompleted > 0) {
-            subjectsStats.push(stats);
-            totalExercises += stats.totalExercises;
-            totalCorrect += stats.correctAnswers;
-          }
-        });
+      Object.keys(subjectData).forEach(subject => {
+        const data = subjectData[subject];
+        let exercises = 0;
+        let correct = 0;
 
-        // Permettre au navigateur de respirer
-        if (i + batchSize < subjects.length) {
-          await new Promise(resolve => setTimeout(resolve, 0));
+        // Compter les exercices
+        if (data.results && Array.isArray(data.results)) {
+          exercises = data.results.length;
+          correct = data.results.filter((r: any) => r && r.isCorrect === true).length;
+        } else if (data.validatedExercises && typeof data.validatedExercises === 'object') {
+          exercises = Object.keys(data.validatedExercises).filter(
+            (key) => data.validatedExercises[key] === true
+          ).length;
+          correct = Math.floor(exercises * 0.8); // Estimation
         }
-      }
 
-      console.log("📊 Statistiques finales:", {
-        totalExercises,
-        totalCorrect,
-        subjectsCount: subjectsStats.length
+        if (exercises > 0) {
+          totalExercises += exercises;
+          totalCorrect += correct;
+          
+          subjectsStats.push({
+            subject: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name || subject,
+            totalExercises: exercises,
+            correctAnswers: correct,
+            averageScore: exercises > 0 ? (correct / exercises) * 100 : 0,
+            progress: 100,
+            lastActivity: new Date().toISOString(),
+            exercisesCompleted: exercises,
+          });
+        }
       });
 
-      // Calculer la moyenne globale
+      // Mettre à jour les statistiques
       const averageScore = totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 0;
-
-      // Créer des statistiques par catégorie
-      const categoryStats: CategoryStats[] = subjectsStats.map((subject) => ({
-        category: subject.subject,
-        count: subject.exercisesCompleted,
-        percentage: subject.averageScore,
-      }));
-
-      // Créer des statistiques quotidiennes simplifiées
-      const dailyStats: DailyStats[] = Array.from({ length: 7 }, (_, i) => {
-        const date = new Date();
-        date.setDate(date.getDate() - i);
-        return {
-          date: date.toISOString().split("T")[0],
-          exercisesCompleted: Math.max(Math.floor(totalExercises / 7), 1),
-          averageScore: Math.max(averageScore, 70),
-        };
-      }).reverse();
-
-      const finalStats: UserStats = {
+      
+      setAdvancedStats({
         totalExercises,
         totalCorrect,
         averageScore,
         subjects: subjectsStats,
-        dailyStats,
-        categoryStats,
+        dailyStats: Array.from({ length: 7 }, (_, i) => ({
+          date: new Date(Date.now() - i * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+          exercisesCompleted: Math.max(Math.floor(totalExercises / 7), 1),
+          averageScore: Math.max(averageScore, 70),
+        })).reverse(),
+        categoryStats: subjectsStats.map(s => ({
+          category: s.subject,
+          count: s.exercisesCompleted,
+          percentage: s.averageScore,
+        })),
         subscriptionType: "free",
-      };
+      });
 
-      console.log("✅ Statistiques avancées finales:", finalStats);
-      setAdvancedStats(finalStats);
-    } catch (err: any) {
-      console.error("❌ Erreur lors de la récupération des statistiques avancées:", err);
+      console.log("✅ Données locales chargées");
+    } catch (err) {
+      console.error("❌ Erreur lors du chargement des données locales:", err);
+    }
+  };
+
+  // Fonction simplifiée pour charger les données serveur
+  const loadServerData = async () => {
+    try {
+      const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+      if (!token || !userId) return;
+
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/eleves/profile/${userId}`,
+        {
+          headers: { Authorization: `Bearer ${token}` },
+          timeout: 5000,
+        },
+      );
+
+      if (response.data) {
+        console.log("✅ Données serveur récupérées");
+        setEleveProfile(response.data);
+      }
+    } catch (err) {
+      console.warn("⚠️ Erreur serveur, utilisation des données locales:", err);
     }
   };
 
@@ -953,7 +638,9 @@ const ElevePage: React.FC = () => {
       );
 
       setEleveProfile(updatedResponse.data);
-      calculateDetailedStats(updatedResponse.data);
+      // Recharger les données avancées pour mettre à jour les statistiques
+      loadLocalData();
+      loadServerData();
     } catch (err) {
       console.error("Erreur lors de la suppression de la note:", err);
       setError("Erreur lors de la suppression de la note");
