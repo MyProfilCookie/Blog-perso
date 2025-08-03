@@ -677,7 +677,7 @@ const ElevePage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
         <div className="text-center">
           <div className="relative">
             <Spinner color="primary" size="lg" />
@@ -698,7 +698,7 @@ const ElevePage: React.FC = () => {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
         <div className="bg-red-100 p-6 rounded-lg text-red-700 max-w-md text-center dark:bg-red-900/30 dark:text-red-300">
           <FontAwesomeIcon
             className="text-2xl mb-4"
@@ -719,7 +719,7 @@ const ElevePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 via-pink-50 to-orange-50 dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
+    <div className="min-h-screen dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
       <div className="container mx-auto p-4">
         <div className="flex justify-between items-center mb-6">
           <BackButton />
