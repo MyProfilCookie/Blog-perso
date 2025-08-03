@@ -965,7 +965,7 @@ const ElevePage: React.FC = () => {
           >
             {/* Informations utilisateur */}
             {userInfo && (
-              <Card className="w-full border border-purple-200 dark:border-purple-800 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/50 dark:to-pink-900/50">
+              <Card className="w-full border border-purple-200 dark:border-purple-800 dark:from-purple-900/50 dark:to-pink-900/50">
                 <CardBody className="p-6">
                   <div className="flex items-center gap-4 mb-4">
                     <Avatar
@@ -1518,7 +1518,7 @@ const ElevePage: React.FC = () => {
                       {selectedTab === "categories" && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                           {advancedStats.categoryStats.length > 0 && (
-                            <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
+                            <Card className="from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
                               <CardBody>
                                 <h3 className="text-xl font-semibold mb-4 text-teal-800 dark:text-teal-100">
                                   Répartition par catégorie
