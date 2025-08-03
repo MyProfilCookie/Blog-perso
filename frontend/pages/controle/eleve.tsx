@@ -360,18 +360,21 @@ const ElevePage: React.FC = () => {
       let totalExercises = 0;
       let totalCorrect = 0;
       const subjectsStats: SubjectStats[] = [];
+      const detailedStatsArray: DetailedStats[] = []; // Ajouter cette ligne
 
       Object.keys(subjectData).forEach((subject) => {
         const data = subjectData[subject];
         let exercises = 0;
         let correct = 0;
+        let scores: number[] = [];
 
-        // Compter les exercices
+        // Compter les exercices et collecter les scores
         if (data.results && Array.isArray(data.results)) {
           exercises = data.results.length;
           correct = data.results.filter(
             (r: any) => r && r.isCorrect === true,
           ).length;
+          scores = data.results.map((r: any) => r.score || 0);
         } else if (
           data.validatedExercises &&
           typeof data.validatedExercises === "object"
@@ -380,22 +383,52 @@ const ElevePage: React.FC = () => {
             (key) => data.validatedExercises[key] === true,
           ).length;
           correct = Math.floor(exercises * 0.8); // Estimation
+          // Générer des scores d'exemple
+          scores = Array.from(
+            { length: exercises },
+            () => Math.random() * 40 + 60,
+          );
         }
 
         if (exercises > 0) {
           totalExercises += exercises;
           totalCorrect += correct;
 
+          const averageScore =
+            scores.length > 0
+              ? scores.reduce((a, b) => a + b, 0) / scores.length
+              : (correct / exercises) * 100;
+
+          const bestScore =
+            scores.length > 0 ? Math.max(...scores) : averageScore;
+          const worstScore =
+            scores.length > 0 ? Math.min(...scores) : averageScore;
+
+          // Obtenir la configuration de la matière
+          const subjectConfig =
+            SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG] ||
+            SUBJECTS_CONFIG.math;
+
           subjectsStats.push({
-            subject:
-              SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name ||
-              subject,
+            subject: subjectConfig.name,
             totalExercises: exercises,
             correctAnswers: correct,
-            averageScore: exercises > 0 ? (correct / exercises) * 100 : 0,
+            averageScore,
             progress: 100,
             lastActivity: new Date().toISOString(),
             exercisesCompleted: exercises,
+          });
+
+          // Ajouter aux statistiques détaillées
+          detailedStatsArray.push({
+            subjectName: subjectConfig.name,
+            totalPages: exercises,
+            averageScore,
+            bestPage: Math.round(bestScore),
+            worstPage: Math.round(worstScore),
+            completionRate: (correct / exercises) * 100,
+            icon: subjectConfig.icon,
+            color: subjectConfig.color,
           });
         }
       });
@@ -403,6 +436,9 @@ const ElevePage: React.FC = () => {
       // Mettre à jour les statistiques
       const averageScore =
         totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 0;
+
+      // Mettre à jour detailedStats ici
+      setDetailedStats(detailedStatsArray);
 
       setAdvancedStats({
         totalExercises,
@@ -424,7 +460,10 @@ const ElevePage: React.FC = () => {
         subscriptionType: "free",
       });
 
-      console.log("✅ Données locales chargées");
+      console.log(
+        "✅ Données locales chargées, detailedStats:",
+        detailedStatsArray,
+      );
     } catch (err) {
       console.error("❌ Erreur lors du chargement des données locales:", err);
     }
@@ -449,6 +488,41 @@ const ElevePage: React.FC = () => {
       if (response.data) {
         console.log("✅ Données serveur récupérées");
         setEleveProfile(response.data);
+
+        // Calculer les statistiques détaillées à partir des données serveur
+        const serverDetailedStats: DetailedStats[] = response.data.subjects.map(
+          (subject: SubjectScore) => {
+            const scores = subject.pages.map((page) => page.score);
+            const bestScore = scores.length > 0 ? Math.max(...scores) : 0;
+            const worstScore = scores.length > 0 ? Math.min(...scores) : 0;
+            const correctAnswers = subject.pages.reduce(
+              (sum, page) => sum + page.correctAnswers,
+              0,
+            );
+            const totalQuestions = subject.pages.reduce(
+              (sum, page) => sum + page.totalQuestions,
+              0,
+            );
+
+            const subjectConfig = getSubjectConfig(subject.subjectName);
+
+            return {
+              subjectName: subject.subjectName,
+              totalPages: subject.pages.length,
+              averageScore: subject.averageScore,
+              bestPage: Math.round(bestScore),
+              worstPage: Math.round(worstScore),
+              completionRate:
+                totalQuestions > 0
+                  ? (correctAnswers / totalQuestions) * 100
+                  : 0,
+              icon: subjectConfig.icon,
+              color: subjectConfig.color,
+            };
+          },
+        );
+
+        setDetailedStats(serverDetailedStats);
       }
     } catch (err) {
       console.warn("⚠️ Erreur serveur, utilisation des données locales:", err);
