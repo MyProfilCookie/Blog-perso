@@ -93,7 +93,7 @@ interface DetailedStats {
   bestPage: number;
   worstPage: number;
   completionRate: number;
-  icon: any;
+  icon: import('@fortawesome/fontawesome-svg-core').IconDefinition;
   color: string;
 }
 
@@ -211,6 +211,19 @@ const SUBJECTS_CONFIG = {
   },
 };
 
+// Enregistrer les éléments Chart.js au début du composant
+ChartJS.register(
+  CategoryScale,
+  LinearScale,
+  PointElement,
+  LineElement,
+  BarElement,
+  ArcElement,
+  Title,
+  Tooltip,
+  Legend,
+);
+
 const ElevePage: React.FC = () => {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
@@ -237,6 +250,7 @@ const ElevePage: React.FC = () => {
       if (storedUser) {
         try {
           const user = JSON.parse(storedUser);
+
           foundUserId = user._id || user.id;
           foundUserInfo = user;
         } catch (err) {
@@ -247,6 +261,7 @@ const ElevePage: React.FC = () => {
       if (!foundUserId && userInfo) {
         try {
           const user = JSON.parse(userInfo);
+
           foundUserId = user._id || user.id;
           foundUserInfo = user;
         } catch (err) {
@@ -318,17 +333,21 @@ const ElevePage: React.FC = () => {
       // Grouper par matière
       allKeys.forEach(key => {
         const parts = key.split('_');
+
         if (parts.length > 1) {
           const subject = parts[0];
+
           if (!subjectData[subject]) {
             subjectData[subject] = {};
           }
           
           try {
             const value = localStorage.getItem(key);
+
             if (value) {
               const parsed = JSON.parse(value);
               const dataKey = key.replace(`${subject}_`, '');
+
               subjectData[subject][dataKey] = parsed;
             }
           } catch (e) {
@@ -405,6 +424,7 @@ const ElevePage: React.FC = () => {
   const loadServerData = async () => {
     try {
       const token = localStorage.getItem("token") || localStorage.getItem("userToken");
+
       if (!token || !userId) return;
 
       const response = await axios.get(
@@ -424,69 +444,134 @@ const ElevePage: React.FC = () => {
     }
   };
 
-  // Fonctions de préparation des graphiques
+  // Fonctions de préparation des graphiques corrigées
   const prepareLineChartData = () => {
-    if (!advancedStats) return null;
+    if (!advancedStats || !advancedStats.dailyStats || advancedStats.dailyStats.length === 0) {
+      return {
+        labels: ['Aucune donnée'],
+        datasets: [{
+          label: "Score moyen",
+          data: [0],
+          borderColor: "rgb(75, 192, 192)",
+          backgroundColor: "rgba(75, 192, 192, 0.1)",
+          tension: 0.1,
+        }],
+      };
+    }
     
     return {
       labels: advancedStats.dailyStats.map((stat: any) =>
-        new Date(stat.date).toLocaleDateString(),
+        new Date(stat.date).toLocaleDateString('fr-FR', { 
+          month: 'short', 
+          day: 'numeric' 
+        }),
       ),
       datasets: [
         {
           label: "Score moyen",
-          data: advancedStats.dailyStats.map((stat: any) => stat.averageScore),
+          data: advancedStats.dailyStats.map((stat: any) => Math.round(stat.averageScore || 0)),
           borderColor: "rgb(75, 192, 192)",
           backgroundColor: "rgba(75, 192, 192, 0.1)",
           tension: 0.1,
+          fill: false,
         },
         {
           label: "Exercices complétés",
-          data: advancedStats.dailyStats.map((stat: any) => stat.exercisesCompleted),
+          data: advancedStats.dailyStats.map((stat: any) => stat.exercisesCompleted || 0),
           borderColor: "rgb(255, 99, 132)",
           backgroundColor: "rgba(255, 99, 132, 0.1)",
           tension: 0.1,
+          fill: false,
         },
       ],
     };
   };
 
   const prepareBarChartData = () => {
-    if (!advancedStats) return null;
+    if (!advancedStats || !advancedStats.subjects || advancedStats.subjects.length === 0) {
+      return {
+        labels: ['Aucune donnée'],
+        datasets: [{
+          label: "Score moyen",
+          data: [0],
+          backgroundColor: ["rgba(156, 163, 175, 0.5)"],
+          borderColor: ["rgba(156, 163, 175, 1)"],
+          borderWidth: 1,
+        }],
+      };
+    }
+    
+    const colors = [
+      "rgba(255, 99, 132, 0.5)",
+      "rgba(54, 162, 235, 0.5)",
+      "rgba(255, 206, 86, 0.5)",
+      "rgba(75, 192, 192, 0.5)",
+      "rgba(153, 102, 255, 0.5)",
+      "rgba(255, 159, 64, 0.5)",
+      "rgba(201, 203, 207, 0.5)",
+    ];
+
+    const borderColors = [
+      "rgba(255, 99, 132, 1)",
+      "rgba(54, 162, 235, 1)",
+      "rgba(255, 206, 86, 1)",
+      "rgba(75, 192, 192, 1)",
+      "rgba(153, 102, 255, 1)",
+      "rgba(255, 159, 64, 1)",
+      "rgba(201, 203, 207, 1)",
+    ];
     
     return {
-      labels: advancedStats.subjects.map((subject: any) => subject.subject),
+      labels: advancedStats.subjects.map((subject: any) => 
+        subject.subject.length > 10 
+          ? subject.subject.substring(0, 10) + '...' 
+          : subject.subject
+      ),
       datasets: [
         {
-          label: "Score moyen",
-          data: advancedStats.subjects.map((subject: any) => subject.averageScore),
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.5)",
-            "rgba(54, 162, 235, 0.5)",
-            "rgba(255, 206, 86, 0.5)",
-            "rgba(75, 192, 192, 0.5)",
-            "rgba(153, 102, 255, 0.5)",
-          ],
+          label: "Score moyen (%)",
+          data: advancedStats.subjects.map((subject: any) => 
+            Math.round(subject.averageScore || 0)
+          ),
+          backgroundColor: colors.slice(0, advancedStats.subjects.length),
+          borderColor: borderColors.slice(0, advancedStats.subjects.length),
+          borderWidth: 1,
         },
       ],
     };
   };
 
   const prepareDoughnutChartData = () => {
-    if (!advancedStats) return null;
+    if (!advancedStats || !advancedStats.categoryStats || advancedStats.categoryStats.length === 0) {
+      return {
+        labels: ['Aucune donnée'],
+        datasets: [{
+          data: [1],
+          backgroundColor: ["rgba(156, 163, 175, 0.5)"],
+          borderColor: ["rgba(156, 163, 175, 1)"],
+          borderWidth: 1,
+        }],
+      };
+    }
     
+    const colors = [
+      "rgba(255, 99, 132, 0.7)",
+      "rgba(54, 162, 235, 0.7)",
+      "rgba(255, 206, 86, 0.7)",
+      "rgba(75, 192, 192, 0.7)",
+      "rgba(153, 102, 255, 0.7)",
+      "rgba(255, 159, 64, 0.7)",
+      "rgba(201, 203, 207, 0.7)",
+    ];
+
     return {
       labels: advancedStats.categoryStats.map((category: any) => category.category),
       datasets: [
         {
-          data: advancedStats.categoryStats.map((category: any) => category.count),
-          backgroundColor: [
-            "rgba(255, 99, 132, 0.5)",
-            "rgba(54, 162, 235, 0.5)",
-            "rgba(255, 206, 86, 0.5)",
-            "rgba(75, 192, 192, 0.5)",
-            "rgba(153, 102, 255, 0.5)",
-          ],
+          data: advancedStats.categoryStats.map((category: any) => category.count || 0),
+          backgroundColor: colors.slice(0, advancedStats.categoryStats.length),
+          borderColor: colors.map(color => color.replace('0.7', '1')).slice(0, advancedStats.categoryStats.length),
+          borderWidth: 2,
         },
       ],
     };
@@ -496,16 +581,24 @@ const ElevePage: React.FC = () => {
   const chartOptions = {
     responsive: true,
     maintainAspectRatio: false,
+    interaction: {
+      mode: 'index' as const,
+      intersect: false,
+    },
     plugins: {
       legend: {
+        position: 'top' as const,
         labels: {
           font: { size: 12 },
           color: typeof window !== "undefined" && document.documentElement.classList.contains("dark") 
             ? "#e5e7eb" 
             : "#374151",
+          usePointStyle: true,
+          padding: 15,
         },
       },
       tooltip: {
+        enabled: true,
         bodyFont: { size: 12 },
         titleFont: { size: 13 },
         backgroundColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
@@ -521,10 +614,19 @@ const ElevePage: React.FC = () => {
           ? "#374151"
           : "#d1d5db",
         borderWidth: 1,
+        cornerRadius: 8,
+        displayColors: true,
       },
     },
     scales: {
       x: {
+        display: true,
+        grid: {
+          display: true,
+          color: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
+            ? "rgba(75, 85, 99, 0.3)"
+            : "rgba(209, 213, 219, 0.5)",
+        },
         ticks: {
           font: { size: 11 },
           maxRotation: 45,
@@ -532,41 +634,81 @@ const ElevePage: React.FC = () => {
           color: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
             ? "#9ca3af"
             : "#6b7280",
-          callback: (
-            value: any,
-            index: number,
-            values: any,
-          ): string | number | undefined => {
-            // Affiche moins de labels sur mobile
-            if (
-              typeof window !== "undefined" &&
-              window.innerWidth < 640 &&
-              index % 2 !== 0
-            )
-              return "";
-
-            return value !== undefined && value !== null
-              ? value.toString()
-              : "";
+          callback: function(value: any, index: number, ticks: any[]) {
+            // Masquer les labels alternés sur mobile pour éviter la surcharge
+            if (typeof window !== "undefined" && window.innerWidth < 640 && index % 2 !== 0) {
+              return '';
+            }
+            // Retourner la valeur du label
+            const chart = (this as any).chart;
+            const labels = chart?.data?.labels as (string | number)[] | undefined;
+            return labels && labels[index] ? labels[index] : value;
           },
         },
+      },
+      y: {
+        display: true,
+        beginAtZero: true,
         grid: {
+          display: true,
           color: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
             ? "rgba(75, 85, 99, 0.3)"
             : "rgba(209, 213, 219, 0.5)",
         },
-      },
-      y: {
         ticks: {
           font: { size: 11 },
           color: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
             ? "#9ca3af"
             : "#6b7280",
+          callback: function(value: any) {
+            return Math.round(Number(value));
+          },
         },
-        grid: {
-          color: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
-            ? "rgba(75, 85, 99, 0.3)"
-            : "rgba(209, 213, 219, 0.5)",
+      },
+    },
+  };
+
+  const doughnutOptions = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        position: 'bottom' as const,
+        labels: {
+          font: { size: 11 },
+          color: typeof window !== "undefined" && document.documentElement.classList.contains("dark") 
+            ? "#e5e7eb" 
+            : "#374151",
+          usePointStyle: true,
+          padding: 10,
+        },
+      },
+      tooltip: {
+        enabled: true,
+        bodyFont: { size: 12 },
+        titleFont: { size: 13 },
+        backgroundColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
+          ? "rgba(17, 24, 39, 0.95)"
+          : "rgba(255, 255, 255, 0.95)",
+        titleColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
+          ? "#e5e7eb"
+          : "#111827",
+        bodyColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
+          ? "#d1d5db"
+          : "#374151",
+        borderColor: typeof window !== "undefined" && document.documentElement.classList.contains("dark")
+          ? "#374151"
+          : "#d1d5db",
+        borderWidth: 1,
+        cornerRadius: 8,
+        callbacks: {
+          label: function(context: any) {
+            const label = context.label || '';
+            const value = context.parsed || 0;
+            const total = context.dataset.data.reduce((a: number, b: number) => a + b, 0);
+            const percentage = total > 0 ? ((value / total) * 100).toFixed(1) : '0';
+            return `${label}: ${value} (${percentage}%)`;
+          },
         },
       },
     },
@@ -1227,66 +1369,55 @@ const ElevePage: React.FC = () => {
                               </Card>
                             </motion.div>
                           ))}
-                          <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-800/50 shadow-lg border border-indigo-200 dark:border-indigo-700">
-                            <CardBody>
-                              <h3 className="text-xl font-semibold mb-4 text-indigo-800 dark:text-indigo-100">
-                                Scores par matière
-                              </h3>
-                              {advancedStats.subjects.length > 0 ? (
-                                <div className="h-64 w-full overflow-x-auto">
-                                  <div
-                                    className="min-w-[350px] w-full"
-                                    style={{ height: "260px" }}
-                                  >
+                          
+                          {/* Graphique des scores par matière - Conditionnel */}
+                          {advancedStats.subjects.length > 0 && (
+                            <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-800/50 shadow-lg border border-indigo-200 dark:border-indigo-700">
+                              <CardBody>
+                                <h3 className="text-xl font-semibold mb-4 text-indigo-800 dark:text-indigo-100">
+                                  Scores par matière
+                                </h3>
+                                <div className="h-64 w-full overflow-hidden">
+                                  <div className="w-full h-full">
                                     <Bar 
-                                      data={prepareBarChartData()!} 
+                                      data={prepareBarChartData()} 
                                       options={chartOptions}
                                     />
                                   </div>
                                 </div>
-                              ) : (
-                                <p className="text-center text-indigo-500 dark:text-indigo-400">
-                                  Aucune donnée disponible
-                                </p>
-                              )}
-                            </CardBody>
-                          </Card>
+                              </CardBody>
+                            </Card>
+                          )}
                         </div>
                       )}
 
                       {/* Par catégorie */}
                       {selectedTab === "categories" && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                          <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
-                            <CardBody>
-                              <h3 className="text-xl font-semibold mb-4 text-teal-800 dark:text-teal-100">
-                                Répartition par catégorie
-                              </h3>
-                              {advancedStats.categoryStats.length > 0 ? (
-                                <div className="h-64 w-full overflow-x-auto">
-                                  <div
-                                    className="min-w-[300px] w-full"
-                                    style={{ height: "260px" }}
-                                  >
+                          {advancedStats.categoryStats.length > 0 && (
+                            <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
+                              <CardBody>
+                                <h3 className="text-xl font-semibold mb-4 text-teal-800 dark:text-teal-100">
+                                  Répartition par catégorie
+                                </h3>
+                                <div className="h-64 w-full overflow-hidden">
+                                  <div className="w-full h-full">
                                     <Doughnut 
-                                      data={prepareDoughnutChartData()!} 
-                                      options={chartOptions}
+                                      data={prepareDoughnutChartData()} 
+                                      options={doughnutOptions}
                                     />
                                   </div>
                                 </div>
-                              ) : (
-                                <p className="text-center text-teal-500 dark:text-teal-400">
-                                  Aucune donnée disponible
-                                </p>
-                              )}
-                            </CardBody>
-                          </Card>
+                              </CardBody>
+                            </Card>
+                          )}
+                          
                           <Card className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/50 dark:to-orange-800/50 shadow-lg border border-amber-200 dark:border-amber-700">
                             <CardBody>
                               <h3 className="text-xl font-semibold mb-4 text-amber-800 dark:text-amber-100">
                                 Détails par catégorie
                               </h3>
-                                                                <div className="space-y-4">
+                              <div className="space-y-4">
                                 {advancedStats.categoryStats.map((category: any, index: number) => (
                                   <div
                                     key={index}
@@ -1312,54 +1443,41 @@ const ElevePage: React.FC = () => {
                       {/* Progression */}
                       {selectedTab === "progress" && (
                         <div className="grid grid-cols-1 gap-6 mb-8">
-                          <Card className="bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/50 dark:to-rose-800/50 shadow-lg border border-pink-200 dark:border-pink-700">
-                            <CardBody>
-                              <h3 className="text-xl font-semibold mb-4 text-pink-800 dark:text-pink-100">
-                                Évolution des scores
-                              </h3>
-                              {advancedStats.dailyStats.length > 0 ? (
-                                <div className="h-64 w-full overflow-x-auto">
-                                  <div
-                                    className="min-w-[350px] w-full"
-                                    style={{ height: "260px" }}
-                                  >
+                          {advancedStats.dailyStats.length > 0 && (
+                            <Card className="bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/50 dark:to-rose-800/50 shadow-lg border border-pink-200 dark:border-pink-700">
+                              <CardBody>
+                                <h3 className="text-xl font-semibold mb-4 text-pink-800 dark:text-pink-100">
+                                  Évolution des scores
+                                </h3>
+                                <div className="h-64 w-full overflow-hidden">
+                                  <div className="w-full h-full">
                                     <Line 
-                                      data={prepareLineChartData()!} 
+                                      data={prepareLineChartData()} 
                                       options={chartOptions}
                                     />
                                   </div>
                                 </div>
-                              ) : (
-                                <p className="text-center text-pink-500 dark:text-pink-400">
-                                  Aucune donnée disponible
-                                </p>
-                              )}
-                            </CardBody>
-                          </Card>
-                          <Card className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/50 dark:to-purple-800/50 shadow-lg border border-violet-200 dark:border-violet-700">
-                                                          <CardBody>
+                              </CardBody>
+                            </Card>
+                          )}
+                          
+                          {advancedStats.subjects.length > 0 && (
+                            <Card className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/50 dark:to-purple-800/50 shadow-lg border border-violet-200 dark:border-violet-700">
+                              <CardBody>
                                 <h3 className="text-xl font-semibold mb-4 text-violet-800 dark:text-violet-100">
                                   Comparaison par matière
                                 </h3>
-                              {advancedStats.subjects.length > 0 ? (
-                                <div className="h-64 w-full overflow-x-auto">
-                                  <div
-                                    className="min-w-[350px] w-full"
-                                    style={{ height: "260px" }}
-                                  >
+                                <div className="h-64 w-full overflow-hidden">
+                                  <div className="w-full h-full">
                                     <Bar 
-                                      data={prepareBarChartData()!} 
+                                      data={prepareBarChartData()} 
                                       options={chartOptions}
                                     />
                                   </div>
                                 </div>
-                              ) : (
-                                <p className="text-center text-violet-500 dark:text-violet-400">
-                                  Aucune donnée disponible
-                                </p>
-                              )}
-                            </CardBody>
-                          </Card>
+                              </CardBody>
+                            </Card>
+                          )}
                         </div>
                       )}
                     </>
