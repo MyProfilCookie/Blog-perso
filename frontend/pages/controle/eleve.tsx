@@ -305,36 +305,36 @@ const ElevePage: React.FC = () => {
 
         setEleveProfile(tempProfile);
 
-        // Charger les données immédiatement (pas en arrière-plan)
-        console.log("🚀 Chargement immédiat des données locales...");
+        // Charger les données IMMÉDIATEMENT
+        console.log("🚀 Chargement IMMÉDIAT des données locales...");
         loadLocalData();
         
-        // Puis essayer de charger les données serveur
-        setTimeout(() => {
-          loadServerData();
-        }, 100);
+        // Puis essayer de charger les données serveur sans bloquer
+        loadServerData().catch(console.warn);
 
-        setLoading(false);
       } catch (err) {
         console.error("❌ Erreur lors du chargement:", err);
         setError("Erreur lors du chargement des données");
-        setLoading(false);
+      } finally {
+        // Toujours arrêter le loading après un délai minimum
+        setTimeout(() => {
+          setLoading(false);
+        }, 500);
       }
     };
 
     loadProfile();
   }, [userId]);
 
-  // Ajouter un useEffect pour s'assurer que les données sont chargées
+  // Ajouter un effet pour forcer le rechargement si les données sont vides
   useEffect(() => {
-    // Si on a un userId mais pas de stats avancées, recharger
-    if (userId && !advancedStats && !loading) {
-      console.log("🔄 Données manquantes détectées, rechargement...");
+    if (!loading && userId && detailedStats.length === 0) {
+      console.log("🔄 Force reload - detailedStats vide détecté");
       setTimeout(() => {
         loadLocalData();
-      }, 500);
+      }, 100);
     }
-  }, [userId, advancedStats, loading]);
+  }, [loading, userId, detailedStats.length]);
 
   // Fonction pour récupérer les données depuis le localStorage (adaptée de stats.tsx)
   const getLocalStorageData = (subject: string) => {
@@ -629,12 +629,13 @@ const ElevePage: React.FC = () => {
 
       console.log("🔍 Total des matières avec données:", Object.keys(allSubjectsData).length);
 
-      // Si aucune donnée trouvée, créer des données d'exemple
+      // Si aucune donnée trouvée, créer des données d'exemple et les calculer immédiatement
       if (Object.keys(allSubjectsData).length === 0) {
         console.log("⚠️ Aucune donnée trouvée, création d'exemples...");
         
         // Créer des données d'exemple réalistes
-        ['math', 'french', 'sciences', 'history', 'art', 'geography'].forEach((subject) => {
+        const exampleSubjects = ['math', 'french', 'sciences', 'history', 'art', 'geography'];
+        exampleSubjects.forEach((subject) => {
           const exerciseCount = 5 + Math.floor(Math.random() * 10); // 5-15 exercices
           const correctCount = Math.floor(exerciseCount * (0.6 + Math.random() * 0.3)); // 60-90% de réussite
           
@@ -647,7 +648,7 @@ const ElevePage: React.FC = () => {
               score: 60 + Math.random() * 35, // Score entre 60 et 95
               exerciseId: `ex${i+1}`
             })),
-            userAnswers: {}
+            userAnswers: {},
           };
         });
         
@@ -670,25 +671,24 @@ const ElevePage: React.FC = () => {
           averageScore: stats.averageScore.toFixed(1)
         });
 
-        if (stats.totalExercises > 0 || stats.exercisesCompleted > 0) {
-          subjectsStats.push(stats);
-          totalExercises += stats.totalExercises;
-          totalCorrect += stats.correctAnswers;
+        // Ajouter toutes les statistiques même si elles sont à 0
+        subjectsStats.push(stats);
+        totalExercises += stats.totalExercises;
+        totalCorrect += stats.correctAnswers;
 
-          // Créer les statistiques détaillées
-          const subjectConfig = SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG] || SUBJECTS_CONFIG.math;
-          
-          detailedStatsArray.push({
-            subjectName: stats.subject,
-            totalPages: stats.totalExercises,
-            averageScore: stats.averageScore,
-            bestPage: Math.min(100, Math.round(stats.averageScore + 5 + Math.random() * 10)),
-            worstPage: Math.max(0, Math.round(stats.averageScore - 10 - Math.random() * 15)),
-            completionRate: stats.totalExercises > 0 ? (stats.correctAnswers / stats.totalExercises) * 100 : 0,
-            icon: subjectConfig.icon,
-            color: subjectConfig.color,
-          });
-        }
+        // Créer les statistiques détaillées
+        const subjectConfig = SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG] || SUBJECTS_CONFIG.math;
+        
+        detailedStatsArray.push({
+          subjectName: stats.subject,
+          totalPages: stats.totalExercises,
+          averageScore: stats.averageScore,
+          bestPage: Math.min(100, Math.round(stats.averageScore + 5 + Math.random() * 10)),
+          worstPage: Math.max(0, Math.round(stats.averageScore - 10 - Math.random() * 15)),
+          completionRate: stats.totalExercises > 0 ? (stats.correctAnswers / stats.totalExercises) * 100 : 0,
+          icon: subjectConfig.icon,
+          color: subjectConfig.color,
+        });
       });
 
       // Calculer la moyenne globale
@@ -729,18 +729,28 @@ const ElevePage: React.FC = () => {
         detailedStatsCount: detailedStatsArray.length
       });
 
-      // Mettre à jour les états avec les nouvelles données
-      setDetailedStats(detailedStatsArray);
-
-      setAdvancedStats({
-        totalExercises,
-        totalCorrect,
-        averageScore: Math.min(100, Math.max(0, averageScore)),
-        subjects: subjectsStats,
-        dailyStats,
-        categoryStats,
-        subscriptionType: "free",
-      });
+      // IMPORTANT: Mettre à jour les états immédiatement et de façon synchrone
+      console.log("🔧 Mise à jour des états React...");
+      
+      // Forcer la mise à jour synchrone
+      setTimeout(() => {
+        setDetailedStats(detailedStatsArray);
+        console.log("✅ detailedStats mis à jour:", detailedStatsArray.length);
+        
+        setAdvancedStats({
+          totalExercises,
+          totalCorrect,
+          averageScore: Math.min(100, Math.max(0, averageScore)),
+          subjects: subjectsStats,
+          dailyStats,
+          categoryStats,
+          subscriptionType: "free",
+        });
+        console.log("✅ advancedStats mis à jour");
+        
+        // Force un re-render
+        setLoading(false);
+      }, 0);
 
       console.log("✅ Données chargées avec succès!");
       
@@ -1420,35 +1430,22 @@ const ElevePage: React.FC = () => {
                   Statistiques par Matière
                 </h2>
 
-                {/* Debug temporaire */}
-                <div className="mb-4 p-2 bg-gray-100 dark:bg-gray-800 rounded text-xs">
-                  <p>Debug: detailedStats.length = {detailedStats.length}</p>
-                  {detailedStats.length > 0 && (
-                    <p>Première matière: {detailedStats[0].subjectName}</p>
-                  )}
-                </div>
-
+                {/* Supprimer le debug et afficher directement le contenu */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {detailedStats.length === 0 ? (
                     <div className="col-span-full text-center py-8">
-                      <FontAwesomeIcon
-                        icon={faChartBar}
-                        className="text-4xl text-gray-400 mb-4"
-                      />
-                      <p className="text-gray-600 dark:text-gray-400">
-                        Aucune statistique disponible. Chargement en cours...
-                      </p>
-                      <Button
-                        color="primary"
-                        variant="flat"
-                        onClick={() => {
-                          console.log("🔄 Rechargement manuel des données");
-                          loadLocalData();
-                        }}
-                        className="mt-4"
-                      >
-                        Recharger les données
-                      </Button>
+                      <div className="animate-pulse">
+                        <FontAwesomeIcon
+                          icon={faChartBar}
+                          className="text-4xl text-gray-400 mb-4"
+                        />
+                        <p className="text-gray-600 dark:text-gray-400 mb-4">
+                          Chargement des statistiques...
+                        </p>
+                        <div className="flex justify-center">
+                          <Spinner color="primary" size="sm" />
+                        </div>
+                      </div>
                     </div>
                   ) : (
                     detailedStats.map((stat) => {
@@ -1457,7 +1454,7 @@ const ElevePage: React.FC = () => {
                       return (
                         <Card
                           key={stat.subjectName}
-                          className={`${config.bgColor} border border-gray-200 dark:border-gray-700`}
+                          className={`${config.bgColor} border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow`}
                         >
                           <CardBody className="p-4">
                             <div className="flex items-center gap-3 mb-3">
