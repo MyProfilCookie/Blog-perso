@@ -1454,21 +1454,21 @@ const ElevePage: React.FC = () => {
                       return (
                         <Card
                           key={stat.subjectName}
-                          className={`${config.bgColor} border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-shadow`}
+                          className="bg-gray-800/50 dark:bg-gray-800/50 border border-gray-600 dark:border-gray-700 hover:shadow-lg transition-shadow backdrop-blur-sm"
                         >
                           <CardBody className="p-4">
                             <div className="flex items-center gap-3 mb-3">
-                              <div className={`p-2 rounded-lg ${config.color}`}>
+                              <div className={`p-2 rounded-lg ${config.color.replace('bg-', 'bg-').replace('text-', 'text-')}`}>
                                 <FontAwesomeIcon
                                   className="text-lg"
                                   icon={config.icon}
                                 />
                               </div>
                               <div>
-                                <h3 className="font-semibold text-gray-800 dark:text-gray-200">
+                                <h3 className="font-semibold text-gray-100 dark:text-gray-200">
                                   {stat.subjectName}
                                 </h3>
-                                <p className="text-sm text-gray-600 dark:text-gray-400">
+                                <p className="text-sm text-gray-300 dark:text-gray-400">
                                   {stat.totalPages} pages
                                 </p>
                               </div>
@@ -1476,13 +1476,14 @@ const ElevePage: React.FC = () => {
 
                             <div className="space-y-2">
                               <div className="flex justify-between items-center">
-                                <span className="text-sm text-gray-600 dark:text-gray-400">
+                                <span className="text-sm text-gray-300 dark:text-gray-400">
                                   Moyenne
                                 </span>
                                 <Chip
                                   color={getScoreColor(stat.averageScore)}
                                   size="sm"
                                   variant="flat"
+                                  className="bg-opacity-80 dark:bg-opacity-80"
                                 >
                                   {stat.averageScore.toFixed(1)}%{" "}
                                   {getScoreEmoji(stat.averageScore)}
@@ -1494,26 +1495,30 @@ const ElevePage: React.FC = () => {
                                 color={getScoreColor(stat.averageScore)}
                                 size="sm"
                                 value={stat.averageScore}
+                                classNames={{
+                                  track: "bg-gray-700 dark:bg-gray-700",
+                                  indicator: "bg-gradient-to-r"
+                                }}
                               />
 
                               <div className="grid grid-cols-2 gap-2 text-xs">
                                 <div>
-                                  <span className="text-green-600 dark:text-green-400">
+                                  <span className="text-green-400 dark:text-green-400">
                                     Meilleure: {stat.bestPage}%
                                   </span>
                                 </div>
                                 <div>
-                                  <span className="text-red-600 dark:text-red-400">
+                                  <span className="text-red-400 dark:text-red-400">
                                     Minimale: {stat.worstPage}%
                                   </span>
                                 </div>
                               </div>
 
                               <div className="flex justify-between items-center">
-                                <span className="text-xs text-gray-500 dark:text-gray-400">
+                                <span className="text-xs text-gray-400 dark:text-gray-400">
                                   Taux de réussite
                                 </span>
-                                <span className="text-xs font-medium">
+                                <span className="text-xs font-medium text-gray-200 dark:text-gray-300">
                                   {stat.completionRate.toFixed(0)}%
                                 </span>
                               </div>
@@ -1753,7 +1758,7 @@ const ElevePage: React.FC = () => {
                               </p>
                             </CardBody>
                           </Card>
-                          <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/50 dark:to-emerald-800/50 shadow-lg border border-emerald-200 dark:border-emerald-700 hover:shadow-xl transition-shadow">
+                          <Card className="bg-gradient-to-br from-emerald-50 to-emerald-100 dark:from-emerald-900/30 dark:to-emerald-800/30 shadow-lg border border-emerald-200 dark:border-emerald-700 hover:shadow-xl transition-shadow">
                             <CardBody>
                               <h3 className="text-lg font-semibold mb-2 text-emerald-700 dark:text-emerald-200">
                                 Réponses correctes
@@ -1773,7 +1778,7 @@ const ElevePage: React.FC = () => {
                               </p>
                             </CardBody>
                           </Card>
-                          <Card className="bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/50 dark:to-violet-800/50 shadow-lg border border-violet-200 dark:border-violet-700 hover:shadow-xl transition-shadow">
+                          <Card className="bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/30 dark:to-violet-800/30 shadow-lg border border-violet-200 dark:border-violet-700 hover:shadow-xl transition-shadow">
                             <CardBody>
                               <h3 className="text-lg font-semibold mb-2 text-violet-700 dark:text-violet-200">
                                 Score moyen
