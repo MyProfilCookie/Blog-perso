@@ -55,6 +55,7 @@ import {
 import { Sparkles } from "lucide-react";
 
 import BackButton from "@/components/back";
+import { useEleveStats } from "../../hooks/useEleveStats";
 
 // Interface pour les notes par page
 interface PageScore {
@@ -238,6 +239,15 @@ const ElevePage: React.FC = () => {
   const [advancedStats, setAdvancedStats] = useState<UserStats | null>(null);
   const [selectedTab, setSelectedTab] = useState<string>("overview");
 
+  const {
+    eleveStats,
+    loading: statsLoading,
+    error: statsError,
+    loadWithSync,
+    syncLocalStorageData,
+    clearError,
+  } = useEleveStats();
+
   // Récupérer l'ID de l'utilisateur depuis le localStorage
   useEffect(() => {
     try {
@@ -285,56 +295,128 @@ const ElevePage: React.FC = () => {
     const loadProfile = async () => {
       try {
         setLoading(true);
+        clearError(); // Nettoyer les erreurs précédentes
 
-        // Créer un profil temporaire simple
-        const tempProfile = {
-          _id: userId,
-          userId: userId,
-          subjects: Object.keys(SUBJECTS_CONFIG).map((subject) => ({
-            subjectName:
-              SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG].name,
-            pages: [],
-            averageScore: 0,
-            lastUpdated: new Date().toISOString(),
-          })),
-          overallAverage: 0,
-          totalPagesCompleted: 0,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        };
+        console.log(`👤 Chargement du profil pour l'utilisateur: ${userId}`);
 
-        setEleveProfile(tempProfile);
+        // Utiliser le hook pour charger avec synchronisation
+        const stats = await loadWithSync();
 
-        // Charger les données IMMÉDIATEMENT
-        console.log("🚀 Chargement IMMÉDIAT des données locales...");
-        loadLocalData();
-        
-        // Puis essayer de charger les données serveur sans bloquer
-        loadServerData().catch(console.warn);
+        if (stats) {
+          // Convertir vers le format de votre interface existante
+          const tempProfile = {
+            _id: userId,
+            userId: userId,
+            subjects: stats.subjects.map((subject: any) => ({
+              subjectName: subject.subject,
+              pages: [], // Les pages sont maintenant gérées via les stats
+              averageScore: subject.averageScore,
+              lastUpdated: subject.lastActivity,
+            })),
+            overallAverage: stats.averageScore,
+            totalPagesCompleted: stats.totalExercises,
+            createdAt: new Date().toISOString(),
+            updatedAt: new Date().toISOString(),
+          };
 
+          setEleveProfile(tempProfile);
+
+          // Convertir pour detailedStats
+          const detailedStatsArray = stats.subjects.map((subject: any) => {
+            const subjectConfig =
+              SUBJECTS_CONFIG[
+                subject.subject as keyof typeof SUBJECTS_CONFIG
+              ] || SUBJECTS_CONFIG.math;
+
+            return {
+              subjectName: subject.subject,
+              totalPages: subject.totalExercises,
+              averageScore: subject.averageScore,
+              bestPage:
+                subject.averageScore > 0
+                  ? Math.min(100, Math.round(subject.averageScore + 5))
+                  : 0,
+              worstPage:
+                subject.averageScore > 0
+                  ? Math.max(0, Math.round(subject.averageScore - 10))
+                  : 0,
+              completionRate: subject.progress,
+              icon: subjectConfig.icon,
+              color: subjectConfig.color,
+            };
+          });
+
+          // Ajouter les matières manquantes avec des valeurs à 0
+          Object.keys(SUBJECTS_CONFIG)
+            .slice(0, 6)
+            .forEach((subjectKey) => {
+              const config =
+                SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
+              const hasData = detailedStatsArray.some(
+                (stat: { subjectName: string; }) => {
+                  return stat.subjectName === config.name;
+                },
+              );
+
+              if (!hasData) {
+                detailedStatsArray.push({
+                  subjectName: config.name,
+                  totalPages: 0,
+                  averageScore: 0,
+                  bestPage: 0,
+                  worstPage: 0,
+                  completionRate: 0,
+                  icon: config.icon,
+                  color: config.color,
+                });
+              }
+            });
+
+          setDetailedStats(detailedStatsArray);
+
+          // Convertir pour advancedStats
+          setAdvancedStats({
+            totalExercises: stats.totalExercises,
+            totalCorrect: stats.totalCorrect,
+            averageScore: stats.averageScore,
+            subjects: stats.subjects,
+            dailyStats: stats.dailyStats,
+            categoryStats: stats.categoryStats,
+            subscriptionType: stats.subscriptionType,
+          });
+
+          if (stats.userInfo) {
+            setUserInfo(stats.userInfo);
+          }
+
+          console.log("✅ Profil chargé avec succès");
+        } else {
+          console.log(
+            "⚠️ Aucune statistique chargée, affichage des valeurs par défaut",
+          );
+          // Garder votre logique par défaut ici
+        }
       } catch (err) {
-        console.error("❌ Erreur lors du chargement:", err);
+        console.error("❌ Erreur lors du chargement du profil:", err);
         setError("Erreur lors du chargement des données");
       } finally {
-        // Toujours arrêter le loading après un délai minimum
-        setTimeout(() => {
-          setLoading(false);
-        }, 500);
+        setLoading(false);
       }
     };
 
     loadProfile();
-  }, [userId]);
+  }, [userId, loadWithSync, clearError]);
 
   // Ajouter un effet pour forcer le rechargement si les données sont vides
   useEffect(() => {
     if (!loading && userId && detailedStats.length === 0) {
       console.log("🔄 Force reload - detailedStats vide détecté");
       setTimeout(() => {
-        loadLocalData();
+        // Appeler loadWithSync au lieu de loadLocalData
+        loadWithSync();
       }, 100);
     }
-  }, [loading, userId, detailedStats.length]);
+  }, [loading, userId, detailedStats.length, loadWithSync]); // Ajouter loadWithSync aux deps
 
   // Fonction pour récupérer les données depuis le localStorage (adaptée de stats.tsx)
   const getLocalStorageData = (subject: string) => {
@@ -348,14 +430,14 @@ const ElevePage: React.FC = () => {
         try {
           const parsed = JSON.parse(userAnswers);
 
-          if (parsed && typeof parsed === 'object') {
+          if (parsed && typeof parsed === "object") {
             data.userAnswers = parsed;
           }
         } catch (e) {
           console.warn(`Erreur parsing userAnswers pour ${subject}:`, e);
         }
       }
-      
+
       // Récupérer les résultats
       const results = localStorage.getItem(`${subject}_results`);
 
@@ -370,22 +452,24 @@ const ElevePage: React.FC = () => {
           console.warn(`Erreur parsing results pour ${subject}:`, e);
         }
       }
-      
+
       // Récupérer les exercices validés
-      const validatedExercises = localStorage.getItem(`${subject}_validatedExercises`);
+      const validatedExercises = localStorage.getItem(
+        `${subject}_validatedExercises`,
+      );
 
       if (validatedExercises) {
         try {
           const parsed = JSON.parse(validatedExercises);
 
-          if (parsed && typeof parsed === 'object') {
+          if (parsed && typeof parsed === "object") {
             data.validatedExercises = parsed;
           }
         } catch (e) {
           console.warn(`Erreur parsing validatedExercises pour ${subject}:`, e);
         }
       }
-      
+
       // Récupérer les scores sauvegardés
       const scores = localStorage.getItem(`${subject}_scores`);
 
@@ -403,19 +487,23 @@ const ElevePage: React.FC = () => {
 
       // Récupérer les notes de leçons (pour les leçons)
       if (subject === "lessons") {
-        const lessonsNotes = localStorage.getItem(`lessons_notes_${new Date().toISOString().split("T")[0]}`);
+        const lessonsNotes = localStorage.getItem(
+          `lessons_notes_${new Date().toISOString().split("T")[0]}`,
+        );
 
         if (lessonsNotes) {
           data.lessonsNotes = lessonsNotes;
         }
 
-        const lessonsRatings = localStorage.getItem(`lessons_ratings_${new Date().toISOString().split("T")[0]}`);
+        const lessonsRatings = localStorage.getItem(
+          `lessons_ratings_${new Date().toISOString().split("T")[0]}`,
+        );
 
         if (lessonsRatings) {
           try {
             const parsed = JSON.parse(lessonsRatings);
 
-            if (parsed && typeof parsed === 'object') {
+            if (parsed && typeof parsed === "object") {
               data.lessonsRatings = parsed;
             }
           } catch (e) {
@@ -423,13 +511,18 @@ const ElevePage: React.FC = () => {
           }
         }
 
-        const lessonsProgress = localStorage.getItem(`lessons_progress_${new Date().toISOString().split("T")[0]}`);
+        const lessonsProgress = localStorage.getItem(
+          `lessons_progress_${new Date().toISOString().split("T")[0]}`,
+        );
 
         if (lessonsProgress) {
           try {
             const parsed = JSON.parse(lessonsProgress);
 
-            if (parsed && (typeof parsed === 'number' || typeof parsed === 'object')) {
+            if (
+              parsed &&
+              (typeof parsed === "number" || typeof parsed === "object")
+            ) {
               data.lessonsProgress = parsed;
             }
           } catch (e) {
@@ -437,24 +530,29 @@ const ElevePage: React.FC = () => {
           }
         }
       }
-      
+
       // Récupérer les données de trimestre
       if (subject.includes("trimestre")) {
-        const trimestreProgress = localStorage.getItem(`trimestre-${subject}-progress`);
+        const trimestreProgress = localStorage.getItem(
+          `trimestre-${subject}-progress`,
+        );
 
         if (trimestreProgress) {
           try {
             const parsed = JSON.parse(trimestreProgress);
 
-            if (parsed && typeof parsed === 'object') {
+            if (parsed && typeof parsed === "object") {
               data.trimestreProgress = parsed;
             }
           } catch (e) {
-            console.warn(`Erreur parsing trimestreProgress pour ${subject}:`, e);
+            console.warn(
+              `Erreur parsing trimestreProgress pour ${subject}:`,
+              e,
+            );
           }
         }
       }
-      
+
       // Récupérer les données de rapport hebdo
       if (subject === "rapportHebdo") {
         const rapportResults = localStorage.getItem("rapportHebdo_results");
@@ -474,7 +572,10 @@ const ElevePage: React.FC = () => {
 
       return data;
     } catch (error) {
-      console.error(`Erreur lors de la récupération des données pour ${subject}:`, error);
+      console.error(
+        `Erreur lors de la récupération des données pour ${subject}:`,
+        error,
+      );
 
       return {};
     }
@@ -486,11 +587,13 @@ const ElevePage: React.FC = () => {
     let correctAnswers = 0;
     let exercisesCompleted = 0;
     let lastActivity = "";
-    
+
     // Vérifier que data est valide
-    if (!data || typeof data !== 'object') {
+    if (!data || typeof data !== "object") {
       return {
-        subject: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name || subject,
+        subject:
+          SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name ||
+          subject,
         totalExercises: 0,
         correctAnswers: 0,
         averageScore: 0,
@@ -499,13 +602,14 @@ const ElevePage: React.FC = () => {
         exercisesCompleted: 0,
       };
     }
-    
+
     // Calculer les statistiques selon le type de matière
     if (subject === "lessons") {
       // Pour les leçons, utiliser les évaluations et la progression
-      if (data.lessonsRatings && typeof data.lessonsRatings === 'object') {
+      if (data.lessonsRatings && typeof data.lessonsRatings === "object") {
         exercisesCompleted = Object.values(data.lessonsRatings).reduce(
-          (sum: number, count: any) => sum + (typeof count === "number" ? count : 0),
+          (sum: number, count: any) =>
+            sum + (typeof count === "number" ? count : 0),
           0,
         );
         correctAnswers = data.lessonsRatings["Facile"] || 0;
@@ -517,8 +621,13 @@ const ElevePage: React.FC = () => {
       }
     } else if (subject.includes("trimestre")) {
       // Pour les trimestres, utiliser les données de progression
-      if (data.trimestreProgress && typeof data.trimestreProgress === 'object') {
-        exercisesCompleted = Object.keys(data.trimestreProgress.completedSubjects || {}).length;
+      if (
+        data.trimestreProgress &&
+        typeof data.trimestreProgress === "object"
+      ) {
+        exercisesCompleted = Object.keys(
+          data.trimestreProgress.completedSubjects || {},
+        ).length;
         totalExercises = exercisesCompleted;
         correctAnswers = exercisesCompleted; // Simplification
       }
@@ -526,44 +635,67 @@ const ElevePage: React.FC = () => {
       // Pour le rapport hebdo, utiliser les résultats
       if (data.rapportResults && Array.isArray(data.rapportResults)) {
         exercisesCompleted = data.rapportResults.length;
-        correctAnswers = data.rapportResults.filter((r: any) => r && r.isCorrect === true).length;
+        correctAnswers = data.rapportResults.filter(
+          (r: any) => r && r.isCorrect === true,
+        ).length;
         totalExercises = exercisesCompleted;
       }
     } else {
       // Pour les autres matières, utiliser les exercices validés et résultats
-      if (data.validatedExercises && typeof data.validatedExercises === 'object') {
+      if (
+        data.validatedExercises &&
+        typeof data.validatedExercises === "object"
+      ) {
         exercisesCompleted = Object.keys(data.validatedExercises).filter(
           (key) => data.validatedExercises[key] === true,
         ).length;
         totalExercises = exercisesCompleted;
       }
-      
+
       // Calculer les réponses correctes depuis les résultats
       if (data.results && Array.isArray(data.results)) {
-        correctAnswers = data.results.filter((r: any) => r && r.isCorrect === true).length;
+        correctAnswers = data.results.filter(
+          (r: any) => r && r.isCorrect === true,
+        ).length;
         totalExercises = Math.max(totalExercises, data.results.length);
       }
-      
+
       // Si pas de résultats mais des exercices validés, estimer les réponses correctes
       if (correctAnswers === 0 && exercisesCompleted > 0) {
         correctAnswers = Math.floor(exercisesCompleted * 0.8); // Estimation 80% de réussite
       }
     }
-    
-    const averageScore = totalExercises > 0 ? (correctAnswers / totalExercises) * 100 : 0;
-    const progress = totalExercises > 0 ? (exercisesCompleted / totalExercises) * 100 : 0;
-    
+
+    const averageScore =
+      totalExercises > 0 ? (correctAnswers / totalExercises) * 100 : 0;
+    const progress =
+      totalExercises > 0 ? (exercisesCompleted / totalExercises) * 100 : 0;
+
     // Déterminer la dernière activité
-    if (data.userAnswers && typeof data.userAnswers === 'object' && Object.keys(data.userAnswers).length > 0) {
+    if (
+      data.userAnswers &&
+      typeof data.userAnswers === "object" &&
+      Object.keys(data.userAnswers).length > 0
+    ) {
       lastActivity = new Date().toISOString();
-    } else if (data.results && Array.isArray(data.results) && data.results.length > 0) {
+    } else if (
+      data.results &&
+      Array.isArray(data.results) &&
+      data.results.length > 0
+    ) {
       lastActivity = new Date().toISOString();
-    } else if (data.validatedExercises && typeof data.validatedExercises === 'object' && Object.keys(data.validatedExercises).length > 0) {
+    } else if (
+      data.validatedExercises &&
+      typeof data.validatedExercises === "object" &&
+      Object.keys(data.validatedExercises).length > 0
+    ) {
       lastActivity = new Date().toISOString();
     }
-    
+
     return {
-      subject: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name || subject,
+      subject:
+        SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name ||
+        subject,
       totalExercises,
       correctAnswers,
       averageScore,
@@ -582,7 +714,9 @@ const ElevePage: React.FC = () => {
       const key = localStorage.key(i);
 
       if (key && key.startsWith("trimestre-") && key.endsWith("-progress")) {
-        const trimestreId = key.replace("trimestre-", "").replace("-progress", "");
+        const trimestreId = key
+          .replace("trimestre-", "")
+          .replace("-progress", "");
 
         trimestres.push(trimestreId);
       }
@@ -594,10 +728,15 @@ const ElevePage: React.FC = () => {
   // Fonction améliorée pour analyser les vraies données localStorage (basée sur stats.tsx)
   const loadLocalData = () => {
     try {
-      console.log("📊 Analyse des données réelles localStorage (méthode stats)...");
+      console.log(
+        "📊 Analyse des données réelles localStorage (méthode stats)...",
+      );
 
       // Attendre que le DOM soit prêt
-      if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
+      if (
+        typeof window === "undefined" ||
+        typeof localStorage === "undefined"
+      ) {
         console.log("⏳ localStorage pas encore disponible, retry...");
         setTimeout(() => loadLocalData(), 100);
         return;
@@ -612,7 +751,10 @@ const ElevePage: React.FC = () => {
           const data = getLocalStorageData(subject);
           if (Object.keys(data).length > 0) {
             allSubjectsData[subject] = data;
-            console.log(`📚 Données trouvées pour ${subject}:`, Object.keys(data));
+            console.log(
+              `📚 Données trouvées pour ${subject}:`,
+              Object.keys(data),
+            );
           }
         }
       });
@@ -627,7 +769,10 @@ const ElevePage: React.FC = () => {
         }
       });
 
-      console.log("🔍 Total des matières avec données:", Object.keys(allSubjectsData).length);
+      console.log(
+        "🔍 Total des matières avec données:",
+        Object.keys(allSubjectsData).length,
+      );
 
       // Calculer les statistiques pour chaque matière (seulement avec de vraies données)
       const subjectsStats: SubjectStats[] = [];
@@ -637,23 +782,28 @@ const ElevePage: React.FC = () => {
 
       // Si aucune donnée trouvée, créer des statistiques VIDES
       if (Object.keys(allSubjectsData).length === 0) {
-        console.log("⚠️ Aucune donnée d'exercice trouvée - création de statistiques à 0");
-        
+        console.log(
+          "⚠️ Aucune donnée d'exercice trouvée - création de statistiques à 0",
+        );
+
         // Créer des statistiques à 0 pour les matières principales
-        Object.keys(SUBJECTS_CONFIG).slice(0, 6).forEach((subjectKey) => {
-          const config = SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
-          
-          detailedStatsArray.push({
-            subjectName: config.name,
-            totalPages: 0,
-            averageScore: 0,
-            bestPage: 0,
-            worstPage: 0,
-            completionRate: 0,
-            icon: config.icon,
-            color: config.color,
+        Object.keys(SUBJECTS_CONFIG)
+          .slice(0, 6)
+          .forEach((subjectKey) => {
+            const config =
+              SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
+
+            detailedStatsArray.push({
+              subjectName: config.name,
+              totalPages: 0,
+              averageScore: 0,
+              bestPage: 0,
+              worstPage: 0,
+              completionRate: 0,
+              icon: config.icon,
+              color: config.color,
+            });
           });
-        });
 
         // Aucune statistique de matière pour advancedStats
         // subjectsStats reste vide
@@ -668,7 +818,7 @@ const ElevePage: React.FC = () => {
           console.log(`📊 Stats réelles pour ${subject}:`, {
             totalExercises: stats.totalExercises,
             correctAnswers: stats.correctAnswers,
-            averageScore: stats.averageScore.toFixed(1)
+            averageScore: stats.averageScore.toFixed(1),
           });
 
           // Ajouter seulement si il y a des exercices réels
@@ -678,15 +828,26 @@ const ElevePage: React.FC = () => {
             totalCorrect += stats.correctAnswers;
 
             // Créer les statistiques détaillées
-            const subjectConfig = SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG] || SUBJECTS_CONFIG.math;
-            
+            const subjectConfig =
+              SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG] ||
+              SUBJECTS_CONFIG.math;
+
             detailedStatsArray.push({
               subjectName: stats.subject,
               totalPages: stats.totalExercises,
               averageScore: stats.averageScore,
-              bestPage: stats.averageScore > 0 ? Math.min(100, Math.round(stats.averageScore + 5)) : 0,
-              worstPage: stats.averageScore > 0 ? Math.max(0, Math.round(stats.averageScore - 10)) : 0,
-              completionRate: stats.totalExercises > 0 ? (stats.correctAnswers / stats.totalExercises) * 100 : 0,
+              bestPage:
+                stats.averageScore > 0
+                  ? Math.min(100, Math.round(stats.averageScore + 5))
+                  : 0,
+              worstPage:
+                stats.averageScore > 0
+                  ? Math.max(0, Math.round(stats.averageScore - 10))
+                  : 0,
+              completionRate:
+                stats.totalExercises > 0
+                  ? (stats.correctAnswers / stats.totalExercises) * 100
+                  : 0,
               icon: subjectConfig.icon,
               color: subjectConfig.color,
             });
@@ -694,36 +855,43 @@ const ElevePage: React.FC = () => {
         });
 
         // Ajouter des cartes à 0 pour les matières principales qui n'ont pas de données
-        Object.keys(SUBJECTS_CONFIG).slice(0, 6).forEach((subjectKey) => {
-          const config = SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
-          const hasData = detailedStatsArray.some(stat => stat.subjectName === config.name);
-          
-          if (!hasData) {
-            detailedStatsArray.push({
-              subjectName: config.name,
-              totalPages: 0,
-              averageScore: 0,
-              bestPage: 0,
-              worstPage: 0,
-              completionRate: 0,
-              icon: config.icon,
-              color: config.color,
-            });
-          }
-        });
+        Object.keys(SUBJECTS_CONFIG)
+          .slice(0, 6)
+          .forEach((subjectKey) => {
+            const config =
+              SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
+            const hasData = detailedStatsArray.some(
+              (stat) => stat.subjectName === config.name,
+            );
+
+            if (!hasData) {
+              detailedStatsArray.push({
+                subjectName: config.name,
+                totalPages: 0,
+                averageScore: 0,
+                bestPage: 0,
+                worstPage: 0,
+                completionRate: 0,
+                icon: config.icon,
+                color: config.color,
+              });
+            }
+          });
       }
 
       // Calculer la moyenne globale (0 si aucun exercice)
-      const averageScore = totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 0;
+      const averageScore =
+        totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 0;
 
       // Créer des statistiques par catégorie (vides si pas de données)
-      const categoryStats: CategoryStats[] = subjectsStats.length > 0 
-        ? subjectsStats.map((subject) => ({
-            category: subject.subject,
-            count: subject.exercisesCompleted,
-            percentage: subject.averageScore,
-          }))
-        : []; // Tableau vide si aucune donnée
+      const categoryStats: CategoryStats[] =
+        subjectsStats.length > 0
+          ? subjectsStats.map((subject) => ({
+              category: subject.subject,
+              count: subject.exercisesCompleted,
+              percentage: subject.averageScore,
+            }))
+          : []; // Tableau vide si aucune donnée
 
       // Créer des statistiques quotidiennes (toutes à 0 si pas de données)
       const last7Days = Array.from({ length: 7 }, (_, i) => {
@@ -746,17 +914,17 @@ const ElevePage: React.FC = () => {
         averageScore: averageScore.toFixed(1),
         subjectsCount: subjectsStats.length,
         detailedStatsCount: detailedStatsArray.length,
-        hasRealData: totalExercises > 0
+        hasRealData: totalExercises > 0,
       });
 
       // IMPORTANT: Mettre à jour les états immédiatement et de façon synchrone
       console.log("🔧 Mise à jour des états React...");
-      
+
       // Forcer la mise à jour synchrone
       setTimeout(() => {
         setDetailedStats(detailedStatsArray);
         console.log("✅ detailedStats mis à jour:", detailedStatsArray.length);
-        
+
         setAdvancedStats({
           totalExercises: totalExercises, // 0 si aucun exercice
           totalCorrect: totalCorrect, // 0 si aucun exercice
@@ -767,13 +935,12 @@ const ElevePage: React.FC = () => {
           subscriptionType: "free",
         });
         console.log("✅ advancedStats mis à jour");
-        
+
         // Force un re-render
         setLoading(false);
       }, 0);
 
       console.log("✅ Données chargées avec succès!");
-      
     } catch (err) {
       console.error("❌ Erreur lors de l'analyse des données réelles:", err);
       setError("Erreur lors de l'analyse des données");
@@ -1418,11 +1585,13 @@ const ElevePage: React.FC = () => {
                     </p>
                     <p className="text-3xl font-bold text-violet-600 dark:text-violet-400">
                       {advancedStats
-                        ? advancedStats.subjects.filter(s => s.totalExercises > 0).length
+                        ? advancedStats.subjects.filter(
+                            (s) => s.totalExercises > 0,
+                          ).length
                         : 0}
                     </p>
                   </div>
-                  <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/30 dark:to-amber-800/30 p-4 rounded-lg text-center border border-amber-200 dark:border-amber-700">
+                  <div className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/30 dark:to-orange-800/30 p-4 rounded-lg text-center border border-amber-200 dark:border-amber-700">
                     <FontAwesomeIcon
                       className="text-2xl text-amber-600 dark:text-amber-400 mb-2"
                       icon={faClock}
@@ -1476,7 +1645,9 @@ const ElevePage: React.FC = () => {
                         >
                           <CardBody className="p-4">
                             <div className="flex items-center gap-3 mb-3">
-                              <div className={`p-2 rounded-lg ${config.color.replace('bg-', 'bg-').replace('text-', 'text-')}`}>
+                              <div
+                                className={`p-2 rounded-lg ${config.color.replace("bg-", "bg-").replace("text-", "text-")}`}
+                              >
                                 <FontAwesomeIcon
                                   className="text-lg"
                                   icon={config.icon}
@@ -1498,24 +1669,34 @@ const ElevePage: React.FC = () => {
                                   Moyenne
                                 </span>
                                 <Chip
-                                  color={stat.averageScore > 0 ? getScoreColor(stat.averageScore) : "default"}
+                                  color={
+                                    stat.averageScore > 0
+                                      ? getScoreColor(stat.averageScore)
+                                      : "default"
+                                  }
                                   size="sm"
                                   variant="flat"
                                   className="bg-opacity-80 dark:bg-opacity-80"
                                 >
                                   {stat.averageScore.toFixed(1)}%{" "}
-                                  {stat.averageScore > 0 ? getScoreEmoji(stat.averageScore) : "📊"}
+                                  {stat.averageScore > 0
+                                    ? getScoreEmoji(stat.averageScore)
+                                    : "📊"}
                                 </Chip>
                               </div>
 
                               <Progress
                                 className="w-full"
-                                color={stat.averageScore > 0 ? getScoreColor(stat.averageScore) : "default"}
+                                color={
+                                  stat.averageScore > 0
+                                    ? getScoreColor(stat.averageScore)
+                                    : "default"
+                                }
                                 size="sm"
                                 value={stat.averageScore}
                                 classNames={{
                                   track: "bg-gray-700 dark:bg-gray-700",
-                                  indicator: "bg-gradient-to-r"
+                                  indicator: "bg-gradient-to-r",
                                 }}
                               />
 
@@ -1824,174 +2005,179 @@ const ElevePage: React.FC = () => {
                       )}
 
                       {/* Par matière */}
-                      {selectedTab === "subjects" && advancedStats.subjects.length > 0 && (
-                        <div className="grid grid-cols-1 gap-6 mb-8">
-                          {advancedStats.subjects.map((subject, index) => (
-                            <motion.div
-                              key={subject.subject}
-                              animate={{ opacity: 1, y: 0 }}
-                              initial={{ opacity: 0, y: 20 }}
-                              transition={{ duration: 0.3, delay: index * 0.1 }}
-                            >
-                              <Card className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/50 dark:to-blue-800/50 shadow-lg border border-cyan-200 dark:border-cyan-700 hover:shadow-xl transition-shadow">
-                                <CardBody>
-                                  <div className="flex justify-between items-center mb-4">
-                                    <h3 className="text-xl font-semibold text-cyan-800 dark:text-cyan-100">
-                                      {subject.subject}
-                                    </h3>
-                                    <Chip
-                                      color={
-                                        subject.averageScore >= 70
-                                          ? "success"
-                                          : "warning"
-                                      }
-                                      variant="flat"
-                                      className="dark:bg-opacity-80"
-                                    >
-                                      {subject.averageScore.toFixed(1)}%
-                                    </Chip>
-                                  </div>
-                                  <div className="mb-4">
-                                    <div className="flex justify-between text-sm mb-1">
-                                      <span className="text-cyan-600 dark:text-cyan-300">
-                                        Progression
-                                      </span>
-                                      <span className="text-cyan-600 dark:text-cyan-300">
-                                        {subject.exercisesCompleted} /{" "}
-                                        {subject.totalExercises} exercices (
-                                        {subject.progress.toFixed(1)}%)
-                                      </span>
-                                    </div>
-                                    <Progress
-                                      value={subject.progress}
-                                      color={
-                                        subject.totalExercises > 0
-                                          ? subject.correctAnswers /
-                                              subject.totalExercises >=
-                                            0.7
+                      {selectedTab === "subjects" &&
+                        advancedStats.subjects.length > 0 && (
+                          <div className="grid grid-cols-1 gap-6 mb-8">
+                            {advancedStats.subjects.map((subject, index) => (
+                              <motion.div
+                                key={subject.subject}
+                                animate={{ opacity: 1, y: 0 }}
+                                initial={{ opacity: 0, y: 20 }}
+                                transition={{
+                                  duration: 0.3,
+                                  delay: index * 0.1,
+                                }}
+                              >
+                                <Card className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/50 dark:to-blue-800/50 shadow-lg border border-cyan-200 dark:border-cyan-700 hover:shadow-xl transition-shadow">
+                                  <CardBody>
+                                    <div className="flex justify-between items-center mb-4">
+                                      <h3 className="text-xl font-semibold text-cyan-800 dark:text-cyan-100">
+                                        {subject.subject}
+                                      </h3>
+                                      <Chip
+                                        color={
+                                          subject.averageScore >= 70
                                             ? "success"
-                                            : subject.correctAnswers /
-                                                  subject.totalExercises >=
-                                                0.4
-                                              ? "warning"
-                                              : "danger"
-                                          : "default"
-                                      }
-                                      className="dark:bg-gray-700"
-                                    />
-                                  </div>
-                                  <div className="grid grid-cols-2 gap-4 text-sm">
-                                    <div>
-                                      <p className="text-cyan-500 dark:text-cyan-400">
-                                        Exercices complétés
-                                      </p>
-                                      <p className="font-medium text-cyan-800 dark:text-cyan-100">
-                                        {subject.exercisesCompleted}
-                                      </p>
+                                            : "warning"
+                                        }
+                                        variant="flat"
+                                        className="dark:bg-opacity-80"
+                                      >
+                                        {subject.averageScore.toFixed(1)}%
+                                      </Chip>
                                     </div>
-                                    <div>
-                                      <p className="text-cyan-500 dark:text-cyan-400">
-                                        Réponses correctes
-                                      </p>
-                                      <p className="font-medium text-cyan-800 dark:text-cyan-100">
-                                        {subject.correctAnswers}
-                                      </p>
-                                      <p className="text-xs text-cyan-400 dark:text-cyan-500">
-                                        {subject.correctAnswers} /{" "}
-                                        {subject.totalExercises} bonnes réponses
-                                        (
-                                        {subject.totalExercises > 0
-                                          ? (
-                                              (subject.correctAnswers /
-                                                subject.totalExercises) *
-                                              100
-                                            ).toFixed(1)
-                                          : 0}
-                                        %)
-                                      </p>
-                                    </div>
-                                  </div>
-                                </CardBody>
-                              </Card>
-                            </motion.div>
-                          ))}
-
-                          {/* Graphique des scores par matière */}
-                          <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-800/50 shadow-lg border border-indigo-200 dark:border-indigo-700">
-                            <CardBody>
-                              <h3 className="text-xl font-semibold mb-4 text-indigo-800 dark:text-indigo-100">
-                                Scores par matière
-                              </h3>
-                              <div className="h-64 w-full overflow-hidden">
-                                <div className="w-full h-full">
-                                  <Bar
-                                    data={prepareBarChartData()}
-                                    options={chartOptions}
-                                  />
-                                </div>
-                              </div>
-                            </CardBody>
-                          </Card>
-                        </div>
-                      )}
-
-                      {/* Par catégorie */}
-                      {selectedTab === "categories" && advancedStats.categoryStats.length > 0 && (
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                          <Card className="from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
-                            <CardBody>
-                              <h3 className="text-xl font-semibold mb-4 text-teal-800 dark:text-teal-100">
-                                Répartition par catégorie
-                              </h3>
-                              <div className="h-64 w-full overflow-hidden">
-                                <div className="w-full h-full">
-                                  <Doughnut
-                                    data={prepareDoughnutChartData()}
-                                    options={doughnutOptions}
-                                  />
-                                </div>
-                              </div>
-                            </CardBody>
-                          </Card>
-
-                          <Card className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/50 dark:to-orange-800/50 shadow-lg border border-amber-200 dark:border-amber-700">
-                            <CardBody>
-                              <h3 className="text-xl font-semibold mb-4 text-amber-800 dark:text-amber-100">
-                                Détails par catégorie
-                              </h3>
-                              <div className="space-y-4">
-                                {advancedStats.categoryStats.map(
-                                  (category: any, index: number) => (
-                                    <div
-                                      key={index}
-                                      className="flex justify-between items-center"
-                                    >
-                                      <span className="text-amber-700 dark:text-amber-200">
-                                        {category.category}
-                                      </span>
-                                      <div className="flex items-center gap-2">
-                                        <span className="text-sm text-amber-500 dark:text-amber-400">
-                                          {category.count} exercices
+                                    <div className="mb-4">
+                                      <div className="flex justify-between text-sm mb-1">
+                                        <span className="text-cyan-600 dark:text-cyan-300">
+                                          Progression
                                         </span>
-                                        <Chip
-                                          size="sm"
-                                          variant="flat"
-                                          className="dark:bg-opacity-80"
-                                        >
-                                          {Number(category.percentage).toFixed(
-                                            1,
-                                          )}
-                                          %
-                                        </Chip>
+                                        <span className="text-cyan-600 dark:text-cyan-300">
+                                          {subject.exercisesCompleted} /{" "}
+                                          {subject.totalExercises} exercices (
+                                          {subject.progress.toFixed(1)}%)
+                                        </span>
+                                      </div>
+                                      <Progress
+                                        value={subject.progress}
+                                        color={
+                                          subject.totalExercises > 0
+                                            ? subject.correctAnswers /
+                                                subject.totalExercises >=
+                                              0.7
+                                              ? "success"
+                                              : subject.correctAnswers /
+                                                    subject.totalExercises >=
+                                                  0.4
+                                                ? "warning"
+                                                : "danger"
+                                            : "default"
+                                        }
+                                        className="dark:bg-gray-700"
+                                      />
+                                    </div>
+                                    <div className="grid grid-cols-2 gap-4 text-sm">
+                                      <div>
+                                        <p className="text-cyan-500 dark:text-cyan-400">
+                                          Exercices complétés
+                                        </p>
+                                        <p className="font-medium text-cyan-800 dark:text-cyan-100">
+                                          {subject.exercisesCompleted}
+                                        </p>
+                                      </div>
+                                      <div>
+                                        <p className="text-cyan-500 dark:text-cyan-400">
+                                          Réponses correctes
+                                        </p>
+                                        <p className="font-medium text-cyan-800 dark:text-cyan-100">
+                                          {subject.correctAnswers}
+                                        </p>
+                                        <p className="text-xs text-cyan-400 dark:text-cyan-500">
+                                          {subject.correctAnswers} /{" "}
+                                          {subject.totalExercises} bonnes
+                                          réponses (
+                                          {subject.totalExercises > 0
+                                            ? (
+                                                (subject.correctAnswers /
+                                                  subject.totalExercises) *
+                                                100
+                                              ).toFixed(1)
+                                            : 0}
+                                          %)
+                                        </p>
                                       </div>
                                     </div>
-                                  ),
-                                )}
-                              </div>
-                            </CardBody>
-                          </Card>
-                        </div>
-                      )}
+                                  </CardBody>
+                                </Card>
+                              </motion.div>
+                            ))}
+
+                            {/* Graphique des scores par matière */}
+                            <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-800/50 shadow-lg border border-indigo-200 dark:border-indigo-700">
+                              <CardBody>
+                                <h3 className="text-xl font-semibold mb-4 text-indigo-800 dark:text-indigo-100">
+                                  Scores par matière
+                                </h3>
+                                <div className="h-64 w-full overflow-hidden">
+                                  <div className="w-full h-full">
+                                    <Bar
+                                      data={prepareBarChartData()}
+                                      options={chartOptions}
+                                    />
+                                  </div>
+                                </div>
+                              </CardBody>
+                            </Card>
+                          </div>
+                        )}
+
+                      {/* Par catégorie */}
+                      {selectedTab === "categories" &&
+                        advancedStats.categoryStats.length > 0 && (
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                            <Card className="from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
+                              <CardBody>
+                                <h3 className="text-xl font-semibold mb-4 text-teal-800 dark:text-teal-100">
+                                  Répartition par catégorie
+                                </h3>
+                                <div className="h-64 w-full overflow-hidden">
+                                  <div className="w-full h-full">
+                                    <Doughnut
+                                      data={prepareDoughnutChartData()}
+                                      options={doughnutOptions}
+                                    />
+                                  </div>
+                                </div>
+                              </CardBody>
+                            </Card>
+
+                            <Card className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/50 dark:to-orange-800/50 shadow-lg border border-amber-200 dark:border-amber-700">
+                              <CardBody>
+                                <h3 className="text-xl font-semibold mb-4 text-amber-800 dark:text-amber-100">
+                                  Détails par catégorie
+                                </h3>
+                                <div className="space-y-4">
+                                  {advancedStats.categoryStats.map(
+                                    (category: any, index: number) => (
+                                      <div
+                                        key={index}
+                                        className="flex justify-between items-center"
+                                      >
+                                        <span className="text-amber-700 dark:text-amber-200">
+                                          {category.category}
+                                        </span>
+                                        <div className="flex items-center gap-2">
+                                          <span className="text-sm text-amber-500 dark:text-amber-400">
+                                            {category.count} exercices
+                                          </span>
+                                          <Chip
+                                            size="sm"
+                                            variant="flat"
+                                            className="dark:bg-opacity-80"
+                                          >
+                                            {Number(
+                                              category.percentage,
+                                            ).toFixed(1)}
+                                            %
+                                          </Chip>
+                                        </div>
+                                      </div>
+                                    ),
+                                  )}
+                                </div>
+                              </CardBody>
+                            </Card>
+                          </div>
+                        )}
 
                       {/* Progression */}
                       {selectedTab === "progress" && (
