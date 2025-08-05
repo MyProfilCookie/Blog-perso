@@ -387,17 +387,6 @@ const ElevePage: React.FC = () => {
     loadProfile();
   }, [userId]); // Supprimer les dépendances du hook pour éviter les re-renders
 
-  // Ajouter un effet pour forcer le rechargement si les données sont vides
-  useEffect(() => {
-    if (!loading && userId && detailedStats.length === 0) {
-      console.log("🔄 Force reload - detailedStats vide détecté");
-      setTimeout(() => {
-        // Appeler loadWithSync au lieu de loadLocalData
-        loadWithSync();
-      }, 100);
-    }
-  }, [loading, userId, detailedStats.length, loadWithSync]); // Ajouter loadWithSync aux deps
-
   // Fonction pour récupérer les données depuis le localStorage (adaptée de stats.tsx)
   const getLocalStorageData = (subject: string) => {
     try {
