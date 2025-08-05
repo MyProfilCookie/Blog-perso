@@ -635,11 +635,11 @@ const ElevePage: React.FC = () => {
       let totalExercises = 0;
       let totalCorrect = 0;
 
-      // NE PAS créer de données d'exemple - utiliser seulement les vraies données
+      // Si aucune donnée trouvée, créer des statistiques VIDES
       if (Object.keys(allSubjectsData).length === 0) {
-        console.log("⚠️ Aucune donnée d'exercice trouvée - affichage de statistiques vides");
+        console.log("⚠️ Aucune donnée d'exercice trouvée - création de statistiques à 0");
         
-        // Créer des statistiques vides pour les matières principales seulement pour l'affichage
+        // Créer des statistiques à 0 pour les matières principales
         Object.keys(SUBJECTS_CONFIG).slice(0, 6).forEach((subjectKey) => {
           const config = SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
           
@@ -654,6 +654,11 @@ const ElevePage: React.FC = () => {
             color: config.color,
           });
         });
+
+        // Aucune statistique de matière pour advancedStats
+        // subjectsStats reste vide
+        totalExercises = 0;
+        totalCorrect = 0;
       } else {
         // Traitement normal avec de vraies données UNIQUEMENT
         Object.keys(allSubjectsData).forEach((subject) => {
@@ -688,7 +693,7 @@ const ElevePage: React.FC = () => {
           }
         });
 
-        // Ajouter des cartes vides pour les matières sans données (pour l'affichage)
+        // Ajouter des cartes à 0 pour les matières principales qui n'ont pas de données
         Object.keys(SUBJECTS_CONFIG).slice(0, 6).forEach((subjectKey) => {
           const config = SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
           const hasData = detailedStatsArray.some(stat => stat.subjectName === config.name);
@@ -711,14 +716,16 @@ const ElevePage: React.FC = () => {
       // Calculer la moyenne globale (0 si aucun exercice)
       const averageScore = totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 0;
 
-      // Créer des statistiques par catégorie (seulement avec de vraies données)
-      const categoryStats: CategoryStats[] = subjectsStats.map((subject) => ({
-        category: subject.subject,
-        count: subject.exercisesCompleted,
-        percentage: subject.averageScore,
-      }));
+      // Créer des statistiques par catégorie (vides si pas de données)
+      const categoryStats: CategoryStats[] = subjectsStats.length > 0 
+        ? subjectsStats.map((subject) => ({
+            category: subject.subject,
+            count: subject.exercisesCompleted,
+            percentage: subject.averageScore,
+          }))
+        : []; // Tableau vide si aucune donnée
 
-      // Créer des statistiques quotidiennes (vides si pas de données)
+      // Créer des statistiques quotidiennes (toutes à 0 si pas de données)
       const last7Days = Array.from({ length: 7 }, (_, i) => {
         const date = new Date();
         date.setDate(date.getDate() - i);
@@ -726,23 +733,20 @@ const ElevePage: React.FC = () => {
       }).reverse();
 
       const dailyStats: DailyStats[] = last7Days.map((date, index) => {
-        // Si pas de données réelles, afficher 0
-        const exercisesForDay = totalExercises > 0 ? Math.max(1, Math.floor(totalExercises / 7)) : 0;
-        const dailyScore = totalExercises > 0 ? averageScore : 0;
-
         return {
           date,
-          exercisesCompleted: exercisesForDay,
-          averageScore: dailyScore,
+          exercisesCompleted: 0, // Toujours 0 si pas de données
+          averageScore: 0, // Toujours 0 si pas de données
         };
       });
 
-      console.log("📊 Statistiques finales réelles calculées:", {
+      console.log("📊 Statistiques finales calculées:", {
         totalExercises,
         totalCorrect,
         averageScore: averageScore.toFixed(1),
         subjectsCount: subjectsStats.length,
-        detailedStatsCount: detailedStatsArray.length
+        detailedStatsCount: detailedStatsArray.length,
+        hasRealData: totalExercises > 0
       });
 
       // IMPORTANT: Mettre à jour les états immédiatement et de façon synchrone
@@ -754,12 +758,12 @@ const ElevePage: React.FC = () => {
         console.log("✅ detailedStats mis à jour:", detailedStatsArray.length);
         
         setAdvancedStats({
-          totalExercises,
-          totalCorrect,
-          averageScore: Math.min(100, Math.max(0, averageScore)),
-          subjects: subjectsStats,
-          dailyStats,
-          categoryStats,
+          totalExercises: totalExercises, // 0 si aucun exercice
+          totalCorrect: totalCorrect, // 0 si aucun exercice
+          averageScore: averageScore, // 0 si aucun exercice
+          subjects: subjectsStats, // Tableau vide si aucun exercice
+          dailyStats: dailyStats, // Tous à 0 si aucun exercice
+          categoryStats: categoryStats, // Tableau vide si aucun exercice
           subscriptionType: "free",
         });
         console.log("✅ advancedStats mis à jour");
@@ -768,7 +772,7 @@ const ElevePage: React.FC = () => {
         setLoading(false);
       }, 0);
 
-      console.log("✅ Données réelles chargées avec succès!");
+      console.log("✅ Données chargées avec succès!");
       
     } catch (err) {
       console.error("❌ Erreur lors de l'analyse des données réelles:", err);
@@ -1721,31 +1725,36 @@ const ElevePage: React.FC = () => {
                     Statistiques Avancées
                   </h2>
 
-                  {/* Message si aucune donnée */}
-                  {advancedStats.totalExercises === 0 && (
-                    <div className="text-center py-8 mb-6">
-                      <FontAwesomeIcon
-                        icon={faChartBar}
-                        className="text-4xl text-gray-400 mb-4"
-                      />
-                      <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
-                        Aucune donnée d&apos;exercices trouvée
-                      </h3>
-                      <p className="text-gray-600 dark:text-gray-400 mb-4">
-                        Commencez à faire des exercices pour voir vos
-                        statistiques ici.
-                      </p>
-                      <Button
-                        color="primary"
-                        variant="flat"
-                        onClick={() => router.push("/controle")}
-                      >
-                        Commencer les exercices
-                      </Button>
-                    </div>
+                  {/* Message si aucune donnée dans les statistiques avancées */}
+                  {(!advancedStats || advancedStats.totalExercises === 0) && (
+                    <Card className="w-full border border-purple-200 dark:border-purple-800 bg-gradient-to-r from-rose-50 to-pink-50 dark:from-rose-900/50 dark:to-pink-900/50">
+                      <CardBody className="p-6">
+                        <div className="text-center py-8">
+                          <FontAwesomeIcon
+                            icon={faChartBar}
+                            className="text-4xl text-gray-400 mb-4"
+                          />
+                          <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
+                            Aucune donnée d&apos;exercices trouvée
+                          </h3>
+                          <p className="text-gray-600 dark:text-gray-400 mb-4">
+                            Commencez à faire des exercices pour voir vos
+                            statistiques ici.
+                          </p>
+                          <Button
+                            color="primary"
+                            variant="flat"
+                            onClick={() => router.push("/controle")}
+                          >
+                            Commencer les exercices
+                          </Button>
+                        </div>
+                      </CardBody>
+                    </Card>
                   )}
 
-                  {advancedStats.totalExercises > 0 && (
+                  {/* Statistiques avancées avec graphiques - seulement si il y a des données */}
+                  {advancedStats && advancedStats.totalExercises > 0 && (
                     <>
                       <Tabs
                         className="mb-8"
@@ -1815,7 +1824,7 @@ const ElevePage: React.FC = () => {
                       )}
 
                       {/* Par matière */}
-                      {selectedTab === "subjects" && (
+                      {selectedTab === "subjects" && advancedStats.subjects.length > 0 && (
                         <div className="grid grid-cols-1 gap-6 mb-8">
                           {advancedStats.subjects.map((subject, index) => (
                             <motion.div
@@ -1907,47 +1916,43 @@ const ElevePage: React.FC = () => {
                             </motion.div>
                           ))}
 
-                          {/* Graphique des scores par matière - Conditionnel */}
-                          {advancedStats.subjects.length > 0 && (
-                            <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-800/50 shadow-lg border border-indigo-200 dark:border-indigo-700">
-                              <CardBody>
-                                <h3 className="text-xl font-semibold mb-4 text-indigo-800 dark:text-indigo-100">
-                                  Scores par matière
-                                </h3>
-                                <div className="h-64 w-full overflow-hidden">
-                                  <div className="w-full h-full">
-                                    <Bar
-                                      data={prepareBarChartData()}
-                                      options={chartOptions}
-                                    />
-                                  </div>
+                          {/* Graphique des scores par matière */}
+                          <Card className="bg-gradient-to-br from-indigo-50 to-purple-50 dark:from-indigo-900/50 dark:to-purple-800/50 shadow-lg border border-indigo-200 dark:border-indigo-700">
+                            <CardBody>
+                              <h3 className="text-xl font-semibold mb-4 text-indigo-800 dark:text-indigo-100">
+                                Scores par matière
+                              </h3>
+                              <div className="h-64 w-full overflow-hidden">
+                                <div className="w-full h-full">
+                                  <Bar
+                                    data={prepareBarChartData()}
+                                    options={chartOptions}
+                                  />
                                 </div>
-                              </CardBody>
-                            </Card>
-                          )}
+                              </div>
+                            </CardBody>
+                          </Card>
                         </div>
                       )}
 
                       {/* Par catégorie */}
-                      {selectedTab === "categories" && (
+                      {selectedTab === "categories" && advancedStats.categoryStats.length > 0 && (
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                          {advancedStats.categoryStats.length > 0 && (
-                            <Card className="from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
-                              <CardBody>
-                                <h3 className="text-xl font-semibold mb-4 text-teal-800 dark:text-teal-100">
-                                  Répartition par catégorie
-                                </h3>
-                                <div className="h-64 w-full overflow-hidden">
-                                  <div className="w-full h-full">
-                                    <Doughnut
-                                      data={prepareDoughnutChartData()}
-                                      options={doughnutOptions}
-                                    />
-                                  </div>
+                          <Card className="from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
+                            <CardBody>
+                              <h3 className="text-xl font-semibold mb-4 text-teal-800 dark:text-teal-100">
+                                Répartition par catégorie
+                              </h3>
+                              <div className="h-64 w-full overflow-hidden">
+                                <div className="w-full h-full">
+                                  <Doughnut
+                                    data={prepareDoughnutChartData()}
+                                    options={doughnutOptions}
+                                  />
                                 </div>
-                              </CardBody>
-                            </Card>
-                          )}
+                              </div>
+                            </CardBody>
+                          </Card>
 
                           <Card className="bg-gradient-to-br from-amber-50 to-orange-50 dark:from-amber-900/50 dark:to-orange-800/50 shadow-lg border border-amber-200 dark:border-amber-700">
                             <CardBody>
@@ -1991,23 +1996,21 @@ const ElevePage: React.FC = () => {
                       {/* Progression */}
                       {selectedTab === "progress" && (
                         <div className="grid grid-cols-1 gap-6 mb-8">
-                          {advancedStats.dailyStats.length > 0 && (
-                            <Card className="bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/50 dark:to-rose-800/50 shadow-lg border border-pink-200 dark:border-pink-700">
-                              <CardBody>
-                                <h3 className="text-xl font-semibold mb-4 text-pink-800 dark:text-pink-100">
-                                  Évolution des scores
-                                </h3>
-                                <div className="h-64 w-full overflow-hidden">
-                                  <div className="w-full h-full">
-                                    <Line
-                                      data={prepareLineChartData()}
-                                      options={chartOptions}
-                                    />
-                                  </div>
+                          <Card className="bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-900/50 dark:to-rose-800/50 shadow-lg border border-pink-200 dark:border-pink-700">
+                            <CardBody>
+                              <h3 className="text-xl font-semibold mb-4 text-pink-800 dark:text-pink-100">
+                                Évolution des scores
+                              </h3>
+                              <div className="h-64 w-full overflow-hidden">
+                                <div className="w-full h-full">
+                                  <Line
+                                    data={prepareLineChartData()}
+                                    options={chartOptions}
+                                  />
                                 </div>
-                              </CardBody>
-                            </Card>
-                          )}
+                              </div>
+                            </CardBody>
+                          </Card>
 
                           {advancedStats.subjects.length > 0 && (
                             <Card className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-900/50 dark:to-purple-800/50 shadow-lg border border-violet-200 dark:border-violet-700">
