@@ -75,10 +75,7 @@ export const useEleveStats = () => {
   // Charger les statistiques complètes depuis votre API
   const loadCompleteStats = useCallback(async () => {
     const userInfo = getUserInfo();
-    if (!userInfo) {
-      console.warn('⚠️ Impossible de charger les stats : utilisateur non connecté');
-      return null;
-    }
+    if (!userInfo) return null;
 
     try {
       setLoading(true);
@@ -87,38 +84,46 @@ export const useEleveStats = () => {
       console.log(`📊 Chargement des statistiques pour l'utilisateur ${userInfo.userId}`);
 
       const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/eleves/complete-stats/${userInfo.userId}`,
+        `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userInfo.userId}`,
         {
           headers: {
             'Authorization': `Bearer ${userInfo.token}`,
             'Content-Type': 'application/json'
           },
-          timeout: 10000 // 10 secondes de timeout
+          timeout: 30000 // Augmenter à 30 secondes
         }
       );
 
-      const stats = response.data;
-      setEleveStats(stats);
-      
-      console.log('✅ Statistiques chargées depuis votre API:', {
-        totalExercises: stats.totalExercises,
-        averageScore: stats.averageScore?.toFixed(1),
-        subjectsCount: stats.subjects?.length || 0
-      });
+      const serverStats = response.data;
+      console.log('✅ Stats serveur récupérées:', serverStats);
 
-      return stats;
+      // Transformation des données si nécessaire
+      const transformedStats = {
+        ...serverStats,
+        averageScore: serverStats.averageScore?.toFixed(1),
+        subjects: serverStats.subjects?.map((subject: any) => ({
+          ...subject,
+          averageScore: subject.averageScore?.toFixed(1),
+        })),
+        dailyStats: serverStats.dailyStats?.map((stat: any) => ({
+          ...stat,
+          averageScore: stat.averageScore?.toFixed(1),
+        })),
+      };
+
+      setEleveStats(transformedStats);
+      return transformedStats;
     } catch (error: any) {
       console.error('❌ Erreur lors du chargement des statistiques:', error);
       
-      if (error.response) {
-        // Erreur du serveur
-        setError(error.response.data?.message || 'Erreur serveur');
-      } else if (error.request) {
-        // Erreur réseau
-        setError('Erreur de connexion au serveur');
+      if (error.code === 'ECONNABORTED') {
+        console.log('⏱️ Timeout détecté, utilisation de localStorage');
+        setError('Connexion lente, utilisation des données locales');
+      } else if (error.response?.status === 404) {
+        console.log('⚠️ Route non trouvée, utilisation des données localStorage uniquement');
+        setError('Serveur indisponible, utilisation des données locales');
       } else {
-        // Autre erreur
-        setError('Erreur lors du chargement des données');
+        setError('Erreur de connexion, utilisation des données locales');
       }
       
       return null;
@@ -255,35 +260,29 @@ export const useEleveStats = () => {
   // Charger avec synchronisation automatique
   const loadWithSync = useCallback(async () => {
     try {
-      console.log('🚀 Chargement avec synchronisation automatique...');
+      console.log('🚀 Chargement avec fallback rapide...');
       
-      // 1. Charger les stats existantes depuis l'API
-      const stats = await loadCompleteStats();
+      // Promise race : soit l'API répond rapidement, soit on passe au localStorage
+      const apiPromise = loadCompleteStats();
+      const timeoutPromise = new Promise(resolve => 
+        setTimeout(() => resolve(null), 5000) // 5 secondes max
+      );
+
+      const stats = await Promise.race([apiPromise, timeoutPromise]);
       
-      // 2. Si pas de données ou peu de données, synchroniser localStorage
-      if (!stats || stats.totalExercises === 0) {
-        console.log('📊 Pas de données serveur détectées, tentative de synchronisation localStorage...');
-        
-        const syncSuccess = await syncLocalStorageData();
-        
-        if (syncSuccess) {
-          console.log('🔄 Synchronisation réussie, rechargement des statistiques...');
-          // 3. Recharger après synchronisation
-          return await loadCompleteStats();
-        } else {
-          console.log('⚠️ Synchronisation échouée, retour des stats vides');
-        }
+      if (stats && stats.totalExercises > 0) {
+        console.log('✅ Données API chargées rapidement');
+        return stats;
       } else {
-        console.log('✅ Données serveur trouvées, pas besoin de synchronisation');
+        console.log('⚠️ API lente ou pas de données, utilisation localStorage');
+        return null;
       }
       
-      return stats;
     } catch (error) {
-      console.error('❌ Erreur lors du chargement avec sync:', error);
-      setError('Erreur lors du chargement des données');
+      console.error('❌ Erreur loadWithSync:', error);
       return null;
     }
-  }, [loadCompleteStats, syncLocalStorageData]);
+  }, [loadCompleteStats]);
 
   // Supprimer toutes les données utilisateur
   const deleteAllUserData = useCallback(async () => {

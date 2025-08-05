@@ -295,117 +295,97 @@ const ElevePage: React.FC = () => {
     const loadProfile = async () => {
       try {
         setLoading(true);
-        clearError(); // Nettoyer les erreurs précédentes
+        clearError();
 
-        console.log(`👤 Chargement du profil pour l'utilisateur: ${userId}`);
+        console.log(`👤 Chargement profil pour: ${userId}`);
 
-        // Utiliser le hook pour charger avec synchronisation
-        const stats = await loadWithSync();
+        // 1. Toujours commencer par localStorage (rapide)
+        console.log('📂 Chargement localStorage en priorité...');
+        loadLocalData();
 
-        if (stats) {
-          // Convertir vers le format de votre interface existante
-          const tempProfile = {
-            _id: userId,
-            userId: userId,
-            subjects: stats.subjects.map((subject: any) => ({
-              subjectName: subject.subject,
-              pages: [], // Les pages sont maintenant gérées via les stats
-              averageScore: subject.averageScore,
-              lastUpdated: subject.lastActivity,
-            })),
-            overallAverage: stats.averageScore,
-            totalPagesCompleted: stats.totalExercises,
-            createdAt: new Date().toISOString(),
-            updatedAt: new Date().toISOString(),
-          };
-
-          setEleveProfile(tempProfile);
-
-          // Convertir pour detailedStats
-          const detailedStatsArray = stats.subjects.map((subject: any) => {
-            const subjectConfig =
-              SUBJECTS_CONFIG[
-                subject.subject as keyof typeof SUBJECTS_CONFIG
-              ] || SUBJECTS_CONFIG.math;
-
-            return {
-              subjectName: subject.subject,
-              totalPages: subject.totalExercises,
-              averageScore: subject.averageScore,
-              bestPage:
-                subject.averageScore > 0
-                  ? Math.min(100, Math.round(subject.averageScore + 5))
-                  : 0,
-              worstPage:
-                subject.averageScore > 0
-                  ? Math.max(0, Math.round(subject.averageScore - 10))
-                  : 0,
-              completionRate: subject.progress,
-              icon: subjectConfig.icon,
-              color: subjectConfig.color,
-            };
+        // 2. Essayer l'API en arrière-plan (sans bloquer l'interface)
+        console.log('🌐 Tentative API en arrière-plan...');
+        loadWithSync()
+          .then(stats => {
+            if (stats && stats.totalExercises > 0) {
+              console.log('✅ Mise à jour avec données API');
+              // Mettre à jour seulement si on a des données meilleures
+              updateWithApiData(stats);
+            }
+          })
+          .catch(err => {
+            console.warn('⚠️ API échouée, localStorage conservé:', err.message);
           });
 
-          // Ajouter les matières manquantes avec des valeurs à 0
-          Object.keys(SUBJECTS_CONFIG)
-            .slice(0, 6)
-            .forEach((subjectKey) => {
-              const config =
-                SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
-              const hasData = detailedStatsArray.some(
-                (stat: { subjectName: string; }) => {
-                  return stat.subjectName === config.name;
-                },
-              );
+        // 3. Charger les données serveur pour affichage admin
+        loadServerData().catch(console.warn);
 
-              if (!hasData) {
-                detailedStatsArray.push({
-                  subjectName: config.name,
-                  totalPages: 0,
-                  averageScore: 0,
-                  bestPage: 0,
-                  worstPage: 0,
-                  completionRate: 0,
-                  icon: config.icon,
-                  color: config.color,
-                });
-              }
-            });
-
-          setDetailedStats(detailedStatsArray);
-
-          // Convertir pour advancedStats
-          setAdvancedStats({
-            totalExercises: stats.totalExercises,
-            totalCorrect: stats.totalCorrect,
-            averageScore: stats.averageScore,
-            subjects: stats.subjects,
-            dailyStats: stats.dailyStats,
-            categoryStats: stats.categoryStats,
-            subscriptionType: stats.subscriptionType,
-          });
-
-          if (stats.userInfo) {
-            setUserInfo(stats.userInfo);
-          }
-
-          console.log("✅ Profil chargé avec succès");
-        } else {
-          console.log(
-            "⚠️ Aucune statistique chargée, affichage des valeurs par défaut",
-          );
-          // Garder votre logique par défaut ici
-        }
       } catch (err) {
-        console.error("❌ Erreur lors du chargement du profil:", err);
-        setError("Erreur lors du chargement des données");
+        console.error("❌ Erreur chargement profil:", err);
+        setError("Erreur lors du chargement");
+        // Toujours essayer localStorage en cas d'erreur
+        loadLocalData();
       } finally {
         setLoading(false);
       }
     };
 
+    // Fonction pour mettre à jour avec les données API
+    const updateWithApiData = (stats: any) => {
+      // Convertir et mettre à jour detailedStats
+      const detailedStatsArray = stats.subjects.map((subject: any) => {
+        const subjectConfig = getSubjectConfig(subject.subject);
+        
+        return {
+          subjectName: subject.subject,
+          totalPages: subject.totalExercises,
+          averageScore: subject.averageScore,
+          bestPage: subject.averageScore > 0 ? Math.min(100, Math.round(subject.averageScore + 5)) : 0,
+          worstPage: subject.averageScore > 0 ? Math.max(0, Math.round(subject.averageScore - 10)) : 0,
+          completionRate: subject.progress,
+          icon: subjectConfig.icon,
+          color: subjectConfig.color,
+        };
+      });
+
+      // Fusionner avec les données localStorage existantes
+      setDetailedStats(prevStats => {
+        const merged = [...detailedStatsArray];
+        
+        // Ajouter les matières manquantes
+        Object.keys(SUBJECTS_CONFIG).slice(0, 6).forEach((subjectKey) => {
+          const config = SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
+          const hasData = merged.some(stat => stat.subjectName === config.name);
+          
+          if (!hasData) {
+            // Garder les données localStorage si elles existent
+            const localData = prevStats.find(stat => stat.subjectName === config.name);
+            if (localData) {
+              merged.push(localData);
+            } else {
+              merged.push({
+                subjectName: config.name,
+                totalPages: 0,
+                averageScore: 0,
+                bestPage: 0,
+                worstPage: 0,
+                completionRate: 0,
+                icon: config.icon,
+                color: config.color,
+              });
+            }
+          }
+        });
+        
+        return merged;
+      });
+
+      // Mettre à jour advancedStats
+      setAdvancedStats(stats);
+    };
+
     loadProfile();
-  }, [userId, loadWithSync, clearError]);
+  }, [userId]); // Supprimer les dépendances du hook pour éviter les re-renders
 
   // Ajouter un effet pour forcer le rechargement si les données sont vides
   useEffect(() => {
@@ -2124,7 +2104,7 @@ const ElevePage: React.FC = () => {
                       {selectedTab === "categories" &&
                         advancedStats.categoryStats.length > 0 && (
                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
-                            <Card className="from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
+                            <Card className="bg-gradient-to-br from-teal-50 to-cyan-50 dark:from-teal-900/50 dark:to-cyan-800/50 shadow-lg border border-teal-200 dark:border-teal-700">
                               <CardBody>
                                 <h3 className="text-xl font-semibold mb-4 text-teal-800 dark:text-teal-100">
                                   Répartition par catégorie
