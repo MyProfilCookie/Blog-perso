@@ -629,79 +629,96 @@ const ElevePage: React.FC = () => {
 
       console.log("🔍 Total des matières avec données:", Object.keys(allSubjectsData).length);
 
-      // Si aucune donnée trouvée, créer des données d'exemple et les calculer immédiatement
-      if (Object.keys(allSubjectsData).length === 0) {
-        console.log("⚠️ Aucune donnée trouvée, création d'exemples...");
-        
-        // Créer des données d'exemple réalistes
-        const exampleSubjects = ['math', 'french', 'sciences', 'history', 'art', 'geography'];
-        exampleSubjects.forEach((subject) => {
-          const exerciseCount = 5 + Math.floor(Math.random() * 10); // 5-15 exercices
-          const correctCount = Math.floor(exerciseCount * (0.6 + Math.random() * 0.3)); // 60-90% de réussite
-          
-          allSubjectsData[subject] = {
-            validatedExercises: Object.fromEntries(
-              Array.from({ length: exerciseCount }, (_, i) => [`ex${i+1}`, true])
-            ),
-            results: Array.from({ length: exerciseCount }, (_, i) => ({
-              isCorrect: i < correctCount,
-              score: 60 + Math.random() * 35, // Score entre 60 et 95
-              exerciseId: `ex${i+1}`
-            })),
-            userAnswers: {},
-          };
-        });
-        
-        console.log("✅ Données d'exemple créées pour", Object.keys(allSubjectsData).length, "matières");
-      }
-
-      // Calculer les statistiques pour chaque matière
+      // Calculer les statistiques pour chaque matière (seulement avec de vraies données)
       const subjectsStats: SubjectStats[] = [];
       const detailedStatsArray: DetailedStats[] = [];
       let totalExercises = 0;
       let totalCorrect = 0;
 
-      Object.keys(allSubjectsData).forEach((subject) => {
-        const subjectData = allSubjectsData[subject];
-        const stats = calculateSubjectStats(subject, subjectData);
-
-        console.log(`📊 Stats pour ${subject}:`, {
-          totalExercises: stats.totalExercises,
-          correctAnswers: stats.correctAnswers,
-          averageScore: stats.averageScore.toFixed(1)
-        });
-
-        // Ajouter toutes les statistiques même si elles sont à 0
-        subjectsStats.push(stats);
-        totalExercises += stats.totalExercises;
-        totalCorrect += stats.correctAnswers;
-
-        // Créer les statistiques détaillées
-        const subjectConfig = SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG] || SUBJECTS_CONFIG.math;
+      // NE PAS créer de données d'exemple - utiliser seulement les vraies données
+      if (Object.keys(allSubjectsData).length === 0) {
+        console.log("⚠️ Aucune donnée d'exercice trouvée - affichage de statistiques vides");
         
-        detailedStatsArray.push({
-          subjectName: stats.subject,
-          totalPages: stats.totalExercises,
-          averageScore: stats.averageScore,
-          bestPage: Math.min(100, Math.round(stats.averageScore + 5 + Math.random() * 10)),
-          worstPage: Math.max(0, Math.round(stats.averageScore - 10 - Math.random() * 15)),
-          completionRate: stats.totalExercises > 0 ? (stats.correctAnswers / stats.totalExercises) * 100 : 0,
-          icon: subjectConfig.icon,
-          color: subjectConfig.color,
+        // Créer des statistiques vides pour les matières principales seulement pour l'affichage
+        Object.keys(SUBJECTS_CONFIG).slice(0, 6).forEach((subjectKey) => {
+          const config = SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
+          
+          detailedStatsArray.push({
+            subjectName: config.name,
+            totalPages: 0,
+            averageScore: 0,
+            bestPage: 0,
+            worstPage: 0,
+            completionRate: 0,
+            icon: config.icon,
+            color: config.color,
+          });
         });
-      });
+      } else {
+        // Traitement normal avec de vraies données UNIQUEMENT
+        Object.keys(allSubjectsData).forEach((subject) => {
+          const subjectData = allSubjectsData[subject];
+          const stats = calculateSubjectStats(subject, subjectData);
 
-      // Calculer la moyenne globale
-      const averageScore = totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 57.1;
+          console.log(`📊 Stats réelles pour ${subject}:`, {
+            totalExercises: stats.totalExercises,
+            correctAnswers: stats.correctAnswers,
+            averageScore: stats.averageScore.toFixed(1)
+          });
 
-      // Créer des statistiques par catégorie
+          // Ajouter seulement si il y a des exercices réels
+          if (stats.totalExercises > 0 || stats.exercisesCompleted > 0) {
+            subjectsStats.push(stats);
+            totalExercises += stats.totalExercises;
+            totalCorrect += stats.correctAnswers;
+
+            // Créer les statistiques détaillées
+            const subjectConfig = SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG] || SUBJECTS_CONFIG.math;
+            
+            detailedStatsArray.push({
+              subjectName: stats.subject,
+              totalPages: stats.totalExercises,
+              averageScore: stats.averageScore,
+              bestPage: stats.averageScore > 0 ? Math.min(100, Math.round(stats.averageScore + 5)) : 0,
+              worstPage: stats.averageScore > 0 ? Math.max(0, Math.round(stats.averageScore - 10)) : 0,
+              completionRate: stats.totalExercises > 0 ? (stats.correctAnswers / stats.totalExercises) * 100 : 0,
+              icon: subjectConfig.icon,
+              color: subjectConfig.color,
+            });
+          }
+        });
+
+        // Ajouter des cartes vides pour les matières sans données (pour l'affichage)
+        Object.keys(SUBJECTS_CONFIG).slice(0, 6).forEach((subjectKey) => {
+          const config = SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
+          const hasData = detailedStatsArray.some(stat => stat.subjectName === config.name);
+          
+          if (!hasData) {
+            detailedStatsArray.push({
+              subjectName: config.name,
+              totalPages: 0,
+              averageScore: 0,
+              bestPage: 0,
+              worstPage: 0,
+              completionRate: 0,
+              icon: config.icon,
+              color: config.color,
+            });
+          }
+        });
+      }
+
+      // Calculer la moyenne globale (0 si aucun exercice)
+      const averageScore = totalExercises > 0 ? (totalCorrect / totalExercises) * 100 : 0;
+
+      // Créer des statistiques par catégorie (seulement avec de vraies données)
       const categoryStats: CategoryStats[] = subjectsStats.map((subject) => ({
         category: subject.subject,
         count: subject.exercisesCompleted,
         percentage: subject.averageScore,
       }));
 
-      // Créer des statistiques quotidiennes basées sur les vraies données
+      // Créer des statistiques quotidiennes (vides si pas de données)
       const last7Days = Array.from({ length: 7 }, (_, i) => {
         const date = new Date();
         date.setDate(date.getDate() - i);
@@ -709,10 +726,9 @@ const ElevePage: React.FC = () => {
       }).reverse();
 
       const dailyStats: DailyStats[] = last7Days.map((date, index) => {
-        const baseScore = averageScore;
-        const variation = (Math.random() - 0.5) * 20; // Variation de ±10%
-        const dailyScore = Math.max(40, Math.min(100, baseScore + variation));
-        const exercisesForDay = Math.max(1, Math.floor(totalExercises / 7) + Math.floor(Math.random() * 3));
+        // Si pas de données réelles, afficher 0
+        const exercisesForDay = totalExercises > 0 ? Math.max(1, Math.floor(totalExercises / 7)) : 0;
+        const dailyScore = totalExercises > 0 ? averageScore : 0;
 
         return {
           date,
@@ -721,7 +737,7 @@ const ElevePage: React.FC = () => {
         };
       });
 
-      console.log("📊 Statistiques finales calculées:", {
+      console.log("📊 Statistiques finales réelles calculées:", {
         totalExercises,
         totalCorrect,
         averageScore: averageScore.toFixed(1),
@@ -752,7 +768,7 @@ const ElevePage: React.FC = () => {
         setLoading(false);
       }, 0);
 
-      console.log("✅ Données chargées avec succès!");
+      console.log("✅ Données réelles chargées avec succès!");
       
     } catch (err) {
       console.error("❌ Erreur lors de l'analyse des données réelles:", err);
@@ -1370,9 +1386,9 @@ const ElevePage: React.FC = () => {
                       Moyenne Globale
                     </p>
                     <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
-                      {advancedStats
+                      {advancedStats && advancedStats.totalExercises > 0
                         ? advancedStats.averageScore.toFixed(1)
-                        : eleveProfile.overallAverage.toFixed(1)}
+                        : "0.0"}
                       %
                     </p>
                   </div>
@@ -1385,9 +1401,7 @@ const ElevePage: React.FC = () => {
                       Pages Complétées
                     </p>
                     <p className="text-3xl font-bold text-emerald-600 dark:text-emerald-400">
-                      {advancedStats
-                        ? advancedStats.totalExercises
-                        : eleveProfile.totalPagesCompleted}
+                      {advancedStats ? advancedStats.totalExercises : 0}
                     </p>
                   </div>
                   <div className="bg-gradient-to-br from-violet-50 to-violet-100 dark:from-violet-900/30 dark:to-violet-800/30 p-4 rounded-lg text-center border border-violet-200 dark:border-violet-700">
@@ -1400,8 +1414,8 @@ const ElevePage: React.FC = () => {
                     </p>
                     <p className="text-3xl font-bold text-violet-600 dark:text-violet-400">
                       {advancedStats
-                        ? advancedStats.subjects.length
-                        : eleveProfile.subjects.length}
+                        ? advancedStats.subjects.filter(s => s.totalExercises > 0).length
+                        : 0}
                     </p>
                   </div>
                   <div className="bg-gradient-to-br from-amber-50 to-amber-100 dark:from-amber-900/30 dark:to-amber-800/30 p-4 rounded-lg text-center border border-amber-200 dark:border-amber-700">
@@ -1413,9 +1427,9 @@ const ElevePage: React.FC = () => {
                       Dernière Activité
                     </p>
                     <p className="text-lg font-bold text-amber-600 dark:text-amber-400">
-                      {eleveProfile.updatedAt
-                        ? formatDate(eleveProfile.updatedAt)
-                        : "Aujourd'hui"}
+                      {advancedStats && advancedStats.totalExercises > 0
+                        ? "Aujourd'hui"
+                        : "Jamais"}
                     </p>
                   </div>
                 </div>
@@ -1480,19 +1494,19 @@ const ElevePage: React.FC = () => {
                                   Moyenne
                                 </span>
                                 <Chip
-                                  color={getScoreColor(stat.averageScore)}
+                                  color={stat.averageScore > 0 ? getScoreColor(stat.averageScore) : "default"}
                                   size="sm"
                                   variant="flat"
                                   className="bg-opacity-80 dark:bg-opacity-80"
                                 >
                                   {stat.averageScore.toFixed(1)}%{" "}
-                                  {getScoreEmoji(stat.averageScore)}
+                                  {stat.averageScore > 0 ? getScoreEmoji(stat.averageScore) : "📊"}
                                 </Chip>
                               </div>
 
                               <Progress
                                 className="w-full"
-                                color={getScoreColor(stat.averageScore)}
+                                color={stat.averageScore > 0 ? getScoreColor(stat.averageScore) : "default"}
                                 size="sm"
                                 value={stat.averageScore}
                                 classNames={{
@@ -1522,6 +1536,15 @@ const ElevePage: React.FC = () => {
                                   {stat.completionRate.toFixed(0)}%
                                 </span>
                               </div>
+
+                              {/* Afficher un message si aucun exercice */}
+                              {stat.totalPages === 0 && (
+                                <div className="text-center py-2">
+                                  <p className="text-xs text-gray-400 dark:text-gray-500">
+                                    Aucun exercice effectué
+                                  </p>
+                                </div>
+                              )}
                             </div>
                           </CardBody>
                         </Card>
