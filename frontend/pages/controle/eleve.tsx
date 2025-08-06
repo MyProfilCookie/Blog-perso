@@ -227,6 +227,23 @@ ChartJS.register(
 
 const ElevePage: React.FC = () => {
   const router = useRouter();
+  
+  // Fonctions utilitaires pour gérer les scores de façon sécurisée
+  const formatScore = (score: any): string => {
+    const numScore = Number(score);
+    return isNaN(numScore) ? "0.0" : numScore.toFixed(1);
+  };
+
+  const formatPercentage = (score: any): string => {
+    const numScore = Number(score);
+    return isNaN(numScore) ? "0%" : `${numScore.toFixed(1)}%`;
+  };
+
+  const safeNumber = (value: any): number => {
+    const num = Number(value);
+    return isNaN(num) ? 0 : num;
+  };
+
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [eleveProfile, setEleveProfile] = useState<EleveProfile | null>(null);
@@ -394,11 +411,9 @@ const ElevePage: React.FC = () => {
 
       // Récupérer les réponses utilisateur
       const userAnswers = localStorage.getItem(`${subject}_userAnswers`);
-
       if (userAnswers) {
         try {
           const parsed = JSON.parse(userAnswers);
-
           if (parsed && typeof parsed === "object") {
             data.userAnswers = parsed;
           }
@@ -409,11 +424,9 @@ const ElevePage: React.FC = () => {
 
       // Récupérer les résultats
       const results = localStorage.getItem(`${subject}_results`);
-
       if (results) {
         try {
           const parsed = JSON.parse(results);
-
           if (parsed && Array.isArray(parsed)) {
             data.results = parsed;
           }
@@ -423,14 +436,10 @@ const ElevePage: React.FC = () => {
       }
 
       // Récupérer les exercices validés
-      const validatedExercises = localStorage.getItem(
-        `${subject}_validatedExercises`,
-      );
-
+      const validatedExercises = localStorage.getItem(`${subject}_validatedExercises`);
       if (validatedExercises) {
         try {
           const parsed = JSON.parse(validatedExercises);
-
           if (parsed && typeof parsed === "object") {
             data.validatedExercises = parsed;
           }
@@ -439,113 +448,26 @@ const ElevePage: React.FC = () => {
         }
       }
 
-      // Récupérer les scores sauvegardés
+      // Récupérer les scores et s'assurer qu'ils sont des nombres
       const scores = localStorage.getItem(`${subject}_scores`);
-
       if (scores) {
         try {
           const parsed = JSON.parse(scores);
-
-          if (parsed && Array.isArray(parsed)) {
-            data.scores = parsed;
+          if (parsed && typeof parsed === "object") {
+            const safeScores: any = {};
+            Object.keys(parsed).forEach(key => {
+              safeScores[key] = safeNumber(parsed[key]);
+            });
+            data.scores = safeScores;
           }
         } catch (e) {
           console.warn(`Erreur parsing scores pour ${subject}:`, e);
         }
       }
 
-      // Récupérer les notes de leçons (pour les leçons)
-      if (subject === "lessons") {
-        const lessonsNotes = localStorage.getItem(
-          `lessons_notes_${new Date().toISOString().split("T")[0]}`,
-        );
-
-        if (lessonsNotes) {
-          data.lessonsNotes = lessonsNotes;
-        }
-
-        const lessonsRatings = localStorage.getItem(
-          `lessons_ratings_${new Date().toISOString().split("T")[0]}`,
-        );
-
-        if (lessonsRatings) {
-          try {
-            const parsed = JSON.parse(lessonsRatings);
-
-            if (parsed && typeof parsed === "object") {
-              data.lessonsRatings = parsed;
-            }
-          } catch (e) {
-            console.warn(`Erreur parsing lessonsRatings pour ${subject}:`, e);
-          }
-        }
-
-        const lessonsProgress = localStorage.getItem(
-          `lessons_progress_${new Date().toISOString().split("T")[0]}`,
-        );
-
-        if (lessonsProgress) {
-          try {
-            const parsed = JSON.parse(lessonsProgress);
-
-            if (
-              parsed &&
-              (typeof parsed === "number" || typeof parsed === "object")
-            ) {
-              data.lessonsProgress = parsed;
-            }
-          } catch (e) {
-            console.warn(`Erreur parsing lessonsProgress pour ${subject}:`, e);
-          }
-        }
-      }
-
-      // Récupérer les données de trimestre
-      if (subject.includes("trimestre")) {
-        const trimestreProgress = localStorage.getItem(
-          `trimestre-${subject}-progress`,
-        );
-
-        if (trimestreProgress) {
-          try {
-            const parsed = JSON.parse(trimestreProgress);
-
-            if (parsed && typeof parsed === "object") {
-              data.trimestreProgress = parsed;
-            }
-          } catch (e) {
-            console.warn(
-              `Erreur parsing trimestreProgress pour ${subject}:`,
-              e,
-            );
-          }
-        }
-      }
-
-      // Récupérer les données de rapport hebdo
-      if (subject === "rapportHebdo") {
-        const rapportResults = localStorage.getItem("rapportHebdo_results");
-
-        if (rapportResults) {
-          try {
-            const parsed = JSON.parse(rapportResults);
-
-            if (parsed && Array.isArray(parsed)) {
-              data.rapportResults = parsed;
-            }
-          } catch (e) {
-            console.warn(`Erreur parsing rapportResults pour ${subject}:`, e);
-          }
-        }
-      }
-
       return data;
     } catch (error) {
-      console.error(
-        `Erreur lors de la récupération des données pour ${subject}:`,
-        error,
-      );
-
+      console.error(`Erreur getLocalStorageData pour ${subject}:`, error);
       return {};
     }
   };
@@ -554,123 +476,52 @@ const ElevePage: React.FC = () => {
   const calculateSubjectStats = (subject: string, data: any): SubjectStats => {
     let totalExercises = 0;
     let correctAnswers = 0;
-    let exercisesCompleted = 0;
     let lastActivity = "";
 
-    // Vérifier que data est valide
-    if (!data || typeof data !== "object") {
-      return {
-        subject:
-          SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name ||
-          subject,
-        totalExercises: 0,
-        correctAnswers: 0,
-        averageScore: 0,
-        progress: 0,
-        lastActivity: new Date().toISOString(),
-        exercisesCompleted: 0,
-      };
-    }
-
-    // Calculer les statistiques selon le type de matière
-    if (subject === "lessons") {
-      // Pour les leçons, utiliser les évaluations et la progression
-      if (data.lessonsRatings && typeof data.lessonsRatings === "object") {
-        exercisesCompleted = Object.values(data.lessonsRatings).reduce(
-          (sum: number, count: any) =>
-            sum + (typeof count === "number" ? count : 0),
-          0,
-        );
-        correctAnswers = data.lessonsRatings["Facile"] || 0;
-        totalExercises = exercisesCompleted;
-      }
-      if (data.lessonsProgress && typeof data.lessonsProgress === "number") {
-        exercisesCompleted = data.lessonsProgress;
-        totalExercises = Math.max(totalExercises, exercisesCompleted);
-      }
-    } else if (subject.includes("trimestre")) {
-      // Pour les trimestres, utiliser les données de progression
-      if (
-        data.trimestreProgress &&
-        typeof data.trimestreProgress === "object"
-      ) {
-        exercisesCompleted = Object.keys(
-          data.trimestreProgress.completedSubjects || {},
-        ).length;
-        totalExercises = exercisesCompleted;
-        correctAnswers = exercisesCompleted; // Simplification
-      }
-    } else if (subject === "rapportHebdo") {
-      // Pour le rapport hebdo, utiliser les résultats
-      if (data.rapportResults && Array.isArray(data.rapportResults)) {
-        exercisesCompleted = data.rapportResults.length;
-        correctAnswers = data.rapportResults.filter(
-          (r: any) => r && r.isCorrect === true,
-        ).length;
-        totalExercises = exercisesCompleted;
-      }
-    } else {
-      // Pour les autres matières, utiliser les exercices validés et résultats
-      if (
-        data.validatedExercises &&
-        typeof data.validatedExercises === "object"
-      ) {
-        exercisesCompleted = Object.keys(data.validatedExercises).filter(
-          (key) => data.validatedExercises[key] === true,
-        ).length;
-        totalExercises = exercisesCompleted;
-      }
-
-      // Calculer les réponses correctes depuis les résultats
-      if (data.results && Array.isArray(data.results)) {
-        correctAnswers = data.results.filter(
-          (r: any) => r && r.isCorrect === true,
-        ).length;
-        totalExercises = Math.max(totalExercises, data.results.length);
-      }
-
-      // Si pas de résultats mais des exercices validés, estimer les réponses correctes
-      if (correctAnswers === 0 && exercisesCompleted > 0) {
-        correctAnswers = Math.floor(exercisesCompleted * 0.8); // Estimation 80% de réussite
-      }
-    }
-
-    const averageScore =
-      totalExercises > 0 ? (correctAnswers / totalExercises) * 100 : 0;
-    const progress =
-      totalExercises > 0 ? (exercisesCompleted / totalExercises) * 100 : 0;
-
-    // Déterminer la dernière activité
-    if (
-      data.userAnswers &&
-      typeof data.userAnswers === "object" &&
-      Object.keys(data.userAnswers).length > 0
-    ) {
-      lastActivity = new Date().toISOString();
-    } else if (
-      data.results &&
-      Array.isArray(data.results) &&
-      data.results.length > 0
-    ) {
-      lastActivity = new Date().toISOString();
-    } else if (
-      data.validatedExercises &&
-      typeof data.validatedExercises === "object" &&
-      Object.keys(data.validatedExercises).length > 0
-    ) {
+    // Analyser les réponses utilisateur
+    if (data.userAnswers && typeof data.userAnswers === "object") {
+      const answers = Object.values(data.userAnswers);
+      totalExercises += answers.length;
+      correctAnswers += answers.filter((answer: any) => answer === true || answer === "correct").length;
       lastActivity = new Date().toISOString();
     }
+
+    // Analyser les résultats
+    if (data.results && Array.isArray(data.results)) {
+      data.results.forEach((result: any) => {
+        totalExercises++;
+        if (result.score && safeNumber(result.score) > 70) {
+          correctAnswers++;
+        }
+        lastActivity = new Date().toISOString();
+      });
+    }
+
+    // Analyser les exercices validés
+    if (data.validatedExercises && typeof data.validatedExercises === "object") {
+      const validatedCount = Object.values(data.validatedExercises).filter(Boolean).length;
+      totalExercises += validatedCount;
+      correctAnswers += validatedCount;
+      lastActivity = new Date().toISOString();
+    }
+
+    // S'assurer que averageScore est toujours un nombre valide
+    let averageScore = 0;
+    if (totalExercises > 0) {
+      averageScore = safeNumber((correctAnswers / totalExercises) * 100);
+    }
+
+    const progress = totalExercises > 0 ? safeNumber((correctAnswers / totalExercises) * 100) : 0;
+    const exercisesCompleted = safeNumber(correctAnswers);
 
     return {
-      subject:
-        SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name ||
-        subject,
-      totalExercises,
-      correctAnswers,
-      averageScore,
-      progress,
+      subject: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name || subject,
+      totalExercises: safeNumber(totalExercises),
+      correctAnswers: safeNumber(correctAnswers),
+      averageScore: averageScore,
+      progress: progress,
       lastActivity: lastActivity || new Date().toISOString(),
-      exercisesCompleted,
+      exercisesCompleted: exercisesCompleted,
     };
   };
 
@@ -1018,7 +869,7 @@ const ElevePage: React.FC = () => {
         {
           label: "Exercices complétés",
           data: advancedStats.dailyStats.map(
-            (stat: any) => stat.exercisesCompleted || 0,
+            (stat: any) => stat.exercicesComplétés || 0,
           ),
           borderColor: "rgb(255, 99, 132)",
           backgroundColor: "rgba(255, 99, 132, 0.1)",
@@ -1527,7 +1378,7 @@ const ElevePage: React.FC = () => {
                     </p>
                     <p className="text-3xl font-bold text-purple-600 dark:text-purple-400">
                       {advancedStats && advancedStats.totalExercises > 0
-                        ? advancedStats.averageScore.toFixed(1)
+                        ? formatScore(advancedStats.averageScore)
                         : "0.0"}
                       %
                     </p>
@@ -1647,7 +1498,7 @@ const ElevePage: React.FC = () => {
                                   variant="flat"
                                   className="bg-opacity-80 dark:bg-opacity-80"
                                 >
-                                  {stat.averageScore.toFixed(1)}%{" "}
+                                  {formatScore(stat.averageScore)}%{" "}
                                   {stat.averageScore > 0
                                     ? getScoreEmoji(stat.averageScore)
                                     : "📊"}
@@ -1751,7 +1602,7 @@ const ElevePage: React.FC = () => {
                               size="sm"
                               variant="flat"
                             >
-                              {subject.averageScore.toFixed(1)}%
+                              {formatScore(subject.averageScore)}%
                             </Chip>
                           </div>
                         }
@@ -2164,7 +2015,7 @@ const ElevePage: React.FC = () => {
                                   />
                                 </div>
                               </div>
-                            </CardBody>
+                                                       </CardBody>
                           </Card>
 
                           {advancedStats.subjects.length > 0 && (
