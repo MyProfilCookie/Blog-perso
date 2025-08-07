@@ -17,6 +17,20 @@ console.log(
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  swcMinify: true, // Utiliser SWC pour la minification (plus rapide)
+  
+  // Optimisations de performance
+  experimental: {
+    optimizeCss: true,
+    scrollRestoration: true,
+  },
+  
+  // Configuration des images pour l'optimisation
+  images: {
+    formats: ['image/webp', 'image/avif'],
+    minimumCacheTTL: 60,
+  },
+  
   // Définir des valeurs par défaut pour éviter les problèmes d'undefined
   env: {
     NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "",
@@ -49,14 +63,70 @@ const nextConfig = {
     ];
   },
 
-  webpack: (config, { isServer }) => {
+  webpack: (config, { isServer, dev }) => {
+    // Optimisations de performance pour la production
+    if (!dev) {
+      // Optimisation des chunks
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          ...config.optimization.splitChunks,
+          cacheGroups: {
+            ...config.optimization.splitChunks.cacheGroups,
+            // Séparer les bibliothèques de graphiques
+            charts: {
+              name: 'charts',
+              test: /[\/]node_modules[\/](chart\.js|react-chartjs-2)[\/]/,
+              chunks: 'all',
+              priority: 30,
+            },
+            // Séparer NextUI
+            nextui: {
+              name: 'nextui',
+              test: /[\/]node_modules[\/]@nextui-org[\/]/,
+              chunks: 'all',
+              priority: 25,
+            },
+            // Séparer Framer Motion
+            framer: {
+              name: 'framer',
+              test: /[\/]node_modules[\/]framer-motion[\/]/,
+              chunks: 'all',
+              priority: 20,
+            },
+          },
+        },
+      };
+    }
+    
     if (!isServer) {
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
       };
     }
-
+    
+    // Optimisation des modules
+    config.module.rules.push({
+      test: /\.(js|jsx|ts|tsx)$/,
+      exclude: /node_modules/,
+      use: {
+        loader: 'babel-loader',
+        options: {
+          presets: ['next/babel'],
+          plugins: [
+            // Plugin pour l'optimisation des imports
+            ['babel-plugin-transform-imports', {
+              '@nextui-org/react': {
+                transform: '@nextui-org/react/dist/{{member}}',
+                preventFullImport: true,
+              },
+            }],
+          ],
+        },
+      },
+    });
+    
     return config;
   },
 };
