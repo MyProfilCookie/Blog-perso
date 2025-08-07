@@ -1,7 +1,8 @@
-import React, { useMemo } from 'react';
+import React, { useMemo, useEffect, useState } from 'react';
 import { Card, CardBody, CardHeader } from '@nextui-org/react';
-import { Bar, Line, Doughnut } from 'react-chartjs-2';
+import dynamic from 'next/dynamic';
 import { SubjectStats, DailyStats, CategoryStats, SUBJECTS_CONFIG } from '../../types/eleve';
+import { useMemoizedCalculation } from '../../utils/memoization';
 import {
   barChartOptions,
   lineChartOptions,
@@ -9,7 +10,65 @@ import {
   colorPalette,
   createOptimizedDataset,
 } from '../../utils/chartConfig';
-import { useMemoizedCalculation } from '../../utils/memoization';
+
+// Import dynamique des composants Chart.js pour éviter les problèmes SSR
+const Bar = dynamic(() => import('react-chartjs-2').then((mod) => ({ default: mod.Bar })), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded"></div>
+});
+
+const Line = dynamic(() => import('react-chartjs-2').then((mod) => ({ default: mod.Line })), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded"></div>
+});
+
+const Doughnut = dynamic(() => import('react-chartjs-2').then((mod) => ({ default: mod.Doughnut })), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded"></div>
+});
+
+// Hook pour l'enregistrement des composants Chart.js
+const useChartJS = () => {
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  useEffect(() => {
+    const registerChartJS = async () => {
+      if (typeof window !== 'undefined' && !isRegistered) {
+        const {
+           Chart,
+           CategoryScale,
+           LinearScale,
+           BarElement,
+           LineElement,
+           PointElement,
+           ArcElement,
+           Title,
+           Tooltip,
+           Legend,
+           Filler,
+         } = await import('chart.js');
+
+        Chart.register(
+          CategoryScale,
+          LinearScale,
+          BarElement,
+          LineElement,
+          PointElement,
+          ArcElement,
+          Title,
+          Tooltip,
+          Legend,
+          Filler
+        );
+        setIsRegistered(true);
+      }
+    };
+
+    registerChartJS();
+  }, [isRegistered]);
+
+  return isRegistered;
+};
 
 interface EleveChartsProps {
   subjects: SubjectStats[];
@@ -18,6 +77,8 @@ interface EleveChartsProps {
 }
 
 const EleveCharts: React.FC<EleveChartsProps> = ({ subjects, categoryStats, dailyStats }) => {
+  const isChartReady = useChartJS();
+
   // Couleurs dynamiques basées sur la configuration des matières
   const getSubjectColors = useMemoizedCalculation(() => {
     return subjects.map(subject => {
@@ -201,7 +262,13 @@ const EleveCharts: React.FC<EleveChartsProps> = ({ subjects, categoryStats, dail
           </h3>
           <div className="h-64 w-full overflow-hidden">
             <div className="w-full h-full">
-              <Bar data={barChartData} options={barOptions} />
+              {isChartReady ? (
+                <Bar data={barChartData} options={barOptions} />
+              ) : (
+                <div className="h-full bg-gray-100 animate-pulse rounded flex items-center justify-center">
+                  <span className="text-gray-500">Chargement du graphique...</span>
+                </div>
+              )}
             </div>
           </div>
         </CardBody>
@@ -215,7 +282,13 @@ const EleveCharts: React.FC<EleveChartsProps> = ({ subjects, categoryStats, dail
           </h3>
           <div className="h-64 w-full overflow-hidden">
             <div className="w-full h-full">
-              <Line data={lineChartData} options={lineOptions} />
+              {isChartReady ? (
+                <Line data={lineChartData} options={lineOptions} />
+              ) : (
+                <div className="h-full bg-gray-100 animate-pulse rounded flex items-center justify-center">
+                  <span className="text-gray-500">Chargement du graphique...</span>
+                </div>
+              )}
             </div>
           </div>
         </CardBody>
@@ -230,7 +303,13 @@ const EleveCharts: React.FC<EleveChartsProps> = ({ subjects, categoryStats, dail
             </h3>
             <div className="h-64 w-full overflow-hidden">
               <div className="w-full h-full">
-                <Doughnut data={doughnutChartData} options={doughnutOptions} />
+                {isChartReady ? (
+                  <Doughnut data={doughnutChartData} options={doughnutOptions} />
+                ) : (
+                  <div className="h-full bg-gray-100 animate-pulse rounded flex items-center justify-center">
+                    <span className="text-gray-500">Chargement du graphique...</span>
+                  </div>
+                )}
               </div>
             </div>
           </CardBody>

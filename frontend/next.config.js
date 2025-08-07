@@ -106,26 +106,8 @@ const nextConfig = {
       };
     }
     
-    // Optimisation des modules
-    config.module.rules.push({
-      test: /\.(js|jsx|ts|tsx)$/,
-      exclude: /node_modules/,
-      use: {
-        loader: 'babel-loader',
-        options: {
-          presets: ['next/babel'],
-          plugins: [
-            // Plugin pour l'optimisation des imports
-            ['babel-plugin-transform-imports', {
-              '@nextui-org/react': {
-                transform: '@nextui-org/react/dist/{{member}}',
-                preventFullImport: true,
-              },
-            }],
-          ],
-        },
-      },
-    });
+    // Configuration supplémentaire si nécessaire
+    // Pas de transformation d'imports pour NextUI pour éviter les erreurs de chemin
     
     return config;
   },

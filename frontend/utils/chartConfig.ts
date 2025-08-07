@@ -1,4 +1,5 @@
-import {
+// Exports des éléments Chart.js pour utilisation dans les composants
+export {
   Chart as ChartJS,
   CategoryScale,
   LinearScale,
@@ -12,29 +13,19 @@ import {
   Filler,
 } from 'chart.js';
 
-// Configuration globale optimisée pour Chart.js
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  LineElement,
-  PointElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-  Filler
-);
-
-// Configuration par défaut optimisée pour les performances
-ChartJS.defaults.responsive = true;
-ChartJS.defaults.maintainAspectRatio = false;
-ChartJS.defaults.animation = {
-  duration: 300, // Animation plus rapide
-};
-ChartJS.defaults.interaction = {
-  intersect: false,
-  mode: 'index',
+// Configuration par défaut pour les performances (sans enregistrement global)
+export const defaultChartConfig = {
+  responsive: true,
+  maintainAspectRatio: false,
+  animation: {
+    duration: 300, // Animation plus rapide
+  },
+  interaction: {
+    intersect: false,
+    mode: 'index' as const,
+    axis: 'x' as const,
+    includeInvisible: false,
+  },
 };
 
 // Options communes pour tous les graphiques
