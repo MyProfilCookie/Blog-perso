@@ -764,26 +764,27 @@ const ElevePage: React.FC = () => {
 
       // IMPORTANT: Mettre à jour les états immédiatement et de façon synchrone
       console.log("🔧 Mise à jour des états React...");
+      console.log("📊 detailedStatsArray avant mise à jour:", detailedStatsArray);
+      console.log("📊 Longueur detailedStatsArray:", detailedStatsArray.length);
 
-      // Forcer la mise à jour synchrone
-      setTimeout(() => {
-        setDetailedStats(detailedStatsArray);
-        console.log("✅ detailedStats mis à jour:", detailedStatsArray.length);
+      // Mettre à jour immédiatement sans setTimeout
+      setDetailedStats(detailedStatsArray);
+      console.log("✅ detailedStats mis à jour:", detailedStatsArray.length);
 
-        setAdvancedStats({
-          totalExercises: totalExercises, // 0 si aucun exercice
-          totalCorrect: totalCorrect, // 0 si aucun exercice
-          averageScore: averageScore, // 0 si aucun exercice
-          subjects: subjectsStats, // Tableau vide si aucun exercice
-          dailyStats: dailyStats, // Tous à 0 si aucun exercice
-          categoryStats: categoryStats, // Tableau vide si aucun exercice
-          subscriptionType: "free",
-        });
-        console.log("✅ advancedStats mis à jour");
+      setAdvancedStats({
+        totalExercises: totalExercises, // 0 si aucun exercice
+        totalCorrect: totalCorrect, // 0 si aucun exercice
+        averageScore: averageScore, // 0 si aucun exercice
+        subjects: subjectsStats, // Tableau vide si aucun exercice
+        dailyStats: dailyStats, // Tous à 0 si aucun exercice
+        categoryStats: categoryStats, // Tableau vide si aucun exercice
+        subscriptionType: "free",
+      });
+      console.log("✅ advancedStats mis à jour");
 
-        // Force un re-render
-        setLoading(false);
-      }, 0);
+      // Force un re-render
+      setLoading(false);
+      console.log("✅ Loading mis à false");
 
       console.log("✅ Données chargées avec succès!");
     } catch (err) {
