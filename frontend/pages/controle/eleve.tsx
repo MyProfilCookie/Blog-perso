@@ -277,7 +277,6 @@ const ElevePage: React.FC = () => {
       if (storedUser) {
         try {
           const user = JSON.parse(storedUser);
-
           foundUserId = user._id || user.id;
           foundUserInfo = user;
         } catch (err) {
@@ -288,7 +287,6 @@ const ElevePage: React.FC = () => {
       if (!foundUserId && userInfo) {
         try {
           const user = JSON.parse(userInfo);
-
           foundUserId = user._id || user.id;
           foundUserInfo = user;
         } catch (err) {
@@ -298,6 +296,18 @@ const ElevePage: React.FC = () => {
 
       setUserId(foundUserId);
       setUserInfo(foundUserInfo);
+      
+      // Si aucun utilisateur trouvé, créer des données par défaut pour permettre l'affichage
+      if (!foundUserId) {
+        console.log('⚠️ Aucun utilisateur trouvé, utilisation de données par défaut');
+        setUserId('default-user');
+        setUserInfo({
+          _id: 'default-user',
+          nom: 'Utilisateur',
+          prenom: 'Invité',
+          email: 'invite@example.com'
+        });
+      }
     } catch (err) {
       console.error("Erreur lors de la récupération de l'utilisateur:", err);
       setError("Erreur lors de la récupération de l'utilisateur");
@@ -1498,7 +1508,7 @@ const ElevePage: React.FC = () => {
                   Statistiques par Matière
                 </h2>
 
-                {/* Supprimer le debug et afficher directement le contenu */}
+                {/* Statistiques par matière */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {detailedStats.length === 0 ? (
                     <div className="col-span-full text-center py-8">
@@ -1508,7 +1518,7 @@ const ElevePage: React.FC = () => {
                           className="text-4xl text-gray-400 mb-4"
                         />
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
-                          Chargement des statistiques...
+                          Chargement des statistiques... (Longueur: {detailedStats.length})
                         </p>
                         <div className="flex justify-center">
                           <Spinner color="primary" size="sm" />
