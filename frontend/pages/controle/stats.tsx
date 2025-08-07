@@ -12,33 +12,24 @@ import {
 } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
-import { Line, Bar, Doughnut } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
+import dynamic from "next/dynamic";
 import { Sparkles } from "lucide-react";
 
-// Enregistrer les composants Chart.js
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+// Import dynamique des composants Chart.js pour éviter les problèmes SSR
+const Line = dynamic(() => import('react-chartjs-2').then((mod) => ({ default: mod.Line })), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded"></div>
+});
+
+const Bar = dynamic(() => import('react-chartjs-2').then((mod) => ({ default: mod.Bar })), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded"></div>
+});
+
+const Doughnut = dynamic(() => import('react-chartjs-2').then((mod) => ({ default: mod.Doughnut })), {
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 animate-pulse rounded"></div>
+});
 
 interface SubjectStats {
   subject: string;
@@ -141,7 +132,51 @@ const SUBJECTS = {
   },
 };
 
+// Hook pour l'enregistrement des composants Chart.js
+const useChartJS = () => {
+  const [isRegistered, setIsRegistered] = useState(false);
+
+  useEffect(() => {
+    const registerChartJS = async () => {
+      if (typeof window !== 'undefined' && !isRegistered) {
+        const {
+           Chart,
+           CategoryScale,
+           LinearScale,
+           BarElement,
+           LineElement,
+           PointElement,
+           ArcElement,
+           Title,
+           Tooltip,
+           Legend,
+           Filler,
+         } = await import('chart.js');
+
+        Chart.register(
+          CategoryScale,
+          LinearScale,
+          BarElement,
+          LineElement,
+          PointElement,
+          ArcElement,
+          Title,
+          Tooltip,
+          Legend,
+          Filler
+        );
+        setIsRegistered(true);
+      }
+    };
+
+    registerChartJS();
+  }, [isRegistered]);
+
+  return isRegistered;
+};
+
 const StatsPage: React.FC = () => {
+  const isChartReady = useChartJS();
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -607,6 +642,49 @@ const StatsPage: React.FC = () => {
     };
   };
 
+  const prepareErrorsBarChartData = () => {
+    if (!stats) return null;
+    
+    const labels = stats.subjects.map((s) => s.subject);
+    const errors = stats.subjects.map(
+      (s) => Math.max(0, s.totalExercises - s.correctAnswers)
+    );
+    
+    // Couleurs dynamiques par matière adaptées au mode sombre
+    const backgroundColors = stats.subjects.map((s) => {
+      // On cherche la clé du SUBJECTS qui correspond au nom affiché
+      const found = Object.values(SUBJECTS).find(
+        (sub) => sub.name === s.subject
+      );
+      // Couleurs adaptées au mode sombre
+      const isDark = typeof window !== "undefined" && document.documentElement.classList.contains("dark");
+      if (found && found.color.includes('yellow')) return isDark ? 'rgba(253, 224, 71, 0.4)' : 'rgba(253, 224, 71, 0.7)';
+      if (found && found.color.includes('red')) return isDark ? 'rgba(239, 68, 68, 0.4)' : 'rgba(239, 68, 68, 0.7)';
+      if (found && found.color.includes('green')) return isDark ? 'rgba(34, 197, 94, 0.4)' : 'rgba(34, 197, 94, 0.7)';
+      if (found && found.color.includes('purple')) return isDark ? 'rgba(168, 85, 247, 0.4)' : 'rgba(168, 85, 247, 0.7)';
+      if (found && found.color.includes('indigo')) return isDark ? 'rgba(99, 102, 241, 0.4)' : 'rgba(99, 102, 241, 0.7)';
+      if (found && found.color.includes('teal')) return isDark ? 'rgba(20, 184, 166, 0.4)' : 'rgba(20, 184, 166, 0.7)';
+      if (found && found.color.includes('pink')) return isDark ? 'rgba(236, 72, 153, 0.4)' : 'rgba(236, 72, 153, 0.7)';
+      if (found && found.color.includes('cyan')) return isDark ? 'rgba(34, 211, 238, 0.4)' : 'rgba(34, 211, 238, 0.7)';
+      if (found && found.color.includes('rose')) return isDark ? 'rgba(244, 63, 94, 0.4)' : 'rgba(244, 63, 94, 0.7)';
+      if (found && found.color.includes('blue')) return isDark ? 'rgba(59, 130, 246, 0.4)' : 'rgba(59, 130, 246, 0.7)';
+      if (found && found.color.includes('gray')) return isDark ? 'rgba(107, 114, 128, 0.4)' : 'rgba(107, 114, 128, 0.7)';
+      if (found && found.color.includes('orange')) return isDark ? 'rgba(251, 146, 60, 0.4)' : 'rgba(251, 146, 60, 0.7)';
+      return isDark ? 'rgba(156, 163, 175, 0.4)' : 'rgba(156, 163, 175, 0.7)'; // gris par défaut
+    });
+    
+    return {
+      labels,
+      datasets: [
+        {
+          label: "Erreurs",
+          data: errors,
+          backgroundColor: backgroundColors,
+        },
+      ],
+    };
+  };
+
   // Options responsives pour les graphiques avec support du mode sombre
   const chartOptions = {
     responsive: true,
@@ -911,10 +989,16 @@ const StatsPage: React.FC = () => {
                       className="min-w-[350px] w-full"
                       style={{ height: "260px" }}
                     >
-                      <Bar 
-                        data={prepareBarChartData()!} 
-                        options={chartOptions}
-                      />
+                      {isChartReady ? (
+                         <Bar 
+                           data={prepareBarChartData()!} 
+                           options={chartOptions}
+                         />
+                       ) : (
+                         <div className="h-64 bg-gray-100 animate-pulse rounded flex items-center justify-center">
+                           <span className="text-gray-500">Chargement du graphique...</span>
+                         </div>
+                       )}
                     </div>
                   </div>
                 ) : (
@@ -936,47 +1020,16 @@ const StatsPage: React.FC = () => {
                       className="min-w-[350px] w-full"
                       style={{ height: "260px" }}
                     >
-                      <Bar
-                        data={(() => {
-                          const labels = stats.subjects.map((s) => s.subject);
-                          const errors = stats.subjects.map(
-                            (s) => Math.max(0, s.totalExercises - s.correctAnswers)
-                          );
-                          // Couleurs dynamiques par matière adaptées au mode sombre
-                          const backgroundColors = stats.subjects.map((s) => {
-                            // On cherche la clé du SUBJECTS qui correspond au nom affiché
-                            const found = Object.values(SUBJECTS).find(
-                              (sub) => sub.name === s.subject
-                            );
-                            // Couleurs adaptées au mode sombre
-                            const isDark = typeof window !== "undefined" && document.documentElement.classList.contains("dark");
-                            if (found && found.color.includes('yellow')) return isDark ? 'rgba(253, 224, 71, 0.4)' : 'rgba(253, 224, 71, 0.7)';
-                            if (found && found.color.includes('red')) return isDark ? 'rgba(239, 68, 68, 0.4)' : 'rgba(239, 68, 68, 0.7)';
-                            if (found && found.color.includes('green')) return isDark ? 'rgba(34, 197, 94, 0.4)' : 'rgba(34, 197, 94, 0.7)';
-                            if (found && found.color.includes('purple')) return isDark ? 'rgba(168, 85, 247, 0.4)' : 'rgba(168, 85, 247, 0.7)';
-                            if (found && found.color.includes('indigo')) return isDark ? 'rgba(99, 102, 241, 0.4)' : 'rgba(99, 102, 241, 0.7)';
-                            if (found && found.color.includes('teal')) return isDark ? 'rgba(20, 184, 166, 0.4)' : 'rgba(20, 184, 166, 0.7)';
-                            if (found && found.color.includes('pink')) return isDark ? 'rgba(236, 72, 153, 0.4)' : 'rgba(236, 72, 153, 0.7)';
-                            if (found && found.color.includes('cyan')) return isDark ? 'rgba(34, 211, 238, 0.4)' : 'rgba(34, 211, 238, 0.7)';
-                            if (found && found.color.includes('rose')) return isDark ? 'rgba(244, 63, 94, 0.4)' : 'rgba(244, 63, 94, 0.7)';
-                            if (found && found.color.includes('blue')) return isDark ? 'rgba(59, 130, 246, 0.4)' : 'rgba(59, 130, 246, 0.7)';
-                            if (found && found.color.includes('gray')) return isDark ? 'rgba(107, 114, 128, 0.4)' : 'rgba(107, 114, 128, 0.7)';
-                            if (found && found.color.includes('orange')) return isDark ? 'rgba(251, 146, 60, 0.4)' : 'rgba(251, 146, 60, 0.7)';
-                            return isDark ? 'rgba(156, 163, 175, 0.4)' : 'rgba(156, 163, 175, 0.7)'; // gris par défaut
-                          });
-                          return {
-                            labels,
-                            datasets: [
-                              {
-                                label: "Erreurs",
-                                data: errors,
-                                backgroundColor: backgroundColors,
-                              },
-                            ],
-                          };
-                        })()}
-                        options={chartOptions}
-                      />
+                      {isChartReady ? (
+                        <Bar
+                          data={prepareErrorsBarChartData()!}
+                          options={chartOptions}
+                        />
+                      ) : (
+                        <div className="h-64 bg-gray-100 animate-pulse rounded flex items-center justify-center">
+                          <span className="text-gray-500">Chargement du graphique...</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -1003,10 +1056,16 @@ const StatsPage: React.FC = () => {
                       className="min-w-[300px] w-full"
                       style={{ height: "260px" }}
                     >
-                      <Doughnut 
-                        data={prepareDoughnutChartData()!} 
-                        options={chartOptions}
-                      />
+                      {isChartReady ? (
+                         <Doughnut 
+                           data={prepareDoughnutChartData()!} 
+                           options={chartOptions}
+                         />
+                       ) : (
+                         <div className="h-64 bg-gray-100 animate-pulse rounded flex items-center justify-center">
+                           <span className="text-gray-500">Chargement du graphique...</span>
+                         </div>
+                       )}
                     </div>
                   </div>
                 ) : (
@@ -1058,10 +1117,16 @@ const StatsPage: React.FC = () => {
                       className="min-w-[350px] w-full"
                       style={{ height: "260px" }}
                     >
-                      <Line 
-                        data={prepareLineChartData()!} 
-                        options={chartOptions}
-                      />
+                      {isChartReady ? (
+                         <Line 
+                           data={prepareLineChartData()!} 
+                           options={chartOptions}
+                         />
+                       ) : (
+                         <div className="h-64 bg-gray-100 animate-pulse rounded flex items-center justify-center">
+                           <span className="text-gray-500">Chargement du graphique...</span>
+                         </div>
+                       )}
                     </div>
                   </div>
                 ) : (
@@ -1082,10 +1147,16 @@ const StatsPage: React.FC = () => {
                       className="min-w-[350px] w-full"
                       style={{ height: "260px" }}
                     >
-                      <Bar 
-                        data={prepareBarChartData()!} 
-                        options={chartOptions}
-                      />
+                      {isChartReady ? (
+                        <Bar 
+                          data={prepareBarChartData()!} 
+                          options={chartOptions}
+                        />
+                      ) : (
+                        <div className="h-64 bg-gray-100 animate-pulse rounded flex items-center justify-center">
+                          <span className="text-gray-500">Chargement du graphique...</span>
+                        </div>
+                      )}
                     </div>
                   </div>
                 ) : (
@@ -1102,4 +1173,4 @@ const StatsPage: React.FC = () => {
   );
 };
 
-export default StatsPage; 
+export default StatsPage;
