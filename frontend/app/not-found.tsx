@@ -1,7 +1,9 @@
 /* eslint-disable react/no-unescaped-entities */
-// pages/404.tsx
+// app/not-found.tsx
 
-import { useRouter } from "next/router";
+"use client";
+
+import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 const NotFoundPage = () => {

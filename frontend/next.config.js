@@ -20,7 +20,6 @@ const nextConfig = {
   swcMinify: true, // Utiliser SWC pour la minification (plus rapide)
   trailingSlash: true, // Ajouter des slashes pour éviter les erreurs de routing
   distDir: '.next', // Utiliser le mode serveur par défaut
-  output: undefined, // Désactiver l'export statique
   
   // Optimisations de performance
   experimental: {
