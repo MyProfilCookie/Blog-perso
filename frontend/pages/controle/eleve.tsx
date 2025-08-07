@@ -349,21 +349,33 @@ const ElevePage: React.FC = () => {
 
     // Fonction pour mettre à jour avec les données API
     const updateWithApiData = (stats: any) => {
+      // Vérifier que stats et stats.subjects existent
+      if (!stats || !stats.subjects || !Array.isArray(stats.subjects)) {
+        console.warn('⚠️ Données API invalides:', stats);
+        return;
+      }
+
       // Convertir et mettre à jour detailedStats
       const detailedStatsArray = stats.subjects.map((subject: any) => {
-        const subjectConfig = getSubjectConfig(subject.subject);
+        // Vérifier que subject existe et a les propriétés nécessaires
+        if (!subject || typeof subject !== 'object') {
+          console.warn('⚠️ Objet subject invalide:', subject);
+          return null;
+        }
+
+        const subjectConfig = getSubjectConfig(subject.subject || 'math');
         
         return {
-          subjectName: subject.subject,
-          totalPages: subject.totalExercises,
-          averageScore: subject.averageScore,
-          bestPage: subject.averageScore > 0 ? Math.min(100, Math.round(subject.averageScore + 5)) : 0,
-          worstPage: subject.averageScore > 0 ? Math.max(0, Math.round(subject.averageScore - 10)) : 0,
-          completionRate: subject.progress,
+          subjectName: subject.subject || 'Matière inconnue',
+          totalPages: safeNumber(subject.totalExercises),
+          averageScore: safeNumber(subject.averageScore),
+          bestPage: safeNumber(subject.averageScore) > 0 ? Math.min(100, Math.round(safeNumber(subject.averageScore) + 5)) : 0,
+          worstPage: safeNumber(subject.averageScore) > 0 ? Math.max(0, Math.round(safeNumber(subject.averageScore) - 10)) : 0,
+          completionRate: safeNumber(subject.progress),
           icon: subjectConfig.icon,
           color: subjectConfig.color,
         };
-      });
+      }).filter(Boolean); // Filtrer les éléments null
 
       // Fusionner avec les données localStorage existantes
       setDetailedStats(prevStats => {
@@ -489,11 +501,14 @@ const ElevePage: React.FC = () => {
     // Analyser les résultats
     if (data.results && Array.isArray(data.results)) {
       data.results.forEach((result: any) => {
-        totalExercises++;
-        if (result.score && safeNumber(result.score) > 70) {
-          correctAnswers++;
+        // Vérifier que result n'est pas null ou undefined
+        if (result && typeof result === 'object') {
+          totalExercises++;
+          if (result.score && safeNumber(result.score) > 70) {
+            correctAnswers++;
+          }
+          lastActivity = new Date().toISOString();
         }
-        lastActivity = new Date().toISOString();
       });
     }
 
@@ -788,26 +803,47 @@ const ElevePage: React.FC = () => {
         setEleveProfile(response.data);
 
         // Calculer les statistiques détaillées à partir des données serveur
-        const serverDetailedStats: DetailedStats[] = response.data.subjects.map(
-          (subject: SubjectScore) => {
-            const scores = subject.pages.map((page) => page.score);
+        const serverDetailedStats: DetailedStats[] = [];
+        
+        if (response.data.subjects && Array.isArray(response.data.subjects)) {
+          response.data.subjects.forEach((subject: SubjectScore) => {
+            // Vérifier que subject existe et a les propriétés nécessaires
+            if (!subject || typeof subject !== 'object') {
+              console.warn('⚠️ Objet subject serveur invalide:', subject);
+              return;
+            }
+
+            // Vérifier que subject.pages existe et est un tableau
+            const pages = subject.pages && Array.isArray(subject.pages) ? subject.pages : [];
+            
+            const scores = pages.map((page) => {
+              // Vérifier que page existe et a une propriété score
+              return (page && typeof page === 'object' && typeof page.score === 'number') ? page.score : 0;
+            });
+            
             const bestScore = scores.length > 0 ? Math.max(...scores) : 0;
             const worstScore = scores.length > 0 ? Math.min(...scores) : 0;
-            const correctAnswers = subject.pages.reduce(
-              (sum, page) => sum + page.correctAnswers,
-              0,
-            );
-            const totalQuestions = subject.pages.reduce(
-              (sum, page) => sum + page.totalQuestions,
-              0,
-            );
+            
+            const correctAnswers = pages.reduce((sum, page) => {
+              if (page && typeof page === 'object' && typeof page.correctAnswers === 'number') {
+                return sum + page.correctAnswers;
+              }
+              return sum;
+            }, 0);
+            
+            const totalQuestions = pages.reduce((sum, page) => {
+              if (page && typeof page === 'object' && typeof page.totalQuestions === 'number') {
+                return sum + page.totalQuestions;
+              }
+              return sum;
+            }, 0);
 
-            const subjectConfig = getSubjectConfig(subject.subjectName);
+            const subjectConfig = getSubjectConfig(subject.subjectName || 'math');
 
-            return {
-              subjectName: subject.subjectName,
-              totalPages: subject.pages.length,
-              averageScore: subject.averageScore,
+            serverDetailedStats.push({
+              subjectName: subject.subjectName || 'Matière inconnue',
+              totalPages: pages.length,
+              averageScore: safeNumber(subject.averageScore),
               bestPage: Math.round(bestScore),
               worstPage: Math.round(worstScore),
               completionRate:
@@ -816,9 +852,9 @@ const ElevePage: React.FC = () => {
                   : 0,
               icon: subjectConfig.icon,
               color: subjectConfig.color,
-            };
-          },
-        );
+            });
+          });
+        }
 
         setDetailedStats(serverDetailedStats);
       }
@@ -849,18 +885,20 @@ const ElevePage: React.FC = () => {
     }
 
     return {
-      labels: advancedStats.dailyStats.map((stat: any) =>
-        new Date(stat.date).toLocaleDateString("fr-FR", {
+      labels: advancedStats.dailyStats.map((stat: any) => {
+        if (!stat || !stat.date) return 'Date inconnue';
+        return new Date(stat.date).toLocaleDateString("fr-FR", {
           month: "short",
           day: "numeric",
-        }),
-      ),
+        });
+      }),
       datasets: [
         {
           label: "Score moyen",
-          data: advancedStats.dailyStats.map((stat: any) =>
-            Math.round(stat.averageScore || 0),
-          ),
+          data: advancedStats.dailyStats.map((stat: any) => {
+            if (!stat || typeof stat.averageScore !== 'number') return 0;
+            return Math.round(stat.averageScore);
+          }),
           borderColor: "rgb(75, 192, 192)",
           backgroundColor: "rgba(75, 192, 192, 0.1)",
           tension: 0.1,
@@ -868,9 +906,10 @@ const ElevePage: React.FC = () => {
         },
         {
           label: "Exercices complétés",
-          data: advancedStats.dailyStats.map(
-            (stat: any) => stat.exercicesComplétés || 0,
-          ),
+          data: advancedStats.dailyStats.map((stat: any) => {
+            if (!stat || typeof stat.exercicesComplétés !== 'number') return 0;
+            return stat.exercicesComplétés;
+          }),
           borderColor: "rgb(255, 99, 132)",
           backgroundColor: "rgba(255, 99, 132, 0.1)",
           tension: 0.1,
@@ -921,17 +960,19 @@ const ElevePage: React.FC = () => {
     ];
 
     return {
-      labels: advancedStats.subjects.map((subject: any) =>
-        subject.subject.length > 10
+      labels: advancedStats.subjects.map((subject: any) => {
+        if (!subject || !subject.subject) return 'Matière inconnue';
+        return subject.subject.length > 10
           ? subject.subject.substring(0, 10) + "..."
-          : subject.subject,
-      ),
+          : subject.subject;
+      }),
       datasets: [
         {
           label: "Score moyen (%)",
-          data: advancedStats.subjects.map((subject: any) =>
-            Math.round(subject.averageScore || 0),
-          ),
+          data: advancedStats.subjects.map((subject: any) => {
+            if (!subject || typeof subject.averageScore !== 'number') return 0;
+            return Math.round(subject.averageScore);
+          }),
           backgroundColor: colors.slice(0, advancedStats.subjects.length),
           borderColor: borderColors.slice(0, advancedStats.subjects.length),
           borderWidth: 1,
@@ -970,14 +1011,16 @@ const ElevePage: React.FC = () => {
     ];
 
     return {
-      labels: advancedStats.categoryStats.map(
-        (category: any) => category.category,
-      ),
+      labels: advancedStats.categoryStats.map((category: any) => {
+        if (!category || !category.category) return 'Catégorie inconnue';
+        return category.category;
+      }),
       datasets: [
         {
-          data: advancedStats.categoryStats.map(
-            (category: any) => category.count || 0,
-          ),
+          data: advancedStats.categoryStats.map((category: any) => {
+            if (!category || typeof category.count !== 'number') return 0;
+            return category.count;
+          }),
           backgroundColor: colors.slice(0, advancedStats.categoryStats.length),
           borderColor: colors
             .map((color) => color.replace("0.7", "1"))
@@ -1188,18 +1231,24 @@ const ElevePage: React.FC = () => {
 
   // Obtenir la couleur en fonction du score
   const getScoreColor = (score: number) => {
-    if (score >= 90) return "success";
-    if (score >= 70) return "primary";
-    if (score >= 50) return "warning";
+    // Vérifier que score est un nombre valide
+    const safeScore = typeof score === 'number' && !isNaN(score) ? score : 0;
+    
+    if (safeScore >= 90) return "success";
+    if (safeScore >= 70) return "primary";
+    if (safeScore >= 50) return "warning";
 
     return "danger";
   };
 
   // Obtenir l'emoji en fonction du score
   const getScoreEmoji = (score: number) => {
-    if (score >= 90) return "🌟";
-    if (score >= 70) return "😊";
-    if (score >= 50) return "😐";
+    // Vérifier que score est un nombre valide
+    const safeScore = typeof score === 'number' && !isNaN(score) ? score : 0;
+    
+    if (safeScore >= 90) return "🌟";
+    if (safeScore >= 70) return "😊";
+    if (safeScore >= 50) return "😐";
 
     return "😢";
   };
@@ -1248,14 +1297,26 @@ const ElevePage: React.FC = () => {
       (s) => s.subjectName === selectedSubject,
     );
 
-    if (!subject) return [];
+    if (!subject || !subject.pages || !Array.isArray(subject.pages)) return [];
+
+    // Filtrer les pages null/undefined et valider les propriétés nécessaires
+    const validPages = subject.pages.filter((page) => {
+      return page && 
+             typeof page === 'object' && 
+             typeof page.pageNumber === 'number' &&
+             typeof page.score === 'number' &&
+             typeof page.correctAnswers === 'number' &&
+             typeof page.totalQuestions === 'number' &&
+             typeof page.timeSpent === 'number' &&
+             page.completedAt;
+    });
 
     const startIndex = (currentPage - 1) * 10;
     const endIndex = startIndex + 10;
 
-    setTotalPages(Math.ceil(subject.pages.length / 10));
+    setTotalPages(Math.ceil(validPages.length / 10));
 
-    return subject.pages.slice(startIndex, endIndex);
+    return validPages.slice(startIndex, endIndex);
   };
 
   // Obtenir la configuration d'une matière
@@ -1638,7 +1699,7 @@ const ElevePage: React.FC = () => {
                                           size="sm"
                                           variant="flat"
                                         >
-                                          {page.score}%{" "}
+                                          {typeof page.score === 'number' ? page.score : 0}%{" "}
                                           {getScoreEmoji(page.score)}
                                         </Chip>
                                       </TableCell>
