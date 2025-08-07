@@ -104,6 +104,7 @@
 		"@typescript-eslint/eslint-plugin": "^7.0.1",
 		"@typescript-eslint/parser": "^7.0.1",
 		"autoprefixer": "^10.4.17",
+		"babel-loader": "^10.0.0",
 		"dotenv": "^16.4.1",
 		"eslint": "^8.56.0",
 		"eslint-config-next": "14.2.3",
