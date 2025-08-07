@@ -320,6 +320,7 @@ const ElevePage: React.FC = () => {
     if (!userId) return;
 
     const loadProfile = async () => {
+
       try {
         setLoading(true);
         clearError();
@@ -770,6 +771,12 @@ const ElevePage: React.FC = () => {
       // Mettre à jour immédiatement sans setTimeout
       setDetailedStats(detailedStatsArray);
       console.log("✅ detailedStats mis à jour:", detailedStatsArray.length);
+      
+      // Vérifier l'état après mise à jour
+      setTimeout(() => {
+        console.log("🔍 État detailedStats après mise à jour:", detailedStats.length);
+        console.log("🔍 Contenu detailedStats:", detailedStats);
+      }, 100);
 
       setAdvancedStats({
         totalExercises: totalExercises, // 0 si aucun exercice
@@ -1511,6 +1518,24 @@ const ElevePage: React.FC = () => {
 
                 {/* Statistiques par matière */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {/* Debug info */}
+                  <div className="col-span-full text-xs text-gray-500 mb-2 p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded">
+                    <strong>DEBUG INFO:</strong><br/>
+                    detailedStats.length = {detailedStats.length}<br/>
+                    loading = {loading ? 'true' : 'false'}<br/>
+                    error = {error || 'none'}<br/>
+                    {detailedStats.length > 0 && (
+                      <div>
+                        <strong>Matières trouvées:</strong> {detailedStats.map(s => `${s.subjectName} (${s.totalPages} pages, ${s.averageScore.toFixed(1)}%)`).join(', ')}
+                      </div>
+                    )}
+                    {detailedStats.length === 0 && (
+                      <div className="text-red-600 dark:text-red-400">
+                        <strong>⚠️ Aucune statistique trouvée!</strong>
+                      </div>
+                    )}
+                  </div>
+                  
                   {detailedStats.length === 0 ? (
                     <div className="col-span-full text-center py-8">
                       <div className="animate-pulse">
@@ -1521,14 +1546,17 @@ const ElevePage: React.FC = () => {
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
                           Chargement des statistiques... (Longueur: {detailedStats.length})
                         </p>
+
                         <div className="flex justify-center">
                           <Spinner color="primary" size="sm" />
                         </div>
                       </div>
                     </div>
                   ) : (
-                    detailedStats.map((stat) => {
+                    detailedStats.map((stat, index) => {
+                      console.log(`🎯 Rendu carte ${index}:`, stat);
                       const config = getSubjectConfig(stat.subjectName);
+                      console.log(`🎨 Config pour ${stat.subjectName}:`, config);
 
                       return (
                         <Card
