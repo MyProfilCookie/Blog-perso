@@ -1,0 +1,551 @@
+/* Optimisations de performance CSS */
+
+/* Réduction du Cumulative Layout Shift (CLS) */
+.performance-optimized {
+  /* Réserver l'espace pour éviter les décalages */
+  min-height: 200px;
+  contain: layout style paint;
+}
+
+/* Optimisation des images */
+.image-optimized {
+  aspect-ratio: 16/9;
+  object-fit: cover;
+  will-change: transform;
+}
+
+/* Optimisation des animations */
+.animation-optimized {
+  will-change: transform, opacity;
+  transform: translateZ(0); /* Force GPU acceleration */
+}
+
+/* Optimisation du scroll */
+.scroll-optimized {
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Optimisation des polices */
+.font-optimized {
+  font-display: swap;
+  font-synthesis: none;
+}
+
+/* Optimisation des transitions */
+.transition-optimized {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  will-change: transform, opacity;
+}
+
+/* Optimisation des graphiques */
+.chart-container {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  contain: layout style;
+}
+
+.chart-loading {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+  border-radius: 8px;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Optimisation du mode sombre */
+@media (prefers-color-scheme: dark) {
+  .chart-loading {
+    background: linear-gradient(90deg, #2a2a2a 25%, #3a3a3a 50%, #2a2a2a 75%);
+    background-size: 200% 100%;
+  }
+}
+
+/* Optimisation des cartes */
+.card-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Optimisation des tableaux */
+.table-optimized {
+  contain: layout style;
+  table-layout: fixed;
+}
+
+/* Optimisation des boutons */
+.button-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+  transition: transform 0.2s ease;
+}
+
+.button-optimized:hover {
+  transform: translateZ(0) scale(1.02);
+}
+
+.button-optimized:active {
+  transform: translateZ(0) scale(0.98);
+}
+
+/* Optimisation des spinners */
+.spinner-optimized {
+  contain: layout style;
+  will-change: transform;
+}
+
+/* Optimisation des modales */
+.modal-optimized {
+  contain: layout style paint;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des tooltips */
+.tooltip-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des notifications */
+.notification-optimized {
+  contain: layout style;
+  will-change: transform;
+}
+
+/* Optimisation des formulaires */
+.form-optimized {
+  contain: layout style;
+}
+
+/* Optimisation des listes */
+.list-optimized {
+  contain: layout style;
+}
+
+.list-item-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* Optimisation des grilles */
+.grid-optimized {
+  contain: layout style;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+/* Optimisation des flexbox */
+.flex-optimized {
+  contain: layout style;
+  display: flex;
+  flex-wrap: wrap;
+}
+
+/* Optimisation des marges et paddings */
+.spacing-optimized {
+  contain: layout;
+}
+
+/* Optimisation des bordures */
+.border-optimized {
+  contain: layout style;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+/* Optimisation des ombres */
+.shadow-optimized {
+  contain: layout style;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Optimisation des gradients */
+.gradient-optimized {
+  contain: layout style;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+/* Optimisation des icônes */
+.icon-optimized {
+  contain: layout style;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Optimisation des avatars */
+.avatar-optimized {
+  contain: layout style;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+/* Optimisation des badges */
+.badge-optimized {
+  contain: layout style;
+  display: inline-flex;
+  align-items: center;
+  padding: 0.25rem 0.5rem;
+  border-radius: 9999px;
+  font-size: 0.75rem;
+  font-weight: 500;
+}
+
+/* Optimisation des progress bars */
+.progress-optimized {
+  contain: layout style;
+  overflow: hidden;
+  border-radius: 9999px;
+}
+
+/* Optimisation des tabs */
+.tabs-optimized {
+  contain: layout style;
+}
+
+.tab-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* Optimisation des accordéons */
+.accordion-optimized {
+  contain: layout style;
+}
+
+.accordion-item-optimized {
+  contain: layout style;
+}
+
+/* Optimisation des carousels */
+.carousel-optimized {
+  contain: layout style;
+  overflow: hidden;
+}
+
+.carousel-item-optimized {
+  contain: layout style;
+  flex-shrink: 0;
+}
+
+/* Optimisation des paginations */
+.pagination-optimized {
+  contain: layout style;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Optimisation des breadcrumbs */
+.breadcrumbs-optimized {
+  contain: layout style;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Optimisation des menus */
+.menu-optimized {
+  contain: layout style;
+}
+
+.menu-item-optimized {
+  contain: layout style;
+}
+
+/* Optimisation des dropdowns */
+.dropdown-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des sliders */
+.slider-optimized {
+  contain: layout style;
+  overflow: hidden;
+}
+
+/* Optimisation des toggles */
+.toggle-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* Optimisation des checkboxes */
+.checkbox-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* Optimisation des radios */
+.radio-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* Optimisation des inputs */
+.input-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* Optimisation des textareas */
+.textarea-optimized {
+  contain: layout style;
+  resize: vertical;
+}
+
+/* Optimisation des selects */
+.select-optimized {
+  contain: layout style;
+}
+
+/* Optimisation des datepickers */
+.datepicker-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des timepickers */
+.timepicker-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des colorpickers */
+.colorpicker-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des file inputs */
+.file-input-optimized {
+  contain: layout style;
+}
+
+/* Optimisation des drag and drop */
+.drag-drop-optimized {
+  contain: layout style;
+  will-change: transform;
+}
+
+/* Optimisation des toolbars */
+.toolbar-optimized {
+  contain: layout style;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Optimisation des sidebars */
+.sidebar-optimized {
+  contain: layout style;
+  will-change: transform;
+}
+
+/* Optimisation des headers */
+.header-optimized {
+  contain: layout style;
+  position: sticky;
+  top: 0;
+  z-index: 50;
+}
+
+/* Optimisation des footers */
+.footer-optimized {
+  contain: layout style;
+}
+
+/* Optimisation des navigations */
+.nav-optimized {
+  contain: layout style;
+}
+
+.nav-item-optimized {
+  contain: layout style;
+  transform: translateZ(0);
+}
+
+/* Optimisation des breadcrumbs */
+.breadcrumb-optimized {
+  contain: layout style;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+/* Optimisation des alerts */
+.alert-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des toasts */
+.toast-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des popovers */
+.popover-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des tooltips */
+.tooltip-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+}
+
+/* Optimisation des overlays */
+.overlay-optimized {
+  contain: layout style;
+  will-change: opacity;
+}
+
+/* Optimisation des backdrops */
+.backdrop-optimized {
+  contain: layout style;
+  will-change: opacity;
+}
+
+/* Optimisation des skeletons */
+.skeleton-optimized {
+  contain: layout style;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+/* Optimisation des placeholders */
+.placeholder-optimized {
+  contain: layout style;
+  background-color: #f3f4f6;
+  border-radius: 4px;
+}
+
+/* Optimisation des empty states */
+.empty-state-optimized {
+  contain: layout style;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Optimisation des error states */
+.error-state-optimized {
+  contain: layout style;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Optimisation des loading states */
+.loading-state-optimized {
+  contain: layout style;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Optimisation des success states */
+.success-state-optimized {
+  contain: layout style;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Optimisation des warning states */
+.warning-state-optimized {
+  contain: layout style;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Optimisation des info states */
+.info-state-optimized {
+  contain: layout style;
+  text-align: center;
+  padding: 2rem;
+}
+
+/* Optimisation des debug states */
+.debug-state-optimized {
+  contain: layout style;
+  text-align: center;
+  padding: 2rem;
+  background-color: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 8px;
+}
+
+/* Optimisation des responsive */
+@media (max-width: 768px) {
+  .mobile-optimized {
+    contain: layout style;
+  }
+}
+
+@media (max-width: 1024px) {
+  .tablet-optimized {
+    contain: layout style;
+  }
+}
+
+@media (min-width: 1025px) {
+  .desktop-optimized {
+    contain: layout style;
+  }
+}
+
+/* Optimisation des print */
+@media print {
+  .print-optimized {
+    contain: layout style;
+  }
+}
+
+/* Optimisation des reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  .reduced-motion-optimized {
+    animation: none !important;
+    transition: none !important;
+  }
+}
+
+/* Optimisation des high contrast */
+@media (prefers-contrast: high) {
+  .high-contrast-optimized {
+    border: 2px solid currentColor;
+  }
+}
+
+/* Optimisation des dark mode */
+@media (prefers-color-scheme: dark) {
+  .dark-mode-optimized {
+    background-color: #1f2937;
+    color: #f9fafb;
+  }
+}
+
+/* Optimisation des light mode */
+@media (prefers-color-scheme: light) {
+  .light-mode-optimized {
+    background-color: #ffffff;
+    color: #111827;
+  }
+}

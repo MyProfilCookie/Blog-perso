@@ -14,6 +14,9 @@ import { fontSans } from "@/config/fonts";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 
+// Import des optimisations de performance
+import "@/styles/performance.css";
+
 // 📌 4. Import du composant Providers
 import { Providers } from "./providers";
 
@@ -21,6 +24,7 @@ import { Providers } from "./providers";
 import ToasterThemeAware from "@/components/toaster-theme-aware";
 
 import { RevisionProvider } from "./RevisionContext";
+import PerformanceMonitor from "@/components/PerformanceMonitor";
 
 export const metadata: Metadata = {
   title: {
@@ -74,6 +78,7 @@ export default function RootLayout({
               <Footer />
             </div>
             <ToasterThemeAware />
+            <PerformanceMonitor />
           </Providers>
         </RevisionProvider>
       </body>

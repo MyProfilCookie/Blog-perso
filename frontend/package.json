@@ -11,6 +11,11 @@
 		"analyze": "ANALYZE=true next build",
 		"build:prod": "NODE_ENV=production next build --debug",
 		"build:analyze": "ANALYZE=true next build",
+		"build:optimized": "./scripts/build-optimized.sh",
+		"deploy:optimized": "./scripts/deploy-optimized.sh",
+		"deploy:preview": "./scripts/deploy-optimized.sh --preview",
+		"performance:report": "node -e \"console.log(require('./lib/metrics').getPerformanceReport())\"",
+		"performance:cleanup": "node -e \"require('./lib/metrics').performanceMonitor.cleanup()\"",
 		"vercel-build": "next build"
 	},
 	"dependencies": {
@@ -94,7 +99,7 @@
 		"tailwind-merge": "^2.2.1",
 		"tailwindcss-animate": "^1.0.7",
 		"update-browserslist-db": "^1.0.11",
-		"vercel": "^44.7.2"
+		"vercel": "^44.7.3"
 	},
 	"devDependencies": {
 		"@types/node": "20.11.19",

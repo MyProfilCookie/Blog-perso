@@ -39,23 +39,14 @@ import {
   faStar,
   faExclamationTriangle,
 } from "@fortawesome/free-solid-svg-icons";
-import { Line, Bar, Doughnut } from "react-chartjs-2";
-import {
-  Chart as ChartJS,
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-} from "chart.js";
 import { Sparkles } from "lucide-react";
 
-import BackButton from "@/components/back";
 import { useEleveStats } from "../../hooks/useEleveStats";
+
+import BackButton from "@/components/back";
+import Charts from "@/components/Charts";
+
+// Utilisation du composant Charts optimisé au lieu de l'initialisation manuelle
 
 // Interface pour les notes par page
 interface PageScore {
@@ -212,35 +203,27 @@ const SUBJECTS_CONFIG = {
   },
 };
 
-// Enregistrer les éléments Chart.js au début du composant
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  PointElement,
-  LineElement,
-  BarElement,
-  ArcElement,
-  Title,
-  Tooltip,
-  Legend,
-);
+// Suppression de la fonction dupliquée - utilisation de la version optimisée ci-dessus
 
 const ElevePage: React.FC = () => {
   const router = useRouter();
-  
+
   // Fonctions utilitaires pour gérer les scores de façon sécurisée
   const formatScore = (score: any): string => {
     const numScore = Number(score);
+
     return isNaN(numScore) ? "0.0" : numScore.toFixed(1);
   };
 
   const formatPercentage = (score: any): string => {
     const numScore = Number(score);
+
     return isNaN(numScore) ? "0%" : `${numScore.toFixed(1)}%`;
   };
 
   const safeNumber = (value: any): number => {
     const num = Number(value);
+
     return isNaN(num) ? 0 : num;
   };
 
@@ -277,6 +260,7 @@ const ElevePage: React.FC = () => {
       if (storedUser) {
         try {
           const user = JSON.parse(storedUser);
+
           foundUserId = user._id || user.id;
           foundUserInfo = user;
         } catch (err) {
@@ -287,6 +271,7 @@ const ElevePage: React.FC = () => {
       if (!foundUserId && userInfo) {
         try {
           const user = JSON.parse(userInfo);
+
           foundUserId = user._id || user.id;
           foundUserInfo = user;
         } catch (err) {
@@ -296,16 +281,18 @@ const ElevePage: React.FC = () => {
 
       setUserId(foundUserId);
       setUserInfo(foundUserInfo);
-      
+
       // Si aucun utilisateur trouvé, créer des données par défaut pour permettre l'affichage
       if (!foundUserId) {
-        console.log('⚠️ Aucun utilisateur trouvé, utilisation de données par défaut');
-        setUserId('default-user');
+        console.log(
+          "⚠️ Aucun utilisateur trouvé, utilisation de données par défaut",
+        );
+        setUserId("default-user");
         setUserInfo({
-          _id: 'default-user',
-          nom: 'Utilisateur',
-          prenom: 'Invité',
-          email: 'invite@example.com'
+          _id: "default-user",
+          nom: "Utilisateur",
+          prenom: "Invité",
+          email: "invite@example.com",
         });
       }
     } catch (err) {
@@ -320,7 +307,6 @@ const ElevePage: React.FC = () => {
     if (!userId) return;
 
     const loadProfile = async () => {
-
       try {
         setLoading(true);
         clearError();
@@ -328,26 +314,25 @@ const ElevePage: React.FC = () => {
         console.log(`👤 Chargement profil pour: ${userId}`);
 
         // 1. Toujours commencer par localStorage (rapide)
-        console.log('📂 Chargement localStorage en priorité...');
+        console.log("📂 Chargement localStorage en priorité...");
         loadLocalData();
 
         // 2. Essayer l'API en arrière-plan (sans bloquer l'interface)
-        console.log('🌐 Tentative API en arrière-plan...');
+        console.log("🌐 Tentative API en arrière-plan...");
         loadWithSync()
-          .then(stats => {
+          .then((stats) => {
             if (stats && stats.totalExercises > 0) {
-              console.log('✅ Mise à jour avec données API');
+              console.log("✅ Mise à jour avec données API");
               // Mettre à jour seulement si on a des données meilleures
               updateWithApiData(stats);
             }
           })
-          .catch(err => {
-            console.warn('⚠️ API échouée, localStorage conservé:', err.message);
+          .catch((err) => {
+            console.warn("⚠️ API échouée, localStorage conservé:", err.message);
           });
 
         // 3. Charger les données serveur pour affichage admin
         loadServerData().catch(console.warn);
-
       } catch (err) {
         console.error("❌ Erreur chargement profil:", err);
         setError("Erreur lors du chargement");
@@ -362,61 +347,82 @@ const ElevePage: React.FC = () => {
     const updateWithApiData = (stats: any) => {
       // Vérifier que stats et stats.subjects existent
       if (!stats || !stats.subjects || !Array.isArray(stats.subjects)) {
-        console.warn('⚠️ Données API invalides:', stats);
+        console.warn("⚠️ Données API invalides:", stats);
+
         return;
       }
 
       // Convertir et mettre à jour detailedStats
-      const detailedStatsArray = stats.subjects.map((subject: any) => {
-        // Vérifier que subject existe et a les propriétés nécessaires
-        if (!subject || typeof subject !== 'object') {
-          console.warn('⚠️ Objet subject invalide:', subject);
-          return null;
-        }
+      const detailedStatsArray = stats.subjects
+        .map((subject: any) => {
+          // Vérifier que subject existe et a les propriétés nécessaires
+          if (!subject || typeof subject !== "object") {
+            console.warn("⚠️ Objet subject invalide:", subject);
 
-        const subjectConfig = getSubjectConfig(subject.subject || 'math');
-        
-        return {
-          subjectName: subject.subject || 'Matière inconnue',
-          totalPages: safeNumber(subject.totalExercises),
-          averageScore: safeNumber(subject.averageScore),
-          bestPage: safeNumber(subject.averageScore) > 0 ? Math.min(100, Math.round(safeNumber(subject.averageScore) + 5)) : 0,
-          worstPage: safeNumber(subject.averageScore) > 0 ? Math.max(0, Math.round(safeNumber(subject.averageScore) - 10)) : 0,
-          completionRate: safeNumber(subject.progress),
-          icon: subjectConfig.icon,
-          color: subjectConfig.color,
-        };
-      }).filter(Boolean); // Filtrer les éléments null
+            return null;
+          }
+
+          const subjectConfig = getSubjectConfig(subject.subject || "math");
+
+          return {
+            subjectName: subject.subject || "Matière inconnue",
+            totalPages: safeNumber(subject.totalExercises),
+            averageScore: safeNumber(subject.averageScore),
+            bestPage:
+              safeNumber(subject.averageScore) > 0
+                ? Math.min(
+                    100,
+                    Math.round(safeNumber(subject.averageScore) + 5),
+                  )
+                : 0,
+            worstPage:
+              safeNumber(subject.averageScore) > 0
+                ? Math.max(0, Math.round(safeNumber(subject.averageScore) - 10))
+                : 0,
+            completionRate: safeNumber(subject.progress),
+            icon: subjectConfig.icon,
+            color: subjectConfig.color,
+          };
+        })
+        .filter(Boolean); // Filtrer les éléments null
 
       // Fusionner avec les données localStorage existantes
-      setDetailedStats(prevStats => {
+      setDetailedStats((prevStats) => {
         const merged = [...detailedStatsArray];
-        
+
         // Ajouter les matières manquantes
-        Object.keys(SUBJECTS_CONFIG).slice(0, 6).forEach((subjectKey) => {
-          const config = SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
-          const hasData = merged.some(stat => stat.subjectName === config.name);
-          
-          if (!hasData) {
-            // Garder les données localStorage si elles existent
-            const localData = prevStats.find(stat => stat.subjectName === config.name);
-            if (localData) {
-              merged.push(localData);
-            } else {
-              merged.push({
-                subjectName: config.name,
-                totalPages: 0,
-                averageScore: 0,
-                bestPage: 0,
-                worstPage: 0,
-                completionRate: 0,
-                icon: config.icon,
-                color: config.color,
-              });
+        Object.keys(SUBJECTS_CONFIG)
+          .slice(0, 6)
+          .forEach((subjectKey) => {
+            const config =
+              SUBJECTS_CONFIG[subjectKey as keyof typeof SUBJECTS_CONFIG];
+            const hasData = merged.some(
+              (stat) => stat.subjectName === config.name,
+            );
+
+            if (!hasData) {
+              // Garder les données localStorage si elles existent
+              const localData = prevStats.find(
+                (stat) => stat.subjectName === config.name,
+              );
+
+              if (localData) {
+                merged.push(localData);
+              } else {
+                merged.push({
+                  subjectName: config.name,
+                  totalPages: 0,
+                  averageScore: 0,
+                  bestPage: 0,
+                  worstPage: 0,
+                  completionRate: 0,
+                  icon: config.icon,
+                  color: config.color,
+                });
+              }
             }
-          }
-        });
-        
+          });
+
         return merged;
       });
 
@@ -434,9 +440,11 @@ const ElevePage: React.FC = () => {
 
       // Récupérer les réponses utilisateur
       const userAnswers = localStorage.getItem(`${subject}_userAnswers`);
+
       if (userAnswers) {
         try {
           const parsed = JSON.parse(userAnswers);
+
           if (parsed && typeof parsed === "object") {
             data.userAnswers = parsed;
           }
@@ -447,9 +455,11 @@ const ElevePage: React.FC = () => {
 
       // Récupérer les résultats
       const results = localStorage.getItem(`${subject}_results`);
+
       if (results) {
         try {
           const parsed = JSON.parse(results);
+
           if (parsed && Array.isArray(parsed)) {
             data.results = parsed;
           }
@@ -459,10 +469,14 @@ const ElevePage: React.FC = () => {
       }
 
       // Récupérer les exercices validés
-      const validatedExercises = localStorage.getItem(`${subject}_validatedExercises`);
+      const validatedExercises = localStorage.getItem(
+        `${subject}_validatedExercises`,
+      );
+
       if (validatedExercises) {
         try {
           const parsed = JSON.parse(validatedExercises);
+
           if (parsed && typeof parsed === "object") {
             data.validatedExercises = parsed;
           }
@@ -473,12 +487,15 @@ const ElevePage: React.FC = () => {
 
       // Récupérer les scores et s'assurer qu'ils sont des nombres
       const scores = localStorage.getItem(`${subject}_scores`);
+
       if (scores) {
         try {
           const parsed = JSON.parse(scores);
+
           if (parsed && typeof parsed === "object") {
             const safeScores: any = {};
-            Object.keys(parsed).forEach(key => {
+
+            Object.keys(parsed).forEach((key) => {
               safeScores[key] = safeNumber(parsed[key]);
             });
             data.scores = safeScores;
@@ -491,6 +508,7 @@ const ElevePage: React.FC = () => {
       return data;
     } catch (error) {
       console.error(`Erreur getLocalStorageData pour ${subject}:`, error);
+
       return {};
     }
   };
@@ -504,8 +522,11 @@ const ElevePage: React.FC = () => {
     // Analyser les réponses utilisateur
     if (data.userAnswers && typeof data.userAnswers === "object") {
       const answers = Object.values(data.userAnswers);
+
       totalExercises += answers.length;
-      correctAnswers += answers.filter((answer: any) => answer === true || answer === "correct").length;
+      correctAnswers += answers.filter(
+        (answer: any) => answer === true || answer === "correct",
+      ).length;
       lastActivity = new Date().toISOString();
     }
 
@@ -513,7 +534,7 @@ const ElevePage: React.FC = () => {
     if (data.results && Array.isArray(data.results)) {
       data.results.forEach((result: any) => {
         // Vérifier que result n'est pas null ou undefined
-        if (result && typeof result === 'object') {
+        if (result && typeof result === "object") {
           totalExercises++;
           if (result.score && safeNumber(result.score) > 70) {
             correctAnswers++;
@@ -524,8 +545,14 @@ const ElevePage: React.FC = () => {
     }
 
     // Analyser les exercices validés
-    if (data.validatedExercises && typeof data.validatedExercises === "object") {
-      const validatedCount = Object.values(data.validatedExercises).filter(Boolean).length;
+    if (
+      data.validatedExercises &&
+      typeof data.validatedExercises === "object"
+    ) {
+      const validatedCount = Object.values(data.validatedExercises).filter(
+        Boolean,
+      ).length;
+
       totalExercises += validatedCount;
       correctAnswers += validatedCount;
       lastActivity = new Date().toISOString();
@@ -533,15 +560,21 @@ const ElevePage: React.FC = () => {
 
     // S'assurer que averageScore est toujours un nombre valide
     let averageScore = 0;
+
     if (totalExercises > 0) {
       averageScore = safeNumber((correctAnswers / totalExercises) * 100);
     }
 
-    const progress = totalExercises > 0 ? safeNumber((correctAnswers / totalExercises) * 100) : 0;
+    const progress =
+      totalExercises > 0
+        ? safeNumber((correctAnswers / totalExercises) * 100)
+        : 0;
     const exercisesCompleted = safeNumber(correctAnswers);
 
     return {
-      subject: SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name || subject,
+      subject:
+        SUBJECTS_CONFIG[subject as keyof typeof SUBJECTS_CONFIG]?.name ||
+        subject,
       totalExercises: safeNumber(totalExercises),
       correctAnswers: safeNumber(correctAnswers),
       averageScore: averageScore,
@@ -585,6 +618,7 @@ const ElevePage: React.FC = () => {
       ) {
         console.log("⏳ localStorage pas encore disponible, retry...");
         setTimeout(() => loadLocalData(), 100);
+
         return;
       }
 
@@ -595,6 +629,7 @@ const ElevePage: React.FC = () => {
       Object.keys(SUBJECTS_CONFIG).forEach((subject) => {
         if (!subject.includes("trimestre")) {
           const data = getLocalStorageData(subject);
+
           if (Object.keys(data).length > 0) {
             allSubjectsData[subject] = data;
             console.log(
@@ -607,8 +642,10 @@ const ElevePage: React.FC = () => {
 
       // Ajouter tous les trimestres trouvés
       const trimestres = getAllTrimestres();
+
       trimestres.forEach((trimestreId) => {
         const data = getLocalStorageData(`trimestre-${trimestreId}`);
+
         if (Object.keys(data).length > 0) {
           allSubjectsData[`trimestre-${trimestreId}`] = data;
           console.log(`📚 Données trimestre trouvées pour ${trimestreId}`);
@@ -742,7 +779,9 @@ const ElevePage: React.FC = () => {
       // Créer des statistiques quotidiennes (toutes à 0 si pas de données)
       const last7Days = Array.from({ length: 7 }, (_, i) => {
         const date = new Date();
+
         date.setDate(date.getDate() - i);
+
         return date.toISOString().split("T")[0];
       }).reverse();
 
@@ -765,16 +804,22 @@ const ElevePage: React.FC = () => {
 
       // IMPORTANT: Mettre à jour les états immédiatement et de façon synchrone
       console.log("🔧 Mise à jour des états React...");
-      console.log("📊 detailedStatsArray avant mise à jour:", detailedStatsArray);
+      console.log(
+        "📊 detailedStatsArray avant mise à jour:",
+        detailedStatsArray,
+      );
       console.log("📊 Longueur detailedStatsArray:", detailedStatsArray.length);
 
       // Mettre à jour immédiatement sans setTimeout
       setDetailedStats(detailedStatsArray);
       console.log("✅ detailedStats mis à jour:", detailedStatsArray.length);
-      
+
       // Vérifier l'état après mise à jour
       setTimeout(() => {
-        console.log("🔍 État detailedStats après mise à jour:", detailedStats.length);
+        console.log(
+          "🔍 État detailedStats après mise à jour:",
+          detailedStats.length,
+        );
         console.log("🔍 Contenu detailedStats:", detailedStats);
       }, 100);
 
@@ -822,44 +867,64 @@ const ElevePage: React.FC = () => {
 
         // Calculer les statistiques détaillées à partir des données serveur
         const serverDetailedStats: DetailedStats[] = [];
-        
+
         if (response.data.subjects && Array.isArray(response.data.subjects)) {
           response.data.subjects.forEach((subject: SubjectScore) => {
             // Vérifier que subject existe et a les propriétés nécessaires
-            if (!subject || typeof subject !== 'object') {
-              console.warn('⚠️ Objet subject serveur invalide:', subject);
+            if (!subject || typeof subject !== "object") {
+              console.warn("⚠️ Objet subject serveur invalide:", subject);
+
               return;
             }
 
             // Vérifier que subject.pages existe et est un tableau
-            const pages = subject.pages && Array.isArray(subject.pages) ? subject.pages : [];
-            
+            const pages =
+              subject.pages && Array.isArray(subject.pages)
+                ? subject.pages
+                : [];
+
             const scores = pages.map((page) => {
               // Vérifier que page existe et a une propriété score
-              return (page && typeof page === 'object' && typeof page.score === 'number') ? page.score : 0;
+              return page &&
+                typeof page === "object" &&
+                typeof page.score === "number"
+                ? page.score
+                : 0;
             });
-            
+
             const bestScore = scores.length > 0 ? Math.max(...scores) : 0;
             const worstScore = scores.length > 0 ? Math.min(...scores) : 0;
-            
+
             const correctAnswers = pages.reduce((sum, page) => {
-              if (page && typeof page === 'object' && typeof page.correctAnswers === 'number') {
+              if (
+                page &&
+                typeof page === "object" &&
+                typeof page.correctAnswers === "number"
+              ) {
                 return sum + page.correctAnswers;
               }
+
               return sum;
             }, 0);
-            
+
             const totalQuestions = pages.reduce((sum, page) => {
-              if (page && typeof page === 'object' && typeof page.totalQuestions === 'number') {
+              if (
+                page &&
+                typeof page === "object" &&
+                typeof page.totalQuestions === "number"
+              ) {
                 return sum + page.totalQuestions;
               }
+
               return sum;
             }, 0);
 
-            const subjectConfig = getSubjectConfig(subject.subjectName || 'math');
+            const subjectConfig = getSubjectConfig(
+              subject.subjectName || "math",
+            );
 
             serverDetailedStats.push({
-              subjectName: subject.subjectName || 'Matière inconnue',
+              subjectName: subject.subjectName || "Matière inconnue",
               totalPages: pages.length,
               averageScore: safeNumber(subject.averageScore),
               bestPage: Math.round(bestScore),
@@ -904,7 +969,8 @@ const ElevePage: React.FC = () => {
 
     return {
       labels: advancedStats.dailyStats.map((stat: any) => {
-        if (!stat || !stat.date) return 'Date inconnue';
+        if (!stat || !stat.date) return "Date inconnue";
+
         return new Date(stat.date).toLocaleDateString("fr-FR", {
           month: "short",
           day: "numeric",
@@ -914,7 +980,8 @@ const ElevePage: React.FC = () => {
         {
           label: "Score moyen",
           data: advancedStats.dailyStats.map((stat: any) => {
-            if (!stat || typeof stat.averageScore !== 'number') return 0;
+            if (!stat || typeof stat.averageScore !== "number") return 0;
+
             return Math.round(stat.averageScore);
           }),
           borderColor: "rgb(75, 192, 192)",
@@ -925,7 +992,8 @@ const ElevePage: React.FC = () => {
         {
           label: "Exercices complétés",
           data: advancedStats.dailyStats.map((stat: any) => {
-            if (!stat || typeof stat.exercicesComplétés !== 'number') return 0;
+            if (!stat || typeof stat.exercicesComplétés !== "number") return 0;
+
             return stat.exercicesComplétés;
           }),
           borderColor: "rgb(255, 99, 132)",
@@ -979,7 +1047,8 @@ const ElevePage: React.FC = () => {
 
     return {
       labels: advancedStats.subjects.map((subject: any) => {
-        if (!subject || !subject.subject) return 'Matière inconnue';
+        if (!subject || !subject.subject) return "Matière inconnue";
+
         return subject.subject.length > 10
           ? subject.subject.substring(0, 10) + "..."
           : subject.subject;
@@ -988,7 +1057,8 @@ const ElevePage: React.FC = () => {
         {
           label: "Score moyen (%)",
           data: advancedStats.subjects.map((subject: any) => {
-            if (!subject || typeof subject.averageScore !== 'number') return 0;
+            if (!subject || typeof subject.averageScore !== "number") return 0;
+
             return Math.round(subject.averageScore);
           }),
           backgroundColor: colors.slice(0, advancedStats.subjects.length),
@@ -1030,13 +1100,15 @@ const ElevePage: React.FC = () => {
 
     return {
       labels: advancedStats.categoryStats.map((category: any) => {
-        if (!category || !category.category) return 'Catégorie inconnue';
+        if (!category || !category.category) return "Catégorie inconnue";
+
         return category.category;
       }),
       datasets: [
         {
           data: advancedStats.categoryStats.map((category: any) => {
-            if (!category || typeof category.count !== 'number') return 0;
+            if (!category || typeof category.count !== "number") return 0;
+
             return category.count;
           }),
           backgroundColor: colors.slice(0, advancedStats.categoryStats.length),
@@ -1250,8 +1322,8 @@ const ElevePage: React.FC = () => {
   // Obtenir la couleur en fonction du score
   const getScoreColor = (score: number) => {
     // Vérifier que score est un nombre valide
-    const safeScore = typeof score === 'number' && !isNaN(score) ? score : 0;
-    
+    const safeScore = typeof score === "number" && !isNaN(score) ? score : 0;
+
     if (safeScore >= 90) return "success";
     if (safeScore >= 70) return "primary";
     if (safeScore >= 50) return "warning";
@@ -1262,8 +1334,8 @@ const ElevePage: React.FC = () => {
   // Obtenir l'emoji en fonction du score
   const getScoreEmoji = (score: number) => {
     // Vérifier que score est un nombre valide
-    const safeScore = typeof score === 'number' && !isNaN(score) ? score : 0;
-    
+    const safeScore = typeof score === "number" && !isNaN(score) ? score : 0;
+
     if (safeScore >= 90) return "🌟";
     if (safeScore >= 70) return "😊";
     if (safeScore >= 50) return "😐";
@@ -1319,14 +1391,16 @@ const ElevePage: React.FC = () => {
 
     // Filtrer les pages null/undefined et valider les propriétés nécessaires
     const validPages = subject.pages.filter((page) => {
-      return page && 
-             typeof page === 'object' && 
-             typeof page.pageNumber === 'number' &&
-             typeof page.score === 'number' &&
-             typeof page.correctAnswers === 'number' &&
-             typeof page.totalQuestions === 'number' &&
-             typeof page.timeSpent === 'number' &&
-             page.completedAt;
+      return (
+        page &&
+        typeof page === "object" &&
+        typeof page.pageNumber === "number" &&
+        typeof page.score === "number" &&
+        typeof page.correctAnswers === "number" &&
+        typeof page.totalQuestions === "number" &&
+        typeof page.timeSpent === "number" &&
+        page.completedAt
+      );
     });
 
     const startIndex = (currentPage - 1) * 10;
@@ -1354,7 +1428,7 @@ const ElevePage: React.FC = () => {
           <div className="relative">
             <Spinner color="primary" size="lg" />
             <div className="absolute inset-0 flex items-center justify-center">
-              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse"></div>
+              <div className="w-8 h-8 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-pulse" />
             </div>
           </div>
           <p className="mt-4 text-purple-600 dark:text-purple-300 font-medium">
@@ -1401,7 +1475,7 @@ const ElevePage: React.FC = () => {
               Profil Élève 📚
             </h1>
             <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 rounded-full border border-emerald-200 dark:border-emerald-700">
-              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></div>
+              <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
               <span className="text-xs font-medium text-emerald-700 dark:text-emerald-300">
                 Optimisé
               </span>
@@ -1520,13 +1594,23 @@ const ElevePage: React.FC = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {/* Debug info */}
                   <div className="col-span-full text-xs text-gray-500 mb-2 p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded">
-                    <strong>DEBUG INFO:</strong><br/>
-                    detailedStats.length = {detailedStats.length}<br/>
-                    loading = {loading ? 'true' : 'false'}<br/>
-                    error = {error || 'none'}<br/>
+                    <strong>DEBUG INFO:</strong>
+                    <br />
+                    detailedStats.length = {detailedStats.length}
+                    <br />
+                    loading = {loading ? "true" : "false"}
+                    <br />
+                    error = {error || "none"}
+                    <br />
                     {detailedStats.length > 0 && (
                       <div>
-                        <strong>Matières trouvées:</strong> {detailedStats.map(s => `${s.subjectName} (${s.totalPages} pages, ${s.averageScore.toFixed(1)}%)`).join(', ')}
+                        <strong>Matières trouvées:</strong>{" "}
+                        {detailedStats
+                          .map(
+                            (s) =>
+                              `${s.subjectName} (${s.totalPages} pages, ${s.averageScore.toFixed(1)}%)`,
+                          )
+                          .join(", ")}
                       </div>
                     )}
                     {detailedStats.length === 0 && (
@@ -1535,16 +1619,17 @@ const ElevePage: React.FC = () => {
                       </div>
                     )}
                   </div>
-                  
+
                   {detailedStats.length === 0 ? (
                     <div className="col-span-full text-center py-8">
                       <div className="animate-pulse">
                         <FontAwesomeIcon
-                          icon={faChartBar}
                           className="text-4xl text-gray-400 mb-4"
+                          icon={faChartBar}
                         />
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
-                          Chargement des statistiques... (Longueur: {detailedStats.length})
+                          Chargement des statistiques... (Longueur:{" "}
+                          {detailedStats.length})
                         </p>
 
                         <div className="flex justify-center">
@@ -1556,7 +1641,11 @@ const ElevePage: React.FC = () => {
                     detailedStats.map((stat, index) => {
                       console.log(`🎯 Rendu carte ${index}:`, stat);
                       const config = getSubjectConfig(stat.subjectName);
-                      console.log(`🎨 Config pour ${stat.subjectName}:`, config);
+
+                      console.log(
+                        `🎨 Config pour ${stat.subjectName}:`,
+                        config,
+                      );
 
                       return (
                         <Card
@@ -1589,6 +1678,7 @@ const ElevePage: React.FC = () => {
                                   Moyenne
                                 </span>
                                 <Chip
+                                  className="bg-opacity-80 dark:bg-opacity-80"
                                   color={
                                     stat.averageScore > 0
                                       ? getScoreColor(stat.averageScore)
@@ -1596,7 +1686,6 @@ const ElevePage: React.FC = () => {
                                   }
                                   size="sm"
                                   variant="flat"
-                                  className="bg-opacity-80 dark:bg-opacity-80"
                                 >
                                   {formatScore(stat.averageScore)}%{" "}
                                   {stat.averageScore > 0
@@ -1607,6 +1696,10 @@ const ElevePage: React.FC = () => {
 
                               <Progress
                                 className="w-full"
+                                classNames={{
+                                  track: "bg-gray-700 dark:bg-gray-700",
+                                  indicator: "bg-gradient-to-r",
+                                }}
                                 color={
                                   stat.averageScore > 0
                                     ? getScoreColor(stat.averageScore)
@@ -1614,10 +1707,6 @@ const ElevePage: React.FC = () => {
                                 }
                                 size="sm"
                                 value={stat.averageScore}
-                                classNames={{
-                                  track: "bg-gray-700 dark:bg-gray-700",
-                                  indicator: "bg-gradient-to-r",
-                                }}
                               />
 
                               <div className="grid grid-cols-2 gap-2 text-xs">
@@ -1738,8 +1827,10 @@ const ElevePage: React.FC = () => {
                                           size="sm"
                                           variant="flat"
                                         >
-                                          {typeof page.score === 'number' ? page.score : 0}%{" "}
-                                          {getScoreEmoji(page.score)}
+                                          {typeof page.score === "number"
+                                            ? page.score
+                                            : 0}
+                                          % {getScoreEmoji(page.score)}
                                         </Chip>
                                       </TableCell>
                                       <TableCell>
@@ -1832,8 +1923,8 @@ const ElevePage: React.FC = () => {
                       <CardBody className="p-6">
                         <div className="text-center py-8">
                           <FontAwesomeIcon
-                            icon={faChartBar}
                             className="text-4xl text-gray-400 mb-4"
+                            icon={faChartBar}
                           />
                           <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-2">
                             Aucune donnée d&apos;exercices trouvée
@@ -1859,10 +1950,6 @@ const ElevePage: React.FC = () => {
                     <>
                       <Tabs
                         className="mb-8"
-                        selectedKey={selectedTab}
-                        onSelectionChange={(key) =>
-                          setSelectedTab(key.toString())
-                        }
                         classNames={{
                           tabList:
                             "bg-white dark:bg-gray-800 border border-purple-200 dark:border-purple-700",
@@ -1871,6 +1958,10 @@ const ElevePage: React.FC = () => {
                           cursor:
                             "bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-400 dark:to-pink-400",
                         }}
+                        selectedKey={selectedTab}
+                        onSelectionChange={(key) =>
+                          setSelectedTab(key.toString())
+                        }
                       >
                         <Tab key="overview" title="Vue d'ensemble" />
                         <Tab key="subjects" title="Par matière" />
@@ -1945,13 +2036,13 @@ const ElevePage: React.FC = () => {
                                         {subject.subject}
                                       </h3>
                                       <Chip
+                                        className="dark:bg-opacity-80"
                                         color={
                                           subject.averageScore >= 70
                                             ? "success"
                                             : "warning"
                                         }
                                         variant="flat"
-                                        className="dark:bg-opacity-80"
                                       >
                                         {subject.averageScore.toFixed(1)}%
                                       </Chip>
@@ -1968,7 +2059,7 @@ const ElevePage: React.FC = () => {
                                         </span>
                                       </div>
                                       <Progress
-                                        value={subject.progress}
+                                        className="dark:bg-gray-700"
                                         color={
                                           subject.totalExercises > 0
                                             ? subject.correctAnswers /
@@ -1982,7 +2073,7 @@ const ElevePage: React.FC = () => {
                                                 : "danger"
                                             : "default"
                                         }
-                                        className="dark:bg-gray-700"
+                                        value={subject.progress}
                                       />
                                     </div>
                                     <div className="grid grid-cols-2 gap-4 text-sm">
@@ -2029,9 +2120,10 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Bar
+                                    <Charts
                                       data={prepareBarChartData()}
                                       options={chartOptions}
+                                      type="bar"
                                     />
                                   </div>
                                 </div>
@@ -2051,9 +2143,10 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Doughnut
+                                    <Charts
                                       data={prepareDoughnutChartData()}
                                       options={doughnutOptions}
+                                      type="doughnut"
                                     />
                                   </div>
                                 </div>
@@ -2080,9 +2173,9 @@ const ElevePage: React.FC = () => {
                                             {category.count} exercices
                                           </span>
                                           <Chip
+                                            className="dark:bg-opacity-80"
                                             size="sm"
                                             variant="flat"
-                                            className="dark:bg-opacity-80"
                                           >
                                             {Number(
                                               category.percentage,
@@ -2109,13 +2202,14 @@ const ElevePage: React.FC = () => {
                               </h3>
                               <div className="h-64 w-full overflow-hidden">
                                 <div className="w-full h-full">
-                                  <Line
+                                  <Charts
                                     data={prepareLineChartData()}
                                     options={chartOptions}
+                                    type="line"
                                   />
                                 </div>
                               </div>
-                                                       </CardBody>
+                            </CardBody>
                           </Card>
 
                           {advancedStats.subjects.length > 0 && (
@@ -2126,9 +2220,10 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Bar
+                                    <Charts
                                       data={prepareBarChartData()}
                                       options={chartOptions}
+                                      type="bar"
                                     />
                                   </div>
                                 </div>
