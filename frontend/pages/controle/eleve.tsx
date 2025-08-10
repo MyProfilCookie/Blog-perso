@@ -1465,16 +1465,16 @@ const ElevePage: React.FC = () => {
   }
 
   return (
-    <div className="min-h-screen dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
-      <div className="container mx-auto p-4">
-        <div className="flex justify-between items-center mb-6">
+    <div className="min-h-screen performance-optimized dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
+      <div className="container mx-auto p-4 spacing-optimized">
+        <div className="flex justify-between items-center mb-6 header-optimized">
           <BackButton />
           <div className="flex items-center gap-4">
-            <h1 className="text-3xl font-bold text-purple-600 dark:text-purple-400 flex items-center gap-2">
-              <FontAwesomeIcon icon={faUser} />
+            <h1 className="text-3xl font-bold text-purple-600 dark:text-purple-400 flex items-center gap-2 font-optimized">
+              <FontAwesomeIcon icon={faUser} className="icon-optimized" />
               Profil Élève 📚
             </h1>
-            <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 rounded-full border border-emerald-200 dark:border-emerald-700">
+            <div className="flex items-center gap-2 px-3 py-1 bg-gradient-to-r from-emerald-100 to-green-100 dark:from-emerald-900/30 dark:to-green-900/30 rounded-full border border-emerald-200 dark:border-emerald-700 badge-optimized">
               <div className="w-2 h-2 bg-emerald-500 rounded-full animate-pulse" />
               <span className="text-xs font-medium text-emerald-700 dark:text-emerald-300">
                 Optimisé
@@ -1486,17 +1486,17 @@ const ElevePage: React.FC = () => {
         {eleveProfile ? (
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="space-y-6"
+            className="space-y-6 animation-optimized"
             initial={{ opacity: 0, y: -10 }}
             transition={{ duration: 0.4 }}
           >
             {/* Informations utilisateur */}
             {userInfo && (
-              <Card className="w-full border border-purple-200 dark:border-purple-800 dark:from-purple-900/50 dark:to-pink-900/50">
-                <CardBody className="p-6">
-                  <div className="flex items-center gap-4 mb-4">
+              <Card className="w-full border border-purple-200 dark:border-purple-800 dark:from-purple-900/50 dark:to-pink-900/50 card-optimized shadow-optimized">
+                <CardBody className="p-6 spacing-optimized">
+                  <div className="flex items-center gap-4 mb-4 flex-optimized">
                     <Avatar
-                      className="ring-2 ring-purple-200 dark:ring-purple-800"
+                      className="ring-2 ring-purple-200 dark:ring-purple-800 avatar-optimized"
                       size="lg"
                       src={userInfo.avatar || "/assets/default-avatar.webp"}
                     />
@@ -1592,8 +1592,8 @@ const ElevePage: React.FC = () => {
 
                 {/* Statistiques par matière */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                  {/* Debug info */}
-                  <div className="col-span-full text-xs text-gray-500 mb-2 p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded">
+                  {/* Debug info - Optimisé */}
+                  <div className="col-span-full text-xs text-gray-500 mb-2 p-2 bg-yellow-100 dark:bg-yellow-900/20 rounded debug-state-optimized">
                     <strong>DEBUG INFO:</strong>
                     <br />
                     detailedStats.length = {detailedStats.length}
@@ -1621,10 +1621,10 @@ const ElevePage: React.FC = () => {
                   </div>
 
                   {detailedStats.length === 0 ? (
-                    <div className="col-span-full text-center py-8">
-                      <div className="animate-pulse">
+                    <div className="col-span-full text-center py-8 loading-state-optimized">
+                      <div className="animate-pulse skeleton-optimized">
                         <FontAwesomeIcon
-                          className="text-4xl text-gray-400 mb-4"
+                          className="text-4xl text-gray-400 mb-4 icon-optimized"
                           icon={faChartBar}
                         />
                         <p className="text-gray-600 dark:text-gray-400 mb-4">
@@ -1633,7 +1633,7 @@ const ElevePage: React.FC = () => {
                         </p>
 
                         <div className="flex justify-center">
-                          <Spinner color="primary" size="sm" />
+                          <Spinner color="primary" size="sm" className="spinner-optimized" />
                         </div>
                       </div>
                     </div>
@@ -1650,18 +1650,18 @@ const ElevePage: React.FC = () => {
                       return (
                         <Card
                           key={stat.subjectName}
-                          className="bg-gray-800/50 dark:bg-gray-800/50 border border-gray-600 dark:border-gray-700 hover:shadow-lg transition-shadow backdrop-blur-sm"
+                          className="bg-gray-800/50 dark:bg-gray-800/50 border border-gray-600 dark:border-gray-700 hover:shadow-lg transition-shadow backdrop-blur-sm card-optimized shadow-optimized"
                         >
-                          <CardBody className="p-4">
-                            <div className="flex items-center gap-3 mb-3">
-                              <div
-                                className={`p-2 rounded-lg ${config.color.replace("bg-", "bg-").replace("text-", "text-")}`}
-                              >
-                                <FontAwesomeIcon
-                                  className="text-lg"
-                                  icon={config.icon}
-                                />
-                              </div>
+                          <CardBody className="p-4 spacing-optimized">
+                                                          <div className="flex items-center gap-3 mb-3 flex-optimized">
+                                <div
+                                  className={`p-2 rounded-lg icon-optimized ${config.color.replace("bg-", "bg-").replace("text-", "text-")}`}
+                                >
+                                  <FontAwesomeIcon
+                                    className="text-lg icon-optimized"
+                                    icon={config.icon}
+                                  />
+                                </div>
                               <div>
                                 <h3 className="font-semibold text-gray-100 dark:text-gray-200">
                                   {stat.subjectName}
@@ -1678,7 +1678,7 @@ const ElevePage: React.FC = () => {
                                   Moyenne
                                 </span>
                                 <Chip
-                                  className="bg-opacity-80 dark:bg-opacity-80"
+                                  className="bg-opacity-80 dark:bg-opacity-80 badge-optimized"
                                   color={
                                     stat.averageScore > 0
                                       ? getScoreColor(stat.averageScore)
@@ -1695,7 +1695,7 @@ const ElevePage: React.FC = () => {
                               </div>
 
                               <Progress
-                                className="w-full"
+                                className="w-full progress-optimized"
                                 classNames={{
                                   track: "bg-gray-700 dark:bg-gray-700",
                                   indicator: "bg-gradient-to-r",

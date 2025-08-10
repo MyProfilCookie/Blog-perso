@@ -10,14 +10,14 @@ const colorVariants = [
 ];
 
 const familyMembers = [
-  { name: "Jessica", img: "/assets/family/avatar/jessica.png" },
-  { name: "Joshua", img: "/assets/family/avatar/joshua.png" },
-  { name: "Maeva", img: "/assets/family/avatar/maeva.png" },
-  { name: "Maman", img: "/assets/family/avatar/chantal.png" },
-  { name: "Nini", img: "/assets/family/avatar/virginie.png" },
-  { name: "Papa", img: "/assets/family/avatar/paul.png" },
-  { name: "Pauline", img: "/assets/family/avatar/pauline.png" },
-  { name: "Titi", img: "/assets/family/avatar/vanessa.png" },
+  { name: "Jessica", img: "/assets/family/avatar/jessica.webp" },
+  { name: "Joshua", img: "/assets/family/avatar/joshua.webp" },
+  { name: "Maeva", img: "/assets/family/avatar/maeva.webp" },
+  { name: "Maman", img: "/assets/family/avatar/chantal.webp" },
+  { name: "Nini", img: "/assets/family/avatar/virginie.webp" },
+  { name: "Papa", img: "/assets/family/avatar/paul.webp" },
+  { name: "Pauline", img: "/assets/family/avatar/pauline.webp" },
+  { name: "Titi", img: "/assets/family/avatar/vanessa.webp" },
 ];
 
 export default function AboutUsPage() {

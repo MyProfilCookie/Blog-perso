@@ -462,7 +462,7 @@ const LessonsPage: React.FC = (): JSX.Element => {
                               src={`/assets/${lesson.subject.toLowerCase()}.jpg`}
                               className="object-cover"
                               fill
-                              onError={(e) => (e.currentTarget.src = "/assets/lessons.jpg")}
+                              onError={(e) => (e.currentTarget.src = "/assets/lessons.webp")}
                             />
                           </motion.div>
                         </div>

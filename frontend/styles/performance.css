@@ -462,6 +462,21 @@
   padding: 2rem;
 }
 
+/* Optimisation du lazy loading */
+.lazy-section-optimized {
+  contain: layout style;
+  will-change: transform, opacity;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.lazy-section-optimized:not(.loaded) {
+  opacity: 0;
+}
+
+.lazy-section-optimized.loaded {
+  opacity: 1;
+}
+
 /* Optimisation des success states */
 .success-state-optimized {
   contain: layout style;

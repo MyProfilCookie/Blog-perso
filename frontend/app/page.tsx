@@ -67,42 +67,42 @@ export default function Home() {
     {
       name: "Papa",
       role: "Père de famille",
-      img: "/assets/family/paul.png",
+      img: "/assets/family/paul.webp",
     },
     {
       name: "Maman",
       role: "Mère de famille",
-      img: "/assets/family/chantal.png",
+      img: "/assets/family/chantal.webp",
     },
     {
       name: "Virginie",
       role: "Sœur de Maeva",
-      img: "/assets/family/virginie.png",
+      img: "/assets/family/virginie.webp",
     },
     {
       name: "Joshua",
       role: "Frère de Maeva",
-      img: "/assets/family/joshua.png",
+      img: "/assets/family/joshua.webp",
     },
     {
       name: "Vanessa",
       role: "Soeur de Maeva",
-      img: "/assets/family/vanessa.png",
+      img: "/assets/family/vanessa.webp",
     },
     {
       name: "Pauline",
       role: "Soeur de Maeva",
-      img: "/assets/family/pauline.png",
+      img: "/assets/family/pauline.webp",
     },
     {
       name: "Jessica",
       role: "Soeur de Maeva",
-      img: "/assets/family/jessica.png",
+      img: "/assets/family/jessica.webp",
     },
     {
       name: "Maeva",
       role: "Inspiratrice de la plateforme",
-      img: "/assets/family/maeva.png",
+      img: "/assets/family/maeva.webp",
     },
   ];
 
