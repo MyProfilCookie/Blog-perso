@@ -18,7 +18,10 @@
 		"performance:cleanup": "node -e \"require('./lib/metrics').performanceMonitor.cleanup()\"",
 		"performance:analyze": "node scripts/analyze-performance.js",
 		    "images:optimize": "node scripts/optimize-images.js",
-    "images:update-refs": "node scripts/update-image-references.js",
+    "images:optimize:aggressive": "node scripts/aggressive-image-optimization.js",
+    "images:optimize:quick": "node scripts/quick-image-optimization.js",
+		"images:update-refs": "node scripts/update-image-references.js",
+		"optimize:cls": "node scripts/optimize-cls.js",
 		"vercel-build": "next build"
 	},
 	"dependencies": {

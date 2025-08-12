@@ -5,6 +5,9 @@
   /* Réserver l'espace pour éviter les décalages */
   min-height: 200px;
   contain: layout style paint;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
 }
 
 /* Optimisation des images */
@@ -12,6 +15,9 @@
   aspect-ratio: 16/9;
   object-fit: cover;
   will-change: transform;
+  transform: translateZ(0);
+  contain: layout style paint;
+  backface-visibility: hidden;
 }
 
 /* Optimisation des animations */

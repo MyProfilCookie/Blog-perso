@@ -1466,7 +1466,7 @@ const ElevePage: React.FC = () => {
 
   return (
     <div className="min-h-screen performance-optimized dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
-      <div className="container mx-auto p-4 spacing-optimized">
+      <div className="container mx-auto p-4 spacing-optimized" style={{ minHeight: '200px', contain: 'layout style paint' }}>
         <div className="flex justify-between items-center mb-6 header-optimized">
           <BackButton />
           <div className="flex items-center gap-4">

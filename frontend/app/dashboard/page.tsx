@@ -85,7 +85,7 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="container px-4 mx-auto mt-6">
+    <div className="container px-4 mx-auto mt-6" style={{ minHeight: '200px', contain: 'layout style paint' }}>
       <h1 className="mb-4 text-3xl font-bold text-center md:text-4xl">
         Bonjour à toi, {user.pseudo} 👋
       </h1>
