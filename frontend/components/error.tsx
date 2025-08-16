@@ -1,6 +1,6 @@
+"use client";
 import dynamic from 'next/dynamic';
 /* eslint-disable react/no-unescaped-entities */
-"use client";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });

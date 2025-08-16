@@ -1,5 +1,5 @@
-import dynamic from 'next/dynamic';
 "use client";
+import dynamic from 'next/dynamic';
 import React, { useState } from "react";
 const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 import { useRouter } from "next/navigation";

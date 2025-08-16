@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
-/* eslint-disable import/order */
 "use client";
+/* eslint-disable import/order */
 
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

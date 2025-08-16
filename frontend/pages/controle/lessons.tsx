@@ -1,7 +1,7 @@
+"use client";
 import dynamic from 'next/dynamic';
 /* eslint-disable import/order */
 /* eslint-disable prettier/prettier */
-"use client";
 
 import {
   AwaitedReactNode,

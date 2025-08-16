@@ -1,7 +1,7 @@
+"use client";
 import dynamic from 'next/dynamic';
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
-"use client";
 import React, { useState, useEffect } from "react";
 import { Button } from '@nextui-org/react'
 import { Input } from '@nextui-org/react'

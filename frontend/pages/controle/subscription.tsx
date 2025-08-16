@@ -1,7 +1,7 @@
+"use client";
 import dynamic from 'next/dynamic';
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-console */
-"use client";
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";

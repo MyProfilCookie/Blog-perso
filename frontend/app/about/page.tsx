@@ -1,5 +1,5 @@
-import dynamic from 'next/dynamic';
 "use client";
+import dynamic from 'next/dynamic';
 
 import React, { useEffect, useState } from "react";
 import { Card } from '@nextui-org/react'

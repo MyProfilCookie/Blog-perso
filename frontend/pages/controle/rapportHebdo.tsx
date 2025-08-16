@@ -1,7 +1,7 @@
+"use client";
 import dynamic from 'next/dynamic';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
-"use client";
 import React, { useState, useEffect, useRef } from "react";
 import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'

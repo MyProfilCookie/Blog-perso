@@ -1,6 +1,6 @@
+"use client";
 import dynamic from 'next/dynamic';
 /* eslint-disable @typescript-eslint/no-unused-vars */
-"use client";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

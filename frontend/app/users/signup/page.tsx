@@ -1,7 +1,7 @@
+"use client";
 import dynamic from 'next/dynamic';
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
-"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
