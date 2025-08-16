@@ -1,11 +1,10 @@
 "use client";
-import dynamic from 'next/dynamic';
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-console */
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { loadStripe } from "@stripe/stripe-js";
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import {
   Loader2,
   Heart,

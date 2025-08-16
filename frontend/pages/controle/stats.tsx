@@ -10,7 +10,7 @@ import { Tabs } from '@nextui-org/react'
 import { Tab } from '@nextui-org/react'
 import { Progress } from '@nextui-org/react'
 import {  } from '@nextui-org/react';
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 const Line = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Line })), { ssr: false })
 const Bar = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Bar })), { ssr: false })

@@ -1,4 +1,5 @@
-import dynamic from 'next/dynamic';
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable no-console */
@@ -6,13 +7,14 @@ import dynamic from 'next/dynamic';
 /* eslint-disable import/order */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
-"use client";
+
+import dynamic from 'next/dynamic';
 
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart, faPlus, faMinus, faTrash, faShoppingBag } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 
 // Import du contexte
 import { CartProvider, useCart } from "../contexts/cart-context";

@@ -1,6 +1,5 @@
-import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from "react";
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 
 import { title, subtitle } from "@/components/primitives"; // Assurez-vous que ces utilitaires existent ou modifiez-les selon vos besoins.
 

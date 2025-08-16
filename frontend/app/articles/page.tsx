@@ -1,14 +1,16 @@
-import dynamic from 'next/dynamic';
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable import/order */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable prettier/prettier */
-"use client";
+
+import dynamic from 'next/dynamic';
 
 import { useState, useEffect, useMemo } from "react";
 import React from "react";
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";

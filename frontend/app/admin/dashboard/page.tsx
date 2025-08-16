@@ -26,7 +26,7 @@ import {
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 
 import OrderHistoryDialog from "@/components/OrderHistoryDialog";
 import articlesData from "@/public/dataarticles.json";

@@ -1,5 +1,4 @@
 "use client";
-import dynamic from 'next/dynamic';
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 
@@ -7,7 +6,7 @@ import React from "react";
 import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'
 import { Image } from '@nextui-org/react';
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 
 import { title } from "@/components/primitives";
 import BackButton from "@/components/back";

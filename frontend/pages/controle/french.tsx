@@ -1,10 +1,9 @@
 "use client";
-import dynamic from 'next/dynamic';
 import React, { useEffect, useState } from "react";
 import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'
 import { Button } from '@nextui-org/react';
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";

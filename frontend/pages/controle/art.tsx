@@ -1,5 +1,4 @@
 "use client";
-import dynamic from 'next/dynamic';
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState } from "react";
@@ -7,7 +6,7 @@ import axios from "axios";
 import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'
 import { Button } from '@nextui-org/react';
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -127,11 +126,11 @@ const ArtPage: React.FC = () => {
         const savedUserAnswers = localStorage.getItem('art_userAnswers');
         const savedResults = localStorage.getItem('art_results');
         const savedValidatedExercises = localStorage.getItem('art_validatedExercises');
-        
+
         if (!savedUserAnswers || !savedResults || !savedValidatedExercises) {
           const userId = localStorage.getItem("userId");
           const token = localStorage.getItem("token");
-          
+
           if (userId && token) {
             const answersResponse = await axios.get(
               `${process.env.NEXT_PUBLIC_API_URL}/answers/${userId}/art`,
@@ -163,12 +162,12 @@ const ArtPage: React.FC = () => {
 
             setUserAnswers(userAnswersMap);
             setResults(resultsMap);
-            
+
             // Sauvegarder dans le localStorage
             localStorage.setItem('art_userAnswers', JSON.stringify(userAnswersMap));
             localStorage.setItem('art_results', JSON.stringify(resultsMap));
             localStorage.setItem('art_validatedExercises', JSON.stringify(validatedExercises));
-            
+
             // Mettre à jour le nombre d'exercices complétés
             setCompletedExercises(Object.values(validatedExercises).filter(Boolean).length);
           }
@@ -188,15 +187,15 @@ const ArtPage: React.FC = () => {
     const savedUserAnswers = localStorage.getItem('art_userAnswers');
     const savedResults = localStorage.getItem('art_results');
     const savedValidatedExercises = localStorage.getItem('art_validatedExercises');
-    
+
     if (savedUserAnswers) {
       setUserAnswers(JSON.parse(savedUserAnswers));
     }
-    
+
     if (savedResults) {
       setResults(JSON.parse(savedResults));
     }
-    
+
     if (savedValidatedExercises) {
       const validatedExercises = JSON.parse(savedValidatedExercises);
       // Calculer le nombre d'exercices complétés
@@ -250,23 +249,23 @@ const ArtPage: React.FC = () => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
     const exerciseIndex = exercises.findIndex(ex => ex._id === id);
-    
+
     if (exerciseIndex !== -1) {
       const newResults = [...results];
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
       setResults(newResults);
-      
+
       // Sauvegarder dans le localStorage
       const updatedUserAnswers = { ...userAnswers, [id]: userAnswer };
       const updatedResults = [...newResults];
       localStorage.setItem('art_userAnswers', JSON.stringify(updatedUserAnswers));
       localStorage.setItem('art_results', JSON.stringify(updatedResults));
-      
+
       // Sauvegarder l'état de validation
       const validatedExercises = JSON.parse(localStorage.getItem('art_validatedExercises') || '{}');
       validatedExercises[id] = true;
       localStorage.setItem('art_validatedExercises', JSON.stringify(validatedExercises));
-      
+
       // Sauvegarder l'erreur dans la base de données (revision-errors)
       let erreurEnregistreeServeur = false;
       try {
@@ -346,7 +345,7 @@ const ArtPage: React.FC = () => {
     try {
       const userId = localStorage.getItem("userId");
       const token = localStorage.getItem("token");
-      
+
       if (!userId || !token) {
         console.error("Utilisateur non connecté");
         toast.error("Vous devez être connecté pour sauvegarder votre score");
@@ -431,7 +430,7 @@ const ArtPage: React.FC = () => {
 
   if (loading) {
     return (
-      <motion.div 
+      <motion.div
         animate={{ opacity: 1 }}
         className="flex items-center justify-center min-h-screen"
         initial={{ opacity: 0 }}
@@ -444,7 +443,7 @@ const ArtPage: React.FC = () => {
 
   if (error) {
     return (
-      <motion.div 
+      <motion.div
         animate={{ opacity: 1 }}
         className="flex flex-col items-center justify-center min-h-screen gap-4"
         initial={{ opacity: 0 }}
@@ -484,7 +483,7 @@ const ArtPage: React.FC = () => {
             <Timer timeLeft={timeLeft} />
           </div>
           <div className="w-full sm:w-auto flex-1">
-            <ProgressBar 
+            <ProgressBar
               totalQuestions={exercises.length}
               correctAnswers={completedExercises}
               onProgressComplete={() => {
@@ -579,9 +578,9 @@ const ArtPage: React.FC = () => {
                       <div className="space-y-4">
                         {exercise.options ? (
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                          {exercise.options.map((option, index) => (
-                                <label
-                                  key={`${exercise._id}-option-${index}`}
+                            {exercise.options.map((option, index) => (
+                              <label
+                                key={`${exercise._id}-option-${index}`}
                                 className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                               >
                                 <input

@@ -1,12 +1,11 @@
 "use client";
-import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from 'react';
 import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
 import { Chip } from '@nextui-org/react'
 import { Progress } from '@nextui-org/react';
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import { useRevision } from "@/app/RevisionContext";
 import { toast } from "sonner";
 

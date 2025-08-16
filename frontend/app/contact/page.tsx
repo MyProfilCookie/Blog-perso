@@ -9,7 +9,7 @@ import { Avatar } from '@nextui-org/react'
 import { Input } from '@nextui-org/react'
 import { Textarea } from '@nextui-org/react'
 import {  } from '@nextui-org/react';
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
 import {

@@ -1,7 +1,6 @@
-import dynamic from 'next/dynamic';
 import React from "react";
 import { Button } from '@nextui-org/react';
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 
 interface ReportHeaderProps {
   userName: string;

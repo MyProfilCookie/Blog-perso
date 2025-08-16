@@ -1,5 +1,4 @@
 "use client";
-import dynamic from 'next/dynamic';
 /* eslint-disable react/no-unescaped-entities */
 import React, { useState, useEffect } from "react";
 import { Card } from '@nextui-org/react'
@@ -9,7 +8,7 @@ import { Spinner } from '@nextui-org/react'
 import { Chip } from '@nextui-org/react'
 import { Pagination } from '@nextui-org/react'
 import {  } from '@nextui-org/react';
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 

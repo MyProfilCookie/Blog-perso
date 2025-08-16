@@ -1,5 +1,4 @@
 "use client";
-import dynamic from 'next/dynamic';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
@@ -28,7 +27,7 @@ import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'
 import { Spinner } from '@nextui-org/react'
 import { Button } from '@nextui-org/react';
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import Link from "next/link";
 import axios from "axios";
 import Swal from "sweetalert2";

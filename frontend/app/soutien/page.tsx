@@ -1,13 +1,15 @@
-import dynamic from 'next/dynamic';
+"use client";
+
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable prettier/prettier */
 /* eslint-disable import/order */
 /* eslint-disable react/no-unescaped-entities */
-"use client";
+
+import dynamic from 'next/dynamic';
 
 import React, { useState } from "react";
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import { title, subtitle } from "@/components/primitives";
 
 export default function FAQ() {

@@ -1,5 +1,4 @@
 "use client";
-import dynamic from 'next/dynamic';
 /* eslint-disable react/no-unescaped-entities */
 
 import { useState } from "react";
@@ -8,7 +7,7 @@ import { Input } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
 import { Checkbox } from '@nextui-org/react';
 import Swal from "sweetalert2";
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 
 import { AutismLogo } from "@/components/icons"; // Assurez-vous que le chemin est correct
 import "sweetalert2/dist/sweetalert2.min.css"; // Inclure le CSS de SweetAlert2

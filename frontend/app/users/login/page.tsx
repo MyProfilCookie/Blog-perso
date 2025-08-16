@@ -1,5 +1,4 @@
 "use client";
-import dynamic from 'next/dynamic';
 
 import * as React from "react";
 import { useState } from "react";
@@ -8,7 +7,7 @@ import { Input } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
 import { Checkbox } from '@nextui-org/react';
 import Swal from "sweetalert2";
-const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { motion } from "framer-motion";
 import "sweetalert2/dist/sweetalert2.min.css";
 import axios from "axios";
 
