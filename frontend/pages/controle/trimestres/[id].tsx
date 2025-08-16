@@ -1,12 +1,14 @@
+import dynamic from 'next/dynamic';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Card, CardBody } from "@nextui-org/react";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react';
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import Swal from "sweetalert2";
-import { motion } from "framer-motion";
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 
 import BackButton from "@/components/back";
 

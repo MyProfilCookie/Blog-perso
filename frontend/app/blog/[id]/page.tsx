@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
@@ -6,7 +7,7 @@
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";
-import { motion } from "framer-motion";
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 import { Loader2, CheckCircle, Calendar, User, Tag } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";

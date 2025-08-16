@@ -1,10 +1,11 @@
+import dynamic from 'next/dynamic';
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-console */
 "use client";
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 import { ShoppingCart, Info, Ruler, CheckCircle, ArrowLeft } from "lucide-react";
 
 import LoadingAnimation from "@/components/loading";

@@ -8,12 +8,11 @@
 
 import { Link } from "@nextui-org/link";
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardBody,
-  Button,
-  Image,
-} from "@nextui-org/react";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Image } from '@nextui-org/react'
+import {  } from '@nextui-org/react';
 import { AnimatePresence, motion } from "framer-motion";
 
 import { siteConfig } from "@/config/site";

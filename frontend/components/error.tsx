@@ -1,9 +1,10 @@
+import dynamic from 'next/dynamic';
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-import { Image } from "@nextui-org/react";
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
+import { Image } from '@nextui-org/react';
 
 const ErrorPage: React.FC = () => {
   const router = useRouter();

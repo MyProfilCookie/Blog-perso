@@ -1,8 +1,9 @@
+import dynamic from 'next/dynamic';
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { Loader2 } from "lucide-react";
-import { motion } from "framer-motion";
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 
 import {
   Card,

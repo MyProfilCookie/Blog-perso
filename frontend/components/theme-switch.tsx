@@ -7,7 +7,11 @@ import { useTheme } from "next-themes";
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faClock } from "@fortawesome/free-solid-svg-icons";
-import { Popover, PopoverTrigger, PopoverContent, Button, Input } from "@nextui-org/react";
+import { Popover } from '@nextui-org/react'
+import { PopoverTrigger } from '@nextui-org/react'
+import { PopoverContent } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Input } from '@nextui-org/react';
 
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 

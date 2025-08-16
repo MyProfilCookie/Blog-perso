@@ -8,15 +8,14 @@ import {
   NavbarItem,
   NavbarMenuToggle,
 } from "@nextui-org/navbar";
-import {
-  Avatar,
-  Button,
-  Dropdown,
-  DropdownTrigger,
-  DropdownMenu,
-  DropdownItem,
-  Badge,
-} from "@nextui-org/react";
+import { Avatar } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Dropdown } from '@nextui-org/react'
+import { DropdownTrigger } from '@nextui-org/react'
+import { DropdownMenu } from '@nextui-org/react'
+import { DropdownItem } from '@nextui-org/react'
+import { Badge } from '@nextui-org/react'
+import {  } from '@nextui-org/react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt,

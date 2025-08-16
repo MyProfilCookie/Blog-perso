@@ -1,6 +1,11 @@
 "use client";
 import React, { useState, useEffect } from 'react';
-import { Card, CardBody, CardHeader, Progress, Chip, Spinner } from '@nextui-org/react';
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { CardHeader } from '@nextui-org/react'
+import { Progress } from '@nextui-org/react'
+import { Chip } from '@nextui-org/react'
+import { Spinner } from '@nextui-org/react';
 import { performanceMonitor } from '@/lib/metrics';
 
 interface DashboardStats {

@@ -1,18 +1,20 @@
+import dynamic from 'next/dynamic';
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  Card,
-  CardBody,
-  Button,
-  Spinner,
-  Chip,
-  Tabs,
-  Tab,
-  Progress,
-} from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Spinner } from '@nextui-org/react'
+import { Chip } from '@nextui-org/react'
+import { Tabs } from '@nextui-org/react'
+import { Tab } from '@nextui-org/react'
+import { Progress } from '@nextui-org/react'
+import {  } from '@nextui-org/react';
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 import { useRouter } from "next/navigation";
-import { Line, Bar, Doughnut } from "react-chartjs-2";
+const Line = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Line })), { ssr: false })
+const Bar = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Bar })), { ssr: false })
+const Doughnut = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Doughnut })), { ssr: false });
 import {
   Chart as ChartJS,
   CategoryScale,

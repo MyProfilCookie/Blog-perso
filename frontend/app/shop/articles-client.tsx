@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 /* eslint-disable import/order */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @next/next/no-img-element */
@@ -6,7 +7,7 @@
 "use client";
 
 // 📌 1. Imports de bibliothèques tierces
-import { motion } from "framer-motion";
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

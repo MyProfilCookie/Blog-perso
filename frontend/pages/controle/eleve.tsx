@@ -1,23 +1,23 @@
 "use client";
 import React, { useEffect, useState } from "react";
-import {
-  Card,
-  CardBody,
-  Button,
-  Tabs,
-  Tab,
-  Table,
-  TableHeader,
-  TableColumn,
-  TableBody,
-  TableRow,
-  TableCell,
-  Spinner,
-  Pagination,
-  Progress,
-  Chip,
-  Avatar,
-} from "@nextui-org/react";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Tabs } from '@nextui-org/react'
+import { Tab } from '@nextui-org/react'
+import { Table } from '@nextui-org/react'
+import { TableHeader } from '@nextui-org/react'
+import { TableColumn } from '@nextui-org/react'
+import { TableBody } from '@nextui-org/react'
+import { TableRow } from '@nextui-org/react'
+import { TableCell } from '@nextui-org/react'
+import { Spinner } from '@nextui-org/react'
+import { Pagination } from '@nextui-org/react'
+import { Progress } from '@nextui-org/react'
+import { Chip } from '@nextui-org/react'
+import { Avatar } from '@nextui-org/react'
+import {  } from '@nextui-org/react';
+// TODO: Optimiser avec dynamic import pour réduire le bundle
 import { motion } from "framer-motion";
 import axios from "axios";
 import { useRouter } from "next/navigation";

@@ -20,6 +20,10 @@
 		    "images:optimize": "node scripts/optimize-images.js",
     "images:optimize:aggressive": "node scripts/aggressive-image-optimization.js",
     "images:optimize:quick": "node scripts/quick-image-optimization.js",
+    "images:optimize:covers": "node scripts/ultra-optimize-covers.js",
+    "images:optimize:all": "node scripts/optimize-all-heavy-images.js",
+    "bundle:optimize": "node scripts/optimize-bundle.js",
+    "bundle:optimize:simple": "node scripts/simple-bundle-optimization.js",
 		"images:update-refs": "node scripts/update-image-references.js",
 		"optimize:cls": "node scripts/optimize-cls.js",
 		"vercel-build": "next build"

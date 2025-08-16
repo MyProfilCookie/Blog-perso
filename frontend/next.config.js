@@ -16,19 +16,8 @@ console.log(
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  reactStrictMode: true,
-  
-  // Optimisations de performance avancées
   experimental: {
-    optimizePackageImports: [
-      '@nextui-org/react',
-      '@fortawesome/react-fontawesome',
-      'framer-motion',
-      'chart.js',
-      'react-chartjs-2',
-      'recharts',
-      'lucide-react'
-    ],
+    optimizePackageImports: ['@nextui-org/react', 'framer-motion', 'chart.js', 'react-chartjs-2'],
     turbo: {
       rules: {
         '*.svg': {
@@ -38,62 +27,95 @@ const nextConfig = {
       },
     },
   },
-
-  // Optimisation des images
   images: {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 60 * 60 * 24 * 30, // 30 jours
+    minimumCacheTTL: 60,
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
-
-  // Compression et optimisation
   compress: true,
   poweredByHeader: false,
-  
-  // Optimisation du bundle
   swcMinify: true,
-
-  // Définir des valeurs par défaut pour éviter les problèmes d'undefined
-  env: {
-    NEXT_PUBLIC_API_URL: process.env.NEXT_PUBLIC_API_URL || "",
-    NEXT_PUBLIC_STRIPE_PUBLIC_KEY:
-      "pk_test_51PJX1EJ9cNEOCcHhPnKT4sBxvL5xs9aQN7VTmRUabgl4khJ6k7KbYIcjJsHIhesao1lhsj0YYfIAjhn9hvAPxwLw008vby1XDo",
+  webpack: (config, { dev, isServer }) => {
+    if (!dev && !isServer) {
+      // Optimisations de production pour réduire la taille du bundle
+      config.optimization.splitChunks = {
+        chunks: 'all',
+        cacheGroups: {
+          // Séparer les bibliothèques lourdes
+          vendor: {
+            test: /[\\/]node_modules[\\/]/,
+            name: 'vendors',
+            chunks: 'all',
+            priority: 10,
+          },
+          // Séparer Chart.js et ses dépendances
+          charts: {
+            test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)[\\/]/,
+            name: 'charts',
+            chunks: 'all',
+            priority: 20,
+          },
+          // Séparer Framer Motion
+          framer: {
+            test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
+            name: 'framer',
+            chunks: 'all',
+            priority: 20,
+          },
+          // Séparer NextUI
+          nextui: {
+            test: /[\\/]node_modules[\\/]@nextui-org[\\/]/,
+            name: 'nextui',
+            chunks: 'all',
+            priority: 20,
+          },
+          // Séparer les composants React
+          react: {
+            test: /[\\/]node_modules[\\/](react|react-dom)[\\/]/,
+            name: 'react',
+            chunks: 'all',
+            priority: 30,
+          },
+          // Séparer les utilitaires
+          utils: {
+            test: /[\\/]node_modules[\\/](lodash|axios|date-fns)[\\/]/,
+            name: 'utils',
+            chunks: 'all',
+            priority: 15,
+          },
+          // Chunks communs
+          common: {
+            name: 'common',
+            minChunks: 2,
+            chunks: 'all',
+            priority: 5,
+            reuseExistingChunk: true,
+          },
+        },
+      };
+      
+      // Optimiser les modules
+      config.optimization.moduleIds = 'deterministic';
+      config.optimization.chunkIds = 'deterministic';
+      
+      // Réduire la taille des chunks
+      config.optimization.minimize = true;
+    }
+    
+    return config;
   },
-
-  async redirects() {
-    return [
-      {
-        source: "/old-path",
-        destination: "/",
-        permanent: true,
-      },
-      {
-        source: "/blogs",
-        destination: "/blog",
-        permanent: false,
-      },
-    ];
-  },
-  
-  // Ajoutez cette configuration pour rediriger les requêtes API
-  async rewrites() {
-    return [
-      {
-        source: '/api/:path*',
-        destination: `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:5000'}/api/:path*`,
-      },
-    ];
-  },
-
-  // Headers de sécurité et performance
   async headers() {
     return [
       {
         source: '/(.*)',
         headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
           {
             key: 'X-Content-Type-Options',
             value: 'nosniff',
@@ -110,58 +132,9 @@ const nextConfig = {
             key: 'Referrer-Policy',
             value: 'strict-origin-when-cross-origin',
           },
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=31536000, immutable',
-          },
-        ],
-      },
-      {
-        source: '/api/(.*)',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'no-cache, no-store, must-revalidate',
-          },
         ],
       },
     ];
-  },
-
-  webpack: (config, { isServer, dev }) => {
-    if (!isServer) {
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-      };
-    }
-
-    // Optimisation du bundle en production
-    if (!dev && !isServer) {
-      // Tree shaking plus agressif
-      config.optimization = {
-        ...config.optimization,
-        splitChunks: {
-          chunks: 'all',
-          cacheGroups: {
-            vendor: {
-              test: /[\\/]node_modules[\\/]/,
-              name: 'vendors',
-              chunks: 'all',
-              priority: 10,
-            },
-            common: {
-              name: 'common',
-              minChunks: 2,
-              chunks: 'all',
-              priority: 5,
-            },
-          },
-        },
-      };
-    }
-
-    return config;
   },
 };
 

@@ -3,6 +3,7 @@
 
 import React from "react";
 // Importez vos dépendances de framer-motion ici
+// TODO: Optimiser avec dynamic import pour réduire le bundle
 import { motion } from "framer-motion";
 
 export default function Loading() {

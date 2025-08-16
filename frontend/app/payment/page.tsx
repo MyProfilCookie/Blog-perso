@@ -1,3 +1,4 @@
+import dynamic from 'next/dynamic';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 /* eslint-disable react/jsx-sort-props */
@@ -6,12 +7,13 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Button, Avatar } from "@nextui-org/react";
+import { Button } from '@nextui-org/react'
+import { Avatar } from '@nextui-org/react';
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
-import { motion } from "framer-motion";
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 
 
 

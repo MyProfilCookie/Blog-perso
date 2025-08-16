@@ -1,18 +1,18 @@
+import dynamic from 'next/dynamic';
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
 "use client";
 import React, { useState, useEffect } from "react";
-import {
-  Button,
-  Input,
-  Textarea,
-  TableRow,
-  TableCell,
-  TableColumn,
-  TableHeader,
-  Table,
-  TableBody,
-} from "@nextui-org/react";
+import { Button } from '@nextui-org/react'
+import { Input } from '@nextui-org/react'
+import { Textarea } from '@nextui-org/react'
+import { TableRow } from '@nextui-org/react'
+import { TableCell } from '@nextui-org/react'
+import { TableColumn } from '@nextui-org/react'
+import { TableHeader } from '@nextui-org/react'
+import { Table } from '@nextui-org/react'
+import { TableBody } from '@nextui-org/react'
+import {  } from '@nextui-org/react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEdit,
@@ -26,7 +26,7 @@ import {
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
-import { motion } from "framer-motion";
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 
 import OrderHistoryDialog from "@/components/OrderHistoryDialog";
 import articlesData from "@/public/dataarticles.json";

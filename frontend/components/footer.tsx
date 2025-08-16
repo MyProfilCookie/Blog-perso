@@ -6,7 +6,11 @@
 import NextLink from "next/link";
 import { useTheme } from "next-themes";
 import { useState, useEffect } from "react";
-import { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Button } from "@nextui-org/react";
+import { Dropdown } from '@nextui-org/react'
+import { DropdownTrigger } from '@nextui-org/react'
+import { DropdownMenu } from '@nextui-org/react'
+import { DropdownItem } from '@nextui-org/react'
+import { Button } from '@nextui-org/react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon } from "@fortawesome/free-solid-svg-icons";
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";

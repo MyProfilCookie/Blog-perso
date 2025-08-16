@@ -1,9 +1,13 @@
+import dynamic from 'next/dynamic';
 /* eslint-disable @typescript-eslint/no-unused-vars */
 /* eslint-disable no-console */
 "use client";
 import React, { useState, useEffect, useRef } from "react";
-import { Card, CardBody, Input, Button } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { Input } from '@nextui-org/react'
+import { Button } from '@nextui-org/react';
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import axios from "axios";

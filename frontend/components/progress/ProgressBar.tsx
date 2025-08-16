@@ -1,8 +1,9 @@
+import dynamic from 'next/dynamic';
 "use client";
 
 import { useEffect, useState } from "react";
-import { Progress } from "@nextui-org/react";
-import { motion } from "framer-motion";
+import { Progress } from '@nextui-org/react';
+const motion = dynamic(() => import('framer-motion').then(mod => ({ default: mod.motion })), { ssr: false });
 
 interface ProgressBarProps {
   totalQuestions: number;
