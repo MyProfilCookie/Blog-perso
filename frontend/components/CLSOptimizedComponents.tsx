@@ -3,6 +3,18 @@
 import React from 'react';
 import { Card, CardBody } from '@nextui-org/react';
 
+// Interface pour LayoutShift
+interface LayoutShift extends PerformanceEntry {
+  value: number;
+  hadRecentInput: boolean;
+  lastInputTime: number;
+  sources: Array<{
+    node: Node;
+    currentRect: DOMRectReadOnly;
+    previousRect: DOMRectReadOnly;
+  }>;
+}
+
 // Composant Card optimisé pour éviter le CLS
 interface CLSOptimizedCardProps {
   children: React.ReactNode;
@@ -208,11 +220,13 @@ export const useCLSOptimization = () => {
     if (typeof window !== 'undefined' && 'PerformanceObserver' in window) {
       const observer = new PerformanceObserver((list) => {
         for (const entry of list.getEntries()) {
-          if (entry.entryType === 'layout-shift' && !(entry as any).hadRecentInput) {
-            console.log('CLS detected:', entry.value);
-            
-            // Si le CLS est élevé, appliquer des optimisations
-            if (entry.value > 0.1) {
+          if (entry.entryType === 'layout-shift') {
+            const layoutShiftEntry = entry as LayoutShift;
+            if (!layoutShiftEntry.hadRecentInput) {
+              console.log('CLS detected:', layoutShiftEntry.value);
+              
+              // Si le CLS est élevé, appliquer des optimisations
+              if (layoutShiftEntry.value > 0.1) {
               // Ajouter des classes d'optimisation aux éléments problématiques
               document.querySelectorAll('img:not([width]):not([height])').forEach(img => {
                 img.classList.add('image-optimized');
