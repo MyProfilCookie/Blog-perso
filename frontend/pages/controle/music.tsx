@@ -625,8 +625,8 @@ const MusicPage: React.FC = React.memo(() => {
       </div>
     </div>
   );
-};
-
 });
+
+MusicPage.displayName = 'MusicPage';
 
 export default MusicPage;
