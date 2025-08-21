@@ -12,9 +12,18 @@ import { Progress } from '@nextui-org/react'
 
 import { LightAnimation } from "@/components/DynamicMotion";
 import { useRouter } from "next/navigation";
-const Line = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Line })), { ssr: false })
-const Bar = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Bar })), { ssr: false })
-const Doughnut = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Doughnut })), { ssr: false });
+const Line = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Line })), { 
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-lg" />
+})
+const Bar = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Bar })), { 
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-lg" />
+})
+const Doughnut = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Doughnut })), { 
+  ssr: false,
+  loading: () => <div className="h-64 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-lg" />
+});
 import {
   Chart as ChartJS,
   CategoryScale,

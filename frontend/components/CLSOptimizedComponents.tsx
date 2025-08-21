@@ -227,14 +227,15 @@ export const useCLSOptimization = () => {
               
               // Si le CLS est élevé, appliquer des optimisations
               if (layoutShiftEntry.value > 0.1) {
-              // Ajouter des classes d'optimisation aux éléments problématiques
-              document.querySelectorAll('img:not([width]):not([height])').forEach(img => {
-                img.classList.add('image-optimized');
-              });
-              
-              document.querySelectorAll('.card:not(.performance-optimized)').forEach(card => {
-                card.classList.add('performance-optimized');
-              });
+                // Ajouter des classes d'optimisation aux éléments problématiques
+                document.querySelectorAll('img:not([width]):not([height])').forEach(img => {
+                  img.classList.add('image-optimized');
+                });
+                
+                document.querySelectorAll('.card:not(.performance-optimized)').forEach(card => {
+                  card.classList.add('performance-optimized');
+                });
+              }
             }
           }
         }

@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 const encouragementMessages = [
@@ -19,7 +19,7 @@ interface TimerProps {
   timeLeft: number;
 }
 
-export default function Timer({ timeLeft }: TimerProps) {
+const Timer = React.memo<TimerProps>(({ timeLeft }) => {
   const [showMessage, setShowMessage] = useState(false);
   const [messageIndex, setMessageIndex] = useState(0);
   const [progress, setProgress] = useState(0);
@@ -90,4 +90,8 @@ export default function Timer({ timeLeft }: TimerProps) {
       </AnimatePresence>
     </div>
   );
-}
+});
+
+Timer.displayName = 'Timer';
+
+export default Timer;

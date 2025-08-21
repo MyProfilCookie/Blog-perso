@@ -34,7 +34,7 @@ interface Result {
   answer: string;
 }
 
-const MusicPage: React.FC = () => {
+const MusicPage: React.FC = React.memo(() => {
   const router = useRouter();
   const { addError } = useRevision();
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -162,7 +162,7 @@ const MusicPage: React.FC = () => {
       clearInterval(timer);
       clearInterval(encouragementTimer);
     };
-  }, [timeLeft, isFinished, currentPage]);
+  }, [timeLeft, isFinished, currentPage, encouragementMessages]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -482,9 +482,13 @@ const MusicPage: React.FC = () => {
                           <Image
                             alt={exercise.title}
                             className="rounded-lg"
-                            layout="fill"
-                            objectFit="cover"
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            style={{ objectFit: 'cover' }}
                             src={exercise.image}
+                            loading="lazy"
+                            placeholder="blur"
+                            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                           />
                         </div>
                       )}
@@ -622,5 +626,7 @@ const MusicPage: React.FC = () => {
     </div>
   );
 };
+
+});
 
 export default MusicPage;

@@ -14,6 +14,7 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRevision } from "@/app/RevisionContext";
+import RatingButtons from "@/components/RatingButtons";
 
 // Interface pour les exercices de mathématiques
 interface Exercise {
@@ -33,7 +34,7 @@ interface Result {
   answer: string;
 }
 
-const MathPage: React.FC = () => {
+const MathPage: React.FC = React.memo(() => {
   const router = useRouter();
   const { addError } = useRevision();
   const [exercises, setExercises] = useState<Exercise[]>([]);
@@ -197,7 +198,7 @@ const MathPage: React.FC = () => {
       clearInterval(timer);
       clearInterval(encouragementTimer);
     };
-  }, [timeLeft, isFinished, currentPage]);
+  }, [timeLeft, isFinished, currentPage, encouragementMessages]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>,
@@ -375,12 +376,12 @@ const MathPage: React.FC = () => {
   const uniqueCategories = Array.from(
     new Set(exercises.map((ex) => ex.category)),
   );
-  const categories = ["Tout", ...uniqueCategories];
+  const categories = React.useMemo(() => ["Tout", ...uniqueCategories], [uniqueCategories]);
 
-  const handleRating = (exerciseId: string, value: number) => {
+  const handleRating = React.useCallback((exerciseId: string, value: number) => {
     setRating(value);
     toast.success(`Merci d'avoir noté cet exercice ! Difficulté : ${value}/5`);
-  };
+  }, []);
 
   if (loading) {
     return (
@@ -497,9 +498,13 @@ const MathPage: React.FC = () => {
                             <Image
                               src={exercise.image}
                               alt={exercise.title}
-                              layout="fill"
-                              objectFit="cover"
+                              fill
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                              style={{ objectFit: 'cover' }}
                               className="rounded-lg"
+                              loading="lazy"
+                              placeholder="blur"
+                              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k="
                             />
                           </div>
                         )}
@@ -554,56 +559,10 @@ const MathPage: React.FC = () => {
                           </Button>
 
                           {isAnswerSubmitted(exercise._id) && (
-                            <div className="mt-4">
-                              <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">Noter la difficulté de cet exercice :</p>
-                              <div className="grid grid-cols-5 gap-2">
-                                <Button
-                                  size="lg"
-                                  color="default"
-                                  variant="flat"
-                                  onClick={() => handleRating(exercise._id, 1)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
-                                >
-                                  1
-                                </Button>
-                                <Button
-                                  size="lg"
-                                  color="default"
-                                  variant="flat"
-                                  onClick={() => handleRating(exercise._id, 2)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
-                                >
-                                  2
-                                </Button>
-                                <Button
-                                  size="lg"
-                                  color="default"
-                                  variant="flat"
-                                  onClick={() => handleRating(exercise._id, 3)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
-                                >
-                                  3
-                                </Button>
-                                <Button
-                                  size="lg"
-                                  color="default"
-                                  variant="flat"
-                                  onClick={() => handleRating(exercise._id, 4)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
-                                >
-                                  4
-                                </Button>
-                                <Button
-                                  size="lg"
-                                  color="default"
-                                  variant="flat"
-                                  onClick={() => handleRating(exercise._id, 5)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
-                                >
-                                  5
-                                </Button>
-                              </div>
-                            </div>
+                            <RatingButtons 
+                              exerciseId={exercise._id} 
+                              onRating={handleRating} 
+                            />
                           )}
                         </div>
                       </div>
@@ -637,5 +596,7 @@ const MathPage: React.FC = () => {
       </div>
   );
 };
+
+});
 
 export default MathPage;
