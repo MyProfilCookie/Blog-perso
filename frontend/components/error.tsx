@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { LightAnimation } from "@/components/DynamicMotion";
 import { Image } from '@nextui-org/react';
+import { motion } from "framer-motion";
 
 const ErrorPage: React.FC = () => {
   const router = useRouter();
@@ -19,7 +20,8 @@ const ErrorPage: React.FC = () => {
 
   return (
     <motion.section
-      animate={{ opacity: 1 className="flex flex-col items-center justify-center min-h-screen bg-gray-100"
+      animate={{ opacity: 1 }}
+      className="flex flex-col items-center justify-center min-h-screen bg-gray-100"
       initial={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >
