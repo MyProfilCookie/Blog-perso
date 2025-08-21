@@ -9,7 +9,7 @@ import { Chip } from '@nextui-org/react'
 import { Tabs } from '@nextui-org/react'
 import { Tab } from '@nextui-org/react'
 import { Progress } from '@nextui-org/react'
-import {  } from '@nextui-org/react';
+
 import { LightAnimation } from "@/components/DynamicMotion";
 import { useRouter } from "next/navigation";
 const Line = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Line })), { ssr: false })
@@ -28,6 +28,7 @@ import {
   Legend,
 } from "chart.js";
 import { Sparkles } from "lucide-react";
+import { motion } from "framer-motion";
 
 // Enregistrer les composants Chart.js
 ChartJS.register(

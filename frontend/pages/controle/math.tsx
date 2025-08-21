@@ -476,7 +476,8 @@ const MathPage: React.FC = () => {
                 .slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
                 .map((exercise) => (
                   <Card
-                    key={exercise._id className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
+                    key={exercise._id}
+                    className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
                   >
                     <CardBody className="p-4 sm:p-6">
                       <div className="flex flex-col gap-4">
@@ -515,14 +516,16 @@ const MathPage: React.FC = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               {exercise.options.map((option, index) => (
                                 <label
-                                  key={`${exercise._id}-option-${index}` className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                                  key={`${exercise._id}-option-${index}`}
+                                  className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                                 >
                                   <input
                                     type="radio"
                                     name={exercise._id}
                                     value={option}
                                     onChange={(e) => handleChange(e, exercise._id)}
-                                    disabled={isAnswerSubmitted(exercise._id) className="form-radio"
+                                    disabled={isAnswerSubmitted(exercise._id)}
+                                    className="form-radio"
                                   />
                                   <span>{option}</span>
                                 </label>
@@ -544,7 +547,8 @@ const MathPage: React.FC = () => {
                           <Button
                             color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
                             onClick={() => handleSubmit(exercise._id, exercise.answer)}
-                            disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id) className="w-full sm:w-auto"
+                            disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
+                            className="w-full sm:w-auto"
                           >
                             {isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "Correct ✓" : "Incorrect ✗") : "Valider"}
                           </Button>
@@ -557,7 +561,8 @@ const MathPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 1) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 1)}
+                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   1
                                 </Button>
@@ -565,7 +570,8 @@ const MathPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 2) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 2)}
+                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   2
                                 </Button>
@@ -573,7 +579,8 @@ const MathPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 3) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 3)}
+                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   3
                                 </Button>
@@ -581,7 +588,8 @@ const MathPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 4) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 4)}
+                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   4
                                 </Button>
@@ -589,7 +597,8 @@ const MathPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 5) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 5)}
+                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   5
                                 </Button>
@@ -608,7 +617,8 @@ const MathPage: React.FC = () => {
           <div className="flex justify-center gap-2 mt-6">
             <Button
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1 className="w-auto"
+              disabled={currentPage === 1}
+              className="w-auto"
             >
               Précédent
             </Button>
@@ -617,7 +627,8 @@ const MathPage: React.FC = () => {
             </span>
             <Button
               onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
-              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage) className="w-auto"
+              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
+              className="w-auto"
             >
               Suivant
             </Button>

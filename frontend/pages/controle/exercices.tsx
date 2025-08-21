@@ -267,9 +267,10 @@ const ExercicesPage: React.FC = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {exercises.map((exercise, index) => (
-                <LightAnimation animation="slideUp"
+                <LightAnimation 
+                  animation="slideUp"
                   key={exercise._id}
-                  }>
+                >
                   <Card className="h-full hover:shadow-lg transition-shadow">
                     <CardBody>
                       <div className="flex justify-between items-start mb-4">

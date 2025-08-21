@@ -100,17 +100,17 @@ function fixAllSyntaxErrors(filePath) {
 
 function main() {
   let fixedCount = 0;
-  
+
   for (const filePath of filesToFix) {
     const fullPath = path.join(__dirname, '..', filePath.replace('frontend/', ''));
     if (fixAllSyntaxErrors(fullPath)) {
       fixedCount++;
     }
   }
-  
+
   console.log('\n📊 Résumé des corrections:');
   console.log(`   Fichiers corrigés: ${fixedCount}/${filesToFix.length}`);
-  
+
   if (fixedCount > 0) {
     console.log('\n✅ Corrections terminées!');
   } else {

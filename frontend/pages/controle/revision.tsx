@@ -152,7 +152,8 @@ const RevisionPage: React.FC = () => {
 
         <Tabs 
           selectedKey={selectedCategory} 
-          onSelectionChange={(key) => setSelectedCategory(key.toString()) className="mb-8"
+          onSelectionChange={(key) => setSelectedCategory(key.toString())}
+          className="mb-8"
         >
           {categories.map((category) => (
             <Tab 
@@ -179,9 +180,10 @@ const RevisionPage: React.FC = () => {
           <>
             <div className="grid grid-cols-1 gap-6 mb-8">
               {errors.map((error, index) => (
-                <LightAnimation animation="slideUp"
+                <LightAnimation 
+                  animation="slideUp"
                   key={error._id}
-                  }>
+                >
                   <Card className="bg-white shadow-lg">
                     <CardBody>
                       <div className="flex justify-between items-start mb-4">

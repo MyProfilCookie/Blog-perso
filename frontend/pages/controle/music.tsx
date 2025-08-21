@@ -422,9 +422,7 @@ const MusicPage: React.FC = () => {
 
         {/* Message d'encouragement */}
         {emoji && (
-          <LightAnimation animation="slideUp" className="text-center text-lg font-medium text-primary mb-4"
-            }
-          >
+          <LightAnimation animation="slideUp" className="text-center text-lg font-medium text-primary mb-4">
             {emoji}
           </LightAnimation>
         )}
@@ -463,7 +461,8 @@ const MusicPage: React.FC = () => {
               .slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
               .map((exercise) => (
                 <Card
-                  key={exercise._id className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
+                  key={exercise._id}
+                  className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
                 >
                   <CardBody className="p-4 sm:p-6">
                     <div className="flex flex-col gap-4">
@@ -481,7 +480,8 @@ const MusicPage: React.FC = () => {
                       {exercise.image && (
                         <div className="relative w-full h-48 sm:h-64">
                           <Image
-                            alt={exercise.title className="rounded-lg"
+                            alt={exercise.title}
+                            className="rounded-lg"
                             layout="fill"
                             objectFit="cover"
                             src={exercise.image}
@@ -501,7 +501,8 @@ const MusicPage: React.FC = () => {
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                             {exercise.options.map((option, index) => (
                               <label
-                                key={index className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                                key={index}
+                                className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                               >
                                 <input
                                   className="form-radio"

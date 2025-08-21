@@ -517,8 +517,7 @@ const ArtPage: React.FC = () => {
                 (exercise) =>
                   selectedCategory === "Tout" ||
                   exercise.category === selectedCategory
-              )
-              .slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
+              ).slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
               .map((exercise) => (
                 <Card
                   key={exercise._id}

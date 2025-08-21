@@ -56,7 +56,7 @@ const Charts: React.FC<ChartProps> = ({ type, data, options }) => {
   }, [isChartJSLoaded]);
 
   if (!isChartJSLoaded) {
-    return <div className="h-64 w-full bg-gray-100 chart-container-fixed dynamic-content-container" dark:bg-gray-800 animate-pulse rounded" /></div>;
+    return <div className="h-64 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded chart-container-fixed dynamic-content-container" />;
   }
 
   switch (type) {
