@@ -17,8 +17,8 @@ import { Progress } from '@nextui-org/react'
 import { Chip } from '@nextui-org/react'
 import { Avatar } from '@nextui-org/react'
 import {  } from '@nextui-org/react';
-// TODO: Optimiser avec dynamic import pour réduire le bundle
-import { motion } from "framer-motion";
+// Optimisé avec dynamic import pour réduire le bundle
+import { LightAnimation } from "@/components/DynamicMotion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -44,9 +44,9 @@ import { Sparkles } from "lucide-react";
 import { useEleveStats } from "../../hooks/useEleveStats";
 
 import BackButton from "@/components/back";
-import Charts from "@/components/Charts";
+import LazyCharts from "@/components/LazyCharts";
 
-// Utilisation du composant Charts optimisé au lieu de l'initialisation manuelle
+// Utilisation du composant LazyCharts optimisé au lieu de l'initialisation manuelle
 
 // Interface pour les notes par page
 interface PageScore {
@@ -1466,7 +1466,7 @@ const ElevePage: React.FC = () => {
 
   return (
     <div className="min-h-screen performance-optimized dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
-      <div className="container mx-auto p-4 spacing-optimized" style={{ minHeight: '200px', contain: 'layout style paint' }}>
+      <div className="container mx-auto p-4 spacing-optimized" style={{ minHeight: '200px', contain: 'layout style paint'>
         <div className="flex justify-between items-center mb-6 header-optimized">
           <BackButton />
           <div className="flex items-center gap-4">
@@ -1484,11 +1484,9 @@ const ElevePage: React.FC = () => {
         </div>
 
         {eleveProfile ? (
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
+          <LightAnimation
+            animation="slideUp"
             className="space-y-6 animation-optimized"
-            initial={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.4 }}
           >
             {/* Informations utilisateur */}
             {userInfo && (
@@ -1650,7 +1648,7 @@ const ElevePage: React.FC = () => {
                       return (
                         <Card
                           key={stat.subjectName}
-                          className="bg-gray-800/50 dark:bg-gray-800/50 border border-gray-600 dark:border-gray-700 hover:shadow-lg transition-shadow backdrop-blur-sm card-optimized shadow-optimized"
+                  className="bg-gray-800/50 dark:bg-gray-800/50 border border-gray-600 dark:border-gray-700 hover:shadow-lg transition-shadow backdrop-blur-sm card-optimized shadow-optimized"
                         >
                           <CardBody className="p-4 spacing-optimized">
                                                           <div className="flex items-center gap-3 mb-3 flex-optimized">
@@ -2020,14 +2018,10 @@ const ElevePage: React.FC = () => {
                         advancedStats.subjects.length > 0 && (
                           <div className="grid grid-cols-1 gap-6 mb-8">
                             {advancedStats.subjects.map((subject, index) => (
-                              <motion.div
+                              <LightAnimation
                                 key={subject.subject}
-                                animate={{ opacity: 1, y: 0 }}
-                                initial={{ opacity: 0, y: 20 }}
-                                transition={{
-                                  duration: 0.3,
-                                  delay: index * 0.1,
-                                }}
+                                animation="slideUp"
+                                delay={index * 100}
                               >
                                 <Card className="bg-gradient-to-br from-cyan-50 to-blue-50 dark:from-cyan-900/50 dark:to-blue-800/50 shadow-lg border border-cyan-200 dark:border-cyan-700 hover:shadow-xl transition-shadow">
                                   <CardBody>
@@ -2109,7 +2103,7 @@ const ElevePage: React.FC = () => {
                                     </div>
                                   </CardBody>
                                 </Card>
-                              </motion.div>
+                              </LightAnimation>
                             ))}
 
                             {/* Graphique des scores par matière */}
@@ -2120,7 +2114,7 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Charts
+                                    <LazyCharts
                                       data={prepareBarChartData()}
                                       options={chartOptions}
                                       type="bar"
@@ -2143,7 +2137,7 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Charts
+                                    <LazyCharts
                                       data={prepareDoughnutChartData()}
                                       options={doughnutOptions}
                                       type="doughnut"
@@ -2163,7 +2157,7 @@ const ElevePage: React.FC = () => {
                                     (category: any, index: number) => (
                                       <div
                                         key={index}
-                                        className="flex justify-between items-center"
+                  className="flex justify-between items-center"
                                       >
                                         <span className="text-amber-700 dark:text-amber-200">
                                           {category.category}
@@ -2202,7 +2196,7 @@ const ElevePage: React.FC = () => {
                               </h3>
                               <div className="h-64 w-full overflow-hidden">
                                 <div className="w-full h-full">
-                                  <Charts
+                                  <LazyCharts
                                     data={prepareLineChartData()}
                                     options={chartOptions}
                                     type="line"
@@ -2220,7 +2214,7 @@ const ElevePage: React.FC = () => {
                                 </h3>
                                 <div className="h-64 w-full overflow-hidden">
                                   <div className="w-full h-full">
-                                    <Charts
+                                    <LazyCharts
                                       data={prepareBarChartData()}
                                       options={chartOptions}
                                       type="bar"
@@ -2237,7 +2231,7 @@ const ElevePage: React.FC = () => {
                 </CardBody>
               </Card>
             )}
-          </motion.div>
+          </LightAnimation>
         ) : (
           <div className="text-center py-12">
             <FontAwesomeIcon

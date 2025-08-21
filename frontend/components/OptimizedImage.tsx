@@ -27,7 +27,7 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   fallbackSrc = "/assets/default-avatar.webp",
   sizes = "(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw",
   placeholder = 'blur',
-  quality = 80,
+  quality = 75, // Qualité réduite pour de meilleures performances
   loading = 'lazy'
 }) => {
   const [imageSrc, setImageSrc] = useState(src);
@@ -71,17 +71,32 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
   }, [src]);
 
   return (
-    <div className={`relative overflow-hidden image-optimized ${className}`}>
+    <div 
+      className={`relative overflow-hidden image-optimized cls-image-container ${className}`}
+      style={{
+        width: `${width}px`,
+        height: `${height}px`,
+        aspectRatio: `${width}/${height}`,
+        contain: 'layout style paint'
+      }}
+    >
       {/* Placeholder pendant le chargement */}
       {isLoading && (
         <div 
-          className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded"
-          style={{ 
-            aspectRatio: `${width}/${height}`,
+          className="absolute inset-0 bg-gray-200 dark:bg-gray-700 animate-pulse rounded skeleton-optimized"
+          style={{
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        objectFit: 'cover',
+         
             background: 'linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%)',
             backgroundSize: '200% 100%',
             animation: 'loading 1.5s infinite'
-          }}
+          
+      }}
         />
       )}
       

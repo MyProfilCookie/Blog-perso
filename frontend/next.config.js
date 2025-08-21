@@ -43,6 +43,8 @@ const nextConfig = {
       // Optimisations de production pour réduire la taille du bundle
       config.optimization.splitChunks = {
         chunks: 'all',
+        maxInitialRequests: 25,
+        maxAsyncRequests: 25,
         cacheGroups: {
           // Séparer les bibliothèques lourdes
           vendor: {
@@ -50,20 +52,23 @@ const nextConfig = {
             name: 'vendors',
             chunks: 'all',
             priority: 10,
+            maxSize: 500000, // 500KB max
           },
           // Séparer Chart.js et ses dépendances
           charts: {
-            test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2)[\\/]/,
+            test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2|recharts)[\\/]/,
             name: 'charts',
-            chunks: 'all',
-            priority: 20,
+            chunks: 'async', // Chargement asynchrone uniquement
+            priority: 25,
+            maxSize: 300000, // 300KB max
           },
-          // Séparer Framer Motion
+          // Séparer Framer Motion (maintenant plus petit grâce aux optimisations)
           framer: {
             test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
             name: 'framer',
-            chunks: 'all',
-            priority: 20,
+            chunks: 'async', // Chargement asynchrone uniquement
+            priority: 25,
+            maxSize: 200000, // 200KB max
           },
           // Séparer NextUI
           nextui: {
@@ -71,6 +76,7 @@ const nextConfig = {
             name: 'nextui',
             chunks: 'all',
             priority: 20,
+            maxSize: 400000, // 400KB max
           },
           // Séparer les composants React
           react: {
@@ -78,13 +84,23 @@ const nextConfig = {
             name: 'react',
             chunks: 'all',
             priority: 30,
+            maxSize: 200000, // 200KB max
           },
           // Séparer les utilitaires
           utils: {
-            test: /[\\/]node_modules[\\/](lodash|axios|date-fns)[\\/]/,
+            test: /[\\/]node_modules[\\/](lodash|axios|date-fns|dayjs)[\\/]/,
             name: 'utils',
             chunks: 'all',
             priority: 15,
+            maxSize: 150000, // 150KB max
+          },
+          // Séparer les icônes
+          icons: {
+            test: /[\\/]node_modules[\\/](@fortawesome|lucide-react)[\\/]/,
+            name: 'icons',
+            chunks: 'all',
+            priority: 15,
+            maxSize: 200000, // 200KB max
           },
           // Chunks communs
           common: {
@@ -93,6 +109,7 @@ const nextConfig = {
             chunks: 'all',
             priority: 5,
             reuseExistingChunk: true,
+            maxSize: 100000, // 100KB max
           },
         },
       };
@@ -103,6 +120,10 @@ const nextConfig = {
       
       // Réduire la taille des chunks
       config.optimization.minimize = true;
+      
+      // Tree shaking plus agressif
+      config.optimization.usedExports = true;
+      config.optimization.sideEffects = false;
     }
     
     return config;

@@ -8,7 +8,7 @@ console.log('🖼️  Optimisation des images...\n');
 
 const publicDir = path.join(__dirname, '../public');
 const imageExtensions = ['.jpg', '.jpeg', '.png'];
-const maxSizeKB = 200;
+const maxSizeKB = 50; // Optimiser toutes les images > 50KB
 
 // Vérifier si sharp est installé
 function checkSharp() {

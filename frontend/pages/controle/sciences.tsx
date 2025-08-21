@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'
 import { Button } from '@nextui-org/react';
-import { motion } from "framer-motion";
+import { LightAnimation } from "@/components/DynamicMotion";
 import Image from "next/image";
 import BackButton from "@/components/back";
 import Timer from "@/components/Timer";
@@ -417,28 +417,18 @@ const SciencesPage: React.FC = () => {
 
   if (loading) {
     return (
-      <motion.div 
-        animate={{ opacity: 1 }}
-        className="flex items-center justify-center min-h-screen"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <LightAnimation animation="slideUp" className="flex items-center justify-center min-h-screen">
         <div className="text-3xl animate-spin">🔄</div>
-      </motion.div>
+      </LightAnimation>
     );
   }
 
   if (error) {
     return (
-      <motion.div 
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center min-h-screen gap-4"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <LightAnimation animation="slideUp" className="flex flex-col items-center justify-center min-h-screen gap-4">
         <div className="text-2xl text-red-600">⚠️</div>
         <p className="text-lg text-gray-600">Erreur: {error}</p>
-      </motion.div>
+      </LightAnimation>
     );
   }
 
@@ -450,19 +440,14 @@ const SciencesPage: React.FC = () => {
         <Timer timeLeft={timeLeft} />
       </div>
 
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center mb-4"
-        initial={{ opacity: 0, y: -10 }}
-        transition={{ duration: 0.4 }}
-      >
+      <LightAnimation animation="slideUp" className="text-center mb-4">
         <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
           Sciences {getEmojiForCategory(selectedCategory)}
         </h1>
         <p className="text-gray-600 dark:text-gray-400 text-sm">
           Exercices interactifs
         </p>
-      </motion.div>
+      </LightAnimation>
 
           {/* Timer et Progression */}
           <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
@@ -484,13 +469,10 @@ const SciencesPage: React.FC = () => {
 
           {/* Message d'encouragement */}
           {emoji && (
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center text-lg font-medium text-primary mb-4"
+            <LightAnimation animation="slideUp" className="text-center text-lg font-medium text-primary mb-4"
             >
               {emoji}
-            </motion.div>
+            </LightAnimation>
           )}
 
           {/* Filtres et catégories */}
@@ -527,8 +509,7 @@ const SciencesPage: React.FC = () => {
                 .slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
                 .map((exercise) => (
                   <Card
-                    key={exercise._id}
-                    className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
+                    key={exercise._id className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
                   >
                     <CardBody className="p-4 sm:p-6">
                       <div className="flex flex-col gap-4">
@@ -567,16 +548,14 @@ const SciencesPage: React.FC = () => {
                             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                               {exercise.options.map((option, index) => (
                                 <label
-                                  key={`${exercise._id}-option-${index}`}
-                                  className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                                  key={`${exercise._id}-option-${index}` className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                                 >
                                   <input
                                     type="radio"
                                     name={exercise._id}
                                     value={option}
                                     onChange={(e) => handleChange(e, exercise._id)}
-                                    disabled={isAnswerSubmitted(exercise._id)}
-                                    className="form-radio"
+                                    disabled={isAnswerSubmitted(exercise._id) className="form-radio"
                                   />
                                   <span>{option}</span>
                                 </label>
@@ -598,8 +577,7 @@ const SciencesPage: React.FC = () => {
                           <Button
                             color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
                             onClick={() => handleSubmit(exercise._id, exercise.answer)}
-                            disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
-                            className="w-full sm:w-auto"
+                            disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id) className="w-full sm:w-auto"
                           >
                             {isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "Correct ✓" : "Incorrect ✗") : "Valider"}
                           </Button>
@@ -612,8 +590,7 @@ const SciencesPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 1)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 1) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   1
                                 </Button>
@@ -621,8 +598,7 @@ const SciencesPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 2)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 2) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   2
                                 </Button>
@@ -630,8 +606,7 @@ const SciencesPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 3)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 3) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   3
                                 </Button>
@@ -639,8 +614,7 @@ const SciencesPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 4)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 4) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   4
                                 </Button>
@@ -648,8 +622,7 @@ const SciencesPage: React.FC = () => {
                                   size="lg"
                                   color="default"
                                   variant="flat"
-                                  onClick={() => handleRating(exercise._id, 5)}
-                                  className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
+                                  onClick={() => handleRating(exercise._id, 5) className="w-full h-12 sm:h-10 flex items-center justify-center text-lg"
                                 >
                                   5
                                 </Button>
@@ -668,8 +641,7 @@ const SciencesPage: React.FC = () => {
           <div className="flex justify-center gap-2 mt-6">
             <Button
               onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-              className="w-auto"
+              disabled={currentPage === 1 className="w-auto"
             >
               Précédent
             </Button>
@@ -678,8 +650,7 @@ const SciencesPage: React.FC = () => {
             </span>
             <Button
               onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
-              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
-              className="w-auto"
+              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage) className="w-auto"
             >
               Suivant
             </Button>

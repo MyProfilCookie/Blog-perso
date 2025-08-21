@@ -94,7 +94,7 @@ const ProfilePage = () => {
         {createdAt}
       </p>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3 grid-cls-optimized">
         {/* Cours Consultés */}
         <Card className="overflow-hidden shadow-md">
           <CardHeader className="bg-primary p-3">
@@ -116,7 +116,7 @@ const ProfilePage = () => {
                 </p>
                 <Button
                   aria-label={`Reprendre ${course.title}`}
-                  className="w-full mt-1"
+                  className="w-full mt-1 button-cls-optimized"
                   size="sm"
                 >
                   Reprendre
@@ -143,7 +143,7 @@ const ProfilePage = () => {
                 </p>
                 <Button
                   aria-label={`Voir l'évaluation de ${evaluation.title}`}
-                  className="w-full mt-1"
+                  className="w-full mt-1 button-cls-optimized"
                   size="sm"
                 >
                   Voir l&apos;évaluation
@@ -174,7 +174,7 @@ const ProfilePage = () => {
                 </p>
                 <Button
                   aria-label={`Reprendre ${article.title}`}
-                  className="w-full mt-1"
+                  className="w-full mt-1 button-cls-optimized"
                   size="sm"
                 >
                   Reprendre

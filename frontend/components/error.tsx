@@ -2,7 +2,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { LightAnimation } from "@/components/DynamicMotion";
 import { Image } from '@nextui-org/react';
 
 const ErrorPage: React.FC = () => {
@@ -19,8 +19,7 @@ const ErrorPage: React.FC = () => {
 
   return (
     <motion.section
-      animate={{ opacity: 1 }}
-      className="flex flex-col items-center justify-center min-h-screen bg-gray-100"
+      animate={{ opacity: 1 } className="flex flex-col items-center justify-center min-h-screen bg-gray-100"
       initial={{ opacity: 0 }}
       transition={{ duration: 0.5 }}
     >

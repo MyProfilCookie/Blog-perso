@@ -901,7 +901,7 @@ export const Navbar = () => {
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium tracking-wide"
+                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium tracking-wide button-cls-optimized"
                       radius="sm"
                       variant="light"
                     >
@@ -933,7 +933,7 @@ export const Navbar = () => {
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium tracking-wide"
+                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium tracking-wide button-cls-optimized"
                       radius="sm"
                       variant="light"
                       onClick={() => router.push("/articles")}
@@ -1006,7 +1006,7 @@ export const Navbar = () => {
                 user.role === "admin" ? "Dashboard Admin" : "Dashboard"
               }
               as={Link}
-              className="text-sm font-normal text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700"
+              className="text-sm font-normal text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 button-cls-optimized"
               href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
             >
               <FontAwesomeIcon
@@ -1066,7 +1066,7 @@ export const Navbar = () => {
                 <DropdownTrigger>
                   <Button
                     aria-label="Menu utilisateur"
-                    className="bg-transparent relative"
+                    className="bg-transparent relative button-cls-optimized"
                   >
                     <Avatar
                       isBordered

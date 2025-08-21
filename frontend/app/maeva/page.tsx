@@ -54,7 +54,7 @@ const MaevaPage = () => {
     "/assets/maeva/maeva1.webp",
     "/assets/maeva/maeva.webp",
     "/assets/maeva/maevanini.webp",
-    "/assets/maeva/IMG_1411.jpg",
+    "/assets/maeva/IMG_1411.webp",
     "/assets/maeva/IMG_1427.webp",
     "/assets/maeva/IMG_2248.webp",
   ];

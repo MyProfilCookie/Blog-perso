@@ -8,7 +8,7 @@ import { Chip } from '@nextui-org/react'
 import { Tabs } from '@nextui-org/react'
 import { Tab } from '@nextui-org/react'
 import { Pagination } from '@nextui-org/react';
-import { motion } from "framer-motion";
+import { LightAnimation } from "@/components/DynamicMotion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -152,8 +152,7 @@ const RevisionPage: React.FC = () => {
 
         <Tabs 
           selectedKey={selectedCategory} 
-          onSelectionChange={(key) => setSelectedCategory(key.toString())}
-          className="mb-8"
+          onSelectionChange={(key) => setSelectedCategory(key.toString()) className="mb-8"
         >
           {categories.map((category) => (
             <Tab 
@@ -180,12 +179,9 @@ const RevisionPage: React.FC = () => {
           <>
             <div className="grid grid-cols-1 gap-6 mb-8">
               {errors.map((error, index) => (
-                <motion.div
+                <LightAnimation animation="slideUp"
                   key={error._id}
-                  initial={{ opacity: 0, y: 20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
+                  }>
                   <Card className="bg-white shadow-lg">
                     <CardBody>
                       <div className="flex justify-between items-start mb-4">
@@ -236,7 +232,7 @@ const RevisionPage: React.FC = () => {
                       </div>
                     </CardBody>
                   </Card>
-                </motion.div>
+                </LightAnimation>
               ))}
             </div>
             

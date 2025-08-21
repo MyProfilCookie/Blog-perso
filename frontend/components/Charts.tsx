@@ -25,6 +25,13 @@ interface ChartProps {
   options: any;
 }
 
+const chartContainerStyle = {
+  height: '256px',
+  width: '100%',
+  contain: 'layout style paint',
+  minHeight: '256px'
+};
+
 const Charts: React.FC<ChartProps> = ({ type, data, options }) => {
   const [isChartJSLoaded, setIsChartJSLoaded] = useState(false);
 
@@ -49,16 +56,16 @@ const Charts: React.FC<ChartProps> = ({ type, data, options }) => {
   }, [isChartJSLoaded]);
 
   if (!isChartJSLoaded) {
-    return <div className="h-64 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded" />;
+    return <div className="h-64 w-full bg-gray-100 chart-container-fixed dynamic-content-container" dark:bg-gray-800 animate-pulse rounded" /></div>;
   }
 
   switch (type) {
     case 'line':
-      return <Line data={data} options={options} />;
+      return <div className="chart-container dynamic-content-container"><Line data={data} options={options} /></div>;
     case 'bar':
-      return <Bar data={data} options={options} />;
+      return <div className="chart-container dynamic-content-container"><Bar data={data} options={options} /></div>;
     case 'doughnut':
-      return <Doughnut data={data} options={options} />;
+      return <div className="chart-container dynamic-content-container"><Doughnut data={data} options={options} /></div>;
     default:
       return null;
   }

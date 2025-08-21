@@ -11,9 +11,10 @@ import React, { useState, useEffect } from "react";
 import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
-import { Image } from '@nextui-org/react'
 import {  } from '@nextui-org/react';
 import { AnimatePresence, motion } from "framer-motion";
+import OptimizedImage from "@/components/OptimizedImage";
+import { OptimizedMotion, ScrollAnimation } from "@/components/OptimizedMotion";
 
 import { siteConfig } from "@/config/site";
 import { title, subtitle } from "@/components/primitives";
@@ -131,13 +132,11 @@ export default function Home() {
 
 
   return (
-    <section className="flex flex-col items-center justify-center w-full gap-4 sm:gap-8 py-4 sm:py-12 px-2 sm:px-4">
+    <section className="flex flex-col items-center justify-center w-full gap-4 sm:gap-8 py-4 sm:py-12 px-2 sm:px-4 min-h-screen performance-optimized">
       {/* Header Title Section */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="text-center w-full max-w-full px-2 sm:px-4"
-        initial={{ opacity: 0, y: -50 }}
-        transition={{ duration: 0.8 }}
+      <OptimizedMotion
+        variant="slideUp"
+        className="text-center w-full max-w-full performance-optimized px-2 sm:px-4"
       >
         <h1 className={`${title()} text-violet-600 dark:text-violet-300 text-2xl sm:text-4xl`}>
           Bienvenue sur AutiStudy
@@ -155,7 +154,7 @@ export default function Home() {
           Une plateforme dédiée à l'éducation des enfants autistes, offrant des
           ressources et un accompagnement personnalisés.
         </h3>
-      </motion.div>
+      </OptimizedMotion>
       <HeaderAutisme
         heading=""
         subheading="Ressources et accompagnement"
@@ -172,14 +171,14 @@ export default function Home() {
       >
         <Button
           as={Link}
-          className="text-white bg-blue-500 hover:bg-blue-400"
+          className="text-white bg-blue-500 hover:bg-blue-400 button-cls-optimized"
           href={siteConfig.links.docs}
         >
           Découvrir nos ressources
         </Button>
         <Button
           as={Link}
-          className="text-blue-500 border-blue-500 hover:bg-blue-100 hover:text-blue-600"
+          className="text-blue-500 border-blue-500 hover:bg-blue-100 hover:text-blue-600 button-cls-optimized"
           href={siteConfig.links.github}
         >
           <GithubIcon className="mr-2" size={20} />
@@ -220,15 +219,13 @@ export default function Home() {
       </motion.div> */}
 
       {/* Features Section */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-6 w-full max-w-[1200px] mt-8 px-2 sm:px-4"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 0.8, delay: 1.5 }}
+      <ScrollAnimation
+        variant="slideUp"
+        className="grid grid-cols-1 md:grid-cols-3 gap-4 grid-cls-optimized sm:gap-6 w-full max-w-[1200px] mt-8 px-2 sm:px-4 grid-cls-optimized"
       >
         {/* Feature 1 */}
         <Card
-          className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl hover:shadow-xl hover:border-violet-500"
+          className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg rounded-xl hover:shadow-xl hover:border-violet-500 card-optimized performance-optimized card-cls-optimized"
           style={{
             borderRadius: '10px',
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -237,12 +234,13 @@ export default function Home() {
           <Link href="/controle">
             <CardBody className="text-center">
               <div className="bg-blue-100 dark:bg-blue-900/30 p-4 rounded-full w-24 h-24 mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  isZoomed
-                  width={600}
+                <OptimizedImage
+                  width={64}
+                  height={64}
                   alt="Learning"
-                  className="h-16 w-16 object-contain"
+                  className="h-16 w-16 object-contain image-optimized"
                   src="/assets/online-learning.webp"
+                  priority={true}
                 />
               </div>
               <h4 className="font-bold text-large text-gray-800 dark:text-white">Cours en ligne adaptés</h4>
@@ -256,7 +254,7 @@ export default function Home() {
 
         {/* Feature 2 */}
         <Card
-          className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md rounded-xl hover:shadow-xl hover:border-violet-500"
+          className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md rounded-xl hover:shadow-xl hover:border-violet-500 card-optimized performance-optimized card-cls-optimized"
           style={{
             borderRadius: '10px',
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -265,12 +263,13 @@ export default function Home() {
           <Link href="/soutien">
             <CardBody className="text-center">
               <div className="bg-green-100 dark:bg-green-900/30 p-4 rounded-full w-24 h-24 mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  isZoomed
-                  width={600}
+                <OptimizedImage
+                  width={64}
+                  height={64}
                   alt="Support"
-                  className="h-16 w-16 object-contain"
+                  className="h-16 w-16 object-contain image-optimized"
                   src="/assets/community-support.webp"
+                  priority={true}
                 />
               </div>
               <h4 className="font-bold text-large text-gray-800 dark:text-white">Soutien communautaire</h4>
@@ -284,7 +283,7 @@ export default function Home() {
 
         {/* Feature 3 */}
         <Card
-          className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md rounded-xl hover:shadow-xl hover:border-violet-500"
+          className="p-6 transition-all transform bg-cream dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-md rounded-xl hover:shadow-xl hover:border-violet-500 card-optimized performance-optimized card-cls-optimized"
           style={{
             borderRadius: '10px',
             boxShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
@@ -293,12 +292,13 @@ export default function Home() {
           <Link href="/progres">
             <CardBody className="text-center">
               <div className="bg-purple-100 dark:bg-purple-900/30 p-4 rounded-full w-24 h-24 mx-auto mb-4 flex items-center justify-center">
-                <Image
-                  isZoomed
-                  width={600}
+                <OptimizedImage
+                  width={64}
+                  height={64}
                   alt="Progress"
-                  className="h-16 w-16 object-contain"
+                  className="h-16 w-16 object-contain image-optimized"
                   src="/assets/progress-tracking.webp"
+                  priority={true}
                 />
               </div>
               <h4 className="font-bold text-large text-gray-800 dark:text-white">Suivi des progrès</h4>
@@ -309,7 +309,7 @@ export default function Home() {
             </CardBody>
           </Link>
         </Card>
-      </motion.div>
+      </ScrollAnimation>
 
 
 
@@ -317,7 +317,7 @@ export default function Home() {
       {/* Articles and Tips Slider */}
       <motion.div
         animate={{ opacity: 1 }}
-        className="w-full max-w-[800px] mt-8 sm:mt-16 mx-auto text-center px-2 sm:px-4"
+        className="w-full max-w-[800px] dynamic-content-container mt-8 sm:mt-16 mx-auto text-center px-2 sm:px-4"
         initial={{ opacity: 0 }}
         transition={{ duration: 0.8, delay: 1 }}
       >
@@ -329,7 +329,7 @@ export default function Home() {
         <div className="relative flex items-center justify-center px-2 sm:px-4">
           <Button
             isIconOnly
-            className="absolute left-0 z-10 flex items-center justify-center w-10 h-10 text-lg text-white transform -translate-y-1/2 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 top-1/2"
+            className="absolute left-0 z-10 flex items-center justify-center w-10 h-10 text-lg text-white transform -translate-y-1/2 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 top-1/2 button-cls-optimized"
             onClick={previousSlide}
           >
             {"<"}
@@ -343,7 +343,7 @@ export default function Home() {
             initial={{ opacity: 0, x: -100 }}
             transition={{ duration: 0.8 }}
           >
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-8 md:grid-cols-2 grid-cls-optimized">
               {articles.slice(currentIndex, currentIndex + 2).map((article, idx) => (
                 <Card
                   key={idx}
@@ -354,13 +354,13 @@ export default function Home() {
                   }}
                 >
                   <CardBody className="flex flex-col items-center text-center">
-                    <Image
-                      isZoomed
+                    <OptimizedImage
                       alt={article.title}
                       width={600}
-                      className="object-cover rounded-lg w-full h-[180px] mb-3"
                       height={280}
+                      className="object-cover rounded-lg w-full h-[180px] mb-3 image-optimized"
                       src={article.img}
+                      loading="lazy"
                     />
                     <h4 className="mb-2 text-lg font-bold text-blue-700 dark:text-blue-400">
                       {article.title}
@@ -376,7 +376,7 @@ export default function Home() {
 
           <Button
             isIconOnly
-            className="absolute right-0 z-10 flex items-center justify-center w-10 h-10 text-lg text-white transform -translate-y-1/2 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 top-1/2"
+            className="absolute right-0 z-10 flex items-center justify-center w-10 h-10 text-lg text-white transform -translate-y-1/2 bg-blue-600 rounded-full shadow-lg hover:bg-blue-700 top-1/2 button-cls-optimized"
             onClick={nextSlide}
           >
             {">"}
@@ -401,7 +401,7 @@ export default function Home() {
           {/* Bouton précédent */}
           <Button
             isIconOnly
-            className="absolute left-0 md:left-8 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all flex items-center justify-center"
+            className="absolute left-0 md:left-8 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all flex items-center justify-center button-cls-optimized"
             onClick={previousTeamSlide}
           >
             <span className="text-xl">&lt;</span>
@@ -416,7 +416,7 @@ export default function Home() {
                 animate={{ opacity: 1, x: 0 }}
                 exit={{ opacity: 0, x: -50 }}
                 transition={{ duration: 0.6 }}
-                className="grid grid-cols-1 gap-8 sm:grid-cols-2"
+                className="grid grid-cols-1 gap-8 sm:grid-cols-2 grid-cls-optimized"
               >
                 {[
                   {
@@ -504,7 +504,7 @@ export default function Home() {
           {/* Bouton suivant */}
           <Button
             isIconOnly
-            className="absolute right-0 md:right-8 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all flex items-center justify-center"
+            className="absolute right-0 md:right-8 z-10 w-10 h-10 md:w-12 md:h-12 text-white bg-violet-600 rounded-full shadow-md hover:bg-violet-700 transition-all flex items-center justify-center button-cls-optimized"
             onClick={nextTeamSlide}
           >
             <span className="text-xl">&gt;</span>
@@ -516,7 +516,7 @@ export default function Home() {
           <Button
             as={Link}
             href="/approches"
-            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700"
+            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 button-cls-optimized"
           >
             Découvrir toutes nos approches
           </Button>
@@ -533,7 +533,7 @@ export default function Home() {
         <h2 className={title({ color: "blue", class: "text-center dark:text-blue-400" })}>
           L'accompagnement des enfants et des adultes autistes
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1200px] mt-12 mx-auto px-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full max-w-[1200px] mt-12 mx-auto px-4 grid-cls-optimized">
           {/* Card 1 */}
           <Card className="shadow-md bg-blue-50 dark:bg-blue-900/30 border border-transparent dark:border-blue-800">
             <CardBody className="text-left text-blue-700 dark:text-blue-300">
@@ -607,7 +607,7 @@ export default function Home() {
           Découvrez comment notre plateforme a aidé des enfants autistes à progresser dans leur parcours d'apprentissage
         </p>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 grid-cls-optimized">
           {/* Témoignage 1 */}
           <Card className="bg-gradient-to-br from-orange-50 to-amber-50 dark:from-orange-900/20 dark:to-amber-900/20 border border-orange-100 dark:border-orange-800/50 shadow-md">
             <CardBody className="p-6">
@@ -649,7 +649,7 @@ export default function Home() {
           <Button
             as={Link}
             href="/temoignages"
-            className="bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 dark:from-orange-600 dark:to-amber-600 dark:hover:from-orange-500 dark:hover:to-amber-500"
+            className="bg-gradient-to-r from-orange-500 to-amber-500 text-white hover:from-orange-600 hover:to-amber-600 dark:from-orange-600 dark:to-amber-600 dark:hover:from-orange-500 dark:hover:to-amber-500 button-cls-optimized"
           >
             Voir plus de témoignages
           </Button>
@@ -667,7 +667,7 @@ export default function Home() {
           Notre impact
         </h2>
         
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 grid-cls-optimized">
           {/* Stat 1 */}
           <Card className="bg-indigo-50 dark:bg-indigo-900/30 border border-indigo-100 dark:border-indigo-800 shadow-md">
             <CardBody className="p-6 text-center">
@@ -734,7 +734,7 @@ export default function Home() {
         </p>
 
         {/* 📞 Contact & Infos */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-10 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-10 text-left grid-cls-optimized">
           {/* 📍 Adresse */}
           <motion.div
             className="p-6 border-2 border-purple-400 dark:border-purple-500 shadow-lg bg-gradient-to-br from-violet-100 to-purple-50 dark:from-violet-900/40 dark:to-purple-900/40 rounded-xl hover:shadow-xl transition-all"
@@ -813,7 +813,7 @@ export default function Home() {
           Parcours d'apprentissage personnalisés
         </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 grid-cls-optimized">
           {/* Carte 1: Évaluation des besoins */}
           <Card className="bg-gradient-to-br from-blue-50 to-violet-50 dark:from-blue-900/30 dark:to-violet-900/30 border border-blue-200 dark:border-blue-800 shadow-md hover:shadow-lg transition-all">
             <CardBody className="p-6">
@@ -830,7 +830,7 @@ export default function Home() {
                 <Button
                   as={Link}
                   href="/evaluation"
-                  className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
+                  className="bg-blue-600 text-white hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600 button-cls-optimized"
                 >
                   Découvrir l'évaluation
                 </Button>
@@ -854,7 +854,7 @@ export default function Home() {
                 <Button
                   as={Link}
                   href="/ressources"
-                  className="bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600"
+                  className="bg-purple-600 text-white hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-600 button-cls-optimized"
                 >
                   Explorer nos ressources
                 </Button>
@@ -864,7 +864,7 @@ export default function Home() {
         </div>
         
         {/* Deuxième rangée */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-8 grid-cls-optimized">
           {/* Carte 3: Suivi des progrès */}
           <Card className="bg-gradient-to-br from-green-50 to-teal-50 dark:from-green-900/30 dark:to-teal-900/30 border border-green-200 dark:border-green-800 shadow-md hover:shadow-lg transition-all">
             <CardBody className="p-6">
@@ -881,7 +881,7 @@ export default function Home() {
                 <Button
                   as={Link}
                   href="/progres"
-                  className="bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600"
+                  className="bg-green-600 text-white hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-600 button-cls-optimized"
                 >
                   Voir le suivi
                 </Button>
@@ -905,7 +905,7 @@ export default function Home() {
                 <Button
                   as={Link}
                   href="/soutien"
-                  className="bg-orange-600 text-white hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600"
+                  className="bg-orange-600 text-white hover:bg-orange-700 dark:bg-orange-700 dark:hover:bg-orange-600 button-cls-optimized"
                 >
                   Rejoindre la communauté
                 </Button>

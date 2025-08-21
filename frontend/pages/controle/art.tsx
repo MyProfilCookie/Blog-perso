@@ -6,7 +6,7 @@ import axios from "axios";
 import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'
 import { Button } from '@nextui-org/react';
-import { motion } from "framer-motion";
+import { LightAnimation } from "@/components/DynamicMotion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { toast } from "sonner";
@@ -430,28 +430,18 @@ const ArtPage: React.FC = () => {
 
   if (loading) {
     return (
-      <motion.div
-        animate={{ opacity: 1 }}
-        className="flex items-center justify-center min-h-screen"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <LightAnimation animation="slideUp" className="flex items-center justify-center min-h-screen">
         <div className="text-3xl animate-spin">🔄</div>
-      </motion.div>
+      </LightAnimation>
     );
   }
 
   if (error) {
     return (
-      <motion.div
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center min-h-screen gap-4"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.5 }}
-      >
+      <LightAnimation animation="slideUp" className="flex flex-col items-center justify-center min-h-screen gap-4">
         <div className="text-2xl text-red-600">⚠️</div>
         <p className="text-lg text-gray-600">Erreur: {error}</p>
-      </motion.div>
+      </LightAnimation>
     );
   }
 
@@ -463,19 +453,14 @@ const ArtPage: React.FC = () => {
           <Timer timeLeft={timeLeft} />
         </div>
 
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-4"
-          initial={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.4 }}
-        >
+        <LightAnimation animation="slideUp" className="text-center mb-4">
           <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
             Art {getEmojiForCategory(selectedCategory)}
           </h1>
           <p className="text-gray-600 dark:text-gray-400 text-sm">
             Exercices interactifs
           </p>
-        </motion.div>
+        </LightAnimation>
 
         {/* Timer et Progression */}
         <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
@@ -497,13 +482,9 @@ const ArtPage: React.FC = () => {
 
         {/* Message d'encouragement */}
         {emoji && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center text-lg font-medium text-primary mb-4"
-          >
+          <LightAnimation animation="slideUp" className="text-center text-lg font-medium text-primary mb-4">
             {emoji}
-          </motion.div>
+          </LightAnimation>
         )}
 
         {/* Filtres et catégories */}

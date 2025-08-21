@@ -8,7 +8,7 @@ import { Spinner } from '@nextui-org/react'
 import { Chip } from '@nextui-org/react'
 import { Pagination } from '@nextui-org/react'
 import {  } from '@nextui-org/react';
-import { motion } from "framer-motion";
+import { LightAnimation } from "@/components/DynamicMotion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
 
@@ -267,12 +267,9 @@ const ExercicesPage: React.FC = () => {
           <>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
               {exercises.map((exercise, index) => (
-                <motion.div
+                <LightAnimation animation="slideUp"
                   key={exercise._id}
-                  animate={{ opacity: 1, y: 0 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
-                >
+                  }>
                   <Card className="h-full hover:shadow-lg transition-shadow">
                     <CardBody>
                       <div className="flex justify-between items-start mb-4">
@@ -315,7 +312,7 @@ const ExercicesPage: React.FC = () => {
                       )}
                     </CardBody>
                   </Card>
-                </motion.div>
+                </LightAnimation>
               ))}
             </div>
 
