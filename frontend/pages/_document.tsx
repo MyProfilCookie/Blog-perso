@@ -9,7 +9,18 @@ export default function Document() {
           rel="preload"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           as="style"
-          onLoad="this.onload=null;this.rel='stylesheet'"
+        />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                var link = document.createElement('link');
+                link.rel = 'stylesheet';
+                link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
+                document.head.appendChild(link);
+              })();
+            `,
+          }}
         />
         <noscript>
           <link
