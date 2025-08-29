@@ -15,17 +15,22 @@ import { DropdownTrigger } from '@nextui-org/react'
 import { DropdownMenu } from '@nextui-org/react'
 import { DropdownItem } from '@nextui-org/react'
 import { Badge } from '@nextui-org/react'
-import {  } from '@nextui-org/react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt,
   faNewspaper,
   faCrown,
   faTachometerAlt,
-  faBars,
   faUser,
   faMoon,
-  faSyncAlt,
+  faHome,
+  faInfoCircle,
+  faBook,
+  faGamepad,
+  faShoppingCart,
+  faGraduationCap,
+  faUsers,
+  faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
@@ -38,15 +43,10 @@ import {
   SunFilledIcon, 
   MoonFilledIcon, 
   AutismLogo, 
-  AutiStudyMenuIcon,
-  AutiStudyBurgerIcon,
-  SimpleAutiStudyBurgerIcon,
-  PuzzleBurgerIcon,
   VisibleBurgerIcon,
   PendingOrdersIcon,
   ShippedOrdersIcon,
   DeliveredOrdersIcon,
-  CloseMenuIcon
 } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
 
@@ -81,59 +81,10 @@ interface Order {
   paymentStatus?: string;
 }
 
-// Function to get the appropriate icon for each navigation item
-const getIconForNavItem = (label: string) => {
-  const iconMap: Record<string, any> = {
-    Accueil: "🏠",
-    "À propos": "ℹ️",
-    Services: "⚡",
-    Équipe: "👥",
-    Articles: "📚",
-    Cours: "🎓",
-    FAQ: "❓",
-    Controle: "🎮",
-    Manuel: "📖",
-  };
-
-  return iconMap[label] || "ℹ️"; // Default icon if no match
-};
-
-// Function to verify token validity
-const verifyToken = async (token: string): Promise<boolean> => {
-  if (!token) return false;
-
-  try {
-    const response = await fetch("/auth/verify-token", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${token}`,
-      },
-      body: JSON.stringify({ token }),
-      credentials: "include",
-    });
-
-    if (!response.ok) {
-      console.warn("Token verification failed with status:", response.status);
-
-      return false;
-    }
-
-    const data = await response.json();
-
-    return data.valid === true;
-  } catch (error) {
-    console.error("Error verifying token:", error);
-
-    return false;
-  }
-};
-
 export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isVerifyingToken, setIsVerifyingToken] = useState(false);
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
     shipped: 0,
@@ -146,74 +97,30 @@ export const Navbar = () => {
   const router = useRouter();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
 
-  // Colors for avatar animation
-  const adminColors = ["#FF0000", "#FF3333", "#FF6666", "#FF9999"];
-  const userColors = ["#0066FF", "#3399FF", "#66CCFF", "#99DDFF"];
-  const guestColors = ["#000000", "#333333", "#666666", "#999999"];
+  // Couleurs pour l'animation de l'avatar - couleurs de l'autisme
+  const adminColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"];
+  const userColors = ["#FFEAA7", "#DDA0DD", "#98D8C8", "#F7DC6F"];
+  const guestColors = ["#E8E8E8", "#D4D4D4", "#B8B8B8", "#9E9E9E"];
 
   const { theme, setTheme, resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-
-  // Pour le débogage
-  useEffect(() => {
-    console.log("API URL Configuration:");
-    console.log("NEXT_PUBLIC_API_URL:", process.env.NEXT_PUBLIC_API_URL);
-    console.log(
-      "API Base URL qui sera utilisée:",
-      (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(
-        /\/$/,
-        "",
-      ),
-    );
-  }, []);
-
-  // Pour le suivi de l'état des compteurs
-  useEffect(() => {
-    console.log("État actuel des compteurs de commandes:", orderCount);
-  }, [orderCount]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Auto theme updater based on time of day
-  useEffect(() => {
-    if (!mounted) return;
-
-    const updateThemeByTime = () => {
-      if (localStorage.getItem("themeMode") === "auto") {
-        const currentHour = new Date().getHours();
-        const isDayTime = currentHour >= 6 && currentHour < 18;
-
-        if (isDayTime) {
-          document.documentElement.classList.remove("dark");
-          localStorage.setItem("theme", "light");
-        } else {
-          document.documentElement.classList.add("dark");
-          localStorage.setItem("theme", "dark");
-        }
-      }
-    };
-
-    updateThemeByTime();
-    const interval = setInterval(updateThemeByTime, 60000);
-
-    return () => clearInterval(interval);
-  }, [mounted]);
-
-  // Avatar color animation
+  // Animation de couleur de l'avatar
   useEffect(() => {
     const colorInterval = setInterval(() => {
       setAvatarColorIndex((prevIndex) => (prevIndex + 1) % 4);
-    }, 1500);
+    }, 2000);
 
     return () => clearInterval(colorInterval);
   }, []);
 
-  // Close menu when clicking outside
+  // Fermer le menu en cliquant à l'extérieur
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
-      // Vérifier si le clic est sur le bouton du menu
       const target = event.target as HTMLElement;
       const isMenuButton = target.closest('button[aria-label="Toggle navigation"]');
       
@@ -231,13 +138,12 @@ export const Navbar = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isMenuOpen]);
 
-  // Close menu when navigating
+  // Fermer le menu lors de la navigation
   useEffect(() => {
     const handleRouteChange = () => {
       setIsMenuOpen(false);
     };
 
-    // Écouter les changements de route
     window.addEventListener('popstate', handleRouteChange);
     
     return () => {
@@ -246,52 +152,7 @@ export const Navbar = () => {
   }, []);
 
   /**
-   * Handle invalid token
-   */
-  const handleTokenInvalid = () => {
-    if (isVerifyingToken) return;
-
-    Swal.fire({
-      title: "Session expirée",
-      text: "Votre session a expiré. Veuillez vous reconnecter pour continuer.",
-      icon: "warning",
-      showCancelButton: true,
-      confirmButtonColor: "#4169E1",
-      cancelButtonColor: "#FFB74D",
-      confirmButtonText: "Se connecter",
-      cancelButtonText: "Annuler",
-    }).then((result) => {
-      if (result.isConfirmed) {
-        const userId = user?.id;
-
-        localStorage.removeItem("user");
-        localStorage.removeItem("userToken");
-        if (userId) {
-          localStorage.removeItem(`cart_${userId}`);
-        }
-        setUser(null);
-        setCartItemsCount(0);
-
-        const event = new CustomEvent("userUpdate");
-
-        window.dispatchEvent(event);
-
-        router.push("/users/login");
-      }
-    });
-  };
-
-  /**
-   * Check token validity - DÉSACTIVÉ pour éviter les déconnexions automatiques
-   */
-  const checkTokenValidity = async () => {
-    // Fonction désactivée pour éviter les déconnexions lors du rafraîchissement
-    // La vérification du token se fera uniquement lors des requêtes API
-    return;
-  };
-
-  /**
-   * Get user and cart from local storage
+   * Récupérer l'utilisateur et le panier depuis le localStorage
    */
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -299,28 +160,17 @@ export const Navbar = () => {
     if (storedUser) {
       try {
         const parsedUser = JSON.parse(storedUser);
-
         setUser(parsedUser);
-
         const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
-
         setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
       } catch (error) {
         console.error("Error parsing user data:", error);
       }
     }
-
-    // Vérification automatique du token désactivée pour éviter les déconnexions
-    // lors du rafraîchissement de la page
   }, []);
 
-  console.log(
-    "🔍 FRONTEND - NEXT_PUBLIC_API_URL:",
-    process.env.NEXT_PUBLIC_API_URL,
-  );
-
   /**
-   * Update user and cart when a "userUpdate" event is triggered
+   * Mettre à jour l'utilisateur et le panier lors d'un événement "userUpdate"
    */
   useEffect(() => {
     const handleUserUpdate = () => {
@@ -332,8 +182,6 @@ export const Navbar = () => {
           setUser(parsedUser);
           const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
           setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
-
-          // Mettre à jour les compteurs de commandes immédiatement après la connexion
           fetchOrderCount();
         } catch (error) {
           console.error("Error parsing user data during update:", error);
@@ -352,7 +200,7 @@ export const Navbar = () => {
   }, []);
 
   /**
-   * User logout
+   * Déconnexion de l'utilisateur
    */
   const handleLogout = () => {
     Swal.fire({
@@ -360,16 +208,14 @@ export const Navbar = () => {
       text: "Vous allez être déconnecté(e) et votre panier sera vidé.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#4169E1",
-      cancelButtonColor: "#FFB74D",
+      confirmButtonColor: "#4ECDC4",
+      cancelButtonColor: "#FF6B6B",
       confirmButtonText: "Oui, déconnectez-moi !",
       cancelButtonText: "Annuler",
     }).then((result) => {
       if (result.isConfirmed) {
-        // Nettoyer toutes les données du localStorage
         const userId = user?.id;
         
-        // Supprimer toutes les données liées à l'utilisateur
         localStorage.removeItem("user");
         localStorage.removeItem("userToken");
         localStorage.removeItem("accessToken");
@@ -379,12 +225,10 @@ export const Navbar = () => {
         localStorage.removeItem("serInfo");
         localStorage.removeItem("token");
         
-        // Supprimer les données du panier
         if (userId) {
           localStorage.removeItem(`cart_${userId}`);
         }
         
-        // Réinitialiser l'état
         setUser(null);
         setCartItemsCount(0);
         setOrderCount({
@@ -394,18 +238,16 @@ export const Navbar = () => {
           total: 0
         });
 
-        // Notifier les autres composants
         const event = new CustomEvent("userUpdate");
         window.dispatchEvent(event);
 
-        // Forcer le rechargement de la page pour s'assurer que tout est nettoyé
         window.location.href = "/";
       }
     });
   };
 
   /**
-   * Redirect to login or signup page
+   * Rediriger vers la page de connexion ou d'inscription
    */
   const handleLoginRedirect = () => {
     Swal.fire({
@@ -425,17 +267,12 @@ export const Navbar = () => {
   };
 
   /**
-   * Fetch order count from API - VERSION CORRIGÉE
-   */
-  /**
    * Fonction robuste pour récupérer les données utilisateur et l'ID
-   * Basée sur la version qui fonctionne dans votre page Orders
    */
   const getUserData = () => {
     if (typeof window === "undefined") return null;
 
     try {
-      // Essayer toutes les sources possibles de token
       const userStr = localStorage.getItem("user");
       const directToken = localStorage.getItem("token");
       const userToken = localStorage.getItem("userToken");
@@ -443,11 +280,9 @@ export const Navbar = () => {
       let userData = null;
       let token = directToken || userToken;
 
-      // Analyser les données utilisateur si disponibles
       if (userStr) {
         try {
           userData = JSON.parse(userStr);
-          // Si les données utilisateur ont un token, l'utiliser (priorité)
           if (userData.token) {
             token = userData.token;
           }
@@ -456,26 +291,20 @@ export const Navbar = () => {
         }
       }
 
-      // Si pas de données utilisateur mais nous avons un token, créer un objet utilisateur minimal
       if (!userData && token) {
         userData = { token };
       }
 
-      // Si nous avons des données utilisateur mais pas de token, ajouter le token
       if (userData && !userData.token && token) {
         userData.token = token;
       }
 
-      // Extraire l'ID utilisateur de diverses sources
       let userId = userData?.id || userData?._id || userData?.userId;
 
-      // Essayer d'obtenir l'ID utilisateur du JWT si non trouvé dans les données utilisateur
       if (!userId && token && token.split(".").length === 3) {
         try {
           const payload = JSON.parse(atob(token.split(".")[1]));
-
           userId = payload.id || payload.userId || payload.sub || payload._id;
-
           if (userId && userData) {
             userData.id = userId;
           }
@@ -484,55 +313,40 @@ export const Navbar = () => {
         }
       }
 
-      // S'assurer que l'ID est correctement attaché aux données utilisateur
       if (userId && userData) {
         userData.id = userId;
       }
 
-      console.log(
-        "Données utilisateur récupérées:",
-        userData?.id ? "ID trouvé: " + userData.id : "ID non trouvé",
-      );
-
       return userData;
     } catch (e) {
-      console.error(
-        "Erreur lors de la récupération des données utilisateur:",
-        e,
-      );
-
+      console.error("Erreur lors de la récupération des données utilisateur:", e);
       return null;
     }
   };
 
   /**
-   * Fetch order count from API - VERSION CORRIGÉE
+   * Récupérer le compteur de commandes depuis l'API
    */
   const fetchOrderCount = async () => {
     setIsLoadingOrders(true);
     setOrderLoadError(null);
 
     try {
-      // Récupération des données utilisateur
       const userData = getUserData();
 
       if (!userData || !userData.id || !userData.token) {
         console.error("Données utilisateur insuffisantes");
         setIsLoadingOrders(false);
-
         return;
       }
 
       const userId = userData.id;
       const token = userData.token;
 
-      // Utiliser directement l'URL qui fonctionne
       const apiUrl = (
         process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
       ).replace(/\/$/, "");
       const url = `${apiUrl}/orders/user/${userId}`;
-
-      console.log("Récupération des commandes via:", url);
 
       const response = await fetch(url, {
         headers: {
@@ -549,7 +363,6 @@ export const Navbar = () => {
 
       const data = await response.json();
 
-      // Extraire les commandes selon le format de réponse
       let orders = [];
 
       if (data && Array.isArray(data)) {
@@ -560,7 +373,6 @@ export const Navbar = () => {
         orders = data.data;
       }
 
-      // Calculer les compteurs
       const pending = orders.filter(
         (order: Order) =>
           order.status?.toLowerCase().includes("pend") ||
@@ -589,13 +401,6 @@ export const Navbar = () => {
         delivered,
         total: orders.length,
       });
-
-      console.log("Compteurs calculés:", {
-        pending,
-        shipped,
-        delivered,
-        total: orders.length,
-      });
     } catch (error) {
       console.error("Exception lors de la récupération des compteurs:", error);
       setOrderLoadError(
@@ -605,53 +410,6 @@ export const Navbar = () => {
       );
     } finally {
       setIsLoadingOrders(false);
-    }
-  };
-
-  /**
-   * Mark order updates as read - VERSION CORRIGÉE
-   */
-  const markOrderUpdatesAsRead = async () => {
-    try {
-      const userData = getUserData();
-
-      if (!userData || !userData.id || !userData.token) {
-        console.error("Données utilisateur insuffisantes");
-
-        return;
-      }
-
-      const userId = userData.id;
-      const token = userData.token;
-
-      const apiUrl = (
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
-      ).replace(/\/$/, "");
-      const url = `${apiUrl}/orders/user/${userId}/orders/updates/read`;
-
-      console.log("Marquage des mises à jour comme lues via:", url);
-
-      const response = await fetch(url, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (response.ok) {
-        console.log("Mises à jour marquées comme lues avec succès");
-        // Rafraîchir les compteurs après avoir marqué comme lus
-        fetchOrderCount();
-      } else {
-        console.error(
-          "Échec du marquage des mises à jour:",
-          response.status,
-          response.statusText,
-        );
-      }
-    } catch (error) {
-      console.error("Erreur lors du marquage des mises à jour:", error);
     }
   };
 
@@ -669,10 +427,8 @@ export const Navbar = () => {
         return;
       }
 
-      // Récupération initiale
       fetchOrderCount();
 
-      // Configurer l'intervalle pour rafraîchir le compteur de commandes
       intervalId = setInterval(() => {
         const currentUserData = getUserData();
         if (!currentUserData || !currentUserData.id || !currentUserData.token) {
@@ -683,9 +439,8 @@ export const Navbar = () => {
           return;
         }
         fetchOrderCount();
-      }, 15000); // Vérifier toutes les 15 secondes
+      }, 30000); // Vérifier toutes les 30 secondes
 
-      // Rafraîchir également lors du focus sur la page
       const handleVisibilityChange = () => {
         if (!document.hidden) {
           const currentUserData = getUserData();
@@ -698,7 +453,6 @@ export const Navbar = () => {
 
       document.addEventListener("visibilitychange", handleVisibilityChange);
 
-      // Nettoyer l'intervalle lorsque le composant est démonté
       return () => {
         if (intervalId) {
           clearInterval(intervalId);
@@ -713,7 +467,6 @@ export const Navbar = () => {
 
     const cleanup = setupOrderTracking();
 
-    // Nettoyer lors du démontage
     return () => {
       if (cleanup) cleanup();
       if (intervalId) {
@@ -721,190 +474,71 @@ export const Navbar = () => {
         intervalId = null;
       }
     };
-  }, []); // Exécuter une fois au montage
-
-  // Vérifier la validité du token toutes les 5 minutes
-  useEffect(() => {
-    let tokenCheckInterval: NodeJS.Timeout | null = null;
-
-    const setupTokenCheck = () => {
-      const userData = getUserData();
-      if (!userData || !userData.token) {
-        return;
-      }
-
-      tokenCheckInterval = setInterval(() => {
-        const currentUserData = getUserData();
-        if (!currentUserData || !currentUserData.token) {
-          if (tokenCheckInterval) {
-            clearInterval(tokenCheckInterval);
-            tokenCheckInterval = null;
-          }
-          return;
-        }
-        checkTokenValidity();
-      }, 5 * 60 * 1000); // 5 minutes
-    };
-
-    setupTokenCheck();
-
-    return () => {
-      if (tokenCheckInterval) {
-        clearInterval(tokenCheckInterval);
-        tokenCheckInterval = null;
-      }
-    };
   }, []);
-
-  // Vérification du token au chargement et périodiquement
-  useEffect(() => {
-    let tokenCheckInterval: NodeJS.Timeout | null = null;
-
-    const checkTokenValidity = async () => {
-      const userData = getUserData();
-      if (!userData || !userData.token) {
-        return;
-      }
-
-      try {
-        // Vérifier si le token est expiré
-        const isExpired = isTokenExpired(userData.token);
-        
-        if (isExpired) {
-          // Nettoyer les données utilisateur
-          const userId = user?.id;
-          localStorage.removeItem("user");
-          localStorage.removeItem("userToken");
-          localStorage.removeItem("accessToken");
-          localStorage.removeItem("refreshToken");
-          localStorage.removeItem("userRole");
-          localStorage.removeItem("userInfo");
-          localStorage.removeItem("serInfo");
-          localStorage.removeItem("token");
-          if (userId) {
-            localStorage.removeItem(`cart_${userId}`);
-          }
-          setUser(null);
-          setCartItemsCount(0);
-
-          // Notifier les autres composants
-          const event = new CustomEvent("userUpdate");
-          window.dispatchEvent(event);
-
-          // Afficher une alerte à l'utilisateur
-          Swal.fire({
-            title: "Session expirée",
-            text: "Votre session a expiré. Veuillez vous reconnecter pour continuer.",
-            icon: "warning",
-            confirmButtonColor: "#4169E1",
-            confirmButtonText: "Se connecter",
-          }).then((result) => {
-            if (result.isConfirmed) {
-              router.push("/users/login");
-            }
-          });
-        }
-      } catch (error) {
-        console.error("Erreur lors de la vérification du token:", error);
-      }
-    };
-
-    // Fonction pour vérifier si le token est expiré
-    const isTokenExpired = (token: string): boolean => {
-      try {
-        const base64Url = token.split('.')[1];
-        const base64 = base64Url.replace(/-/g, '+').replace(/_/g, '/');
-        const payload = JSON.parse(atob(base64));
-        
-        // Vérifier si le token a une date d'expiration
-        if (!payload.exp) return true;
-        
-        // Comparer la date d'expiration avec la date actuelle
-        const currentTime = Math.floor(Date.now() / 1000);
-        return payload.exp < currentTime;
-      } catch (error) {
-        console.error("Erreur lors de la vérification du token:", error);
-        return true; // En cas d'erreur, considérer le token comme expiré
-      }
-    };
-
-    // Vérifier au chargement
-    checkTokenValidity();
-
-    // Vérifier périodiquement
-    tokenCheckInterval = setInterval(() => {
-      const userData = getUserData();
-      if (!userData || !userData.token) {
-        if (tokenCheckInterval) {
-          clearInterval(tokenCheckInterval);
-          tokenCheckInterval = null;
-        }
-        return;
-      }
-      checkTokenValidity();
-    }, 5 * 60 * 1000); // Toutes les 5 minutes
-    
-    return () => {
-      if (tokenCheckInterval) {
-        clearInterval(tokenCheckInterval);
-        tokenCheckInterval = null;
-      }
-    };
-  }, [router, user]);
 
   return (
     <NextUINavbar
-      className="dark:bg-gray-900 bg-white/70 backdrop-blur-sm font-sans relative"
+      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative border-b border-gray-200 dark:border-gray-700"
       maxWidth="xl"
       position="sticky"
-      style={{ boxShadow: "0 4px 6px rgba(0, 0, 0, 0.1)" }}
+      style={{ 
+        boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
+        background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,248,255,0.95) 100%)"
+      }}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        {/* Logo */}
-        <NavbarBrand as="li" className="gap-3 max-w-fit">
-          <NextLink className="flex items-center justify-start gap-1" href="/">
-            <AutismLogo />
-            <p className="font-bold text-blue-800 dark:text-white font-sans">
-              AutiStudy
-            </p>
+        {/* Logo AutiStudy */}
+        <NavbarBrand as="li" className="gap-2 max-w-fit">
+          <NextLink className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200" href="/">
+            <AutismLogo size={16} />
+            <div className="flex flex-col">
+              <p className="font-bold text-blue-600 dark:text-blue-400 text-base font-sans">
+                AutiStudy
+              </p>
+              <p className="text-xs text-gray-500 dark:text-gray-400 font-medium">
+                Créé par une famille
+              </p>
+            </div>
           </NextLink>
         </NavbarBrand>
 
-        {/* Bouton menu mobile avec icône burger visible */}
+        {/* Bouton menu mobile */}
         <button
           aria-label="Toggle navigation"
-          className="lg:hidden p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-all duration-200"
+          className="lg:hidden p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-200"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <VisibleBurgerIcon 
             size={24} 
-            className={`text-blue-800 dark:text-white hover:text-blue-500 transition-colors duration-200 ${
+            className={`text-blue-600 dark:text-blue-400 hover:text-blue-500 transition-colors duration-200 ${
               isMenuOpen ? 'rotate-90' : ''
             }`}
           />
         </button>
 
-        {/* Conteneur pour centrer la navigation */}
+        {/* Navigation desktop */}
         <div className="hidden lg:flex flex-grow justify-center">
           <div className="flex items-center">
-            {/* Onglets visibles dans la barre de navigation */}
-            <ul className="flex gap-4 items-center font-sans">
+            <ul className="flex gap-6 items-center font-sans">
               <NavbarItem>
                 <NextLink
-                  className="text-blue-800 dark:text-white hover:text-blue-500 text-lg font-medium tracking-wide"
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
                   href="/"
                 >
+                  <FontAwesomeIcon icon={faHome} className="w-4 h-4" />
                   Accueil
                 </NextLink>
               </NavbarItem>
+              
               <NavbarItem>
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium tracking-wide button-cls-optimized"
+                      className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 bg-transparent p-0 text-base font-medium tracking-wide button-cls-optimized flex items-center gap-2"
                       radius="sm"
                       variant="light"
                     >
+                      <FontAwesomeIcon icon={faInfoCircle} className="w-4 h-4" />
                       À propos
                     </Button>
                   </DropdownTrigger>
@@ -917,6 +551,7 @@ export const Navbar = () => {
                       textValue="À propos de nous"
                       onClick={() => router.push("/about")}
                     >
+                      <FontAwesomeIcon icon={faUsers} className="mr-2" />
                       À propos de nous
                     </DropdownItem>
                     <DropdownItem
@@ -924,51 +559,39 @@ export const Navbar = () => {
                       textValue="Contact"
                       onClick={() => router.push("/contact")}
                     >
+                      <FontAwesomeIcon icon={faHeart} className="mr-2" />
                       Contact
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               </NavbarItem>
-              <NavbarItem>
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button
-                      className="text-blue-800 dark:text-white hover:text-blue-500 bg-transparent p-0 text-lg font-medium tracking-wide button-cls-optimized"
-                      radius="sm"
-                      variant="light"
-                      onClick={() => router.push("/articles")}
-                    >
-                      Articles
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu
-                    aria-label="Articles menu"
-                    className="animate-in fade-in-80 zoom-in-95 duration-200"
-                  >
-                    <DropdownItem
-                      key="blog"
-                      textValue="Blog"
-                      onClick={() => router.push("/blog")}
-                    >
-                      Blog
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              </NavbarItem>
+              
               <NavbarItem>
                 <NextLink
-                  className="text-blue-800 dark:text-white hover:text-blue-500 text-lg font-medium tracking-wide"
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+                  href="/articles"
+                >
+                  <FontAwesomeIcon icon={faBook} className="w-4 h-4" />
+                  Articles
+                </NextLink>
+              </NavbarItem>
+              
+              <NavbarItem>
+                <NextLink
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
                   href="/controle"
                 >
-                  Controle
+                  <FontAwesomeIcon icon={faGamepad} className="w-4 h-4" />
+                  Contrôle
                 </NextLink>
               </NavbarItem>
 
               <NavbarItem key="shop" className="relative">
                 <NextLink
-                  className="text-blue-800 dark:text-white hover:text-blue-500 flex items-center relative text-lg font-medium tracking-wide"
+                  className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-2 relative text-base font-medium tracking-wide transition-colors duration-200"
                   href="/shop"
                 >
+                  <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
                   Shop
                   {cartItemsCount > 0 && (
                     <Badge
@@ -976,8 +599,8 @@ export const Navbar = () => {
                       content={cartItemsCount}
                       style={{
                         position: "absolute",
-                        top: "-10px",
-                        right: "-10px",
+                        top: "-8px",
+                        right: "-8px",
                       }}
                     >
                       {cartItemsCount}
@@ -985,6 +608,7 @@ export const Navbar = () => {
                   )}
                 </NextLink>
               </NavbarItem>
+              
               <NavbarItem className="hidden lg:flex">
                 <ThemeSwitch />
               </NavbarItem>
@@ -994,11 +618,12 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="sm:flex basis-1/5 sm:basis-full" justify="end">
-        {/* Bouton de mode nuit visible en mobile et tablette mais caché en desktop */}
+        {/* Bouton de thème mobile */}
         <NavbarItem className="flex lg:hidden">
           <ThemeSwitch />
         </NavbarItem>
 
+        {/* Dashboard pour utilisateurs connectés */}
         {user && (
           <NavbarItem className="hidden md:flex">
             <Button
@@ -1006,42 +631,43 @@ export const Navbar = () => {
                 user.role === "admin" ? "Dashboard Admin" : "Dashboard"
               }
               as={Link}
-              className="text-sm font-normal text-gray-600 dark:text-gray-300 bg-gray-200 dark:bg-gray-800 hover:bg-gray-300 dark:hover:bg-gray-700 button-cls-optimized"
+              className="text-sm font-normal text-gray-600 dark:text-gray-300 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-gray-700 dark:hover:to-gray-600 button-cls-optimized border border-blue-200 dark:border-gray-600"
               href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
             >
               <FontAwesomeIcon
                 className="mr-2"
-                icon={user.role === "admin" ? faCrown : faTachometerAlt}
+                icon={user.role === "admin" ? faCrown : faGraduationCap}
               />
-              {user.role === "admin" ? "Dashboard Admin" : "Dashboard"}
+              {user.role === "admin" ? "Admin" : "Dashboard"}
             </Button>
           </NavbarItem>
         )}
 
+        {/* Avatar utilisateur */}
         {!user ? (
           <Avatar
             isBordered
             showFallback
             aria-label="Connectez-vous pour accéder à votre profil"
-            className="cursor-pointer text-tiny text-default-500 transition-colors duration-700"
+            className="cursor-pointer text-tiny text-default-500 transition-all duration-300 hover:scale-110"
             name="Invité"
             size="md"
             src="/assets/default-avatar.webp"
             style={{
               borderColor: guestColors[avatarColorIndex],
               borderWidth: "3px",
-              boxShadow: `0 0 8px ${guestColors[avatarColorIndex]}`,
+              boxShadow: `0 0 12px ${guestColors[avatarColorIndex]}`,
             }}
             onClick={handleLoginRedirect}
           />
         ) : (
           <>
-            {/* For mobile view - direct click to profile */}
+            {/* Avatar mobile */}
             <div className="md:hidden">
               <Avatar
                 isBordered
                 alt={`Avatar de ${user?.pseudo}`}
-                className="transition-colors duration-700 cursor-pointer"
+                className="transition-all duration-300 cursor-pointer hover:scale-110"
                 size="sm"
                 src={user?.avatar || "/assets/default-avatar.webp"}
                 style={{
@@ -1050,7 +676,7 @@ export const Navbar = () => {
                       ? adminColors[avatarColorIndex]
                       : userColors[avatarColorIndex],
                   borderWidth: "3px",
-                  boxShadow: `0 0 8px ${
+                  boxShadow: `0 0 12px ${
                     user?.role === "admin"
                       ? adminColors[avatarColorIndex]
                       : userColors[avatarColorIndex]
@@ -1060,18 +686,18 @@ export const Navbar = () => {
               />
             </div>
 
-            {/* For desktop view - keep the dropdown */}
+            {/* Avatar desktop avec dropdown */}
             <div className="hidden md:block">
               <Dropdown>
                 <DropdownTrigger>
                   <Button
                     aria-label="Menu utilisateur"
-                    className="bg-transparent relative button-cls-optimized"
+                    className="bg-transparent relative button-cls-optimized hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-200"
                   >
                     <Avatar
                       isBordered
                       alt={`Avatar de ${user?.pseudo}`}
-                      className="transition-colors duration-700"
+                      className="transition-all duration-300"
                       size="sm"
                       src={user?.avatar || "/assets/default-avatar.webp"}
                       style={{
@@ -1080,14 +706,14 @@ export const Navbar = () => {
                             ? adminColors[avatarColorIndex]
                             : userColors[avatarColorIndex],
                         borderWidth: "3px",
-                        boxShadow: `0 0 8px ${
+                        boxShadow: `0 0 12px ${
                           user?.role === "admin"
                             ? adminColors[avatarColorIndex]
                             : userColors[avatarColorIndex]
                         }`,
                       }}
                     />
-                    <span className="ml-2 hidden xl:inline dark:text-white">
+                    <span className="ml-2 hidden xl:inline dark:text-white text-gray-700">
                       {user?.pseudo || "Utilisateur"}
                     </span>
                   </Button>
@@ -1118,7 +744,10 @@ export const Navbar = () => {
                   >
                     <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-3">
-                        <span className="text-xl">⏳</span>
+                        <PendingOrdersIcon 
+                          size={28} 
+                          className="text-yellow-600 dark:text-yellow-400"
+                        />
                         <div className="flex flex-col">
                           <div className="font-medium text-yellow-600 dark:text-yellow-400">
                             En cours
@@ -1143,7 +772,10 @@ export const Navbar = () => {
                   >
                     <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-3">
-                        <span className="text-xl">🚚</span>
+                        <ShippedOrdersIcon 
+                          size={28} 
+                          className="text-blue-600 dark:text-blue-400"
+                        />
                         <div className="flex flex-col">
                           <div className="font-medium text-blue-600 dark:text-blue-400">
                             Envoyées
@@ -1168,7 +800,10 @@ export const Navbar = () => {
                   >
                     <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-3">
-                        <span className="text-xl">✅</span>
+                        <DeliveredOrdersIcon 
+                          size={28} 
+                          className="text-green-600 dark:text-green-400"
+                        />
                         <div className="flex flex-col">
                           <div className="font-medium text-green-600 dark:text-green-400">
                             Livrées
@@ -1204,11 +839,11 @@ export const Navbar = () => {
                     key="controle"
                     onClick={() => router.push("/controle")}
                   >
-                    <FontAwesomeIcon className="mr-2" icon={faNewspaper} />
-                    Controle
+                    <FontAwesomeIcon className="mr-2" icon={faGamepad} />
+                    Contrôle
                   </DropdownItem>
 
-                  {/* mode */}
+                  {/* Thème */}
                   <DropdownItem key="theme" textValue="Thème">
                     <Dropdown placement="left-start">
                       <DropdownTrigger>
@@ -1222,11 +857,8 @@ export const Navbar = () => {
                           key="light"
                           textValue="Mode clair"
                           onClick={() => {
-                            // Nettoyer le localStorage du mode automatique
                             localStorage.removeItem("themeMode");
                             localStorage.removeItem("autoModeHours");
-                            
-                            // Appliquer le mode clair
                             document.documentElement.classList.remove("dark");
                             localStorage.setItem("theme", "light");
                             setTheme("light");
@@ -1245,11 +877,8 @@ export const Navbar = () => {
                           key="dark"
                           textValue="Mode sombre"
                           onClick={() => {
-                            // Nettoyer le localStorage du mode automatique
                             localStorage.removeItem("themeMode");
                             localStorage.removeItem("autoModeHours");
-                            
-                            // Appliquer le mode sombre
                             document.documentElement.classList.add("dark");
                             localStorage.setItem("theme", "dark");
                             setTheme("dark");
@@ -1268,14 +897,12 @@ export const Navbar = () => {
                           key="auto"
                           textValue="Mode automatique"
                           onClick={() => {
-                            // Récupérer les heures sauvegardées ou utiliser les valeurs par défaut
                             const savedHours = localStorage.getItem("autoModeHours");
                             const autoModeHours = savedHours ? JSON.parse(savedHours) : { start: 20, end: 7 };
                             
                             localStorage.setItem("themeMode", "auto");
                             localStorage.setItem("autoModeHours", JSON.stringify(autoModeHours));
                             
-                            // Appliquer le thème basé sur l'heure actuelle
                             const currentHour = new Date().getHours();
                             const shouldBeDark = currentHour >= autoModeHours.start || currentHour < autoModeHours.end;
 
@@ -1313,7 +940,7 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Menu burger pour mobile avec animations améliorées - DÉPLACÉ EN DEHORS DU NavbarContent */}
+      {/* Menu burger mobile avec animations améliorées */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div
@@ -1325,7 +952,7 @@ export const Navbar = () => {
               scale: 1,
               rotateX: 0
             }}
-            className="lg:hidden dark:bg-gray-900 bg-white w-full shadow-lg absolute top-full left-0 z-50 max-h-[80vh] overflow-y-auto rounded-b-lg border-t border-gray-200 dark:border-gray-700 backdrop-blur-sm"
+            className="lg:hidden dark:bg-gray-900/95 bg-white/95 w-full shadow-xl absolute top-full left-0 z-50 max-h-[80vh] overflow-y-auto rounded-b-xl border-t border-gray-200 dark:border-gray-700 backdrop-blur-md"
             exit={{ 
               height: 0, 
               opacity: 0, 
@@ -1347,7 +974,7 @@ export const Navbar = () => {
             }}
           >
             <motion.div 
-              className="p-4 space-y-4"
+              className="p-6 space-y-6"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.2, duration: 0.3 }}
@@ -1362,14 +989,15 @@ export const Navbar = () => {
                   transition={{ delay: 0.3, duration: 0.4 }}
                 >
                   <motion.h3 
-                    className="text-md font-semibold text-gray-600 dark:text-gray-300 px-2"
+                    className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4, duration: 0.3 }}
                   >
+                    <FontAwesomeIcon icon={faUser} className="text-blue-600" />
                     Mon compte
                   </motion.h3>
-                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4 space-y-3 border border-blue-200 dark:border-gray-600">
                     <NextLink
                       className="block w-full"
                       href="/orders"
@@ -1440,7 +1068,7 @@ export const Navbar = () => {
 
                     {/* Dashboard */}
                     <NextLink
-                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href={
                         user.role === "admin"
                           ? "/admin/dashboard"
@@ -1451,7 +1079,7 @@ export const Navbar = () => {
                       <FontAwesomeIcon
                         className="mr-3 text-blue-600 dark:text-blue-400 w-5"
                         icon={
-                          user.role === "admin" ? faCrown : faTachometerAlt
+                          user.role === "admin" ? faCrown : faGraduationCap
                         }
                       />
                       <span className="font-medium">
@@ -1463,27 +1091,27 @@ export const Navbar = () => {
 
                     {/* Contrôle */}
                     <NextLink
-                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/controle"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FontAwesomeIcon
                         className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                        icon={faNewspaper}
+                        icon={faGamepad}
                       />
                       <span className="font-medium">Contrôle</span>
                     </NextLink>
 
                     {/* Déconnexion */}
                     <button
-                      className="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      className="flex items-center w-full px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-all duration-200"
                       onClick={() => {
                         setIsMenuOpen(false);
                         handleLogout();
                       }}
                     >
                       <FontAwesomeIcon
-                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        className="mr-3 text-red-600 dark:text-red-400 w-5"
                         icon={faSignOutAlt}
                       />
                       <span className="font-medium">Déconnexion</span>
@@ -1501,65 +1129,66 @@ export const Navbar = () => {
                   transition={{ delay: 0.3, duration: 0.4 }}
                 >
                   <motion.h3 
-                    className="text-md font-semibold text-gray-600 dark:text-gray-300 px-2"
+                    className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2"
                     initial={{ opacity: 0, x: -20 }}
                     animate={{ opacity: 1, x: 0 }}
                     transition={{ delay: 0.4, duration: 0.3 }}
                   >
+                    <FontAwesomeIcon icon={faHome} className="text-blue-600" />
                     Navigation
                   </motion.h3>
-                  <div className="bg-gray-50 dark:bg-gray-800 rounded-lg p-4 space-y-3">
+                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4 space-y-3 border border-blue-200 dark:border-gray-600">
                     <NextLink
-                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <span className="text-xl mr-3">🏠</span>
+                      <FontAwesomeIcon icon={faHome} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
                       <span className="font-medium">Accueil</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/about"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <span className="text-xl mr-3">ℹ️</span>
+                      <FontAwesomeIcon icon={faInfoCircle} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
                       <span className="font-medium">À propos</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/articles"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <span className="text-xl mr-3">📚</span>
+                      <FontAwesomeIcon icon={faBook} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
                       <span className="font-medium">Articles</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/controle"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <span className="text-xl mr-3">🎮</span>
+                      <FontAwesomeIcon icon={faGamepad} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
                       <span className="font-medium">Contrôle</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/shop"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <span className="text-xl mr-3">🛒</span>
+                      <FontAwesomeIcon icon={faShoppingCart} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
                       <span className="font-medium">Shop</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-all duration-200"
+                      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/contact"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <span className="text-xl mr-3">📞</span>
+                      <FontAwesomeIcon icon={faHeart} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
                       <span className="font-medium">Contact</span>
                     </NextLink>
                   </div>

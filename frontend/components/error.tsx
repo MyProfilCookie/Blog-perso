@@ -2,8 +2,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { LightAnimation } from "@/components/DynamicMotion";
-import { Image } from '@nextui-org/react';
+import { Image } from "@nextui-org/react";
 import { motion } from "framer-motion";
 
 const ErrorPage: React.FC = () => {

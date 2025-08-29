@@ -3,6 +3,8 @@ import { Inter } from "next/font/google";
 import "@/styles/globals.css";
 import { Providers } from "./providers";
 import { Toaster } from "sonner";
+import { Navbar } from "@/components/navbar";
+import Footer from "@/components/footer";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -96,7 +98,13 @@ export default function RootLayout({
       </head>
       <body className={inter.className}>
         <Providers>
-          {children}
+          <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
+            <Navbar />
+            <main className="flex-grow px-6 pt-16 mx-auto max-w-7xl w-full">
+              {children}
+            </main>
+            <Footer />
+          </div>
           <Toaster 
             position="top-right"
             richColors
