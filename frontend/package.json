@@ -30,9 +30,9 @@
 		"optimize:critical": "node scripts/optimize-critical-components.js",
 		"optimize:motion": "node scripts/optimize-framer-motion.js",
 		"performance:fix": "npm run optimize:navbar && npm run optimize:critical && npm run optimize:motion && npm run build",
-    "performance:apply-all": "node scripts/apply-all-performance-fixes.js",
-    "mobile:optimize": "node scripts/optimize-mobile-performance.js",
-    "mobile:build": "npm run mobile:optimize && npm run build",
+		"performance:apply-all": "node scripts/apply-all-performance-fixes.js",
+		"mobile:optimize": "node scripts/optimize-mobile-performance.js",
+		"mobile:build": "npm run mobile:optimize && npm run build",
 		"vercel-build": "next build"
 	},
 	"dependencies": {
