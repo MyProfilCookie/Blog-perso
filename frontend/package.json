@@ -118,19 +118,13 @@
 		"tailwind-merge": "^2.2.1",
 		"tailwindcss-animate": "^1.0.7",
 		"update-browserslist-db": "^1.0.11",
-<<<<<<< HEAD
-		"vercel": "^44.7.3"
+		"vercel": "^46.1.0"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.28.0",
 		"@babel/preset-env": "^7.28.0",
 		"@babel/preset-typescript": "^7.27.1",
-=======
-		"vercel": "^46.1.0"
-	},
-	"devDependencies": {
 		"@next/bundle-analyzer": "^15.5.0",
->>>>>>> restore-ancienne-version
 		"@types/node": "20.11.19",
 		"@types/react": "^18.2.55",
 		"@types/react-dom": "^18.2.19",
