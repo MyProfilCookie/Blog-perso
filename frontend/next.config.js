@@ -17,7 +17,7 @@ console.log(
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Optimisations pour mobile
-  experimental: {
+   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['@nextui-org/react', 'framer-motion', 'lucide-react'],
   },
@@ -27,7 +27,7 @@ const nextConfig = {
     formats: ['image/webp', 'image/avif'],
     deviceSizes: [640, 750, 828, 1080, 1200, 1920, 2048, 3840],
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
-    minimumCacheTTL: 31536000, // 1 an
+    minimumCacheTTL: 31536000, //
     dangerouslyAllowSVG: true,
     contentSecurityPolicy: "default-src 'self'; script-src 'none'; sandbox;",
   },
@@ -98,7 +98,20 @@ const nextConfig = {
         },
       };
     }
-
+    
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+      };
+    }
+    
+    // Configuration pour Chart.js - les imports dynamiques gèrent déjà le SSR
+    // Pas besoin de marquer comme externe
+    
+    // Configuration supplémentaire si nécessaire
+    // Pas de transformation d'imports pour NextUI pour éviter les erreurs de chemin
+    
     return config;
   },
 
