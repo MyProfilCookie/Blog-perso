@@ -26,7 +26,7 @@ import {
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import dayjs from "dayjs";
-import { motion } from "framer-motion";
+// import { motion } from "framer-motion"; // Removed for performance optimization
 
 import OrderHistoryDialog from "@/components/OrderHistoryDialog";
 import articlesData from "@/public/dataarticles.json";
@@ -1404,11 +1404,8 @@ const AdminDashboard = () => {
       </div>
 
       {/* Gestion des articles */}
-      <OptimizedMotion
-        animate={{ opacity: 1 }}
-        className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 performance-optimized"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.6, delay: 0.3 }}
+      <div
+        className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 performance-optimized fade-optimized visible"
       >
         <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold col-span-full text-center sm:text-left performance-optimized">
           Gestion des articles
@@ -1470,14 +1467,11 @@ const AdminDashboard = () => {
             </div>
           </div>
         ))}
-      </OptimizedMotion>
+      </div>
 
       {/* Ajouter un nouvel article */}
-      <OptimizedMotion
-        animate={{ opacity: 1 }}
-        className="mt-4 performance-optimized"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.6, delay: 0.5 }}
+      <div
+        className="mt-4 performance-optimized fade-optimized visible"
       >
         <Input
           key="title"
@@ -1500,14 +1494,11 @@ const AdminDashboard = () => {
         <Button size="sm" onClick={addArticle}>
           <FontAwesomeIcon icon={faPlus} /> Ajouter un article
         </Button>
-      </OptimizedMotion>
+      </div>
 
       {/* Visualisation des messages */}
-      <OptimizedMotion
-        animate={{ opacity: 1 }}
-        className="mt-6 sm:mt-8 performance-optimized"
-        initial={{ opacity: 0 }}
-        transition={{ duration: 0.6, delay: 0.7 }}
+      <div
+        className="mt-6 sm:mt-8 performance-optimized fade-optimized visible"
       >
         <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold performance-optimized">
           Messages des utilisateurs
@@ -1576,7 +1567,7 @@ const AdminDashboard = () => {
             </TableBody>
           </Table>
         </div>
-      </OptimizedMotion>
+      </div>
 
       {/* Intégration du composant de dialogue pour l'historique des commandes */}
       <OrderHistoryDialog
