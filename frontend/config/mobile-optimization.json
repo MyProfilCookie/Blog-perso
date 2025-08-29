@@ -1,0 +1,11 @@
+{
+  "mobileOptimizations": {
+    "enableReducedMotion": true,
+    "enableLowQualityImages": true,
+    "enableLazyLoading": true,
+    "enablePreloadCritical": true,
+    "maxImageQuality": 60,
+    "animationDuration": 200,
+    "enableServiceWorker": true
+  }
+}

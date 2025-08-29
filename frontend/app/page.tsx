@@ -6,9 +6,11 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { Suspense } from "react";
+import { Suspense, useEffect } from "react";
 import { Card, CardBody, CardHeader } from "@/components/OptimizedNextUI";
 import OptimizedImage from "@/components/OptimizedImage";
+import MobileOptimizedImage from "@/components/MobileOptimizedImage";
+import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import { LazyWrapper } from "@/components/LazyComponents";
 import Link from "next/link";
 
@@ -122,6 +124,18 @@ const stats = [
 ];
 
 export default function HomePage() {
+  const { isMobile, optimizePerformance, preloadCriticalResources } = useMobileOptimization({
+    enableReducedMotion: true,
+    enableLowQualityImages: true,
+    enablePreloadCritical: true
+  });
+
+  // Optimisations au montage
+  useEffect(() => {
+    optimizePerformance();
+    preloadCriticalResources();
+  }, [optimizePerformance, preloadCriticalResources]);
+
   return (
     <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
       <main className="flex-grow">

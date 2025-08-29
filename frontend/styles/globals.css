@@ -320,3 +320,57 @@ body {
     image-rendering: crisp-edges;
   }
 }
+/* Optimisations mobile */
+@media (max-width: 768px) {
+  /* Réduire les animations sur mobile */
+  * {
+    animation-duration: 0.2s !important;
+    transition-duration: 0.2s !important;
+  }
+  
+  /* Optimiser les images */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Réduire les ombres pour les performances */
+  .shadow-lg, .shadow-xl {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Optimiser les grilles */
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  }
+  
+  /* Réduire les espacements */
+  .p-8, .py-8, .px-8 {
+    padding: 1rem !important;
+  }
+  
+  .m-8, .my-8, .mx-8 {
+    margin: 1rem !important;
+  }
+}
+
+/* Optimisations pour connexions lentes */
+@media (prefers-reduced-data: reduce) {
+  * {
+    animation-duration: 0.1s !important;
+    transition-duration: 0.1s !important;
+  }
+  
+  img {
+    filter: blur(0) !important;
+  }
+}
+
+/* Optimisations pour mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
