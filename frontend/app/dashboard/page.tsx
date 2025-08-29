@@ -85,38 +85,38 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="container px-4 mx-auto mt-6">
-      <h1 className="mb-4 text-3xl font-bold text-center md:text-4xl">
+    <div className="container px-4 mx-auto mt-6 performance-optimized" style={{ minHeight: '200px', contain: 'layout style paint' }}>
+      <h1 className="mb-4 text-3xl font-bold text-center md:text-4xl performance-optimized">
         Bonjour à toi, {user.pseudo} 👋
       </h1>
-      <p className="mb-6 text-sm text-center text-muted-foreground md:text-base">
+      <p className="mb-6 text-sm text-center text-muted-foreground md:text-base performance-optimized">
         Heure actuelle : {currentTime} | Date de création du compte :{" "}
         {createdAt}
       </p>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3 grid-cls-optimized performance-optimized">
         {/* Cours Consultés */}
-        <Card className="overflow-hidden shadow-md">
-          <CardHeader className="bg-primary p-3">
-            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl">
+        <Card className="overflow-hidden shadow-md performance-optimized">
+          <CardHeader className="bg-primary p-3 performance-optimized">
+            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl performance-optimized">
               Cours Consultés
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-4">
+          <CardContent className="p-4 performance-optimized">
             {mockData.courses.map((course, index) => (
-              <div key={index} className="mb-4">
-                <p className="mb-1 font-medium">{course.title}</p>
+              <div key={index} className="mb-4 performance-optimized">
+                <p className="mb-1 font-medium performance-optimized">{course.title}</p>
                 <Progress
                   aria-label={`Progression du cours ${course.title}`}
-                  className="h-2 mb-1"
+                  className="h-2 mb-1 performance-optimized"
                   value={course.progress}
                 />
-                <p className="mb-2 text-sm text-muted-foreground">
+                <p className="mb-2 text-sm text-muted-foreground performance-optimized">
                   Dernière consultation : {course.lastViewed}
                 </p>
                 <Button
                   aria-label={`Reprendre ${course.title}`}
-                  className="w-full mt-1"
+                  className="w-full mt-1 button-cls-optimized performance-optimized"
                   size="sm"
                 >
                   Reprendre
@@ -127,23 +127,23 @@ const ProfilePage = () => {
         </Card>
 
         {/* Évaluations faites */}
-        <Card className="overflow-hidden shadow-md">
-          <CardHeader className="bg-primary p-3">
-            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl">
+        <Card className="overflow-hidden shadow-md performance-optimized">
+          <CardHeader className="bg-primary p-3 performance-optimized">
+            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl performance-optimized">
               Évaluations
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-4">
+          <CardContent className="p-4 performance-optimized">
             {mockData.evaluations.map((evaluation, index) => (
-              <div key={index} className="mb-4">
-                <p className="mb-1 font-medium">{evaluation.title}</p>
-                <p className="text-sm">Score : {evaluation.score}%</p>
-                <p className="mb-2 text-sm text-muted-foreground">
+              <div key={index} className="mb-4 performance-optimized">
+                <p className="mb-1 font-medium performance-optimized">{evaluation.title}</p>
+                <p className="text-sm performance-optimized">Score : {evaluation.score}%</p>
+                <p className="mb-2 text-sm text-muted-foreground performance-optimized">
                   Date : {evaluation.date}
                 </p>
                 <Button
                   aria-label={`Voir l'évaluation de ${evaluation.title}`}
-                  className="w-full mt-1"
+                  className="w-full mt-1 button-cls-optimized performance-optimized"
                   size="sm"
                 >
                   Voir l&apos;évaluation
@@ -154,27 +154,27 @@ const ProfilePage = () => {
         </Card>
 
         {/* Articles Consultés */}
-        <Card className="overflow-hidden shadow-md">
-          <CardHeader className="bg-primary p-3">
-            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl">
+        <Card className="overflow-hidden shadow-md performance-optimized">
+          <CardHeader className="bg-primary p-3 performance-optimized">
+            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl performance-optimized">
               Articles Consultés
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-4">
+          <CardContent className="p-4 performance-optimized">
             {mockData.articles.map((article, index) => (
-              <div key={index} className="mb-4">
-                <p className="mb-1 font-medium">{article.title}</p>
+              <div key={index} className="mb-4 performance-optimized">
+                <p className="mb-1 font-medium performance-optimized">{article.title}</p>
                 <Progress
                   aria-label={`Progression de l'article ${article.title}`}
-                  className="h-2 mb-1"
+                  className="h-2 mb-1 performance-optimized"
                   value={article.progress}
                 />
-                <p className="mb-2 text-sm text-muted-foreground">
+                <p className="mb-2 text-sm text-muted-foreground performance-optimized">
                   Dernière consultation : {article.lastViewed}
                 </p>
                 <Button
                   aria-label={`Reprendre ${article.title}`}
-                  className="w-full mt-1"
+                  className="w-full mt-1 button-cls-optimized performance-optimized"
                   size="sm"
                 >
                   Reprendre
@@ -186,14 +186,14 @@ const ProfilePage = () => {
       </div>
 
       {/* Diagramme de progression */}
-      <Card className="mt-8 overflow-hidden shadow-md">
-        <CardHeader className="bg-primary p-3">
-          <CardTitle className="text-lg text-center text-primary-foreground md:text-xl">
+      <Card className="mt-8 overflow-hidden shadow-md performance-optimized">
+        <CardHeader className="bg-primary p-3 performance-optimized">
+          <CardTitle className="text-lg text-center text-primary-foreground md:text-xl performance-optimized">
             Progression des activités
           </CardTitle>
         </CardHeader>
-        <CardContent className="p-4">
-          <div className="w-full" style={{ height: "300px" }}>
+        <CardContent className="p-4 performance-optimized">
+          <div className="w-full performance-optimized" style={{ height: "300px" }}>
             <ResponsiveContainer height="100%" width="100%">
               <LineChart
                 data={[

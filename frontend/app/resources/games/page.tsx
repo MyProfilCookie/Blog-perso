@@ -1,6 +1,10 @@
 "use client";
 import React from "react";
-import { Card, CardBody, Image, Button, Divider } from "@nextui-org/react";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { Image } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Divider } from '@nextui-org/react';
 
 import BackButton from "@/components/back";
 

@@ -1,6 +1,7 @@
+"use client";
+import dynamic from 'next/dynamic';
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-console */
-"use client";
 
 import { useEffect, useState } from "react";
 import { useParams, useRouter } from "next/navigation";

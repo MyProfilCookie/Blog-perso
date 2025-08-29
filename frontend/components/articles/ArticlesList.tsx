@@ -1,7 +1,10 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Input, Button, Select, SelectItem } from "@nextui-org/react";
+import { Input } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Select } from '@nextui-org/react'
+import { SelectItem } from '@nextui-org/react';
 import { motion, AnimatePresence } from "framer-motion";
 import axios from "axios";
 

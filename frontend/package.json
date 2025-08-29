@@ -11,6 +11,28 @@
 		"analyze": "ANALYZE=true next build",
 		"build:prod": "NODE_ENV=production next build --debug",
 		"build:analyze": "ANALYZE=true next build",
+		"build:optimized": "./scripts/build-optimized.sh",
+		"deploy:optimized": "./scripts/deploy-optimized.sh",
+		"deploy:preview": "./scripts/deploy-optimized.sh --preview",
+		"performance:report": "node -e \"console.log(require('./lib/metrics').getPerformanceReport())\"",
+		"performance:cleanup": "node -e \"require('./lib/metrics').performanceMonitor.cleanup()\"",
+		"performance:analyze": "node scripts/analyze-performance.js",
+		"images:optimize": "node scripts/optimize-images.js",
+		"images:optimize:aggressive": "node scripts/aggressive-image-optimization.js",
+		"images:optimize:quick": "node scripts/quick-image-optimization.js",
+		"images:optimize:covers": "node scripts/ultra-optimize-covers.js",
+		"images:optimize:all": "node scripts/optimize-all-heavy-images.js",
+		"bundle:optimize": "node scripts/optimize-bundle.js",
+		"bundle:optimize:simple": "node scripts/simple-bundle-optimization.js",
+		"images:update-refs": "node scripts/update-image-references.js",
+		"optimize:cls": "node scripts/optimize-cls.js",
+		"optimize:navbar": "node scripts/optimize-navbar-performance.js",
+		"optimize:critical": "node scripts/optimize-critical-components.js",
+		"optimize:motion": "node scripts/optimize-framer-motion.js",
+		"performance:fix": "npm run optimize:navbar && npm run optimize:critical && npm run optimize:motion && npm run build",
+    "performance:apply-all": "node scripts/apply-all-performance-fixes.js",
+    "mobile:optimize": "node scripts/optimize-mobile-performance.js",
+    "mobile:build": "npm run mobile:optimize && npm run build",
 		"vercel-build": "next build"
 	},
 	"dependencies": {
@@ -86,6 +108,7 @@
 		"react-toastify": "^10.0.4",
 		"recharts": "^2.10.4",
 		"rimraf": "^5.0.5",
+		"sharp": "^0.34.3",
 		"sonner": "^1.4.0",
 		"stripe": "^14.14.0",
 		"styled-components": "^6.1.8",
@@ -95,12 +118,19 @@
 		"tailwind-merge": "^2.2.1",
 		"tailwindcss-animate": "^1.0.7",
 		"update-browserslist-db": "^1.0.11",
+<<<<<<< HEAD
 		"vercel": "^44.7.3"
 	},
 	"devDependencies": {
 		"@babel/core": "^7.28.0",
 		"@babel/preset-env": "^7.28.0",
 		"@babel/preset-typescript": "^7.27.1",
+=======
+		"vercel": "^46.1.0"
+	},
+	"devDependencies": {
+		"@next/bundle-analyzer": "^15.5.0",
+>>>>>>> restore-ancienne-version
 		"@types/node": "20.11.19",
 		"@types/react": "^18.2.55",
 		"@types/react-dom": "^18.2.19",

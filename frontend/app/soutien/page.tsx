@@ -1,9 +1,12 @@
+"use client";
+
 /* eslint-disable react/jsx-no-undef */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable prettier/prettier */
 /* eslint-disable import/order */
 /* eslint-disable react/no-unescaped-entities */
-"use client";
+
+import dynamic from 'next/dynamic';
 
 import React, { useState } from "react";
 import { motion } from "framer-motion";

@@ -1,10 +1,13 @@
+"use client";
+import dynamic from 'next/dynamic';
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
-"use client";
 
 import React from "react";
 import { useParams } from "next/navigation";
-import { Card, CardBody, Button } from "@nextui-org/react";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { Button } from '@nextui-org/react';
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";

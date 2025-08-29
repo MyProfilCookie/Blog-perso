@@ -1,3 +1,5 @@
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/jsx-sort-props */
 /* eslint-disable no-console */
@@ -5,7 +7,8 @@
 /* eslint-disable import/order */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
-"use client";
+
+import dynamic from 'next/dynamic';
 
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";

@@ -1,10 +1,12 @@
+"use client";
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
-"use client";
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Input, Button, Checkbox } from "@nextui-org/react";
+import { Input } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Checkbox } from '@nextui-org/react';
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import "sweetalert2/dist/sweetalert2.min.css";

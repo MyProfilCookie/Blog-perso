@@ -1,14 +1,14 @@
 "use client";
+import dynamic from 'next/dynamic';
 
 import { useState, useEffect } from "react";
-import {
-  Card,
-  CardBody,
-  Button,
-  Avatar,
-  Input,
-  Textarea,
-} from "@nextui-org/react";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Avatar } from '@nextui-org/react'
+import { Input } from '@nextui-org/react'
+import { Textarea } from '@nextui-org/react'
+import {  } from '@nextui-org/react';
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";

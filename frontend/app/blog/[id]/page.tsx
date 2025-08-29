@@ -1,8 +1,11 @@
+"use client";
+
 /* eslint-disable react/no-unknown-property */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 /* eslint-disable react/no-unescaped-entities */
-"use client";
+
+import dynamic from 'next/dynamic';
 
 import { useEffect, useState } from "react";
 import { useParams } from "next/navigation";

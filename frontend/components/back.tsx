@@ -1,6 +1,6 @@
 "use client";
 
-import { Button } from "@nextui-org/react";
+import { Button } from '@nextui-org/react';
 import { useRouter } from "next/navigation";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft } from "@fortawesome/free-solid-svg-icons";
@@ -31,7 +31,7 @@ export default function BackButton({ label }: BackButtonProps) {
   }
 
   return (
-    <div className="w-full flex justify-start mt-20 mb-4 px-4">
+    <div className="w-full flex justify-start mb-4 px-4">
       <Button
         variant="light"
         onPress={() => router.back()}

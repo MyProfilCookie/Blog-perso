@@ -1,9 +1,12 @@
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable import/order */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable prettier/prettier */
-"use client";
+
+import dynamic from 'next/dynamic';
 
 import { useState, useEffect, useMemo } from "react";
 import React from "react";

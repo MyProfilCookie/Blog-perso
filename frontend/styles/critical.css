@@ -1,0 +1,124 @@
+/* CSS critique pour le First Contentful Paint */
+@layer base {
+  html {
+    font-family: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    line-height: 1.5;
+    -webkit-text-size-adjust: 100%;
+    -moz-tab-size: 4;
+    tab-size: 4;
+  }
+
+  body {
+    margin: 0;
+    font-family: inherit;
+    line-height: inherit;
+    background-color: #fefce8; /* bg-cream */
+    color: #111827; /* text-gray-900 */
+  }
+
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #111827; /* dark:bg-gray-900 */
+      color: #f9fafb; /* dark:text-gray-100 */
+    }
+  }
+}
+
+/* Classes critiques pour éviter le CLS */
+.min-h-screen {
+  min-height: 100vh;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.font-bold {
+  font-weight: 700;
+}
+
+.text-3xl {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+}
+
+.text-violet-600 {
+  color: #7c3aed;
+}
+
+.bg-white {
+  background-color: #ffffff;
+}
+
+.shadow-lg {
+  box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}
+
+.rounded-lg {
+  border-radius: 0.5rem;
+}
+
+.p-4 {
+  padding: 1rem;
+}
+
+.mb-4 {
+  margin-bottom: 1rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+/* Animation de chargement pour réduire le CLS */
+.animate-pulse {
+  animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: .5;
+  }
+}
+
+/* Optimisations pour les images */
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+/* Optimisations pour les boutons */
+button {
+  cursor: pointer;
+  border: none;
+  background: none;
+  font-family: inherit;
+}
+
+button:focus {
+  outline: 2px solid #8b5cf6;
+  outline-offset: 2px;
+}

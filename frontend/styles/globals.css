@@ -86,13 +86,291 @@ body {
   }
 }
 
-
-
-@layer base {
-  * {
-    @apply border-border outline-ring/50;
+/* Animations pour le header */
+@keyframes blob {
+  0% {
+    transform: translate(0px, 0px) scale(1);
   }
+  33% {
+    transform: translate(30px, -50px) scale(1.1);
+  }
+  66% {
+    transform: translate(-20px, 20px) scale(0.9);
+  }
+  100% {
+    transform: translate(0px, 0px) scale(1);
+  }
+}
+
+.animate-blob {
+  animation: blob 7s infinite;
+}
+
+.animation-delay-2000 {
+  animation-delay: 2s;
+}
+
+.animation-delay-4000 {
+  animation-delay: 4s;
+}
+
+/* Optimisations de performance CSS */
+@layer base {
+  /* Optimisations de rendu */
+  * {
+    box-sizing: border-box;
+  }
+  
+  html {
+    scroll-behavior: smooth;
+    text-rendering: optimizeSpeed;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
   body {
-    @apply bg-background text-foreground;
+    margin: 0;
+    padding: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    color: #1f2937;
+    background-color: #faf9f5;
+    overflow-x: hidden;
+  }
+  
+  /* Optimisations pour les images */
+  img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  /* Optimisations pour les liens */
+  a {
+    color: inherit;
+    text-decoration: none;
+  }
+  
+  /* Optimisations pour les boutons */
+  button {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  
+  /* Optimisations pour les inputs */
+  input, textarea, select {
+    font-family: inherit;
+    font-size: inherit;
+  }
+}
+
+@layer components {
+  /* Classes utilitaires optimisées */
+  .container-optimized {
+    width: 100%;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+  }
+  
+  .text-balance {
+    text-wrap: balance;
+  }
+  
+  .aspect-square {
+    aspect-ratio: 1 / 1;
+  }
+  
+  .aspect-video {
+    aspect-ratio: 16 / 9;
+  }
+  
+  /* Optimisations pour les animations */
+  .animate-fade-in {
+    animation: fadeIn 0.3s ease-in-out;
+  }
+  
+  .animate-slide-up {
+    animation: slideUp 0.4s ease-out;
+  }
+  
+  /* Optimisations pour les performances de scroll */
+  .scroll-smooth {
+    scroll-behavior: smooth;
+  }
+  
+  /* Optimisations pour les performances de rendu */
+  .will-change-transform {
+    will-change: transform;
+  }
+  
+  .will-change-opacity {
+    will-change: opacity;
+  }
+  
+  /* Optimisations pour les performances de layout */
+  .contain-layout {
+    contain: layout;
+  }
+  
+  .contain-paint {
+    contain: paint;
+  }
+  
+  .contain-strict {
+    contain: strict;
+  }
+}
+
+@layer utilities {
+  /* Animations optimisées */
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  /* Optimisations pour les performances de rendu */
+  .gpu-accelerated {
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Optimisations pour les performances de scroll */
+  .scroll-optimized {
+    -webkit-overflow-scrolling: touch;
+    scroll-behavior: smooth;
+  }
+  
+  /* Optimisations pour les performances de layout */
+  .layout-optimized {
+    contain: layout style paint;
+  }
+  
+  /* Optimisations pour les performances de peinture */
+  .paint-optimized {
+    contain: paint;
+    will-change: auto;
+  }
+}
+
+/* Optimisations spécifiques pour les performances */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Optimisations pour les performances de chargement */
+.loading-optimized {
+  opacity: 0;
+  transition: opacity 0.3s ease-in-out;
+}
+
+.loading-optimized.loaded {
+  opacity: 1;
+}
+
+/* Optimisations pour les performances de rendu sur mobile */
+@media (max-width: 768px) {
+  .mobile-optimized {
+    contain: layout style paint;
+    will-change: auto;
+  }
+  
+  .mobile-scroll-optimized {
+    -webkit-overflow-scrolling: touch;
+    overscroll-behavior: contain;
+  }
+}
+
+/* Optimisations pour les performances de rendu sur desktop */
+@media (min-width: 769px) {
+  .desktop-optimized {
+    contain: layout style paint;
+  }
+}
+
+/* Optimisations pour les performances de rendu sur les écrans haute résolution */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+  .high-dpi-optimized {
+    image-rendering: -webkit-optimize-contrast;
+    image-rendering: crisp-edges;
+  }
+}
+/* Optimisations mobile */
+@media (max-width: 768px) {
+  /* Réduire les animations sur mobile */
+  * {
+    animation-duration: 0.2s !important;
+    transition-duration: 0.2s !important;
+  }
+  
+  /* Optimiser les images */
+  img {
+    max-width: 100% !important;
+    height: auto !important;
+  }
+  
+  /* Réduire les ombres pour les performances */
+  .shadow-lg, .shadow-xl {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+  }
+  
+  /* Optimiser les grilles */
+  .grid {
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)) !important;
+  }
+  
+  /* Réduire les espacements */
+  .p-8, .py-8, .px-8 {
+    padding: 1rem !important;
+  }
+  
+  .m-8, .my-8, .mx-8 {
+    margin: 1rem !important;
+  }
+}
+
+/* Optimisations pour connexions lentes */
+@media (prefers-reduced-data: reduce) {
+  * {
+    animation-duration: 0.1s !important;
+    transition-duration: 0.1s !important;
+  }
+  
+  img {
+    filter: blur(0) !important;
+  }
+}
+
+/* Optimisations pour mouvement réduit */
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
   }
 }

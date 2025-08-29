@@ -1,14 +1,15 @@
+"use client";
+
 /* eslint-disable import/order */
 /* eslint-disable prettier/prettier */
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-console */
-"use client";
 
 // 📌 1. Imports de bibliothèques tierces
-import { motion } from "framer-motion";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
@@ -109,26 +110,26 @@ export default function ArticlesClient() {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               className="h-full"
               initial={{ opacity: 0, y: 50, scale: 0.8 }}
-              transition={{ 
-                duration: 0.6, 
+              transition={{
+                duration: 0.6,
                 delay: index * 0.1,
                 type: "spring",
                 stiffness: 100,
                 damping: 15
               }}
-              whileHover={{ 
-                y: -8, 
+              whileHover={{
+                y: -8,
                 scale: 1.02,
-                transition: { 
+                transition: {
                   duration: 0.3,
                   type: "spring",
                   stiffness: 300
-                } 
+                }
               }}
               whileTap={{ scale: 0.98 }}
             >
               <Card className="overflow-hidden bg-cream dark:bg-gray-800 border-transparent dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col group">
-                <motion.div 
+                <motion.div
                   className="relative overflow-hidden"
                   whileHover={{ scale: 1.05 }}
                   transition={{ duration: 0.3 }}
@@ -138,7 +139,7 @@ export default function ArticlesClient() {
                     className="object-cover object-center w-full h-64 md:h-72 lg:h-80 transition-transform duration-700 group-hover:scale-110"
                     src={article.imageUrl}
                   />
-                  <motion.div 
+                  <motion.div
                     className="absolute top-3 right-3"
                     initial={{ opacity: 0, scale: 0.5 }}
                     animate={{ opacity: 1, scale: 1 }}
@@ -151,7 +152,7 @@ export default function ArticlesClient() {
                 </motion.div>
 
                 <CardHeader className="p-6 pb-0">
-                  <motion.h3 
+                  <motion.h3
                     className="mb-3 text-xl md:text-2xl font-bold text-center text-gray-800 dark:text-white"
                     whileHover={{ color: "#7c3aed" }}
                     transition={{ duration: 0.3 }}
@@ -161,7 +162,7 @@ export default function ArticlesClient() {
                 </CardHeader>
 
                 <CardContent className="p-6 pt-2 flex-grow">
-                  <motion.p 
+                  <motion.p
                     className="text-base md:text-lg text-center text-gray-600 dark:text-gray-300 line-clamp-4"
                     initial={{ opacity: 0 }}
                     animate={{ opacity: 1 }}

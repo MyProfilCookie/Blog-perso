@@ -92,7 +92,14 @@ module.exports = {
   				'4': 'hsl(var(--chart-4))',
   				'5': 'hsl(var(--chart-5))'
   			},
-  			'cream': '#faf9f5',
+  			'cream': '#f8faff', // Bleu très clair qui s'harmonise avec votre palette existante
+			'soft-blue': '#f0f8ff', // Bleu doux apaisant
+			'gentle-mint': '#f0fff4', // Vert menthe doux
+			'soft-lavender': '#faf5ff', // Lavande très clair
+			'warm-white': '#fafafa', // Blanc cassé chaleureux
+			'autistudy-blue': '#f8faff', // Bleu AutiStudy - harmonise avec blue-50/indigo-50
+			'autistudy-purple': '#faf5ff', // Violet AutiStudy - harmonise avec purple-50
+			'autistudy-mint': '#f0fff4', // Vert AutiStudy - harmonise avec green-100
   			'lBlack': '#111827',
   			'lGray': '#374151',
   			'crem-500': '#f5f3ec',

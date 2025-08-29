@@ -1,5 +1,5 @@
 import React from "react";
-import { Button } from "@nextui-org/react";
+import { Button } from '@nextui-org/react';
 import { motion } from "framer-motion";
 
 interface ReportHeaderProps {

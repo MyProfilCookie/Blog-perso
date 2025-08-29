@@ -1,4 +1,5 @@
 "use client";
+import dynamic from 'next/dynamic';
 import React, { useState } from "react";
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
@@ -50,12 +51,12 @@ const MaevaPage = () => {
 
   // Images de Maeva
   const images = [
-    "/assets/maeva/maeva1.jpg",
-    "/assets/maeva/maeva.jpg",
-    "/assets/maeva/maevanini.jpg",
-    "/assets/maeva/IMG_1411.jpg",
-    "/assets/maeva/IMG_1427.jpg",
-    "/assets/maeva/IMG_2248.jpg",
+    "/assets/maeva/maeva1.webp",
+    "/assets/maeva/maeva.webp",
+    "/assets/maeva/maevanini.webp",
+    "/assets/maeva/IMG_1411.webp",
+    "/assets/maeva/IMG_1427.webp",
+    "/assets/maeva/IMG_2248.webp",
   ];
 
   // Activités préférées

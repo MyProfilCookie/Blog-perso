@@ -1,9 +1,9 @@
-/* eslint-disable react/no-unescaped-entities */
 "use client";
+/* eslint-disable react/no-unescaped-entities */
 import React, { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
 import { Image } from "@nextui-org/react";
+import { motion } from "framer-motion";
 
 const ErrorPage: React.FC = () => {
   const router = useRouter();

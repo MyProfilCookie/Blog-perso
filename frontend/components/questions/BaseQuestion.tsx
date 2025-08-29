@@ -1,5 +1,7 @@
 import React from "react";
-import { Card, CardBody, Button } from "@nextui-org/react";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { Button } from '@nextui-org/react';
 import { useQuestionAttempts } from "@/hooks/useQuestionAttempts";
 import { toast } from "react-hot-toast";
 import Image from "next/image";

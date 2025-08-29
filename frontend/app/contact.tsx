@@ -1,10 +1,15 @@
+import dynamic from 'next/dynamic';
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, CardBody, Button, Input, Textarea } from "@nextui-org/react";
+import { Card } from '@nextui-org/react'
+import { CardBody } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Input } from '@nextui-org/react'
+import { Textarea } from '@nextui-org/react';
 import { motion } from "framer-motion";
 import Swal from "sweetalert2";
 

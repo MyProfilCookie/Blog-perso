@@ -1,9 +1,12 @@
+"use client";
+
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable import/order */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable prettier/prettier */
-"use client";
+
+import dynamic from 'next/dynamic';
 
 import { useState, useEffect, useMemo } from "react";
 import React from "react";
@@ -68,7 +71,7 @@ const BlogCard = ({ _id, title, description, imageUrl, category, author, created
           alt={title}
           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
           src={imageUrl}
-          onError={(e) => (e.currentTarget.src = "/assets/autism-daily.jpg")}
+          onError={(e) => (e.currentTarget.src = "/assets/autism-daily.webp")}
         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         {category && (
@@ -487,7 +490,7 @@ const BlogPage = () => {
                           alt={blog.title}
                           className="w-16 h-16 object-cover rounded-lg"
                           src={blog.imageUrl}
-                          onError={(e) => (e.currentTarget.src = "/assets/autism-daily.jpg")}
+                          onError={(e) => (e.currentTarget.src = "/assets/autism-daily.webp")}
                         />
                         <div className="flex-1">
                           <h4 className="text-sm font-semibold text-gray-800 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors line-clamp-2">

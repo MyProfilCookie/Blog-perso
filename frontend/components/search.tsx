@@ -1,6 +1,7 @@
 "use client";
 import React, { useState } from "react";
-import { Input, Kbd } from "@nextui-org/react";
+import { Input } from '@nextui-org/react'
+import { Kbd } from '@nextui-org/react';
 import { useRouter } from "next/navigation"; // Utilisé pour la redirection
 
 import { SearchIcon } from "@/components/icons"; // Assurez-vous que l'icône est importée correctement

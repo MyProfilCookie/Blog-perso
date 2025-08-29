@@ -7,7 +7,11 @@ import { useTheme } from "next-themes";
 import clsx from "clsx";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon, faClock } from "@fortawesome/free-solid-svg-icons";
-import { Popover, PopoverTrigger, PopoverContent, Button, Input } from "@nextui-org/react";
+import { Popover } from '@nextui-org/react'
+import { PopoverTrigger } from '@nextui-org/react'
+import { PopoverContent } from '@nextui-org/react'
+import { Button } from '@nextui-org/react'
+import { Input } from '@nextui-org/react';
 
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 
@@ -115,11 +119,11 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     });
 
   if (!mounted) {
-    return <div className="w-5 h-5 bg-gray-300 rounded-full animate-pulse" />;
+    return <div className="w-5 h-5 bg-gray-300 rounded-full animate-pulse performance-optimized" />;
   }
 
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 performance-optimized">
       <Component
         {...getBaseProps({
           className: clsx(
@@ -150,12 +154,12 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
         >
           {isDarkMode ? (
             <MoonFilledIcon
-              className="text-blue-300 transition-all duration-300"
+              className="text-blue-300 transition-all duration-300 performance-optimized"
               size={18}
             />
           ) : (
             <SunFilledIcon
-              className="text-yellow-500 transition-all duration-300"
+              className="text-yellow-500 transition-all duration-300 performance-optimized"
               size={18}
             />
           )}
@@ -182,16 +186,16 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
               isIconOnly
               size="sm"
               variant="light"
-              className="text-xs"
+              className="text-xs performance-optimized"
               title="Modifier les heures"
             >
               <FontAwesomeIcon icon={faClock} />
             </Button>
           </PopoverTrigger>
           <PopoverContent>
-            <div className="p-4 space-y-4">
-              <h3 className="text-sm font-medium">Heures de définition</h3>
-              <div className="flex items-center gap-2">
+            <div className="p-4 space-y-4 performance-optimized">
+              <h3 className="text-sm font-medium performance-optimized">Heures de définition</h3>
+              <div className="flex items-center gap-2 performance-optimized">
                 <Input
                   type="number"
                   min="0"
@@ -203,7 +207,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
                       updateAutoModeHours(value, autoModeHours.end);
                     }
                   }}
-                  className="w-20"
+                  className="w-20 performance-optimized"
                 />
                 <span>h -</span>
                 <Input
@@ -217,7 +221,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
                       updateAutoModeHours(autoModeHours.start, value);
                     }
                   }}
-                  className="w-20"
+                  className="w-20 performance-optimized"
                 />
                 <span>h</span>
               </div>
