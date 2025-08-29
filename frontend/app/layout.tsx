@@ -26,14 +26,14 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL('https://autistudy.vercel.app'),
+  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.vercel.app'),
   alternates: {
     canonical: '/',
   },
   openGraph: {
     title: "AutiStudy - Apprentissage adapté pour enfants autistes",
     description: "Plateforme éducative spécialisée pour les enfants autistes",
-    url: 'https://autistudy.vercel.app',
+    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.vercel.app',
     siteName: 'AutiStudy',
     images: [
       {
