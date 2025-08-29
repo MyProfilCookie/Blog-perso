@@ -49,9 +49,9 @@ filesWithMotion.forEach(file => {
   const filePath = path.join(__dirname, '..', file);
   
   if (fs.existsSync(filePath)) {
-    let content = fs.readFileSync(filePath, 'utf8');
-    let modified = false;
-    
+  let content = fs.readFileSync(filePath, 'utf8');
+  let modified = false;
+
     // Vérifier si le fichier contient Framer Motion
     if (content.includes('framer-motion') || content.includes('motion.div')) {
       console.log(`🔄 Optimisation de ${file}...`);
@@ -59,14 +59,14 @@ filesWithMotion.forEach(file => {
       motionReplacements.forEach(({ search, replace, comment }) => {
         if (content.includes(search)) {
           content = content.replace(new RegExp(search, 'g'), replace);
-          modified = true;
+    modified = true;
           console.log(`✅ ${comment} dans ${file}`);
-        }
+  }
       });
-      
+
       // Ajouter les classes d'optimisation pour les animations
       if (content.includes('className=') && !content.includes('animation-optimized')) {
-        content = content.replace(
+    content = content.replace(
           /className="([^"]*)"/g,
           (match, className) => {
             if (className.includes('transition') && !className.includes('animation-optimized')) {
@@ -74,8 +74,8 @@ filesWithMotion.forEach(file => {
             }
             return match;
           }
-        );
-        modified = true;
+    );
+    modified = true;
         console.log(`✅ Classes d'animation optimisées ajoutées dans ${file}`);
       }
       
