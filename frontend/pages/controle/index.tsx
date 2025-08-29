@@ -466,7 +466,7 @@ export default function ControlePage() {
         <div className="self-start">
           <BackButton />
         </div>
-        <h1 className="text-4xl font-bold text-center text-gray-900 dark:text-white mt-4 animate-bounce">
+        <h1 className="text-4xl font-bold text-center text-gray-900 dark:text-white animate-bounce">
           🌟 Bonjour {(() => {
             // Essayer d'abord stats.eleve.prenom
             if (stats.eleve?.prenom) {
@@ -487,7 +487,7 @@ export default function ControlePage() {
             return "Élève";
           })()} ! 🌟
         </h1>
-        <p className="text-xl text-center text-gray-600 dark:text-gray-300 mt-2">
+        <p className="text-xl text-center text-gray-600 dark:text-gray-300">
           Bienvenue dans ton espace d&apos;apprentissage magique ! ✨
         </p>
       </div>
