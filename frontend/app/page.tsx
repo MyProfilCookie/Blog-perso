@@ -127,7 +127,7 @@ export default function HomePage() {
       <main className="flex-grow">
         
         {/* Hero Section */}
-        <section className="relative py-20 px-4 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 overflow-hidden">
+        <section className="relative py-20 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900 dark:to-purple-900 overflow-hidden">
           {/* Éléments décoratifs de fond */}
           <div className="absolute inset-0 overflow-hidden">
             <div className="absolute -top-40 -right-40 w-80 h-80 bg-blue-200 dark:bg-blue-800 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob"></div>
@@ -135,7 +135,7 @@ export default function HomePage() {
             <div className="absolute top-40 left-40 w-80 h-80 bg-green-200 dark:bg-green-800 rounded-full mix-blend-multiply filter blur-xl opacity-70 animate-blob animation-delay-4000"></div>
           </div>
           
-          <div className="max-w-7xl mx-auto relative z-10">
+          <div className="w-full px-4 md:px-8 lg:px-12 relative z-10">
             <div className="grid lg:grid-cols-2 gap-12 items-center">
               <motion.div
                 initial={{ opacity: 0, x: -50 }}
@@ -285,8 +285,8 @@ export default function HomePage() {
         </section>
 
         {/* Section Présentation */}
-        <section className="py-16 px-4 bg-white dark:bg-gray-800">
-          <div className="max-w-7xl mx-auto">
+        <section className="py-16 bg-white dark:bg-gray-800">
+          <div className="w-full px-4 md:px-8 lg:px-12">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -297,7 +297,7 @@ export default function HomePage() {
               <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                 Une famille, une mission
               </h2>
-              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+              <p className="text-lg text-gray-600 dark:text-gray-300 max-w-3xl">
                 AutiStudy est née de l'expérience d'une famille avec un enfant autiste. 
                 Nous créons des ressources éducatives adaptées, ludiques et efficaces.
               </p>
@@ -334,8 +334,8 @@ export default function HomePage() {
         </section>
 
         {/* Section Statistiques */}
-        <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-          <div className="max-w-7xl mx-auto">
+        <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
+          <div className="w-full px-4 md:px-8 lg:px-12">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -374,8 +374,8 @@ export default function HomePage() {
         </section>
 
         {/* Section Témoignages */}
-        <section className="py-16 px-4 bg-gray-50 dark:bg-gray-900">
-          <div className="max-w-7xl mx-auto">
+        <section className="py-16 bg-gray-50 dark:bg-gray-900">
+          <div className="w-full px-4 md:px-8 lg:px-12">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -436,8 +436,8 @@ export default function HomePage() {
         </section>
 
         {/* Section Articles */}
-        <section className="py-16 px-4 bg-white dark:bg-gray-800">
-          <div className="max-w-7xl mx-auto">
+        <section className="py-16 bg-white dark:bg-gray-800">
+          <div className="w-full px-4 md:px-8 lg:px-12">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}
@@ -501,8 +501,8 @@ export default function HomePage() {
         </section>
 
         {/* Section Call-to-Action */}
-        <section className="py-16 px-4 bg-gradient-to-r from-blue-600 to-purple-600">
-          <div className="max-w-4xl mx-auto text-center">
+        <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
+          <div className="w-full px-4 md:px-8 lg:px-12 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
               whileInView={{ opacity: 1, y: 0 }}

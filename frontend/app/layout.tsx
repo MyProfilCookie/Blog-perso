@@ -100,7 +100,7 @@ export default function RootLayout({
         <Providers>
           <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
             <Navbar />
-            <main className="flex-grow px-6 pt-16 mx-auto max-w-7xl w-full">
+            <main className="flex-grow pt-16 w-full">
               {children}
             </main>
             <Footer />
