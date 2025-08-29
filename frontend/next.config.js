@@ -16,6 +16,10 @@ console.log(
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  // Configuration pour résoudre les conflits de routage
+  trailingSlash: false,
+  skipTrailingSlashRedirect: true,
+  
   // Optimisations pour mobile
    experimental: {
     optimizeCss: true,
