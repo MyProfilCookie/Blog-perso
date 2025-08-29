@@ -187,7 +187,7 @@ const SciencesPage: React.FC = () => {
           }
           return prev - 1;
         });
-      }, 1000);
+      }, 2000);
 
       // Messages d'encouragement toutes les 15 minutes
       encouragementTimer = setInterval(() => {

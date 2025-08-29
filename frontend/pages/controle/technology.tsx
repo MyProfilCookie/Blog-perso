@@ -181,7 +181,7 @@ const TechnologyPage: React.FC = () => {
           }
           return prev - 1;
         });
-      }, 1000);
+      }, 2000);
       encouragementTimer = setInterval(() => {
         const randomMessage = encouragementMessages[Math.floor(Math.random() * encouragementMessages.length)];
         setEmoji(`Page ${currentPage} : ${randomMessage}`);

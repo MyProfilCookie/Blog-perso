@@ -1,179 +1,106 @@
 "use client";
+import React, { useState, useEffect } from 'react';
 
-import React from 'react';
-import { motion, MotionProps } from 'framer-motion';
-
-// Variantes d'animation optimisées pour les performances
-export const optimizedVariants = {
-  // Animation de fade in/out
-  fadeIn: {
-    initial: { opacity: 0 },
-    animate: { opacity: 1 },
-    exit: { opacity: 0 },
-    transition: { duration: 0.3, ease: "easeOut" }
-  },
-  
-  // Animation de slide depuis le bas
-  slideUp: {
-    initial: { opacity: 0, transform: "translateY(20px)" },
-    animate: { opacity: 1, transform: "translateY(0px)" },
-    exit: { opacity: 0, transform: "translateY(-20px)" },
-    transition: { duration: 0.4, ease: "easeOut" }
-  },
-  
-  // Animation de slide depuis la gauche
-  slideLeft: {
-    initial: { opacity: 0, transform: "translateX(-20px)" },
-    animate: { opacity: 1, transform: "translateX(0px)" },
-    exit: { opacity: 0, transform: "translateX(20px)" },
-    transition: { duration: 0.4, ease: "easeOut" }
-  },
-  
-  // Animation de scale
-  scale: {
-    initial: { opacity: 0, transform: "scale(0.9)" },
-    animate: { opacity: 1, transform: "scale(1)" },
-    exit: { opacity: 0, transform: "scale(0.9)" },
-    transition: { duration: 0.3, ease: "easeOut" }
-  },
-  
-  // Animation de rotation légère
-  rotate: {
-    initial: { opacity: 0, transform: "rotate(-5deg) scale(0.9)" },
-    animate: { opacity: 1, transform: "rotate(0deg) scale(1)" },
-    exit: { opacity: 0, transform: "rotate(5deg) scale(0.9)" },
-    transition: { duration: 0.4, ease: "easeOut" }
-  }
-};
-
-interface OptimizedMotionProps extends MotionProps {
+interface OptimizedMotionProps {
   children: React.ReactNode;
-  variant?: keyof typeof optimizedVariants;
-  delay?: number;
   className?: string;
+  delay?: number;
+  duration?: number;
+  animation?: 'fade-in' | 'slide-up' | 'slide-left' | 'scale-in';
+  threshold?: number;
 }
 
-// Composant motion optimisé
 export const OptimizedMotion: React.FC<OptimizedMotionProps> = ({
   children,
-  variant = 'fadeIn',
+  className = '',
   delay = 0,
-  className = "",
-  ...props
+  duration = 300,
+  animation = 'fade-in',
+  threshold = 0.1
 }) => {
-  const variantConfig = optimizedVariants[variant];
-  
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting && !hasAnimated) {
+          setTimeout(() => {
+            setIsVisible(true);
+            setHasAnimated(true);
+          }, delay);
+        }
+      },
+      { threshold }
+    );
+
+    const element = document.querySelector(`[data-motion-id="${Math.random().toString(36)}"]`);
+    if (element) {
+      observer.observe(element);
+    }
+
+    return () => observer.disconnect();
+  }, [delay, threshold, hasAnimated]);
+
+  const getAnimationClass = () => {
+    if (!isVisible) return '';
+    
+    const baseClass = 'animation-optimized';
+    const animationClasses = {
+      'fade-in': 'animate-fade-in',
+      'slide-up': 'animate-slide-up',
+      'slide-left': 'animate-slide-left',
+      'scale-in': 'animate-scale'
+    };
+    
+    return `${baseClass} ${animationClasses[animation]}`;
+  };
+
   return (
-    <motion.div
-      initial={variantConfig.initial}
-      animate={variantConfig.animate}
-      exit={variantConfig.exit}
-      transition={{ 
-        ...variantConfig.transition, 
-        delay 
-      }}
-      className={`animation-optimized ${className}`}
+    <div
+      data-motion-id={Math.random().toString(36)}
+      className={`${className} ${getAnimationClass()}`}
       style={{
-        willChange: 'transform, opacity',
-        transform: 'translateZ(0)', // Force GPU acceleration
-        backfaceVisibility: 'hidden'
+        transitionDuration: `${duration}ms`,
+        contain: 'layout style paint'
       }}
-      {...props}
     >
       {children}
-    </motion.div>
-  );
-};
-
-// Composant pour les listes avec animation en cascade
-interface OptimizedMotionListProps {
-  children: React.ReactNode[];
-  variant?: keyof typeof optimizedVariants;
-  staggerDelay?: number;
-  className?: string;
-}
-
-export const OptimizedMotionList: React.FC<OptimizedMotionListProps> = ({
-  children,
-  variant = 'slideUp',
-  staggerDelay = 0.1,
-  className = ""
-}) => {
-  return (
-    <div className={className}>
-      {children.map((child, index) => (
-        <OptimizedMotion
-          key={index}
-          variant={variant}
-          delay={index * staggerDelay}
-        >
-          {child}
-        </OptimizedMotion>
-      ))}
     </div>
   );
 };
 
-// Hook pour les animations de scroll optimisées
-export const useOptimizedScrollAnimation = () => {
-  const [isVisible, setIsVisible] = React.useState(false);
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setIsVisible(true);
-          observer.disconnect(); // Arrêter l'observation une fois visible
-        }
-      },
-      {
-        threshold: 0.1,
-        rootMargin: '50px'
-      }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, []);
-
-  return { ref, isVisible };
-};
-
-// Composant pour les animations au scroll
-interface ScrollAnimationProps {
+// Composant optimisé pour les transitions de page
+export const OptimizedPageTransition: React.FC<{
   children: React.ReactNode;
-  variant?: keyof typeof optimizedVariants;
   className?: string;
-}
-
-export const ScrollAnimation: React.FC<ScrollAnimationProps> = ({
-  children,
-  variant = 'slideUp',
-  className = ""
-}) => {
-  const { ref, isVisible } = useOptimizedScrollAnimation();
-  const variantConfig = optimizedVariants[variant];
-
+}> = ({ children, className = '' }) => {
   return (
-    <motion.div
-      ref={ref}
-      initial={variantConfig.initial}
-      animate={isVisible ? variantConfig.animate : variantConfig.initial}
-      transition={variantConfig.transition}
-      className={`animation-optimized ${className}`}
+    <div 
+      className={`page-transition-optimized ${className}`}
       style={{
-        willChange: 'transform, opacity',
-        transform: 'translateZ(0)',
-        backfaceVisibility: 'hidden'
+        contain: 'layout style paint',
+        willChange: 'transform, opacity'
       }}
     >
       {children}
-    </motion.div>
+    </div>
   );
+};
+
+// Hook pour optimiser les animations
+export const useOptimizedAnimation = (delay: number = 0) => {
+  const [isReady, setIsReady] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setIsReady(true);
+    }, delay);
+
+    return () => clearTimeout(timer);
+  }, [delay]);
+
+  return isReady;
 };
 
 export default OptimizedMotion;

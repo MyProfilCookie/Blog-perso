@@ -827,7 +827,7 @@ const AdminDashboard = () => {
   if (!user) return null;
 
   return (
-    <div className="container mx-auto mt-6 px-2 sm:px-4">
+    <div className="container mx-auto mt-6 px-2 sm:px-4 performance-optimized">
       {/* Styles responsifs */}
       <style>{`
         .text-ellipsis {
@@ -952,31 +952,31 @@ const AdminDashboard = () => {
         }
       `}</style>
 
-      <h1 className="mb-4 text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-pulse text-center">
+      <h1 className="mb-4 text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-pulse text-center performance-optimized">
         Dashboard Admin
       </h1>
 
-      <p className="mb-3 sm:mb-6 text-gray-600 dark:text-white text-base sm:text-lg animate-bounce text-center">
+      <p className="mb-3 sm:mb-6 text-gray-600 dark:text-white text-base sm:text-lg animate-bounce text-center performance-optimized">
         Heure actuelle : {currentTime}
       </p>
 
-      <h2 className="text-xl sm:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-center animate-slide-in">
+      <h2 className="text-xl sm:text-2xl font-semibold text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-blue-500 text-center animate-slide-in performance-optimized">
         Bonjour,{" "}
         {(user as { prenom?: string })?.prenom ||
           (user as { pseudo: string }).pseudo}{" "}
         <FontAwesomeIcon
-          className="text-yellow-400 animate-spin-slow"
+          className="text-yellow-400 animate-spin-slow performance-optimized"
           icon={faCrown}
           size="sm"
         />
       </h2>
 
       {/* Gestion des commandes */}
-      <div className="mt-6 sm:mt-8">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
+      <div className="mt-6 sm:mt-8 performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left performance-optimized">
           Gestion des commandes
         </h3>
-        <div className="space-y-3 sm:space-y-4">
+        <div className="space-y-3 sm:space-y-4 performance-optimized">
           {orders.map((order) => (
             <div
               key={
@@ -984,15 +984,15 @@ const AdminDashboard = () => {
                   ? (order as { _id: string })._id
                   : undefined
               }
-              className="border rounded-lg shadow-md p-2 sm:p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2 order-card card-hover"
+              className="border rounded-lg shadow-md p-2 sm:p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2 order-card card-hover performance-optimized"
             >
-              <div className="flex flex-col sm:flex-row justify-between items-start gap-2">
+              <div className="flex flex-col sm:flex-row justify-between items-start gap-2 performance-optimized">
                 {/* Informations sur la commande */}
-                <div className="flex-1 text-left overflow-hidden">
-                  <p className="id-field font-bold text-sm">
+                <div className="flex-1 text-left overflow-hidden performance-optimized">
+                  <p className="id-field font-bold text-sm performance-optimized">
                     ID : {(order as { _id: string })._id}
                   </p>
-                  <p className="text-sm text-gray-700 dark:text-gray-400 truncate">
+                  <p className="text-sm text-gray-700 dark:text-gray-400 truncate performance-optimized">
                     Client :{" "}
                     {(order as { lastName?: string; firstName?: string })
                       .lastName
@@ -1001,30 +1001,30 @@ const AdminDashboard = () => {
                         }`
                       : "Inconnu"}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-300 truncate">
+                  <p className="text-sm text-gray-500 dark:text-gray-300 truncate performance-optimized">
                     Email : {(order as { email: string }).email}
                   </p>
-                  <div className="scrollable-content order-details">
-                    <p className="text-sm text-gray-700 dark:text-gray-400">
+                  <div className="scrollable-content order-details performance-optimized">
+                    <p className="text-sm text-gray-700 dark:text-gray-400 performance-optimized">
                       Produit :{" "}
                       {(order as { items?: Array<{ title: string }> }).items
                         ?.map((item) => item.title)
                         .join(" • ") || "Aucun"}
                     </p>
                   </div>
-                  <p className="text-sm text-gray-500 dark:text-gray-300">
+                  <p className="text-sm text-gray-500 dark:text-gray-300 performance-optimized">
                     Date :{" "}
                     {dayjs((order as { orderDate: string }).orderDate).format(
                       "DD/MM/YYYY",
                     )}
                   </p>
-                  <p className="text-sm text-blue-500 dark:text-blue-300">
+                  <p className="text-sm text-blue-500 dark:text-blue-300 performance-optimized">
                     Paiement :{" "}
                     {(order as { paymentStatus?: string }).paymentStatus} (
                     {(order as { paymentMethod?: string }).paymentMethod})
                   </p>
                   {(order as { trackingNumber?: string }).trackingNumber && (
-                    <p className="text-sm text-green-600 dark:text-green-400 truncate">
+                    <p className="text-sm text-green-600 dark:text-green-400 truncate performance-optimized">
                       N° de suivi :{" "}
                       {(order as { trackingNumber?: string }).trackingNumber}
                     </p>
@@ -1032,9 +1032,9 @@ const AdminDashboard = () => {
                 </div>
 
                 {/* Actions pour les commandes */}
-                <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[180px]">
+                <div className="flex flex-col gap-2 w-full sm:w-auto sm:min-w-[180px] performance-optimized">
                   <Button
-                    className="w-full"
+                    className="w-full performance-optimized"
                     color="secondary"
                     size="sm"
                     onClick={() =>
@@ -1043,11 +1043,11 @@ const AdminDashboard = () => {
                       )
                     }
                   >
-                    <FontAwesomeIcon className="mr-2" icon={faHistory} />{" "}
+                    <FontAwesomeIcon className="mr-2 performance-optimized" icon={faHistory} />{" "}
                     Historique
                   </Button>
                   {(order as { status?: string }).status === "Shipped" && (
-                    <div className="mt-1 w-full">
+                    <div className="mt-1 w-full performance-optimized">
                       <Input
                         placeholder="N° de suivi"
                         size="sm"
@@ -1077,7 +1077,7 @@ const AdminDashboard = () => {
               </div>
 
               {/* Composant de progression */}
-              <div className="mt-2 mb-2 w-full">
+              <div className="mt-2 mb-2 w-full performance-optimized">
                 <ProgressionCommande
                   statut={
                     (order as { status?: string }).status || "Enregistree"
@@ -1086,9 +1086,9 @@ const AdminDashboard = () => {
               </div>
 
               {/* Actions pour les statuts */}
-              <div className="flex flex-wrap gap-2 mt-2">
+              <div className="flex flex-wrap gap-2 mt-2 performance-optimized">
                 <select
-                  className="p-2 border rounded-md bg-cream dark:bg-gray-800 text-gray-800 dark:text-white flex-grow text-sm"
+                  className="p-2 border rounded-md bg-cream dark:bg-gray-800 text-gray-800 dark:text-white flex-grow text-sm performance-optimized"
                   value="" // Reset à chaque changement
                   onChange={(e) => {
                     if (e.target.value) {
@@ -1132,15 +1132,15 @@ const AdminDashboard = () => {
       </div>
 
       {/* Gestion des messages de contact */}
-      <div className="mt-6 sm:mt-8">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
+      <div className="mt-6 sm:mt-8 performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left performance-optimized">
           Gestion des messages de contact
         </h3>
 
-        <div className="scrollable-content admin-table">
+        <div className="scrollable-content admin-table performance-optimized">
           <Table
             aria-label="Liste des messages de contact"
-            className="min-w-full"
+            className="min-w-full performance-optimized"
           >
             <TableHeader>
               <TableColumn>Nom</TableColumn>
@@ -1152,14 +1152,14 @@ const AdminDashboard = () => {
             <TableBody>
               {messages.map((contactMsg, index) => (
                 <TableRow key={(contactMsg as { _id?: string })._id || index}>
-                  <TableCell className="max-w-[100px] truncate">
+                  <TableCell className="max-w-[100px] truncate performance-optimized">
                     {(contactMsg as { nom?: string }).nom || "Unknown"}
                   </TableCell>
-                  <TableCell className="max-w-[120px] truncate">
+                  <TableCell className="max-w-[120px] truncate performance-optimized">
                     {(contactMsg as { email?: string }).email}
                   </TableCell>
-                  <TableCell className="max-w-[200px]">
-                    <div className="line-clamp-2">
+                  <TableCell className="max-w-[200px] performance-optimized">
+                    <div className="line-clamp-2 performance-optimized">
                       {(contactMsg as { message?: string }).message}
                     </div>
                   </TableCell>
@@ -1169,7 +1169,7 @@ const AdminDashboard = () => {
                     ).format("DD/MM/YY")}
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 performance-optimized">
                       <Button
                         color={
                           (contactMsg as { lu?: boolean }).lu
@@ -1217,11 +1217,11 @@ const AdminDashboard = () => {
       </div>
 
       {/* Gestion des utilisateurs */}
-      <div className="mt-6 sm:mt-8">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
+      <div className="mt-6 sm:mt-8 performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left performance-optimized">
           Gestion des utilisateurs
         </h3>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 performance-optimized">
           {users.map((user) => (
             <div
               key={
@@ -1229,27 +1229,27 @@ const AdminDashboard = () => {
                   ? (user as { _id: string })._id
                   : undefined
               }
-              className="border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2 user-card card-hover"
+              className="border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2 user-card card-hover performance-optimized"
             >
-              <div className="flex flex-col items-center text-center overflow-hidden">
-                <p className="id-field font-bold text-sm">
+              <div className="flex flex-col items-center text-center overflow-hidden performance-optimized">
+                <p className="id-field font-bold text-sm performance-optimized">
                   ID : {(user as { _id: string })._id}
                 </p>
-                <p className="font-bold text-lg truncate max-w-full">
+                <p className="font-bold text-lg truncate max-w-full performance-optimized">
                   Pseudo : {(user as { pseudo: string }).pseudo}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-300 truncate max-w-full">
+                <p className="text-sm text-gray-500 dark:text-gray-300 truncate max-w-full performance-optimized">
                   Email : {(user as { email: string }).email}
                 </p>
-                <p className="text-sm text-gray-700 dark:text-gray-400">
+                <p className="text-sm text-gray-700 dark:text-gray-400 performance-optimized">
                   Rôle : {(user as { role: string }).role}
                 </p>
               </div>
-              <div className="grid user-actions gap-2 w-full grid-cols-1 sm:grid-cols-2 mt-2">
+              <div className="grid user-actions gap-2 w-full grid-cols-1 sm:grid-cols-2 mt-2 performance-optimized">
                 {(user as { email: string }).email !==
                   "virginie.ayivor@yahoo.fr" && (
                   <Button
-                    className="w-full col-span-full"
+                    className="w-full col-span-full performance-optimized"
                     color={
                       (user as { role: string }).role === "admin"
                         ? "warning"
@@ -1272,7 +1272,7 @@ const AdminDashboard = () => {
                 {["Violation", "Spam", "Harcèlement", "Autre"].map((reason) => (
                   <Button
                     key={reason}
-                    className="w-full"
+                    className="w-full performance-optimized"
                     color="secondary"
                     size="sm"
                     onClick={() =>
@@ -1288,7 +1288,7 @@ const AdminDashboard = () => {
                 ))}
 
                 <Button
-                  className="w-full col-span-full"
+                  className="w-full col-span-full performance-optimized"
                   color="danger"
                   disabled={
                     typeof user === "object" &&
@@ -1313,36 +1313,36 @@ const AdminDashboard = () => {
       </div>
 
       {/* Gestion des leçons */}
-      <div className="mt-6 sm:mt-8">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left">
+      <div className="mt-6 sm:mt-8 performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left performance-optimized">
           Gestion des leçons
         </h3>
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 performance-optimized">
           {lessons.map((lesson) => (
             <div
               key={(lesson as any)._id}
               className="border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black dark:text-white 
-                flex flex-col lesson-card card-hover"
+                flex flex-col lesson-card card-hover performance-optimized"
             >
-              <div className="card-header mb-2 text-center">
-                <p className="font-bold text-lg truncate max-w-full">
+              <div className="card-header mb-2 text-center performance-optimized">
+                <p className="font-bold text-lg truncate max-w-full performance-optimized">
                   {(lesson as { title: string }).title}
                 </p>
-                <p className="id-field text-gray-500 dark:text-gray-300">
+                <p className="id-field text-gray-500 dark:text-gray-300 performance-optimized">
                   ID : {(lesson as any)._id}
                 </p>
               </div>
-              <div className="card-body mb-2 text-center">
-                <p className="text-sm text-gray-700 dark:text-gray-400 mb-2 line-clamp-2">
+              <div className="card-body mb-2 text-center performance-optimized">
+                <p className="text-sm text-gray-700 dark:text-gray-400 mb-2 line-clamp-2 performance-optimized">
                   {(lesson as { content: string }).content}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-300">
+                <p className="text-sm text-gray-500 dark:text-gray-300 performance-optimized">
                   Date: {dayjs((lesson as any).date).format("DD/MM/YYYY")}
                 </p>
               </div>
-              <div className="card-footer mt-auto pt-2 flex gap-2">
+              <div className="card-footer mt-auto pt-2 flex gap-2 performance-optimized">
                 <Button
-                  className="flex-1"
+                  className="flex-1 performance-optimized"
                   color="primary"
                   size="sm"
                   onClick={() =>
@@ -1352,7 +1352,7 @@ const AdminDashboard = () => {
                   <FontAwesomeIcon icon={faEdit} /> Modifier
                 </Button>
                 <Button
-                  className="flex-1"
+                  className="flex-1 performance-optimized"
                   color="danger"
                   size="sm"
                   onClick={() =>
@@ -1368,13 +1368,13 @@ const AdminDashboard = () => {
       </div>
 
       {/* Ajouter une nouvelle leçon */}
-      <div className="mt-6 sm:mt-8">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold">
+      <div className="mt-6 sm:mt-8 performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold performance-optimized">
           Ajouter une nouvelle leçon
         </h3>
         <Input
           key="title"
-          className="mb-3"
+          className="mb-3 performance-optimized"
           label="Titre de la leçon"
           value={newLesson.title}
           onChange={(e) =>
@@ -1383,7 +1383,7 @@ const AdminDashboard = () => {
         />
         <Textarea
           key="content"
-          className="mb-3"
+          className="mb-3 performance-optimized"
           label="Contenu de la leçon"
           value={newLesson.content}
           onChange={(e) =>
@@ -1392,44 +1392,44 @@ const AdminDashboard = () => {
         />
         <Input
           key="date"
-          className="mb-3"
+          className="mb-3 performance-optimized"
           label="Date de la leçon"
           type="date"
           value={newLesson.date}
           onChange={(e) => setNewLesson({ ...newLesson, date: e.target.value })}
         />
-        <Button className="mt-3" size="sm" onClick={addLesson}>
+        <Button className="mt-3 performance-optimized" size="sm" onClick={addLesson}>
           <FontAwesomeIcon icon={faPlus} /> Ajouter une leçon
         </Button>
       </div>
 
       {/* Gestion des articles */}
-      <motion.div
+      <OptimizedMotion
         animate={{ opacity: 1 }}
-        className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3"
+        className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 performance-optimized"
         initial={{ opacity: 0 }}
         transition={{ duration: 0.6, delay: 0.3 }}
       >
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold col-span-full text-center sm:text-left">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold col-span-full text-center sm:text-left performance-optimized">
           Gestion des articles
         </h3>
         {articlesData.articles.map((article) => (
           <div
             key={article.id}
             className="col-span-1 border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black 
-              flex flex-col card-hover sm:w-full"
+              flex flex-col card-hover sm:w-full performance-optimized"
           >
-            <div className="card-header mb-2 text-center">
+            <div className="card-header mb-2 text-center performance-optimized">
               <img
                 alt={article.title}
-                className="w-full h-32 sm:h-40 object-cover rounded-md mb-2"
+                className="w-full h-32 sm:h-40 object-cover rounded-md mb-2 performance-optimized"
                 src={article.image}
               />
-              <p className="font-bold text-lg truncate">{article.title}</p>
+              <p className="font-bold text-lg truncate performance-optimized">{article.title}</p>
             </div>
-            <div className="card-body mb-2 text-center">
+            <div className="card-body mb-2 text-center performance-optimized">
               <Button
-                className="mb-3 mx-auto"
+                className="mb-3 mx-auto performance-optimized"
                 size="sm"
                 onClick={() =>
                   setShowContent((prev) => ({
@@ -1445,14 +1445,14 @@ const AdminDashboard = () => {
                   : "Voir le contenu"}
               </Button>
               {showContent[article.id as keyof typeof showContent] && (
-                <p className="text-sm text-gray-600 line-clamp-2">
+                <p className="text-sm text-gray-600 line-clamp-2 performance-optimized">
                   {article.content}
                 </p>
               )}
             </div>
-            <div className="card-footer mt-auto pt-2 flex gap-2">
+            <div className="card-footer mt-auto pt-2 flex gap-2 performance-optimized">
               <Button
-                className="flex-1"
+                className="flex-1 performance-optimized"
                 color="primary"
                 size="sm"
                 onClick={() => updateArticle(article.id.toString(), article)}
@@ -1460,7 +1460,7 @@ const AdminDashboard = () => {
                 <FontAwesomeIcon icon={faEdit} /> Modifier
               </Button>
               <Button
-                className="flex-1"
+                className="flex-1 performance-optimized"
                 color="danger"
                 size="sm"
                 onClick={() => deleteArticle(article.id.toString())}
@@ -1470,18 +1470,18 @@ const AdminDashboard = () => {
             </div>
           </div>
         ))}
-      </motion.div>
+      </OptimizedMotion>
 
       {/* Ajouter un nouvel article */}
-      <motion.div
+      <OptimizedMotion
         animate={{ opacity: 1 }}
-        className="mt-4"
+        className="mt-4 performance-optimized"
         initial={{ opacity: 0 }}
         transition={{ duration: 0.6, delay: 0.5 }}
       >
         <Input
           key="title"
-          className="mb-3"
+          className="mb-3 performance-optimized"
           label="Titre de l'article"
           value={newArticle.title}
           onChange={(e) =>
@@ -1490,7 +1490,7 @@ const AdminDashboard = () => {
         />
         <Textarea
           key="content"
-          className="mb-3"
+          className="mb-3 performance-optimized"
           label="Contenu de l'article"
           value={newArticle.content}
           onChange={(e) =>
@@ -1500,20 +1500,20 @@ const AdminDashboard = () => {
         <Button size="sm" onClick={addArticle}>
           <FontAwesomeIcon icon={faPlus} /> Ajouter un article
         </Button>
-      </motion.div>
+      </OptimizedMotion>
 
       {/* Visualisation des messages */}
-      <motion.div
+      <OptimizedMotion
         animate={{ opacity: 1 }}
-        className="mt-6 sm:mt-8"
+        className="mt-6 sm:mt-8 performance-optimized"
         initial={{ opacity: 0 }}
         transition={{ duration: 0.6, delay: 0.7 }}
       >
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold performance-optimized">
           Messages des utilisateurs
         </h3>
-        <div className="scrollable-content admin-table">
-          <Table aria-label="Liste des messages" className="min-w-full">
+        <div className="scrollable-content admin-table performance-optimized">
+          <Table aria-label="Liste des messages" className="min-w-full performance-optimized">
             <TableHeader>
               <TableColumn>Pseudo</TableColumn>
               <TableColumn>Message</TableColumn>
@@ -1524,11 +1524,11 @@ const AdminDashboard = () => {
             <TableBody>
               {messages.map((message, index) => (
                 <TableRow key={(message as { _id?: string })?._id || index}>
-                  <TableCell className="max-w-[100px] truncate">
+                  <TableCell className="max-w-[100px] truncate performance-optimized">
                     {(message as { pseudo?: string }).pseudo || "Unknown"}
                   </TableCell>
-                  <TableCell className="max-w-[200px]">
-                    <div className="line-clamp-2">
+                  <TableCell className="max-w-[200px] performance-optimized">
+                    <div className="line-clamp-2 performance-optimized">
                       {(message as { message?: string }).message ||
                         "No message"}
                     </div>
@@ -1539,7 +1539,7 @@ const AdminDashboard = () => {
                     ).format("DD/MM/YY")}
                   </TableCell>
                   <TableCell>
-                    <div className="flex flex-wrap gap-1">
+                    <div className="flex flex-wrap gap-1 performance-optimized">
                       <Button
                         color="danger"
                         size="sm"
@@ -1576,7 +1576,7 @@ const AdminDashboard = () => {
             </TableBody>
           </Table>
         </div>
-      </motion.div>
+      </OptimizedMotion>
 
       {/* Intégration du composant de dialogue pour l'historique des commandes */}
       <OrderHistoryDialog

@@ -224,7 +224,7 @@ const FrancaisPage: React.FC = () => {
 
           return prev - 1;
         });
-      }, 1000);
+      }, 2000);
       encouragementTimer = setInterval(() => {
         const randomMessage =
           encouragementMessages[

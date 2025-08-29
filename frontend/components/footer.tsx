@@ -50,55 +50,55 @@ const Footer = () => {
   }, [mounted]);
 
   return (
-    <footer className="border-t dark:bg-gray-900 border-violet-200 dark:border-violet-800 mt-16">
-      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 grid-cls-optimized">
+    <footer className="border-t dark:bg-gray-900 border-violet-200 dark:border-violet-800 mt-16 performance-optimized">
+      <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 performance-optimized">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 grid-cls-optimized performance-optimized">
           {/* Logo et Description */}
-          <div className="col-span-1 lg:col-span-2 text-center sm:text-left">
-            <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-3">
+          <div className="col-span-1 lg:col-span-2 text-center sm:text-left performance-optimized">
+            <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-3 performance-optimized">
               AutiStudy
             </h3>
-            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md mx-auto sm:mx-0">
+            <p className="text-sm text-gray-600 dark:text-gray-400 max-w-md mx-auto sm:mx-0 performance-optimized">
               Une plateforme éducative adaptée, favorisant l&apos;apprentissage et l&apos;épanouissement des enfants autistes.
             </p>
           </div>
 
           {/* Navigation */}
-          <div className="space-y-3 text-center sm:text-left">
-            <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <div className="space-y-3 text-center sm:text-left performance-optimized">
+            <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 performance-optimized">
               Navigation
             </h4>
-            <nav className="flex flex-col space-y-2">
-              <NextLink href="/blog" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">
+            <nav className="flex flex-col space-y-2 performance-optimized">
+              <NextLink href="/blog" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors performance-optimized">
                 Blog
               </NextLink>
-              <NextLink href="/about" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">
+              <NextLink href="/about" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors performance-optimized">
                 À propos
               </NextLink>
-              <NextLink href="/contact" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors">
+              <NextLink href="/contact" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors performance-optimized">
                 Contact
               </NextLink>
             </nav>
           </div>
 
           {/* Thème et Paramètres */}
-          <div className="space-y-3 text-center sm:text-left">
-            <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100">
+          <div className="space-y-3 text-center sm:text-left performance-optimized">
+            <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 performance-optimized">
               Paramètres
             </h4>
-            <div className="flex justify-center sm:justify-start">
+            <div className="flex justify-center sm:justify-start performance-optimized">
               <Dropdown>
                 <DropdownTrigger>
                   <Button
-                    className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 button-cls-optimized"
+                    className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 button-cls-optimized performance-optimized"
                   >
                     {mounted && (
                       <>
-                        <span className="text-xs font-medium">Thème</span>
+                        <span className="text-xs font-medium performance-optimized">Thème</span>
                         {document.documentElement.classList.contains("dark") ? (
-                          <MoonFilledIcon className="text-blue-300" size={16} />
+                          <MoonFilledIcon className="text-blue-300 performance-optimized" size={16} />
                         ) : (
-                          <SunFilledIcon className="text-yellow-500" size={16} />
+                          <SunFilledIcon className="text-yellow-500 performance-optimized" size={16} />
                         )}
                       </>
                     )}
@@ -114,8 +114,8 @@ const Footer = () => {
                       setAvatarColorIndex(prev => prev);
                     }}
                   >
-                    <div className="flex items-center gap-2">
-                      <SunFilledIcon className="text-yellow-500" size={16} />
+                    <div className="flex items-center gap-2 performance-optimized">
+                      <SunFilledIcon className="text-yellow-500 performance-optimized" size={16} />
                       <span>Mode clair</span>
                     </div>
                   </DropdownItem>
@@ -128,8 +128,8 @@ const Footer = () => {
                       setAvatarColorIndex(prev => prev);
                     }}
                   >
-                    <div className="flex items-center gap-2">
-                      <MoonFilledIcon className="text-blue-300" size={16} />
+                    <div className="flex items-center gap-2 performance-optimized">
+                      <MoonFilledIcon className="text-blue-300 performance-optimized" size={16} />
                       <span>Mode sombre</span>
                     </div>
                   </DropdownItem>
@@ -150,8 +150,8 @@ const Footer = () => {
                       setAvatarColorIndex(prev => prev);
                     }}
                   >
-                    <div className="flex items-center gap-2">
-                      <FontAwesomeIcon icon={faMoon} className="text-gray-500" />
+                    <div className="flex items-center gap-2 performance-optimized">
+                      <FontAwesomeIcon icon={faMoon} className="text-gray-500 performance-optimized" />
                       <span>Mode automatique</span>
                     </div>
                   </DropdownItem>
@@ -162,8 +162,8 @@ const Footer = () => {
         </div>
 
         {/* Copyright - Séparé en bas */}
-        <div className="border-t border-gray-200 dark:border-gray-800 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center">
-          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+        <div className="border-t border-gray-200 dark:border-gray-800 mt-8 sm:mt-12 pt-6 sm:pt-8 text-center performance-optimized">
+          <p className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 performance-optimized">
             © {new Date().getFullYear()} AutiStudy | Tous droits réservés
           </p>
         </div>
