@@ -6,24 +6,19 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { Suspense, useEffect } from "react";
+import { useEffect } from "react";
 import { Card, CardBody, CardHeader } from "@/components/OptimizedNextUI";
 import OptimizedImage from "@/components/OptimizedImage";
-import MobileOptimizedImage from "@/components/MobileOptimizedImage";
 import { useMobileOptimization } from "@/hooks/useMobileOptimization";
-import { LazyWrapper } from "@/components/LazyComponents";
 import Link from "next/link";
 
 import { motion } from "framer-motion";
 import { 
   BookOpen, 
   Users, 
-  Target, 
-  Award, 
   Heart, 
   Star, 
-  ArrowRight, 
-  Play,
+  ArrowRight,
   CheckCircle,
   Brain,
   Lightbulb,
