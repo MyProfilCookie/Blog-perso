@@ -35,6 +35,12 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('fr-FR', options);
 };
 
+// Fonction pour corriger les extensions d'images de .jpg vers .webp
+const fixImageUrl = (imageUrl: string) => {
+  if (!imageUrl) return imageUrl;
+  return imageUrl.replace(/\.jpg$/i, '.webp');
+};
+
 const ArticlePage = () => {
   const params = useParams() as { id: string | string[] };
   const articleId = Array.isArray(params.id) ? params.id[0] : params.id;
@@ -132,7 +138,7 @@ const ArticlePage = () => {
               className="object-cover w-full h-auto max-h-[500px] rounded-lg shadow-md dark:shadow-gray-800"
               height={500}
               width={800}
-              src={article["🔗 imageUrl"]}
+              src={fixImageUrl(article["🔗 imageUrl"])}
               priority
               quality={90}
               sizes="(max-width: 768px) 100vw, (max-width: 1200px) 80vw, 1200px"
