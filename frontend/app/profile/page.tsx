@@ -1280,13 +1280,13 @@ const ProfilePage = () => {
               className="mr-2 text-blue-600 dark:text-blue-400"
               icon={faGraduationCap}
             />
-            Vos Activités
+            Progression de l&apos;enfant
           </h2>
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             <ActivityCard
               data={mockData.courses}
               icon={faBook}
-              title="Cours Consultés"
+              title="Exercices Réalisés"
             />
             <ActivityCard
               isEvaluation
@@ -1297,7 +1297,7 @@ const ProfilePage = () => {
             <ActivityCard
               data={mockData.articles}
               icon={faNewspaper}
-              title="Articles Consultés"
+              title="Ressources Consultées"
             />
           </div>
 
@@ -1307,7 +1307,7 @@ const ProfilePage = () => {
                 className="mr-2 text-blue-600 dark:text-blue-400"
                 icon={faChartBar}
               />
-              Progression des activités
+              Suivi de progression
             </h3>
             <div className="h-[300px] w-full">
               <div className="text-center text-gray-600 dark:text-gray-400 py-6 flex flex-col items-center justify-center h-full">
