@@ -1,0 +1,34 @@
+/* Styles pour supprimer les animations du menu burger */
+[data-slot="trigger"] button,
+[data-slot="trigger"] button *,
+[data-slot="content"] *,
+[data-slot="content"] {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Suppression des animations NextUI */
+[data-slot="content"] {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Suppression des animations des DropdownItem */
+[data-slot="content"] [role="menuitem"] {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}
+
+/* Suppression des animations du bouton burger */
+.xl\\:hidden button {
+  transition: none !important;
+}
+
+.xl\\:hidden button span {
+  transition: none !important;
+  animation: none !important;
+  transform: none !important;
+}

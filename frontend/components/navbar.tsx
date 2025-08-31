@@ -97,6 +97,25 @@ export const Navbar = () => {
   const [orderLoadError, setOrderLoadError] = useState<string | null>(null);
   const router = useRouter();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  // Gestionnaire pour fermer le menu quand on clique à l'extérieur
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Element;
+      if (isMenuOpen && !target.closest('.xl\\:hidden')) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    if (isMenuOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isMenuOpen]);
 
   // Couleurs pour l'animation de l'avatar - couleurs de l'autisme
   const adminColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"];
@@ -478,119 +497,102 @@ export const Navbar = () => {
           </NextLink>
         </NavbarBrand>
 
-        {/* Menu burger mobile avec Dropdown */}
+        {/* Menu burger mobile simple sans animations */}
         <div className="xl:hidden">
-          <Dropdown 
-            placement="bottom-end"
-            shouldBlockScroll={false}
-            backdrop="transparent"
+          <Button
+            aria-label="Menu de navigation"
+            className="bg-transparent p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 border-2 border-violet-500 min-w-[44px] min-h-[44px]"
+            size="sm"
+            onClick={() => setIsMenuOpen(!isMenuOpen)}
           >
-            <DropdownTrigger>
-              <Button
-                aria-label="Menu de navigation"
-                className="bg-transparent p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 border-2 border-violet-500 min-w-[44px] min-h-[44px]"
-                size="sm"
-              >
-                <div className="w-6 h-6 flex flex-col justify-center items-center">
-                  <span className="block w-5 h-0.5 bg-violet-600"></span>
-                  <span className="block w-5 h-0.5 bg-violet-600 mt-1"></span>
-                  <span className="block w-5 h-0.5 bg-violet-600 mt-1"></span>
-                </div>
-              </Button>
-            </DropdownTrigger>
-            <DropdownMenu 
-              className="dark:bg-gray-800 dark:border-gray-700 w-80 max-h-[80vh] overflow-y-auto"
-              disableAnimation={true}
-            >
-              {/* Navigation */}
-              <DropdownItem
-                key="home"
-                onClick={() => router.push("/")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
-              >
-                <FontAwesomeIcon icon={faHome} className="mr-2" />
-                Accueil
-              </DropdownItem>
-              <DropdownItem
-                key="about"
-                onClick={() => router.push("/about")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
-              >
-                <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
-                À propos
-              </DropdownItem>
-              <DropdownItem
-                key="articles"
-                onClick={() => router.push("/articles")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
-              >
-                <FontAwesomeIcon icon={faBook} className="mr-2" />
-                Articles
-              </DropdownItem>
-              <DropdownItem
-                key="controle"
-                onClick={() => router.push("/controle")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
-              >
-                <FontAwesomeIcon icon={faGamepad} className="mr-2" />
-                Contrôle
-              </DropdownItem>
-              <DropdownItem
-                key="shop"
-                onClick={() => router.push("/shop")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
-              >
-                <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
-                Shop
-              </DropdownItem>
-              <DropdownItem
-                key="contact"
-                onClick={() => router.push("/contact")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
-              >
-                <FontAwesomeIcon icon={faHeart} className="mr-2" />
-                Contact
-              </DropdownItem>
-               
-              {/* User-specific items */}
-              {user ? (
-                <>
-                  <DropdownItem
-                    key="separator"
-                    showDivider
-                    className="font-medium dark:text-gray-300"
-                    textValue="Mon compte"
-                  >
-                    Mon compte
-                  </DropdownItem>
-                  <DropdownItem
-                    key="dashboard"
-                    onClick={() => router.push(user.role === "admin" ? "/admin/dashboard" : "/dashboard")}
-                    className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
-                  >
-                    <FontAwesomeIcon icon={user.role === "admin" ? faCrown : faGraduationCap} className="mr-2" />
-                    {user.role === "admin" ? "Dashboard Admin" : "Dashboard"}
-                  </DropdownItem>
-                  <DropdownItem
-                    key="profile"
-                    onClick={() => router.push("/profile")}
-                    className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
-                  >
-                    <FontAwesomeIcon icon={faUser} className="mr-2" />
-                    Profil
-                  </DropdownItem>
-                  <DropdownItem
-                    key="logout"
-                    onClick={handleLogout}
-                    className="dark:text-gray-200 dark:hover:bg-gray-700 text-red-600 dark:text-red-400 py-3 text-base"
-                  >
-                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
-                    Déconnexion
-                  </DropdownItem>
-                </>
-              ) : null}
-            </DropdownMenu>
-          </Dropdown>
+            <div className="w-6 h-6 flex flex-col justify-center items-center">
+              <span className="block w-5 h-0.5 bg-violet-600"></span>
+              <span className="block w-5 h-0.5 bg-violet-600 mt-1"></span>
+              <span className="block w-5 h-0.5 bg-violet-600 mt-1"></span>
+            </div>
+          </Button>
+          
+          {/* Menu mobile simple sans animations */}
+          {isMenuOpen && (
+            <div className="absolute top-16 right-0 w-80 bg-white dark:bg-gray-800 border-2 border-violet-500 rounded-lg shadow-xl z-50 max-h-[80vh] overflow-y-auto">
+              <div className="p-2">
+                {/* Navigation */}
+                <button
+                  onClick={() => { router.push("/"); setIsMenuOpen(false); }}
+                  className="w-full text-left p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-700 dark:text-gray-200 text-base"
+                >
+                  <FontAwesomeIcon icon={faHome} className="mr-2" />
+                  Accueil
+                </button>
+                <button
+                  onClick={() => { router.push("/about"); setIsMenuOpen(false); }}
+                  className="w-full text-left p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-700 dark:text-gray-200 text-base"
+                >
+                  <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
+                  À propos
+                </button>
+                <button
+                  onClick={() => { router.push("/articles"); setIsMenuOpen(false); }}
+                  className="w-full text-left p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-700 dark:text-gray-200 text-base"
+                >
+                  <FontAwesomeIcon icon={faBook} className="mr-2" />
+                  Articles
+                </button>
+                <button
+                  onClick={() => { router.push("/controle"); setIsMenuOpen(false); }}
+                  className="w-full text-left p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-700 dark:text-gray-200 text-base"
+                >
+                  <FontAwesomeIcon icon={faGamepad} className="mr-2" />
+                  Contrôle
+                </button>
+                <button
+                  onClick={() => { router.push("/shop"); setIsMenuOpen(false); }}
+                  className="w-full text-left p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-700 dark:text-gray-200 text-base"
+                >
+                  <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+                  Shop
+                </button>
+                <button
+                  onClick={() => { router.push("/contact"); setIsMenuOpen(false); }}
+                  className="w-full text-left p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-700 dark:text-gray-200 text-base"
+                >
+                  <FontAwesomeIcon icon={faHeart} className="mr-2" />
+                  Contact
+                </button>
+                
+                {/* User-specific items */}
+                {user && (
+                  <>
+                    <div className="border-t border-gray-200 dark:border-gray-600 my-2"></div>
+                    <div className="px-3 py-2 text-sm font-medium text-gray-500 dark:text-gray-400">
+                      Mon compte
+                    </div>
+                    <button
+                      onClick={() => { router.push(user.role === "admin" ? "/admin/dashboard" : "/dashboard"); setIsMenuOpen(false); }}
+                      className="w-full text-left p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-700 dark:text-gray-200 text-base"
+                    >
+                      <FontAwesomeIcon icon={user.role === "admin" ? faCrown : faGraduationCap} className="mr-2" />
+                      {user.role === "admin" ? "Dashboard Admin" : "Dashboard"}
+                    </button>
+                    <button
+                      onClick={() => { router.push("/profile"); setIsMenuOpen(false); }}
+                      className="w-full text-left p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-700 dark:text-gray-200 text-base"
+                    >
+                      <FontAwesomeIcon icon={faUser} className="mr-2" />
+                      Profil
+                    </button>
+                    <button
+                      onClick={() => { handleLogout(); setIsMenuOpen(false); }}
+                      className="w-full text-left p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-700 text-red-600 dark:text-red-400 text-base"
+                    >
+                      <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
+                      Déconnexion
+                    </button>
+                  </>
+                )}
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Navigation desktop */}
