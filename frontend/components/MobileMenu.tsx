@@ -63,11 +63,6 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   orderCount,
   handleLogout,
 }) => {
-  console.log('MobileMenu render - isOpen:', isOpen, 'user:', user);
-  
-  if (isOpen) {
-    console.log('MobileMenu is OPEN - rendering menu content');
-  }
   
   // Injecter les styles CSS pour les animations
   useEffect(() => {
@@ -78,7 +73,6 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
         styleElement.id = 'mobile-menu-styles';
         styleElement.textContent = mobileMenuStyles;
         document.head.appendChild(styleElement);
-        console.log('MobileMenu styles injected');
       }
     }
   }, []);
@@ -87,7 +81,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 
   return (
     <div
-      className="xl:hidden fixed inset-0 top-0 z-50 bg-red-500/80 backdrop-blur-sm"
+      className="xl:hidden fixed inset-0 top-0 z-50 bg-black/50 backdrop-blur-sm"
       data-menu-content
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -96,7 +90,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
       }}
     >
       <div 
-        className="absolute top-16 left-0 right-0 bg-white dark:bg-gray-900 shadow-xl border-t border-gray-200 dark:border-gray-700 max-h-[calc(100vh-4rem)] overflow-y-auto border-4 border-green-500"
+        className="absolute top-16 left-0 right-0 bg-white dark:bg-gray-900 shadow-xl border-t border-gray-200 dark:border-gray-700 max-h-[calc(100vh-4rem)] overflow-y-auto"
         style={{
           animation: 'slideDown 0.3s ease-out'
         }}

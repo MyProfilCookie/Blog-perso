@@ -111,11 +111,8 @@ export const Navbar = () => {
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // Debug pour le menu mobile et injection des styles
+  // Injection des styles CSS pour les animations du menu mobile
   useEffect(() => {
-    console.log('Menu state changed:', isMenuOpen);
-    
-    // Injecter les styles CSS pour les animations
     if (typeof document !== 'undefined') {
       const existingStyle = document.getElementById('mobile-menu-styles');
       if (!existingStyle) {
@@ -126,9 +123,6 @@ export const Navbar = () => {
       }
     }
   }, [isMenuOpen]);
-
-  // Debug pour voir si le composant se rend
-  console.log('Navbar rendering, isMenuOpen:', isMenuOpen, 'user:', user);
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
     shipped: 0,
@@ -570,11 +564,8 @@ export const Navbar = () => {
         {/* Bouton menu mobile */}
         <button
           aria-label="Toggle navigation"
-          className="xl:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative border-2 border-blue-500"
+          className="xl:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative"
           onClick={() => {
-            console.log('Menu button clicked, current state:', isMenuOpen);
-            console.log('Setting menu to:', !isMenuOpen);
-            console.log('Button is visible and clickable');
             setIsMenuOpen(!isMenuOpen);
           }}
           style={{ zIndex: 1000 }}
