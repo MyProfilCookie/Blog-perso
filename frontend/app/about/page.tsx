@@ -7,21 +7,29 @@ import { CardBody } from '@nextui-org/react'
 import { Avatar } from '@nextui-org/react'
 import { Button } from '@nextui-org/react';
 import { motion } from "framer-motion";
-import { Sparkles, Users, HeartHandshake, Code, Target, Star, Globe, HelpingHand, Lightbulb } from "lucide-react";
+import { Sparkles, Users, HeartHandshake, Code, Target, Star, Globe, HelpingHand, Lightbulb, Award, BookOpen, Shield, Zap } from "lucide-react";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const colorVariants = [
   "#DBEAFE", "#D1FAE5", "#E9D5FF", "#FEF3C7", "#FECACA", "#CCFBF1"
 ];
 
 const familyMembers = [
-  { name: "Jessica", img: "/assets/family/avatar/jessica.webp" },
-  { name: "Joshua", img: "/assets/family/avatar/joshua.webp" },
-  { name: "Maeva", img: "/assets/family/avatar/maeva.webp" },
-  { name: "Maman", img: "/assets/family/avatar/chantal.webp" },
-  { name: "Nini", img: "/assets/family/avatar/virginie.webp" },
-  { name: "Papa", img: "/assets/family/avatar/paul.webp" },
-  { name: "Pauline", img: "/assets/family/avatar/pauline.webp" },
-  { name: "Titi", img: "/assets/family/avatar/vanessa.webp" },
+  { name: "Jessica", img: "/assets/family/avatar/jessica.webp", role: "Sœur aînée", age: "38 ans" },
+  { name: "Joshua", img: "/assets/family/avatar/joshua.webp", role: "Frère", age: "35 ans" },
+  { name: "Maeva", img: "/assets/family/avatar/maeva.webp", role: "Notre inspiration", age: "14 ans" },
+  { name: "Chantal", img: "/assets/family/avatar/chantal.webp", role: "Maman", age: "Maman au grand cœur" },
+  { name: "Virginie", img: "/assets/family/avatar/virginie.webp", role: "Nini", age: "Sœur" },
+  { name: "Paul", img: "/assets/family/avatar/paul.webp", role: "Papa", age: "Ingénieur & Co-fondateur" },
+  { name: "Pauline", img: "/assets/family/avatar/pauline.webp", role: "Sœur", age: "Sœur" },
+  { name: "Vanessa", img: "/assets/family/avatar/vanessa.webp", role: "Titi", age: "Sœur" },
+];
+
+const achievements = [
+  { icon: <Users className="w-6 h-6" />, number: "500+", label: "Familles accompagnées" },
+  { icon: <BookOpen className="w-6 h-6" />, number: "1000+", label: "Exercices créés" },
+  { icon: <Star className="w-6 h-6" />, number: "4.9/5", label: "Note moyenne" },
+  { icon: <HeartHandshake className="w-6 h-6" />, number: "24/7", label: "Support familial" },
 ];
 
 export default function AboutUsPage() {
@@ -49,164 +57,338 @@ export default function AboutUsPage() {
   }, []);
 
   return (
-    <section className="flex flex-col gap-6 md:gap-8 lg:gap-10 items-center py-6 md:py-8 lg:py-12 w-full px-4 md:px-6 lg:px-8">
-      {/* Titre principal */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: -40 }}
-        transition={{ duration: 0.7 }}
-        className="text-center w-full"
-      >
-        <motion.h1
-          animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.08, 1] }}
-          transition={{ duration: 2, repeat: Infinity }}
-          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-600 flex items-center justify-center gap-3"
-        >
-          Notre Histoire <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-blue-400" />
-        </motion.h1>
-        <p className="mt-4 md:mt-6 text-base sm:text-lg md:text-xl lg:text-2xl text-blue-700 font-medium px-2">
-          Une famille soudée, une mission : l'éducation inclusive et bienveillante pour tous les enfants autistes.
-        </p>
-        <p className="mt-3 text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto px-2 md:px-4 leading-relaxed">
-          Chez AutiStudy, chaque membre de la famille apporte sa pierre à l'édifice pour créer une plateforme unique, pensée pour l'épanouissement et la réussite de tous.
-        </p>
-      </motion.div>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">
+      <main>
+        {/* Hero Section Familiale */}
+        <section className="relative py-12 md:py-20 lg:py-24 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-100/50 to-purple-100/50 dark:from-blue-900/20 dark:to-purple-900/20"></div>
+          <div className="relative w-full px-4 md:px-8 lg:px-12">
+            <div className="max-w-7xl mx-auto">
+              <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+                <motion.div
+                  initial={{ opacity: 0, x: -50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8 }}
+                >
+                  <motion.div
+                    animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.05, 1] }}
+                    transition={{ duration: 3, repeat: Infinity }}
+                    className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 px-4 py-2 rounded-full mb-6"
+                  >
+                    <Sparkles className="w-5 h-5 text-blue-600" />
+                    <span className="text-blue-700 dark:text-blue-300 font-semibold">Famille Ayivor</span>
+                  </motion.div>
+                  
+                  <h1 className="text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-bold text-gray-900 dark:text-white mb-6">
+                    Notre{" "}
+                    <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                      Histoire
+                    </span>
+                  </h1>
+                  
+                  <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
+                    Une famille soudée, une mission : l'éducation inclusive et bienveillante pour tous les enfants autistes.
+                  </p>
+                  
+                  <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
+                    Chez AutiStudy, chaque membre de la famille apporte sa pierre à l'édifice pour créer une plateforme unique, pensée pour l'épanouissement et la réussite de tous.
+                  </p>
 
-      {/* Cartes informatives */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 w-full max-w-5xl">
-        {[
-          {
-            title: "Notre Famille",
-            text: "Nous sommes une grande famille unie, avec des enfants de 14 à 38 ans. Maeva, la benjamine, est notre source d'inspiration.",
-            icon: <Users className="text-blue-600 w-8 h-8 sm:w-10 sm:h-10" />,
-          },
-          {
-            title: "Notre Maman",
-            text: "Chantal, maman au grand cœur, veille chaque jour à l'harmonie et au bien-être de tous.",
-            icon: <HeartHandshake className="text-green-600 w-8 h-8 sm:w-10 sm:h-10" />,
-          },
-          {
-            title: "Notre Papa",
-            text: "Paul, papa ingénieur, développe les outils numériques d'AutiStudy et co-fonde la plateforme.",
-            icon: <Code className="text-purple-600 w-8 h-8 sm:w-10 sm:h-10" />,
-          },
-          {
-            title: "Notre Mission",
-            text: "AutiStudy est née de notre volonté de rendre l'apprentissage accessible, ludique et adapté à chaque enfant autiste.",
-            icon: <Target className="text-yellow-600 w-8 h-8 sm:w-10 sm:h-10" />,
-          },
-        ].map((info, idx) => (
-          <motion.div
-            key={idx}
-            whileHover={{ scale: 1.03 }}
-            transition={{ duration: 0.25 }}
-          >
-            <Card
-              className="p-5 md:p-6 lg:p-8 rounded-xl shadow-xl min-h-[200px] sm:min-h-[220px] md:min-h-[240px] flex flex-col items-center text-center border-2 border-gray-100 hover:border-blue-200 transition-all duration-300"
-              style={{ backgroundColor: cardColors[idx] }}
-            >
-              <div className="mb-4 md:mb-5 p-3 bg-white/50 rounded-full">{info.icon}</div>
-              <CardBody className="p-3 md:p-4">
-                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4">
-                  {info.title}
-                </h3>
-                <p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed">{info.text}</p>
-              </CardBody>
-            </Card>
-          </motion.div>
-        ))}
-      </div>
-
-      {/* Valeurs */}
-      <div className="w-full max-w-5xl mt-8 md:mt-10 lg:mt-12">
-        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-700 mb-6 md:mb-8 text-center">Nos valeurs</h2>
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
-          {[
-            { icon: <Star className="w-7 h-7 sm:w-8 sm:h-8 text-yellow-500" />, label: "Bienveillance" },
-            { icon: <Globe className="w-7 h-7 sm:w-8 sm:h-8 text-blue-600" />, label: "Inclusion" },
-            { icon: <Lightbulb className="w-7 h-7 sm:w-8 sm:h-8 text-purple-600" />, label: "Innovation" },
-            { icon: <HelpingHand className="w-7 h-7 sm:w-8 sm:h-8 text-green-600" />, label: "Entraide" },
-          ].map((val, i) => (
-            <div key={i} className="flex flex-col items-center bg-white rounded-xl shadow-lg p-4 md:p-5 lg:p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
-              <div className="p-3 bg-gray-50 rounded-full mb-3">{val.icon}</div>
-              <span className="text-sm sm:text-base font-bold text-gray-800 text-center">{val.label}</span>
-            </div>
-          ))}
-        </div>
-      </div>
-
-      {/* Carte famille */}
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        initial={{ opacity: 0, y: 30 }}
-        transition={{ duration: 0.6 }}
-        className="max-w-4xl w-full mt-8 md:mt-10 lg:mt-12 rounded-xl shadow-xl"
-        whileHover={{ scale: 1.02 }}
-      >
-        <Card style={{ backgroundColor: familyCardColor }} className="border-2 border-gray-200">
-          <CardBody className="flex flex-col items-center p-5 md:p-6 lg:p-8">
-            <h3 className="mb-6 md:mb-8 font-bold text-gray-800 text-lg sm:text-xl md:text-2xl text-center">
-              Rencontrez la famille Ayivor
-            </h3>
-            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full">
-              {familyMembers.map((member, i) => (
-                <div key={i} className="flex flex-col items-center">
-                  <Avatar
-                    isBordered
-                    alt={member.name}
-                    className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
-                    color="primary"
-                    size="lg"
-                    src={member.img}
-                    style={{
-                      borderWidth: "4px",
-                      boxShadow: "0 6px 20px rgba(0,0,0,0.2)"
-                    }}
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+                    {achievements.map((achievement, index) => (
+                      <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6, delay: index * 0.1 }}
+                        className="text-center"
+                      >
+                        <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
+                          {achievement.number}
+                        </div>
+                        <div className="text-sm text-gray-600 dark:text-gray-400">
+                          {achievement.label}
+                        </div>
+                      </motion.div>
+                    ))}
+                  </div>
+                </motion.div>
+                
+                <motion.div
+                  initial={{ opacity: 0, x: 50 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
+                  className="relative"
+                >
+                  <OptimizedImage
+                    src="/assets/family/family.webp"
+                    alt="Famille Ayivor"
+                    width={600}
+                    height={400}
+                    className="rounded-2xl shadow-2xl"
+                    priority
                   />
-                  <span className="mt-3 md:mt-4 text-sm sm:text-base md:text-lg font-semibold text-gray-800 text-center">{member.name}</span>
-                </div>
-              ))}
+                </motion.div>
+              </div>
             </div>
-          </CardBody>
-        </Card>
-      </motion.div>
+          </div>
+        </section>
 
-      {/* Appel à l'action */}
-      <div className="flex flex-col items-center mt-8 md:mt-10 lg:mt-12 gap-4 md:gap-5">
-        <p className="text-base sm:text-lg md:text-xl text-gray-700 text-center px-4 max-w-2xl">
-          Envie d'en savoir plus ou de rejoindre l'aventure ? Découvrez la plateforme ou contactez-nous !
-        </p>
-        <Button
-          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 md:px-8 lg:px-10 rounded-lg text-base sm:text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-300"
-          onClick={() => window.location.href = '/contact'}
-        >
-          Nous contacter
-        </Button>
-      </div>
+        {/* Section Notre Mission */}
+        <section className="py-16 md:py-20 bg-white dark:bg-gray-800">
+          <div className="w-full px-4 md:px-8 lg:px-12">
+            <div className="max-w-7xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="text-center mb-16"
+              >
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                  Notre Mission
+                </h2>
+                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                  AutiStudy est née de notre volonté de rendre l'apprentissage accessible, ludique et adapté à chaque enfant autiste.
+                </p>
+              </motion.div>
+              
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+                {[
+                  {
+                    title: "Notre Famille",
+                    text: "Nous sommes une grande famille unie, avec des enfants de 14 à 38 ans. Maeva, la benjamine, est notre source d'inspiration.",
+                    icon: <Users className="text-blue-600 w-8 h-8" />,
+                    color: "from-blue-100 to-blue-200"
+                  },
+                  {
+                    title: "Notre Maman",
+                    text: "Chantal, maman au grand cœur, veille chaque jour à l'harmonie et au bien-être de tous.",
+                    icon: <HeartHandshake className="text-green-600 w-8 h-8" />,
+                    color: "from-green-100 to-green-200"
+                  },
+                  {
+                    title: "Notre Papa",
+                    text: "Paul, papa ingénieur, développe les outils numériques d'AutiStudy et co-fonde la plateforme.",
+                    icon: <Code className="text-purple-600 w-8 h-8" />,
+                    color: "from-purple-100 to-purple-200"
+                  },
+                  {
+                    title: "Notre Vision",
+                    text: "Créer un monde où chaque enfant autiste peut apprendre, grandir et s'épanouir dans un environnement bienveillant.",
+                    icon: <Target className="text-yellow-600 w-8 h-8" />,
+                    color: "from-yellow-100 to-yellow-200"
+                  },
+                ].map((info, idx) => (
+                  <motion.div
+                    key={idx}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: idx * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.05 }}
+                    className="group"
+                  >
+                    <Card className="h-full bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 border-2 border-gray-100 dark:border-gray-600 hover:border-blue-200 dark:hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-xl">
+                      <CardBody className="p-6 md:p-8 text-center">
+                        <div className={`w-16 h-16 rounded-full bg-gradient-to-br ${info.color} flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition-transform duration-300`}>
+                          {info.icon}
+                        </div>
+                        <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-4">
+                          {info.title}
+                        </h3>
+                        <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
+                          {info.text}
+                        </p>
+                      </CardBody>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
 
-      {/* Bouton pour changer les couleurs */}
-      <div className="flex justify-center mt-6 md:mt-8 lg:mt-10">
-        <Button
-          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-5 md:px-6 rounded-lg text-sm sm:text-base md:text-lg shadow-md hover:shadow-lg transition-all duration-300"
-          onClick={() => {
-            setCardColors(
-              Array(4)
-                .fill(null)
-                .map(
-                  () =>
-                    colorVariants[
-                      Math.floor(Math.random() * colorVariants.length)
-                    ],
-                ),
-            );
-            setFamilyCardColor(
-              colorVariants[Math.floor(Math.random() * colorVariants.length)],
-            );
-          }}
-        >
-          Changer les couleurs
-        </Button>
-      </div>
-    </section>
+        {/* Section Valeurs */}
+        <section className="py-16 md:py-20 bg-gradient-to-br from-gray-50 to-blue-50 dark:from-gray-900 dark:to-gray-800">
+          <div className="w-full px-4 md:px-8 lg:px-12">
+            <div className="max-w-7xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="text-center mb-16"
+              >
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                  Nos Valeurs
+                </h2>
+                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                  Les principes qui guident notre action au quotidien
+                </p>
+              </motion.div>
+              
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8">
+                {[
+                  { icon: <Star className="w-8 h-8 text-yellow-500" />, label: "Bienveillance", description: "Chaque enfant est unique et mérite notre attention" },
+                  { icon: <Globe className="w-8 h-8 text-blue-600" />, label: "Inclusion", description: "Un monde accessible pour tous" },
+                  { icon: <Lightbulb className="w-8 h-8 text-purple-600" />, label: "Innovation", description: "Technologies au service de l'apprentissage" },
+                  { icon: <HelpingHand className="w-8 h-8 text-green-600" />, label: "Entraide", description: "Ensemble, nous sommes plus forts" },
+                ].map((val, i) => (
+                  <motion.div
+                    key={i}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, delay: i * 0.1 }}
+                    viewport={{ once: true }}
+                    whileHover={{ scale: 1.05 }}
+                  >
+                    <Card className="bg-white dark:bg-gray-700 border-2 border-gray-100 dark:border-gray-600 hover:border-blue-200 dark:hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-xl">
+                      <CardBody className="p-6 text-center">
+                        <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                          {val.icon}
+                        </div>
+                        <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{val.label}</h3>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">{val.description}</p>
+                      </CardBody>
+                    </Card>
+                  </motion.div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section Famille */}
+        <section className="py-16 md:py-20 bg-white dark:bg-gray-800">
+          <div className="w-full px-4 md:px-8 lg:px-12">
+            <div className="max-w-7xl mx-auto">
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="text-center mb-16"
+              >
+                <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
+                  Rencontrez la Famille Ayivor
+                </h2>
+                <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                  Chaque membre apporte sa contribution unique à notre mission
+                </p>
+              </motion.div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6 }}
+                viewport={{ once: true }}
+                className="max-w-6xl mx-auto"
+              >
+                <Card className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-2 border-blue-200 dark:border-blue-400 shadow-2xl">
+                  <CardBody className="p-8 md:p-12">
+                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
+                      {familyMembers.map((member, i) => (
+                        <motion.div
+                          key={i}
+                          initial={{ opacity: 0, scale: 0.8 }}
+                          whileInView={{ opacity: 1, scale: 1 }}
+                          transition={{ duration: 0.6, delay: i * 0.1 }}
+                          viewport={{ once: true }}
+                          whileHover={{ scale: 1.05 }}
+                          className="flex flex-col items-center text-center"
+                        >
+                          <Avatar
+                            isBordered
+                            alt={member.name}
+                            className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 mb-4"
+                            color="primary"
+                            size="lg"
+                            src={member.img}
+                            style={{
+                              borderWidth: "4px",
+                              boxShadow: "0 8px 25px rgba(0,0,0,0.15)"
+                            }}
+                          />
+                          <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">
+                            {member.name}
+                          </h3>
+                          <p className="text-sm md:text-base text-blue-600 dark:text-blue-400 font-semibold mb-1">
+                            {member.role}
+                          </p>
+                          <p className="text-xs md:text-sm text-gray-600 dark:text-gray-400">
+                            {member.age}
+                          </p>
+                        </motion.div>
+                      ))}
+                    </div>
+                  </CardBody>
+                </Card>
+              </motion.div>
+            </div>
+          </div>
+        </section>
+
+        {/* Section Call-to-Action */}
+        <section className="py-16 md:py-20 bg-gradient-to-r from-blue-600 to-purple-600">
+          <div className="w-full px-4 md:px-8 lg:px-12 text-center">
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+            >
+              <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
+                Rejoignez l'Aventure AutiStudy
+              </h2>
+              <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto">
+                Ensemble, créons un monde plus inclusif et bienveillant pour tous les enfants
+              </p>
+              <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                <Button
+                  className="bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors font-bold text-lg shadow-lg hover:shadow-xl"
+                  onClick={() => window.location.href = '/users/signup'}
+                >
+                  <Zap className="w-5 h-5 mr-2" />
+                  Commencer gratuitement
+                </Button>
+                <Button
+                  className="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-bold text-lg"
+                  onClick={() => window.location.href = '/contact'}
+                >
+                  <Shield className="w-5 h-5 mr-2" />
+                  Nous contacter
+                </Button>
+              </div>
+            </motion.div>
+          </div>
+        </section>
+
+        {/* Bouton pour changer les couleurs */}
+        <div className="flex justify-center py-8">
+          <Button
+            className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
+            onClick={() => {
+              setCardColors(
+                Array(4)
+                  .fill(null)
+                  .map(
+                    () =>
+                      colorVariants[
+                        Math.floor(Math.random() * colorVariants.length)
+                      ],
+                  ),
+              );
+              setFamilyCardColor(
+                colorVariants[Math.floor(Math.random() * colorVariants.length)],
+              );
+            }}
+          >
+            <Sparkles className="w-4 h-4 mr-2" />
+            Changer les couleurs
+          </Button>
+        </div>
+      </main>
+    </div>
   );
 }
