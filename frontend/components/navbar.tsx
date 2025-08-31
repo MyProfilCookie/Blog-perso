@@ -519,7 +519,7 @@ export const Navbar = () => {
           
           {/* Menu mobile simple sans animations */}
           {isMenuOpen && (
-            <div className="absolute top-16 right-0 w-80 bg-white dark:bg-gray-800 border-2 border-violet-500 rounded-lg shadow-xl z-50 max-h-[80vh] overflow-y-auto" style={{ border: '2px solid red' }}>
+            <div className="fixed top-20 right-4 w-80 bg-yellow-300 border-4 border-red-500 rounded-lg shadow-xl z-[9999] max-h-[80vh] overflow-y-auto">
               <div className="p-2">
                 {/* Navigation */}
                 <button
