@@ -487,7 +487,7 @@ export const Navbar = () => {
           : "0 4px 20px rgba(0, 0, 0, 0.08)",
         background: resolvedTheme === 'dark'
           ? "linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(31, 41, 55, 0.95) 100%)"
-          : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,248,255,0.95) 100%)",
+          : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,243,255,0.95) 100%)",
         contain: "layout style paint"
       }}
     >
@@ -497,7 +497,7 @@ export const Navbar = () => {
           <NextLink className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized" href="/">
             <AutismLogo size={16} />
             <div className="flex flex-col">
-              <p className="font-bold text-blue-600 dark:text-blue-400 text-sm md:text-base font-sans">
+              <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-base font-sans">
                 AutiStudy
               </p>
               <p className="text-xs text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
@@ -510,12 +510,12 @@ export const Navbar = () => {
         {/* Bouton menu mobile */}
         <button
           aria-label="Toggle navigation"
-          className="lg:hidden p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-200 animation-optimized"
+          className="lg:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 animation-optimized"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <VisibleBurgerIcon 
             size={20} 
-            className={`text-blue-600 dark:text-blue-400 hover:text-blue-500 dark:hover:text-blue-300 transition-colors duration-200 ${
+            className={`text-violet-600 dark:text-violet-400 hover:text-violet-500 dark:hover:text-violet-300 transition-colors duration-200 ${
               isMenuOpen ? 'rotate-90' : ''
             }`}
           />
@@ -529,7 +529,7 @@ export const Navbar = () => {
                 <Dropdown>
                   <DropdownTrigger>
                     <Button
-                      className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 bg-transparent p-0 text-sm xl:text-base font-medium tracking-wide button-cls-optimized flex items-center gap-2"
+                      className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 bg-transparent p-0 text-sm xl:text-base font-medium tracking-wide button-cls-optimized flex items-center gap-2"
                       radius="sm"
                       variant="light"
                     >
@@ -565,7 +565,7 @@ export const Navbar = () => {
               
               <NavbarItem>
                 <NextLink
-                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+                  className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
                   href="/articles"
                 >
                   <FontAwesomeIcon icon={faBook} className="w-4 h-4" />
@@ -575,7 +575,7 @@ export const Navbar = () => {
               
               <NavbarItem>
                 <NextLink
-                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+                  className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
                   href="/controle"
                 >
                   <FontAwesomeIcon icon={faGamepad} className="w-4 h-4" />
@@ -585,7 +585,7 @@ export const Navbar = () => {
 
               <NavbarItem key="shop" className="relative">
                 <NextLink
-                  className="text-gray-700 dark:text-gray-200 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-2 relative text-sm xl:text-base font-medium tracking-wide transition-colors duration-200"
+                  className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-sm xl:text-base font-medium tracking-wide transition-colors duration-200"
                   href="/shop"
                 >
                   <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
@@ -629,7 +629,7 @@ export const Navbar = () => {
                 user.role === "admin" ? "Dashboard Admin" : "Dashboard"
               }
               as={Link}
-              className="text-xs md:text-sm font-normal text-gray-600 dark:text-gray-200 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-gray-700 dark:hover:to-gray-600 button-cls-optimized border border-blue-200 dark:border-gray-600"
+              className="text-xs md:text-sm font-normal text-gray-600 dark:text-gray-200 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:from-violet-100 hover:to-purple-100 dark:hover:from-gray-700 dark:hover:to-gray-600 button-cls-optimized border border-violet-200 dark:border-gray-600"
               href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
             >
               <FontAwesomeIcon
@@ -690,7 +690,7 @@ export const Navbar = () => {
                 <DropdownTrigger>
                   <Button
                     aria-label="Menu utilisateur"
-                    className="bg-transparent relative button-cls-optimized hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-200"
+                    className="bg-transparent relative button-cls-optimized hover:bg-violet-50 dark:hover:bg-gray-800 transition-colors duration-200"
                   >
                     <Avatar
                       isBordered
@@ -769,14 +769,14 @@ export const Navbar = () => {
                       router.push("/orders?status=shipped");
                     }}
                   >
-                    <div className="flex items-center justify-between p-2 md:p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/20 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                    <div className="flex items-center justify-between p-2 md:p-3 rounded-lg border border-violet-200 dark:border-violet-800 hover:bg-violet-50/30 dark:hover:bg-violet-900/20 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-2 md:gap-3">
                         <ShippedOrdersIcon 
                           size={24} 
-                          className="text-blue-600 dark:text-blue-400"
+                          className="text-violet-600 dark:text-violet-400"
                         />
                         <div className="flex flex-col">
-                          <div className="font-medium text-blue-600 dark:text-blue-400 text-sm">
+                          <div className="font-medium text-violet-600 dark:text-violet-400 text-sm">
                             Envoyées
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
@@ -784,7 +784,7 @@ export const Navbar = () => {
                           </div>
                         </div>
                       </div>
-                      <span className="text-base md:text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
+                      <span className="text-base md:text-lg font-semibold text-violet-600 dark:text-violet-400 min-w-[2rem] text-center">
                         {orderCount.shipped || 0}
                       </span>
                     </div>
@@ -889,7 +889,7 @@ export const Navbar = () => {
                         >
                           <div className="flex items-center gap-2">
                             <MoonFilledIcon
-                              className="text-blue-300"
+                              className="text-violet-300"
                               size={16}
                             />
                             <span>Mode sombre</span>
@@ -952,7 +952,7 @@ export const Navbar = () => {
             style={{
               background: resolvedTheme === 'dark'
                 ? "linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(31, 41, 55, 0.95) 100%)"
-                : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,248,255,0.95) 100%)"
+                : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,243,255,0.95) 100%)"
             }}
           >
             <div className="p-4 md:p-6 space-y-4 md:space-y-6 fade-optimized visible">
@@ -963,10 +963,10 @@ export const Navbar = () => {
                   <h3 
                     className="text-base md:text-lg font-semibold text-gray-700 dark:text-gray-200 px-2 flex items-center gap-2 slide-left-optimized visible"
                   >
-                    <FontAwesomeIcon icon={faUser} className="text-blue-600 dark:text-blue-400" />
+                    <FontAwesomeIcon icon={faUser} className="text-violet-600 dark:text-violet-400" />
                     Mon compte
                   </h3>
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-3 md:p-4 space-y-2 md:space-y-3 border border-blue-200 dark:border-gray-600">
+                  <div className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-3 md:p-4 space-y-2 md:space-y-3 border border-violet-200 dark:border-gray-600">
                     <NextLink
                       className="block w-full"
                       href="/orders"
@@ -993,14 +993,14 @@ export const Navbar = () => {
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between p-2 md:p-3 rounded-lg border-2 border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/20 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                        <div className="flex items-center justify-between p-2 md:p-3 rounded-lg border-2 border-violet-200 dark:border-violet-800 hover:bg-violet-50/30 dark:hover:bg-violet-900/20 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                           <div className="flex items-center gap-2 md:gap-3">
                             <ShippedOrdersIcon 
                               size={24} 
-                              className="text-blue-600 dark:text-blue-400"
+                              className="text-violet-600 dark:text-violet-400"
                             />
                             <div className="flex flex-col">
-                              <div className="font-medium text-blue-600 dark:text-blue-400 text-sm">
+                              <div className="font-medium text-violet-600 dark:text-violet-400 text-sm">
                                 Envoyées
                               </div>
                               <div className="text-xs text-gray-500 dark:text-gray-400">
@@ -1008,7 +1008,7 @@ export const Navbar = () => {
                               </div>
                             </div>
                           </div>
-                          <span className="text-base md:text-lg font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
+                          <span className="text-base md:text-lg font-semibold text-violet-600 dark:text-violet-400 min-w-[2rem] text-center">
                             {orderCount.shipped || 0}
                           </span>
                         </div>
@@ -1037,7 +1037,7 @@ export const Navbar = () => {
 
                     {/* Dashboard */}
                     <NextLink
-                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href={
                         user.role === "admin"
                           ? "/admin/dashboard"
@@ -1046,7 +1046,7 @@ export const Navbar = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FontAwesomeIcon
-                        className="mr-2 md:mr-3 text-blue-600 dark:text-blue-400 w-4 md:w-5"
+                        className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5"
                         icon={
                           user.role === "admin" ? faCrown : faGraduationCap
                         }
@@ -1060,12 +1060,12 @@ export const Navbar = () => {
 
                     {/* Contrôle */}
                     <NextLink
-                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/controle"
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FontAwesomeIcon
-                        className="mr-2 md:mr-3 text-blue-600 dark:text-blue-400 w-4 md:w-5"
+                        className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5"
                         icon={faGamepad}
                       />
                       <span className="font-medium text-sm md:text-base">Contrôle</span>
@@ -1095,61 +1095,61 @@ export const Navbar = () => {
                   <h3 
                     className="text-base md:text-lg font-semibold text-gray-700 dark:text-gray-200 px-2 flex items-center gap-2 slide-left-optimized visible"
                   >
-                    <FontAwesomeIcon icon={faHome} className="text-blue-600 dark:text-blue-400" />
+                    <FontAwesomeIcon icon={faHome} className="text-violet-600 dark:text-violet-400" />
                     Navigation
                   </h3>
-                  <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-3 md:p-4 space-y-2 md:space-y-3 border border-blue-200 dark:border-gray-600">
+                  <div className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-3 md:p-4 space-y-2 md:space-y-3 border border-violet-200 dark:border-gray-600">
                     <NextLink
-                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faHome} className="mr-2 md:mr-3 text-blue-600 dark:text-blue-400 w-4 md:w-5" />
+                      <FontAwesomeIcon icon={faHome} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
                       <span className="font-medium text-sm md:text-base">Accueil</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/about"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faInfoCircle} className="mr-2 md:mr-3 text-blue-600 dark:text-blue-400 w-4 md:w-5" />
+                      <FontAwesomeIcon icon={faInfoCircle} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
                       <span className="font-medium text-sm md:text-base">À propos</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/articles"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faBook} className="mr-2 md:mr-3 text-blue-600 dark:text-blue-400 w-4 md:w-5" />
+                      <FontAwesomeIcon icon={faBook} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
                       <span className="font-medium text-sm md:text-base">Articles</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/controle"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faGamepad} className="mr-2 md:mr-3 text-blue-600 dark:text-blue-400 w-4 md:w-5" />
+                      <FontAwesomeIcon icon={faGamepad} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
                       <span className="font-medium text-sm md:text-base">Contrôle</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/shop"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faShoppingCart} className="mr-2 md:mr-3 text-blue-600 dark:text-blue-400 w-4 md:w-5" />
+                      <FontAwesomeIcon icon={faShoppingCart} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
                       <span className="font-medium text-sm md:text-base">Shop</span>
                     </NextLink>
                     
                     <NextLink
-                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                      className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/contact"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faHeart} className="mr-2 md:mr-3 text-blue-600 dark:text-blue-400 w-4 md:w-5" />
+                      <FontAwesomeIcon icon={faHeart} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
                       <span className="font-medium text-sm md:text-base">Contact</span>
                     </NextLink>
                   </div>
