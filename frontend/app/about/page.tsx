@@ -49,68 +49,68 @@ export default function AboutUsPage() {
   }, []);
 
   return (
-    <section className="flex flex-col gap-6 md:gap-10 items-center py-8 md:py-12 w-full lg:py-16 px-4">
+    <section className="flex flex-col gap-6 md:gap-8 lg:gap-10 items-center py-6 md:py-8 lg:py-12 w-full px-4 md:px-6 lg:px-8">
       {/* Titre principal */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: -40 }}
         transition={{ duration: 0.7 }}
-        className="text-center"
+        className="text-center w-full"
       >
         <motion.h1
           animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.08, 1] }}
           transition={{ duration: 2, repeat: Infinity }}
-          className="text-3xl md:text-4xl lg:text-5xl font-extrabold text-blue-600 flex items-center justify-center gap-2"
+          className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold text-blue-600 flex items-center justify-center gap-3"
         >
-          Notre Histoire <Sparkles className="w-5 h-5 md:w-7 md:h-7 text-blue-400" />
+          Notre Histoire <Sparkles className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-blue-400" />
         </motion.h1>
-        <p className="mt-3 md:mt-4 text-base md:text-lg lg:text-xl text-blue-700 font-medium">
-          Une famille soudée, une mission : l’éducation inclusive et bienveillante pour tous les enfants autistes.
+        <p className="mt-4 md:mt-6 text-base sm:text-lg md:text-xl lg:text-2xl text-blue-700 font-medium px-2">
+          Une famille soudée, une mission : l'éducation inclusive et bienveillante pour tous les enfants autistes.
         </p>
-        <p className="mt-2 text-sm md:text-base text-gray-600 max-w-2xl mx-auto px-4">
-          Chez AutiStudy, chaque membre de la famille apporte sa pierre à l’édifice pour créer une plateforme unique, pensée pour l’épanouissement et la réussite de tous.
+        <p className="mt-3 text-sm sm:text-base md:text-lg text-gray-600 max-w-3xl mx-auto px-2 md:px-4 leading-relaxed">
+          Chez AutiStudy, chaque membre de la famille apporte sa pierre à l'édifice pour créer une plateforme unique, pensée pour l'épanouissement et la réussite de tous.
         </p>
       </motion.div>
 
       {/* Cartes informatives */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6 lg:gap-8 w-full max-w-5xl">
         {[
           {
             title: "Notre Famille",
-            text: "Nous sommes une grande famille unie, avec des enfants de 14 à 38 ans. Maeva, la benjamine, est notre source d’inspiration.",
-            icon: <Users className="text-blue-600 w-8 h-8" />,
+            text: "Nous sommes une grande famille unie, avec des enfants de 14 à 38 ans. Maeva, la benjamine, est notre source d'inspiration.",
+            icon: <Users className="text-blue-600 w-8 h-8 sm:w-10 sm:h-10" />,
           },
           {
             title: "Notre Maman",
-            text: "Chantal, maman au grand cœur, veille chaque jour à l’harmonie et au bien-être de tous.",
-            icon: <HeartHandshake className="text-green-600 w-8 h-8" />,
+            text: "Chantal, maman au grand cœur, veille chaque jour à l'harmonie et au bien-être de tous.",
+            icon: <HeartHandshake className="text-green-600 w-8 h-8 sm:w-10 sm:h-10" />,
           },
           {
             title: "Notre Papa",
-            text: "Paul, papa ingénieur, développe les outils numériques d’AutiStudy et co-fonde la plateforme.",
-            icon: <Code className="text-purple-600 w-8 h-8" />,
+            text: "Paul, papa ingénieur, développe les outils numériques d'AutiStudy et co-fonde la plateforme.",
+            icon: <Code className="text-purple-600 w-8 h-8 sm:w-10 sm:h-10" />,
           },
           {
             title: "Notre Mission",
-            text: "AutiStudy est née de notre volonté de rendre l’apprentissage accessible, ludique et adapté à chaque enfant autiste.",
-            icon: <Target className="text-yellow-600 w-8 h-8" />,
+            text: "AutiStudy est née de notre volonté de rendre l'apprentissage accessible, ludique et adapté à chaque enfant autiste.",
+            icon: <Target className="text-yellow-600 w-8 h-8 sm:w-10 sm:h-10" />,
           },
         ].map((info, idx) => (
           <motion.div
             key={idx}
-            whileHover={{ scale: 1.04 }}
+            whileHover={{ scale: 1.03 }}
             transition={{ duration: 0.25 }}
           >
             <Card
-              className="p-4 md:p-6 rounded-lg shadow-lg min-h-[180px] md:min-h-[200px] flex flex-col items-center text-center"
+              className="p-5 md:p-6 lg:p-8 rounded-xl shadow-xl min-h-[200px] sm:min-h-[220px] md:min-h-[240px] flex flex-col items-center text-center border-2 border-gray-100 hover:border-blue-200 transition-all duration-300"
               style={{ backgroundColor: cardColors[idx] }}
             >
-              <div className="mb-2 md:mb-3">{info.icon}</div>
-              <CardBody>
-                <h3 className="text-lg md:text-xl font-semibold text-gray-800 mb-1">
+              <div className="mb-4 md:mb-5 p-3 bg-white/50 rounded-full">{info.icon}</div>
+              <CardBody className="p-3 md:p-4">
+                <h3 className="text-lg sm:text-xl md:text-2xl font-bold text-gray-800 mb-3 md:mb-4">
                   {info.title}
                 </h3>
-                <p className="text-sm md:text-base text-gray-700">{info.text}</p>
+                <p className="text-sm sm:text-base md:text-lg text-gray-700 leading-relaxed">{info.text}</p>
               </CardBody>
             </Card>
           </motion.div>
@@ -118,18 +118,18 @@ export default function AboutUsPage() {
       </div>
 
       {/* Valeurs */}
-      <div className="w-full max-w-3xl mt-6 md:mt-8">
-        <h2 className="text-xl md:text-2xl font-bold text-blue-700 mb-3 md:mb-4 text-center">Nos valeurs</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
+      <div className="w-full max-w-5xl mt-8 md:mt-10 lg:mt-12">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-700 mb-6 md:mb-8 text-center">Nos valeurs</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 lg:gap-8">
           {[
-            { icon: <Star className="w-6 h-6 text-yellow-400" />, label: "Bienveillance" },
-            { icon: <Globe className="w-6 h-6 text-blue-500" />, label: "Inclusion" },
-            { icon: <Lightbulb className="w-6 h-6 text-purple-500" />, label: "Innovation" },
-            { icon: <HelpingHand className="w-6 h-6 text-green-500" />, label: "Entraide" },
+            { icon: <Star className="w-7 h-7 sm:w-8 sm:h-8 text-yellow-500" />, label: "Bienveillance" },
+            { icon: <Globe className="w-7 h-7 sm:w-8 sm:h-8 text-blue-600" />, label: "Inclusion" },
+            { icon: <Lightbulb className="w-7 h-7 sm:w-8 sm:h-8 text-purple-600" />, label: "Innovation" },
+            { icon: <HelpingHand className="w-7 h-7 sm:w-8 sm:h-8 text-green-600" />, label: "Entraide" },
           ].map((val, i) => (
-            <div key={i} className="flex flex-col items-center bg-white rounded-lg shadow p-3 md:p-4">
-              {val.icon}
-              <span className="mt-2 text-xs md:text-sm font-semibold text-gray-700">{val.label}</span>
+            <div key={i} className="flex flex-col items-center bg-white rounded-xl shadow-lg p-4 md:p-5 lg:p-6 border border-gray-200 hover:shadow-xl transition-all duration-300">
+              <div className="p-3 bg-gray-50 rounded-full mb-3">{val.icon}</div>
+              <span className="text-sm sm:text-base font-bold text-gray-800 text-center">{val.label}</span>
             </div>
           ))}
         </div>
@@ -140,26 +140,30 @@ export default function AboutUsPage() {
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 30 }}
         transition={{ duration: 0.6 }}
-        className="max-w-2xl w-full mt-6 md:mt-8 rounded-lg shadow-lg"
-        whileHover={{ scale: 1.03 }}
+        className="max-w-4xl w-full mt-8 md:mt-10 lg:mt-12 rounded-xl shadow-xl"
+        whileHover={{ scale: 1.02 }}
       >
-        <Card style={{ backgroundColor: familyCardColor }}>
-          <CardBody className="flex flex-col items-center">
-            <h3 className="mb-4 md:mb-5 font-bold text-gray-800 text-base md:text-lg">
+        <Card style={{ backgroundColor: familyCardColor }} className="border-2 border-gray-200">
+          <CardBody className="flex flex-col items-center p-5 md:p-6 lg:p-8">
+            <h3 className="mb-6 md:mb-8 font-bold text-gray-800 text-lg sm:text-xl md:text-2xl text-center">
               Rencontrez la famille Ayivor
             </h3>
-            <div className="grid grid-cols-2 gap-3 md:gap-4 md:grid-cols-4">
+            <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 md:gap-6 lg:gap-8 w-full">
               {familyMembers.map((member, i) => (
                 <div key={i} className="flex flex-col items-center">
                   <Avatar
                     isBordered
                     alt={member.name}
-                    className="w-16 h-16 md:w-20 md:h-20"
+                    className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28"
                     color="primary"
                     size="lg"
                     src={member.img}
+                    style={{
+                      borderWidth: "3px",
+                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+                    }}
                   />
-                  <span className="mt-2 text-xs md:text-sm font-medium text-gray-700">{member.name}</span>
+                  <span className="mt-3 md:mt-4 text-sm sm:text-base md:text-lg font-semibold text-gray-800 text-center">{member.name}</span>
                 </div>
               ))}
             </div>
@@ -168,12 +172,12 @@ export default function AboutUsPage() {
       </motion.div>
 
       {/* Appel à l'action */}
-      <div className="flex flex-col items-center mt-6 md:mt-8 gap-2">
-        <p className="text-sm md:text-base text-gray-700 text-center">
-          Envie d’en savoir plus ou de rejoindre l’aventure ? Découvrez la plateforme ou contactez-nous !
+      <div className="flex flex-col items-center mt-8 md:mt-10 lg:mt-12 gap-4 md:gap-5">
+        <p className="text-base sm:text-lg md:text-xl text-gray-700 text-center px-4 max-w-2xl">
+          Envie d'en savoir plus ou de rejoindre l'aventure ? Découvrez la plateforme ou contactez-nous !
         </p>
         <Button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 md:px-6 rounded text-sm md:text-base"
+          className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 md:px-8 lg:px-10 rounded-lg text-base sm:text-lg md:text-xl shadow-lg hover:shadow-xl transition-all duration-300"
           onClick={() => window.location.href = '/contact'}
         >
           Nous contacter
@@ -181,9 +185,9 @@ export default function AboutUsPage() {
       </div>
 
       {/* Bouton pour changer les couleurs */}
-      <div className="flex justify-center mt-4 md:mt-6">
+      <div className="flex justify-center mt-6 md:mt-8 lg:mt-10">
         <Button
-          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 md:px-4 rounded text-sm md:text-base"
+          className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-5 md:px-6 rounded-lg text-sm sm:text-base md:text-lg shadow-md hover:shadow-lg transition-all duration-300"
           onClick={() => {
             setCardColors(
               Array(4)
