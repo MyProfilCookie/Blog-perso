@@ -480,7 +480,7 @@ export const Navbar = () => {
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="sm:hidden"
+          className="sm:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
         />
         <NavbarBrand as="li" className="gap-2 max-w-fit">
           <NextLink className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized" href="/">
