@@ -2,30 +2,7 @@
 "use client";
 import React, { useState, useRef, useEffect } from "react";
 
-// Styles CSS pour les animations du menu mobile
-const mobileMenuStyles = `
-  @keyframes slideDown {
-    from {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  
-  @keyframes slideUp {
-    from {
-      opacity: 1;
-      transform: translateY(0);
-    }
-    to {
-      opacity: 0;
-      transform: translateY(-10px);
-    }
-  }
-`;
+
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -73,7 +50,6 @@ import {
   DeliveredOrdersIcon,
 } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
-import MobileMenu from "./MobileMenu";
 
 // Type definition for user
 type User = {
@@ -109,20 +85,8 @@ interface Order {
 export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   
-  // Injection des styles CSS pour les animations du menu mobile
-  useEffect(() => {
-    if (typeof document !== 'undefined') {
-      const existingStyle = document.getElementById('mobile-menu-styles');
-      if (!existingStyle) {
-        const styleElement = document.createElement('style');
-        styleElement.id = 'mobile-menu-styles';
-        styleElement.textContent = mobileMenuStyles;
-        document.head.appendChild(styleElement);
-      }
-    }
-  }, [isMenuOpen]);
+
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
     shipped: 0,
@@ -131,7 +95,6 @@ export const Navbar = () => {
   });
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const [orderLoadError, setOrderLoadError] = useState<string | null>(null);
-  const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
 
@@ -157,53 +120,7 @@ export const Navbar = () => {
     return () => clearInterval(colorInterval);
   }, []);
 
-  // Fermer le menu en cliquant à l'extérieur
-  useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      const target = event.target as HTMLElement;
-      const isMenuButton = target.closest('button[aria-label="Toggle navigation"]');
-      const isMenuContent = target.closest('[data-menu-content]');
-      
-      if (menuRef.current && !menuRef.current.contains(target) && !isMenuButton && !isMenuContent) {
-        setIsMenuOpen(false);
-      }
-    }
 
-    function handleEscapeKey(event: KeyboardEvent) {
-      if (event.key === 'Escape' && isMenuOpen) {
-        setIsMenuOpen(false);
-      }
-    }
-
-    if (isMenuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
-      document.addEventListener("keydown", handleEscapeKey);
-      document.body.style.overflow = 'hidden'; // Empêcher le scroll
-    } else {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscapeKey);
-      document.body.style.overflow = ''; // Restaurer le scroll
-    }
-
-    return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
-      document.removeEventListener("keydown", handleEscapeKey);
-      document.body.style.overflow = '';
-    };
-  }, [isMenuOpen]);
-
-  // Fermer le menu lors de la navigation
-  useEffect(() => {
-    const handleRouteChange = () => {
-      setIsMenuOpen(false);
-    };
-
-    window.addEventListener('popstate', handleRouteChange);
-    
-    return () => {
-      window.removeEventListener('popstate', handleRouteChange);
-    };
-  }, []);
 
   /**
    * Récupérer l'utilisateur et le panier depuis le localStorage
@@ -561,28 +478,113 @@ export const Navbar = () => {
           </NextLink>
         </NavbarBrand>
 
-        {/* Bouton menu mobile */}
-        <button
-          aria-label="Toggle navigation"
-          className="xl:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative border-2 border-red-500"
-          onClick={() => {
-            console.log('Menu button clicked!');
-            setIsMenuOpen(!isMenuOpen);
-          }}
-          style={{ zIndex: 1000 }}
-        >
-          <div className="w-6 h-6 flex flex-col justify-center items-center">
-            <span className={`block w-5 h-0.5 bg-red-600 transition-all duration-300 transform ${
-              isMenuOpen ? 'rotate-45 translate-y-1' : ''
-            }`}></span>
-            <span className={`block w-5 h-0.5 bg-red-600 mt-1 transition-all duration-300 ${
-              isMenuOpen ? 'opacity-0' : ''
-            }`}></span>
-            <span className={`block w-5 h-0.5 bg-red-600 mt-1 transition-all duration-300 transform ${
-              isMenuOpen ? '-rotate-45 -translate-y-1' : ''
-            }`}></span>
-          </div>
-        </button>
+        {/* Menu burger mobile avec Dropdown */}
+        <div className="xl:hidden">
+          <Dropdown>
+            <DropdownTrigger>
+              <Button
+                aria-label="Menu de navigation"
+                className="bg-transparent p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 border-2 border-violet-500"
+                size="sm"
+              >
+                <div className="w-6 h-6 flex flex-col justify-center items-center">
+                  <span className="block w-5 h-0.5 bg-violet-600 transition-all duration-300"></span>
+                  <span className="block w-5 h-0.5 bg-violet-600 mt-1 transition-all duration-300"></span>
+                  <span className="block w-5 h-0.5 bg-violet-600 mt-1 transition-all duration-300"></span>
+                </div>
+              </Button>
+            </DropdownTrigger>
+            <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700 w-64">
+              {/* Navigation */}
+              <DropdownItem
+                key="home"
+                onClick={() => router.push("/")}
+                className="dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                <FontAwesomeIcon icon={faHome} className="mr-2" />
+                Accueil
+              </DropdownItem>
+              <DropdownItem
+                key="about"
+                onClick={() => router.push("/about")}
+                className="dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
+                À propos
+              </DropdownItem>
+              <DropdownItem
+                key="articles"
+                onClick={() => router.push("/articles")}
+                className="dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                <FontAwesomeIcon icon={faBook} className="mr-2" />
+                Articles
+              </DropdownItem>
+              <DropdownItem
+                key="controle"
+                onClick={() => router.push("/controle")}
+                className="dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                <FontAwesomeIcon icon={faGamepad} className="mr-2" />
+                Contrôle
+              </DropdownItem>
+              <DropdownItem
+                key="shop"
+                onClick={() => router.push("/shop")}
+                className="dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+                Shop
+              </DropdownItem>
+              <DropdownItem
+                key="contact"
+                onClick={() => router.push("/contact")}
+                className="dark:text-gray-200 dark:hover:bg-gray-700"
+              >
+                <FontAwesomeIcon icon={faHeart} className="mr-2" />
+                Contact
+              </DropdownItem>
+              
+              {/* Séparateur pour utilisateurs connectés */}
+              {user && (
+                <>
+                  <DropdownItem
+                    key="separator"
+                    showDivider
+                    className="font-medium dark:text-gray-300"
+                    textValue="Mon compte"
+                  >
+                    Mon compte
+                  </DropdownItem>
+                  <DropdownItem
+                    key="dashboard"
+                    onClick={() => router.push(user.role === "admin" ? "/admin/dashboard" : "/dashboard")}
+                    className="dark:text-gray-200 dark:hover:bg-gray-700"
+                  >
+                    <FontAwesomeIcon icon={user.role === "admin" ? faCrown : faGraduationCap} className="mr-2" />
+                    {user.role === "admin" ? "Dashboard Admin" : "Dashboard"}
+                  </DropdownItem>
+                  <DropdownItem
+                    key="profile"
+                    onClick={() => router.push("/profile")}
+                    className="dark:text-gray-200 dark:hover:bg-gray-700"
+                  >
+                    <FontAwesomeIcon icon={faUser} className="mr-2" />
+                    Profil
+                  </DropdownItem>
+                  <DropdownItem
+                    key="logout"
+                    onClick={handleLogout}
+                    className="dark:text-gray-200 dark:hover:bg-gray-700 text-red-600 dark:text-red-400"
+                  >
+                    <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
+                    Déconnexion
+                  </DropdownItem>
+                </>
+              )}
+            </DropdownMenu>
+          </Dropdown>
+        </div>
 
         {/* Navigation desktop */}
         <div className="hidden lg:flex flex-grow justify-center">
@@ -1006,16 +1008,7 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Menu burger mobile */}
-      <div ref={menuRef}>
-        <MobileMenu
-          isOpen={isMenuOpen}
-          onClose={() => setIsMenuOpen(false)}
-          user={user}
-          orderCount={orderCount}
-          handleLogout={handleLogout}
-        />
-      </div>
+
 
 
     </NextUINavbar>
