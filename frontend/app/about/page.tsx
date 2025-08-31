@@ -49,7 +49,7 @@ export default function AboutUsPage() {
   }, []);
 
   return (
-    <section className="flex flex-col gap-6 md:gap-10 items-center py-8 md:py-12 w-full lg:py-16">
+    <section className="flex flex-col gap-6 md:gap-10 items-center py-8 md:py-12 w-full lg:py-16 px-4">
       {/* Titre principal */}
       <motion.div
         animate={{ opacity: 1, y: 0 }}
@@ -73,7 +73,7 @@ export default function AboutUsPage() {
       </motion.div>
 
       {/* Cartes informatives */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl px-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 w-full max-w-3xl">
         {[
           {
             title: "Notre Famille",
@@ -118,7 +118,7 @@ export default function AboutUsPage() {
       </div>
 
       {/* Valeurs */}
-      <div className="w-full max-w-3xl mt-6 md:mt-8 px-4">
+      <div className="w-full max-w-3xl mt-6 md:mt-8">
         <h2 className="text-xl md:text-2xl font-bold text-blue-700 mb-3 md:mb-4 text-center">Nos valeurs</h2>
         <div className="grid grid-cols-2 md:grid-cols-4 gap-3 md:gap-4">
           {[
@@ -140,7 +140,7 @@ export default function AboutUsPage() {
         animate={{ opacity: 1, y: 0 }}
         initial={{ opacity: 0, y: 30 }}
         transition={{ duration: 0.6 }}
-        className="max-w-2xl w-full mt-6 md:mt-8 rounded-lg shadow-lg px-4"
+        className="max-w-2xl w-full mt-6 md:mt-8 rounded-lg shadow-lg"
         whileHover={{ scale: 1.03 }}
       >
         <Card style={{ backgroundColor: familyCardColor }}>
@@ -168,7 +168,7 @@ export default function AboutUsPage() {
       </motion.div>
 
       {/* Appel à l'action */}
-      <div className="flex flex-col items-center mt-6 md:mt-8 gap-2 px-4">
+      <div className="flex flex-col items-center mt-6 md:mt-8 gap-2">
         <p className="text-sm md:text-base text-gray-700 text-center">
           Envie d’en savoir plus ou de rejoindre l’aventure ? Découvrez la plateforme ou contactez-nous !
         </p>
@@ -181,7 +181,7 @@ export default function AboutUsPage() {
       </div>
 
       {/* Bouton pour changer les couleurs */}
-      <div className="flex justify-center mt-4 md:mt-6 px-4">
+      <div className="flex justify-center mt-4 md:mt-6">
         <Button
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-3 md:px-4 rounded text-sm md:text-base"
           onClick={() => {

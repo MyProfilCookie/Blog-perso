@@ -480,21 +480,48 @@ export const Navbar = () => {
 
         {/* Menu burger mobile avec Dropdown */}
         <div className="xl:hidden">
-          <Dropdown>
+          <Dropdown 
+            placement="bottom-end"
+            shouldBlockScroll={false}
+            backdrop="transparent"
+          >
             <DropdownTrigger>
               <Button
                 aria-label="Menu de navigation"
-                className="bg-transparent p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 border-2 border-violet-500 min-w-[44px] min-h-[44px]"
+                className="bg-transparent p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-colors duration-200 border-2 border-violet-500 min-w-[44px] min-h-[44px]"
                 size="sm"
               >
                 <div className="w-6 h-6 flex flex-col justify-center items-center">
-                  <span className="block w-5 h-0.5 bg-violet-600 transition-all duration-300"></span>
-                  <span className="block w-5 h-0.5 bg-violet-600 mt-1 transition-all duration-300"></span>
-                  <span className="block w-5 h-0.5 bg-violet-600 mt-1 transition-all duration-300"></span>
+                  <span className="block w-5 h-0.5 bg-violet-600 transition-transform duration-200"></span>
+                  <span className="block w-5 h-0.5 bg-violet-600 mt-1 transition-transform duration-200"></span>
+                  <span className="block w-5 h-0.5 bg-violet-600 mt-1 transition-transform duration-200"></span>
                 </div>
               </Button>
             </DropdownTrigger>
-            <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700 w-80 max-h-[80vh] overflow-y-auto">
+            <DropdownMenu 
+              className="dark:bg-gray-800 dark:border-gray-700 w-80 max-h-[80vh] overflow-y-auto"
+              disableAnimation={false}
+              motionProps={{
+                variants: {
+                  enter: {
+                    opacity: 1,
+                    y: 0,
+                    transition: {
+                      duration: 0.2,
+                      ease: "easeOut"
+                    }
+                  },
+                  exit: {
+                    opacity: 0,
+                    y: -10,
+                    transition: {
+                      duration: 0.15,
+                      ease: "easeIn"
+                    }
+                  }
+                }
+              }}
+            >
               {/* Navigation */}
               <DropdownItem
                 key="home"

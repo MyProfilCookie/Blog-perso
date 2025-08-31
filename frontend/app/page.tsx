@@ -291,7 +291,7 @@ export default function HomePage() {
         </section>
 
         {/* Articles Section */}
-        <section className="py-20 bg-gray-50 dark:bg-gray-800">
+        <section className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
@@ -301,15 +301,15 @@ export default function HomePage() {
                 viewport={{ once: true }}
                 className="text-center mb-12"
               >
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                   Articles récents
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300">
+                <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
                   Découvrez nos derniers articles et conseils
                 </p>
               </motion.div>
               
-              <div className="grid md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 {articles.map((article, index) => (
                   <motion.div
                     key={article.id}
@@ -329,16 +329,16 @@ export default function HomePage() {
                           priority={article.id === 1}
                         />
                       </CardHeader>
-                      <CardBody className="p-6">
+                      <CardBody className="p-4 md:p-6">
                         <div className="mb-2">
                           <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
                             {article.category}
                           </span>
                         </div>
-                        <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                        <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-900 dark:text-white">
                           {article.title}
                         </h3>
-                        <p className="text-gray-600 dark:text-gray-300 mb-4">
+                        <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mb-4">
                           {article.description}
                         </p>
                         <Link 
@@ -358,7 +358,7 @@ export default function HomePage() {
         </section>
 
         {/* Section Call-to-Action */}
-        <section className="py-16 bg-gradient-to-r from-blue-600 to-purple-600">
+        <section className="py-12 md:py-16 bg-gradient-to-r from-blue-600 to-purple-600">
           <div className="w-full px-4 md:px-8 lg:px-12 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
@@ -366,10 +366,10 @@ export default function HomePage() {
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
                 Prêt à commencer l'aventure ?
               </h2>
-              <p className="text-xl text-blue-100 mb-8">
+              <p className="text-lg md:text-xl text-blue-100 mb-6 md:mb-8">
                 Rejoignez des centaines de familles qui font confiance à AutiStudy
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
