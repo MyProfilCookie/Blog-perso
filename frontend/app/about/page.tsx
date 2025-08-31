@@ -264,10 +264,10 @@ export default function AboutUsPage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                viewport={{ once: true, margin: "-50px" }}
                 className="text-center mb-16"
               >
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
@@ -279,10 +279,10 @@ export default function AboutUsPage() {
               </motion.div>
               
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                viewport={{ once: true, margin: "-50px" }}
                 className="max-w-6xl mx-auto"
               >
                 <Card className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-2 border-blue-200 dark:border-blue-400 shadow-2xl">
@@ -291,17 +291,17 @@ export default function AboutUsPage() {
                       {familyMembers.map((member, i) => (
                         <motion.div
                           key={i}
-                          initial={{ opacity: 0, scale: 0.8 }}
+                          initial={{ opacity: 0, scale: 0.95 }}
                           whileInView={{ opacity: 1, scale: 1 }}
-                          transition={{ duration: 0.6, delay: i * 0.1 }}
-                          viewport={{ once: true }}
-                          whileHover={{ scale: 1.05 }}
+                          transition={{ duration: 0.4, delay: i * 0.1, ease: "easeOut" }}
+                          viewport={{ once: true, margin: "-50px" }}
+                          whileHover={{ scale: 1.02 }}
                           className="flex flex-col items-center text-center"
                         >
                           <Avatar
                             isBordered
                             alt={member.name}
-                            className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32 mb-4"
+                            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4"
                             color="primary"
                             size="lg"
                             src={member.img}

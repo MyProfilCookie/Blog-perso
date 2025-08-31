@@ -123,9 +123,9 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto">
               <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
                 <motion.div
-                  initial={{ opacity: 0, x: -50 }}
+                  initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8 }}
+                  transition={{ duration: 0.6, ease: "easeOut" }}
                 >
                   <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">
                     Apprentissage{" "}
@@ -157,9 +157,9 @@ export default function HomePage() {
                 </motion.div>
                 
                 <motion.div
-                  initial={{ opacity: 0, x: 50 }}
+                  initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
+                  transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
                   className="relative"
                 >
                   <OptimizedImage
@@ -181,10 +181,10 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                viewport={{ once: true, margin: "-50px" }}
                 className="text-center mb-12 md:mb-16"
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -199,10 +199,10 @@ export default function HomePage() {
                 {services.map((service, index) => (
                   <motion.div
                     key={service.title}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+                    viewport={{ once: true, margin: "-50px" }}
                   >
                     <Link href={service.link}>
                       <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
@@ -231,10 +231,10 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                viewport={{ once: true, margin: "-50px" }}
                 className="text-center mb-12 md:mb-16"
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -249,10 +249,10 @@ export default function HomePage() {
                 {testimonials.map((testimonial, index) => (
                   <motion.div
                     key={testimonial.name}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+                    viewport={{ once: true, margin: "-50px" }}
                   >
                     <Card className="h-full">
                       <CardBody className="p-4 md:p-6">
@@ -295,10 +295,10 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                viewport={{ once: true }}
+                transition={{ duration: 0.5, ease: "easeOut" }}
+                viewport={{ once: true, margin: "-50px" }}
                 className="text-center mb-12"
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -313,10 +313,10 @@ export default function HomePage() {
                 {articles.map((article, index) => (
                   <motion.div
                     key={article.id}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 15 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
+                    transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+                    viewport={{ once: true, margin: "-50px" }}
                   >
                     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                       <CardHeader className="p-0">
@@ -361,10 +361,10 @@ export default function HomePage() {
         <section className="py-12 md:py-16 bg-gradient-to-r from-blue-600 to-purple-600">
           <div className="w-full px-4 md:px-8 lg:px-12 text-center">
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6 }}
-              viewport={{ once: true }}
+              transition={{ duration: 0.5, ease: "easeOut" }}
+              viewport={{ once: true, margin: "-50px" }}
             >
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
                 Prêt à commencer l'aventure ?

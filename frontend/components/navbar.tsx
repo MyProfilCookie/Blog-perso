@@ -488,19 +488,19 @@ export const Navbar = () => {
             <DropdownTrigger>
               <Button
                 aria-label="Menu de navigation"
-                className="bg-transparent p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-colors duration-200 border-2 border-violet-500 min-w-[44px] min-h-[44px]"
+                className="bg-transparent p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 border-2 border-violet-500 min-w-[44px] min-h-[44px]"
                 size="sm"
               >
                 <div className="w-6 h-6 flex flex-col justify-center items-center">
-                  <span className="block w-5 h-0.5 bg-violet-600 transition-transform duration-200"></span>
-                  <span className="block w-5 h-0.5 bg-violet-600 mt-1 transition-transform duration-200"></span>
-                  <span className="block w-5 h-0.5 bg-violet-600 mt-1 transition-transform duration-200"></span>
+                  <span className="block w-5 h-0.5 bg-violet-600"></span>
+                  <span className="block w-5 h-0.5 bg-violet-600 mt-1"></span>
+                  <span className="block w-5 h-0.5 bg-violet-600 mt-1"></span>
                 </div>
               </Button>
             </DropdownTrigger>
-                        <DropdownMenu 
+            <DropdownMenu 
               className="dark:bg-gray-800 dark:border-gray-700 w-80 max-h-[80vh] overflow-y-auto"
-              disableAnimation={false}
+              disableAnimation={true}
             >
               {/* Navigation */}
               <DropdownItem
