@@ -496,7 +496,9 @@ export const Navbar = () => {
             </div>
           </NextLink>
         </NavbarBrand>
+      </NavbarContent>
 
+      <NavbarContent justify="end">
         {/* Menu burger mobile simple sans animations */}
         <div className="xl:hidden">
           <Button
