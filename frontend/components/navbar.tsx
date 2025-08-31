@@ -126,6 +126,9 @@ export const Navbar = () => {
       }
     }
   }, [isMenuOpen]);
+
+  // Debug pour voir si le composant se rend
+  console.log('Navbar rendering, isMenuOpen:', isMenuOpen, 'user:', user);
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
     shipped: 0,
@@ -567,7 +570,7 @@ export const Navbar = () => {
         {/* Bouton menu mobile */}
         <button
           aria-label="Toggle navigation"
-          className="lg:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative"
+          className="lg:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative border border-red-500"
           onClick={() => {
             console.log('Menu button clicked, current state:', isMenuOpen);
             setIsMenuOpen(!isMenuOpen);
@@ -575,13 +578,13 @@ export const Navbar = () => {
           style={{ zIndex: 1000 }}
         >
           <div className="w-6 h-6 flex flex-col justify-center items-center">
-            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 transition-all duration-300 transform ${
+            <span className={`block w-5 h-0.5 bg-red-600 transition-all duration-300 transform ${
               isMenuOpen ? 'rotate-45 translate-y-1' : ''
             }`}></span>
-            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 mt-1 transition-all duration-300 ${
+            <span className={`block w-5 h-0.5 bg-red-600 mt-1 transition-all duration-300 ${
               isMenuOpen ? 'opacity-0' : ''
             }`}></span>
-            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 mt-1 transition-all duration-300 transform ${
+            <span className={`block w-5 h-0.5 bg-red-600 mt-1 transition-all duration-300 transform ${
               isMenuOpen ? '-rotate-45 -translate-y-1' : ''
             }`}></span>
           </div>
