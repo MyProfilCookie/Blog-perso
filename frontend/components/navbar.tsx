@@ -116,6 +116,11 @@ export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  
+  // Debug pour le menu mobile
+  useEffect(() => {
+    console.log('Menu state changed:', isMenuOpen);
+  }, [isMenuOpen]);
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
     shipped: 0,
@@ -557,19 +562,21 @@ export const Navbar = () => {
         {/* Bouton menu mobile */}
         <button
           aria-label="Toggle navigation"
-          className="lg:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 animation-optimized"
-          onClick={() => setIsMenuOpen(!isMenuOpen)}
+          className="lg:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative"
+          onClick={() => {
+            console.log('Menu button clicked, current state:', isMenuOpen);
+            setIsMenuOpen(!isMenuOpen);
+          }}
+          style={{ zIndex: 1000 }}
         >
-          <div className={`w-6 h-6 flex flex-col justify-center items-center transition-all duration-300 ${
-            isMenuOpen ? 'rotate-90' : ''
-          }`}>
-            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 transition-all duration-300 ${
+          <div className="w-6 h-6 flex flex-col justify-center items-center">
+            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 transition-all duration-300 transform ${
               isMenuOpen ? 'rotate-45 translate-y-1' : ''
             }`}></span>
             <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 mt-1 transition-all duration-300 ${
               isMenuOpen ? 'opacity-0' : ''
             }`}></span>
-            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 mt-1 transition-all duration-300 ${
+            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 mt-1 transition-all duration-300 transform ${
               isMenuOpen ? '-rotate-45 -translate-y-1' : ''
             }`}></span>
           </div>
@@ -997,18 +1004,22 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Menu burger mobile avec animations améliorées */}
-      <div className="animate-presence-optimized">
-        {isMenuOpen && (
-          <div
-            ref={menuRef}
-            data-menu-content
-            className="lg:hidden dark:bg-gray-900/95 bg-white/95 w-full shadow-xl absolute top-full left-0 z-50 max-h-[80vh] overflow-y-auto rounded-b-xl border-t border-gray-200 dark:border-gray-700 backdrop-blur-md transform transition-all duration-300 ease-out"
+      {/* Menu burger mobile */}
+      {isMenuOpen && (
+        <div
+          ref={menuRef}
+          data-menu-content
+          className="lg:hidden fixed inset-0 top-16 z-40 bg-black/50 backdrop-blur-sm"
+          onClick={(e) => {
+            if (e.target === e.currentTarget) {
+              setIsMenuOpen(false);
+            }
+          }}
+        >
+          <div 
+            className="absolute top-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-xl border-t border-gray-200 dark:border-gray-700 max-h-[calc(100vh-4rem)] overflow-y-auto"
             style={{
-              background: resolvedTheme === 'dark'
-                ? "linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(31, 41, 55, 0.95) 100%)"
-                : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,243,255,0.95) 100%)",
-              animation: isMenuOpen ? 'slideDown 0.3s ease-out' : 'slideUp 0.3s ease-in'
+              animation: 'slideDown 0.3s ease-out'
             }}
           >
             <div className="p-4 md:p-6 space-y-4 md:space-y-6 fade-optimized visible">
