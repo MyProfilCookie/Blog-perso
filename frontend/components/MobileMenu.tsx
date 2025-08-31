@@ -65,6 +65,10 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 }) => {
   console.log('MobileMenu render - isOpen:', isOpen, 'user:', user);
   
+  if (isOpen) {
+    console.log('MobileMenu is OPEN - rendering menu content');
+  }
+  
   // Injecter les styles CSS pour les animations
   useEffect(() => {
     if (typeof document !== 'undefined') {
@@ -83,7 +87,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 
   return (
     <div
-      className="lg:hidden fixed inset-0 top-16 z-40 bg-black/50 backdrop-blur-sm"
+      className="xl:hidden fixed inset-0 top-16 z-40 bg-black/50 backdrop-blur-sm"
       data-menu-content
       onClick={(e) => {
         if (e.target === e.currentTarget) {
