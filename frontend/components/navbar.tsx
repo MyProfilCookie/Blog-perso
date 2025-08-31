@@ -520,51 +520,78 @@ export const Navbar = () => {
           
           {/* Menu mobile simple sans animations */}
           {isMenuOpen && (
-            <div className="mobile-menu-container fixed top-150 right-20 w-full sm:w-auto h-auto sm:h-screen bg-white dark:bg-gray-800 z-50 shadow-lg rounded-lg overflow-hidden">
+            <div className="mobile-menu-container fixed top-20 right-4 w-80 max-h-[80vh] bg-white dark:bg-gray-800 border-2 border-violet-500 dark:border-violet-400 rounded-lg shadow-xl z-50 overflow-y-auto">
               <div className="p-4">
-                <h3 className="text-lg font-semibold mb-4">Menu</h3>
+                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Menu</h3>
                 <ul className="space-y-3">
                   <li>
-                    <button onClick={() => router.push('/')} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
+                    <button onClick={() => {
+                      router.push('/');
+                      setIsMenuOpen(false);
+                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
                       🏠 Accueil
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => router.push('/about')} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
+                    <button onClick={() => {
+                      router.push('/about');
+                      setIsMenuOpen(false);
+                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
                       ℹ️ À propos
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => router.push('/articles')} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
+                    <button onClick={() => {
+                      router.push('/articles');
+                      setIsMenuOpen(false);
+                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
                       📚 Articles
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => router.push('/controle')} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
+                    <button onClick={() => {
+                      router.push('/controle');
+                      setIsMenuOpen(false);
+                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
                       🎮 Contrôle
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => router.push('/shop')} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
+                    <button onClick={() => {
+                      router.push('/shop');
+                      setIsMenuOpen(false);
+                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
                       🛒 Shop
                     </button>
                   </li>
                   <li>
-                    <button onClick={() => router.push('/contact')} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
+                    <button onClick={() => {
+                      router.push('/contact');
+                      setIsMenuOpen(false);
+                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
                       ❤️ Contact
                     </button>
                   </li>
                 </ul>
                 {user && (
                   <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <h3 className="text-sm font-semibold mb-4">Mon compte</h3>
-                    <button onClick={() => router.push(user.role === 'admin' ? '/admin/dashboard' : '/dashboard')} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
+                    <h3 className="text-sm font-semibold mb-4 text-gray-700 dark:text-gray-300">Mon compte</h3>
+                    <button onClick={() => {
+                      router.push(user.role === 'admin' ? '/admin/dashboard' : '/dashboard');
+                      setIsMenuOpen(false);
+                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
                       {user.role === 'admin' ? '👑 Dashboard Admin' : '🎓 Dashboard'}
                     </button>
-                    <button onClick={() => router.push('/profile')} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
+                    <button onClick={() => {
+                      router.push('/profile');
+                      setIsMenuOpen(false);
+                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
                       👤 Profil
                     </button>
-                    <button onClick={handleLogout} className="w-full text-left p-2 rounded-md hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400">
+                    <button onClick={() => {
+                      handleLogout();
+                      setIsMenuOpen(false);
+                    }} className="w-full text-left p-2 rounded-md hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400">
                       🚪 Déconnexion
                     </button>
                   </div>
