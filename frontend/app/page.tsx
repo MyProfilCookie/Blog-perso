@@ -32,7 +32,7 @@ const articles = [
     title: "Stratégies d'apprentissage pour enfants autistes",
     description: "Découvrez des méthodes adaptées pour faciliter l'apprentissage...",
     img: "/assets/images/autism-awareness.webp",
-    link: "/articles/strategies-apprentissage",
+    link: "/articles/1",
     category: "Éducation"
   },
   {
@@ -40,7 +40,7 @@ const articles = [
     title: "Ressources éducatives spécialisées",
     description: "Une collection d'outils et de matériels éducatifs...",
     img: "/assets/aba_therapy.webp",
-    link: "/articles/ressources-educatives",
+    link: "/articles/2",
     category: "Ressources"
   },
   {
@@ -48,7 +48,7 @@ const articles = [
     title: "Accompagnement parental",
     description: "Conseils et soutien pour les parents d'enfants autistes...",
     img: "/assets/family/family.webp",
-    link: "/articles/accompagnement-parental",
+    link: "/articles/3",
     category: "Parentalité"
   }
 ];
