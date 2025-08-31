@@ -19,7 +19,7 @@ import { motion } from "framer-motion";
 
 
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "");
 console.log("✅ Clé Stripe chargée :", process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
 
 // Définir une interface pour l'utilisateur
