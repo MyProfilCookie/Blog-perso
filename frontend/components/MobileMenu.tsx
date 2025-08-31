@@ -1,6 +1,31 @@
 "use client";
 
-import React from "react";
+import React, { useEffect } from "react";
+
+// Styles CSS pour les animations du menu mobile
+const mobileMenuStyles = `
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+`;
 import NextLink from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
@@ -38,6 +63,22 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   orderCount,
   handleLogout,
 }) => {
+  console.log('MobileMenu render - isOpen:', isOpen, 'user:', user);
+  
+  // Injecter les styles CSS pour les animations
+  useEffect(() => {
+    if (typeof document !== 'undefined') {
+      const existingStyle = document.getElementById('mobile-menu-styles');
+      if (!existingStyle) {
+        const styleElement = document.createElement('style');
+        styleElement.id = 'mobile-menu-styles';
+        styleElement.textContent = mobileMenuStyles;
+        document.head.appendChild(styleElement);
+        console.log('MobileMenu styles injected');
+      }
+    }
+  }, []);
+  
   if (!isOpen) return null;
 
   return (
