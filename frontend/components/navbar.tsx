@@ -484,7 +484,7 @@ export const Navbar = () => {
             <DropdownTrigger>
               <Button
                 aria-label="Menu de navigation"
-                className="bg-transparent p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 border-2 border-violet-500"
+                className="bg-transparent p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 border-2 border-violet-500 min-w-[44px] min-h-[44px]"
                 size="sm"
               >
                 <div className="w-6 h-6 flex flex-col justify-center items-center">
@@ -494,12 +494,12 @@ export const Navbar = () => {
                 </div>
               </Button>
             </DropdownTrigger>
-            <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700 w-64">
+            <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700 w-80 max-h-[80vh] overflow-y-auto">
               {/* Navigation */}
               <DropdownItem
                 key="home"
                 onClick={() => router.push("/")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700"
+                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
               >
                 <FontAwesomeIcon icon={faHome} className="mr-2" />
                 Accueil
@@ -507,7 +507,7 @@ export const Navbar = () => {
               <DropdownItem
                 key="about"
                 onClick={() => router.push("/about")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700"
+                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
               >
                 <FontAwesomeIcon icon={faInfoCircle} className="mr-2" />
                 À propos
@@ -515,7 +515,7 @@ export const Navbar = () => {
               <DropdownItem
                 key="articles"
                 onClick={() => router.push("/articles")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700"
+                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
               >
                 <FontAwesomeIcon icon={faBook} className="mr-2" />
                 Articles
@@ -523,7 +523,7 @@ export const Navbar = () => {
               <DropdownItem
                 key="controle"
                 onClick={() => router.push("/controle")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700"
+                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
               >
                 <FontAwesomeIcon icon={faGamepad} className="mr-2" />
                 Contrôle
@@ -531,7 +531,7 @@ export const Navbar = () => {
               <DropdownItem
                 key="shop"
                 onClick={() => router.push("/shop")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700"
+                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
               >
                 <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
                 Shop
@@ -539,7 +539,7 @@ export const Navbar = () => {
               <DropdownItem
                 key="contact"
                 onClick={() => router.push("/contact")}
-                className="dark:text-gray-200 dark:hover:bg-gray-700"
+                className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
               >
                 <FontAwesomeIcon icon={faHeart} className="mr-2" />
                 Contact
@@ -559,7 +559,7 @@ export const Navbar = () => {
                   <DropdownItem
                     key="dashboard"
                     onClick={() => router.push(user.role === "admin" ? "/admin/dashboard" : "/dashboard")}
-                    className="dark:text-gray-200 dark:hover:bg-gray-700"
+                    className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
                   >
                     <FontAwesomeIcon icon={user.role === "admin" ? faCrown : faGraduationCap} className="mr-2" />
                     {user.role === "admin" ? "Dashboard Admin" : "Dashboard"}
@@ -567,7 +567,7 @@ export const Navbar = () => {
                   <DropdownItem
                     key="profile"
                     onClick={() => router.push("/profile")}
-                    className="dark:text-gray-200 dark:hover:bg-gray-700"
+                    className="dark:text-gray-200 dark:hover:bg-gray-700 py-3 text-base"
                   >
                     <FontAwesomeIcon icon={faUser} className="mr-2" />
                     Profil
@@ -575,7 +575,7 @@ export const Navbar = () => {
                   <DropdownItem
                     key="logout"
                     onClick={handleLogout}
-                    className="dark:text-gray-200 dark:hover:bg-gray-700 text-red-600 dark:text-red-400"
+                    className="dark:text-gray-200 dark:hover:bg-gray-700 text-red-600 dark:text-red-400 py-3 text-base"
                   >
                     <FontAwesomeIcon icon={faSignOutAlt} className="mr-2" />
                     Déconnexion
