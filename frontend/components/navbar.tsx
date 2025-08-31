@@ -498,29 +498,9 @@ export const Navbar = () => {
                 </div>
               </Button>
             </DropdownTrigger>
-            <DropdownMenu 
+                        <DropdownMenu 
               className="dark:bg-gray-800 dark:border-gray-700 w-80 max-h-[80vh] overflow-y-auto"
               disableAnimation={false}
-              motionProps={{
-                variants: {
-                  enter: {
-                    opacity: 1,
-                    y: 0,
-                    transition: {
-                      duration: 0.2,
-                      ease: "easeOut"
-                    }
-                  },
-                  exit: {
-                    opacity: 0,
-                    y: -10,
-                    transition: {
-                      duration: 0.15,
-                      ease: "easeIn"
-                    }
-                  }
-                }
-              }}
             >
               {/* Navigation */}
               <DropdownItem
@@ -571,9 +551,9 @@ export const Navbar = () => {
                 <FontAwesomeIcon icon={faHeart} className="mr-2" />
                 Contact
               </DropdownItem>
-              
-              {/* Séparateur pour utilisateurs connectés */}
-              {user && (
+               
+              {/* User-specific items */}
+              {user ? (
                 <>
                   <DropdownItem
                     key="separator"
@@ -608,7 +588,7 @@ export const Navbar = () => {
                     Déconnexion
                   </DropdownItem>
                 </>
-              )}
+              ) : null}
             </DropdownMenu>
           </Dropdown>
         </div>
@@ -713,25 +693,7 @@ export const Navbar = () => {
           <ThemeSwitch />
         </NavbarItem>
 
-        {/* Dashboard pour utilisateurs connectés */}
-        {user && (
-          <NavbarItem className="hidden md:flex">
-            <Button
-              aria-label={
-                user.role === "admin" ? "Dashboard Admin" : "Dashboard"
-              }
-              as={Link}
-              className="text-xs md:text-sm font-normal text-gray-600 dark:text-gray-200 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 hover:from-violet-100 hover:to-purple-100 dark:hover:from-gray-700 dark:hover:to-gray-600 button-cls-optimized border border-violet-200 dark:border-gray-600"
-              href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
-            >
-              <FontAwesomeIcon
-                className="mr-1 md:mr-2"
-                icon={user.role === "admin" ? faCrown : faGraduationCap}
-              />
-              <span className="hidden xl:inline">{user.role === "admin" ? "Admin" : "Dashboard"}</span>
-            </Button>
-          </NavbarItem>
-        )}
+
 
         {/* Avatar utilisateur */}
         {!user ? (
