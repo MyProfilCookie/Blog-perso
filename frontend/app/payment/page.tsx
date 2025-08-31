@@ -19,8 +19,10 @@ import { motion } from "framer-motion";
 
 
 
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY || "");
-console.log("✅ Clé Stripe chargée :", process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY);
+// Vérifier si la clé Stripe est disponible
+const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
+const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
+console.log("✅ Clé Stripe chargée :", stripeKey);
 
 // Définir une interface pour l'utilisateur
 
@@ -664,15 +666,22 @@ const PaymentPage = () => {
 
             {/* 💳 Paiement */}
             <motion.div className="mt-6">
-                <Elements stripe={stripePromise}>
-                    <CheckoutForm
-                        totalToPay={totalToPay}
-                        cartItems={cartItems}
-                        onPaymentSuccess={() => console.log("Paiement terminé")}
-                        selectedTransporter={selectedTransporter}
-                        deliveryCost={deliveryCost}
-                    />
-                </Elements>
+                {stripePromise && (
+                    <Elements stripe={stripePromise}>
+                        <CheckoutForm
+                            totalToPay={totalToPay}
+                            cartItems={cartItems}
+                            onPaymentSuccess={() => console.log("Paiement terminé")}
+                            selectedTransporter={selectedTransporter}
+                            deliveryCost={deliveryCost}
+                        />
+                    </Elements>
+                )}
+                {!stripePromise && (
+                    <div className="p-4 bg-red-100 border border-red-400 rounded-lg">
+                        <p className="text-red-800">Erreur : Impossible de charger Stripe. Veuillez réessayer plus tard.</p>
+                    </div>
+                )}
             </motion.div>
         </motion.div>
     );
