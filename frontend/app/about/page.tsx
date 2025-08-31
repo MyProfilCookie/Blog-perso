@@ -154,13 +154,13 @@ export default function AboutUsPage() {
                   <Avatar
                     isBordered
                     alt={member.name}
-                    className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 lg:w-28 lg:h-28"
+                    className="w-20 h-20 sm:w-24 sm:h-24 md:w-28 md:h-28 lg:w-32 lg:h-32"
                     color="primary"
                     size="lg"
                     src={member.img}
                     style={{
-                      borderWidth: "3px",
-                      boxShadow: "0 4px 12px rgba(0,0,0,0.15)"
+                      borderWidth: "4px",
+                      boxShadow: "0 6px 20px rgba(0,0,0,0.2)"
                     }}
                   />
                   <span className="mt-3 md:mt-4 text-sm sm:text-base md:text-lg font-semibold text-gray-800 text-center">{member.name}</span>
