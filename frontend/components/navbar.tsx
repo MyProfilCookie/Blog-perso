@@ -1,8 +1,6 @@
 /* eslint-disable no-console */
 "use client";
 import React, { useState, useRef, useEffect } from "react";
-import { createPortal } from "react-dom";
-
 
 import {
   Navbar as NextUINavbar,
@@ -10,6 +8,8 @@ import {
   NavbarBrand,
   NavbarItem,
   NavbarMenuToggle,
+  NavbarMenu,
+  NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Avatar } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
@@ -86,8 +86,6 @@ interface Order {
 export const Navbar = () => {
   const [user, setUser] = useState<User | null>(null);
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
-  
-
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
     shipped: 0,
@@ -99,24 +97,6 @@ export const Navbar = () => {
   const router = useRouter();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-
-  // Gestionnaire pour fermer le menu quand on clique à l'extérieur
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      const target = event.target as Element;
-      if (isMenuOpen && !target.closest('.mobile-menu-container')) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    if (isMenuOpen) {
-      document.addEventListener('mousedown', handleClickOutside);
-    }
-
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, [isMenuOpen]);
 
   // Couleurs pour l'animation de l'avatar - couleurs de l'autisme
   const adminColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"];
@@ -132,15 +112,12 @@ export const Navbar = () => {
 
   // Animation de couleur de l'avatar - optimisée pour les performances
   useEffect(() => {
-    // Réduire la fréquence d'animation pour améliorer les performances
     const colorInterval = setInterval(() => {
       setAvatarColorIndex((prevIndex) => (prevIndex + 1) % 4);
-    }, 4000); // Changé de 2000ms à 4000ms
+    }, 4000);
 
     return () => clearInterval(colorInterval);
   }, []);
-
-
 
   /**
    * Récupérer l'utilisateur et le panier depuis le localStorage
@@ -430,7 +407,7 @@ export const Navbar = () => {
           return;
         }
         fetchOrderCount();
-      }, 60000); // Changé de 30000ms à 60000ms pour améliorer les performances
+      }, 60000);
 
       const handleVisibilityChange = () => {
         if (!document.hidden) {
@@ -467,11 +444,29 @@ export const Navbar = () => {
     };
   }, []);
 
+  // Menu items pour le menu mobile
+  const menuItems = [
+    { name: "🏠 Accueil", href: "/", color: "foreground" },
+    { name: "ℹ️ À propos", href: "/about", color: "foreground" },
+    { name: "📚 Articles", href: "/articles", color: "foreground" },
+    { name: "🎮 Contrôle", href: "/controle", color: "foreground" },
+    { name: "🛒 Shop", href: "/shop", color: "foreground" },
+    { name: "❤️ Contact", href: "/contact", color: "foreground" },
+  ];
+
+  // Menu items utilisateur si connecté
+  const userMenuItems = user ? [
+    { name: "👤 Profil", href: "/profile", color: "foreground" },
+    { name: "🎓 Dashboard", href: user.role === 'admin' ? '/admin/dashboard' : '/dashboard', color: "foreground" },
+    { name: "🚪 Déconnexion", href: "#", color: "danger", action: handleLogout },
+  ] : [];
+
   return (
     <NextUINavbar
       className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative border-b border-gray-200 dark:border-gray-700 performance-optimized"
       maxWidth="xl"
       position="sticky"
+      onMenuOpenChange={setIsMenuOpen}
       style={{ 
         boxShadow: resolvedTheme === 'dark' 
           ? "0 4px 20px rgba(0, 0, 0, 0.3)" 
@@ -482,8 +477,11 @@ export const Navbar = () => {
         contain: "layout style paint"
       }}
     >
-      <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
-        {/* Logo AutiStudy */}
+      <NavbarContent>
+        <NavbarMenuToggle
+          aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
+          className="sm:hidden"
+        />
         <NavbarBrand as="li" className="gap-2 max-w-fit">
           <NextLink className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized" href="/">
             <AutismLogo size={16} />
@@ -499,209 +497,67 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent justify="end">
-        {/* Menu burger mobile simple sans animations */}
-        <div className="xl:hidden">
-          <Button
-            aria-label="Menu de navigation"
-            className="bg-transparent p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 border-2 border-violet-500 min-w-[44px] min-h-[44px]"
-            size="sm"
-            onClick={() => {
-              console.log('Menu button clicked, current state:', isMenuOpen);
-              setIsMenuOpen(!isMenuOpen);
-            }}
+      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+        <NavbarItem>
+          <NextLink
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            href="/about"
           >
-            <div className="w-6 h-6 flex flex-col justify-center items-center">
-              <span className="block w-5 h-0.5 bg-violet-600"></span>
-              <span className="block w-5 h-0.5 bg-violet-600 mt-1"></span>
-              <span className="block w-5 h-0.5 bg-violet-600 mt-1"></span>
-            </div>
-          </Button>
-          
-          {/* Menu mobile simple sans animations */}
-          {isMenuOpen && (
-            <div className="mobile-menu-container fixed top-16 right-4 w-80 max-h-[80vh] bg-white dark:bg-gray-800 border-2 border-violet-500 dark:border-violet-400 rounded-lg shadow-2xl z-[9999] overflow-y-auto" style={{ zIndex: 9999 }}>
-              <div className="p-4">
-                <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Menu</h3>
-                <ul className="space-y-3">
-                  <li>
-                    <button onClick={() => {
-                      router.push('/');
-                      setIsMenuOpen(false);
-                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
-                      🏠 Accueil
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => {
-                      router.push('/about');
-                      setIsMenuOpen(false);
-                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
-                      ℹ️ À propos
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => {
-                      router.push('/articles');
-                      setIsMenuOpen(false);
-                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
-                      📚 Articles
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => {
-                      router.push('/controle');
-                      setIsMenuOpen(false);
-                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
-                      🎮 Contrôle
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => {
-                      router.push('/shop');
-                      setIsMenuOpen(false);
-                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
-                      🛒 Shop
-                    </button>
-                  </li>
-                  <li>
-                    <button onClick={() => {
-                      router.push('/contact');
-                      setIsMenuOpen(false);
-                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
-                      ❤️ Contact
-                    </button>
-                  </li>
-                </ul>
-                {user && (
-                  <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
-                    <h3 className="text-sm font-semibold mb-4 text-gray-700 dark:text-gray-300">Mon compte</h3>
-                    <button onClick={() => {
-                      router.push(user.role === 'admin' ? '/admin/dashboard' : '/dashboard');
-                      setIsMenuOpen(false);
-                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
-                      {user.role === 'admin' ? '👑 Dashboard Admin' : '🎓 Dashboard'}
-                    </button>
-                    <button onClick={() => {
-                      router.push('/profile');
-                      setIsMenuOpen(false);
-                    }} className="w-full text-left p-2 rounded-md hover:bg-violet-100 dark:hover:bg-violet-900 text-gray-700 dark:text-gray-200">
-                      👤 Profil
-                    </button>
-                    <button onClick={() => {
-                      handleLogout();
-                      setIsMenuOpen(false);
-                    }} className="w-full text-left p-2 rounded-md hover:bg-red-100 dark:hover:bg-red-900 text-red-600 dark:text-red-400">
-                      🚪 Déconnexion
-                    </button>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-        </div>
+            <FontAwesomeIcon icon={faInfoCircle} className="w-4 h-4" />
+            À propos
+          </NextLink>
+        </NavbarItem>
+        
+        <NavbarItem>
+          <NextLink
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            href="/articles"
+          >
+            <FontAwesomeIcon icon={faBook} className="w-4 h-4" />
+            Articles
+          </NextLink>
+        </NavbarItem>
+        
+        <NavbarItem>
+          <NextLink
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            href="/controle"
+          >
+            <FontAwesomeIcon icon={faGamepad} className="w-4 h-4" />
+            Contrôle
+          </NextLink>
+        </NavbarItem>
 
-        {/* Navigation desktop */}
-        <div className="hidden lg:flex flex-grow justify-center">
-          <div className="flex items-center">
-            <ul className="flex gap-4 xl:gap-6 items-center font-sans">
-              <NavbarItem>
-                <Dropdown>
-                  <DropdownTrigger>
-                    <Button
-                      className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 bg-transparent p-0 text-sm xl:text-base font-medium tracking-wide button-cls-optimized flex items-center gap-2"
-                      radius="sm"
-                      variant="light"
-                    >
-                      <FontAwesomeIcon icon={faInfoCircle} className="w-4 h-4" />
-                      À propos
-                    </Button>
-                  </DropdownTrigger>
-                  <DropdownMenu
-                    aria-label="À propos menu"
-                    className="animate-in fade-in-80 zoom-in-95 duration-200 dark:bg-gray-800 dark:border-gray-700"
-                  >
-                    <DropdownItem
-                      key="about"
-                      textValue="À propos de nous"
-                      onClick={() => router.push("/about")}
-                      className="dark:text-gray-200 dark:hover:bg-gray-700"
-                    >
-                      <FontAwesomeIcon icon={faUsers} className="mr-2" />
-                      À propos de nous
-                    </DropdownItem>
-                    <DropdownItem
-                      key="contact"
-                      textValue="Contact"
-                      onClick={() => router.push("/contact")}
-                      className="dark:text-gray-200 dark:hover:bg-gray-700"
-                    >
-                      <FontAwesomeIcon icon={faHeart} className="mr-2" />
-                      Contact
-                    </DropdownItem>
-                  </DropdownMenu>
-                </Dropdown>
-              </NavbarItem>
-              
-              <NavbarItem>
-                <NextLink
-                  className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
-                  href="/articles"
-                >
-                  <FontAwesomeIcon icon={faBook} className="w-4 h-4" />
-                  Articles
-                </NextLink>
-              </NavbarItem>
-              
-              <NavbarItem>
-                <NextLink
-                  className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
-                  href="/controle"
-                >
-                  <FontAwesomeIcon icon={faGamepad} className="w-4 h-4" />
-                  Contrôle
-                </NextLink>
-              </NavbarItem>
-
-              <NavbarItem key="shop" className="relative">
-                <NextLink
-                  className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-sm xl:text-base font-medium tracking-wide transition-colors duration-200"
-                  href="/shop"
-                >
-                  <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
-                  Shop
-                  {cartItemsCount > 0 && (
-                    <Badge
-                      color="danger"
-                      content={cartItemsCount}
-                      size="sm"
-                      style={{
-                        position: "absolute",
-                        top: "-6px",
-                        right: "-6px",
-                      }}
-                    >
-                      {cartItemsCount}
-                    </Badge>
-                  )}
-                </NextLink>
-              </NavbarItem>
-              
-              <NavbarItem className="hidden lg:flex">
-                <ThemeSwitch />
-              </NavbarItem>
-            </ul>
-          </div>
-        </div>
+        <NavbarItem key="shop" className="relative">
+          <NextLink
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-sm xl:text-base font-medium tracking-wide transition-colors duration-200"
+            href="/shop"
+          >
+            <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
+            Shop
+            {cartItemsCount > 0 && (
+              <Badge
+                color="danger"
+                content={cartItemsCount}
+                size="sm"
+                style={{
+                  position: "absolute",
+                  top: "-6px",
+                  right: "-6px",
+                }}
+              >
+                {cartItemsCount}
+              </Badge>
+            )}
+          </NextLink>
+        </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="sm:flex basis-1/5 sm:basis-full" justify="end">
+      <NavbarContent justify="end">
         {/* Bouton de thème mobile */}
         <NavbarItem className="flex lg:hidden">
           <ThemeSwitch />
         </NavbarItem>
-
-
 
         {/* Avatar utilisateur */}
         {!user ? (
@@ -1005,9 +861,40 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-
-
-
+      {/* Menu mobile HeroUI */}
+      <NavbarMenu>
+        {menuItems.map((item, index) => (
+          <NavbarMenuItem key={`${item.name}-${index}`}>
+            <Link
+              className="w-full"
+              color={item.color as any}
+              href={item.href}
+              size="lg"
+              onClick={() => setIsMenuOpen(false)}
+            >
+              {item.name}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+        {userMenuItems.map((item, index) => (
+          <NavbarMenuItem key={`user-${item.name}-${index}`}>
+            <Link
+              className="w-full"
+              color={item.color as any}
+              href={item.href}
+              size="lg"
+              onClick={() => {
+                if (item.action) {
+                  item.action();
+                }
+                setIsMenuOpen(false);
+              }}
+            >
+              {item.name}
+            </Link>
+          </NavbarMenuItem>
+        ))}
+      </NavbarMenu>
     </NextUINavbar>
   );
 };
