@@ -120,27 +120,191 @@ export const Navbar = () => {
           position: fixed;
           top: 100px;
           right: 20px;
-          width: 300px;
-          height: 200px;
-          background-color: purple;
-          color: white;
+          width: 320px;
+          max-height: 80vh;
+          background-color: white;
+          color: #374151;
           z-index: 99999;
-          padding: 20px;
-          border: 5px solid orange;
-          font-size: 16px;
-          font-family: Arial, sans-serif;
+          border: 2px solid #8b5cf6;
+          border-radius: 8px;
+          box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+          font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          overflow-y: auto;
         ">
-          <h3>VANILLA MENU</h3>
-          <p>Menu JavaScript Vanilla is OPEN!</p>
-          <p>State: ${isMenuOpen}</p>
-          <button onclick="document.getElementById('vanilla-menu').remove(); console.log('Vanilla menu closed')" style="
-            background: white;
-            color: black;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 5px;
-            cursor: pointer;
-          ">Fermer Vanilla</button>
+          <div style="padding: 16px;">
+            <!-- Navigation -->
+            <div style="margin-bottom: 16px;">
+              <button onclick="window.location.href='/'; document.getElementById('vanilla-menu').remove();" style="
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #374151;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              " onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='transparent'">
+                🏠 Accueil
+              </button>
+              <button onclick="window.location.href='/about'; document.getElementById('vanilla-menu').remove();" style="
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #374151;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              " onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='transparent'">
+                ℹ️ À propos
+              </button>
+              <button onclick="window.location.href='/articles'; document.getElementById('vanilla-menu').remove();" style="
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #374151;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              " onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='transparent'">
+                📚 Articles
+              </button>
+              <button onclick="window.location.href='/controle'; document.getElementById('vanilla-menu').remove();" style="
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #374151;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              " onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='transparent'">
+                🎮 Contrôle
+              </button>
+              <button onclick="window.location.href='/shop'; document.getElementById('vanilla-menu').remove();" style="
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #374151;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              " onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='transparent'">
+                🛒 Shop
+              </button>
+              <button onclick="window.location.href='/contact'; document.getElementById('vanilla-menu').remove();" style="
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #374151;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              " onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='transparent'">
+                ❤️ Contact
+              </button>
+            </div>
+            
+            ${user ? `
+            <!-- User-specific items -->
+            <div style="border-top: 1px solid #e5e7eb; margin: 16px 0; padding-top: 16px;">
+              <div style="font-size: 14px; font-weight: 600; color: #6b7280; margin-bottom: 12px; padding: 0 12px;">
+                Mon compte
+              </div>
+              <button onclick="window.location.href='${user.role === "admin" ? "/admin/dashboard" : "/dashboard"}'; document.getElementById('vanilla-menu').remove();" style="
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #374151;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              " onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='transparent'">
+                ${user.role === "admin" ? "👑" : "🎓"} ${user.role === "admin" ? "Dashboard Admin" : "Dashboard"}
+              </button>
+              <button onclick="window.location.href='/profile'; document.getElementById('vanilla-menu').remove();" style="
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #374151;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              " onmouseover="this.style.backgroundColor='#f3f4f6'" onmouseout="this.style.backgroundColor='transparent'">
+                👤 Profil
+              </button>
+              <button onclick="
+                if(confirm('Êtes-vous sûr de vouloir vous déconnecter ?')) {
+                  localStorage.removeItem('user');
+                  localStorage.removeItem('userToken');
+                  localStorage.removeItem('accessToken');
+                  localStorage.removeItem('refreshToken');
+                  localStorage.removeItem('userRole');
+                  localStorage.removeItem('userInfo');
+                  localStorage.removeItem('serInfo');
+                  localStorage.removeItem('token');
+                  if('${user.id}') {
+                    localStorage.removeItem('cart_${user.id}');
+                  }
+                  window.location.href='/';
+                }
+                document.getElementById('vanilla-menu').remove();
+              " style="
+                width: 100%;
+                text-align: left;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #dc2626;
+                font-size: 16px;
+                cursor: pointer;
+                border-radius: 6px;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+              " onmouseover="this.style.backgroundColor='#fef2f2'" onmouseout="this.style.backgroundColor='transparent'">
+                🚪 Déconnexion
+              </button>
+            </div>
+            ` : ''}
+          </div>
         </div>
       `;
       document.body.appendChild(menuElement);
