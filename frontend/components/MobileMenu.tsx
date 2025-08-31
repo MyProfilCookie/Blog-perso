@@ -218,70 +218,68 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
             </div>
           )}
 
-          {/* Navigation mobile pour les utilisateurs non connectés */}
-          {!user && (
-            <div className="space-y-3 md:space-y-4">
-              <h3 className="text-base md:text-lg font-semibold text-gray-700 dark:text-gray-200 px-2 flex items-center gap-2">
-                <FontAwesomeIcon icon={faHome} className="text-violet-600 dark:text-violet-400" />
-                Navigation
-              </h3>
-              <div className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-3 md:p-4 space-y-2 md:space-y-3 border border-violet-200 dark:border-gray-600">
-                <NextLink
-                  className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
-                  href="/"
-                  onClick={onClose}
-                >
-                  <FontAwesomeIcon icon={faHome} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
-                  <span className="font-medium text-sm md:text-base">Accueil</span>
-                </NextLink>
-                
-                <NextLink
-                  className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
-                  href="/about"
-                  onClick={onClose}
-                >
-                  <FontAwesomeIcon icon={faInfoCircle} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
-                  <span className="font-medium text-sm md:text-base">À propos</span>
-                </NextLink>
-                
-                <NextLink
-                  className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
-                  href="/articles"
-                  onClick={onClose}
-                >
-                  <FontAwesomeIcon icon={faBook} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
-                  <span className="font-medium text-sm md:text-base">Articles</span>
-                </NextLink>
-                
-                <NextLink
-                  className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
-                  href="/controle"
-                  onClick={onClose}
-                >
-                  <FontAwesomeIcon icon={faGamepad} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
-                  <span className="font-medium text-sm md:text-base">Contrôle</span>
-                </NextLink>
-                
-                <NextLink
-                  className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
-                  href="/shop"
-                  onClick={onClose}
-                >
-                  <FontAwesomeIcon icon={faShoppingCart} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
-                  <span className="font-medium text-sm md:text-base">Shop</span>
-                </NextLink>
-                
-                <NextLink
-                  className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
-                  href="/contact"
-                  onClick={onClose}
-                >
-                  <FontAwesomeIcon icon={faHeart} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
-                  <span className="font-medium text-sm md:text-base">Contact</span>
-                </NextLink>
-              </div>
+          {/* Navigation mobile - toujours visible */}
+          <div className="space-y-3 md:space-y-4">
+            <h3 className="text-base md:text-lg font-semibold text-gray-700 dark:text-gray-200 px-2 flex items-center gap-2">
+              <FontAwesomeIcon icon={faHome} className="text-violet-600 dark:text-violet-400" />
+              Navigation
+            </h3>
+            <div className="bg-gradient-to-br from-violet-50 to-purple-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-3 md:p-4 space-y-2 md:space-y-3 border border-violet-200 dark:border-gray-600">
+              <NextLink
+                className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                href="/"
+                onClick={onClose}
+              >
+                <FontAwesomeIcon icon={faHome} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
+                <span className="font-medium text-sm md:text-base">Accueil</span>
+              </NextLink>
+              
+              <NextLink
+                className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                href="/about"
+                onClick={onClose}
+              >
+                <FontAwesomeIcon icon={faInfoCircle} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
+                <span className="font-medium text-sm md:text-base">À propos</span>
+              </NextLink>
+              
+              <NextLink
+                className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                href="/articles"
+                onClick={onClose}
+              >
+                <FontAwesomeIcon icon={faBook} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
+                <span className="font-medium text-sm md:text-base">Articles</span>
+              </NextLink>
+              
+              <NextLink
+                className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                href="/controle"
+                onClick={onClose}
+              >
+                <FontAwesomeIcon icon={faGamepad} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
+                <span className="font-medium text-sm md:text-base">Contrôle</span>
+              </NextLink>
+              
+              <NextLink
+                className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                href="/shop"
+                onClick={onClose}
+              >
+                <FontAwesomeIcon icon={faShoppingCart} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
+                <span className="font-medium text-sm md:text-base">Shop</span>
+              </NextLink>
+              
+              <NextLink
+                className="flex items-center px-3 md:px-4 py-2 md:py-3 text-gray-700 dark:text-gray-200 hover:bg-violet-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
+                href="/contact"
+                onClick={onClose}
+              >
+                <FontAwesomeIcon icon={faHeart} className="mr-2 md:mr-3 text-violet-600 dark:text-violet-400 w-4 md:w-5" />
+                <span className="font-medium text-sm md:text-base">Contact</span>
+              </NextLink>
             </div>
-          )}
+          </div>
         </div>
       </div>
     </div>
