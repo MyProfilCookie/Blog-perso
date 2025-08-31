@@ -165,9 +165,9 @@ const OrderProgress = ({ status }: { status: string }) => {
       <div className="flex justify-between mb-2">
         <div className="flex flex-col items-center">
           <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${
+            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 shadow-sm ${
               isRegistered
-                ? "bg-indigo-500 text-white"
+                ? "bg-indigo-500 dark:bg-indigo-600 text-white"
                 : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
             }`}
           >
@@ -186,9 +186,9 @@ const OrderProgress = ({ status }: { status: string }) => {
 
         <div className="flex flex-col items-center">
           <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${
+            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 shadow-sm ${
               isProcessed
-                ? "bg-indigo-500 text-white"
+                ? "bg-indigo-500 dark:bg-indigo-600 text-white"
                 : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
             }`}
           >
@@ -211,9 +211,9 @@ const OrderProgress = ({ status }: { status: string }) => {
 
         <div className="flex flex-col items-center">
           <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${
+            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 shadow-sm ${
               isShipped
-                ? "bg-pink-500 text-white"
+                ? "bg-pink-500 dark:bg-pink-600 text-white"
                 : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
             }`}
           >
@@ -236,9 +236,9 @@ const OrderProgress = ({ status }: { status: string }) => {
 
         <div className="flex flex-col items-center">
           <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 ${
+            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 shadow-sm ${
               isDelivered
-                ? "bg-emerald-500 text-white"
+                ? "bg-emerald-500 dark:bg-emerald-600 text-white"
                 : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
             }`}
           >
@@ -261,18 +261,18 @@ const OrderProgress = ({ status }: { status: string }) => {
       </div>
 
       {/* Progress bar */}
-      <div className="h-3 flex w-full rounded-full overflow-hidden">
-        <div className="bg-indigo-500 h-full" style={{ width: "25%" }} />
+      <div className="h-3 flex w-full rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
+        <div className="bg-indigo-500 dark:bg-indigo-600 h-full transition-all duration-300" style={{ width: "25%" }} />
         <div
-          className={`h-full ${isProcessed ? "bg-indigo-500" : "bg-gray-200 dark:bg-gray-700"}`}
+          className={`h-full transition-all duration-300 ${isProcessed ? "bg-indigo-500 dark:bg-indigo-600" : "bg-gray-200 dark:bg-gray-700"}`}
           style={{ width: "25%" }}
         />
         <div
-          className={`h-full ${isShipped ? "bg-pink-500" : "bg-gray-200 dark:bg-gray-700"}`}
+          className={`h-full transition-all duration-300 ${isShipped ? "bg-pink-500 dark:bg-pink-600" : "bg-gray-200 dark:bg-gray-700"}`}
           style={{ width: "25%" }}
         />
         <div
-          className={`h-full ${isDelivered ? "bg-emerald-500" : "bg-gray-200 dark:bg-gray-700"}`}
+          className={`h-full transition-all duration-300 ${isDelivered ? "bg-emerald-500 dark:bg-emerald-600" : "bg-gray-200 dark:bg-gray-700"}`}
           style={{ width: "25%" }}
         />
       </div>
