@@ -564,8 +564,9 @@ export const Navbar = () => {
         {/* Bouton menu mobile */}
         <button
           aria-label="Toggle navigation"
-          className="xl:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative"
+          className="xl:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative border-2 border-red-500"
           onClick={() => {
+            console.log('Menu button clicked!');
             setIsMenuOpen(!isMenuOpen);
           }}
           style={{ zIndex: 1000 }}
