@@ -1,6 +1,38 @@
 /* eslint-disable no-console */
 "use client";
 import React, { useState, useRef, useEffect } from "react";
+
+// Styles CSS pour les animations du menu mobile
+const mobileMenuStyles = `
+  @keyframes slideDown {
+    from {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 1;
+      transform: translateY(0);
+    }
+    to {
+      opacity: 0;
+      transform: translateY(-10px);
+    }
+  }
+`;
+
+// Injecter les styles dans le head
+if (typeof document !== 'undefined') {
+  const styleElement = document.createElement('style');
+  styleElement.textContent = mobileMenuStyles;
+  document.head.appendChild(styleElement);
+}
 import {
   Navbar as NextUINavbar,
   NavbarContent,
@@ -123,19 +155,34 @@ export const Navbar = () => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement;
       const isMenuButton = target.closest('button[aria-label="Toggle navigation"]');
+      const isMenuContent = target.closest('[data-menu-content]');
       
-      if (menuRef.current && !menuRef.current.contains(target) && !isMenuButton) {
+      if (menuRef.current && !menuRef.current.contains(target) && !isMenuButton && !isMenuContent) {
+        setIsMenuOpen(false);
+      }
+    }
+
+    function handleEscapeKey(event: KeyboardEvent) {
+      if (event.key === 'Escape' && isMenuOpen) {
         setIsMenuOpen(false);
       }
     }
 
     if (isMenuOpen) {
       document.addEventListener("mousedown", handleClickOutside);
+      document.addEventListener("keydown", handleEscapeKey);
+      document.body.style.overflow = 'hidden'; // Empêcher le scroll
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscapeKey);
+      document.body.style.overflow = ''; // Restaurer le scroll
     }
 
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+      document.removeEventListener("keydown", handleEscapeKey);
+      document.body.style.overflow = '';
+    };
   }, [isMenuOpen]);
 
   // Fermer le menu lors de la navigation
@@ -513,12 +560,19 @@ export const Navbar = () => {
           className="lg:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 animation-optimized"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <VisibleBurgerIcon 
-            size={20} 
-            className={`text-violet-600 dark:text-violet-400 hover:text-violet-500 dark:hover:text-violet-300 transition-colors duration-200 ${
-              isMenuOpen ? 'rotate-90' : ''
-            }`}
-          />
+          <div className={`w-6 h-6 flex flex-col justify-center items-center transition-all duration-300 ${
+            isMenuOpen ? 'rotate-90' : ''
+          }`}>
+            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 transition-all duration-300 ${
+              isMenuOpen ? 'rotate-45 translate-y-1' : ''
+            }`}></span>
+            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 mt-1 transition-all duration-300 ${
+              isMenuOpen ? 'opacity-0' : ''
+            }`}></span>
+            <span className={`block w-5 h-0.5 bg-violet-600 dark:bg-violet-400 mt-1 transition-all duration-300 ${
+              isMenuOpen ? '-rotate-45 -translate-y-1' : ''
+            }`}></span>
+          </div>
         </button>
 
         {/* Navigation desktop */}
@@ -948,11 +1002,13 @@ export const Navbar = () => {
         {isMenuOpen && (
           <div
             ref={menuRef}
-            className="lg:hidden dark:bg-gray-900/95 bg-white/95 w-full shadow-xl absolute top-full left-0 z-50 max-h-[80vh] overflow-y-auto rounded-b-xl border-t border-gray-200 dark:border-gray-700 backdrop-blur-md slide-up-optimized visible"
+            data-menu-content
+            className="lg:hidden dark:bg-gray-900/95 bg-white/95 w-full shadow-xl absolute top-full left-0 z-50 max-h-[80vh] overflow-y-auto rounded-b-xl border-t border-gray-200 dark:border-gray-700 backdrop-blur-md transform transition-all duration-300 ease-out"
             style={{
               background: resolvedTheme === 'dark'
                 ? "linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(31, 41, 55, 0.95) 100%)"
-                : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,243,255,0.95) 100%)"
+                : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,243,255,0.95) 100%)",
+              animation: isMenuOpen ? 'slideDown 0.3s ease-out' : 'slideUp 0.3s ease-in'
             }}
           >
             <div className="p-4 md:p-6 space-y-4 md:space-y-6 fade-optimized visible">

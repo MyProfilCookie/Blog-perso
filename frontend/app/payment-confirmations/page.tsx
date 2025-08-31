@@ -239,25 +239,25 @@ const OrderConfirmationPage = () => {
 
     if (["payé", "complété", "paid", "completed"].includes(statusLower)) {
       return (
-        <Badge className="ml-2 bg-green-500 text-white" variant="outline">
+        <Badge className="ml-2 bg-green-500 hover:bg-green-600 text-white border-green-500" variant="default">
           ✅ {status}
         </Badge>
       );
     } else if (["en attente", "pending"].includes(statusLower)) {
       return (
-        <Badge className="ml-2 bg-yellow-500 text-white" variant="outline">
+        <Badge className="ml-2 bg-violet-500 hover:bg-violet-600 text-white border-violet-500" variant="default">
           ⏳ {status}
         </Badge>
       );
     } else if (["annulé", "cancelled", "canceled"].includes(statusLower)) {
       return (
-        <Badge className="ml-2 bg-red-500 text-white" variant="outline">
+        <Badge className="ml-2 bg-red-500 hover:bg-red-600 text-white border-red-500" variant="default">
           ❌ {status}
         </Badge>
       );
     } else {
       return (
-        <Badge className="ml-2 bg-gray-500 text-white" variant="outline">
+        <Badge className="ml-2 bg-gray-500 hover:bg-gray-600 text-white border-gray-500" variant="default">
           {status}
         </Badge>
       );
@@ -265,130 +265,152 @@ const OrderConfirmationPage = () => {
   };
 
   return (
-    <div className="container px-4 mx-auto my-12 md:px-6">
-      <div className="mb-8 text-center">
-        <h1 className="mb-2 text-4xl font-extrabold text-yellow-400 animate-bounce">
-          🎉 Confirmation de Commande 🎉
-        </h1>
-        <p className="text-gray-500 dark:text-gray-400">
-          Merci pour votre achat ! Voici le récapitulatif de votre commande.
-        </p>
+    <div className="min-h-screen bg-cream dark:bg-gray-900">
+      {/* Header avec gradient violet/purple */}
+      <div className="bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-700 dark:to-purple-700 py-8 md:py-12">
+        <div className="container px-4 mx-auto text-center">
+          <h1 className="mb-4 text-3xl md:text-5xl font-bold text-white">
+            🎉 Commande Confirmée !
+          </h1>
+          <p className="text-lg md:text-xl text-violet-100 max-w-2xl mx-auto">
+            Merci pour votre achat ! Votre commande a été traitée avec succès.
+          </p>
+        </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              👤 Informations Client
+      <div className="container px-4 mx-auto py-8 md:py-12">
+        <div className="grid gap-6 md:grid-cols-2 lg:gap-8">
+          {/* Informations Client */}
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
+            <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20">
+              <CardTitle className="flex items-center text-violet-700 dark:text-violet-300">
+                <span className="mr-2">👤</span>
+                Informations Client
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="space-y-3">
+                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Prénom:</span>
+                  <span className="text-violet-600 dark:text-violet-400 font-semibold">{firstName}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Nom:</span>
+                  <span className="text-violet-600 dark:text-violet-400 font-semibold">{lastName}</span>
+                </div>
+                <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Email:</span>
+                  <span className="text-violet-600 dark:text-violet-400 font-semibold">{email}</span>
+                </div>
+                <div className="flex justify-between items-center py-2">
+                  <span className="font-medium text-gray-700 dark:text-gray-300">Téléphone:</span>
+                  <span className="text-violet-600 dark:text-violet-400 font-semibold">{phone}</span>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Adresse de Livraison */}
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
+            <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20">
+              <CardTitle className="flex items-center text-violet-700 dark:text-violet-300">
+                <span className="mr-2">📦</span>
+                Adresse de Livraison
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-6">
+              <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+                <p className="text-gray-700 dark:text-gray-300 leading-relaxed">
+                  <span className="font-medium text-violet-600 dark:text-violet-400">{deliveryAddress.street}</span>
+                  <br />
+                  <span className="text-gray-600 dark:text-gray-400">
+                    {deliveryAddress.city}, {deliveryAddress.postalCode}
+                  </span>
+                  <br />
+                  <span className="text-gray-600 dark:text-gray-400">{deliveryAddress.country}</span>
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Détails de la Commande */}
+        <Card className="mt-8 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
+          <CardHeader className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20">
+            <CardTitle className="flex items-center text-violet-700 dark:text-violet-300">
+              <span className="mr-2">🛒</span>
+              Détails de la Commande
             </CardTitle>
           </CardHeader>
-          <CardContent>
-            <div className="space-y-2">
-              <div className="flex justify-between">
-                <span className="font-medium">Prénom:</span>
-                <span>{firstName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium">Nom:</span>
-                <span>{lastName}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium">Email:</span>
-                <span>{email}</span>
-              </div>
-              <div className="flex justify-between">
-                <span className="font-medium">Téléphone:</span>
-                <span>{phone}</span>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle className="flex items-center">
-              📦 Adresse de Livraison
-            </CardTitle>
-          </CardHeader>
-          <CardContent>
-            <p className="text-gray-700 dark:text-gray-300">
-              {deliveryAddress.street},<br />
-              {deliveryAddress.city}, {deliveryAddress.postalCode}
-              <br />
-              {deliveryAddress.country}
-            </p>
-          </CardContent>
-        </Card>
-      </div>
-
-      <Card className="mt-6">
-        <CardHeader>
-          <CardTitle className="flex items-center">
-            🛒 Détails de la Commande
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          {order?.items && order.items.length > 0 ? (
-            <div className="space-y-4">
-              {order.items.map((item: OrderItem) => (
-                <div
-                  key={item.productId || item._id}
-                  className="flex items-center justify-between"
-                >
-                  <div className="flex items-center">
-                    <Badge className="mr-2" variant="outline">
-                      {item.quantity}
-                    </Badge>
-                    <span>{item.title}</span>
+          <CardContent className="p-6">
+            {order?.items && order.items.length > 0 ? (
+              <div className="space-y-4">
+                {order.items.map((item: OrderItem) => (
+                  <div
+                    key={item.productId || item._id}
+                    className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg"
+                  >
+                    <div className="flex items-center">
+                      <Badge className="mr-3 bg-violet-600 text-white" variant="default">
+                        {item.quantity}
+                      </Badge>
+                      <span className="font-medium text-gray-800 dark:text-gray-200">{item.title}</span>
+                    </div>
+                    <span className="font-bold text-violet-600 dark:text-violet-400">
+                      {(item.price || 0).toFixed(2)} €
+                    </span>
                   </div>
-                  <span className="font-medium">
-                    {(item.price || 0).toFixed(2)} €
-                  </span>
-                </div>
-              ))}
-              <Separator className="my-4" />
-              <div className="space-y-2">
-                <div className="flex justify-between">
-                  <span className="font-medium">🚚 Méthode de Livraison:</span>
-                  <span>{deliveryMethod}</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">💸 Frais de Livraison:</span>
-                  <span>{deliveryCost.toFixed(2)} €</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="font-medium">💳 Méthode de Paiement:</span>
-                  <span>{paymentMethod}</span>
-                </div>
-                <div className="flex items-center justify-between">
-                  <span className="font-medium">✅ Statut du Paiement:</span>
-                  {getStatusBadge(paymentStatus)}
-                </div>
-                <Separator className="my-4" />
-                <div className="flex items-center justify-between text-xl font-bold">
-                  <span className="text-yellow-500">Total:</span>
-                  <span className="text-yellow-500">
-                    {totalAmount.toFixed(2)} € 🎯
-                  </span>
+                ))}
+                
+                <Separator className="my-6" />
+                
+                <div className="space-y-3">
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">🚚 Méthode de Livraison:</span>
+                    <span className="text-violet-600 dark:text-violet-400 font-semibold">{deliveryMethod}</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">💸 Frais de Livraison:</span>
+                    <span className="text-violet-600 dark:text-violet-400 font-semibold">{deliveryCost.toFixed(2)} €</span>
+                  </div>
+                  <div className="flex justify-between items-center py-2 border-b border-gray-100 dark:border-gray-700">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">💳 Méthode de Paiement:</span>
+                    <span className="text-violet-600 dark:text-violet-400 font-semibold">{paymentMethod}</span>
+                  </div>
+                  <div className="flex items-center justify-between py-2">
+                    <span className="font-medium text-gray-700 dark:text-gray-300">✅ Statut du Paiement:</span>
+                    {getStatusBadge(paymentStatus)}
+                  </div>
+                  
+                  <Separator className="my-6" />
+                  
+                  <div className="flex items-center justify-between p-4 bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-lg">
+                    <span className="text-xl font-bold text-violet-700 dark:text-violet-300">Total:</span>
+                    <span className="text-2xl font-bold text-violet-600 dark:text-violet-400">
+                      {totalAmount.toFixed(2)} €
+                    </span>
+                  </div>
                 </div>
               </div>
-            </div>
-          ) : (
-            <p className="text-center text-red-400">
-              Aucun article trouvé dans la commande.
-            </p>
-          )}
-        </CardContent>
-      </Card>
+            ) : (
+              <div className="text-center py-8">
+                <p className="text-red-400 text-lg">Aucun article trouvé dans la commande.</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
 
-      <div className="mt-8 text-center">
-        <Button
-          className="px-8 py-3 font-bold text-white transform transition-transform bg-yellow-500 rounded-lg hover:bg-yellow-600 hover:scale-105"
-          variant="default"
-          onClick={handleBack}
-        >
-          🔙 Retourner à l&apos;accueil
-        </Button>
+        {/* Bouton de retour */}
+        <div className="mt-12 text-center">
+          <Button
+            className="px-8 py-4 text-lg font-bold text-white bg-gradient-to-r from-violet-600 to-purple-600 hover:from-violet-700 hover:to-purple-700 rounded-xl shadow-lg transform transition-all duration-300 hover:scale-105"
+            variant="default"
+            onClick={handleBack}
+          >
+            <span className="mr-2">🏠</span>
+            Retourner à l&apos;accueil
+          </Button>
+        </div>
       </div>
     </div>
   );
