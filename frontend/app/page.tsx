@@ -117,40 +117,40 @@ export default function HomePage() {
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <main>
         {/* Hero Section */}
-        <section className="relative py-20 lg:py-32 overflow-hidden">
+        <section className="relative py-12 md:py-20 lg:py-32 overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
           <div className="relative w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-12 items-center">
+              <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
                 <motion.div
                   initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ duration: 0.8 }}
                 >
-                  <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 dark:text-white mb-6">
+                  <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">
                     Apprentissage{" "}
                     <span className="text-blue-600 dark:text-blue-400">
                       adapté
                     </span>{" "}
                     pour enfants autistes
                   </h1>
-                  <p className="text-xl text-gray-600 dark:text-gray-300 mb-8">
+                  <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 md:mb-8">
                     Une plateforme éducative spécialisée qui s'adapte aux besoins 
                     uniques de chaque enfant pour un apprentissage efficace et bienveillant.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4">
+                  <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
                     <Link 
                       href="/users/signup" 
-                      className="bg-blue-600 text-white px-8 py-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center justify-center gap-2"
+                      className="bg-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
                     >
-                      <Star className="w-5 h-5" />
+                      <Star className="w-4 h-4 md:w-5 md:h-5" />
                       Commencer gratuitement
                     </Link>
                     <Link 
                       href="/about" 
-                      className="border-2 border-blue-600 text-blue-600 px-8 py-4 rounded-lg hover:bg-blue-50 transition-colors font-semibold flex items-center justify-center gap-2"
+                      className="border-2 border-blue-600 text-blue-600 px-6 md:px-8 py-3 md:py-4 rounded-lg hover:bg-blue-50 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
                     >
-                      <Shield className="w-5 h-5" />
+                      <Shield className="w-4 h-4 md:w-5 md:h-5" />
                       En savoir plus
                     </Link>
                   </div>
@@ -177,7 +177,7 @@ export default function HomePage() {
         </section>
 
         {/* Services Section */}
-        <section className="py-20 bg-gray-50 dark:bg-gray-800">
+        <section className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
@@ -185,17 +185,17 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-center mb-16"
+                className="text-center mb-12 md:mb-16"
               >
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                   Nos services
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300">
+                <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
                   Tout ce dont vous avez besoin pour accompagner l'apprentissage de votre enfant
                 </p>
               </motion.div>
               
-              <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
                 {services.map((service, index) => (
                   <motion.div
                     key={service.title}
@@ -206,14 +206,14 @@ export default function HomePage() {
                   >
                     <Link href={service.link}>
                       <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                        <CardBody className="text-center p-6">
-                          <div className={`w-16 h-16 rounded-full ${service.color} flex items-center justify-center mx-auto mb-4`}>
+                        <CardBody className="text-center p-4 md:p-6">
+                          <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${service.color} flex items-center justify-center mx-auto mb-3 md:mb-4`}>
                             {service.icon}
                           </div>
-                          <h3 className="text-xl font-semibold mb-2 text-gray-900 dark:text-white">
+                          <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-900 dark:text-white">
                             {service.title}
                           </h3>
-                          <p className="text-gray-600 dark:text-gray-300">
+                          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">
                             {service.description}
                           </p>
                         </CardBody>
@@ -227,7 +227,7 @@ export default function HomePage() {
         </section>
 
         {/* Témoignages Section */}
-        <section className="py-20">
+        <section className="py-12 md:py-20">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
@@ -235,17 +235,17 @@ export default function HomePage() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-center mb-16"
+                className="text-center mb-12 md:mb-16"
               >
-                <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
                   Ils nous font confiance
                 </h2>
-                <p className="text-lg text-gray-600 dark:text-gray-300">
+                <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
                   Découvrez les témoignages de nos utilisateurs
                 </p>
               </motion.div>
               
-              <div className="grid md:grid-cols-3 gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
                 {testimonials.map((testimonial, index) => (
                   <motion.div
                     key={testimonial.name}
@@ -255,14 +255,14 @@ export default function HomePage() {
                     viewport={{ once: true }}
                   >
                     <Card className="h-full">
-                      <CardBody className="p-6">
-                        <div className="flex items-center mb-4">
+                      <CardBody className="p-4 md:p-6">
+                        <div className="flex items-center mb-3 md:mb-4">
                           <OptimizedImage
                             src={testimonial.avatar}
                             alt={testimonial.name}
                             width={60}
                             height={60}
-                            className="w-15 h-15 rounded-full mr-4"
+                            className="w-12 h-12 md:w-15 md:h-15 rounded-full mr-3 md:mr-4"
                           />
                           <div>
                             <h4 className="font-semibold text-gray-900 dark:text-white">
