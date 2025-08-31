@@ -12,6 +12,7 @@ import { useState, useEffect, useMemo } from "react";
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
@@ -67,11 +68,16 @@ const ArticleCard = ({ id, title, subtitle, img, category, author, date, readTim
   >
     <Card className="shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800 rounded-xl overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-700 group">
       <Link className="block relative overflow-hidden h-[200px]" href={`/articles/${id}`}>
-        <motion.img
-          alt={title}
-          className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-          src={img}
-        />
+                 <Image
+           alt={title}
+           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
+           src={img}
+           width={600}
+           height={400}
+           quality={90}
+           priority={id <= 6}
+           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+         />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         {category && (
           <Badge className="absolute top-3 left-3 bg-violet-600 hover:bg-violet-700 text-white">
@@ -433,10 +439,13 @@ const ArticlesPage = () => {
                   >
                     <Link href={`/articles/${article.id}`}>
                       <div className="flex gap-3">
-                        <img
+                        <Image
                           alt={article.title}
                           className="w-16 h-16 object-cover rounded-lg"
                           src={article.img}
+                          width={64}
+                          height={64}
+                          quality={90}
                         />
                         <div className="flex-1">
                           <h4 className="text-sm font-semibold text-gray-800 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors line-clamp-2">
