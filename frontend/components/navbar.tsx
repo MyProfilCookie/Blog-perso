@@ -503,7 +503,10 @@ export const Navbar = () => {
             aria-label="Menu de navigation"
             className="bg-transparent p-3 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 border-2 border-violet-500 min-w-[44px] min-h-[44px]"
             size="sm"
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
+            onClick={() => {
+              console.log('Menu button clicked, current state:', isMenuOpen);
+              setIsMenuOpen(!isMenuOpen);
+            }}
           >
             <div className="w-6 h-6 flex flex-col justify-center items-center">
               <span className="block w-5 h-0.5 bg-violet-600"></span>
@@ -514,7 +517,7 @@ export const Navbar = () => {
           
           {/* Menu mobile simple sans animations */}
           {isMenuOpen && (
-            <div className="absolute top-16 right-0 w-80 bg-white dark:bg-gray-800 border-2 border-violet-500 rounded-lg shadow-xl z-50 max-h-[80vh] overflow-y-auto">
+            <div className="absolute top-16 right-0 w-80 bg-white dark:bg-gray-800 border-2 border-violet-500 rounded-lg shadow-xl z-50 max-h-[80vh] overflow-y-auto" style={{ border: '2px solid red' }}>
               <div className="p-2">
                 {/* Navigation */}
                 <button
