@@ -111,10 +111,54 @@ export const Navbar = () => {
 
     if (isMenuOpen) {
       document.addEventListener('mousedown', handleClickOutside);
+      
+      // Créer le menu avec JavaScript vanilla
+      const menuElement = document.createElement('div');
+      menuElement.id = 'vanilla-menu';
+      menuElement.innerHTML = `
+        <div style="
+          position: fixed;
+          top: 100px;
+          right: 20px;
+          width: 300px;
+          height: 200px;
+          background-color: purple;
+          color: white;
+          z-index: 99999;
+          padding: 20px;
+          border: 5px solid orange;
+          font-size: 16px;
+          font-family: Arial, sans-serif;
+        ">
+          <h3>VANILLA MENU</h3>
+          <p>Menu JavaScript Vanilla is OPEN!</p>
+          <p>State: ${isMenuOpen}</p>
+          <button onclick="document.getElementById('vanilla-menu').remove(); console.log('Vanilla menu closed')" style="
+            background: white;
+            color: black;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+          ">Fermer Vanilla</button>
+        </div>
+      `;
+      document.body.appendChild(menuElement);
+      console.log('Vanilla menu created and appended to body');
+    } else {
+      const existingMenu = document.getElementById('vanilla-menu');
+      if (existingMenu) {
+        existingMenu.remove();
+        console.log('Vanilla menu removed');
+      }
     }
 
     return () => {
       document.removeEventListener('mousedown', handleClickOutside);
+      const existingMenu = document.getElementById('vanilla-menu');
+      if (existingMenu) {
+        existingMenu.remove();
+      }
     };
   }, [isMenuOpen]);
 
