@@ -87,7 +87,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
 
   return (
     <div
-      className="xl:hidden fixed inset-0 top-16 z-40 bg-black/50 backdrop-blur-sm"
+      className="xl:hidden fixed inset-0 top-0 z-50 bg-red-500/80 backdrop-blur-sm"
       data-menu-content
       onClick={(e) => {
         if (e.target === e.currentTarget) {
@@ -96,7 +96,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
       }}
     >
       <div 
-        className="absolute top-0 left-0 right-0 bg-white dark:bg-gray-900 shadow-xl border-t border-gray-200 dark:border-gray-700 max-h-[calc(100vh-4rem)] overflow-y-auto"
+        className="absolute top-16 left-0 right-0 bg-white dark:bg-gray-900 shadow-xl border-t border-gray-200 dark:border-gray-700 max-h-[calc(100vh-4rem)] overflow-y-auto border-4 border-green-500"
         style={{
           animation: 'slideDown 0.3s ease-out'
         }}
