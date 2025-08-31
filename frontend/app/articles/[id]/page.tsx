@@ -104,22 +104,22 @@ const ArticlePage = () => {
   }
 
   return (
-    <section className="flex flex-col items-center justify-center min-h-screen w-full bg-cream dark:bg-gray-900 py-16 px-4 md:px-8">
+    <section className="flex flex-col items-center justify-center min-h-screen w-full bg-cream dark:bg-gray-900 py-8 md:py-16 px-4 md:px-8">
       <div className="container mx-auto max-w-6xl">
         {/* Informations sur l'Article */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="w-full text-center mb-12"
+          className="w-full text-center mb-8 md:mb-12"
           initial={{ opacity: 0, y: -50 }}
           transition={{ duration: 0.8 }}
         >
-          <h1 className={`${title()} text-4xl md:text-5xl font-bold leading-tight dark:text-violet-300`}>
+          <h1 className={`${title()} text-2xl md:text-4xl lg:text-5xl font-bold leading-tight dark:text-violet-300 mb-4`}>
             {article["📌 titre"]}
           </h1>
-          <h2 className={`${subtitle()} text-xl md:text-2xl text-gray-600 dark:text-gray-300 italic`}>
+          <h2 className={`${subtitle()} text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 italic mb-4`}>
             {article["📝 sous-titre"]}
           </h2>
-          <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
+          <div className="mt-4 text-sm md:text-base text-gray-500 dark:text-gray-400">
             <p>Publié le : <span className="font-medium text-violet-600 dark:text-violet-400">{formatDate(article["📅 date"])}</span></p>
             <p>Auteur : <span className="font-medium text-violet-600 dark:text-violet-400">{article["✍️ auteur"]}</span></p>
           </div>
@@ -128,14 +128,14 @@ const ArticlePage = () => {
         {/* Image de l'Article */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="w-full flex justify-center mb-12"
+          className="w-full flex justify-center mb-8 md:mb-12"
           initial={{ opacity: 0, y: 50 }}
           transition={{ duration: 0.8, delay: 0.5 }}
         >
           <div className="w-full max-w-4xl">
             <Image
               alt={article["📌 titre"]}
-              className="object-cover w-full h-auto max-h-[500px] rounded-lg shadow-md dark:shadow-gray-800"
+              className="object-cover w-full h-auto max-h-[300px] md:max-h-[500px] rounded-lg shadow-md dark:shadow-gray-800"
               height={800}
               width={1200}
               src={fixImageUrl(article["🔗 imageUrl"])}
@@ -151,12 +151,12 @@ const ArticlePage = () => {
         {/* Contenu de l'Article */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="w-full flex justify-center mb-12"
+          className="w-full flex justify-center mb-8 md:mb-12"
           initial={{ opacity: 0, y: 50 }}
           transition={{ duration: 0.8, delay: 1 }}
         >
           <Card className="w-full max-w-3xl bg-cream dark:bg-gray-800 shadow-none dark:border dark:border-gray-700">
-            <CardBody className="p-8 text-lg leading-relaxed text-gray-800 dark:text-gray-200">
+            <CardBody className="p-4 md:p-8 text-base md:text-lg leading-relaxed text-gray-800 dark:text-gray-200">
               <div className="prose dark:prose-invert max-w-none">
                 {article["📖 content"].split('\n').map((paragraph, index) => (
                   <motion.p
@@ -184,7 +184,7 @@ const ArticlePage = () => {
           transition={{ duration: 0.8, delay: 1.5 }}
         >
           <Link href="/articles">
-            <Button className="px-6 py-3 text-white rounded-lg bg-violet-600 hover:bg-violet-700 transition-colors">
+            <Button className="px-4 md:px-6 py-2 md:py-3 text-sm md:text-base text-white rounded-lg bg-violet-600 hover:bg-violet-700 transition-colors">
               Retour à la liste des articles
             </Button>
           </Link>

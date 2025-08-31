@@ -269,18 +269,18 @@ const ArticlesPage = () => {
   return (
     <div className="min-h-screen bg-cream dark:bg-gray-900">
       {/* Header avec titre animé */}
-      <div className="bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-700 dark:to-purple-700 py-16">
+      <div className="bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-700 dark:to-purple-700 py-8 md:py-16">
         <div className="max-w-7xl mx-auto px-4 text-center">
           <motion.h1
             animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.05, 1] }}
-            className={`${title()} text-5xl md:text-6xl font-bold text-white mb-4`}
+            className={`${title()} text-3xl md:text-5xl lg:text-6xl font-bold text-white mb-4`}
             transition={{ duration: 3, repeat: Infinity }}
           >
             Articles et Astuces
           </motion.h1>
           <motion.p
             animate={{ opacity: 1, y: 0 }}
-            className="text-xl text-violet-100 max-w-2xl mx-auto leading-relaxed"
+            className="text-lg md:text-xl text-violet-100 max-w-2xl mx-auto leading-relaxed px-4"
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
@@ -289,52 +289,52 @@ const ArticlesPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-4 py-8">
+      <div className="max-w-7xl mx-auto px-4 py-4 md:py-8">
         {/* Statistiques */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12"
+          className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-4 mb-8 md:mb-12"
           initial={{ opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-6">
-            <div className="text-3xl font-bold text-violet-600 dark:text-violet-400 mb-2">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-4 md:p-6">
+            <div className="text-2xl md:text-3xl font-bold text-violet-600 dark:text-violet-400 mb-2">
               {stats.totalArticles}
             </div>
-            <div className="text-gray-600 dark:text-gray-300">Articles</div>
+            <div className="text-sm md:text-base text-gray-600 dark:text-gray-300">Articles</div>
           </Card>
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-6">
-            <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-4 md:p-6">
+            <div className="text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
               {stats.totalViews.toLocaleString()}
             </div>
-            <div className="text-gray-600 dark:text-gray-300">Vues</div>
+            <div className="text-sm md:text-base text-gray-600 dark:text-gray-300">Vues</div>
           </Card>
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-6">
-            <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-4 md:p-6">
+            <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
               {stats.totalLikes.toLocaleString()}
             </div>
-            <div className="text-gray-600 dark:text-gray-300">J'aime</div>
+            <div className="text-sm md:text-base text-gray-600 dark:text-gray-300">J'aime</div>
           </Card>
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-6">
-            <div className="text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-2">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-4 md:p-6">
+            <div className="text-2xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-2">
               {stats.averageRating}
             </div>
-            <div className="text-gray-600 dark:text-gray-300">Note moyenne</div>
+            <div className="text-sm md:text-base text-gray-600 dark:text-gray-300">Note moyenne</div>
           </Card>
         </motion.div>
 
         {/* Filtres et recherche */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="bg-white dark:bg-gray-800 rounded-xl p-6 mb-8 border border-gray-200 dark:border-gray-700"
+          className="bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 mb-6 md:mb-8 border border-gray-200 dark:border-gray-700"
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <div className="flex flex-col lg:flex-row gap-4 items-center">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
+          <div className="flex flex-col lg:flex-row gap-3 md:gap-4 items-center">
+            <div className="relative flex-1 w-full">
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 md:w-5 md:h-5" />
               <Input
-                className="pl-10 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600"
+                className="pl-10 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-sm md:text-base"
                 placeholder="Rechercher un article..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -342,7 +342,7 @@ const ArticlesPage = () => {
             </div>
             
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-48 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600">
+              <SelectTrigger className="w-full md:w-48 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-sm md:text-base">
                 <SelectValue placeholder="Catégorie" />
               </SelectTrigger>
               <SelectContent>
@@ -356,7 +356,7 @@ const ArticlesPage = () => {
             </Select>
 
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-40 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600">
+              <SelectTrigger className="w-full md:w-40 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-sm md:text-base">
                 <SelectValue placeholder="Trier par" />
               </SelectTrigger>
               <SelectContent>
@@ -387,18 +387,18 @@ const ArticlesPage = () => {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 md:gap-8">
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-6">
+          <div className="lg:col-span-1 space-y-4 md:space-y-6">
             {/* Catégories populaires */}
             <motion.div
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+              className="bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-200 dark:border-gray-700"
               initial={{ opacity: 0, x: -30 }}
               transition={{ duration: 0.6, delay: 0.5 }}
             >
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                <Tag className="w-5 h-5 text-violet-600" />
+              <h3 className="text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-3 md:mb-4 flex items-center gap-2">
+                <Tag className="w-4 h-4 md:w-5 md:h-5 text-violet-600" />
                 Catégories populaires
               </h3>
               <div className="space-y-2">
@@ -410,7 +410,7 @@ const ArticlesPage = () => {
                     transition={{ duration: 0.4, delay: 0.6 + index * 0.1 }}
                     className="flex items-center justify-between p-2 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer"
                   >
-                    <span className="text-gray-700 dark:text-gray-300">{category.name}</span>
+                    <span className="text-sm md:text-base text-gray-700 dark:text-gray-300">{category.name}</span>
                     <Badge className={category.color}>{category.count}</Badge>
                   </motion.div>
                 ))}
@@ -420,15 +420,15 @@ const ArticlesPage = () => {
             {/* Articles recommandés */}
             <motion.div
               animate={{ opacity: 1, x: 0 }}
-              className="bg-white dark:bg-gray-800 rounded-xl p-6 border border-gray-200 dark:border-gray-700"
+              className="bg-white dark:bg-gray-800 rounded-xl p-4 md:p-6 border border-gray-200 dark:border-gray-700"
               initial={{ opacity: 0, x: -30 }}
               transition={{ duration: 0.6, delay: 0.7 }}
             >
-              <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-4 flex items-center gap-2">
-                <Star className="w-5 h-5 text-yellow-500" />
+              <h3 className="text-base md:text-lg font-semibold text-gray-800 dark:text-white mb-3 md:mb-4 flex items-center gap-2">
+                <Star className="w-4 h-4 md:w-5 md:h-5 text-yellow-500" />
                 Recommandés
               </h3>
-              <div className="space-y-4">
+              <div className="space-y-3 md:space-y-4">
                 {recommendedArticles.map((article, index) => (
                   <motion.div
                     key={`recommended-${article.id}`}
@@ -438,20 +438,20 @@ const ArticlesPage = () => {
                     className="group cursor-pointer"
                   >
                     <Link href={`/articles/${article.id}`}>
-                      <div className="flex gap-3">
+                      <div className="flex gap-2 md:gap-3">
                         <Image
                           alt={article.title}
-                          className="w-16 h-16 object-cover rounded-lg"
+                          className="w-12 h-12 md:w-16 md:h-16 object-cover rounded-lg"
                           src={article.img}
                           width={64}
                           height={64}
                           quality={90}
                         />
-                        <div className="flex-1">
-                          <h4 className="text-sm font-semibold text-gray-800 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors line-clamp-2">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-xs md:text-sm font-semibold text-gray-800 dark:text-white group-hover:text-violet-600 dark:group-hover:text-violet-400 transition-colors line-clamp-2">
                             {article.title}
                           </h4>
-                          <div className="flex items-center gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400">
+                          <div className="flex items-center gap-1 md:gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400">
                             <Eye className="w-3 h-3" />
                             <span>{article.views || Math.floor((article.id % 900) + 100)}</span>
                             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
@@ -468,20 +468,20 @@ const ArticlesPage = () => {
             {/* Newsletter */}
             <motion.div
               animate={{ opacity: 1, x: 0 }}
-              className="bg-gradient-to-br from-violet-600 to-purple-600 rounded-xl p-6 text-white"
+              className="bg-gradient-to-br from-violet-600 to-purple-600 rounded-xl p-4 md:p-6 text-white"
               initial={{ opacity: 0, x: -30 }}
               transition={{ duration: 0.6, delay: 0.9 }}
             >
-              <h3 className="text-lg font-semibold mb-2">Restez informé</h3>
-              <p className="text-violet-100 text-sm mb-4">
+              <h3 className="text-base md:text-lg font-semibold mb-2">Restez informé</h3>
+              <p className="text-violet-100 text-xs md:text-sm mb-3 md:mb-4">
                 Recevez nos derniers articles directement dans votre boîte mail
               </p>
-              <div className="space-y-3">
+              <div className="space-y-2 md:space-y-3">
                 <Input
-                  className="bg-white/20 border-white/30 text-white placeholder:text-violet-200"
+                  className="bg-white/20 border-white/30 text-white placeholder:text-violet-200 text-sm"
                   placeholder="Votre email"
                 />
-                <Button className="w-full bg-white text-violet-600 hover:bg-gray-100">
+                <Button className="w-full bg-white text-violet-600 hover:bg-gray-100 text-sm">
                   S'abonner
                 </Button>
               </div>
@@ -493,7 +493,7 @@ const ArticlesPage = () => {
             {/* Grille d'articles */}
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className={`grid gap-6 ${
+              className={`grid gap-4 md:gap-6 ${
                 viewMode === "grid" 
                   ? "grid-cols-1 md:grid-cols-2 xl:grid-cols-3" 
                   : "grid-cols-1"
