@@ -520,7 +520,7 @@ export const Navbar = () => {
           
           {/* Menu mobile simple sans animations */}
           {isMenuOpen && (
-            <div className="mobile-menu-container fixed top-20 right-4 w-80 max-h-[80vh] bg-white dark:bg-gray-800 border-2 border-violet-500 dark:border-violet-400 rounded-lg shadow-xl z-50 overflow-y-auto">
+            <div className="mobile-menu-container fixed top-16 right-4 w-80 max-h-[80vh] bg-white dark:bg-gray-800 border-2 border-violet-500 dark:border-violet-400 rounded-lg shadow-2xl z-[9999] overflow-y-auto" style={{ zIndex: 9999 }}>
               <div className="p-4">
                 <h3 className="text-lg font-semibold mb-4 text-gray-900 dark:text-white">Menu</h3>
                 <ul className="space-y-3">
