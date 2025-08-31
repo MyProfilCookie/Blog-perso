@@ -570,9 +570,10 @@ export const Navbar = () => {
         {/* Bouton menu mobile */}
         <button
           aria-label="Toggle navigation"
-          className="lg:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative border border-red-500"
+          className="lg:hidden p-2 rounded-lg hover:bg-violet-50 dark:hover:bg-gray-800 transition-all duration-200 z-50 relative"
           onClick={() => {
             console.log('Menu button clicked, current state:', isMenuOpen);
+            console.log('Setting menu to:', !isMenuOpen);
             setIsMenuOpen(!isMenuOpen);
           }}
           style={{ zIndex: 1000 }}
@@ -1013,13 +1014,15 @@ export const Navbar = () => {
       </NavbarContent>
 
       {/* Menu burger mobile */}
-      <MobileMenu
-        isOpen={isMenuOpen}
-        onClose={() => setIsMenuOpen(false)}
-        user={user}
-        orderCount={orderCount}
-        handleLogout={handleLogout}
-      />
+      <div ref={menuRef}>
+        <MobileMenu
+          isOpen={isMenuOpen}
+          onClose={() => setIsMenuOpen(false)}
+          user={user}
+          orderCount={orderCount}
+          handleLogout={handleLogout}
+        />
+      </div>
 
 
     </NextUINavbar>

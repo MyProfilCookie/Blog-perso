@@ -84,6 +84,7 @@ const MobileMenu: React.FC<MobileMenuProps> = ({
   return (
     <div
       className="lg:hidden fixed inset-0 top-16 z-40 bg-black/50 backdrop-blur-sm"
+      data-menu-content
       onClick={(e) => {
         if (e.target === e.currentTarget) {
           onClose();
