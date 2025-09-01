@@ -61,13 +61,13 @@ interface ArticleCardProps {
 const ArticleCard = ({ id, title, subtitle, img, category, author, date, readTime, views, rating }: ArticleCardProps) => (
   <motion.div
     animate={{ opacity: 1, y: 0 }}
-    className="w-full mb-6"
+    className="w-full mb-4 sm:mb-5 md:mb-6"
     initial={{ opacity: 0, y: 20 }}
     transition={{ duration: 0.6 }}
     whileHover={{ scale: 1.02 }}
   >
     <Card className="shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800 rounded-xl overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-700 group">
-      <Link className="block relative overflow-hidden h-[200px]" href={`/articles/${id}`}>
+      <Link className="block relative overflow-hidden h-[160px] sm:h-[180px] md:h-[200px]" href={`/articles/${id}`}>
                  <Image
            alt={title}
            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
@@ -92,7 +92,7 @@ const ArticleCard = ({ id, title, subtitle, img, category, author, date, readTim
         )}
       </Link>
 
-      <CardHeader className="p-5 pb-3">
+      <CardHeader className="p-3 sm:p-4 md:p-5 pb-2 sm:pb-3">
         <div className="flex items-center gap-2 text-sm text-gray-500 dark:text-gray-400 mb-2">
           {author && (
             <>
@@ -112,7 +112,7 @@ const ArticleCard = ({ id, title, subtitle, img, category, author, date, readTim
         </h4>
       </CardHeader>
 
-      <CardContent className="p-5 pt-0 flex-grow">
+      <CardContent className="p-3 sm:p-4 md:p-5 pt-0 flex-grow">
         <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4">
           {subtitle}
         </p>
@@ -132,7 +132,7 @@ const ArticleCard = ({ id, title, subtitle, img, category, author, date, readTim
         </div>
       </CardContent>
 
-      <CardFooter className="p-5 pt-0">
+      <CardFooter className="p-3 sm:p-4 md:p-5 pt-0">
         <Link className="block w-full" href={`/articles/${id}`}>
           <Button
             className="w-full bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white group-hover:bg-violet-700 transition-all duration-300"
@@ -289,11 +289,11 @@ const ArticlesPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4 md:py-6 lg:py-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-4 lg:px-6 xl:px-8 py-2 sm:py-3 md:py-4 lg:py-6 xl:py-8">
         {/* Statistiques */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-2 sm:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-6 sm:mb-8 md:mb-10 lg:mb-12"
+          className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12"
           initial={{ opacity: 0, y: 30 }}
           transition={{ duration: 0.8, delay: 0.3 }}
         >
@@ -330,7 +330,7 @@ const ArticlesPage = () => {
           initial={{ opacity: 0, y: 20 }}
           transition={{ duration: 0.6, delay: 0.4 }}
         >
-          <div className="flex flex-col lg:flex-row gap-2 sm:gap-3 md:gap-4 items-center">
+          <div className="flex flex-col md:flex-row gap-2 sm:gap-3 md:gap-4 items-stretch md:items-center">
             <div className="relative flex-1 w-full">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
               <Input
@@ -387,9 +387,9 @@ const ArticlesPage = () => {
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-3 sm:gap-4 md:gap-6 lg:gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-8">
           {/* Sidebar */}
-          <div className="lg:col-span-1 space-y-3 sm:space-y-4 md:space-y-6">
+          <div className="md:col-span-1 space-y-2 sm:space-y-3 md:space-y-4 lg:space-y-6">
             {/* Catégories populaires */}
             <motion.div
               animate={{ opacity: 1, x: 0 }}
@@ -489,13 +489,13 @@ const ArticlesPage = () => {
           </div>
 
           {/* Contenu principal */}
-          <div className="lg:col-span-3">
+          <div className="md:col-span-3">
             {/* Grille d'articles */}
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className={`grid gap-3 sm:gap-4 md:gap-6 ${
-                viewMode === "grid" 
-                  ? "grid-cols-1 sm:grid-cols-2 xl:grid-cols-3" 
+              className={`grid gap-2 sm:gap-3 md:gap-4 lg:gap-6 ${
+                viewMode === "grid"
+                  ? "grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3"
                   : "grid-cols-1"
               }`}
               initial={{ opacity: 0, y: 30 }}
