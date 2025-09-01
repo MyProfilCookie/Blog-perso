@@ -38,7 +38,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
           >
             <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
               <Navbar />
-              <main className="flex-grow px-6 pt-16 mx-auto max-w-7xl w-full">
+              <main className="flex-grow pt-16 mx-auto max-w-7xl w-full">
                 <Component {...pageProps} />
                 <SpeedInsights />
               </main>
