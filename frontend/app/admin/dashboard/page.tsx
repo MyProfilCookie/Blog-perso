@@ -1024,7 +1024,7 @@ const AdminDashboard = () => {
         }
     
         .animate-spin-minimal {
-          animation: spin-slow 60s linear infinite;
+          animation: spin-slow 120s linear infinite;
         }
 
         .animate-pulse-minimal {
@@ -1055,7 +1055,7 @@ const AdminDashboard = () => {
         {(user as { prenom?: string })?.prenom ||
           (user as { pseudo: string }).pseudo}{" "}
         <FontAwesomeIcon
-          className="text-yellow-400 performance-optimized"
+          className="text-yellow-400 animate-spin-minimal performance-optimized"
           icon={faCrown}
           size="sm"
         />
