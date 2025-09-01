@@ -332,9 +332,9 @@ const ArticlesPage = () => {
         >
           <div className="flex flex-col md:flex-row gap-2 sm:gap-3 md:gap-4 items-stretch md:items-center">
             <div className="relative flex-1 w-full">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4 sm:w-5 sm:h-5" />
+              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 w-4 h-4 sm:w-5 sm:h-5" />
               <Input
-                className="pl-10 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-sm sm:text-base"
+                className="pl-10 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 placeholder:text-gray-500 dark:placeholder:text-gray-400 text-sm sm:text-base"
                 placeholder="Rechercher un article..."
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
@@ -342,7 +342,7 @@ const ArticlesPage = () => {
             </div>
             
             <Select value={selectedCategory} onValueChange={setSelectedCategory}>
-              <SelectTrigger className="w-full sm:w-48 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-sm sm:text-base">
+              <SelectTrigger className="w-full sm:w-48 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 text-sm sm:text-base">
                 <SelectValue placeholder="Catégorie" />
               </SelectTrigger>
               <SelectContent>
@@ -356,7 +356,7 @@ const ArticlesPage = () => {
             </Select>
 
             <Select value={sortBy} onValueChange={setSortBy}>
-              <SelectTrigger className="w-full sm:w-40 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-sm sm:text-base">
+              <SelectTrigger className="w-full sm:w-40 bg-gray-50 dark:bg-gray-700 border-gray-200 dark:border-gray-600 text-gray-900 dark:text-gray-100 hover:bg-gray-100 dark:hover:bg-gray-600 text-sm sm:text-base">
                 <SelectValue placeholder="Trier par" />
               </SelectTrigger>
               <SelectContent>
@@ -368,7 +368,7 @@ const ArticlesPage = () => {
 
             <div className="flex gap-1 sm:gap-2">
               <Button
-                className="bg-violet-600 hover:bg-violet-700 text-white"
+                className="bg-violet-600 hover:bg-violet-700 text-white border-violet-600 dark:border-violet-500"
                 size="sm"
                 variant={viewMode === "grid" ? "default" : "outline"}
                 onClick={() => setViewMode("grid")}
@@ -376,7 +376,7 @@ const ArticlesPage = () => {
                 <Grid3X3 className="w-4 h-4" />
               </Button>
               <Button
-                className="bg-violet-600 hover:bg-violet-700 text-white"
+                className="bg-violet-600 hover:bg-violet-700 text-white border-violet-600 dark:border-violet-500"
                 size="sm"
                 variant={viewMode === "list" ? "default" : "outline"}
                 onClick={() => setViewMode("list")}
