@@ -827,7 +827,7 @@ const AdminDashboard = () => {
   if (!user) return null;
 
   return (
-    <div className="container mx-auto mt-6 px-2 sm:px-4 performance-optimized">
+    <div className="container mx-auto mt-6 px-2 sm:px-4 performance-optimized bg-gray-50 dark:bg-gray-900 min-h-screen">
       {/* Styles responsifs */}
       <style>{`
         .text-ellipsis {
@@ -956,7 +956,7 @@ const AdminDashboard = () => {
         Dashboard Admin
       </h1>
 
-      <p className="mb-3 sm:mb-6 text-gray-600 dark:text-white text-base sm:text-lg animate-bounce text-center performance-optimized">
+      <p className="mb-3 sm:mb-6 text-gray-600 dark:text-gray-200 text-base sm:text-lg animate-bounce text-center performance-optimized">
         Heure actuelle : {currentTime}
       </p>
 
@@ -973,7 +973,7 @@ const AdminDashboard = () => {
 
       {/* Gestion des commandes */}
       <div className="mt-6 sm:mt-8 performance-optimized">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left text-gray-800 dark:text-white performance-optimized">
           Gestion des commandes
         </h3>
         <div className="space-y-3 sm:space-y-4 performance-optimized">
@@ -1088,7 +1088,7 @@ const AdminDashboard = () => {
               {/* Actions pour les statuts */}
               <div className="flex flex-wrap gap-2 mt-2 performance-optimized">
                 <select
-                  className="p-2 border rounded-md bg-cream dark:bg-gray-800 text-gray-800 dark:text-white flex-grow text-sm performance-optimized"
+                  className="p-2 border rounded-md bg-white dark:bg-gray-800 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 flex-grow text-sm performance-optimized"
                   value="" // Reset à chaque changement
                   onChange={(e) => {
                     if (e.target.value) {
@@ -1100,21 +1100,21 @@ const AdminDashboard = () => {
                     }
                   }}
                 >
-                  <option value="">Changer le statut...</option>
+                  <option value="" className="dark:bg-gray-800 dark:text-white">Changer le statut...</option>
                   {(order as { status?: string }).status !== "Pending" && (
-                    <option value="Pending">Enregistrée</option>
+                    <option value="Pending" className="dark:bg-gray-800 dark:text-white">Enregistrée</option>
                   )}
                   {(order as { status?: string }).status !== "Processing" && (
-                    <option value="Processing">En préparation</option>
+                    <option value="Processing" className="dark:bg-gray-800 dark:text-white">En préparation</option>
                   )}
                   {(order as { status?: string }).status !== "Shipped" && (
-                    <option value="Shipped">Expédiée</option>
+                    <option value="Shipped" className="dark:bg-gray-800 dark:text-white">Expédiée</option>
                   )}
                   {(order as { status?: string }).status !== "Delivered" && (
-                    <option value="Delivered">Livrée</option>
+                    <option value="Delivered" className="dark:bg-gray-800 dark:text-white">Livrée</option>
                   )}
                   {(order as { status?: string }).status !== "Cancelled" && (
-                    <option value="Cancelled">Annulée</option>
+                    <option value="Cancelled" className="dark:bg-gray-800 dark:text-white">Annulée</option>
                   )}
                 </select>
 
@@ -1133,7 +1133,7 @@ const AdminDashboard = () => {
 
       {/* Gestion des messages de contact */}
       <div className="mt-6 sm:mt-8 performance-optimized">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left text-gray-800 dark:text-white performance-optimized">
           Gestion des messages de contact
         </h3>
 
@@ -1218,7 +1218,7 @@ const AdminDashboard = () => {
 
       {/* Gestion des utilisateurs */}
       <div className="mt-6 sm:mt-8 performance-optimized">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left text-gray-800 dark:text-white performance-optimized">
           Gestion des utilisateurs
         </h3>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3 performance-optimized">
@@ -1314,7 +1314,7 @@ const AdminDashboard = () => {
 
       {/* Gestion des leçons */}
       <div className="mt-6 sm:mt-8 performance-optimized">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-center sm:text-left text-gray-800 dark:text-white performance-optimized">
           Gestion des leçons
         </h3>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 performance-optimized">
@@ -1369,7 +1369,7 @@ const AdminDashboard = () => {
 
       {/* Ajouter une nouvelle leçon */}
       <div className="mt-6 sm:mt-8 performance-optimized">
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-gray-800 dark:text-white performance-optimized">
           Ajouter une nouvelle leçon
         </h3>
         <Input
@@ -1407,7 +1407,7 @@ const AdminDashboard = () => {
       <div
         className="mt-6 sm:mt-8 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 performance-optimized fade-optimized visible"
       >
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold col-span-full text-center sm:text-left performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold col-span-full text-center sm:text-left text-gray-800 dark:text-white performance-optimized">
           Gestion des articles
         </h3>
         {articlesData.articles.map((article) => (
@@ -1500,7 +1500,7 @@ const AdminDashboard = () => {
       <div
         className="mt-6 sm:mt-8 performance-optimized fade-optimized visible"
       >
-        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold performance-optimized">
+        <h3 className="mb-3 sm:mb-4 text-lg sm:text-xl font-semibold text-gray-800 dark:text-white performance-optimized">
           Messages des utilisateurs
         </h3>
         <div className="scrollable-content admin-table performance-optimized">
