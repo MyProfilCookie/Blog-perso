@@ -1016,23 +1016,23 @@ const AdminDashboard = () => {
         }
     
         .animate-fade-in {
-          animation: fade-in 2s ease-out;
+          animation: fade-in 3s ease-out;
         }
     
         .animate-slide-in {
-          animation: slide-in 2.5s ease-out;
+          animation: slide-in 4s ease-out;
         }
     
-        .animate-spin-slow {
-          animation: spin-slow 8s linear infinite;
+        .animate-spin-very-slow {
+          animation: spin-slow 15s linear infinite;
         }
 
-        .animate-pulse-slow {
-          animation: pulse-slow 6s ease-in-out infinite;
+        .animate-pulse-very-slow {
+          animation: pulse-slow 12s ease-in-out infinite;
         }
 
-        .animate-bounce-slow {
-          animation: bounce 3s ease-in-out infinite;
+        .animate-bounce-very-slow {
+          animation: bounce 8s ease-in-out infinite;
         }
     
         .card-hover:hover {
@@ -1042,11 +1042,11 @@ const AdminDashboard = () => {
         }
       `}</style>
 
-      <h1 className="mb-4 text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-pulse-slow text-center performance-optimized">
+      <h1 className="mb-4 text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-pulse-very-slow text-center performance-optimized">
         Dashboard Admin
       </h1>
 
-      <p className="mb-3 sm:mb-6 text-gray-600 dark:text-gray-200 text-base sm:text-lg animate-bounce-slow text-center performance-optimized">
+      <p className="mb-3 sm:mb-6 text-gray-600 dark:text-gray-200 text-base sm:text-lg animate-bounce-very-slow text-center performance-optimized">
         Heure actuelle : {currentTime}
       </p>
 
@@ -1055,7 +1055,7 @@ const AdminDashboard = () => {
         {(user as { prenom?: string })?.prenom ||
           (user as { pseudo: string }).pseudo}{" "}
         <FontAwesomeIcon
-          className="text-yellow-400 animate-spin-slow performance-optimized"
+          className="text-yellow-400 animate-spin-very-slow performance-optimized"
           icon={faCrown}
           size="sm"
         />
