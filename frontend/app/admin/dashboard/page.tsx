@@ -827,7 +827,7 @@ const AdminDashboard = () => {
   if (!user) return null;
 
   return (
-    <div className="container mx-auto mt-6 px-2 sm:px-4 performance-optimized bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="container mx-auto mt-6 px-2 sm:px-4 performance-optimized bg-gray-50 dark:bg-gray-900 min-h-screen text-gray-900 dark:text-gray-100">
       {/* Styles responsifs */}
       <style>{`
         .text-ellipsis {
@@ -861,6 +861,79 @@ const AdminDashboard = () => {
         .scrollable-content::-webkit-scrollbar-thumb {
           background-color: rgba(0, 0, 0, 0.2);
           border-radius: 4px;
+        }
+
+        /* Améliorations pour le mode sombre */
+        .dark .scrollable-content::-webkit-scrollbar-thumb {
+          background-color: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Améliorer les inputs en mode sombre */
+        .dark input,
+        .dark textarea,
+        .dark select {
+          background-color: rgb(31 41 55) !important;
+          border-color: rgb(75 85 99) !important;
+          color: rgb(243 244 246) !important;
+        }
+
+        .dark input::placeholder,
+        .dark textarea::placeholder {
+          color: rgb(156 163 175) !important;
+        }
+
+        /* Améliorer les boutons en mode sombre */
+        .dark button {
+          background-color: rgb(31 41 55) !important;
+          border-color: rgb(75 85 99) !important;
+          color: rgb(243 244 246) !important;
+        }
+
+        .dark button:hover {
+          background-color: rgb(55 65 81) !important;
+        }
+
+        /* Améliorer les tableaux en mode sombre */
+        .dark table {
+          background-color: rgb(17 24 39) !important;
+          color: rgb(243 244 246) !important;
+        }
+
+        .dark th,
+        .dark td {
+          background-color: rgb(31 41 55) !important;
+          color: rgb(243 244 246) !important;
+          border-color: rgb(55 65 81) !important;
+        }
+
+        /* Améliorer les composants NextUI en mode sombre */
+        .dark .nextui-table-container {
+          background-color: rgb(17 24 39) !important;
+        }
+
+        .dark .nextui-table-header,
+        .dark .nextui-table-cell {
+          background-color: rgb(31 41 55) !important;
+          color: rgb(243 244 246) !important;
+        }
+
+        .dark .nextui-button {
+          background-color: rgb(55 65 81) !important;
+          color: rgb(243 244 246) !important;
+          border-color: rgb(75 85 99) !important;
+        }
+
+        .dark .nextui-button:hover {
+          background-color: rgb(75 85 99) !important;
+        }
+
+        .dark .nextui-input-container {
+          background-color: rgb(31 41 55) !important;
+          border-color: rgb(75 85 99) !important;
+        }
+
+        .dark .nextui-input {
+          color: rgb(243 244 246) !important;
         }
         
         /* Réorganisation des cartes pour mobile */
@@ -984,7 +1057,7 @@ const AdminDashboard = () => {
                   ? (order as { _id: string })._id
                   : undefined
               }
-              className="border rounded-lg shadow-md p-2 sm:p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2 order-card card-hover performance-optimized"
+              className="border rounded-lg shadow-md p-2 sm:p-4 bg-cream dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-700 flex flex-col gap-2 order-card card-hover performance-optimized"
             >
               <div className="flex flex-col sm:flex-row justify-between items-start gap-2 performance-optimized">
                 {/* Informations sur la commande */}
@@ -992,7 +1065,7 @@ const AdminDashboard = () => {
                   <p className="id-field font-bold text-sm performance-optimized">
                     ID : {(order as { _id: string })._id}
                   </p>
-                  <p className="text-sm text-gray-700 dark:text-gray-400 truncate performance-optimized">
+                  <p className="text-sm text-gray-700 dark:text-gray-300 truncate performance-optimized">
                     Client :{" "}
                     {(order as { lastName?: string; firstName?: string })
                       .lastName
@@ -1001,7 +1074,7 @@ const AdminDashboard = () => {
                         }`
                       : "Inconnu"}
                   </p>
-                  <p className="text-sm text-gray-500 dark:text-gray-300 truncate performance-optimized">
+                  <p className="text-sm text-gray-500 dark:text-gray-400 truncate performance-optimized">
                     Email : {(order as { email: string }).email}
                   </p>
                   <div className="scrollable-content order-details performance-optimized">
@@ -1088,7 +1161,7 @@ const AdminDashboard = () => {
               {/* Actions pour les statuts */}
               <div className="flex flex-wrap gap-2 mt-2 performance-optimized">
                 <select
-                  className="p-2 border rounded-md bg-white dark:bg-gray-800 text-gray-800 dark:text-white border-gray-300 dark:border-gray-600 flex-grow text-sm performance-optimized"
+                  className="p-2 border rounded-md bg-white dark:bg-gray-800 text-gray-800 dark:text-gray-100 border-gray-300 dark:border-gray-600 hover:bg-gray-50 dark:hover:bg-gray-700 flex-grow text-sm performance-optimized"
                   value="" // Reset à chaque changement
                   onChange={(e) => {
                     if (e.target.value) {
@@ -1229,7 +1302,7 @@ const AdminDashboard = () => {
                   ? (user as { _id: string })._id
                   : undefined
               }
-              className="border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black dark:text-white flex flex-col gap-2 user-card card-hover performance-optimized"
+              className="border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-700 flex flex-col gap-2 user-card card-hover performance-optimized"
             >
               <div className="flex flex-col items-center text-center overflow-hidden performance-optimized">
                 <p className="id-field font-bold text-sm performance-optimized">
@@ -1238,10 +1311,10 @@ const AdminDashboard = () => {
                 <p className="font-bold text-lg truncate max-w-full performance-optimized">
                   Pseudo : {(user as { pseudo: string }).pseudo}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-300 truncate max-w-full performance-optimized">
+                <p className="text-sm text-gray-500 dark:text-gray-400 truncate max-w-full performance-optimized">
                   Email : {(user as { email: string }).email}
                 </p>
-                <p className="text-sm text-gray-700 dark:text-gray-400 performance-optimized">
+                <p className="text-sm text-gray-700 dark:text-gray-300 performance-optimized">
                   Rôle : {(user as { role: string }).role}
                 </p>
               </div>
@@ -1321,22 +1394,21 @@ const AdminDashboard = () => {
           {lessons.map((lesson) => (
             <div
               key={(lesson as any)._id}
-              className="border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black dark:text-white 
-                flex flex-col lesson-card card-hover performance-optimized"
+              className="border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-700 flex flex-col lesson-card card-hover performance-optimized"
             >
               <div className="card-header mb-2 text-center performance-optimized">
                 <p className="font-bold text-lg truncate max-w-full performance-optimized">
                   {(lesson as { title: string }).title}
                 </p>
-                <p className="id-field text-gray-500 dark:text-gray-300 performance-optimized">
+                <p className="id-field text-gray-500 dark:text-gray-400 performance-optimized">
                   ID : {(lesson as any)._id}
                 </p>
               </div>
               <div className="card-body mb-2 text-center performance-optimized">
-                <p className="text-sm text-gray-700 dark:text-gray-400 mb-2 line-clamp-2 performance-optimized">
+                <p className="text-sm text-gray-700 dark:text-gray-300 mb-2 line-clamp-2 performance-optimized">
                   {(lesson as { content: string }).content}
                 </p>
-                <p className="text-sm text-gray-500 dark:text-gray-300 performance-optimized">
+                <p className="text-sm text-gray-500 dark:text-gray-400 performance-optimized">
                   Date: {dayjs((lesson as any).date).format("DD/MM/YYYY")}
                 </p>
               </div>
@@ -1413,8 +1485,7 @@ const AdminDashboard = () => {
         {articlesData.articles.map((article) => (
           <div
             key={article.id}
-            className="col-span-1 border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-black 
-              flex flex-col card-hover sm:w-full performance-optimized"
+            className="col-span-1 border rounded-lg shadow-md p-3 sm:p-4 bg-cream dark:bg-gray-800 dark:text-gray-100 border-gray-200 dark:border-gray-700 flex flex-col card-hover sm:w-full performance-optimized"
           >
             <div className="card-header mb-2 text-center performance-optimized">
               <img
@@ -1442,7 +1513,7 @@ const AdminDashboard = () => {
                   : "Voir le contenu"}
               </Button>
               {showContent[article.id as keyof typeof showContent] && (
-                <p className="text-sm text-gray-600 line-clamp-2 performance-optimized">
+                <p className="text-sm text-gray-600 dark:text-gray-300 line-clamp-2 performance-optimized">
                   {article.content}
                 </p>
               )}
