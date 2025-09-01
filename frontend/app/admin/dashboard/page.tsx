@@ -1042,7 +1042,7 @@ const AdminDashboard = () => {
         }
       `}</style>
 
-      <h1 className="mb-4 text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 animate-pulse-minimal text-center performance-optimized">
+      <h1 className="mb-4 text-3xl sm:text-4xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-400 via-pink-500 to-red-500 text-center performance-optimized">
         Dashboard Admin
       </h1>
 
@@ -1055,7 +1055,7 @@ const AdminDashboard = () => {
         {(user as { prenom?: string })?.prenom ||
           (user as { pseudo: string }).pseudo}{" "}
         <FontAwesomeIcon
-          className="text-yellow-400 animate-spin-minimal performance-optimized"
+          className="text-yellow-400 performance-optimized"
           icon={faCrown}
           size="sm"
         />
