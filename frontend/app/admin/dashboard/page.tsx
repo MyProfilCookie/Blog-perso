@@ -1024,7 +1024,7 @@ const AdminDashboard = () => {
         }
     
         .animate-spin-minimal {
-          animation: spin-slow 120s linear infinite;
+          animation: spin-slow 300s linear infinite;
         }
 
         .animate-pulse-minimal {
