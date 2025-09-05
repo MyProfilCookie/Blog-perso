@@ -38,7 +38,8 @@ interface Article {
   id: number;
   title: string;
   subtitle: string;
-  img: string;
+  img?: string;
+  image?: string;
   category?: string;
   author?: string;
   date?: string;
@@ -49,7 +50,8 @@ interface ArticleCardProps {
   id: number;
   title: string;
   subtitle: string;
-  img: string;
+  img?: string;
+  image?: string;
   category?: string;
   author?: string;
   date?: string;
@@ -58,7 +60,9 @@ interface ArticleCardProps {
   rating?: number;
 }
 
-const ArticleCard = ({ id, title, subtitle, img, category, author, date, readTime, views, rating }: ArticleCardProps) => (
+const ArticleCard = ({ id, title, subtitle, img, image, category, author, date, readTime, views, rating }: ArticleCardProps) => {
+  const imageSrc = img || image;
+  return (
   <motion.div
     animate={{ opacity: 1, y: 0 }}
     className="w-full mb-4 sm:mb-5 md:mb-6"
@@ -71,7 +75,7 @@ const ArticleCard = ({ id, title, subtitle, img, category, author, date, readTim
                  <Image
            alt={title}
            className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-           src={img}
+           src={imageSrc || "/assets/default-image.webp"}
            width={600}
            height={400}
            quality={90}
@@ -144,7 +148,8 @@ const ArticleCard = ({ id, title, subtitle, img, category, author, date, readTim
       </CardFooter>
     </Card>
   </motion.div>
-);
+  );
+};
 
 const ArticlesPage = () => {
   const [search, setSearch] = useState("");
@@ -442,7 +447,7 @@ const ArticlesPage = () => {
                         <Image
                           alt={article.title}
                           className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 object-cover rounded-lg"
-                          src={article.img}
+                          src={article.img || article.image || "/assets/default-image.webp"}
                           width={64}
                           height={64}
                           quality={90}
@@ -515,6 +520,7 @@ const ArticlesPage = () => {
                     date={article.date}
                     id={article.id}
                     img={article.img}
+                    image={article.image}
                     rating={stableRating}
                     readTime={`${stableReadTime}`}
                     subtitle={article.subtitle}

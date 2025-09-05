@@ -20,7 +20,8 @@ interface Article {
   id: number;
   title: string;
   subtitle: string;
-  img: string;
+  img?: string;
+  image?: string;
   category?: string;
   author?: string;
   date?: string;
@@ -131,7 +132,7 @@ const ArticlePage = () => {
               className="object-cover w-full h-auto max-h-[250px] sm:max-h-[300px] md:max-h-[400px] lg:max-h-[500px] rounded-lg shadow-md dark:shadow-gray-800"
               height={800}
               width={1200}
-              src={article.img}
+              src={article.img || article.image || "/assets/default-image.webp"}
               priority
               quality={95}
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1200px"
