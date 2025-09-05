@@ -4,7 +4,7 @@ import dynamic from 'next/dynamic';
 /* eslint-disable react/no-unescaped-entities */
 
 import React from "react";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
 import { Card, CardBody, CardHeader, Button, Badge, Chip } from '@nextui-org/react';
 import { motion } from "framer-motion";
 import Image from "next/image";
@@ -49,6 +49,7 @@ const formatDate = (dateString: string) => {
 
 const ArticlePage = () => {
   const params = useParams() as { id: string | string[] };
+  const router = useRouter();
   const articleId = Array.isArray(params.id) ? params.id[0] : params.id;
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
@@ -173,23 +174,22 @@ const ArticlePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header avec navigation */}
-      <motion.div
+        <motion.div
         initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700"
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
           <div className="flex items-center justify-between">
-            <Link href="/articles">
-              <Button
-                variant="ghost"
-                className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
-              >
-                <ArrowLeft className="w-4 h-4" />
-                Retour aux articles
-              </Button>
-            </Link>
+            <Button
+              variant="ghost"
+              className="flex items-center gap-2 text-gray-600 dark:text-gray-300 hover:text-violet-600 dark:hover:text-violet-400"
+              onClick={() => router.push('/articles')}
+            >
+              <ArrowLeft className="w-4 h-4" />
+              Retour aux articles
+            </Button>
             
             <div className="flex items-center gap-2">
               <Button
@@ -269,49 +269,49 @@ const ArticlePage = () => {
                   <Heart className="w-4 h-4" />
                   <span>{likeCount} j'aime</span>
                 </div>
-              </div>
-            </motion.div>
+          </div>
+        </motion.div>
 
             {/* Image principale */}
-            <motion.div
+        <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mb-8"
-            >
+        >
               <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-                <Image
+            <Image
                   alt={article.title}
                   className="object-cover w-full h-[300px] sm:h-[400px] lg:h-[500px]"
                   height={500}
-                  width={1200}
+              width={1200}
                   src={article.img || article.image || "/assets/default-image.webp"}
-                  priority
-                  quality={95}
+              priority
+              quality={95}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 900px"
-                />
+            />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-              </div>
-            </motion.div>
+          </div>
+        </motion.div>
 
             {/* Contenu de l'article */}
-            <motion.div
+        <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <Card className="bg-white dark:bg-gray-800 shadow-lg border-0">
                 <CardBody className="p-6 sm:p-8 lg:p-10">
                   <div className="prose prose-lg dark:prose-invert max-w-none">
                     {article.content ? article.content.split('\n').map((paragraph, index) => (
-                      <motion.p
-                        key={index}
+                  <motion.p
+                    key={index}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                         className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-justify"
-                      >
-                        {paragraph.split(/(\*\*.*?\*\*)/g).map((part, i) =>
+                  >
+                    {paragraph.split(/(\*\*.*?\*\*)/g).map((part, i) =>
                           part.startsWith('**') ? (
                             <strong key={i} className="text-violet-600 dark:text-violet-400 font-semibold">
                               {part.slice(2, -2)}
@@ -329,15 +329,15 @@ const ArticlePage = () => {
                         Contenu de l'article en cours de chargement...
                       </motion.p>
                     )}
-                  </div>
-                </CardBody>
-              </Card>
-            </motion.div>
+              </div>
+            </CardBody>
+          </Card>
+        </motion.div>
 
             {/* Actions en bas d'article */}
-            <motion.div
+        <motion.div
               initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
               className="mt-8 flex flex-wrap items-center justify-between gap-4"
             >
@@ -367,17 +367,17 @@ const ArticlePage = () => {
                 </Button>
               </div>
               
-              <Link href="/articles">
+          <Link href="/articles">
                 <Button
                   color="primary"
                   variant="solid"
                   startContent={<ArrowLeft className="w-4 h-4" />}
                 >
                   Autres articles
-                </Button>
-              </Link>
-            </motion.div>
-          </div>
+            </Button>
+          </Link>
+        </motion.div>
+      </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1">

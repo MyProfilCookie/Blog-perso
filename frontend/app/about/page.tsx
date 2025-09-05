@@ -96,13 +96,13 @@ export default function AboutUsPage() {
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     {achievements.map((achievement, index) => (
-                      <motion.div
+      <motion.div
                         key={index}
                         initial={{ opacity: 0, y: 20 }}
-                        animate={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className="text-center"
-                      >
+        className="text-center"
+      >
                         <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
                           {achievement.number}
                         </div>
@@ -150,38 +150,38 @@ export default function AboutUsPage() {
                 </h2>
                 <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                   AutiStudy est née de notre volonté de rendre l'apprentissage accessible, ludique et adapté à chaque enfant autiste.
-                </p>
-              </motion.div>
-              
+        </p>
+      </motion.div>
+
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
-                {[
-                  {
-                    title: "Notre Famille",
+        {[
+          {
+            title: "Notre Famille",
                     text: "Nous sommes une grande famille unie, avec des enfants de 14 à 38 ans. Maeva, la benjamine, est notre source d'inspiration.",
-                    icon: <Users className="text-blue-600 w-8 h-8" />,
+            icon: <Users className="text-blue-600 w-8 h-8" />,
                     color: "from-blue-100 to-blue-200"
-                  },
-                  {
-                    title: "Notre Maman",
+          },
+          {
+            title: "Notre Maman",
                     text: "Chantal, maman au grand cœur, veille chaque jour à l'harmonie et au bien-être de tous.",
-                    icon: <HeartHandshake className="text-green-600 w-8 h-8" />,
+            icon: <HeartHandshake className="text-green-600 w-8 h-8" />,
                     color: "from-green-100 to-green-200"
-                  },
-                  {
-                    title: "Notre Papa",
+          },
+          {
+            title: "Notre Papa",
                     text: "Paul, papa ingénieur, développe les outils numériques d'AutiStudy et co-fonde la plateforme.",
-                    icon: <Code className="text-purple-600 w-8 h-8" />,
+            icon: <Code className="text-purple-600 w-8 h-8" />,
                     color: "from-purple-100 to-purple-200"
-                  },
-                  {
+          },
+          {
                     title: "Notre Vision",
                     text: "Créer un monde où chaque enfant autiste peut apprendre, grandir et s'épanouir dans un environnement bienveillant.",
-                    icon: <Target className="text-yellow-600 w-8 h-8" />,
+            icon: <Target className="text-yellow-600 w-8 h-8" />,
                     color: "from-yellow-100 to-yellow-200"
-                  },
-                ].map((info, idx) => (
-                  <motion.div
-                    key={idx}
+          },
+        ].map((info, idx) => (
+          <motion.div
+            key={idx}
                     initial={{ opacity: 0, y: 30 }}
                     whileInView={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: idx * 0.1 }}
@@ -195,16 +195,16 @@ export default function AboutUsPage() {
                           {info.icon}
                         </div>
                         <h3 className="text-xl md:text-2xl font-bold text-gray-900 dark:text-white mb-4">
-                          {info.title}
-                        </h3>
+                  {info.title}
+                </h3>
                         <p className="text-gray-600 dark:text-gray-300 leading-relaxed">
                           {info.text}
                         </p>
-                      </CardBody>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
+              </CardBody>
+            </Card>
+          </motion.div>
+        ))}
+      </div>
             </div>
           </div>
         </section>
@@ -234,7 +234,7 @@ export default function AboutUsPage() {
                   { icon: <Globe className="w-8 h-8 text-blue-600" />, label: "Inclusion", description: "Un monde accessible pour tous" },
                   { icon: <Lightbulb className="w-8 h-8 text-purple-600" />, label: "Innovation", description: "Technologies au service de l'apprentissage" },
                   { icon: <HelpingHand className="w-8 h-8 text-green-600" />, label: "Entraide", description: "Ensemble, nous sommes plus forts" },
-                ].map((val, i) => (
+          ].map((val, i) => (
                   <motion.div
                     key={i}
                     initial={{ opacity: 0, y: 30 }}
@@ -246,16 +246,16 @@ export default function AboutUsPage() {
                     <Card className="bg-white dark:bg-gray-700 border-2 border-gray-100 dark:border-gray-600 hover:border-blue-200 dark:hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-xl">
                       <CardBody className="p-6 text-center">
                         <div className="w-16 h-16 bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/30 dark:to-purple-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
-                          {val.icon}
-                        </div>
+              {val.icon}
+            </div>
                         <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2">{val.label}</h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">{val.description}</p>
                       </CardBody>
                     </Card>
                   </motion.div>
-                ))}
-              </div>
-            </div>
+          ))}
+        </div>
+      </div>
           </div>
         </section>
 
@@ -278,7 +278,7 @@ export default function AboutUsPage() {
                 </p>
               </motion.div>
               
-              <motion.div
+      <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
@@ -288,7 +288,7 @@ export default function AboutUsPage() {
                 <Card className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-2 border-blue-200 dark:border-blue-400 shadow-2xl">
                   <CardBody className="p-8 md:p-12">
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
-                      {familyMembers.map((member, i) => (
+              {familyMembers.map((member, i) => (
                         <motion.div
                           key={i}
                           initial={{ opacity: 0, scale: 0.95 }}
@@ -298,13 +298,13 @@ export default function AboutUsPage() {
                           whileHover={{ scale: 1.02 }}
                           className="flex flex-col items-center text-center"
                         >
-                          <Avatar
-                            isBordered
-                            alt={member.name}
+                  <Avatar
+                    isBordered
+                    alt={member.name}
                             className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4"
-                            color="primary"
-                            size="lg"
-                            src={member.img}
+                    color="primary"
+                    size="lg"
+                    src={member.img}
                             style={{
                               borderWidth: "4px",
                               boxShadow: "0 8px 25px rgba(0,0,0,0.15)"
@@ -320,11 +320,11 @@ export default function AboutUsPage() {
                             {member.age}
                           </p>
                         </motion.div>
-                      ))}
-                    </div>
-                  </CardBody>
-                </Card>
-              </motion.div>
+              ))}
+            </div>
+          </CardBody>
+        </Card>
+      </motion.div>
             </div>
           </div>
         </section>
@@ -352,42 +352,42 @@ export default function AboutUsPage() {
                   <Zap className="w-5 h-5 mr-2" />
                   Commencer gratuitement
                 </Button>
-                <Button
+        <Button
                   className="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-bold text-lg"
-                  onClick={() => window.location.href = '/contact'}
-                >
+          onClick={() => window.location.href = '/contact'}
+        >
                   <Shield className="w-5 h-5 mr-2" />
-                  Nous contacter
-                </Button>
-              </div>
+          Nous contacter
+        </Button>
+      </div>
             </motion.div>
           </div>
         </section>
 
-        {/* Bouton pour changer les couleurs */}
+      {/* Bouton pour changer les couleurs */}
         <div className="flex justify-center py-8">
-          <Button
+        <Button
             className="bg-blue-500 hover:bg-blue-600 text-white font-bold py-3 px-6 rounded-lg shadow-md hover:shadow-lg transition-all duration-300"
-            onClick={() => {
-              setCardColors(
-                Array(4)
-                  .fill(null)
-                  .map(
-                    () =>
-                      colorVariants[
-                        Math.floor(Math.random() * colorVariants.length)
-                      ],
-                  ),
-              );
-              setFamilyCardColor(
-                colorVariants[Math.floor(Math.random() * colorVariants.length)],
-              );
-            }}
-          >
+          onClick={() => {
+            setCardColors(
+              Array(4)
+                .fill(null)
+                .map(
+                  () =>
+                    colorVariants[
+                      Math.floor(Math.random() * colorVariants.length)
+                    ],
+                ),
+            );
+            setFamilyCardColor(
+              colorVariants[Math.floor(Math.random() * colorVariants.length)],
+            );
+          }}
+        >
             <Sparkles className="w-4 h-4 mr-2" />
-            Changer les couleurs
-          </Button>
-        </div>
+          Changer les couleurs
+        </Button>
+      </div>
       </main>
     </div>
   );
