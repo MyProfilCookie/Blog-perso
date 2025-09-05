@@ -6,9 +6,8 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 
-import { useEffect } from "react";
 import { Card, CardBody, CardHeader } from "@/components/OptimizedNextUI";
-import OptimizedImage from "@/components/OptimizedImage";
+import Image from "next/image";
 import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import Link from "next/link";
 
@@ -162,7 +161,7 @@ export default function HomePage() {
                   transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
                   className="relative"
                 >
-                  <OptimizedImage
+                  <Image
                     src="/assets/home/home.webp"
                     alt="Enfant apprenant avec AutiStudy"
                     width={600}
@@ -257,7 +256,7 @@ export default function HomePage() {
                     <Card className="h-full">
                       <CardBody className="p-4 md:p-6">
                         <div className="flex items-center mb-3 md:mb-4">
-                          <OptimizedImage
+                          <Image
                             src={testimonial.avatar}
                             alt={testimonial.name}
                             width={60}
@@ -320,7 +319,7 @@ export default function HomePage() {
                   >
                     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                       <CardHeader className="p-0">
-                        <OptimizedImage
+                        <Image
                           src={article.img}
                           alt={article.title}
                           width={400}
