@@ -63,19 +63,29 @@ const ArticlePage = () => {
     const likedArticles = JSON.parse(localStorage.getItem('likedArticles') || '[]');
     const articleIdNum = parseInt(articleId, 10);
     
+    // Sauvegarder le nouveau nombre de likes
+    const likesData = JSON.parse(localStorage.getItem('articleLikes') || '{}');
+    
     if (isLiked) {
       // Retirer le like
       const updatedLikes = likedArticles.filter((id: number) => id !== articleIdNum);
       localStorage.setItem('likedArticles', JSON.stringify(updatedLikes));
       setIsLiked(false);
-      setLikeCount(prev => Math.max(0, prev - 1));
+      const newCount = Math.max(0, likeCount - 1);
+      setLikeCount(newCount);
+      likesData[articleIdNum] = newCount;
     } else {
       // Ajouter le like
       const updatedLikes = [...likedArticles, articleIdNum];
       localStorage.setItem('likedArticles', JSON.stringify(updatedLikes));
       setIsLiked(true);
-      setLikeCount(prev => prev + 1);
+      const newCount = likeCount + 1;
+      setLikeCount(newCount);
+      likesData[articleIdNum] = newCount;
     }
+    
+    // Sauvegarder les données de likes
+    localStorage.setItem('articleLikes', JSON.stringify(likesData));
   };
 
   // Fonction pour charger les données de like
@@ -87,10 +97,17 @@ const ArticlePage = () => {
     
     setIsLiked(likedArticles.includes(articleIdNum));
     
-    // Charger le nombre de likes depuis localStorage ou utiliser une valeur par défaut
+    // Charger le nombre de likes depuis localStorage ou utiliser une valeur par défaut stable
     const likesData = JSON.parse(localStorage.getItem('articleLikes') || '{}');
-    const defaultLikes = Math.floor(Math.random() * 50) + 10; // Valeur aléatoire entre 10 et 60
-    setLikeCount(likesData[articleIdNum] || defaultLikes);
+    
+    if (!likesData[articleIdNum]) {
+      // Générer une valeur par défaut stable basée sur l'ID de l'article
+      const stableDefaultLikes = 15 + (articleIdNum % 35); // Valeur entre 15 et 50 basée sur l'ID
+      likesData[articleIdNum] = stableDefaultLikes;
+      localStorage.setItem('articleLikes', JSON.stringify(likesData));
+    }
+    
+    setLikeCount(likesData[articleIdNum]);
   };
 
   useEffect(() => {
@@ -246,7 +263,7 @@ const ArticlePage = () => {
                 </div>
                 <div className="flex items-center gap-1">
                   <Eye className="w-4 h-4" />
-                  <span>{Math.floor(Math.random() * 500) + 100} vues</span>
+                  <span>{150 + (parseInt(articleId, 10) % 200)} vues</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Heart className="w-4 h-4" />
@@ -445,7 +462,7 @@ const ArticlePage = () => {
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-300">Vues</span>
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
-                      {Math.floor(Math.random() * 500) + 100}
+                      {150 + (parseInt(articleId, 10) % 200)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
