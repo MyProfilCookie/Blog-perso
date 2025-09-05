@@ -11,20 +11,20 @@ import { Button } from '@nextui-org/react';
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
-import axios from "axios";
 import { useState, useEffect } from "react";
 
 import { title, subtitle } from "@/components/primitives";
+import articlesData from "@/public/dataarticles.json";
 
 interface Article {
-  "📌 titre": string;
-  "📝 sous-titre": string;
-  "🧠 description": string;
-  "📖 content": string;
-  "📂 category": string;
-  "✍️ auteur": string;
-  "🔗 imageUrl": string;
-  "📅 date": string;
+  id: number;
+  title: string;
+  subtitle: string;
+  img: string;
+  category?: string;
+  author?: string;
+  date?: string;
+  content?: string;
 }
 
 // Fonction pour transformer la date au format "YYYY-MM-DD" en "DD Month YYYY"
@@ -35,11 +35,6 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('fr-FR', options);
 };
 
-// Fonction pour corriger les extensions d'images de .jpg vers .webp
-const fixImageUrl = (imageUrl: string) => {
-  if (!imageUrl) return imageUrl;
-  return imageUrl.replace(/\.jpg$/i, '.webp');
-};
 
 const ArticlePage = () => {
   const params = useParams() as { id: string | string[] };
@@ -49,12 +44,10 @@ const ArticlePage = () => {
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    const fetchArticle = async () => {
+    const fetchArticle = () => {
       try {
-        const apiUrl = (process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api").replace(/\/$/, "");
-        const response = await axios.get(`${apiUrl}/articles`);
-        const articles = response.data;
-        const foundArticle = articles[parseInt(articleId, 10)];
+        const articles = articlesData.articles;
+        const foundArticle = articles.find((article: Article) => article.id === parseInt(articleId, 10));
 
         setArticle(foundArticle || null);
       } catch (err) {
@@ -114,14 +107,14 @@ const ArticlePage = () => {
           transition={{ duration: 0.8 }}
         >
           <h1 className={`${title()} text-xl sm:text-2xl md:text-3xl lg:text-4xl xl:text-5xl font-bold leading-tight dark:text-violet-300 mb-3 sm:mb-4`}>
-            {article["📌 titre"]}
+            {article.title}
           </h1>
           <h2 className={`${subtitle()} text-base sm:text-lg md:text-xl lg:text-2xl text-gray-600 dark:text-gray-300 italic mb-3 sm:mb-4`}>
-            {article["📝 sous-titre"]}
+            {article.subtitle}
           </h2>
           <div className="mt-3 sm:mt-4 text-xs sm:text-sm md:text-base text-gray-500 dark:text-gray-400">
-            <p>Publié le : <span className="font-medium text-violet-600 dark:text-violet-400">{formatDate(article["📅 date"])}</span></p>
-            <p>Auteur : <span className="font-medium text-violet-600 dark:text-violet-400">{article["✍️ auteur"]}</span></p>
+            <p>Publié le : <span className="font-medium text-violet-600 dark:text-violet-400">{article.date ? formatDate(article.date) : 'Date non disponible'}</span></p>
+            <p>Auteur : <span className="font-medium text-violet-600 dark:text-violet-400">{article.author || 'Auteur non disponible'}</span></p>
           </div>
         </motion.div>
 
@@ -134,11 +127,11 @@ const ArticlePage = () => {
         >
           <div className="w-full max-w-4xl">
             <Image
-              alt={article["📌 titre"]}
+              alt={article.title}
               className="object-cover w-full h-auto max-h-[250px] sm:max-h-[300px] md:max-h-[400px] lg:max-h-[500px] rounded-lg shadow-md dark:shadow-gray-800"
               height={800}
               width={1200}
-              src={fixImageUrl(article["🔗 imageUrl"])}
+              src={article.img}
               priority
               quality={95}
               sizes="(max-width: 640px) 100vw, (max-width: 768px) 90vw, (max-width: 1200px) 80vw, 1200px"
@@ -158,7 +151,7 @@ const ArticlePage = () => {
           <Card className="w-full max-w-3xl bg-cream dark:bg-gray-800 shadow-none dark:border dark:border-gray-700">
             <CardBody className="p-3 sm:p-4 md:p-6 lg:p-8 text-sm sm:text-base md:text-lg leading-relaxed text-gray-800 dark:text-gray-200">
               <div className="prose dark:prose-invert max-w-none">
-                {article["📖 content"].split('\n').map((paragraph, index) => (
+                {article.content ? article.content.split('\n').map((paragraph, index) => (
                   <motion.p
                     key={index}
                     animate={{ opacity: 1 }}
@@ -170,7 +163,16 @@ const ArticlePage = () => {
                       part.startsWith('**') ? <strong key={i} className="text-violet-600 dark:text-violet-400">{part.slice(2, -2)}</strong> : part
                     )}
                   </motion.p>
-                ))}
+                )) : (
+                  <motion.p
+                    animate={{ opacity: 1 }}
+                    className="mt-3 sm:mt-4 leading-relaxed text-justify"
+                    initial={{ opacity: 0 }}
+                    transition={{ duration: 0.8 }}
+                  >
+                    Contenu de l'article en cours de chargement...
+                  </motion.p>
+                )}
               </div>
             </CardBody>
           </Card>
