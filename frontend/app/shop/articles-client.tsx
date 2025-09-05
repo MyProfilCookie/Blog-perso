@@ -143,88 +143,58 @@ export default function ArticlesClient() {
               }}
               whileTap={{ scale: 0.98 }}
             >
-              <Card className="overflow-hidden bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col group">
-                <motion.div
-                  className="relative overflow-hidden"
-                  whileHover={{ scale: 1.05 }}
-                  transition={{ duration: 0.3 }}
-                >
+              <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700">
+                {/* Image Container */}
+                <div className="relative overflow-hidden">
                   <img
                     alt={article.title}
-                    className="object-cover object-center w-full h-64 md:h-72 lg:h-80 transition-transform duration-700 group-hover:scale-110"
+                    className="w-full h-48 md:h-56 object-cover transition-transform duration-700 group-hover:scale-105"
                     src={article.imageUrl}
                   />
-                  <motion.div
-                    className="absolute top-3 right-3"
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: 0.5 + index * 0.1, duration: 0.3 }}
-                  >
-                    <Badge className="bg-blue-600 hover:bg-blue-700 px-4 py-2 text-lg font-bold text-white shadow-lg">
+                  {/* Price Badge */}
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-blue-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold shadow-lg">
                       {article.price} €
-                    </Badge>
-                  </motion.div>
-                </motion.div>
+                    </span>
+                  </div>
+                  {/* Overlay on hover */}
+                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                </div>
 
-                <CardHeader className="p-6 pb-0">
-                  <motion.h3
-                    className="mb-3 text-xl md:text-2xl font-bold text-center text-gray-800 dark:text-white"
-                    whileHover={{ color: "#2563eb" }}
-                    transition={{ duration: 0.3 }}
-                  >
+                {/* Content */}
+                <div className="p-6">
+                  {/* Title */}
+                  <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {article.title}
-                  </motion.h3>
-                </CardHeader>
-
-                <CardContent className="p-6 pt-2 flex-grow">
-                  <motion.p
-                    className="text-base md:text-lg text-center text-gray-600 dark:text-gray-300 line-clamp-4"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    transition={{ delay: 0.8 + index * 0.1, duration: 0.5 }}
-                  >
+                  </h3>
+                  
+                  {/* Description */}
+                  <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base mb-4 line-clamp-3">
                     {article.description}
-                  </motion.p>
-                </CardContent>
+                  </p>
 
-                <CardFooter className="p-6 pt-0 flex flex-col space-y-4">
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
+                  {/* Buttons */}
+                  <div className="flex flex-col gap-3">
                     <Button
                       asChild
-                      className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white text-base md:text-lg py-3 transition-all duration-300 hover:shadow-lg"
-                      variant="default"
+                      className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white border-0 py-2.5 transition-all duration-300"
+                      variant="outline"
                     >
                       <NextLink href={`/products/${article._id}`}>
-                        Voir cet article
+                        Voir les détails
                       </NextLink>
                     </Button>
-                  </motion.div>
-
-                  <motion.div
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    transition={{ type: "spring", stiffness: 400 }}
-                  >
+                    
                     <Button
-                      className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white text-base md:text-lg py-3 transition-all duration-300 hover:shadow-lg"
-                      variant="default"
+                      className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white py-2.5 transition-all duration-300 flex items-center justify-center gap-2"
                       onClick={() => addToCart(article)}
                     >
-                      <motion.div
-                        animate={{ rotate: [0, 10, -10, 0] }}
-                        transition={{ duration: 0.5, repeat: Infinity, repeatDelay: 2 }}
-                      >
-                        <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
-                      </motion.div>
+                      <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
                       Ajouter au panier
                     </Button>
-                  </motion.div>
-                </CardFooter>
-              </Card>
+                  </div>
+                </div>
+              </div>
             </motion.div>
           ))}
         </div>
