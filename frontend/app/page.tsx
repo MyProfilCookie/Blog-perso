@@ -28,27 +28,27 @@ import {
 // Données des articles optimisées
 const articles = [
   {
-    id: 1,
+    id: 11,
     title: "Stratégies d'apprentissage pour enfants autistes",
     description: "Découvrez des méthodes adaptées pour faciliter l'apprentissage...",
     img: "/assets/images/autism-awareness.webp",
-    link: "/articles/1",
+    link: "/articles/11",
     category: "Éducation"
   },
   {
-    id: 2,
+    id: 12,
     title: "Ressources éducatives spécialisées",
     description: "Une collection d'outils et de matériels éducatifs...",
     img: "/assets/aba_therapy.webp",
-    link: "/articles/2",
+    link: "/articles/12",
     category: "Ressources"
   },
   {
-    id: 3,
+    id: 13,
     title: "Accompagnement parental",
     description: "Conseils et soutien pour les parents d'enfants autistes...",
     img: "/assets/family/family.webp",
-    link: "/articles/3",
+    link: "/articles/13",
     category: "Parentalité"
   }
 ];
