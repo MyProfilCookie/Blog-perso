@@ -72,13 +72,13 @@ export default function ArticlesClient() {
 
   if (articles.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-cream dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
         <p className="text-xl font-semibold">
           Aucun article disponible pour le moment.
         </p>
         <Button
           asChild
-          className="mt-6 bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white"
+          className="mt-6 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white"
         >
           <NextLink href="/">Retour à l'accueil</NextLink>
         </Button>
@@ -87,20 +87,35 @@ export default function ArticlesClient() {
   }
 
   return (
-    <section className="min-h-screen px-2 py-6 md:px-4 lg:px-6 bg-cream dark:bg-gray-900 transition-colors">
-      <motion.div
-        animate={{ opacity: 1, y: 0 }}
-        className="mb-8 md:mb-12 text-center"
-        initial={{ opacity: 0, y: -20 }}
-        transition={{ duration: 0.4 }}
-      >
-        <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white">
-          Nos articles
-        </h2>
-        <p className="mt-2 text-gray-600 dark:text-gray-400">
-          Découvrez nos articles de qualité supérieure.
-        </p>
-      </motion.div>
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Hero Section */}
+      <section className="relative py-12 md:py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
+        <div className="relative w-full px-4 md:px-8 lg:px-12">
+          <div className="max-w-7xl mx-auto text-center">
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8 md:mb-12"
+              initial={{ opacity: 0, y: -20 }}
+              transition={{ duration: 0.6 }}
+            >
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Boutique{" "}
+                <span className="text-blue-600 dark:text-blue-400">
+                  AutiStudy
+                </span>
+              </h1>
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                Outils et ressources spécialisés pour l'apprentissage adapté des enfants autistes. 
+                Découvrez notre sélection d'équipements sensoriels et éducatifs.
+              </p>
+            </motion.div>
+          </div>
+        </div>
+      </section>
+
+      {/* Products Section */}
+      <section className="px-2 py-6 md:px-4 lg:px-6 bg-white dark:bg-gray-900 transition-colors">
 
       <div className="w-full">
         <div className="grid grid-cols-1 gap-4 sm:gap-6 md:gap-8 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 2xl:grid-cols-4">
@@ -128,7 +143,7 @@ export default function ArticlesClient() {
               }}
               whileTap={{ scale: 0.98 }}
             >
-              <Card className="overflow-hidden bg-cream dark:bg-gray-800 border-transparent dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col group">
+              <Card className="overflow-hidden bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-2xl transition-all duration-500 h-full flex flex-col group">
                 <motion.div
                   className="relative overflow-hidden"
                   whileHover={{ scale: 1.05 }}
@@ -145,7 +160,7 @@ export default function ArticlesClient() {
                     animate={{ opacity: 1, scale: 1 }}
                     transition={{ delay: 0.5 + index * 0.1, duration: 0.3 }}
                   >
-                    <Badge className="bg-amber-500 hover:bg-amber-600 px-4 py-2 text-lg font-bold text-white shadow-lg">
+                    <Badge className="bg-blue-600 hover:bg-blue-700 px-4 py-2 text-lg font-bold text-white shadow-lg">
                       {article.price} €
                     </Badge>
                   </motion.div>
@@ -154,7 +169,7 @@ export default function ArticlesClient() {
                 <CardHeader className="p-6 pb-0">
                   <motion.h3
                     className="mb-3 text-xl md:text-2xl font-bold text-center text-gray-800 dark:text-white"
-                    whileHover={{ color: "#7c3aed" }}
+                    whileHover={{ color: "#2563eb" }}
                     transition={{ duration: 0.3 }}
                   >
                     {article.title}
@@ -180,7 +195,7 @@ export default function ArticlesClient() {
                   >
                     <Button
                       asChild
-                      className="w-full bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white text-base md:text-lg py-3 transition-all duration-300 hover:shadow-lg"
+                      className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white text-base md:text-lg py-3 transition-all duration-300 hover:shadow-lg"
                       variant="default"
                     >
                       <NextLink href={`/products/${article._id}`}>
@@ -214,6 +229,7 @@ export default function ArticlesClient() {
           ))}
         </div>
       </div>
-    </section>
+      </section>
+    </div>
   );
 }
