@@ -53,6 +53,45 @@ const ArticlePage = () => {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [likeCount, setLikeCount] = useState(0);
+
+  // Fonction pour gérer les likes
+  const handleLike = () => {
+    if (!article) return;
+    
+    const likedArticles = JSON.parse(localStorage.getItem('likedArticles') || '[]');
+    const articleIdNum = parseInt(articleId, 10);
+    
+    if (isLiked) {
+      // Retirer le like
+      const updatedLikes = likedArticles.filter((id: number) => id !== articleIdNum);
+      localStorage.setItem('likedArticles', JSON.stringify(updatedLikes));
+      setIsLiked(false);
+      setLikeCount(prev => Math.max(0, prev - 1));
+    } else {
+      // Ajouter le like
+      const updatedLikes = [...likedArticles, articleIdNum];
+      localStorage.setItem('likedArticles', JSON.stringify(updatedLikes));
+      setIsLiked(true);
+      setLikeCount(prev => prev + 1);
+    }
+  };
+
+  // Fonction pour charger les données de like
+  const loadLikeData = () => {
+    if (!article) return;
+    
+    const likedArticles = JSON.parse(localStorage.getItem('likedArticles') || '[]');
+    const articleIdNum = parseInt(articleId, 10);
+    
+    setIsLiked(likedArticles.includes(articleIdNum));
+    
+    // Charger le nombre de likes depuis localStorage ou utiliser une valeur par défaut
+    const likesData = JSON.parse(localStorage.getItem('articleLikes') || '{}');
+    const defaultLikes = Math.floor(Math.random() * 50) + 10; // Valeur aléatoire entre 10 et 60
+    setLikeCount(likesData[articleIdNum] || defaultLikes);
+  };
 
   useEffect(() => {
     const fetchArticle = () => {
@@ -70,6 +109,13 @@ const ArticlePage = () => {
 
     fetchArticle();
   }, [articleId]);
+
+  // Charger les données de like quand l'article est chargé
+  useEffect(() => {
+    if (article) {
+      loadLikeData();
+    }
+  }, [article, articleId]);
 
   if (loading) {
     return (
@@ -132,10 +178,14 @@ const ArticlePage = () => {
               <Button
                 isIconOnly
                 variant="ghost"
-                className="text-gray-600 dark:text-gray-300 hover:text-red-500"
+                className={`${isLiked ? 'text-red-500' : 'text-gray-600 dark:text-gray-300 hover:text-red-500'} transition-colors`}
+                onClick={handleLike}
               >
-                <Heart className="w-4 h-4" />
+                <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
               </Button>
+              <span className="text-sm text-gray-500 dark:text-gray-400">
+                {likeCount}
+              </span>
               <Button
                 isIconOnly
                 variant="ghost"
@@ -197,6 +247,10 @@ const ArticlePage = () => {
                 <div className="flex items-center gap-1">
                   <Eye className="w-4 h-4" />
                   <span>{Math.floor(Math.random() * 500) + 100} vues</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  <Heart className="w-4 h-4" />
+                  <span>{likeCount} j'aime</span>
                 </div>
               </div>
             </motion.div>
@@ -272,12 +326,13 @@ const ArticlePage = () => {
             >
               <div className="flex items-center gap-4">
                 <Button
-                  color="danger"
-                  variant="bordered"
-                  startContent={<Heart className="w-4 h-4" />}
-                  className="hover:bg-red-50 dark:hover:bg-red-900/20"
+                  color={isLiked ? "danger" : "default"}
+                  variant={isLiked ? "solid" : "bordered"}
+                  startContent={<Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />}
+                  className={`${isLiked ? 'bg-red-500 hover:bg-red-600' : 'hover:bg-red-50 dark:hover:bg-red-900/20'} transition-all duration-200`}
+                  onClick={handleLike}
                 >
-                  J'aime
+                  {isLiked ? 'J\'aime' : 'J\'aime'} ({likeCount})
                 </Button>
                 <Button
                   color="primary"
@@ -391,6 +446,12 @@ const ArticlePage = () => {
                     <span className="text-sm text-gray-600 dark:text-gray-300">Vues</span>
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
                       {Math.floor(Math.random() * 500) + 100}
+                    </span>
+                  </div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-sm text-gray-600 dark:text-gray-300">J'aime</span>
+                    <span className="text-sm font-medium text-gray-900 dark:text-white">
+                      {likeCount}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
