@@ -3,1325 +3,386 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
-import Swal from "sweetalert2";
-import Image from "next/image";
-import { useTheme } from "next-themes";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faUser,
-  faPhone,
-  faMapMarkerAlt,
-  faGlobe,
-  faCity,
-  faMailBulk,
-  faShoppingBag,
-  faCalendarAlt,
-  faClock,
-  faExclamationCircle,
-  faCheck,
-  faSpinner,
-  faBook,
-  faGraduationCap,
-  faNewspaper,
-  faChartBar,
-} from "@fortawesome/free-solid-svg-icons";
+import { Sun, Moon, User, Mail, Calendar, Award, BookOpen, Target, TrendingUp } from "lucide-react";
 
-// Define TypeScript interfaces
-interface Address {
-  street: string;
-  city: string;
-  postalCode: string;
-  country: string;
-}
+// Import shadcn components
+import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Progress } from "@/components/ui/progress";
+import { Badge } from "@/components/ui/badge";
+import Loading from "@/components/loading";
 
-interface User {
-  _id: string;
-  pseudo: string;
-  email: string;
-  role: string;
-  firstName?: string;
-  lastName?: string;
-  phone?: string;
-  deliveryAddress?: Address;
-  createdAt: string;
-  image?: string;
-  prenom?: string;
-  nom?: string;
-  modificationsCount?: number;
-  lastModificationDate?: string;
-}
-
-interface OrderItem {
-  productId: string;
-  title: string;
-  quantity: number;
-  price: number;
-  image?: string;
-}
-
-interface Order {
-  _id: string;
-  date?: string;
-  createdAt?: string;
-  total?: number;
-  totalAmount?: number;
-  status: string;
-  items?: OrderItem[];
-  deliveryCost?: number;
-  paymentMethod?: string;
-  paymentStatus?: string;
-}
-
-interface CourseItem {
-  title: string;
-  progress: number;
-  lastViewed: string;
-}
-
-interface EvaluationItem {
-  title: string;
-  score: number;
-  date: string;
-}
-
+// Données adaptées au projet AutiStudy
 const mockData = {
-  courses: [
-    { title: "Cours de Mathématiques", progress: 80, lastViewed: "2024-09-20" },
-    { title: "Cours de Français", progress: 50, lastViewed: "2024-09-21" },
-  ],
-  evaluations: [
-    { title: "Évaluation de Mathématiques", score: 75, date: "2024-09-15" },
-    { title: "Évaluation de Français", score: 88, date: "2024-09-17" },
-  ],
-  articles: [
-    { title: "Article sur l'autisme", progress: 60, lastViewed: "2024-09-19" },
-    {
-      title: "Article sur la pédagogie",
-      progress: 30,
+  matieres: [
+    { 
+      title: "Mathématiques", 
+      progress: 80, 
+      lastViewed: "2024-09-20",
+      icon: "🔢",
+      color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
+      exercises: 15,
+      completed: 12
+    },
+    { 
+      title: "Français", 
+      progress: 65, 
+      lastViewed: "2024-09-21",
+      icon: "📚",
+      color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+      exercises: 20,
+      completed: 13
+    },
+    { 
+      title: "Sciences", 
+      progress: 45, 
+      lastViewed: "2024-09-19",
+      icon: "🧪",
+      color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+      exercises: 12,
+      completed: 5
+    },
+    { 
+      title: "Arts Plastiques", 
+      progress: 70, 
       lastViewed: "2024-09-18",
+      icon: "🎨",
+      color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+      exercises: 8,
+      completed: 6
     },
   ],
+  recentActivities: [
+    { 
+      title: "Exercice de calcul mental", 
+      matiere: "Mathématiques",
+      score: 85, 
+      date: "2024-09-15",
+      type: "exercise"
+    },
+    { 
+      title: "Lecture et compréhension", 
+      matiere: "Français",
+      score: 92, 
+      date: "2024-09-17",
+      type: "exercise"
+    },
+    { 
+      title: "Découverte des couleurs", 
+      matiere: "Arts",
+      score: 78, 
+      date: "2024-09-16",
+      type: "lesson"
+    },
+    { 
+      title: "Apprentissage des formes", 
+      matiere: "Mathématiques",
+      score: 88, 
+      date: "2024-09-14",
+      type: "lesson"
+    },
+  ],
+  achievements: [
+    { title: "Premier exercice", description: "Premier exercice complété", icon: "🎯", unlocked: true },
+    { title: "Mathématicien", description: "10 exercices de maths", icon: "🔢", unlocked: true },
+    { title: "Lecteur assidu", description: "5 exercices de français", icon: "📚", unlocked: true },
+    { title: "Artiste en herbe", description: "3 exercices d'arts", icon: "🎨", unlocked: false },
+  ]
 };
 
-const countries = [
-  "France",
-  "Belgique",
-  "Suisse",
-  "Canada",
-  "États-Unis",
-  "Royaume-Uni",
-];
-
-// Loading component
-const Loading = () => (
-  <div className="flex justify-center items-center h-screen">
-    <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-600 dark:border-blue-400" />
-  </div>
-);
-
-// Status Badge Component
-const StatusBadge = ({ status }: { status: string }) => {
-  let bgColor = "bg-yellow-500";
-  let textColor = "text-white";
-
-  if (status === "Pending" || status === "En attente") {
-    bgColor = "bg-red-400";
-  } else if (status === "Shipped" || status === "Expédié") {
-    bgColor = "bg-red-500";
-  } else if (status === "Delivered" || status === "Livrée") {
-    bgColor = "bg-black dark:bg-gray-800";
-  } else if (status === "Processed" || status === "En cours") {
-    bgColor = "bg-blue-500";
+// Function to retrieve user data stored in localStorage
+const fetchUserData = () => {
+  if (typeof window !== "undefined") {
+    const storedUser = localStorage.getItem("user");
+    return storedUser ? JSON.parse(storedUser) : null;
   }
-
-  return (
-    <span
-      className={`${bgColor} ${textColor} py-1 px-4 rounded-full text-sm font-medium`}
-    >
-      {status}
-    </span>
-  );
-};
-
-// Order Progress tracker component
-const OrderProgress = ({ status }: { status: string }) => {
-  const isRegistered = true; // First step is always completed
-  const isProcessed = [
-    "Processed",
-    "En cours",
-    "Shipped",
-    "Expédié",
-    "Delivered",
-    "Livrée",
-  ].includes(status);
-  const isShipped = ["Shipped", "Expédié", "Delivered", "Livrée"].includes(
-    status,
-  );
-  const isDelivered = ["Delivered", "Livrée"].includes(status);
-
-  return (
-    <div className="mt-4 w-full">
-      {/* Step indicators */}
-      <div className="flex justify-between mb-2">
-        <div className="flex flex-col items-center">
-          <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 shadow-sm ${
-              isRegistered
-                ? "bg-indigo-500 dark:bg-indigo-600 text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-            }`}
-          >
-            <FontAwesomeIcon icon={faCheck} />
-          </div>
-          <span
-            className={`text-sm text-center ${
-              isRegistered
-                ? "text-indigo-500 dark:text-indigo-400"
-                : "text-gray-500 dark:text-gray-400"
-            }`}
-          >
-            Enregistrement
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 shadow-sm ${
-              isProcessed
-                ? "bg-indigo-500 dark:bg-indigo-600 text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-            }`}
-          >
-            {isProcessed ? (
-              <FontAwesomeIcon icon={faCheck} />
-            ) : (
-              <FontAwesomeIcon icon={faSpinner} />
-            )}
-          </div>
-          <span
-            className={`text-sm text-center ${
-              isProcessed
-                ? "text-indigo-500 dark:text-indigo-400"
-                : "text-gray-500 dark:text-gray-400"
-            }`}
-          >
-            Préparation
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 shadow-sm ${
-              isShipped
-                ? "bg-pink-500 dark:bg-pink-600 text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-            }`}
-          >
-            {isShipped ? (
-              <FontAwesomeIcon icon={faCheck} />
-            ) : (
-              <FontAwesomeIcon icon={faSpinner} />
-            )}
-          </div>
-          <span
-            className={`text-sm text-center ${
-              isShipped
-                ? "text-pink-500 dark:text-pink-400"
-                : "text-gray-500 dark:text-gray-400"
-            }`}
-          >
-            Expédition
-          </span>
-        </div>
-
-        <div className="flex flex-col items-center">
-          <div
-            className={`w-10 h-10 rounded-full flex items-center justify-center mb-1 shadow-sm ${
-              isDelivered
-                ? "bg-emerald-500 dark:bg-emerald-600 text-white"
-                : "bg-gray-200 dark:bg-gray-700 text-gray-500 dark:text-gray-400"
-            }`}
-          >
-            {isDelivered ? (
-              <FontAwesomeIcon icon={faCheck} />
-            ) : (
-              <FontAwesomeIcon icon={faSpinner} />
-            )}
-          </div>
-          <span
-            className={`text-sm text-center ${
-              isDelivered
-                ? "text-emerald-500 dark:text-emerald-400"
-                : "text-gray-500 dark:text-gray-400"
-            }`}
-          >
-            Livraison
-          </span>
-        </div>
-      </div>
-
-      {/* Progress bar */}
-      <div className="h-3 flex w-full rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700">
-        <div className="bg-indigo-500 dark:bg-indigo-600 h-full transition-all duration-300" style={{ width: "25%" }} />
-        <div
-          className={`h-full transition-all duration-300 ${isProcessed ? "bg-indigo-500 dark:bg-indigo-600" : "bg-gray-200 dark:bg-gray-700"}`}
-          style={{ width: "25%" }}
-        />
-        <div
-          className={`h-full transition-all duration-300 ${isShipped ? "bg-pink-500 dark:bg-pink-600" : "bg-gray-200 dark:bg-gray-700"}`}
-          style={{ width: "25%" }}
-        />
-        <div
-          className={`h-full transition-all duration-300 ${isDelivered ? "bg-emerald-500 dark:bg-emerald-600" : "bg-gray-200 dark:bg-gray-700"}`}
-          style={{ width: "25%" }}
-        />
-      </div>
-
-      {/* Percentage display */}
-      {isDelivered && (
-        <div className="flex justify-between items-center mt-2">
-          <span className="text-lg font-medium text-emerald-600 dark:text-emerald-400">
-            Livraison
-          </span>
-          <span className="text-lg font-medium text-emerald-600 dark:text-emerald-400">
-            100%
-          </span>
-        </div>
-      )}
-    </div>
-  );
-};
-
-// Activity Card Component
-const ActivityCard = ({
-  title,
-  data,
-  isEvaluation = false,
-  icon,
-}: {
-  title: string;
-  data: CourseItem[] | EvaluationItem[];
-  isEvaluation?: boolean;
-  icon: any;
-}) => (
-  <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md h-full overflow-hidden">
-    <div className="p-4 border-b border-gray-100 dark:border-gray-700 flex items-center">
-      <FontAwesomeIcon
-        className="mr-2 text-blue-600 dark:text-blue-400"
-        icon={icon}
-      />
-      <h3 className="text-lg font-semibold">{title}</h3>
-    </div>
-    <div className="p-4 space-y-4 max-h-[300px] overflow-y-auto">
-      {data.map((item, index) => (
-        <div
-          key={index}
-          className="mb-4 pb-3 border-b border-gray-100 dark:border-gray-700 last:border-0"
-        >
-          <p className="font-medium">{item.title}</p>
-          {isEvaluation ? (
-            <div className="mt-2">
-              <div className="flex items-center justify-between">
-                <span className="text-sm text-gray-600 dark:text-gray-400">
-                  Score:
-                </span>
-                <span
-                  className={`text-sm px-2 py-0.5 rounded-full font-medium ${
-                    (item as EvaluationItem).score >= 75
-                      ? "bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200"
-                      : (item as EvaluationItem).score >= 50
-                        ? "bg-yellow-100 dark:bg-yellow-900 text-yellow-800 dark:text-yellow-200"
-                        : "bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200"
-                  }`}
-                >
-                  {(item as EvaluationItem).score}%
-                </span>
-              </div>
-              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 flex items-center">
-                <FontAwesomeIcon
-                  className="mr-1 text-xs"
-                  icon={faCalendarAlt}
-                />
-                Date: {(item as EvaluationItem).date}
-              </p>
-            </div>
-          ) : (
-            <div className="mt-2 space-y-2">
-              <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
-                <div
-                  className="bg-blue-600 h-2.5 rounded-full"
-                  style={{ width: `${(item as CourseItem).progress}%` }}
-                />
-              </div>
-              <div className="flex justify-between text-xs text-gray-500 dark:text-gray-400">
-                <div className="flex items-center">
-                  <FontAwesomeIcon className="mr-1" icon={faChartBar} />
-                  {(item as CourseItem).progress}%
-                </div>
-                <div className="flex items-center">
-                  <FontAwesomeIcon className="mr-1" icon={faClock} />
-                  {(item as CourseItem).lastViewed}
-                </div>
-              </div>
-            </div>
-          )}
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-// Main OrdersSection Component
-const OrdersSection = ({
-  orders,
-  user,
-}: {
-  orders: Order[];
-  user: User | null;
-}) => {
-  // State to track which orders are expanded
-  const [expandedOrders, setExpandedOrders] = useState<{
-    [key: string]: boolean;
-  }>({});
-
-  // Toggle expansion for a specific order
-  const toggleOrderExpansion = (orderId: string) => {
-    setExpandedOrders((prev) => ({
-      ...prev,
-      [orderId]: !prev[orderId],
-    }));
-  };
-
-  if (!orders || orders.length === 0) {
-    return (
-      <div className="mt-8">
-        <h3 className="text-2xl font-bold mb-4 flex items-center">
-          <FontAwesomeIcon
-            className="mr-2 text-blue-600 dark:text-blue-400"
-            icon={faShoppingBag}
-          />
-          Vos Commandes ({orders.length})
-        </h3>
-        <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow text-center">
-          <div className="flex flex-col items-center justify-center">
-            <FontAwesomeIcon
-              className="text-4xl mb-3 text-gray-400 dark:text-gray-500"
-              icon={faExclamationCircle}
-            />
-            <p className="text-gray-600 dark:text-gray-400">
-              Vous n&apos;avez pas encore passé de commande.
-            </p>
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="mt-8 space-y-6">
-      <h3 className="text-2xl font-bold mb-4 flex items-center">
-        <FontAwesomeIcon
-          className="mr-2 text-blue-600 dark:text-blue-400"
-          icon={faShoppingBag}
-        />
-        Vos Commandes ({orders.length})
-      </h3>
-
-      <div className="space-y-4">
-        {orders.map((order) => (
-          <div
-            key={order._id}
-            className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden"
-          >
-            {/* Order Header */}
-            <div
-              className="p-4 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-300"
-              onClick={() => toggleOrderExpansion(order._id)}
-              role="button"
-              tabIndex={0}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                  toggleOrderExpansion(order._id);
-                }
-              }}
-            >
-              <div className="flex flex-col gap-2">
-                <div className="flex justify-between items-center w-full">
-                  <p className="font-semibold text-base flex items-center">
-                    <FontAwesomeIcon
-                      className="mr-2 text-blue-600 dark:text-blue-400"
-                      icon={faShoppingBag}
-                    />
-                    Commande #{order._id.substring(0, 8)}...
-                  </p>
-                  <svg
-                    className="w-5 h-5 text-gray-500 dark:text-gray-400 transition-transform duration-300"
-                    fill="none"
-                    stroke="currentColor"
-                    style={{
-                      transform: expandedOrders[order._id]
-                        ? "rotate(180deg)"
-                        : "rotate(0deg)",
-                    }}
-                    viewBox="0 0 24 24"
-                    xmlns="http://www.w3.org/2000/svg"
-                  >
-                    <path
-                      d="M19.5 8.25l-7.5 7.5-7.5-7.5"
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      strokeWidth={1.5}
-                    />
-                  </svg>
-                </div>
-
-                <p className="text-gray-500 dark:text-gray-400 text-sm flex items-center">
-                  <FontAwesomeIcon className="mr-2" icon={faCalendarAlt} />
-                  {dayjs(order.date || order.createdAt).format("DD/MM/YYYY")}
-                </p>
-
-                <div className="flex justify-between items-center w-full flex-wrap">
-                  <StatusBadge status={order.status} />
-
-                  {user && user.role === "admin" ? (
-                    <div className="flex items-center">
-                      <span className="line-through mr-2 text-gray-600 dark:text-gray-400">
-                        {order.total || order.totalAmount || 0}€
-                      </span>
-                      <span className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full px-4 py-1 text-sm font-medium">
-                        Gratuit • Admin
-                      </span>
-                    </div>
-                  ) : (
-                    <span className="font-medium">
-                      {order.total || order.totalAmount || 0}€
-                    </span>
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Order Details */}
-            {expandedOrders[order._id] && (
-              <div className="px-4 pb-6 border-t border-gray-100 dark:border-gray-700">
-                {/* Order Progress */}
-                <OrderProgress status={order.status} />
-
-                <hr className="my-6 border-gray-200 dark:border-gray-700" />
-
-                {/* Order Items */}
-                {order.items && order.items.length > 0 && (
-                  <>
-                    <h4 className="font-medium text-lg mb-4 flex items-center">
-                      <FontAwesomeIcon
-                        className="mr-2 text-blue-600 dark:text-blue-400"
-                        icon={faShoppingBag}
-                      />
-                      Articles commandés
-                    </h4>
-                    <div className="space-y-4">
-                      {order.items.map((item, idx) => {
-                        // Get image URL from various possible properties
-                        const imageUrl =
-                          item.image ||
-                          (item as any).imageUrl ||
-                          (item as any).img ||
-                          (item as any).photo ||
-                          (item as any).thumbnail;
-
-                        return (
-                          <div
-                            key={idx}
-                            className="bg-gray-50 dark:bg-gray-700/50 p-4 rounded-lg"
-                          >
-                            <div className="flex gap-4">
-                              {/* Product image */}
-                              <div className="flex-shrink-0">
-                                {imageUrl ? (
-                                  <div className="relative h-24 w-24 rounded-md overflow-hidden border border-gray-200 dark:border-gray-600">
-                                    <Image
-                                      fill
-                                      alt={`Image de ${item.title}`}
-                                      className="object-contain"
-                                      src={imageUrl}
-                                      onError={(e) => {
-                                        (
-                                          e.target as HTMLImageElement
-                                        ).style.display = "none";
-                                        (
-                                          e.target as HTMLImageElement
-                                        ).parentElement!.innerHTML =
-                                          '<div class="h-24 w-24 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md"><span class="text-xs text-gray-400 dark:text-gray-500">Image indisponible</span></div>';
-                                      }}
-                                    />
-                                  </div>
-                                ) : (
-                                  <div className="h-24 w-24 flex items-center justify-center bg-gray-100 dark:bg-gray-800 rounded-md border border-gray-200 dark:border-gray-700">
-                                    <span className="text-xs text-gray-400 dark:text-gray-500">
-                                      Pas d&apos;image
-                                    </span>
-                                  </div>
-                                )}
-                              </div>
-
-                              {/* Product info */}
-                              <div className="flex-1 space-y-1 min-w-0">
-                                <p className="font-medium break-words">
-                                  {item.title}
-                                </p>
-                                <p className="text-xs text-gray-500 dark:text-gray-400 break-all">
-                                  Réf: {item.productId}
-                                </p>
-                                <div className="flex flex-wrap gap-2 items-center mt-2">
-                                  <span className="text-sm text-gray-600 dark:text-gray-300">
-                                    {item.quantity} × {item.price}€
-                                  </span>
-
-                                  {user && user.role === "admin" ? (
-                                    <div className="flex items-center gap-2">
-                                      <span className="line-through font-medium text-gray-600 dark:text-gray-400">
-                                        {(item.quantity * item.price).toFixed(
-                                          2,
-                                        )}
-                                        €
-                                      </span>
-                                      <span className="bg-indigo-100 dark:bg-indigo-900 text-indigo-800 dark:text-indigo-200 text-xs px-2 py-1 rounded-full">
-                                        Gratuit
-                                      </span>
-                                    </div>
-                                  ) : (
-                                    <span className="font-medium">
-                                      {(item.quantity * item.price).toFixed(2)}€
-                                    </span>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-                          </div>
-                        );
-                      })}
-                    </div>
-                  </>
-                )}
-
-                {/* Order Summary */}
-                <div className="mt-6 space-y-2">
-                  {order.deliveryCost && (
-                    <div className="flex justify-between items-center flex-wrap">
-                      <span className="text-sm text-gray-600 dark:text-gray-400">
-                        Frais de livraison:
-                      </span>
-                      {user && user.role === "admin" ? (
-                        <div className="flex items-center gap-2">
-                          <span className="line-through text-gray-600 dark:text-gray-400">
-                            {order.deliveryCost}€
-                          </span>
-                          <span className="bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200 text-xs px-2 py-1 rounded-full">
-                            Gratuit
-                          </span>
-                        </div>
-                      ) : (
-                        <span className="text-gray-700 dark:text-gray-300">
-                          {order.deliveryCost}€
-                        </span>
-                      )}
-                    </div>
-                  )}
-
-                  <div className="flex justify-between items-center flex-wrap font-medium">
-                    <span>Total:</span>
-                    {user && user.role === "admin" ? (
-                      <div className="flex items-center gap-2">
-                        <span className="line-through text-gray-600 dark:text-gray-400">
-                          {order.total || order.totalAmount || 0}€
-                        </span>
-                        <span className="bg-gray-200 dark:bg-gray-700 text-gray-800 dark:text-gray-200 rounded-full px-3 py-1 text-sm">
-                          Gratuit • Admin
-                        </span>
-                      </div>
-                    ) : (
-                      <span>{order.total || order.totalAmount || 0}€</span>
-                    )}
-                  </div>
-                </div>
-              </div>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
+  return null;
 };
 
 const ProfilePage = () => {
-  // User state
-  const [user, setUser] = useState<User | null>(null);
-  const [createdAt, setCreatedAt] = useState("");
-  const [currentTime, setCurrentTime] = useState("");
-
-  // Profile form state
-  const [firstName, setFirstName] = useState("");
-  const [lastName, setLastName] = useState("");
-  const [phone, setPhone] = useState("");
-  const [address, setAddress] = useState<Address>({
-    street: "",
-    city: "",
-    postalCode: "",
-    country: "France",
-  });
-
-  // Orders state
-  const [orders, setOrders] = useState<Order[]>([]);
-
-  // UI state
-  const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
-  const [activeTab, setActiveTab] = useState("profile");
-
-  // Theme handling
-  const [mounted, setMounted] = useState(false);
-  const { theme, setTheme } = useTheme(); // This is still useful for some operations
-  const [isDarkMode, setIsDarkMode] = useState(false);
-
+  const [user, setUser] = useState<any>(null);
+  const [createdAt, setCreatedAt] = useState<string>("");
+  const [currentTime, setCurrentTime] = useState<string>("");
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [activeTab, setActiveTab] = useState<"overview" | "progress" | "achievements">("overview");
   const router = useRouter();
 
-  // Handle hydration
   useEffect(() => {
-    setMounted(true);
-    // Check if dark mode is enabled using document.documentElement.classList
-    const isDark = document.documentElement.classList.contains("dark");
+    // Retrieve user data from localStorage
+    const fetchedUser = fetchUserData();
 
-    setIsDarkMode(isDark);
-  }, []);
+    if (fetchedUser) {
+      setUser(fetchedUser);
+      const formattedCreatedAt = fetchedUser.createdAt
+        ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
+        : "Non disponible";
 
-  // Update current time
-  useEffect(() => {
+      setCreatedAt(formattedCreatedAt);
+    } else {
+      router.push("/users/login");
+    }
+
+    // Check for dark mode preference
+    const darkMode = localStorage.getItem("darkMode") === "true" || 
+                     (!localStorage.getItem("darkMode") && window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setIsDarkMode(darkMode);
+    
+    // Apply dark mode to document
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+
+    // Update current time every second
     const interval = setInterval(() => {
       setCurrentTime(dayjs().format("HH:mm:ss"));
     }, 1000);
 
     return () => clearInterval(interval);
-  }, []);
-
-  // Check for theme changes
-  useEffect(() => {
-    const observer = new MutationObserver((mutations) => {
-      mutations.forEach((mutation) => {
-        if (
-          mutation.attributeName === "class" &&
-          mutation.target === document.documentElement
-        ) {
-          const isDark = document.documentElement.classList.contains("dark");
-
-          setIsDarkMode(isDark);
-        }
-      });
-    });
-
-    observer.observe(document.documentElement, { attributes: true });
-
-    return () => observer.disconnect();
-  }, []);
-
-  // Fetch user data and orders
-  useEffect(() => {
-    const fetchUserData = async () => {
-      setLoading(true);
-
-      try {
-        const token = localStorage.getItem("userToken");
-
-        if (!token) {
-          console.error("Token not found in localStorage");
-          Swal.fire({
-            title: "Erreur d'authentification",
-            text: "Vous devez être connecté pour accéder à cette page.",
-            icon: "error",
-            confirmButtonText: "OK",
-          }).then(() => router.push("/users/login"));
-          return;
-        }
-
-        const apiUrl = (
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
-        ).replace(/\/$/, "");
-
-        const headers = {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        };
-
-        const userResponse = await fetch(`${apiUrl}/users/me`, {
-          method: "GET",
-          headers,
-        });
-
-        if (!userResponse.ok) {
-          throw new Error(`HTTP error! Status: ${userResponse.status}`);
-        }
-
-        const userData = await userResponse.json();
-
-        if (userData.user) {
-          // Initialiser les compteurs de modification s'ils n'existent pas
-          const userInfo = {
-            ...userData.user,
-            modificationsCount: userData.user.modificationsCount || 0,
-            lastModificationDate: userData.user.lastModificationDate || new Date(0).toISOString()
-          };
-
-          setUser(userInfo);
-          setFirstName(userInfo.firstName || userInfo.prenom || "");
-          setLastName(userInfo.lastName || userInfo.nom || "");
-          setPhone(userInfo.phone || "");
-          setAddress(
-            userInfo.deliveryAddress || {
-              street: "",
-              city: "",
-              postalCode: "",
-              country: "France",
-            }
-          );
-
-          setCreatedAt(dayjs(userInfo.createdAt).format("DD/MM/YYYY"));
-
-          // Stocker les données utilisateur mises à jour
-          localStorage.setItem("user", JSON.stringify(userInfo));
-          localStorage.setItem("userInfo", JSON.stringify(userInfo));
-
-          if (userInfo._id) {
-            fetchUserOrders(userInfo._id, token);
-          }
-        }
-      } catch (error) {
-        console.error("Error in fetchUserData:", error);
-        if (error instanceof Error && error.message.includes("401")) {
-          localStorage.removeItem("userToken");
-          Swal.fire({
-            title: "Session expirée",
-            text: "Votre session a expiré. Veuillez vous reconnecter.",
-            icon: "warning",
-            confirmButtonText: "OK",
-          }).then(() => router.push("/users/login"));
-        } else {
-          Swal.fire({
-            title: "Erreur",
-            text: "Impossible de récupérer vos informations. Veuillez réessayer.",
-            icon: "error",
-            confirmButtonText: "OK",
-          });
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchUserData();
   }, [router]);
 
-  const fetchUserOrders = async (userId: string, token: string) => {
-    try {
-      const apiUrl = (
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
-      ).replace(/\/$/, "");
-
-      const ordersResponse = await fetch(`${apiUrl}/orders/user/${userId}`, {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-      });
-
-      if (!ordersResponse.ok) {
-        throw new Error(`HTTP error! Status: ${ordersResponse.status}`);
-      }
-
-      const ordersData = await ordersResponse.json();
-
-      if (ordersData) {
-        if (Array.isArray(ordersData.orders)) {
-          setOrders(ordersData.orders);
-        } else if (Array.isArray(ordersData)) {
-          setOrders(ordersData);
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    localStorage.setItem("darkMode", newDarkMode.toString());
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add("dark");
         } else {
-          console.warn("Unexpected orders response format:", ordersData);
-          setOrders([]);
-        }
-      }
-    } catch (orderError) {
-      console.error("Error fetching orders:", orderError);
+      document.documentElement.classList.remove("dark");
     }
   };
 
-  // Profile update handler
-  const handleSaveProfile = async () => {
-    if (!user || !user._id) {
-      Swal.fire({
-        title: "Erreur",
-        text: "Utilisateur non défini ou sans identifiant",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-      return;
-    }
-
-    setSaving(true);
-
-    try {
-      const token = localStorage.getItem("userToken");
-      const apiUrl = (
-        process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
-      ).replace(/\/$/, "");
-
-      const currentModificationsCount = user.modificationsCount || 0;
-      const lastModificationDate = user.lastModificationDate || new Date(0).toISOString();
-      
-      const lastModification = new Date(lastModificationDate);
-      const currentDate = new Date();
-      const monthDiff = (currentDate.getFullYear() - lastModification.getFullYear()) * 12 + 
-                       (currentDate.getMonth() - lastModification.getMonth());
-
-      if (monthDiff < 1 && currentModificationsCount >= 3) {
-        Swal.fire({
-          title: "Limite atteinte",
-          text: "Vous avez atteint la limite de 3 modifications par mois. Veuillez réessayer le mois prochain.",
-          icon: "warning",
-          confirmButtonText: "OK",
-        });
-        setSaving(false);
-        return;
-      }
-
-      // Préparer les données à envoyer
-      const updateData = {
-        prenom: firstName,
-        nom: lastName,
-        phone,
-        deliveryAddress: address,
-        modificationsCount: currentModificationsCount + 1,
-        lastModificationDate: new Date().toISOString()
-      };
-
-      console.log("Données envoyées au serveur:", updateData);
-
-      const updateResponse = await fetch(`${apiUrl}/users/${user._id}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(updateData),
-      });
-
-      if (!updateResponse.ok) {
-        const errorData = await updateResponse.json();
-        console.error("Erreur serveur:", errorData);
-        throw new Error(`HTTP error! Status: ${updateResponse.status}`);
-      }
-
-      const responseData = await updateResponse.json();
-      console.log("Réponse du serveur:", responseData);
-
-      const updatedUser = {
-        ...user,
-        prenom: firstName,
-        nom: lastName,
-        phone,
-        deliveryAddress: address,
-        modificationsCount: currentModificationsCount + 1,
-        lastModificationDate: new Date().toISOString()
-      };
-
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      localStorage.setItem("userInfo", JSON.stringify(updatedUser));
-      
-      setUser(updatedUser);
-
-      Swal.fire({
-        title: "Profil mis à jour",
-        text: "Vos informations ont été enregistrées avec succès.",
-        icon: "success",
-        confirmButtonText: "OK",
-      });
-    } catch (error) {
-      console.error("Error updating profile:", error);
-      Swal.fire({
-        title: "Erreur",
-        text: "Une erreur est survenue lors de la mise à jour.",
-        icon: "error",
-        confirmButtonText: "OK",
-      });
-    } finally {
-      setSaving(false);
-    }
-  };
-
-  if (!mounted || loading) {
+  if (!user) {
     return <Loading />;
   }
 
   return (
-    <div className="pb-16 transition-colors duration-300">
-      {/* Welcome Banner */}
-      <div className="mb-8">
-        <div className="flex flex-col md:flex-row md:items-end justify-between">
-          <div>
-            <h1 className="text-3xl md:text-4xl font-bold text-center md:text-left">
-              {user?.role === "admin"
-                ? `Bonjour à vous Admin 👑`
-                : `Bonjour ${user?.pseudo || "Utilisateur"} 👋`}
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Hero Section */}
+      <section className="relative py-12 md:py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
+        <div className="relative w-full px-4 md:px-8 lg:px-12">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-end mb-4">
+              <Button
+                onClick={toggleDarkMode}
+                variant="outline"
+                size="sm"
+                className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
+              >
+                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+              </Button>
+            </div>
+            
+            <div className="text-center">
+              <div className="w-24 h-24 mx-auto mb-6 bg-blue-600 rounded-full flex items-center justify-center">
+                <User className="w-12 h-12 text-white" />
+              </div>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Profil AutiStudy
             </h1>
-            <p className="mt-2 text-gray-600 dark:text-gray-400 text-center md:text-left flex items-center justify-center md:justify-start">
-              <FontAwesomeIcon className="mr-2" icon={faClock} />
-              {currentTime} |{" "}
-              <FontAwesomeIcon className="mx-2" icon={faCalendarAlt} /> Compte
-              créé le: {createdAt}
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-2">
+                Bonjour {user.pseudo} ! 👋
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Heure actuelle : {currentTime} | Membre depuis le {createdAt}
             </p>
           </div>
         </div>
       </div>
+      </section>
 
       {/* Tab Navigation */}
-      <div className="mb-6 border-b border-gray-200 dark:border-gray-700">
-        <ul className="flex flex-wrap -mb-px">
-          <li className="mr-2">
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
+        <div className="border-b border-gray-200 dark:border-gray-700">
+          <nav className="flex space-x-8">
+            {[
+              { id: "overview", label: "Vue d'ensemble", icon: Target },
+              { id: "progress", label: "Progression", icon: TrendingUp },
+              { id: "achievements", label: "Réussites", icon: Award },
+            ].map((tab) => (
             <button
-              className={`inline-block p-4 rounded-t-lg border-b-2 transition-colors duration-300 ${
-                activeTab === "profile"
-                  ? "text-blue-600 dark:text-blue-300 border-blue-600 dark:border-blue-300"
-                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-              }`}
-              onClick={() => setActiveTab("profile")}
-            >
-              <FontAwesomeIcon className="mr-2" icon={faUser} />
-              Profil
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                  activeTab === tab.id
+                    ? "border-blue-600 text-blue-600 dark:text-blue-400"
+                    : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
+                }`}
+              >
+                <tab.icon className="w-4 h-4" />
+                {tab.label}
             </button>
-          </li>
-          <li className="mr-2">
-            <button
-              className={`inline-block p-4 rounded-t-lg border-b-2 transition-colors duration-300 ${
-                activeTab === "orders"
-                  ? "text-blue-600 dark:text-blue-300 border-blue-600 dark:border-blue-300"
-                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-              }`}
-              onClick={() => setActiveTab("orders")}
-            >
-              <FontAwesomeIcon className="mr-2" icon={faShoppingBag} />
-              Commandes
-            </button>
-          </li>
-          <li className="mr-2">
-            <button
-              className={`inline-block p-4 rounded-t-lg border-b-2 transition-colors duration-300 ${
-                activeTab === "activities"
-                  ? "text-blue-600 dark:text-blue-300 border-blue-600 dark:border-blue-300"
-                  : "border-transparent hover:text-gray-600 hover:border-gray-300 dark:hover:text-gray-300"
-              }`}
-              onClick={() => setActiveTab("activities")}
-            >
-              <FontAwesomeIcon className="mr-2" icon={faGraduationCap} />
-              Activités
-            </button>
-          </li>
-        </ul>
+            ))}
+          </nav>
+        </div>
       </div>
 
-      {/* Profile Tab */}
-      {activeTab === "profile" && (
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-8 transition-colors duration-300">
-          <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FontAwesomeIcon
-              className="mr-2 text-blue-600 dark:text-blue-400"
-              icon={faUser}
-            />
-            Modifier votre profil
-          </h2>
-
-          {/* User info summary */}
-          <div className="flex items-start md:items-center gap-4 flex-wrap md:flex-nowrap mb-6">
-            <div className="h-16 w-16 rounded-full overflow-hidden bg-gray-200 dark:bg-gray-700 relative">
-              <Image
-                alt={`Avatar de ${user?.pseudo}`}
-                className="rounded-full"
-                layout="fill"
-                objectFit="cover"
-                src={user?.image || "/assets/default-avatar.webp"}
-              />
+      {/* Content */}
+      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-8">
+        {activeTab === "overview" && (
+          <div className="space-y-8">
+            {/* Stats Cards */}
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                      <BookOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
             </div>
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Matières</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{mockData.matieres.length}</p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
 
-            <div className="space-y-1 flex-1 min-w-0">
-              <p className="font-medium text-lg">Pseudo: {user?.pseudo}</p>
-              <p className="text-gray-600 dark:text-gray-400 break-all">
-                Email: {user?.email}
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div className="p-2 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                      <Target className="w-6 h-6 text-green-600 dark:text-green-400" />
+                    </div>
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Exercices</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {mockData.matieres.reduce((acc, m) => acc + m.completed, 0)}
               </p>
-              <p className="text-gray-600 dark:text-gray-400">
-                Role: {user?.role}
-              </p>
             </div>
           </div>
+                </CardContent>
+              </Card>
 
-          <hr className="my-6 border-gray-200 dark:border-gray-700" />
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                      <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              </div>
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Progression</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {Math.round(mockData.matieres.reduce((acc, m) => acc + m.progress, 0) / mockData.matieres.length)}%
+                      </p>
+              </div>
+            </div>
+                </CardContent>
+              </Card>
 
-          {/* Personal information form */}
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                <CardContent className="p-6">
+                  <div className="flex items-center">
+                    <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
+                      <Award className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
+            </div>
+                    <div className="ml-4">
+                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Réussites</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
+                        {mockData.achievements.filter(a => a.unlocked).length}
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+          </div>
+
+            {/* Recent Activities */}
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-900 dark:text-white">
+                  Activités Récentes
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
           <div className="space-y-4">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label
-                  className="block text-sm font-medium flex items-center"
-                  htmlFor="firstName"
-                >
-                  <FontAwesomeIcon
-                    className="mr-2 text-blue-600 dark:text-blue-400"
-                    icon={faUser}
-                  />
-                  Prénom
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
-                  id="firstName"
-                  placeholder="Votre prénom"
-                  type="text"
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                />
+                  {mockData.recentActivities.map((activity, index) => (
+                    <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
+                      <div className="flex items-center gap-3">
+                        <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
+                          <span className="text-lg">
+                            {activity.type === "exercise" ? "📝" : "📖"}
+                          </span>
+            </div>
+                        <div>
+                          <p className="font-medium text-gray-900 dark:text-white">{activity.title}</p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">{activity.matiere}</p>
               </div>
-
-              <div className="space-y-2">
-                <label
-                  className="block text-sm font-medium flex items-center"
-                  htmlFor="lastName"
-                >
-                  <FontAwesomeIcon
-                    className="mr-2 text-blue-600 dark:text-blue-400"
-                    icon={faUser}
-                  />
-                  Nom
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
-                  id="lastName"
-                  placeholder="Votre nom"
-                  type="text"
-                  value={lastName}
-                  onChange={(e) => setLastName(e.target.value)}
-                />
               </div>
+                      <div className="text-right">
+                        <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                          {activity.score}%
+                        </Badge>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{activity.date}</p>
             </div>
-
-            <div className="space-y-2">
-              <label
-                className="block text-sm font-medium flex items-center"
-                htmlFor="phone"
-              >
-                <FontAwesomeIcon
-                  className="mr-2 text-blue-600 dark:text-blue-400"
-                  icon={faPhone}
-                />
-                Numéro de téléphone
-              </label>
-              <input
-                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
-                id="phone"
-                placeholder="Votre numéro de téléphone"
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-              />
+                    </div>
+                  ))}
             </div>
-          </div>
-
-          <hr className="my-6 border-gray-200 dark:border-gray-700" />
-
-          {/* Delivery address form */}
-          <div className="space-y-4">
-            <h3 className="font-medium text-lg flex items-center">
-              <FontAwesomeIcon
-                className="mr-2 text-blue-600 dark:text-blue-400"
-                icon={faMapMarkerAlt}
-              />
-              Adresse de livraison
-            </h3>
-
-            <div className="space-y-2">
-              <label
-                className="block text-sm font-medium flex items-center"
-                htmlFor="street"
-              >
-                <FontAwesomeIcon
-                  className="mr-2 text-blue-600 dark:text-blue-400"
-                  icon={faMapMarkerAlt}
-                />
-                Adresse
-              </label>
-              <input
-                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
-                id="street"
-                placeholder="Numéro et nom de rue"
-                type="text"
-                value={address.street}
-                onChange={(e) =>
-                  setAddress({ ...address, street: e.target.value })
-                }
-              />
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <label
-                  className="block text-sm font-medium flex items-center"
-                  htmlFor="city"
-                >
-                  <FontAwesomeIcon
-                    className="mr-2 text-blue-600 dark:text-blue-400"
-                    icon={faCity}
-                  />
-                  Ville
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
-                  id="city"
-                  placeholder="Votre ville"
-                  type="text"
-                  value={address.city}
-                  onChange={(e) =>
-                    setAddress({ ...address, city: e.target.value })
-                  }
-                />
-              </div>
-
-              <div className="space-y-2">
-                <label
-                  className="block text-sm font-medium flex items-center"
-                  htmlFor="postalCode"
-                >
-                  <FontAwesomeIcon
-                    className="mr-2 text-blue-600 dark:text-blue-400"
-                    icon={faMailBulk}
-                  />
-                  Code postal
-                </label>
-                <input
-                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
-                  id="postalCode"
-                  placeholder="Code postal"
-                  type="text"
-                  value={address.postalCode}
-                  onChange={(e) =>
-                    setAddress({ ...address, postalCode: e.target.value })
-                  }
-                />
-              </div>
-            </div>
-
-            <div className="space-y-2">
-              <label
-                className="block text-sm font-medium flex items-center"
-                htmlFor="country"
-              >
-                <FontAwesomeIcon
-                  className="mr-2 text-blue-600 dark:text-blue-400"
-                  icon={faGlobe}
-                />
-                Pays
-              </label>
-              <select
-                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-md bg-white dark:bg-gray-700 text-gray-900 dark:text-gray-100 transition-colors duration-300"
-                id="country"
-                value={address.country}
-                onChange={(e) =>
-                  setAddress({ ...address, country: e.target.value })
-                }
-              >
-                {countries.map((country) => (
-                  <option key={country} value={country}>
-                    {country}
-                  </option>
-                ))}
-              </select>
-            </div>
-          </div>
-
-          <div className="mt-8">
-            <button
-              className={`px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-md transition-colors duration-300 flex items-center ${
-                saving ? "opacity-50 cursor-not-allowed" : ""
-              }`}
-              disabled={saving}
-              onClick={handleSaveProfile}
-            >
-              {saving ? (
-                <>
-                  <FontAwesomeIcon
-                    className="mr-2 animate-spin"
-                    icon={faSpinner}
-                  />
-                  Enregistrement...
-                </>
-              ) : (
-                <>
-                  <FontAwesomeIcon className="mr-2" icon={faCheck} />
-                  Enregistrer
-                </>
-              )}
-            </button>
-          </div>
+              </CardContent>
+            </Card>
         </div>
       )}
 
-      {/* Orders Tab */}
-      {activeTab === "orders" && <OrdersSection orders={orders} user={user} />}
-
-      {/* Activities Tab */}
-      {activeTab === "activities" && (
+        {activeTab === "progress" && (
+          <div className="space-y-8">
+            {/* Matières Progress */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {mockData.matieres.map((matiere, index) => (
+                <Card key={index} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                  <CardHeader>
+                    <div className="flex items-center gap-3">
+                      <span className="text-2xl">{matiere.icon}</span>
         <div>
-          <h2 className="text-2xl font-bold mb-6 flex items-center">
-            <FontAwesomeIcon
-              className="mr-2 text-blue-600 dark:text-blue-400"
-              icon={faGraduationCap}
-            />
-            Progression de l&apos;enfant
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <ActivityCard
-              data={mockData.courses}
-              icon={faBook}
-              title="Exercices Réalisés"
-            />
-            <ActivityCard
-              isEvaluation
-              data={mockData.evaluations}
-              icon={faGraduationCap}
-              title="Évaluations"
-            />
-            <ActivityCard
-              data={mockData.articles}
-              icon={faNewspaper}
-              title="Ressources Consultées"
-            />
+                        <CardTitle className="text-lg text-gray-900 dark:text-white">{matiere.title}</CardTitle>
+                        <p className="text-sm text-gray-600 dark:text-gray-400">
+                          {matiere.completed}/{matiere.exercises} exercices
+                        </p>
           </div>
-
-          <div className="mt-8 bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
-            <h3 className="text-xl font-bold mb-4 flex items-center">
-              <FontAwesomeIcon
-                className="mr-2 text-blue-600 dark:text-blue-400"
-                icon={faChartBar}
-              />
-              Suivi de progression
-            </h3>
-            <div className="h-[300px] w-full">
-              <div className="text-center text-gray-600 dark:text-gray-400 py-6 flex flex-col items-center justify-center h-full">
-                <FontAwesomeIcon
-                  className="text-5xl mb-4 text-gray-400 dark:text-gray-600"
-                  icon={faChartBar}
-                />
-                <p className="text-lg">[Graphique de progression ici]</p>
-                <p className="mt-2">Fonctionnalité en cours de développement</p>
               </div>
+                  </CardHeader>
+                  <CardContent>
+                    <Progress value={matiere.progress} className="mb-4" />
+                    <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                      <span>Progression: {matiere.progress}%</span>
+                      <span>Dernière activité: {matiere.lastViewed}</span>
             </div>
+                    <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white">
+                      Continuer
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
           </div>
         </div>
       )}
+
+        {activeTab === "achievements" && (
+          <div className="space-y-8">
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {mockData.achievements.map((achievement, index) => (
+                <Card key={index} className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 ${
+                  !achievement.unlocked ? "opacity-50" : ""
+                }`}>
+                  <CardContent className="p-6 text-center">
+                    <div className="w-16 h-16 mx-auto mb-4 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center">
+                      <span className="text-2xl">{achievement.icon}</span>
+                    </div>
+                    <h3 className="font-bold text-gray-900 dark:text-white mb-2">{achievement.title}</h3>
+                    <p className="text-sm text-gray-600 dark:text-gray-400">{achievement.description}</p>
+                    {achievement.unlocked && (
+                      <Badge className="mt-3 bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
+                        Débloqué
+                      </Badge>
+                    )}
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
