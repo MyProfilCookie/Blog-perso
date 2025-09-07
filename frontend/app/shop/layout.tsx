@@ -85,7 +85,7 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
 
     return (
         <div className="min-h-screen px-2 py-4 md:px-4 lg:px-6 bg-cream dark:bg-gray-900 transition-colors">
-            <div className="mb-4 md:mb-6 text-center">
+            {/* <div className="mb-4 md:mb-6 text-center">
                 <motion.h1
                     animate={{ opacity: 1, y: 0 }}
                     className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2"
@@ -103,7 +103,7 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
                 >
                     Découvrez notre sélection de produits spécialement conçus pour améliorer le quotidien des personnes autistes.
                 </motion.p>
-            </div>
+            </div> */}
 
             <div className="fixed right-4 bottom-4 z-50">
                 <motion.div
