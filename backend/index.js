@@ -98,6 +98,8 @@ app.use(compression());
 
 // 🔧 Configuration CORS
 const allowedOrigins = [
+  'https://autistudy.com',
+  'https://www.autistudy.com',
   'https://autistudy.vercel.app',
   'https://autistudy-48mon62zt-myprofilcookies-projects.vercel.app',
   'http://localhost:3000'
@@ -119,7 +121,10 @@ const corsOptions = {
 
 app.use(cors(corsOptions));
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "https://autistudy.vercel.app");
+  const origin = req.headers.origin;
+  if (allowedOrigins.includes(origin)) {
+    res.header("Access-Control-Allow-Origin", origin);
+  }
   res.header("Access-Control-Allow-Methods", "GET,POST,PUT,DELETE,OPTIONS");
   res.header("Access-Control-Allow-Headers", "Content-Type, Authorization");
   res.header("Access-Control-Allow-Credentials", "true");
