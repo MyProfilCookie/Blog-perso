@@ -2,14 +2,21 @@
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { Card } from '@nextui-org/react'
-import { CardBody } from '@nextui-org/react';
+import { motion } from "framer-motion";
+import {
+  Sun,
+  Moon,
+  ArrowLeft,
+  Clock,
+  CheckCircle,
+  Target,
+  BookOpen,
+} from "lucide-react";
 import { toast, ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import Swal from "sweetalert2";
-import { motion } from "framer-motion";
-
-import BackButton from "@/components/back";
+// Import shadcn components
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 
 interface Question {
   _id: string;
@@ -40,44 +47,52 @@ interface Result {
 
 const subjectColors = {
   Mathématiques: {
-    bg: "bg-yellow-500",
-    text: "text-yellow-600",
+    bg: "bg-yellow-100 dark:bg-yellow-900/30",
+    text: "text-yellow-600 dark:text-yellow-400",
     border: "border-yellow-500",
+    icon: "🔢",
   },
   Sciences: {
-    bg: "bg-green-500",
-    text: "text-green-600",
+    bg: "bg-green-100 dark:bg-green-900/30",
+    text: "text-green-600 dark:text-green-400",
     border: "border-green-500",
+    icon: "🧪",
   },
   Français: {
-    bg: "bg-red-500",
-    text: "text-red-600",
+    bg: "bg-red-100 dark:bg-red-900/30",
+    text: "text-red-600 dark:text-red-400",
     border: "border-red-500",
+    icon: "📚",
   },
   Histoire: {
-    bg: "bg-indigo-500",
-    text: "text-indigo-600",
+    bg: "bg-indigo-100 dark:bg-indigo-900/30",
+    text: "text-indigo-600 dark:text-indigo-400",
     border: "border-indigo-500",
+    icon: "🏛️",
   },
   Géographie: {
-    bg: "bg-teal-500",
-    text: "text-teal-600",
+    bg: "bg-teal-100 dark:bg-teal-900/30",
+    text: "text-teal-600 dark:text-teal-400",
     border: "border-teal-500",
+    icon: "🌍",
   },
   Langues: {
-    bg: "bg-pink-500",
-    text: "text-pink-600",
+    bg: "bg-pink-100 dark:bg-pink-900/30",
+    text: "text-pink-600 dark:text-pink-400",
     border: "border-pink-500",
+    icon: "🗣️",
   },
   "Arts Plastiques": {
-    bg: "bg-purple-500",
-    text: "text-purple-600",
+    bg: "bg-purple-100 dark:bg-purple-900/30",
+    text: "text-purple-600 dark:text-purple-400",
     border: "border-purple-500",
+    icon: "🎨",
   },
   default: {
-    bg: "bg-gray-500",
-    text: "text-gray-600",
+    bg: "bg-gray-100 dark:bg-gray-900/30",
+    text: "text-gray-600 dark:text-gray-400",
     border: "border-gray-500",
+    icon: "📖",
   },
 };
 
@@ -114,6 +129,7 @@ export default function TrimestreDetails() {
   } | null>(null);
   const [timeSpent, setTimeSpent] = useState(0);
   const [results, setResults] = useState<Result[]>([]);
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   const encouragementMessages = [
     "Continue comme ça, tu es sur la bonne voie ! 🌟",
@@ -138,7 +154,6 @@ export default function TrimestreDetails() {
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/trimestres/${id}`,
         );
-
         setData(response.data);
       } catch (err) {
         setError("Erreur lors de la récupération des données du trimestre.");
@@ -157,10 +172,8 @@ export default function TrimestreDetails() {
           clearInterval(timer);
           calculateScore();
           setShowResults(true);
-
           return 0;
         }
-
         return prevTime - 1;
       });
     }, 1000);
@@ -171,10 +184,8 @@ export default function TrimestreDetails() {
   // Charger la progression sauvegardée
   useEffect(() => {
     const savedProgress = localStorage.getItem(`trimestre-${id}-progress`);
-
     if (savedProgress) {
       const progress = JSON.parse(savedProgress);
-
       setSelectedAnswers(progress.selectedAnswers);
       setValidatedQuestions(progress.validatedQuestions);
       setCompletedSubjects(progress.completedSubjects || {});
@@ -195,7 +206,6 @@ export default function TrimestreDetails() {
         completedSubjects,
         timeLeft,
       };
-
       localStorage.setItem(
         `trimestre-${id}-progress`,
         JSON.stringify(progress),
@@ -205,7 +215,6 @@ export default function TrimestreDetails() {
 
   useEffect(() => {
     const savedUserInfo = localStorage.getItem("userInfo");
-
     if (savedUserInfo) {
       setUserInfo(JSON.parse(savedUserInfo));
     }
@@ -217,25 +226,48 @@ export default function TrimestreDetails() {
       const randomIndex = Math.floor(
         Math.random() * encouragementMessages.length,
       );
-
       setEncouragementMessage(encouragementMessages[randomIndex]);
     };
 
     updateMessage(); // Message initial
     const interval = setInterval(updateMessage, 20 * 60 * 1000);
-
     return () => clearInterval(interval);
   }, []);
+
+  // Check for dark mode preference
+  useEffect(() => {
+    const darkMode =
+      localStorage.getItem("darkMode") === "true" ||
+      (!localStorage.getItem("darkMode") &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setIsDarkMode(darkMode);
+
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    localStorage.setItem("darkMode", newDarkMode.toString());
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   const getEncouragement = (isCorrect: boolean, streak: number) => {
     if (isCorrect) {
       if (streak >= 5) return "🌟 Extraordinaire ! Tu es inarrêtable !";
       if (streak >= 3) return "🎯 Excellent ! Continue comme ça !";
-
       return "✅ Bravo ! C'est la bonne réponse !";
     } else {
       if (streak > 2) return "😮 Dommage, mais tu étais sur une belle série !";
-
       return "❌ Ce n'est pas la bonne réponse, mais continue d'essayer !";
     }
   };
@@ -244,7 +276,6 @@ export default function TrimestreDetails() {
     if (!data || currentSubjectIndex === null) return [];
     const currentSubject = data.subjects[currentSubjectIndex];
     const startIndex = currentPage * QUESTIONS_PER_PAGE;
-
     return currentSubject.questions.slice(
       startIndex,
       startIndex + QUESTIONS_PER_PAGE,
@@ -254,7 +285,6 @@ export default function TrimestreDetails() {
   const getTotalPages = (): number => {
     if (!data || currentSubjectIndex === null) return 0;
     const currentSubject = data.subjects[currentSubjectIndex];
-
     return Math.ceil(currentSubject.questions.length / QUESTIONS_PER_PAGE);
   };
 
@@ -300,10 +330,10 @@ export default function TrimestreDetails() {
             headers: {
               Authorization: `Bearer ${token}`,
             },
-          }
+          },
         );
       } catch (error) {
-        console.error("Erreur lors de la sauvegarde du score:", error);
+        // console.error("Erreur lors de la sauvegarde du score:", error);
       }
     }
 
@@ -320,18 +350,15 @@ export default function TrimestreDetails() {
 
   const calculateScore = () => {
     if (!data || currentSubjectIndex === null) return 0;
-
     const currentQuestions = getCurrentQuestions();
-    const correctAnswers = results.filter(r => r.isCorrect).length;
+    const correctAnswers = results.filter((r) => r.isCorrect).length;
     const totalQuestions = currentQuestions.length;
     const finalScore = Math.round((correctAnswers / totalQuestions) * 100);
-
     return finalScore;
   };
 
   const getCurrentProgress = (): number => {
     if (!data || currentSubjectIndex === null) return 0;
-
     let totalQuestions = 0;
     let currentQuestionNumber = 0;
 
@@ -361,22 +388,18 @@ export default function TrimestreDetails() {
 
     for (let i = startIndex; i < endIndex; i++) {
       const questionId = `${currentSubjectIndex}-${i}`;
-
       if (!validatedQuestions[questionId]) {
         return false;
       }
     }
-
     return true;
   };
 
   const isSubjectCompleted = (subjectIndex: number): boolean => {
     if (!data) return false;
     const subject = data.subjects[subjectIndex];
-
     return subject.questions.every((_: Question, questionIndex: number) => {
       const questionId = `${subjectIndex}-${questionIndex}`;
-
       return validatedQuestions[questionId];
     });
   };
@@ -425,7 +448,7 @@ export default function TrimestreDetails() {
     
     if (currentSubjectIndex !== null && !showResults) {
       interval = setInterval(() => {
-        setTimeSpent(prev => prev + 1);
+        setTimeSpent((prev) => prev + 1);
       }, 1000);
     }
     
@@ -438,18 +461,23 @@ export default function TrimestreDetails() {
 
   if (loading)
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex justify-center items-center">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-primary" />
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex justify-center items-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-300">
+            Chargement du trimestre...
+          </p>
+        </div>
       </div>
     );
 
   if (error)
     return (
-      <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800 flex justify-center items-center">
-        <Card className="bg-danger-50">
-          <CardBody>
-            <p className="text-danger">{error}</p>
-          </CardBody>
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex justify-center items-center">
+        <Card className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+          <CardContent className="p-6">
+            <p className="text-red-600 dark:text-red-400">{error}</p>
+          </CardContent>
         </Card>
       </div>
     );
@@ -458,18 +486,67 @@ export default function TrimestreDetails() {
 
   if (showSubjectSelector) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100 p-8">
-        <div className="max-w-4xl mx-auto">
-          <div className="mb-8">
-            <h1 className="text-3xl font-bold text-gray-800 mb-4">
-              Choisissez une matière
+      <div className="min-h-screen bg-white dark:bg-gray-900">
+        {/* Hero Section */}
+        <section className="relative py-12 md:py-20 overflow-hidden">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
+          <div className="relative w-full px-4 md:px-8 lg:px-12">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex justify-between items-center mb-8">
+                <Button
+                  className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
+                  onClick={() => router.back()}
+                  variant="outline"
+                >
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Retour
+                </Button>
+                <Button
+                  className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
+                  onClick={toggleDarkMode}
+                  size="sm"
+                  variant="outline"
+                >
+                  {isDarkMode ? (
+                    <Sun className="w-4 h-4" />
+                  ) : (
+                    <Moon className="w-4 h-4" />
+                  )}
+                </Button>
+              </div>
+              
+              <motion.div
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.7 }}
+                className="text-center"
+              >
+                <div className="w-24 h-24 mx-auto mb-6 bg-blue-600 rounded-full flex items-center justify-center">
+                  <BookOpen className="w-12 h-12 text-white" />
+                </div>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                  Trimestre {data.numero}
             </h1>
-            <p className="text-gray-600">
-              Sélectionnez la matière par laquelle vous souhaitez commencer
-            </p>
+                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-2">
+                  Bonjour {userInfo?.firstName || "Élève"} ! 👋
+                </p>
+                <p className="text-sm text-gray-500 dark:text-gray-400">
+                  Choisissez une matière pour commencer vos exercices
+                </p>
+              </motion.div>
+            </div>
           </div>
+        </section>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        {/* Matières */}
+        <section className="py-12">
+          <div className="max-w-6xl mx-auto px-4 md:px-8 lg:px-12">
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
             {data.subjects.map((subject: Subject, index: number) => {
               const isCompleted = completedSubjects[index];
               const subjectStyle =
@@ -477,47 +554,52 @@ export default function TrimestreDetails() {
                 subjectColors.default;
 
               return (
-                <motion.button
+                  <motion.div
                   key={index}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`p-6 rounded-xl backdrop-blur-sm border transition-all duration-300 ${
-                    isCompleted
-                      ? "bg-gray-100 border-gray-200 cursor-not-allowed"
-                      : "bg-white hover:shadow-lg border-yellow-200 hover:border-yellow-300 cursor-pointer"
-                  }`}
-                  disabled={isCompleted}
-                  initial={{ opacity: 0, y: 20 }}
-                  transition={{ duration: 0.3, delay: index * 0.1 }}
+                    whileHover={{ scale: 1.02 }}
+                    transition={{ duration: 0.2 }}
+                  >
+                    <Card
+                      className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 hover:shadow-lg transition-all duration-300 ${
+                        isCompleted ? "opacity-75" : "cursor-pointer"
+                      }`}
                   onClick={() => !isCompleted && handleSubjectSelect(index)}
-                >
-                  <div className="flex items-center gap-4">
-                    <div
-                      className={`w-12 h-12 ${subjectStyle.bg} bg-opacity-20 rounded-full flex items-center justify-center text-2xl`}
                     >
-                      {subject.icon}
+                      <CardContent className="p-6">
+                        <div className="flex items-center gap-4 mb-4">
+                          <div
+                            className={`w-16 h-16 ${subjectStyle.bg} rounded-full flex items-center justify-center text-2xl`}
+                          >
+                            {subjectStyle.icon}
                     </div>
-                    <div className="flex-1 text-left">
-                      <h3 className="text-lg font-semibold text-gray-800">
+                          <div className="flex-1">
+                            <h3 className="text-lg font-bold text-gray-900 dark:text-white">
                         {subject.name}
                       </h3>
-                      <p className="text-sm text-gray-500">
+                            <p className="text-sm text-gray-600 dark:text-gray-400">
                         {subject.questions.length} questions
                       </p>
                     </div>
+                        </div>
+                        
                     {isCompleted ? (
-                      <div className="flex items-center text-green-500">
-                        <span className="mr-2">Terminé</span>
-                        <span>✓</span>
+                          <div className="flex items-center justify-center gap-2 text-green-600 dark:text-green-400">
+                            <CheckCircle className="w-5 h-5" />
+                            <span className="font-medium">Terminé</span>
                       </div>
                     ) : (
-                      <span className="text-yellow-500">→</span>
+                          <Button className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white">
+                            Commencer
+                          </Button>
                     )}
-                  </div>
-                </motion.button>
+                      </CardContent>
+                    </Card>
+                  </motion.div>
               );
             })}
+            </motion.div>
           </div>
-        </div>
+        </section>
       </div>
     );
   }
@@ -526,159 +608,145 @@ export default function TrimestreDetails() {
 
   const currentSubject = data.subjects[currentSubjectIndex];
   const currentQuestions = getCurrentQuestions();
+  const subjectStyle =
+    subjectColors[currentSubject.name as keyof typeof subjectColors] ||
+    subjectColors.default;
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-50 to-yellow-100">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <ToastContainer />
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-6">
-        <div className="mb-6 sm:mb-8">
-          <div className="flex items-center gap-2 mb-4 sm:mb-6">
-            <BackButton />
-            <span className="text-[13px] sm:text-[15px] text-yellow-600">
-              Retour
-            </span>
+      
+      {/* Header */}
+      <div className="bg-gradient-to-r from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900 border-b border-gray-200 dark:border-gray-700">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-6">
+          <div className="flex justify-between items-center mb-4">
+            <Button
+              className="bg-white/20 hover:bg-white/30 border-white/30 text-gray-700 dark:text-gray-300"
+              onClick={() => setShowSubjectSelector(true)}
+              variant="outline"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour aux matières
+            </Button>
+            <Button
+              className="bg-white/20 hover:bg-white/30 border-white/30 text-gray-700 dark:text-gray-300"
+              onClick={toggleDarkMode}
+              size="sm"
+              variant="outline"
+            >
+              {isDarkMode ? (
+                <Sun className="w-4 h-4" />
+              ) : (
+                <Moon className="w-4 h-4" />
+              )}
+            </Button>
           </div>
 
-          <div className="flex flex-col gap-4 mb-6">
-            <div className="flex items-center justify-between">
-              <motion.div
-                animate={{ opacity: 1, x: 0 }}
-                className="flex items-center gap-2"
-                initial={{ opacity: 0, x: -20 }}
-                transition={{ duration: 0.5 }}
+          <div className="text-center">
+            <div className="flex items-center justify-center gap-3 mb-4">
+              <div
+                className={`w-12 h-12 ${subjectStyle.bg} rounded-full flex items-center justify-center text-xl`}
               >
-                <h1 className="text-2xl sm:text-3xl font-bold bg-gradient-to-r from-yellow-600 to-yellow-800 bg-clip-text text-transparent">
-                  {userInfo?.firstName
-                    ? `Courage ${userInfo.firstName} !`
-                    : "Courage !"}
+                {subjectStyle.icon}
+              </div>
+              <h1 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">
+                {currentSubject.name}
                 </h1>
-                <h2 className="text-2xl sm:text-3xl text-black font-bold dark:text-white text-center">
-                  Bonjour {userInfo?.firstName}, es-tu prêt(e) pour le trimestre
-                  {data?.numero} ?
-                </h2>
-                <span className="text-2xl sm:text-3xl animate-bounce">💪</span>
-              </motion.div>
-              <motion.div
-                animate={{ opacity: 1, x: 0 }}
-                className="text-xl sm:text-2xl font-bold text-yellow-800"
-                initial={{ opacity: 0, x: 20 }}
-                transition={{ duration: 0.5 }}
-              >
-                Trimestre {data?.numero}
-              </motion.div>
             </div>
 
             <motion.div
               animate={{ opacity: 1, y: 0 }}
-              className="bg-cream backdrop-blur-sm rounded-xl p-4 shadow-lg border border-yellow-500"
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.5, delay: 0.2 }}
+              className="bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-4 mb-4"
+              initial={{ opacity: 0, y: 10 }}
+              transition={{ duration: 0.5 }}
             >
-              <p className="text-gray-700 text-xl font-medium text-center italic">
+              <p className="text-gray-700 dark:text-gray-300 text-lg font-medium italic">
                 {encouragementMessage}
               </p>
             </motion.div>
 
-            <div className="flex items-center gap-2 bg-yellow-400/10 px-3 py-1 rounded-full">
-              <motion.span
-                animate={{ rotate: [0, -10, 10, -10, 0] }}
-                className="text-xl sm:text-2xl"
-                transition={{ duration: 2, repeat: Infinity }}
-              >
-                {currentSubject.icon}
-              </motion.span>
-              <span className="text-lg sm:text-xl font-semibold text-yellow-700">
-                {currentSubject.name}
+            {/* Timer et progression */}
+            <div className="flex items-center justify-between bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm rounded-xl p-4">
+              <div className="flex items-center gap-2">
+                <Clock className="w-5 h-5 text-blue-600" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {Math.floor(timeLeft / 3600)}h{" "}
+                  {Math.floor((timeLeft % 3600) / 60)}m restantes
               </span>
-            </div>
-          </div>
-
-          <div className="space-y-1.5 bg-white/50 backdrop-blur-sm rounded-xl p-4">
-            <div className="bg-yellow-100 h-2 w-full rounded-full overflow-hidden">
-              <motion.div
-                animate={{ width: `${(timeLeft / 10800) * 100}%` }}
-                className="bg-yellow-400 h-full rounded-full"
-                initial={{ width: 0 }}
-                transition={{ duration: 1 }}
-              />
-            </div>
-
-            <div className="flex justify-between items-center">
-              <div className="text-[12px] sm:text-[13px] text-yellow-700 font-medium">
-                {Math.floor(timeLeft / 3600)}h{" "}
-                {Math.floor((timeLeft % 3600) / 60)}m
               </div>
-              <div className="text-[12px] sm:text-[13px] text-yellow-700 font-medium">
+              <div className="flex items-center gap-2">
+                <Target className="w-5 h-5 text-blue-600" />
+                <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
                 Page {currentPage + 1}/{getTotalPages()}
+                </span>
+              </div>
               </div>
             </div>
           </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 sm:gap-6">
+      {/* Questions */}
+      <div className="max-w-6xl mx-auto px-4 md:px-8 lg:px-12 py-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {currentQuestions.map((question: Question, index: number) => {
             const questionId = `${currentSubjectIndex}-${currentPage * QUESTIONS_PER_PAGE + index}`;
-            const subjectStyle =
-              subjectColors[
-                currentSubject.name as keyof typeof subjectColors
-              ] || subjectColors.default;
 
             return (
               <motion.div
-                key={questionId}
                 animate={{ opacity: 1, y: 0 }}
-                className={`bg-white/90 backdrop-blur-sm rounded-lg shadow-lg hover:shadow-xl transition-all duration-300 overflow-hidden border-l-4 ${subjectStyle.border} transform hover:-translate-y-1 hover:scale-[1.02] group`}
                 initial={{ opacity: 0, y: 20 }}
+                key={questionId}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
               >
-                <div className="p-3 sm:p-4">
-                  <div className="flex justify-between items-start mb-3">
-                    <p
-                      className={`text-[14px] sm:text-[15px] font-medium text-gray-900 ${subjectStyle.bg} bg-opacity-20 rounded-lg p-3 border border-opacity-10 ${subjectStyle.border} group-hover:bg-opacity-30 transition-all duration-300 flex-1 mr-2`}
-                    >
+                <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg hover:shadow-xl transition-all duration-300">
+                  <CardContent className="p-6">
+                    <div className="flex justify-between items-start mb-4">
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex-1 mr-4">
                       {question.question}
-                    </p>
+                      </h3>
                     {validatedQuestions[questionId] && (
-                      <div className="flex items-center justify-center w-6 h-6 bg-green-100 rounded-full">
-                        <span className="text-green-600 text-sm">✓</span>
+                        <div className="flex items-center justify-center w-8 h-8 bg-green-100 dark:bg-green-900/30 rounded-full">
+                          <CheckCircle className="w-5 h-5 text-green-600 dark:text-green-400" />
                       </div>
                     )}
                   </div>
-                  <div className="space-y-2">
-                    {question.options.map(
-                      (option: string, optIndex: number) => {
+                    
+                    <div className="space-y-3">
+                      {question.options.map((option: string, optIndex: number) => {
                         const isSelected =
                           selectedAnswers[questionId] === option;
                         const isValidated = validatedQuestions[questionId];
 
                         return (
                           <button
-                            key={optIndex}
-                            className={`w-full text-left py-2.5 sm:py-3 px-3 sm:px-4 rounded-lg border transition-all duration-300 ${
+                            className={`w-full text-left p-4 rounded-lg border transition-all duration-300 ${
                               isSelected
-                                ? `${subjectStyle.bg} bg-opacity-20 ${subjectStyle.border} transform scale-[1.02]`
-                                : "bg-white/100 hover:bg-yellow-50 border-gray-100 hover:border-yellow-200 hover:scale-[1.01]"
+                                ? `${subjectStyle.bg} ${subjectStyle.border} border-2 transform scale-[1.02]`
+                                : "bg-gray-50 dark:bg-gray-700 hover:bg-gray-100 dark:hover:bg-gray-600 border-gray-200 dark:border-gray-600 hover:border-gray-300 dark:hover:border-gray-500"
                             } ${
                               isValidated
-                                ? "bg-gray-100 cursor-not-allowed"
+                                ? "cursor-not-allowed opacity-75"
                                 : "hover:shadow-md"
                             }`}
                             disabled={isValidated}
+                            key={optIndex}
                             onClick={() => handleAnswerSelect(index, option)}
                           >
-                            <div className="flex items-center gap-2.5 sm:gap-3">
+                            <div className="flex items-center gap-3">
                               <span
-                                className={`text-[13px] sm:text-[15px] ${
+                                className={`text-sm font-medium ${
                                   isSelected
                                     ? subjectStyle.text
-                                    : "text-yellow-600"
-                                } font-medium`}
+                                    : "text-gray-600 dark:text-gray-400"
+                                }`}
                               >
                                 {String.fromCharCode(65 + optIndex)}.
                               </span>
                               <span
-                                className={`text-[13px] sm:text-[15px] ${
-                                  isSelected ? "text-gray-900" : "text-gray-700"
+                                className={`text-sm ${
+                                  isSelected
+                                    ? "text-gray-900 dark:text-white font-medium"
+                                    : "text-gray-700 dark:text-gray-300"
                                 }`}
                               >
                                 {option}
@@ -686,37 +754,37 @@ export default function TrimestreDetails() {
                             </div>
                           </button>
                         );
-                      },
-                    )}
-                  </div>
-                </div>
+                      })}
+                    </div>
+                  </CardContent>
+                </Card>
               </motion.div>
             );
           })}
         </div>
 
         {/* Pagination */}
-        <div className="mt-6 flex justify-between items-center bg-cream backdrop-blur-sm rounded-xl p-4 shadow-lg border border-yellow-500">
-          <button
-            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-              currentPage === 0
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-yellow-500 text-white hover:bg-yellow-600"
-            }`}
-            disabled={currentPage === 0}
-            onClick={() => setCurrentPage((prev) => prev - 1)}
-          >
-            ← Précédent
-          </button>
+        <div className="mt-8">
+          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <CardContent className="p-6">
+              <div className="flex justify-between items-center">
+                <Button
+                  className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+                  disabled={currentPage === 0}
+                  onClick={() => setCurrentPage((prev) => prev - 1)}
+                  variant="outline"
+                >
+                  ← Précédent
+                </Button>
 
           <div className="flex items-center gap-2">
             {Array.from({ length: getTotalPages() }, (_, i) => (
               <button
                 key={i}
-                className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 ${
                   currentPage === i
-                    ? "bg-yellow-500 text-white"
-                    : "bg-white text-gray-600 hover:bg-yellow-100"
+                          ? "bg-blue-600 text-white"
+                          : "bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-600"
                 } ${
                   !areAllQuestionsAnswered(i)
                     ? "cursor-not-allowed opacity-50"
@@ -730,21 +798,20 @@ export default function TrimestreDetails() {
             ))}
           </div>
 
-          <button
-            className={`px-4 py-2 rounded-lg transition-all duration-300 ${
-              !areAllQuestionsAnswered(currentPage) ||
-              currentPage === getTotalPages() - 1
-                ? "bg-gray-100 text-gray-400 cursor-not-allowed"
-                : "bg-yellow-500 text-white hover:bg-yellow-600"
-            }`}
-            disabled={
-              !areAllQuestionsAnswered(currentPage) ||
-              currentPage === getTotalPages() - 1
-            }
-            onClick={() => setCurrentPage((prev) => prev + 1)}
-          >
-            Suivant →
-          </button>
+                <Button
+                  className="bg-white dark:bg-gray-700 border-gray-300 dark:border-gray-600"
+                  disabled={
+                    !areAllQuestionsAnswered(currentPage) ||
+                    currentPage === getTotalPages() - 1
+                  }
+                  onClick={() => setCurrentPage((prev) => prev + 1)}
+                  variant="outline"
+                >
+                  Suivant →
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </div>
     </div>
