@@ -1,9 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Button } from '@nextui-org/react';
 import { useRouter } from "next/router";
 import { useRevision } from "@/app/RevisionContext";
 import { toast } from "sonner";
 import axios from "axios";
+import { motion } from "framer-motion";
+import {
+  Sun,
+  Moon,
+  ArrowLeft,
+  BookOpen,
+  CheckCircle,
+} from "lucide-react";
+
+// Import shadcn components
+import { Card, CardContent } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 
 interface Question {
   _id: string;
@@ -26,11 +38,67 @@ interface TrimestreData {
   subjects: Subject[];
 }
 
+const subjectColors = {
+  Mathématiques: {
+    bg: "bg-yellow-100 dark:bg-yellow-900/30",
+    text: "text-yellow-600 dark:text-yellow-400",
+    border: "border-yellow-500",
+    icon: "🔢",
+  },
+  Sciences: {
+    bg: "bg-green-100 dark:bg-green-900/30",
+    text: "text-green-600 dark:text-green-400",
+    border: "border-green-500",
+    icon: "🧪",
+  },
+  Français: {
+    bg: "bg-red-100 dark:bg-red-900/30",
+    text: "text-red-600 dark:text-red-400",
+    border: "border-red-500",
+    icon: "📚",
+  },
+  Histoire: {
+    bg: "bg-indigo-100 dark:bg-indigo-900/30",
+    text: "text-indigo-600 dark:text-indigo-400",
+    border: "border-indigo-500",
+    icon: "🏛️",
+  },
+  Géographie: {
+    bg: "bg-teal-100 dark:bg-teal-900/30",
+    text: "text-teal-600 dark:text-teal-400",
+    border: "border-teal-500",
+    icon: "🌍",
+  },
+  Langues: {
+    bg: "bg-pink-100 dark:bg-pink-900/30",
+    text: "text-pink-600 dark:text-pink-400",
+    border: "border-pink-500",
+    icon: "🗣️",
+  },
+  "Arts Plastiques": {
+    bg: "bg-purple-100 dark:bg-purple-900/30",
+    text: "text-purple-600 dark:text-purple-400",
+    border: "border-purple-500",
+    icon: "🎨",
+  },
+  default: {
+    bg: "bg-gray-100 dark:bg-gray-900/30",
+    text: "text-gray-600 dark:text-gray-400",
+    border: "border-gray-500",
+    icon: "📖",
+  },
+};
+
 const TrimestrePage = () => {
   const [trimestre, setTrimestre] = useState<TrimestreData | null>(null);
   const [loading, setLoading] = useState(true);
   const [answers, setAnswers] = useState<{ [questionId: string]: string }>({});
   const [results, setResults] = useState<{ [questionId: string]: boolean }>({});
+  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [userInfo, setUserInfo] = useState<{
+    firstName: string;
+    lastName: string;
+  } | null>(null);
   const router = useRouter();
   const { id } = router.query;
   const { addError } = useRevision();
@@ -47,10 +115,10 @@ const TrimestrePage = () => {
         if (data && data.subjects) {
           setTrimestre(data);
         } else {
-          console.warn("Données du trimestre non trouvées.");
+          // console.warn("Données du trimestre non trouvées.");
         }
       } catch (error) {
-        console.error("Erreur lors du chargement du trimestre :", error);
+        // console.error("Erreur lors du chargement du trimestre :", error);
       } finally {
         setLoading(false);
       }
@@ -58,6 +126,40 @@ const TrimestrePage = () => {
 
     fetchData();
   }, [id]);
+
+  useEffect(() => {
+    const savedUserInfo = localStorage.getItem("userInfo");
+    if (savedUserInfo) {
+      setUserInfo(JSON.parse(savedUserInfo));
+    }
+  }, []);
+
+  // Check for dark mode preference
+  useEffect(() => {
+    const darkMode =
+      localStorage.getItem("darkMode") === "true" ||
+      (!localStorage.getItem("darkMode") &&
+        window.matchMedia("(prefers-color-scheme: dark)").matches);
+    setIsDarkMode(darkMode);
+
+    if (darkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, []);
+
+  const toggleDarkMode = () => {
+    const newDarkMode = !isDarkMode;
+    setIsDarkMode(newDarkMode);
+    localStorage.setItem("darkMode", newDarkMode.toString());
+    
+    if (newDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   const handleChange = (
     e: React.ChangeEvent<HTMLSelectElement>,
@@ -108,7 +210,7 @@ const TrimestrePage = () => {
           }
         }
       } catch (error) {
-        console.error("Erreur lors de la sauvegarde de l'erreur de révision:", error);
+        // console.error("Erreur lors de la sauvegarde de l'erreur de révision:", error);
         toast.error("Erreur lors de la sauvegarde de l'erreur de révision");
       }
 
@@ -136,7 +238,7 @@ const TrimestrePage = () => {
               addError(errorData);
             }
           } catch (error) {
-            console.error("Erreur lors de l'enregistrement dans le RevisionContext:", error);
+            // console.error("Erreur lors de l'enregistrement dans le RevisionContext:", error);
           }
         }
       }
@@ -150,67 +252,260 @@ const TrimestrePage = () => {
     }
   };
 
-  if (loading) return <p className="text-center mt-10">Chargement...</p>;
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex justify-center items-center">
+        <div className="text-center">
+          <motion.div
+            animate={{ rotate: 360 }}
+            transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
+            className="w-16 h-16 border-4 border-blue-600 border-t-transparent rounded-full mx-auto mb-4"
+          />
+          <motion.div
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.5 }}
+          >
+            <h2 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              Chargement du trimestre...
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300">
+              Préparation de vos exercices
+            </p>
+          </motion.div>
+        </div>
+      </div>
+    );
+  }
+
+  if (!trimestre) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex justify-center items-center">
+        <Card className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800">
+          <CardContent className="p-6 text-center">
+            <h2 className="text-xl font-semibold text-red-600 dark:text-red-400 mb-2">
+              Trimestre non trouvé
+            </h2>
+            <p className="text-red-500 dark:text-red-300">
+              Impossible de charger les données du trimestre.
+            </p>
+            <Button
+              onClick={() => router.back()}
+              className="mt-4 bg-red-600 hover:bg-red-700 text-white"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
 
   return (
-    <div className="p-6 max-w-6xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6 text-center text-violet-600">
-        Contrôle du trimestre {trimestre?.numero}
-      </h1>
-
-      {trimestre?.subjects.map((subject) => (
-        <div key={subject._id} className="mb-10">
-          <h2
-            className="text-2xl font-semibold mb-4 px-3 py-2 rounded text-white"
-            style={{ backgroundColor: subject.color }}
-          >
-            {subject.icon} {subject.name}
-          </h2>
-
-          <div className="space-y-4">
-            {subject.questions.map((q) => (
-              <div
-                key={q._id}
-                className="border border-gray-200 rounded-lg p-4 shadow-sm bg-white"
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Hero Section */}
+      <section className="relative py-12 md:py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
+        <div className="relative w-full px-4 md:px-8 lg:px-12">
+          <div className="max-w-7xl mx-auto">
+            <div className="flex justify-between items-center mb-8">
+              <Button
+                onClick={() => router.back()}
+                variant="outline"
+                className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
               >
-                <h3 className="text-lg font-medium mb-2">{q.question}</h3>
-                <select
-                  className="w-full border rounded px-3 py-2 mb-2"
-                  disabled={results[q._id] !== undefined}
-                  value={answers[q._id] || ""}
-                  onChange={(e) => handleChange(e, q._id)}
-                >
-                  <option value="">-- Choisissez une réponse --</option>
-                  {q.options.map((opt, idx) => (
-                    <option key={idx} value={opt}>
-                      {opt}
-                    </option>
-                  ))}
-                </select>
-                <Button
-                  className="bg-violet-500 text-white"
-                  disabled={results[q._id] !== undefined}
-                  size="sm"
-                  onClick={() => handleSubmit(q._id, q.answer)}
-                >
-                  Valider
-                </Button>
-                {results[q._id] !== undefined && (
-                  <p
-                    className={`mt-2 ${
-                      results[q._id] ? "text-green-500" : "text-red-500"
-                    }`}
-                  >
-                    {results[q._id]
-                      ? "Bonne réponse !"
-                      : `Mauvaise réponse. Réponse correcte : ${q.answer}`}
-                  </p>
+                <ArrowLeft className="w-4 h-4 mr-2" />
+                Retour
+              </Button>
+              <Button
+                onClick={toggleDarkMode}
+                variant="outline"
+                size="sm"
+                className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
+              >
+                {isDarkMode ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
                 )}
+              </Button>
+            </div>
+            
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7 }}
+              className="text-center"
+            >
+              <div className="w-24 h-24 mx-auto mb-6 bg-blue-600 rounded-full flex items-center justify-center">
+                <BookOpen className="w-12 h-12 text-white" />
               </div>
-            ))}
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                Contrôle Trimestre {trimestre.numero}
+              </h1>
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-2">
+                Bonjour {userInfo?.firstName || "Élève"} ! 👋
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Testez vos connaissances dans toutes les matières
+              </p>
+            </motion.div>
           </div>
         </div>
-      ))}
+      </section>
+
+      {/* Contenu */}
+      <div className="max-w-6xl mx-auto px-4 md:px-8 lg:px-12 py-8">
+        {trimestre.subjects.map((subject, subjectIndex) => {
+          const subjectStyle = subjectColors[subject.name as keyof typeof subjectColors] || subjectColors.default;
+          const completedQuestions = subject.questions.filter(q => results[q._id] !== undefined).length;
+          const totalQuestions = subject.questions.length;
+          const progress = totalQuestions > 0 ? (completedQuestions / totalQuestions) * 100 : 0;
+
+          return (
+            <motion.div
+              key={subject._id}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: subjectIndex * 0.1 }}
+              className="mb-12"
+            >
+              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 shadow-lg">
+                <CardContent className="p-6">
+                  <div className="flex items-center gap-4 mb-6">
+                    <div className={`w-16 h-16 ${subjectStyle.bg} rounded-full flex items-center justify-center text-2xl`}>
+                      {subjectStyle.icon}
+                    </div>
+                    <div className="flex-1">
+                      <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
+                        {subject.name}
+                      </h2>
+                      <div className="flex items-center gap-4">
+                        <Badge className={`${subjectStyle.bg} ${subjectStyle.text} border-0`}>
+                          {totalQuestions} questions
+                        </Badge>
+                        <Badge className="bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-200">
+                          {completedQuestions} complétées
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Barre de progression */}
+                  <div className="mb-6">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                        Progression
+                      </span>
+                      <span className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                        {Math.round(progress)}%
+                      </span>
+                    </div>
+                    <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                      <motion.div
+                        initial={{ width: 0 }}
+                        animate={{ width: `${progress}%` }}
+                        transition={{ duration: 1, delay: 0.5 }}
+                        className={`h-2 rounded-full ${subjectStyle.bg.replace('bg-', 'bg-').replace('/30', '')}`}
+                      />
+                    </div>
+                  </div>
+
+                  <div className="space-y-4">
+                    {subject.questions.map((question, questionIndex) => {
+                      const isAnswered = results[question._id] !== undefined;
+                      const isCorrect = results[question._id];
+
+                      return (
+                        <motion.div
+                          key={question._id}
+                          initial={{ opacity: 0, x: -20 }}
+                          animate={{ opacity: 1, x: 0 }}
+                          transition={{ duration: 0.3, delay: questionIndex * 0.05 }}
+                        >
+                          <Card className={`border transition-all duration-300 ${
+                            isAnswered 
+                              ? isCorrect 
+                                ? "border-green-200 dark:border-green-800 bg-green-50 dark:bg-green-900/20" 
+                                : "border-red-200 dark:border-red-800 bg-red-50 dark:bg-red-900/20"
+                              : "border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800"
+                          }`}>
+                            <CardContent className="p-6">
+                              <div className="flex items-start justify-between mb-4">
+                                <h3 className="text-lg font-semibold text-gray-900 dark:text-white flex-1 mr-4">
+                                  {question.question}
+                                </h3>
+                                {isAnswered && (
+                                  <div className="flex items-center justify-center w-8 h-8 rounded-full bg-white dark:bg-gray-700">
+                                    {isCorrect ? (
+                                      <CheckCircle className="w-5 h-5 text-green-600" />
+                                    ) : (
+                                      <div className="w-5 h-5 rounded-full bg-red-600 flex items-center justify-center">
+                                        <span className="text-white text-xs font-bold">✕</span>
+                                      </div>
+                                    )}
+                                  </div>
+                                )}
+                              </div>
+
+                              <div className="space-y-3">
+                                <select
+                                  className={`w-full border rounded-lg px-4 py-3 transition-all duration-300 ${
+                                    isAnswered
+                                      ? "bg-gray-100 dark:bg-gray-700 border-gray-300 dark:border-gray-600 cursor-not-allowed"
+                                      : "bg-white dark:bg-gray-800 border-gray-300 dark:border-gray-600 hover:border-blue-400 dark:hover:border-blue-500 focus:border-blue-500 dark:focus:border-blue-400"
+                                  }`}
+                                  disabled={isAnswered}
+                                  value={answers[question._id] || ""}
+                                  onChange={(e) => handleChange(e, question._id)}
+                                >
+                                  <option value="">-- Choisissez une réponse --</option>
+                                  {question.options.map((option, idx) => (
+                                    <option key={idx} value={option}>
+                                      {option}
+                                    </option>
+                                  ))}
+                                </select>
+
+                                <div className="flex items-center gap-3">
+                                  <Button
+                                    className={`${
+                                      isAnswered
+                                        ? "bg-gray-400 dark:bg-gray-600 cursor-not-allowed"
+                                        : "bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800"
+                                    } text-white`}
+                                    disabled={isAnswered || !answers[question._id]}
+                                    onClick={() => handleSubmit(question._id, question.answer)}
+                                  >
+                                    {isAnswered ? "Répondu" : "Valider"}
+                                  </Button>
+
+                                  {isAnswered && (
+                                    <div className={`flex items-center gap-2 px-3 py-2 rounded-lg ${
+                                      isCorrect 
+                                        ? "bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-200" 
+                                        : "bg-red-100 dark:bg-red-900/30 text-red-800 dark:text-red-200"
+                                    }`}>
+                                      <span className="text-sm font-medium">
+                                        {isCorrect ? "Bonne réponse !" : `Réponse correcte : ${question.answer}`}
+                                      </span>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            </CardContent>
+                          </Card>
+                        </motion.div>
+                      );
+                    })}
+                  </div>
+                </CardContent>
+              </Card>
+            </motion.div>
+          );
+        })}
+      </div>
     </div>
   );
 };
