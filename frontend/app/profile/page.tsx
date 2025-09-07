@@ -12,82 +12,17 @@ import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
 import Loading from "@/components/loading";
 
-// Données adaptées au projet AutiStudy
-const mockData = {
-  matieres: [
-    { 
-      title: "Mathématiques", 
-      progress: 80, 
-      lastViewed: "2024-09-20",
-      icon: "🔢",
-      color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300",
-      exercises: 15,
-      completed: 12
-    },
-    { 
-      title: "Français", 
-      progress: 65, 
-      lastViewed: "2024-09-21",
-      icon: "📚",
-      color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
-      exercises: 20,
-      completed: 13
-    },
-    { 
-      title: "Sciences", 
-      progress: 45, 
-      lastViewed: "2024-09-19",
-      icon: "🧪",
-      color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
-      exercises: 12,
-      completed: 5
-    },
-    { 
-      title: "Arts Plastiques", 
-      progress: 70, 
-      lastViewed: "2024-09-18",
-      icon: "🎨",
-      color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
-      exercises: 8,
-      completed: 6
-    },
-  ],
-  recentActivities: [
-    { 
-      title: "Exercice de calcul mental", 
-      matiere: "Mathématiques",
-      score: 85, 
-      date: "2024-09-15",
-      type: "exercise"
-    },
-    { 
-      title: "Lecture et compréhension", 
-      matiere: "Français",
-      score: 92, 
-      date: "2024-09-17",
-      type: "exercise"
-    },
-    { 
-      title: "Découverte des couleurs", 
-      matiere: "Arts",
-      score: 78, 
-      date: "2024-09-16",
-      type: "lesson"
-    },
-    { 
-      title: "Apprentissage des formes", 
-      matiere: "Mathématiques",
-      score: 88, 
-      date: "2024-09-14",
-      type: "lesson"
-    },
-  ],
-  achievements: [
-    { title: "Premier exercice", description: "Premier exercice complété", icon: "🎯", unlocked: true },
-    { title: "Mathématicien", description: "10 exercices de maths", icon: "🔢", unlocked: true },
-    { title: "Lecteur assidu", description: "5 exercices de français", icon: "📚", unlocked: true },
-    { title: "Artiste en herbe", description: "3 exercices d'arts", icon: "🎨", unlocked: false },
-  ]
+// Configuration des matières avec icônes et couleurs
+const SUBJECTS_CONFIG = {
+  math: { name: "Mathématiques", icon: "🔢", color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300" },
+  french: { name: "Français", icon: "📚", color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" },
+  sciences: { name: "Sciences", icon: "🧪", color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" },
+  art: { name: "Arts Plastiques", icon: "🎨", color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" },
+  history: { name: "Histoire", icon: "🏛️", color: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/30 dark:text-indigo-300" },
+  geography: { name: "Géographie", icon: "🌍", color: "bg-teal-100 text-teal-800 dark:bg-teal-900/30 dark:text-teal-300" },
+  language: { name: "Langues", icon: "🗣️", color: "bg-pink-100 text-pink-800 dark:bg-pink-900/30 dark:text-pink-300" },
+  technology: { name: "Technologie", icon: "💻", color: "bg-cyan-100 text-cyan-800 dark:bg-cyan-900/30 dark:text-cyan-300" },
+  music: { name: "Musique", icon: "🎵", color: "bg-rose-100 text-rose-800 dark:bg-rose-900/30 dark:text-rose-300" },
 };
 
 // Function to retrieve user data stored in localStorage
@@ -105,22 +40,49 @@ const ProfilePage = () => {
   const [currentTime, setCurrentTime] = useState<string>("");
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"overview" | "progress" | "achievements">("overview");
+  const [stats, setStats] = useState<any>(null);
+  const [loading, setLoading] = useState<boolean>(true);
   const router = useRouter();
 
   useEffect(() => {
-    // Retrieve user data from localStorage
-    const fetchedUser = fetchUserData();
+    const fetchData = async () => {
+      // Retrieve user data from localStorage
+      const fetchedUser = fetchUserData();
 
-    if (fetchedUser) {
-      setUser(fetchedUser);
-      const formattedCreatedAt = fetchedUser.createdAt
-        ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
-        : "Non disponible";
+      if (fetchedUser) {
+        setUser(fetchedUser);
+        const formattedCreatedAt = fetchedUser.createdAt
+          ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
+          : "Non disponible";
 
-      setCreatedAt(formattedCreatedAt);
-    } else {
-      router.push("/users/login");
-    }
+        setCreatedAt(formattedCreatedAt);
+
+        // Fetch real statistics
+        try {
+          const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/eleves/complete-stats/${fetchedUser._id}`, {
+            headers: {
+              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Content-Type': 'application/json'
+            }
+          });
+
+          if (response.ok) {
+            const statsData = await response.json();
+            setStats(statsData);
+          } else {
+            console.error('Erreur lors de la récupération des statistiques');
+          }
+        } catch (error) {
+          console.error('Erreur lors de la récupération des statistiques:', error);
+        }
+      } else {
+        router.push("/users/login");
+      }
+
+      setLoading(false);
+    };
+
+    fetchData();
 
     // Check for dark mode preference
     const darkMode = localStorage.getItem("darkMode") === "true" || 
@@ -154,7 +116,7 @@ const ProfilePage = () => {
     }
   };
 
-  if (!user) {
+  if (!user || loading) {
     return <Loading />;
   }
 
@@ -234,7 +196,7 @@ const ProfilePage = () => {
             </div>
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Matières</p>
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{mockData.matieres.length}</p>
+                      <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.subjects?.length || 0}</p>
                     </div>
                   </div>
                 </CardContent>
@@ -249,9 +211,9 @@ const ProfilePage = () => {
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Exercices</p>
                       <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {mockData.matieres.reduce((acc, m) => acc + m.completed, 0)}
-              </p>
-            </div>
+                        {stats?.totalExercises || 0}
+                      </p>
+                    </div>
           </div>
                 </CardContent>
               </Card>
@@ -265,9 +227,9 @@ const ProfilePage = () => {
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Progression</p>
                       <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {Math.round(mockData.matieres.reduce((acc, m) => acc + m.progress, 0) / mockData.matieres.length)}%
+                        {Math.round(stats?.averageScore || 0)}%
                       </p>
-              </div>
+                    </div>
             </div>
                 </CardContent>
               </Card>
@@ -281,7 +243,7 @@ const ProfilePage = () => {
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Réussites</p>
                       <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {mockData.achievements.filter(a => a.unlocked).length}
+                        {stats?.totalExercises > 0 ? Math.floor(stats.totalExercises / 5) : 0}
                       </p>
                     </div>
                   </div>
@@ -297,29 +259,37 @@ const ProfilePage = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-          <div className="space-y-4">
-                  {mockData.recentActivities.map((activity, index) => (
+                <div className="space-y-4">
+                  {stats?.scores?.slice(0, 5).map((score: any, index: number) => (
                     <div key={index} className="flex items-center justify-between p-4 bg-gray-50 dark:bg-gray-700 rounded-lg">
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center">
-                          <span className="text-lg">
-                            {activity.type === "exercise" ? "📝" : "📖"}
-                          </span>
-            </div>
+                          <span className="text-lg">📝</span>
+                        </div>
                         <div>
-                          <p className="font-medium text-gray-900 dark:text-white">{activity.title}</p>
-                          <p className="text-sm text-gray-600 dark:text-gray-400">{activity.matiere}</p>
-              </div>
-              </div>
+                          <p className="font-medium text-gray-900 dark:text-white">
+                            Exercice {score.subjectName}
+                          </p>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {SUBJECTS_CONFIG[score.subjectName as keyof typeof SUBJECTS_CONFIG]?.name || score.subjectName}
+                          </p>
+                        </div>
+                      </div>
                       <div className="text-right">
                         <Badge className="bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200">
-                          {activity.score}%
+                          {Math.round(score.score || 0)}%
                         </Badge>
-                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">{activity.date}</p>
-            </div>
+                        <p className="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                          {dayjs(score.createdAt).format("DD/MM/YYYY")}
+                        </p>
+                      </div>
                     </div>
-                  ))}
-            </div>
+                  )) || (
+                    <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+                      <p>Aucune activité récente</p>
+                    </div>
+                  )}
+                </div>
               </CardContent>
             </Card>
         </div>
@@ -329,39 +299,97 @@ const ProfilePage = () => {
           <div className="space-y-8">
             {/* Matières Progress */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {mockData.matieres.map((matiere, index) => (
-                <Card key={index} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                  <CardHeader>
-                    <div className="flex items-center gap-3">
-                      <span className="text-2xl">{matiere.icon}</span>
-        <div>
-                        <CardTitle className="text-lg text-gray-900 dark:text-white">{matiere.title}</CardTitle>
-                        <p className="text-sm text-gray-600 dark:text-gray-400">
-                          {matiere.completed}/{matiere.exercises} exercices
-                        </p>
-          </div>
-              </div>
-                  </CardHeader>
-                  <CardContent>
-                    <Progress value={matiere.progress} className="mb-4" />
-                    <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
-                      <span>Progression: {matiere.progress}%</span>
-                      <span>Dernière activité: {matiere.lastViewed}</span>
+              {stats?.subjects?.map((subject: any, index: number) => {
+                const subjectConfig = SUBJECTS_CONFIG[subject.subject as keyof typeof SUBJECTS_CONFIG];
+                return (
+                  <Card key={index} className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+                    <CardHeader>
+                      <div className="flex items-center gap-3">
+                        <span className="text-2xl">{subjectConfig?.icon || "📚"}</span>
+                        <div>
+                          <CardTitle className="text-lg text-gray-900 dark:text-white">
+                            {subjectConfig?.name || subject.subject}
+                          </CardTitle>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            {subject.totalExercises} exercices
+                          </p>
+                        </div>
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <Progress value={Math.round(subject.averageScore || 0)} className="mb-4" />
+                      <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400">
+                        <span>Score moyen: {Math.round(subject.averageScore || 0)}%</span>
+                        <span>Exercices: {subject.totalExercises}</span>
+                      </div>
+                      <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white">
+                        Continuer
+                      </Button>
+                    </CardContent>
+                  </Card>
+                );
+              }) || (
+                <div className="col-span-2 text-center py-8 text-gray-500 dark:text-gray-400">
+                  <p>Aucune donnée de progression disponible</p>
+                </div>
+              )}
             </div>
-                    <Button className="w-full mt-4 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white">
-                      Continuer
-                    </Button>
-                  </CardContent>
-                </Card>
-              ))}
           </div>
-        </div>
-      )}
+        )}
 
         {activeTab === "achievements" && (
           <div className="space-y-8">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {mockData.achievements.map((achievement, index) => (
+              {[
+                { 
+                  title: "Premier exercice", 
+                  description: "Premier exercice complété", 
+                  icon: "🎯", 
+                  unlocked: (stats?.totalExercises || 0) >= 1 
+                },
+                { 
+                  title: "Élève assidu", 
+                  description: "5 exercices complétés", 
+                  icon: "📚", 
+                  unlocked: (stats?.totalExercises || 0) >= 5 
+                },
+                { 
+                  title: "Excellent élève", 
+                  description: "10 exercices complétés", 
+                  icon: "⭐", 
+                  unlocked: (stats?.totalExercises || 0) >= 10 
+                },
+                { 
+                  title: "Champion", 
+                  description: "25 exercices complétés", 
+                  icon: "🏆", 
+                  unlocked: (stats?.totalExercises || 0) >= 25 
+                },
+                { 
+                  title: "Mathématicien", 
+                  description: "Score moyen > 80%", 
+                  icon: "🔢", 
+                  unlocked: (stats?.averageScore || 0) >= 80 
+                },
+                { 
+                  title: "Perfectionniste", 
+                  description: "Score moyen > 90%", 
+                  icon: "💯", 
+                  unlocked: (stats?.averageScore || 0) >= 90 
+                },
+                { 
+                  title: "Polyvalent", 
+                  description: "3 matières différentes", 
+                  icon: "🎨", 
+                  unlocked: (stats?.subjects?.length || 0) >= 3 
+                },
+                { 
+                  title: "Expert", 
+                  description: "5 matières différentes", 
+                  icon: "🎓", 
+                  unlocked: (stats?.subjects?.length || 0) >= 5 
+                },
+              ].map((achievement, index) => (
                 <Card key={index} className={`bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 ${
                   !achievement.unlocked ? "opacity-50" : ""
                 }`}>
