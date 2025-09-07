@@ -19,23 +19,47 @@ import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import Loading from "@/components/loading";
 
-// Example data for courses, evaluations, and articles
+// Données adaptées au projet AutiStudy
 const mockData = {
-  courses: [
-    { title: "Cours de Mathématiques", progress: 80, lastViewed: "2024-09-20" },
-    { title: "Cours de Français", progress: 50, lastViewed: "2024-09-21" },
-  ],
-  evaluations: [
-    { title: "Évaluation de Mathématiques", score: 75, date: "2024-09-15" },
-    { title: "Évaluation de Français", score: 88, date: "2024-09-17" },
-  ],
-  articles: [
-    { title: "Article sur l'autisme", progress: 60, lastViewed: "2024-09-19" },
-    {
-      title: "Article sur la pédagogie",
-      progress: 30,
-      lastViewed: "2024-09-18",
+  matieres: [
+    { 
+      title: "Mathématiques", 
+      progress: 80, 
+      lastViewed: "2024-09-20",
+      icon: "🔢",
+      color: "bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-300"
     },
+    { 
+      title: "Français", 
+      progress: 65, 
+      lastViewed: "2024-09-21",
+      icon: "📚",
+      color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300"
+    },
+    { 
+      title: "Sciences", 
+      progress: 45, 
+      lastViewed: "2024-09-19",
+      icon: "🧪",
+      color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300"
+    },
+    { 
+      title: "Arts Plastiques", 
+      progress: 70, 
+      lastViewed: "2024-09-18",
+      icon: "🎨",
+      color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300"
+    },
+  ],
+  exercices: [
+    { title: "Exercice de calcul mental", score: 85, date: "2024-09-15", matiere: "Mathématiques" },
+    { title: "Lecture et compréhension", score: 92, date: "2024-09-17", matiere: "Français" },
+    { title: "Découverte des couleurs", score: 78, date: "2024-09-16", matiere: "Arts" },
+  ],
+  lecons: [
+    { title: "Apprentissage des formes", progress: 60, lastViewed: "2024-09-19", matiere: "Mathématiques" },
+    { title: "Vocabulaire sensoriel", progress: 40, lastViewed: "2024-09-18", matiere: "Français" },
+    { title: "Découverte des sons", progress: 55, lastViewed: "2024-09-17", matiere: "Sciences" },
   ],
 };
 
@@ -43,10 +67,8 @@ const mockData = {
 const fetchUserData = () => {
   if (typeof window !== "undefined") {
     const storedUser = localStorage.getItem("user");
-
     return storedUser ? JSON.parse(storedUser) : null;
   }
-
   return null;
 };
 
@@ -85,142 +107,170 @@ const ProfilePage = () => {
   }
 
   return (
-    <div className="container px-4 mx-auto mt-6 performance-optimized" style={{ minHeight: '200px', contain: 'layout style paint' }}>
-      <h1 className="mb-4 text-3xl font-bold text-center md:text-4xl performance-optimized">
-        Bonjour à toi, {user.pseudo} 👋
-      </h1>
-      <p className="mb-6 text-sm text-center text-muted-foreground md:text-base performance-optimized">
-        Heure actuelle : {currentTime} | Date de création du compte :{" "}
-        {createdAt}
-      </p>
+    <div className="min-h-screen bg-white dark:bg-gray-900">
+      {/* Hero Section */}
+      <section className="relative py-12 md:py-20 overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
+        <div className="relative w-full px-4 md:px-8 lg:px-12">
+          <div className="max-w-7xl mx-auto text-center">
+            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              Bonjour {user.pseudo} ! 👋
+            </h1>
+            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-2">
+              Bienvenue sur votre tableau de bord AutiStudy
+            </p>
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              Heure actuelle : {currentTime} | Membre depuis le {createdAt}
+            </p>
+          </div>
+        </div>
+      </section>
 
-      <div className="grid grid-cols-1 gap-6 md:grid-cols-3 grid-cls-optimized performance-optimized">
-        {/* Cours Consultés */}
-        <Card className="overflow-hidden shadow-md performance-optimized">
-          <CardHeader className="bg-primary p-3 performance-optimized">
-            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl performance-optimized">
-              Cours Consultés
+      {/* Dashboard Content */}
+      <div className="container px-4 mx-auto py-8">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
+          {/* Matières */}
+          <Card className="overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+            <CardHeader className="bg-blue-600 p-4">
+              <CardTitle className="text-lg text-center text-white md:text-xl">
+                📚 Mes Matières
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+              {mockData.matieres.map((matiere, index) => (
+                <div key={index} className="mb-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <span className="text-xl">{matiere.icon}</span>
+                    <p className="font-medium text-gray-900 dark:text-white">{matiere.title}</p>
+                  </div>
+                  <Progress
+                    aria-label={`Progression en ${matiere.title}`}
+                    className="h-2 mb-2"
+                    value={matiere.progress}
+                  />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Dernière activité : {matiere.lastViewed}
+                  </p>
+                  <Button
+                    aria-label={`Continuer ${matiere.title}`}
+                    className="w-full bg-blue-600 hover:bg-blue-700 text-white"
+                    size="sm"
+                  >
+                    Continuer
+                  </Button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Exercices Réalisés */}
+          <Card className="overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+            <CardHeader className="bg-green-600 p-4">
+              <CardTitle className="text-lg text-center text-white md:text-xl">
+                ✅ Exercices Réalisés
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+              {mockData.exercices.map((exercice, index) => (
+                <div key={index} className="mb-4">
+                  <div className="flex items-center justify-between mb-2">
+                    <p className="font-medium text-gray-900 dark:text-white">{exercice.title}</p>
+                    <span className="text-sm bg-green-100 text-green-800 px-2 py-1 rounded-full">
+                      {exercice.score}%
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                    Matière : {exercice.matiere}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Date : {exercice.date}
+                  </p>
+                  <Button
+                    aria-label={`Voir l'exercice ${exercice.title}`}
+                    className="w-full bg-green-600 hover:bg-green-700 text-white"
+                    size="sm"
+                  >
+                    Voir les détails
+                  </Button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+
+          {/* Leçons en Cours */}
+          <Card className="overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+            <CardHeader className="bg-purple-600 p-4">
+              <CardTitle className="text-lg text-center text-white md:text-xl">
+                📖 Leçons en Cours
+              </CardTitle>
+            </CardHeader>
+            <CardContent className="p-4">
+              {mockData.lecons.map((lecon, index) => (
+                <div key={index} className="mb-4">
+                  <div className="flex items-center gap-2 mb-2">
+                    <p className="font-medium text-gray-900 dark:text-white">{lecon.title}</p>
+                  </div>
+                  <Progress
+                    aria-label={`Progression de la leçon ${lecon.title}`}
+                    className="h-2 mb-2"
+                    value={lecon.progress}
+                  />
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                    Matière : {lecon.matiere}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    Dernière activité : {lecon.lastViewed}
+                  </p>
+                  <Button
+                    aria-label={`Reprendre ${lecon.title}`}
+                    className="w-full bg-purple-600 hover:bg-purple-700 text-white"
+                    size="sm"
+                  >
+                    Reprendre
+                  </Button>
+                </div>
+              ))}
+            </CardContent>
+          </Card>
+        </div>
+
+        {/* Graphique de Progression */}
+        <Card className="mt-8 overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700">
+          <CardHeader className="bg-blue-600 p-4">
+            <CardTitle className="text-lg text-center text-white md:text-xl">
+              📊 Progression AutiStudy
             </CardTitle>
           </CardHeader>
-          <CardContent className="p-4 performance-optimized">
-            {mockData.courses.map((course, index) => (
-              <div key={index} className="mb-4 performance-optimized">
-                <p className="mb-1 font-medium performance-optimized">{course.title}</p>
-                <Progress
-                  aria-label={`Progression du cours ${course.title}`}
-                  className="h-2 mb-1 performance-optimized"
-                  value={course.progress}
-                />
-                <p className="mb-2 text-sm text-muted-foreground performance-optimized">
-                  Dernière consultation : {course.lastViewed}
-                </p>
-                <Button
-                  aria-label={`Reprendre ${course.title}`}
-                  className="w-full mt-1 button-cls-optimized performance-optimized"
-                  size="sm"
+          <CardContent className="p-4">
+            <div className="w-full" style={{ height: "300px" }}>
+              <ResponsiveContainer height="100%" width="100%">
+                <LineChart
+                  data={[
+                    { name: "Mathématiques", progress: 80 },
+                    { name: "Français", progress: 65 },
+                    { name: "Sciences", progress: 45 },
+                    { name: "Arts", progress: 70 },
+                    { name: "Exercices", progress: 85 },
+                    { name: "Leçons", progress: 55 },
+                  ]}
+                  margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
                 >
-                  Reprendre
-                </Button>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Évaluations faites */}
-        <Card className="overflow-hidden shadow-md performance-optimized">
-          <CardHeader className="bg-primary p-3 performance-optimized">
-            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl performance-optimized">
-              Évaluations
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-4 performance-optimized">
-            {mockData.evaluations.map((evaluation, index) => (
-              <div key={index} className="mb-4 performance-optimized">
-                <p className="mb-1 font-medium performance-optimized">{evaluation.title}</p>
-                <p className="text-sm performance-optimized">Score : {evaluation.score}%</p>
-                <p className="mb-2 text-sm text-muted-foreground performance-optimized">
-                  Date : {evaluation.date}
-                </p>
-                <Button
-                  aria-label={`Voir l'évaluation de ${evaluation.title}`}
-                  className="w-full mt-1 button-cls-optimized performance-optimized"
-                  size="sm"
-                >
-                  Voir l&apos;évaluation
-                </Button>
-              </div>
-            ))}
-          </CardContent>
-        </Card>
-
-        {/* Articles Consultés */}
-        <Card className="overflow-hidden shadow-md performance-optimized">
-          <CardHeader className="bg-primary p-3 performance-optimized">
-            <CardTitle className="text-lg text-center text-primary-foreground md:text-xl performance-optimized">
-              Articles Consultés
-            </CardTitle>
-          </CardHeader>
-          <CardContent className="p-4 performance-optimized">
-            {mockData.articles.map((article, index) => (
-              <div key={index} className="mb-4 performance-optimized">
-                <p className="mb-1 font-medium performance-optimized">{article.title}</p>
-                <Progress
-                  aria-label={`Progression de l'article ${article.title}`}
-                  className="h-2 mb-1 performance-optimized"
-                  value={article.progress}
-                />
-                <p className="mb-2 text-sm text-muted-foreground performance-optimized">
-                  Dernière consultation : {article.lastViewed}
-                </p>
-                <Button
-                  aria-label={`Reprendre ${article.title}`}
-                  className="w-full mt-1 button-cls-optimized performance-optimized"
-                  size="sm"
-                >
-                  Reprendre
-                </Button>
-              </div>
-            ))}
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="name" tick={{ fontSize: 12 }} tickSize={8} />
+                  <YAxis tick={{ fontSize: 12 }} tickSize={8} />
+                  <Tooltip />
+                  <Line
+                    dataKey="progress"
+                    stroke="#2563eb"
+                    strokeWidth={2}
+                    type="monotone"
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
           </CardContent>
         </Card>
       </div>
-
-      {/* Diagramme de progression */}
-      <Card className="mt-8 overflow-hidden shadow-md performance-optimized">
-        <CardHeader className="bg-primary p-3 performance-optimized">
-          <CardTitle className="text-lg text-center text-primary-foreground md:text-xl performance-optimized">
-            Progression des activités
-          </CardTitle>
-        </CardHeader>
-        <CardContent className="p-4 performance-optimized">
-          <div className="w-full performance-optimized" style={{ height: "300px" }}>
-            <ResponsiveContainer height="100%" width="100%">
-              <LineChart
-                data={[
-                  { name: "Math", progress: 80 },
-                  { name: "Français", progress: 50 },
-                  { name: "Éval Math", progress: 75 },
-                  { name: "Éval FR", progress: 88 },
-                  { name: "Art Autisme", progress: 60 },
-                  { name: "Art Péda", progress: 30 },
-                ]}
-                margin={{ top: 5, right: 5, left: 5, bottom: 5 }}
-              >
-                <CartesianGrid strokeDasharray="3 3" />
-                <XAxis dataKey="name" tick={{ fontSize: 12 }} tickSize={8} />
-                <YAxis tick={{ fontSize: 12 }} tickSize={8} />
-                <Tooltip />
-                <Line
-                  dataKey="progress"
-                  stroke="hsl(var(--primary))"
-                  strokeWidth={2}
-                  type="monotone"
-                />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </CardContent>
-      </Card>
     </div>
   );
 };
