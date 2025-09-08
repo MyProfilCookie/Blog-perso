@@ -110,7 +110,7 @@ export default function RootLayout({
         {/* Support du mode sombre pour Safari */}
         <meta name="supported-color-schemes" content="light dark" />
         
-        {/* Styles inline pour forcer le mode sombre sur iOS */}
+        {/* Styles inline pour forcer le mode sombre sur iOS et supprimer les bordures navbar */}
         <style dangerouslySetInnerHTML={{
           __html: `
             @media (prefers-color-scheme: dark) {
@@ -119,6 +119,32 @@ export default function RootLayout({
             }
             .dark body { background-color: #111827 !important; }
             .dark html { background-color: #111827 !important; }
+            
+            /* Suppression forcée des bordures navbar */
+            .nextui-navbar,
+            .nextui-navbar-container,
+            [data-nextui-navbar],
+            nav,
+            header,
+            .navbar,
+            .navigation {
+              border: none !important;
+              border-bottom: none !important;
+              border-top: none !important;
+              border-left: none !important;
+              border-right: none !important;
+              outline: none !important;
+              box-shadow: none !important;
+            }
+            
+            /* Suppression sur tous les enfants de la navbar */
+            .nextui-navbar *,
+            nav *,
+            header * {
+              border: none !important;
+              border-bottom: none !important;
+              outline: none !important;
+            }
           `
         }} />
       </head>

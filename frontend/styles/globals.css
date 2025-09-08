@@ -81,22 +81,33 @@ body {
 .nextui-c-egxOLa,
 .nextui-c-egxOLa-ibCqjJf-css,
 nav[role="navigation"],
-header nav {
+header nav,
+nav,
+header,
+.navbar,
+.navigation,
+[class*="navbar"],
+[class*="nav-"] {
   border-bottom: none !important;
   border-top: none !important;
   border-left: none !important;
   border-right: none !important;
+  border: none !important;
   outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Styles spécifiques pour iPhone - suppression des bordures */
 @supports (padding: max(0px)) {
   .nextui-navbar,
   .nextui-navbar-container,
-  [data-nextui-navbar] {
+  [data-nextui-navbar],
+  nav,
+  header {
     border-bottom: none !important;
     box-shadow: none !important;
     outline: none !important;
+    border: none !important;
   }
 }
 
@@ -104,6 +115,7 @@ header nav {
 [data-nextui-navbar] {
   border: none !important;
   outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Correction spécifique pour les composants NextUI navbar */
@@ -111,6 +123,7 @@ header nav {
 .nextui-c-egxOLa-ibCqjJf-css {
   border: none !important;
   outline: none !important;
+  box-shadow: none !important;
 }
 
 /* Suppression des bordures sur tous les éléments de navigation */
@@ -119,6 +132,21 @@ header,
 .navbar,
 .navigation {
   border-bottom: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+  border: none !important;
+}
+
+/* Styles ultra-agressifs pour supprimer toute bordure */
+*[class*="navbar"] *,
+*[class*="nav-"] *,
+header *,
+nav * {
+  border-bottom: none !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  border: none !important;
   outline: none !important;
 }
 

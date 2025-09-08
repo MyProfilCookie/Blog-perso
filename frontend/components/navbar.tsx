@@ -476,8 +476,13 @@ export const Navbar = () => {
           : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,243,255,0.95) 100%)",
         contain: "layout style paint",
         borderBottom: "none",
+        borderTop: "none",
+        borderLeft: "none",
+        borderRight: "none",
         border: "none",
-        outline: "none"
+        outline: "none",
+        borderWidth: "0",
+        borderStyle: "none"
       }}
     >
       <NavbarContent>
