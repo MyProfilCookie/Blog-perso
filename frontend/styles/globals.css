@@ -150,6 +150,20 @@ nav * {
   outline: none !important;
 }
 
+/* Classe spécifique pour la navbar sans bordure */
+.no-border-navbar,
+.no-border-navbar *,
+.no-border-navbar::before,
+.no-border-navbar::after {
+  border: none !important;
+  border-bottom: none !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
 .emoji-green {
   color: #10b981;
   /* Couleur vert Tailwind */

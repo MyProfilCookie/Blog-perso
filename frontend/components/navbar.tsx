@@ -463,14 +463,12 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar
-      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative performance-optimized"
+      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative performance-optimized no-border-navbar"
       maxWidth="xl"
       position="sticky"
       onMenuOpenChange={setIsMenuOpen}
       style={{ 
-        boxShadow: resolvedTheme === 'dark' 
-          ? "0 4px 20px rgba(0, 0, 0, 0.3)" 
-          : "0 4px 20px rgba(0, 0, 0, 0.08)",
+        boxShadow: "none",
         background: resolvedTheme === 'dark'
           ? "linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(31, 41, 55, 0.95) 100%)"
           : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,243,255,0.95) 100%)",
