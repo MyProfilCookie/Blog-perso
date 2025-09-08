@@ -74,6 +74,41 @@ body {
   background-color: #111827 !important;
 }
 
+/* Suppression de la barre de délimitation de la navbar sur iPhone */
+.nextui-navbar {
+  border-bottom: none !important;
+}
+
+.nextui-navbar-container {
+  border-bottom: none !important;
+}
+
+/* Styles spécifiques pour iPhone - suppression des bordures */
+@supports (padding: max(0px)) {
+  .nextui-navbar {
+    border-bottom: none !important;
+    box-shadow: none !important;
+  }
+  
+  .nextui-navbar-container {
+    border-bottom: none !important;
+  }
+}
+
+/* Force la suppression de toutes les bordures sur la navbar */
+[data-nextui-navbar] {
+  border-bottom: none !important;
+}
+
+/* Correction spécifique pour les composants NextUI navbar */
+.nextui-c-egxOLa {
+  border-bottom: none !important;
+}
+
+.nextui-c-egxOLa-ibCqjJf-css {
+  border-bottom: none !important;
+}
+
 .emoji-green {
   color: #10b981;
   /* Couleur vert Tailwind */

@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
   BookOpen,
-  Flask,
+  Beaker,
   Calculator,
   Languages,
   Palette,
@@ -48,7 +48,7 @@ const courseThemes = [
     title: "Sciences",
     description: "Expériences et découvertes",
     route: "/controle/sciences",
-    icon: Flask,
+    icon: Beaker,
     color: "from-green-500 to-emerald-500",
     bgColor: "bg-green-50 dark:bg-green-900/20",
     borderColor: "border-green-200 dark:border-green-800",
