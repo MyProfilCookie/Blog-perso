@@ -74,39 +74,52 @@ body {
   background-color: #111827 !important;
 }
 
-/* Suppression de la barre de délimitation de la navbar sur iPhone */
-.nextui-navbar {
+/* Suppression complète de la barre de délimitation de la navbar */
+.nextui-navbar,
+.nextui-navbar-container,
+[data-nextui-navbar],
+.nextui-c-egxOLa,
+.nextui-c-egxOLa-ibCqjJf-css,
+nav[role="navigation"],
+header nav {
   border-bottom: none !important;
-}
-
-.nextui-navbar-container {
-  border-bottom: none !important;
+  border-top: none !important;
+  border-left: none !important;
+  border-right: none !important;
+  outline: none !important;
 }
 
 /* Styles spécifiques pour iPhone - suppression des bordures */
 @supports (padding: max(0px)) {
-  .nextui-navbar {
+  .nextui-navbar,
+  .nextui-navbar-container,
+  [data-nextui-navbar] {
     border-bottom: none !important;
     box-shadow: none !important;
-  }
-  
-  .nextui-navbar-container {
-    border-bottom: none !important;
+    outline: none !important;
   }
 }
 
 /* Force la suppression de toutes les bordures sur la navbar */
 [data-nextui-navbar] {
-  border-bottom: none !important;
+  border: none !important;
+  outline: none !important;
 }
 
 /* Correction spécifique pour les composants NextUI navbar */
-.nextui-c-egxOLa {
-  border-bottom: none !important;
+.nextui-c-egxOLa,
+.nextui-c-egxOLa-ibCqjJf-css {
+  border: none !important;
+  outline: none !important;
 }
 
-.nextui-c-egxOLa-ibCqjJf-css {
+/* Suppression des bordures sur tous les éléments de navigation */
+nav,
+header,
+.navbar,
+.navigation {
   border-bottom: none !important;
+  outline: none !important;
 }
 
 .emoji-green {
