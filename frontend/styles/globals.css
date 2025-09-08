@@ -51,26 +51,22 @@ body {
   background-color: #111827 !important;
 }
 
-/* Correction spécifique pour les pages controle */
-[data-page="controle"] {
-  background-color: #111827 !important;
-}
-
+/* Correction spécifique pour les pages controle - mode sombre uniquement */
 .dark [data-page="controle"] {
   background-color: #111827 !important;
 }
 
-/* Force le background sur toutes les sections controle */
-.dark section {
+/* Force le background sur les sections controle uniquement */
+.dark [data-page="controle"] section {
   background-color: #111827 !important;
 }
 
-/* Correction pour NextUI en mode sombre */
-.dark .nextui-c-egxOLa {
+/* Correction pour NextUI en mode sombre - uniquement dans controle */
+.dark [data-page="controle"] .nextui-c-egxOLa {
   background-color: #111827 !important;
 }
 
-.dark .nextui-c-egxOLa-ibCqjJf-css {
+.dark [data-page="controle"] .nextui-c-egxOLa-ibCqjJf-css {
   background-color: #111827 !important;
 }
 
