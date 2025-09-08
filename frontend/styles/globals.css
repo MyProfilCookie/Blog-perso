@@ -13,6 +13,35 @@ body {
   font-family: 'MyCustomFont', sans-serif;
 }
 
+/* Styles spécifiques pour iOS - Correction de l'encoche */
+@supports (padding: max(0px)) {
+  body {
+    padding-left: max(12px, env(safe-area-inset-left));
+    padding-right: max(12px, env(safe-area-inset-right));
+  }
+}
+
+/* Force le mode sombre pour l'encoche iOS */
+.ios-dark-mode {
+  background-color: #111827 !important;
+}
+
+/* Meta tags dynamiques pour iOS */
+@media (prefers-color-scheme: dark) {
+  body {
+    background-color: #111827;
+  }
+}
+
+/* Correction spécifique pour iPhone avec encoche */
+@supports (padding: max(0px)) {
+  @media (prefers-color-scheme: dark) {
+    body {
+      background-color: #111827 !important;
+    }
+  }
+}
+
 .emoji-green {
   color: #10b981;
   /* Couleur vert Tailwind */

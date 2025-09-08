@@ -94,9 +94,10 @@ export default function RootLayout({
           as="style"
         />
         
-        {/* Meta tags pour les performances */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+        {/* Meta tags pour les performances et iPhone avec encoche */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
         <meta httpEquiv="x-dns-prefetch-control" content="on" />
+        <meta name="format-detection" content="telephone=no" />
         
         {/* Meta tags pour le mode sombre iOS */}
         <meta name="color-scheme" content="light dark" />
@@ -108,6 +109,18 @@ export default function RootLayout({
         
         {/* Support du mode sombre pour Safari */}
         <meta name="supported-color-schemes" content="light dark" />
+        
+        {/* Styles inline pour forcer le mode sombre sur iOS */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            @media (prefers-color-scheme: dark) {
+              body { background-color: #111827 !important; }
+              html { background-color: #111827 !important; }
+            }
+            .dark body { background-color: #111827 !important; }
+            .dark html { background-color: #111827 !important; }
+          `
+        }} />
       </head>
       <body className={inter.className}>
         <ThemeColorManager />

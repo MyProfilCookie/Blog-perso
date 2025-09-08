@@ -12,31 +12,47 @@ export function ThemeColorManager() {
       
       const themeColor = isDarkMode ? "#111827" : "#ffffff";
       
-      // Mettre à jour le theme-color meta tag
-      let themeColorMeta = document.querySelector('meta[name="theme-color"]');
-      if (!themeColorMeta) {
-        themeColorMeta = document.createElement('meta');
-        themeColorMeta.setAttribute('name', 'theme-color');
-        document.head.appendChild(themeColorMeta);
-      }
-      themeColorMeta.setAttribute('content', themeColor);
+      // Supprimer tous les meta tags existants
+      const existingThemeColor = document.querySelectorAll('meta[name="theme-color"]');
+      existingThemeColor.forEach(meta => meta.remove());
       
-      // Mettre à jour le status-bar-style pour iOS
-      let statusBarMeta = document.querySelector('meta[name="apple-mobile-web-app-status-bar-style"]');
-      if (!statusBarMeta) {
-        statusBarMeta = document.createElement('meta');
-        statusBarMeta.setAttribute('name', 'apple-mobile-web-app-status-bar-style');
-        document.head.appendChild(statusBarMeta);
-      }
+      const existingStatusBar = document.querySelectorAll('meta[name="apple-mobile-web-app-status-bar-style"]');
+      existingStatusBar.forEach(meta => meta.remove());
+      
+      // Créer de nouveaux meta tags
+      const themeColorMeta = document.createElement('meta');
+      themeColorMeta.setAttribute('name', 'theme-color');
+      themeColorMeta.setAttribute('content', themeColor);
+      document.head.appendChild(themeColorMeta);
+      
+      const statusBarMeta = document.createElement('meta');
+      statusBarMeta.setAttribute('name', 'apple-mobile-web-app-status-bar-style');
       statusBarMeta.setAttribute('content', isDarkMode ? 'black-translucent' : 'default');
+      document.head.appendChild(statusBarMeta);
+      
+      // Forcer la mise à jour pour iOS
+      if (navigator.userAgent.includes('iPhone') || navigator.userAgent.includes('iPad')) {
+        // Ajouter une classe au body pour forcer le re-rendu
+        document.body.classList.toggle('ios-dark-mode', isDarkMode);
+        
+        // Forcer le reflow
+        document.body.offsetHeight;
+        
+        // Mettre à jour le viewport meta tag
+        const viewportMeta = document.querySelector('meta[name="viewport"]');
+        if (viewportMeta) {
+          const content = viewportMeta.getAttribute('content') || '';
+          viewportMeta.setAttribute('content', content + ', viewport-fit=cover');
+        }
+      }
     };
 
-    // Mettre à jour au chargement
-    updateThemeColor();
+    // Mettre à jour au chargement avec un délai pour iOS
+    setTimeout(updateThemeColor, 100);
 
     // Écouter les changements de mode sombre
     const observer = new MutationObserver(() => {
-      updateThemeColor();
+      setTimeout(updateThemeColor, 50);
     });
 
     observer.observe(document.documentElement, {
@@ -46,7 +62,9 @@ export function ThemeColorManager() {
 
     // Écouter les changements de préférence système
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    mediaQuery.addEventListener('change', updateThemeColor);
+    mediaQuery.addEventListener('change', () => {
+      setTimeout(updateThemeColor, 100);
+    });
 
     return () => {
       observer.disconnect();
