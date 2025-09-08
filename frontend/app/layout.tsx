@@ -6,6 +6,7 @@ import { Providers } from "./providers";
 import { Toaster } from "sonner";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
+import { ThemeColorManager } from "@/components/theme-color-manager";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -96,8 +97,20 @@ export default function RootLayout({
         {/* Meta tags pour les performances */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
         <meta httpEquiv="x-dns-prefetch-control" content="on" />
+        
+        {/* Meta tags pour le mode sombre iOS */}
+        <meta name="color-scheme" content="light dark" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)" />
+        <meta name="apple-mobile-web-app-capable" content="yes" />
+        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+        <meta name="apple-mobile-web-app-title" content="AutiStudy" />
+        
+        {/* Support du mode sombre pour Safari */}
+        <meta name="supported-color-schemes" content="light dark" />
       </head>
       <body className={inter.className}>
+        <ThemeColorManager />
         <Providers>
           <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
             <Navbar />
