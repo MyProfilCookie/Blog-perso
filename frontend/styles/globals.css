@@ -42,6 +42,38 @@ body {
   }
 }
 
+/* Force le mode sombre pour les pages controle */
+.dark body {
+  background-color: #111827 !important;
+}
+
+.dark html {
+  background-color: #111827 !important;
+}
+
+/* Correction spécifique pour les pages controle */
+[data-page="controle"] {
+  background-color: #111827 !important;
+}
+
+.dark [data-page="controle"] {
+  background-color: #111827 !important;
+}
+
+/* Force le background sur toutes les sections controle */
+.dark section {
+  background-color: #111827 !important;
+}
+
+/* Correction pour NextUI en mode sombre */
+.dark .nextui-c-egxOLa {
+  background-color: #111827 !important;
+}
+
+.dark .nextui-c-egxOLa-ibCqjJf-css {
+  background-color: #111827 !important;
+}
+
 .emoji-green {
   color: #10b981;
   /* Couleur vert Tailwind */
