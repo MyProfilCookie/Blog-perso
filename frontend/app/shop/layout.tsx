@@ -17,7 +17,7 @@ import { useRouter } from "next/navigation";
 import { motion } from "framer-motion";
 
 // Import du contexte
-import { CartProvider, useCart } from "../contexts/cart-context";
+import { CartProvider, useCart } from "@/app/contexts/cart-context";
 
 // Importer les composants shadcn
 import {

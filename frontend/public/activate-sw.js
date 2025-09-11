@@ -37,36 +37,20 @@
     });
   }
   
-  // Préchargement des ressources critiques
+  // Préchargement des ressources critiques (seulement les ressources essentielles)
   function preloadCriticalResources() {
-    const criticalResources = [
-      '/favicon.ico',
-      '/_next/static/css/',
-      '/_next/static/js/'
-    ];
-    
-    criticalResources.forEach(function(resource) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = resource.endsWith('.css') ? 'style' : 'script';
-      link.href = resource;
-      document.head.appendChild(link);
-    });
+    // Précharger seulement le favicon qui est utilisé sur toutes les pages
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = '/favicon.ico';
+    document.head.appendChild(link);
   }
   
-  // Précharger les polices critiques
+  // Précharger les polices critiques (désactivé pour éviter les erreurs de performance)
   function preloadFonts() {
-    const fonts = [
-      'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap'
-    ];
-    
-    fonts.forEach(function(font) {
-      const link = document.createElement('link');
-      link.rel = 'preload';
-      link.as = 'style';
-      link.href = font;
-      document.head.appendChild(link);
-    });
+    // Les polices sont déjà chargées dans _document.tsx
+    // Pas besoin de les précharger à nouveau ici
   }
   
   // Optimisations de performance

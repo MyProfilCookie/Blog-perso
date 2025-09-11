@@ -67,24 +67,36 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    const storedUser = localStorage.getItem("user");
+    try {
+      const storedUser = localStorage.getItem("user");
 
-    if (storedUser) {
-      const parsedUser: User = JSON.parse(storedUser);
+      if (storedUser) {
+        const parsedUser: User = JSON.parse(storedUser);
 
-      setUser(parsedUser);
-      const userCartKey = `cartItems_${parsedUser.pseudo}`;
-      const storedUserCart = localStorage.getItem(userCartKey);
+        // Vérifier que l'utilisateur a toutes les données nécessaires
+        if (parsedUser && parsedUser.pseudo && parsedUser._id) {
+          setUser(parsedUser);
+          const userCartKey = `cartItems_${parsedUser.pseudo}`;
+          const storedUserCart = localStorage.getItem(userCartKey);
 
-      if (storedUserCart) {
-        setCartItems(JSON.parse(storedUserCart));
+          if (storedUserCart) {
+            setCartItems(JSON.parse(storedUserCart));
+          }
+        } else {
+          console.warn("Données utilisateur incomplètes, utilisation du panier invité");
+        }
+      } else {
+        const guestCart = localStorage.getItem("guestCart");
+
+        if (guestCart) {
+          setCartItems(JSON.parse(guestCart));
+        }
       }
-    } else {
-      const guestCart = localStorage.getItem("guestCart");
-
-      if (guestCart) {
-        setCartItems(JSON.parse(guestCart));
-      }
+    } catch (error) {
+      console.error("Erreur lors du chargement des données utilisateur:", error);
+      // En cas d'erreur, nettoyer les données corrompues
+      localStorage.removeItem("user");
+      localStorage.removeItem("guestCart");
     }
   }, []);
 
@@ -92,12 +104,15 @@ export function CartProvider({ children }: { children: ReactNode }) {
   useEffect(() => {
     if (typeof window === "undefined") return;
 
-    if (user) {
-      const userCartKey = `cartItems_${user.pseudo}`;
-
-      localStorage.setItem(userCartKey, JSON.stringify(cartItems));
-    } else {
-      localStorage.setItem("guestCart", JSON.stringify(cartItems));
+    try {
+      if (user && user.pseudo) {
+        const userCartKey = `cartItems_${user.pseudo}`;
+        localStorage.setItem(userCartKey, JSON.stringify(cartItems));
+      } else {
+        localStorage.setItem("guestCart", JSON.stringify(cartItems));
+      }
+    } catch (error) {
+      console.error("Erreur lors de la sauvegarde du panier:", error);
     }
   }, [cartItems, user]);
 
