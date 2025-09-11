@@ -1,5 +1,5 @@
 "use client";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
 import {
@@ -27,6 +27,7 @@ import {
   Sparkles,
   RefreshCw,
   Crown,
+  Target,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -137,6 +138,16 @@ const courseThemes = [
   },
   {
     id: 11,
+    title: "Quiz Hebdomadaires",
+    description: "Quiz adaptés pour l'autisme",
+    route: "/controle/quiz-hebdomadaire",
+    icon: Target,
+    color: "from-purple-500 to-pink-500",
+    bgColor: "bg-purple-50 dark:bg-purple-900/20",
+    borderColor: "border-purple-200 dark:border-purple-800",
+  },
+  {
+    id: 12,
     title: "Premium",
     description: "Contenu exclusif et avancé",
     route: "/controle/subscription",
@@ -472,6 +483,125 @@ export default function ControleIndex() {
                 </Card>
               </motion.div>
             ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* Quiz Hebdomadaires - Section Spéciale */}
+      <section className="py-12 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
+        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
+            className="text-center mb-12"
+          >
+            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4">
+              <Target className="w-8 h-8 text-white" />
+            </div>
+            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+              Quiz Hebdomadaires 🧩
+            </h2>
+            <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+              Des quiz adaptés spécialement pour les enfants autistes de 6 à 18 ans. 
+              Questions simples, feedback positif et progression douce !
+            </p>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+          >
+            {/* Adaptations spéciales */}
+            <Card className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+                  <span className="text-2xl">📝</span>
+                  Questions Claires
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Phrases courtes et simples, une difficulté à la fois pour éviter la surcharge cognitive.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+                  <span className="text-2xl">🎨</span>
+                  Repères Visuels
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Couleurs et icônes par matière, animations douces pour une expérience apaisante.
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+                  <span className="text-2xl">💪</span>
+                  Feedback Positif
+                </CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-gray-600 dark:text-gray-300">
+                  Encouragements constants, progression visible et célébration des réussites.
+                </p>
+              </CardContent>
+            </Card>
+          </motion.div>
+
+          {/* Carte principale du quiz */}
+          <motion.div
+            initial={{ opacity: 0, scale: 0.95 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
+            className="max-w-4xl mx-auto"
+          >
+            <Card className="bg-gradient-to-r from-purple-500 to-pink-500 border-0 shadow-2xl overflow-hidden">
+              <CardContent className="p-8">
+                <div className="text-center text-white">
+                  <div className="w-20 h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-6">
+                    <Target className="w-10 h-10 text-white" />
+                  </div>
+                  <h3 className="text-2xl md:text-3xl font-bold mb-4">
+                    Commencer un Quiz
+                  </h3>
+                  <p className="text-lg mb-6 opacity-90">
+                    52 quiz disponibles, adaptés pour chaque semaine de l'année
+                  </p>
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                    <Button
+                      onClick={() => router.push('/controle/quiz-hebdomadaire')}
+                      size="lg"
+                      className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-3"
+                    >
+                      <Target className="w-5 h-5 mr-2" />
+                      Choisir un Quiz
+                    </Button>
+                    <Button
+                      onClick={() => {
+                        const currentWeek = Math.ceil((new Date().getTime() - new Date(new Date().getFullYear(), 0, 1).getTime()) / (86400000 * 7));
+                        router.push(`/controle/quiz-hebdomadaire?week=${currentWeek}`);
+                      }}
+                      size="lg"
+                      variant="outline"
+                      className="border-white text-white hover:bg-white/10 font-semibold px-8 py-3"
+                    >
+                      <Sparkles className="w-5 h-5 mr-2" />
+                      Quiz de cette Semaine
+                    </Button>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
           </motion.div>
         </div>
       </section>
