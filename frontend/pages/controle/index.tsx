@@ -25,6 +25,8 @@ import {
   Sun,
   Moon,
   Sparkles,
+  RefreshCw,
+  Crown,
 } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -122,6 +124,26 @@ const courseThemes = [
     color: "from-amber-500 to-yellow-500",
     bgColor: "bg-amber-50 dark:bg-amber-900/20",
     borderColor: "border-amber-200 dark:border-amber-800",
+  },
+  {
+    id: 10,
+    title: "Révisions",
+    description: "Consolidation des acquis",
+    route: "/controle/revision",
+    icon: RefreshCw,
+    color: "from-cyan-500 to-blue-500",
+    bgColor: "bg-cyan-50 dark:bg-cyan-900/20",
+    borderColor: "border-cyan-200 dark:border-cyan-800",
+  },
+  {
+    id: 11,
+    title: "Premium",
+    description: "Contenu exclusif et avancé",
+    route: "/controle/subscription",
+    icon: Crown,
+    color: "from-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600",
+    bgColor: "bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20",
+    borderColor: "border-yellow-300 dark:border-yellow-700",
   },
 ];
 
