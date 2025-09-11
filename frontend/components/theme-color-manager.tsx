@@ -35,6 +35,10 @@ export function ThemeColorManager() {
         // Ajouter une classe au body pour forcer le re-rendu
         document.body.classList.toggle('ios-dark-mode', isDarkMode);
         
+        // Forcer la couleur de l'encoche
+        document.body.style.backgroundColor = isDarkMode ? '#111827' : '#f8faff';
+        document.documentElement.style.backgroundColor = isDarkMode ? '#111827' : '#f8faff';
+        
         // Forcer le reflow
         document.body.offsetHeight;
         

@@ -120,6 +120,16 @@ export default function RootLayout({
             .dark body { background-color: #111827 !important; }
             .dark html { background-color: #111827 !important; }
             
+            /* Force la couleur de l'encoche iPhone */
+            @media (prefers-color-scheme: light) {
+              body { background-color: #f8faff !important; }
+              html { background-color: #f8faff !important; }
+            }
+            
+            /* Force la couleur cream pour l'encoche */
+            :not(.dark) body { background-color: #f8faff !important; }
+            :not(.dark) html { background-color: #f8faff !important; }
+            
             /* Suppression forcée des bordures navbar */
             .nextui-navbar,
             .nextui-navbar-container,
