@@ -115,7 +115,7 @@ export default function ArticlesClient() {
       </section>
 
       {/* Products Section */}
-      <section className="px-2 py-6 md:px-4 lg:px-6 bg-white dark:bg-gray-900 transition-colors">
+      <section className="bg-white dark:bg-gray-900 transition-colors">
 
       <div className="w-full">
         <div className="grid grid-cols-1 gap-6 sm:gap-8 md:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 max-w-7xl mx-auto">
