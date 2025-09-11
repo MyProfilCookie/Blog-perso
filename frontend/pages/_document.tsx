@@ -41,6 +41,12 @@ export default function Document() {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="AutiStudy" />
+        
+        {/* Meta tags pour le mode sombre iOS */}
+        <meta name="color-scheme" content="light dark" />
+        <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)" />
+        <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)" />
+        <meta name="supported-color-schemes" content="light dark" />
 
         {/* Optimisations de performance */}
         <meta httpEquiv="x-dns-prefetch-control" content="on" />

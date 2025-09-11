@@ -11,6 +11,7 @@ import clsx from "clsx";
 import { Providers } from "@/app/providers";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
+import { ThemeColorManager } from "@/components/theme-color-manager";
 
 import { fontSans } from "@/config/fonts";
 import { RevisionProvider } from "@/app/RevisionContext";
@@ -20,6 +21,7 @@ export default function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <PerformanceOptimizer />
+      <ThemeColorManager />
       <RevisionProvider>
         <div
           className={clsx(
