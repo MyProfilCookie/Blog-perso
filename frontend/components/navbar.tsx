@@ -471,7 +471,7 @@ export const Navbar = () => {
         boxShadow: "none",
         background: resolvedTheme === 'dark'
           ? "rgba(17, 24, 39, 0.95)"
-          : "rgba(254, 243, 199, 0.95)",
+          : "rgba(248, 250, 255, 0.95)",
         backdropFilter: "blur(10px)",
         contain: "layout style paint",
         borderBottom: "0",
