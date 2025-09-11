@@ -7,7 +7,7 @@
     // Attendre que la page soit chargée
     window.addEventListener('load', function() {
       // Enregistrer le Service Worker
-      navigator.serviceWorker.register('/sw-cache.js')
+      navigator.serviceWorker.register('/sw.js')
         .then(function(registration) {
           console.log('Service Worker enregistré avec succès:', registration.scope);
           
@@ -40,17 +40,16 @@
   // Préchargement des ressources critiques
   function preloadCriticalResources() {
     const criticalResources = [
-      '/assets/home/home.webp',
-      '/assets/family/chantal.webp',
-      '/assets/logo/logo.webp'
+      '/favicon.ico',
+      '/_next/static/css/',
+      '/_next/static/js/'
     ];
     
     criticalResources.forEach(function(resource) {
       const link = document.createElement('link');
       link.rel = 'preload';
-      link.as = 'image';
+      link.as = resource.endsWith('.css') ? 'style' : 'script';
       link.href = resource;
-      link.crossOrigin = 'anonymous';
       document.head.appendChild(link);
     });
   }
