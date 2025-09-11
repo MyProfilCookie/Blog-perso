@@ -488,7 +488,7 @@ export const Navbar = () => {
       <NavbarContent>
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="sm:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
+          className="md:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
         />
         <NavbarBrand as="li" className="gap-2 max-w-fit">
           <NextLink className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized" href="/">
@@ -505,10 +505,10 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden sm:flex gap-4" justify="center">
+      <NavbarContent className="hidden md:flex gap-6" justify="center">
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
             href="/about"
           >
             <FontAwesomeIcon icon={faInfoCircle} className="w-4 h-4" />
@@ -518,7 +518,7 @@ export const Navbar = () => {
         
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
             href="/articles"
           >
             <FontAwesomeIcon icon={faBook} className="w-4 h-4" />
@@ -528,7 +528,7 @@ export const Navbar = () => {
         
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
             href="/controle"
           >
             <FontAwesomeIcon icon={faGamepad} className="w-4 h-4" />
@@ -538,7 +538,7 @@ export const Navbar = () => {
 
         <NavbarItem key="shop" className="relative">
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-sm xl:text-base font-medium tracking-wide transition-colors duration-200"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-base lg:text-lg font-medium tracking-wide transition-colors duration-200"
             href="/shop"
           >
             <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
@@ -563,7 +563,7 @@ export const Navbar = () => {
 
       <NavbarContent justify="end">
         {/* Bouton de thème mobile */}
-        <NavbarItem className="flex lg:hidden">
+        <NavbarItem className="flex xl:hidden">
           <ThemeSwitch />
         </NavbarItem>
 
