@@ -469,9 +469,8 @@ export const Navbar = () => {
       onMenuOpenChange={setIsMenuOpen}
       style={{ 
         boxShadow: "none",
-        background: resolvedTheme === 'dark'
-          ? "linear-gradient(135deg, rgba(17, 24, 39, 0.95) 0%, rgba(31, 41, 55, 0.95) 100%)"
-          : "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,243,255,0.95) 100%)",
+        background: "transparent",
+        backdropFilter: "blur(10px)",
         contain: "layout style paint",
         borderBottom: "0",
         borderTop: "0",
