@@ -469,7 +469,9 @@ export const Navbar = () => {
       onMenuOpenChange={setIsMenuOpen}
       style={{ 
         boxShadow: "none",
-        background: "transparent",
+        background: resolvedTheme === 'dark'
+          ? "rgba(17, 24, 39, 0.95)"
+          : "rgba(254, 243, 199, 0.95)",
         backdropFilter: "blur(10px)",
         contain: "layout style paint",
         borderBottom: "0",
