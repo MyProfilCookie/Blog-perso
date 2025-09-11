@@ -180,7 +180,18 @@ export default function ControleIndex() {
           localStorage.getItem("userId") ||
           JSON.parse(localStorage.getItem("user") || "{}")._id;
 
-        if (!token || !userId) throw new Error("Utilisateur non authentifié");
+        if (!token || !userId) {
+          // Utiliser des stats par défaut si pas connecté
+          setStats({
+            eleve: { prenom: "Visiteur", nom: "" },
+            moyenneGenerale: 0,
+            tempsEtude: "0h/jour",
+            coursSuivis: 0,
+            exercicesCompletes: 0,
+            progressionGenerale: 0
+          });
+          return;
+        }
         const response = await axios.get(
           `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
           { headers: { Authorization: `Bearer ${token}` } },
@@ -240,10 +251,11 @@ export default function ControleIndex() {
         }
       }
 
-      if (!isAuthenticated) {
-        router.push("/users/login");
-        return;
-      }
+      // Permettre un aperçu même sans connexion
+      // if (!isAuthenticated) {
+      //   router.push("/users/login");
+      //   return;
+      // }
 
       if (userData) {
         setStats(prevStats => ({
@@ -380,12 +392,21 @@ export default function ControleIndex() {
                     console.error("Erreur lors de la récupération du prénom depuis localStorage:", e);
                   }
                   
-                  return "Élève";
+                  return "Visiteur";
                 })()} ! 🌟
               </h1>
               <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
-                Bienvenue dans ton espace d&apos;apprentissage magique ! ✨
+                {localStorage.getItem("user") ? "Bienvenue dans ton espace d'apprentissage magique ! ✨" : "Découvrez nos matières et fonctionnalités d'apprentissage ! ✨"}
               </p>
+              {!localStorage.getItem("user") && (
+                <div className="mt-6 max-w-2xl mx-auto">
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <p className="text-blue-800 dark:text-blue-200 text-sm">
+                      💡 <strong>Mode aperçu :</strong> Connectez-vous pour accéder à vos statistiques personnalisées et sauvegarder votre progression.
+                    </p>
+                  </div>
+                </div>
+              )}
             </motion.div>
           </div>
         </div>
