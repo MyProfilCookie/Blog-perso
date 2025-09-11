@@ -84,7 +84,7 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
     };
 
     return (
-        <div className="min-h-screen px-2 py-4 md:px-4 lg:px-6 bg-cream dark:bg-gray-900 transition-colors">
+        <div className="min-h-screen py-4 bg-cream dark:bg-gray-900 transition-colors">
             {/* <div className="mb-4 md:mb-6 text-center">
                 <motion.h1
                     animate={{ opacity: 1, y: 0 }}
