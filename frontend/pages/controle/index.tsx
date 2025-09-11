@@ -183,12 +183,15 @@ export default function ControleIndex() {
         if (!token || !userId) {
           // Utiliser des stats par défaut si pas connecté
           setStats({
-            eleve: { prenom: "Visiteur", nom: "" },
-            moyenneGenerale: 0,
-            tempsEtude: "0h/jour",
-            coursSuivis: 0,
-            exercicesCompletes: 0,
-            progressionGenerale: 0
+            totalEleves: 0,
+            averageScore: "0",
+            progression: "0",
+            eleve: { 
+              prenom: "Visiteur", 
+              nom: "", 
+              modificationsCount: 0, 
+              lastModificationDate: new Date().toISOString() 
+            }
           });
           return;
         }
