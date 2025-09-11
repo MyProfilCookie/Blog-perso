@@ -145,6 +145,31 @@ export default function RootLayout({
               border-bottom: none !important;
               outline: none !important;
             }
+            
+            /* Suppression ultra-agressive de toutes les bordures */
+            .nextui-navbar,
+            .nextui-navbar *,
+            .nextui-navbar::before,
+            .nextui-navbar::after,
+            [data-nextui-navbar],
+            [data-nextui-navbar] * {
+              border: 0 !important;
+              border-bottom: 0 !important;
+              border-top: 0 !important;
+              border-left: 0 !important;
+              border-right: 0 !important;
+              outline: 0 !important;
+              box-shadow: none !important;
+              border-width: 0 !important;
+              border-style: none !important;
+            }
+            
+            /* Suppression des pseudo-éléments */
+            .nextui-navbar::after,
+            .nextui-navbar::before {
+              display: none !important;
+              content: none !important;
+            }
           `
         }} />
       </head>

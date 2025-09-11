@@ -160,6 +160,45 @@ nav * {
   box-shadow: none !important;
 }
 
+/* Styles ultra-agressifs pour supprimer TOUTE bordure visible */
+.nextui-navbar,
+.nextui-navbar *,
+.nextui-navbar::before,
+.nextui-navbar::after,
+[data-nextui-navbar],
+[data-nextui-navbar] *,
+[data-nextui-navbar]::before,
+[data-nextui-navbar]::after {
+  border: 0 !important;
+  border-bottom: 0 !important;
+  border-top: 0 !important;
+  border-left: 0 !important;
+  border-right: 0 !important;
+  outline: 0 !important;
+  box-shadow: none !important;
+  border-width: 0 !important;
+  border-style: none !important;
+  border-color: transparent !important;
+}
+
+/* Suppression des pseudo-éléments qui pourraient créer des bordures */
+.nextui-navbar::after,
+.nextui-navbar::before,
+[data-nextui-navbar]::after,
+[data-nextui-navbar]::before {
+  display: none !important;
+  content: none !important;
+}
+
+/* Force la suppression sur tous les éléments enfants */
+.nextui-navbar > *,
+.nextui-navbar > * > *,
+.nextui-navbar > * > * > * {
+  border: 0 !important;
+  border-bottom: 0 !important;
+  box-shadow: none !important;
+}
+
 .emoji-green {
   color: #10b981;
   /* Couleur vert Tailwind */
