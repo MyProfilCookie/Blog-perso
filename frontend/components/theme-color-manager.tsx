@@ -10,7 +10,7 @@ export function ThemeColorManager() {
         (!localStorage.getItem("darkMode") && 
          window.matchMedia("(prefers-color-scheme: dark)").matches);
       
-      const themeColor = isDarkMode ? "#111827" : "#ffffff";
+      const themeColor = isDarkMode ? "#111827" : "#f8faff";
       
       // Supprimer tous les meta tags existants
       const existingThemeColor = document.querySelectorAll('meta[name="theme-color"]');
