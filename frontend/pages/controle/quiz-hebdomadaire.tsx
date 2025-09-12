@@ -29,7 +29,7 @@ export default function QuizHebdomadairePage() {
     const loadQuizzesAndScores = async () => {
       try {
         // Charger les quiz depuis l'API
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/quiz`);
+        const response = await fetch(`/api/quiz`);
         if (response.ok) {
           const result = await response.json();
           if (result.success) {
@@ -40,7 +40,7 @@ export default function QuizHebdomadairePage() {
         // Charger les scores de l'utilisateur depuis l'API
         const token = localStorage.getItem('token');
         if (token) {
-          const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/quiz/results/user/${JSON.parse(localStorage.getItem('user') || '{}')._id}/stats`, {
+          const userResponse = await fetch(`/api/quiz/results/user/${JSON.parse(localStorage.getItem('user') || '{}')._id}/stats`, {
             headers: {
               'Authorization': `Bearer ${token}`
             }

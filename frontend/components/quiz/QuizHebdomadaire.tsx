@@ -66,7 +66,7 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     const loadQuiz = async () => {
       try {
         const targetWeek = weekNumber || getCurrentWeek();
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/quiz/week/${targetWeek}`);
+        const response = await fetch(`/api/quiz/week/${targetWeek}`);
         
         if (!response.ok) {
           throw new Error(`Erreur ${response.status}: ${response.statusText}`);
@@ -156,7 +156,7 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
         };
       });
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/quiz/${currentQuiz._id}/submit`, {
+      const response = await fetch(`/api/quiz/${currentQuiz._id}/submit`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
