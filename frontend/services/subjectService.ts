@@ -39,7 +39,7 @@ const getBaseUrl = () => {
   }
   
   // URL de repli pour déploiement Vercel - à adapter selon votre configuration
-  return 'https://blog-perso.onrender.com/api/subjects';
+  return 'http://localhost:10000/api/subjects';
 };
 
 // Initialisation de l'URL de base

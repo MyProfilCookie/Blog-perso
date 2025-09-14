@@ -21,7 +21,7 @@ export interface WeeklyReportData {
 
 // Fonction pour construire l'URL de base correcte
 const getBaseUrl = () => {
-  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com';
+  const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:10000';
   
   // Si l'URL se termine déjà par /api, on ne l'ajoute pas à nouveau
   if (apiUrl.endsWith('/api')) {
