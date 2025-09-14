@@ -150,7 +150,7 @@ export default function LCPOptimizer() {
       let loadedCount = 0;
       
       criticalImages.forEach((img) => {
-        if (img.complete) {
+        if (img instanceof HTMLImageElement && img.complete) {
           loadedCount++;
         }
       });
