@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import "@/styles/critical.css";
 import "@/styles/globals.css";
 import "@/styles/mobile-optimizations.css";
 import { Providers } from "./providers";
@@ -78,11 +79,16 @@ export default function RootLayout({
   return (
     <html lang="fr" className="scroll-smooth">
       <head>
-        {/* Préchargement des ressources critiques pour LCP */}
+        {/* Préchargement agressif des ressources critiques pour LCP */}
         <link rel="preload" href="/assets/home/home.webp" as="image" type="image/webp" fetchPriority="high" />
-        <link rel="preload" href="/assets/family/chantal.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/assets/family/chantal.webp" as="image" type="image/webp" fetchPriority="high" />
         <link rel="preload" href="/assets/family/family.webp" as="image" type="image/webp" />
         <link rel="preload" href="/assets/home/hero-bg.webp" as="image" type="image/webp" />
+        
+        {/* Resource hints avancés pour LCP */}
+        <link rel="preload" href="/_next/static/chunks/framework.js" as="script" />
+        <link rel="preload" href="/_next/static/chunks/main.js" as="script" />
+        <link rel="preload" href="/_next/static/css/app.css" as="style" />
         
         {/* Préconnexions DNS pour les domaines externes */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -112,15 +118,47 @@ export default function RootLayout({
         {/* Support du mode sombre pour Safari */}
         <meta name="supported-color-schemes" content="light dark" />
         
-        {/* Styles inline pour forcer le mode sombre sur iOS et supprimer les bordures navbar */}
+        {/* CSS critique inline pour LCP optimisé */}
         <style dangerouslySetInnerHTML={{
           __html: `
-            @media (prefers-color-scheme: dark) {
-              body { background-color: #111827 !important; }
-              html { background-color: #111827 !important; }
+            /* CSS critique pour LCP */
+            body { 
+              font-family: Inter, system-ui, -apple-system, sans-serif;
+              margin: 0;
+              padding: 0;
+              background-color: #f8faff;
+              line-height: 1.6;
             }
-            .dark body { background-color: #111827 !important; }
-            .dark html { background-color: #111827 !important; }
+            .dark body { background-color: #111827; }
+            html { background-color: #f8faff; }
+            .dark html { background-color: #111827; }
+            
+            /* Layout critique */
+            .min-h-screen { min-height: 100vh; }
+            .flex { display: flex; }
+            .flex-col { flex-direction: column; }
+            .w-full { width: 100%; }
+            .h-full { height: 100%; }
+            .relative { position: relative; }
+            .absolute { position: absolute; }
+            
+            /* Hero section critique */
+            .hero-section {
+              background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+              min-height: 100vh;
+              display: flex;
+              align-items: center;
+              justify-content: center;
+            }
+            
+            /* Images critiques */
+            .hero-image {
+              width: 100%;
+              height: auto;
+              max-width: 600px;
+              border-radius: 16px;
+              box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+            }
             
             /* Force la couleur de l'encoche iPhone */
             @media (prefers-color-scheme: light) {

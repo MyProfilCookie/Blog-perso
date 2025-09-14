@@ -4,85 +4,109 @@ import { useEffect } from 'react';
 
 export default function LCPOptimizer() {
   useEffect(() => {
-    // Optimisation LCP - Préchargement des ressources critiques
+    // Optimisation LCP agressive - Préchargement des ressources critiques
     const preloadCriticalResources = () => {
-      // Précharger les images critiques de la page d'accueil
+      // Précharger les images critiques avec priorité maximale
       const criticalImages = [
-        '/assets/home/home.webp',
-        '/assets/family/chantal.webp',
-        '/assets/family/family.webp',
-        '/assets/home/hero-bg.webp'
+        { src: '/assets/home/home.webp', priority: 'high' },
+        { src: '/assets/family/chantal.webp', priority: 'high' },
+        { src: '/assets/family/family.webp', priority: 'auto' },
+        { src: '/assets/home/hero-bg.webp', priority: 'auto' }
       ];
 
-      criticalImages.forEach((src) => {
+      criticalImages.forEach(({ src, priority }) => {
         const link = document.createElement('link');
         link.rel = 'preload';
         link.as = 'image';
         link.href = src;
         link.type = 'image/webp';
+        if (priority === 'high') {
+          link.setAttribute('fetchpriority', 'high');
+        }
         document.head.appendChild(link);
       });
 
-      // Précharger les polices critiques
+      // Précharger les scripts critiques avec modulepreload
+      const criticalScripts = [
+        '/_next/static/chunks/framework.js',
+        '/_next/static/chunks/main.js',
+        '/_next/static/chunks/webpack.js'
+      ];
+
+      criticalScripts.forEach((src) => {
+        const link = document.createElement('link');
+        link.rel = 'modulepreload';
+        link.href = src;
+        document.head.appendChild(link);
+      });
+
+      // Précharger les CSS critiques
+      const criticalCSS = [
+        '/_next/static/css/app.css',
+        '/_next/static/css/globals.css'
+      ];
+
+      criticalCSS.forEach((href) => {
+        const link = document.createElement('link');
+        link.rel = 'preload';
+        link.as = 'style';
+        link.href = href;
+        document.head.appendChild(link);
+      });
+    };
+
+    // Optimisation agressive des images
+    const optimizeImages = () => {
+      const images = document.querySelectorAll('img');
+      images.forEach((img, index) => {
+        const rect = img.getBoundingClientRect();
+        const isAboveFold = rect.top < window.innerHeight;
+        
+        if (isAboveFold) {
+          // Images above-the-fold : priorité maximale
+          img.setAttribute('loading', 'eager');
+          img.setAttribute('fetchpriority', 'high');
+          img.setAttribute('decoding', 'sync');
+        } else {
+          // Images below-the-fold : lazy loading
+          img.setAttribute('loading', 'lazy');
+          img.setAttribute('fetchpriority', 'low');
+        }
+        
+        // Optimiser les dimensions pour éviter le CLS
+        if (!img.width || !img.height) {
+          img.style.aspectRatio = '16/9';
+          img.style.width = '100%';
+          img.style.height = 'auto';
+        }
+
+        // Ajouter des attributs d'optimisation
+        img.setAttribute('sizes', '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw');
+      });
+    };
+
+    // Optimisation des polices
+    const optimizeFonts = () => {
+      // Précharger les polices avec font-display: swap
       const fontLink = document.createElement('link');
       fontLink.rel = 'preload';
       fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
       fontLink.as = 'style';
+      fontLink.crossOrigin = 'anonymous';
       document.head.appendChild(fontLink);
 
-      // Précharger les scripts critiques
-      const scriptLink = document.createElement('link');
-      scriptLink.rel = 'modulepreload';
-      scriptLink.href = '/_next/static/chunks/framework.js';
-      document.head.appendChild(scriptLink);
-    };
-
-    // Optimisation des images existantes
-    const optimizeImages = () => {
-      const images = document.querySelectorAll('img');
-      images.forEach((img) => {
-        // Ajouter loading="eager" aux images above-the-fold
-        if (img.getBoundingClientRect().top < window.innerHeight) {
-          img.setAttribute('loading', 'eager');
-          img.setAttribute('fetchpriority', 'high');
-        }
-        
-        // Optimiser les images avec des dimensions fixes
-        if (!img.width || !img.height) {
-          img.style.aspectRatio = '16/9';
-        }
-      });
-    };
-
-    // Optimisation des ressources CSS critiques
-    const optimizeCSS = () => {
-      // Inline les styles critiques
-      const criticalCSS = `
+      // Ajouter un fallback immédiat
+      const fallbackStyle = document.createElement('style');
+      fallbackStyle.textContent = `
         body { 
-          font-family: Inter, system-ui, -apple-system, sans-serif;
-          margin: 0;
-          padding: 0;
-          background-color: #f8faff;
+          font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+          font-display: swap;
         }
-        .dark body { background-color: #111827; }
-        .min-h-screen { min-height: 100vh; }
-        .flex { display: flex; }
-        .flex-col { flex-direction: column; }
-        .w-full { width: 100%; }
-        .h-full { height: 100%; }
       `;
-      
-      const style = document.createElement('style');
-      style.textContent = criticalCSS;
-      document.head.insertBefore(style, document.head.firstChild);
+      document.head.appendChild(fallbackStyle);
     };
 
-    // Exécuter les optimisations
-    preloadCriticalResources();
-    optimizeImages();
-    optimizeCSS();
-
-    // Optimisation différée pour les ressources non critiques
+    // Optimisation des ressources non critiques
     const optimizeNonCritical = () => {
       // Lazy load les images non critiques
       const lazyImages = document.querySelectorAll('img[data-src]');
@@ -95,13 +119,55 @@ export default function LCPOptimizer() {
             imageObserver.unobserve(img);
           }
         });
+      }, {
+        rootMargin: '50px 0px',
+        threshold: 0.1
       });
 
       lazyImages.forEach((img) => imageObserver.observe(img));
+
+      // Optimiser les scripts non critiques
+      const scripts = document.querySelectorAll('script[data-defer]');
+      scripts.forEach((script) => {
+        script.setAttribute('defer', '');
+      });
     };
 
-    // Exécuter l'optimisation non critique après le chargement initial
-    setTimeout(optimizeNonCritical, 100);
+    // Exécuter les optimisations critiques immédiatement
+    preloadCriticalResources();
+    optimizeImages();
+    optimizeFonts();
+
+    // Optimisation différée pour les ressources non critiques
+    requestIdleCallback(() => {
+      optimizeNonCritical();
+    });
+
+    // Optimisation continue pendant le chargement
+    const optimizeDuringLoad = () => {
+      // Vérifier si les images critiques sont chargées
+      const criticalImages = document.querySelectorAll('img[fetchpriority="high"]');
+      let loadedCount = 0;
+      
+      criticalImages.forEach((img) => {
+        if (img.complete) {
+          loadedCount++;
+        }
+      });
+
+      // Si toutes les images critiques sont chargées, optimiser le reste
+      if (loadedCount === criticalImages.length) {
+        optimizeNonCritical();
+      }
+    };
+
+    // Vérifier périodiquement le chargement
+    const checkInterval = setInterval(optimizeDuringLoad, 100);
+    
+    // Nettoyer après 5 secondes
+    setTimeout(() => {
+      clearInterval(checkInterval);
+    }, 5000);
 
   }, []);
 

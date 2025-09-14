@@ -30,6 +30,10 @@ const nextConfig = {
         },
       },
     },
+    // Optimisations LCP agressives
+    optimizeServerReact: true,
+    // Compression agressive
+    gzipSize: true,
   },
 
   // Headers pour optimiser le cache

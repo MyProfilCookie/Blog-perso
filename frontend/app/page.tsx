@@ -166,7 +166,7 @@ export default function HomePage() {
                     alt="Enfant apprenant avec AutiStudy"
                     width={600}
                     height={400}
-                    className="rounded-2xl shadow-2xl image-optimized cls-image-container"
+                    className="hero-image rounded-2xl shadow-2xl image-optimized cls-image-container"
                     priority
                     sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                   />
