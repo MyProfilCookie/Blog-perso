@@ -79,7 +79,7 @@ export default function RootLayout({
     <html lang="fr" className="scroll-smooth">
       <head>
         {/* Préchargement des ressources critiques pour LCP */}
-        <link rel="preload" href="/assets/home/home.webp" as="image" type="image/webp" fetchpriority="high" />
+        <link rel="preload" href="/assets/home/home.webp" as="image" type="image/webp" fetchPriority="high" />
         <link rel="preload" href="/assets/family/chantal.webp" as="image" type="image/webp" />
         <link rel="preload" href="/assets/family/family.webp" as="image" type="image/webp" />
         <link rel="preload" href="/assets/home/hero-bg.webp" as="image" type="image/webp" />
@@ -92,17 +92,9 @@ export default function RootLayout({
         
         {/* Préchargement des polices critiques */}
         <link
-          rel="preload"
+          rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          as="style"
-          onLoad="this.onload=null;this.rel='stylesheet'"
         />
-        <noscript>
-          <link
-            rel="stylesheet"
-            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          />
-        </noscript>
         
         {/* Meta tags pour les performances et iPhone avec encoche */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
