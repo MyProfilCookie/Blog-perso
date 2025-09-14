@@ -8,9 +8,6 @@ async function getProducts() {
     const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api';
     const response = await fetch(`${apiUrl}/products`, {
       next: { revalidate: 300 }, // Revalidation toutes les 5 minutes
-      headers: {
-        'Cache-Control': 'max-age=300',
-      },
     });
 
     if (!response.ok) {

@@ -58,12 +58,7 @@ export default function ArticlesClient() {
         }
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/products`,
-          {
-            headers: {
-              'Cache-Control': 'max-age=300', // 5 minutes
-            },
-          }
+          `${process.env.NEXT_PUBLIC_API_URL}/products`
         );
 
         if (!response.ok) {
