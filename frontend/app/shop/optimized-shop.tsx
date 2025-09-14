@@ -56,7 +56,12 @@ export default function OptimizedShop({ initialArticles = [] }: OptimizedShopPro
         }
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/products`
+          `${process.env.NEXT_PUBLIC_API_URL}/products`,
+          {
+            headers: {
+              'Cache-Control': 'max-age=300',
+            },
+          }
         );
 
         if (!response.ok) {

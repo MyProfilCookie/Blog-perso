@@ -7,6 +7,7 @@ import { Toaster } from "sonner";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 import { ThemeColorManager } from "@/components/theme-color-manager";
+import LCPOptimizer from "@/components/LCPOptimizer";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -77,9 +78,11 @@ export default function RootLayout({
   return (
     <html lang="fr" className="scroll-smooth">
       <head>
-        {/* Préchargement des ressources critiques */}
-        <link rel="preload" href="/assets/home/home.webp" as="image" type="image/webp" />
+        {/* Préchargement des ressources critiques pour LCP */}
+        <link rel="preload" href="/assets/home/home.webp" as="image" type="image/webp" fetchpriority="high" />
         <link rel="preload" href="/assets/family/chantal.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/assets/family/family.webp" as="image" type="image/webp" />
+        <link rel="preload" href="/assets/home/hero-bg.webp" as="image" type="image/webp" />
         
         {/* Préconnexions DNS pour les domaines externes */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -92,7 +95,14 @@ export default function RootLayout({
           rel="preload"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           as="style"
+          onLoad="this.onload=null;this.rel='stylesheet'"
         />
+        <noscript>
+          <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          />
+        </noscript>
         
         {/* Meta tags pour les performances et iPhone avec encoche */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
@@ -184,6 +194,7 @@ export default function RootLayout({
         }} />
       </head>
       <body className={inter.className}>
+        <LCPOptimizer />
         <ThemeColorManager />
         <Providers>
           <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">

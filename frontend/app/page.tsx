@@ -7,7 +7,7 @@
 "use client";
 
 import { Card, CardBody, CardHeader } from "@/components/OptimizedNextUI";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import Link from "next/link";
 
@@ -161,13 +161,14 @@ export default function HomePage() {
                   transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
                   className="relative"
                 >
-                  <Image
+                  <OptimizedImage
                     src="/assets/home/home.webp"
                     alt="Enfant apprenant avec AutiStudy"
                     width={600}
                     height={400}
-                    className="rounded-2xl shadow-2xl image-optimized cls-image-container image-optimized cls-image-container"
+                    className="rounded-2xl shadow-2xl image-optimized cls-image-container"
                     priority
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 600px"
                   />
                 </motion.div>
               </div>
@@ -255,12 +256,13 @@ export default function HomePage() {
                   >
                     <Card className="h-full">
                       <CardBody className="p-4 md:p-6">
-                        <div className="flex items-center mb-3 md:mb-4 cls-image-container cls-image-container"><Image
+                        <div className="flex items-center mb-3 md:mb-4 cls-image-container"><OptimizedImage
                             src={testimonial.avatar}
                             alt={testimonial.name}
                             width={60}
                             height={60}
-                            className="w-12 h-12 md:w-15 md:h-15 rounded-full mr-3 md:mr-4 image-optimized cls-image-container image-optimized cls-image-container"
+                            className="w-12 h-12 md:w-15 md:h-15 rounded-full mr-3 md:mr-4 image-optimized"
+                            sizes="60px"
                           />
                           <div>
                             <h4 className="font-semibold text-gray-900 dark:text-white">
@@ -318,13 +320,14 @@ export default function HomePage() {
                   >
                     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                       <CardHeader className="p-0">
-                        <Image
+                        <OptimizedImage
                           src={article.img}
                           alt={article.title}
                           width={400}
                           height={200}
-                          className="w-full h-48 object-cover image-optimized cls-image-container image-optimized cls-image-container"
+                          className="w-full h-48 object-cover image-optimized cls-image-container"
                           priority={article.id === 1}
+                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
                         />
                       </CardHeader>
                       <CardBody className="p-4 md:p-6">

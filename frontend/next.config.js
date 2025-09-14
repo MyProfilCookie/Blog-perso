@@ -9,11 +9,54 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,
+    // Optimisations LCP
+    priority: true,
+    quality: 85,
+    unoptimized: false,
   },
 
+  // Optimisations de performance
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
+  
+  // Optimisations expérimentales pour LCP
+  experimental: {
+    optimizeCss: true,
+    optimizePackageImports: ['lucide-react', '@nextui-org/react'],
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
+  },
+
+  // Headers pour optimiser le cache
+  async headers() {
+    return [
+      {
+        source: '/assets/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+      {
+        source: '/_next/static/:path*',
+        headers: [
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
+        ],
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;
