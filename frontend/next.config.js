@@ -10,8 +10,6 @@ const nextConfig = {
     minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,
     // Optimisations LCP
-    priority: true,
-    quality: 85,
     unoptimized: false,
   },
 
