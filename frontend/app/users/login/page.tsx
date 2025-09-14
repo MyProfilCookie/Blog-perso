@@ -16,7 +16,8 @@ import { useAuth } from "@/context/AuthContext"; // Assurez-vous d'avoir ce chem
 import { AutismLogo } from "@/components/icons"; // Vérifie le bon chemin
 
 export default function Connexion() {
-  const { loginUser } = useContext(UserContext);
+  const userContext = useContext(UserContext) as any;
+  const loginUser = userContext?.loginUser;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newsletter, setNewsletter] = useState(false); // Checkbox newsletter
