@@ -228,7 +228,7 @@ const getBaseUrl = () => {
     return `${apiUrl}/api`;
   }
 
-  return "http://localhost:10000/api";
+  return "https://blog-perso.onrender.com/api";
 };
 
 const subjectEmojis: Record<string, string> = {

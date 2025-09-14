@@ -64,7 +64,7 @@ export const RevisionProvider: React.FC<RevisionProviderProps> = ({
   >({});
 
   const baseUrl =
-    process.env.NEXT_PUBLIC_API_URL || "http://localhost:10000";
+    process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com";
 
   useEffect(() => {
     const fetchErrors = async () => {
