@@ -8,7 +8,7 @@ const bodyParser = require("body-parser");
 const mongoose = require("mongoose");
 const cookieParser = require("cookie-parser");
 const createError = require("http-errors");
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const path = require("path");
 const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY); // Stripe
 

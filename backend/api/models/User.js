@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 
 // ADMIN_EMAIL est l'email de l'administrateur
 const ADMIN_EMAIL = "virginie.ayivor@yahoo.fr";
