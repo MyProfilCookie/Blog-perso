@@ -1,6 +1,7 @@
 /* eslint-disable no-console */
 "use client";
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useContext } from "react";
+import { UserContext } from "@/context/UserContext";
 
 import {
   Navbar as NextUINavbar,
@@ -84,6 +85,8 @@ interface Order {
 }
 
 export const Navbar = () => {
+  const userContext = useContext(UserContext) as any;
+  const contextUser = userContext?.user || null;
   const [user, setUser] = useState<User | null>(null);
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [orderCount, setOrderCount] = useState<OrderCountType>({
@@ -120,22 +123,37 @@ export const Navbar = () => {
   }, []);
 
   /**
-   * Récupérer l'utilisateur et le panier depuis le localStorage
+   * Synchroniser l'utilisateur avec le contexte d'authentification
    */
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
+    if (contextUser) {
+      setUser(contextUser);
+      const userCart = localStorage.getItem(`cart_${contextUser.id}`);
+      setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
+    } else {
+      setUser(null);
+      setCartItemsCount(0);
+    }
+  }, [contextUser]);
 
-    if (storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setUser(parsedUser);
-        const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
-        setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
-      } catch (error) {
-        console.error("Error parsing user data:", error);
+  /**
+   * Récupérer l'utilisateur et le panier depuis le localStorage (fallback)
+   */
+  useEffect(() => {
+    if (!contextUser) {
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          const parsedUser = JSON.parse(storedUser);
+          setUser(parsedUser);
+          const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
+          setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
+        } catch (error) {
+          console.error("Error parsing user data:", error);
+        }
       }
     }
-  }, []);
+  }, [contextUser]);
 
   /**
    * Mettre à jour l'utilisateur et le panier lors d'un événement "userUpdate"

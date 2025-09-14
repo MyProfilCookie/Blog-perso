@@ -1,8 +1,9 @@
 "use client";
 
 import * as React from "react";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
+import { UserContext } from "@/context/UserContext";
 import { Input } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
 import { Checkbox } from '@nextui-org/react';
@@ -15,6 +16,7 @@ import { useAuth } from "@/context/AuthContext"; // Assurez-vous d'avoir ce chem
 import { AutismLogo } from "@/components/icons"; // Vérifie le bon chemin
 
 export default function Connexion() {
+  const { loginUser } = useContext(UserContext);
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [newsletter, setNewsletter] = useState(false); // Checkbox newsletter
@@ -123,8 +125,8 @@ export default function Connexion() {
             userData.pseudo || userData.email,
           );
 
-          // Notifier les autres composants que l'utilisateur s'est connecté
-          window.dispatchEvent(new CustomEvent("userUpdate"));
+          // Mettre à jour le contexte d'authentification
+          loginUser(userData);
 
           // Afficher le succès et rediriger
           Swal.fire({
