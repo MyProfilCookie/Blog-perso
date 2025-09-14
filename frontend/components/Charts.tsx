@@ -56,16 +56,16 @@ const Charts: React.FC<ChartProps> = ({ type, data, options }) => {
   }, [isChartJSLoaded]);
 
   if (!isChartJSLoaded) {
-    return <div className="h-64 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded chart-container-fixed dynamic-content-container" />;
+    return <div className="h-64 w-full bg-gray-100 dark:bg-gray-800 animate-pulse rounded chart-container-fixed dynamic-content-container chart-container dynamic-content-container" />;
   }
 
   switch (type) {
     case 'line':
-      return <div className="chart-container dynamic-content-container"><Line data={data} options={options} /></div>;
+      return <div className="chart-container dynamic-content-container chart-container dynamic-content-container"><Line data={data} options={options} /></div>;
     case 'bar':
-      return <div className="chart-container dynamic-content-container"><Bar data={data} options={options} /></div>;
+      return <div className="chart-container dynamic-content-container chart-container dynamic-content-container"><Bar data={data} options={options} /></div>;
     case 'doughnut':
-      return <div className="chart-container dynamic-content-container"><Doughnut data={data} options={options} /></div>;
+      return <div className="chart-container dynamic-content-container chart-container dynamic-content-container"><Doughnut data={data} options={options} /></div>;
     default:
       return null;
   }

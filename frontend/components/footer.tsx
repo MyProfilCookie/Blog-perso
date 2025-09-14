@@ -52,7 +52,7 @@ const Footer = () => {
   return (
     <footer className="border-t dark:bg-gray-900 border-violet-200 dark:border-violet-800 mt-16 performance-optimized">
       <div className="container mx-auto px-4 sm:px-6 py-8 sm:py-12 performance-optimized">
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 grid-cls-optimized performance-optimized">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 grid-cls-optimized performance-optimized grid-cls-optimized">
           {/* Logo et Description */}
           <div className="col-span-1 lg:col-span-2 text-center sm:text-left performance-optimized">
             <h3 className="text-xl sm:text-2xl font-bold bg-gradient-to-r from-violet-600 to-blue-600 bg-clip-text text-transparent mb-3 performance-optimized">
@@ -90,7 +90,7 @@ const Footer = () => {
               <Dropdown>
                 <DropdownTrigger>
                   <Button
-                    className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 button-cls-optimized performance-optimized"
+                    className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 button-cls-optimized performance-optimized button-cls-optimized"
                   >
                     {mounted && (
                       <>

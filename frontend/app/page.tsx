@@ -120,7 +120,7 @@ export default function HomePage() {
           <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
           <div className="relative w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
-              <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
+              <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center grid-cls-optimized">
                 <motion.div
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -166,7 +166,7 @@ export default function HomePage() {
                     alt="Enfant apprenant avec AutiStudy"
                     width={600}
                     height={400}
-                    className="rounded-2xl shadow-2xl"
+                    className="rounded-2xl shadow-2xl image-optimized cls-image-container"
                     priority
                   />
                 </motion.div>
@@ -194,7 +194,7 @@ export default function HomePage() {
                 </p>
               </motion.div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 grid-cls-optimized">
                 {services.map((service, index) => (
                   <motion.div
                     key={service.title}
@@ -244,7 +244,7 @@ export default function HomePage() {
                 </p>
               </motion.div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 grid-cls-optimized">
                 {testimonials.map((testimonial, index) => (
                   <motion.div
                     key={testimonial.name}
@@ -255,13 +255,12 @@ export default function HomePage() {
                   >
                     <Card className="h-full">
                       <CardBody className="p-4 md:p-6">
-                        <div className="flex items-center mb-3 md:mb-4">
-                          <Image
+                        <div className="flex items-center mb-3 md:mb-4 cls-image-container"><Image
                             src={testimonial.avatar}
                             alt={testimonial.name}
                             width={60}
                             height={60}
-                            className="w-12 h-12 md:w-15 md:h-15 rounded-full mr-3 md:mr-4"
+                            className="w-12 h-12 md:w-15 md:h-15 rounded-full mr-3 md:mr-4 image-optimized cls-image-container"
                           />
                           <div>
                             <h4 className="font-semibold text-gray-900 dark:text-white">
@@ -308,7 +307,7 @@ export default function HomePage() {
                 </p>
               </motion.div>
               
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 grid-cls-optimized">
                 {articles.map((article, index) => (
                   <motion.div
                     key={article.id}
@@ -324,7 +323,7 @@ export default function HomePage() {
                           alt={article.title}
                           width={400}
                           height={200}
-                          className="w-full h-48 object-cover"
+                          className="w-full h-48 object-cover image-optimized cls-image-container"
                           priority={article.id === 1}
                         />
                       </CardHeader>
