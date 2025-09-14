@@ -144,7 +144,7 @@ const ProfilePage = () => {
                 onClick={toggleDarkMode}
                 variant="outline"
                 size="sm"
-                className="bg-white/20 hover:bg-white/30 border-white/30 text-white button-cls-optimized button-cls-optimized"
+                className="bg-white/20 hover:bg-white/30 border-white/30 text-white button-cls-optimized button-cls-optimized button-cls-optimized"
               >
                 {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>
@@ -164,7 +164,7 @@ const ProfilePage = () => {
 
       {/* Dashboard Content */}
       <div className="container px-4 mx-auto py-8">
-        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 grid-cls-optimized grid-cls-optimized">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-3 grid-cls-optimized grid-cls-optimized grid-cls-optimized">
           {/* Matières */}
           <Card className="overflow-hidden shadow-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
             <CardHeader className="bg-blue-600 dark:bg-blue-700 p-4">
@@ -189,7 +189,7 @@ const ProfilePage = () => {
                   </p>
                   <Button
                     aria-label={`Continuer ${matiere.title}`}
-                    className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white button-cls-optimized button-cls-optimized"
+                    className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white button-cls-optimized button-cls-optimized button-cls-optimized"
                     size="sm"
                   >
                     Continuer
@@ -223,7 +223,7 @@ const ProfilePage = () => {
                   </p>
                   <Button
                     aria-label={`Voir l'exercice ${exercice.title}`}
-                    className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white button-cls-optimized button-cls-optimized"
+                    className="w-full bg-green-600 hover:bg-green-700 dark:bg-green-700 dark:hover:bg-green-800 text-white button-cls-optimized button-cls-optimized button-cls-optimized"
                     size="sm"
                   >
                     Voir les détails
@@ -259,7 +259,7 @@ const ProfilePage = () => {
                   </p>
                   <Button
                     aria-label={`Reprendre ${lecon.title}`}
-                    className="w-full bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800 text-white button-cls-optimized button-cls-optimized"
+                    className="w-full bg-purple-600 hover:bg-purple-700 dark:bg-purple-700 dark:hover:bg-purple-800 text-white button-cls-optimized button-cls-optimized button-cls-optimized"
                     size="sm"
                   >
                     Reprendre

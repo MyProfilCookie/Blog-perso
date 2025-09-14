@@ -616,7 +616,7 @@ export const Navbar = () => {
                 <DropdownTrigger>
                   <Button
                     aria-label="Menu utilisateur"
-                    className="bg-transparent relative button-cls-optimized hover:bg-violet-50 dark:hover:bg-gray-800 transition-colors duration-200 button-cls-optimized button-cls-optimized"
+                    className="bg-transparent relative button-cls-optimized hover:bg-violet-50 dark:hover:bg-gray-800 transition-colors duration-200 button-cls-optimized button-cls-optimized button-cls-optimized"
                   >
                     <Avatar
                       isBordered
