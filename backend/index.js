@@ -160,7 +160,7 @@ app.use("/api/eleves", eleveRoutes); // Nouvelle route pour les élèves
 app.use("/api/subscriptions", subscriptionRoutes); // Nouvelle route pour les abonnements
 app.use("/api/rapport-hebdo", rapportHebdoRoutes); // Nouvelle route pour les rapports hebdomadaires
 app.use("/api/stats", statsRoutes); // Route pour les statistiques
-app.use("/api/quiz", require("./routes/quiz")); // Route pour les quiz
+// app.use("/api/quiz", require("./routes/quiz")); // Route pour les quiz - temporairement désactivée
 app.use((req, res, next) => {
   console.log(`[${new Date().toISOString()}] ${req.method} ${req.url}`);
   console.log('Headers:', req.headers);
