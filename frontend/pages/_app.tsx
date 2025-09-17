@@ -1,5 +1,4 @@
 import "@/styles/globals.css";
-import "@/lib/polyfills";
 import type { AppProps } from "next/app";
 
 import dynamic from "next/dynamic";
