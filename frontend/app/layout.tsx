@@ -9,6 +9,8 @@ import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 import { ThemeColorManager } from "@/components/theme-color-manager";
 import LCPOptimizer from "@/components/LCPOptimizer";
+import ErrorBoundary from "@/components/ErrorBoundary";
+import IOSErrorHandler from "@/components/IOSErrorHandler";
 
 const inter = Inter({ 
   subsets: ["latin"],
@@ -226,21 +228,24 @@ export default function RootLayout({
       <body className={inter.className}>
         <LCPOptimizer />
         <ThemeColorManager />
-        <Providers>
-          <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
-            <Navbar />
-            <main className="flex-grow w-full">
-              {children}
-            </main>
-            <Footer />
-          </div>
-          <Toaster 
-            position="top-right"
-            richColors
-            closeButton
-            duration={4000}
-          />
-        </Providers>
+        <IOSErrorHandler />
+        <ErrorBoundary>
+          <Providers>
+            <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
+              <Navbar />
+              <main className="flex-grow w-full">
+                {children}
+              </main>
+              <Footer />
+            </div>
+            <Toaster 
+              position="top-right"
+              richColors
+              closeButton
+              duration={4000}
+            />
+          </Providers>
+        </ErrorBoundary>
       </body>
     </html>
   );

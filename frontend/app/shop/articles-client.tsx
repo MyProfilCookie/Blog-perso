@@ -17,6 +17,7 @@ import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { Button } from "@/components/ui/button";
 import { CardSkeleton } from "@/components/SkeletonLoaders";
 import OptimizedImage from "@/components/OptimizedImage";
+import { useIsClient } from "@/hooks/useIsClient";
 
 // 📌 3. Imports relatifs (fichiers du projet)
 import { useCart } from "../contexts/cart-context";
@@ -38,14 +39,18 @@ export default function ArticlesClient() {
   const [articles, setArticles] = useState<Article[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const isClient = useIsClient();
 
   // Utiliser le contexte du panier au lieu de props
   const { addToCart } = useCart();
 
   useEffect(() => {
+    if (!isClient) return;
+    
     const fetchArticles = async () => {
       try {
-        // Vérifier le cache local d'abord
+        // Vérifier le cache local d'abord (seulement côté client)
+        if (typeof window !== 'undefined') {
         const cachedData = localStorage.getItem('shop-products');
         const cacheTimestamp = localStorage.getItem('shop-products-timestamp');
         const now = Date.now();
@@ -55,6 +60,7 @@ export default function ArticlesClient() {
           setArticles(JSON.parse(cachedData));
           setLoading(false);
           return;
+          }
         }
 
         const response = await fetch(
@@ -72,9 +78,11 @@ export default function ArticlesClient() {
 
         const data = await response.json();
 
-        // Mettre en cache les données
+        // Mettre en cache les données (seulement côté client)
+        if (typeof window !== 'undefined') {
         localStorage.setItem('shop-products', JSON.stringify(data));
-        localStorage.setItem('shop-products-timestamp', now.toString());
+          localStorage.setItem('shop-products-timestamp', Date.now().toString());
+        }
 
         setArticles(data);
       } catch (error) {
@@ -86,7 +94,7 @@ export default function ArticlesClient() {
     };
 
     fetchArticles();
-  }, []);
+  }, [isClient]);
 
   if (loading) {
     return (
@@ -129,7 +137,11 @@ export default function ArticlesClient() {
           {error}
         </p>
         <Button
-          onClick={() => window.location.reload()}
+          onClick={() => {
+            if (typeof window !== 'undefined') {
+              window.location.reload();
+            }
+          }}
           className="mt-6 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white"
         >
           Réessayer
@@ -161,11 +173,13 @@ export default function ArticlesClient() {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
         <div className="relative w-full px-4 md:px-8 lg:px-12">
           <div className="max-w-7xl mx-auto text-center">
+            {isClient ? (
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="mb-8 md:mb-12"
               initial={{ opacity: 0, y: -20 }}
               transition={{ duration: 0.6 }}
+                style={{ willChange: 'auto' }}
             >
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
                 Boutique{" "}
@@ -178,6 +192,20 @@ export default function ArticlesClient() {
                 Découvrez notre sélection d'équipements sensoriels et éducatifs.
               </p>
             </motion.div>
+            ) : (
+              <div className="mb-8 md:mb-12">
+                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+                  Boutique{" "}
+                  <span className="text-blue-600 dark:text-blue-400">
+                    AutiStudy
+                  </span>
+                </h1>
+                <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
+                  Outils et ressources spécialisés pour l'apprentissage adapté des enfants autistes. 
+                  Découvrez notre sélection d'équipements sensoriels et éducatifs.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </section>
@@ -188,6 +216,7 @@ export default function ArticlesClient() {
       <div className="w-full">
         <div className="grid grid-cols-1 gap-6 sm:gap-8 md:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 max-w-7xl mx-auto">
           {articles.map((article, index) => (
+            isClient ? (
             <motion.div
               key={article.productId || index}
               animate={{ opacity: 1, y: 0 }}
@@ -205,64 +234,125 @@ export default function ArticlesClient() {
                   ease: "easeOut"
                 }
               }}
-            >
-              <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700">
-                {/* Image Container */}
-                <div className="relative overflow-hidden">
-                  <OptimizedImage
-                    src={article.imageUrl}
-                    alt={article.title}
-                    width={400}
-                    height={300}
-                    className="w-full h-48 md:h-56 object-cover transition-transform duration-700 group-hover:scale-105"
-                    priority={index < 3} // Priorité pour les 3 premières images
-                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  />
-                  {/* Price Badge */}
-                  <div className="absolute top-4 right-4">
-                    <span className="bg-blue-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold shadow-lg">
-                      {article.price} €
-                    </span>
+                style={{ willChange: 'auto' }}
+              >
+                <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700">
+                  {/* Image Container */}
+                  <div className="relative overflow-hidden">
+                    <OptimizedImage
+                      src={article.imageUrl}
+                      alt={article.title}
+                      width={400}
+                      height={300}
+                      className="w-full h-48 md:h-56 object-cover transition-transform duration-700 group-hover:scale-105"
+                      priority={index < 3} // Priorité pour les 3 premières images
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    {/* Price Badge */}
+                    <div className="absolute top-4 right-4">
+                      <span className="bg-blue-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold shadow-lg">
+                        {article.price} €
+                      </span>
+                    </div>
+                    {/* Overlay on hover */}
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
                   </div>
-                  {/* Overlay on hover */}
-                  <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-                </div>
 
-                {/* Content */}
-                <div className="p-6">
-                  {/* Title */}
-                  <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                    {article.title}
-                  </h3>
-                  
-                  {/* Description */}
-                  <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base mb-4 line-clamp-3">
-                    {article.description}
-                  </p>
-
-                  {/* Buttons */}
-                  <div className="flex flex-col gap-3">
-                    <Button
-                      asChild
-                      className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white border-0 py-2.5 transition-all duration-300"
-                      variant="outline"
-                    >
-                      <NextLink href={`/products/${article._id}`}>
-                        Voir les détails
-                      </NextLink>
-                    </Button>
+                  {/* Content */}
+                  <div className="p-6">
+                    {/* Title */}
+                    <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {article.title}
+                    </h3>
                     
-                    <Button
-                      className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white py-2.5 transition-all duration-300 flex items-center justify-center gap-2"
-                      onClick={() => addToCart(article)}
-                    >
-                      <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
-                      Ajouter au panier
-                    </Button>
+                    {/* Description */}
+                    <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base mb-4 line-clamp-3">
+                      {article.description}
+                    </p>
+
+                    {/* Buttons */}
+                    <div className="flex flex-col gap-3">
+                      <Button
+                        asChild
+                        className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white border-0 py-2.5 transition-all duration-300"
+                        variant="outline"
+                      >
+                        <NextLink href={`/products/${article._id}`}>
+                          Voir les détails
+                        </NextLink>
+                      </Button>
+                      
+                      <Button
+                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white py-2.5 transition-all duration-300 flex items-center justify-center gap-2"
+                        onClick={() => addToCart(article)}
+                      >
+                        <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
+                        Ajouter au panier
+                      </Button>
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ) : (
+              <div key={article.productId || index} className="h-full">
+                <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-500 overflow-hidden border border-gray-100 dark:border-gray-700">
+                  {/* Image Container */}
+                  <div className="relative overflow-hidden">
+                    <OptimizedImage
+                      src={article.imageUrl}
+                      alt={article.title}
+                      width={400}
+                      height={300}
+                      className="w-full h-48 md:h-56 object-cover transition-transform duration-700 group-hover:scale-105"
+                      priority={index < 3} // Priorité pour les 3 premières images
+                      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    />
+                    {/* Price Badge */}
+                    <div className="absolute top-4 right-4">
+                      <span className="bg-blue-600 text-white px-3 py-1.5 rounded-full text-sm font-semibold shadow-lg">
+                        {article.price} €
+                      </span>
+                    </div>
+                    {/* Overlay on hover */}
+                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+                  </div>
+
+                  {/* Content */}
+                  <div className="p-6">
+                    {/* Title */}
+                    <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                      {article.title}
+                    </h3>
+                    
+                    {/* Description */}
+                    <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base mb-4 line-clamp-3">
+                      {article.description}
+                    </p>
+
+                    {/* Buttons */}
+                    <div className="flex flex-col gap-3">
+                      <Button
+                        asChild
+                        className="w-full bg-gray-100 hover:bg-gray-200 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white border-0 py-2.5 transition-all duration-300"
+                        variant="outline"
+                      >
+                        <NextLink href={`/products/${article._id}`}>
+                          Voir les détails
+                        </NextLink>
+                      </Button>
+                      
+                      <Button
+                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white py-2.5 transition-all duration-300 flex items-center justify-center gap-2"
+                        onClick={() => addToCart(article)}
+                      >
+                        <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
+                        Ajouter au panier
+                      </Button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </motion.div>
+            )
           ))}
         </div>
       </div>
