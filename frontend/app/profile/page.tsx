@@ -3,13 +3,16 @@
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
-import { Sun, Moon, User, Mail, Calendar, Award, BookOpen, Target, TrendingUp } from "lucide-react";
+import { Sun, Moon, User, Mail, Calendar, Award, BookOpen, Target, TrendingUp, Edit3, Save, X } from "lucide-react";
+import Swal from "sweetalert2";
 
 // Import shadcn components
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import Loading from "@/components/loading";
 
 // Configuration des matières avec icônes et couleurs
@@ -39,9 +42,19 @@ const ProfilePage = () => {
   const [createdAt, setCreatedAt] = useState<string>("");
   const [currentTime, setCurrentTime] = useState<string>("");
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
-  const [activeTab, setActiveTab] = useState<"overview" | "progress" | "achievements">("overview");
+  const [activeTab, setActiveTab] = useState<"overview" | "progress" | "achievements" | "edit">("overview");
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
+  const [isEditing, setIsEditing] = useState<boolean>(false);
+  const [editForm, setEditForm] = useState({
+    phone: "",
+    deliveryAddress: {
+      street: "",
+      city: "",
+      postalCode: "",
+      country: ""
+    }
+  });
   const router = useRouter();
 
   useEffect(() => {
@@ -56,6 +69,17 @@ const ProfilePage = () => {
           : "Non disponible";
 
         setCreatedAt(formattedCreatedAt);
+
+        // Initialize edit form with current user data
+        setEditForm({
+          phone: fetchedUser.phone || "",
+          deliveryAddress: {
+            street: fetchedUser.deliveryAddress?.street || "",
+            city: fetchedUser.deliveryAddress?.city || "",
+            postalCode: fetchedUser.deliveryAddress?.postalCode || "",
+            country: fetchedUser.deliveryAddress?.country || ""
+          }
+        });
 
         // Fetch real statistics
         try {
@@ -116,6 +140,94 @@ const ProfilePage = () => {
     }
   };
 
+  const handleEditFormChange = (field: string, value: string) => {
+    if (field.startsWith('deliveryAddress.')) {
+      const addressField = field.split('.')[1];
+      setEditForm(prev => ({
+        ...prev,
+        deliveryAddress: {
+          ...prev.deliveryAddress,
+          [addressField]: value
+        }
+      }));
+    } else {
+      setEditForm(prev => ({
+        ...prev,
+        [field]: value
+      }));
+    }
+  };
+
+  const handleSaveProfile = async () => {
+    try {
+      const token = localStorage.getItem("userToken");
+      if (!token) {
+        Swal.fire({
+          title: "Erreur",
+          text: "Votre session a expiré. Veuillez vous reconnecter.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/update-profile`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          phone: editForm.phone,
+          deliveryAddress: editForm.deliveryAddress
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Erreur lors de la mise à jour du profil");
+      }
+
+      const updatedUser = await response.json();
+      
+      // Update local storage
+      localStorage.setItem("user", JSON.stringify(updatedUser.user));
+      
+      // Update state
+      setUser(updatedUser.user);
+      setIsEditing(false);
+
+      Swal.fire({
+        title: "Succès",
+        text: "Votre profil a été mis à jour avec succès !",
+        icon: "success",
+        confirmButtonText: "OK",
+      });
+
+    } catch (error) {
+      console.error("Erreur lors de la mise à jour du profil:", error);
+      Swal.fire({
+        title: "Erreur",
+        text: "Une erreur est survenue lors de la mise à jour de votre profil.",
+        icon: "error",
+        confirmButtonText: "OK",
+      });
+    }
+  };
+
+  const handleCancelEdit = () => {
+    // Reset form to original user data
+    setEditForm({
+      phone: user.phone || "",
+      deliveryAddress: {
+        street: user.deliveryAddress?.street || "",
+        city: user.deliveryAddress?.city || "",
+        postalCode: user.deliveryAddress?.postalCode || "",
+        country: user.deliveryAddress?.country || ""
+      }
+    });
+    setIsEditing(false);
+  };
+
   if (!user || loading) {
     return <Loading />;
   }
@@ -164,6 +276,7 @@ const ProfilePage = () => {
               { id: "overview", label: "Vue d'ensemble", icon: Target },
               { id: "progress", label: "Progression", icon: TrendingUp },
               { id: "achievements", label: "Réussites", icon: Award },
+              { id: "edit", label: "Édition", icon: Edit3 },
             ].map((tab) => (
             <button
                 key={tab.id}
@@ -408,6 +521,133 @@ const ProfilePage = () => {
                 </Card>
               ))}
             </div>
+          </div>
+        )}
+
+        {activeTab === "edit" && (
+          <div className="space-y-8">
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+              <CardHeader>
+                <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                  <Edit3 className="w-5 h-5" />
+                  Édition du profil
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-6">
+                {/* Informations de contact */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Informations de contact</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                      <Label htmlFor="phone" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Numéro de téléphone *
+                      </Label>
+                      <Input
+                        id="phone"
+                        type="tel"
+                        value={editForm.phone}
+                        onChange={(e) => handleEditFormChange("phone", e.target.value)}
+                        placeholder="Ex: +33 6 12 34 56 78"
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Adresse de livraison */}
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Adresse de livraison</h3>
+                  
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div className="md:col-span-2">
+                      <Label htmlFor="street" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Adresse *
+                      </Label>
+                      <Input
+                        id="street"
+                        type="text"
+                        value={editForm.deliveryAddress.street}
+                        onChange={(e) => handleEditFormChange("deliveryAddress.street", e.target.value)}
+                        placeholder="Ex: 123 Rue de la Paix"
+                        className="mt-1"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="city" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Ville *
+                      </Label>
+                      <Input
+                        id="city"
+                        type="text"
+                        value={editForm.deliveryAddress.city}
+                        onChange={(e) => handleEditFormChange("deliveryAddress.city", e.target.value)}
+                        placeholder="Ex: Paris"
+                        className="mt-1"
+                      />
+                    </div>
+                    
+                    <div>
+                      <Label htmlFor="postalCode" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Code postal *
+                      </Label>
+                      <Input
+                        id="postalCode"
+                        type="text"
+                        value={editForm.deliveryAddress.postalCode}
+                        onChange={(e) => handleEditFormChange("deliveryAddress.postalCode", e.target.value)}
+                        placeholder="Ex: 75001"
+                        className="mt-1"
+                      />
+                    </div>
+                    
+                    <div className="md:col-span-2">
+                      <Label htmlFor="country" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                        Pays *
+                      </Label>
+                      <Input
+                        id="country"
+                        type="text"
+                        value={editForm.deliveryAddress.country}
+                        onChange={(e) => handleEditFormChange("deliveryAddress.country", e.target.value)}
+                        placeholder="Ex: France"
+                        className="mt-1"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Boutons d'action */}
+                <div className="flex gap-4 pt-4">
+                  <Button
+                    onClick={handleSaveProfile}
+                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    disabled={!editForm.phone || !editForm.deliveryAddress.street || !editForm.deliveryAddress.city || !editForm.deliveryAddress.postalCode || !editForm.deliveryAddress.country}
+                  >
+                    <Save className="w-4 h-4 mr-2" />
+                    Sauvegarder
+                  </Button>
+                  
+                  <Button
+                    onClick={handleCancelEdit}
+                    variant="outline"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                  >
+                    <X className="w-4 h-4 mr-2" />
+                    Annuler
+                  </Button>
+                </div>
+
+                {/* Informations sur les champs obligatoires */}
+                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                    <strong>Note :</strong> Les champs marqués d'un astérisque (*) sont obligatoires pour passer des commandes.
+                    Assurez-vous de remplir tous les champs requis avant de procéder au paiement.
+                  </p>
+                </div>
+              </CardContent>
+            </Card>
           </div>
         )}
       </div>
