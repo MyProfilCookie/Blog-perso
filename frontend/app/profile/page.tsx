@@ -301,7 +301,7 @@ const ProfilePage = () => {
         {activeTab === "overview" && (
           <div className="space-y-8">
             {/* Stats Cards */}
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
               <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <CardContent className="p-6">
                   <div className="flex items-center">
@@ -332,21 +332,6 @@ const ProfilePage = () => {
                 </CardContent>
               </Card>
 
-              <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-                <CardContent className="p-6">
-                  <div className="flex items-center">
-                    <div className="p-2 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
-                      <TrendingUp className="w-6 h-6 text-purple-600 dark:text-purple-400" />
-              </div>
-                    <div className="ml-4">
-                      <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Progression</p>
-                      <p className="text-2xl font-bold text-gray-900 dark:text-white">
-                        {Math.round(stats?.averageScore || 0)}%
-                      </p>
-                    </div>
-            </div>
-                </CardContent>
-              </Card>
 
               <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
                 <CardContent className="p-6">
