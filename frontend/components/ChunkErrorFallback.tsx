@@ -23,19 +23,23 @@ export default function ChunkErrorFallback({ onRetry }: ChunkErrorFallbackProps)
         );
       }
       
-      // Nettoyer le localStorage des chunks
-      const keys = Object.keys(localStorage);
-      keys.forEach(key => {
-        if (key.includes('chunk') || key.includes('webpack')) {
-          localStorage.removeItem(key);
-        }
-      });
+      // Nettoyer le localStorage des chunks (seulement côté client)
+      if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+        const keys = Object.keys(localStorage);
+        keys.forEach(key => {
+          if (key.includes('chunk') || key.includes('webpack')) {
+            localStorage.removeItem(key);
+          }
+        });
+      }
       
       // Attendre un peu avant de recharger
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Recharger la page
-      window.location.reload();
+      // Recharger la page (seulement côté client)
+      if (typeof window !== 'undefined') {
+        window.location.reload();
+      }
     } catch (error) {
       console.error('Erreur lors du retry:', error);
       setIsRetrying(false);
@@ -96,7 +100,11 @@ export default function ChunkErrorFallback({ onRetry }: ChunkErrorFallbackProps)
             </button>
             
             <button
-              onClick={() => window.location.href = '/'}
+              onClick={() => {
+                if (typeof window !== 'undefined') {
+                  window.location.href = '/';
+                }
+              }}
               className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium py-2 px-4 rounded-lg transition-colors"
             >
               Retour à l'accueil

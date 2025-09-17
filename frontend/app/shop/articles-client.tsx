@@ -5,6 +5,7 @@
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable no-console */
+// 🔧 Fix iPhone client-side errors - v2.0
 
 // 📌 1. Imports de bibliothèques tierces
 import NextLink from "next/link";

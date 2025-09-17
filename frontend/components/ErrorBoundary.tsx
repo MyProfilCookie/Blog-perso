@@ -79,14 +79,22 @@ class ErrorBoundary extends Component<Props, State> {
             
             <div className="space-y-3">
               <button
-                onClick={() => window.location.reload()}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.location.reload();
+                  }
+                }}
                 className="w-full bg-blue-600 hover:bg-blue-700 text-white font-medium py-2 px-4 rounded-lg transition-colors"
               >
                 Recharger la page
               </button>
               
               <button
-                onClick={() => window.location.href = '/'}
+                onClick={() => {
+                  if (typeof window !== 'undefined') {
+                    window.location.href = '/';
+                  }
+                }}
                 className="w-full bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-800 dark:text-white font-medium py-2 px-4 rounded-lg transition-colors"
               >
                 Retour à l'accueil
