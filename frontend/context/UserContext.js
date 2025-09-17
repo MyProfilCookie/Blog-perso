@@ -13,6 +13,11 @@ export const UserProvider = ({ children }) => {
 
   // Charger l'utilisateur depuis le localStorage au montage
   useEffect(() => {
+    if (typeof window === 'undefined') {
+      setLoading(false);
+      return;
+    }
+
     const storedUser = localStorage.getItem("user");
     const storedToken = localStorage.getItem("userToken");
 
@@ -31,18 +36,24 @@ export const UserProvider = ({ children }) => {
 
   const loginUser = (userData) => {
     setUser(userData);
-    localStorage.setItem("user", JSON.stringify(userData)); // Sauvegarder l'utilisateur dans le localStorage
+    
+    if (typeof window !== 'undefined') {
+      localStorage.setItem("user", JSON.stringify(userData)); // Sauvegarder l'utilisateur dans le localStorage
 
-    // Déclencher un événement personnalisé pour notifier les autres composants
-    const event = new CustomEvent("userUpdate", { detail: userData });
-
-    window.dispatchEvent(event);
+      // Déclencher un événement personnalisé pour notifier les autres composants
+      const event = new CustomEvent("userUpdate", { detail: userData });
+      window.dispatchEvent(event);
+    }
   };
 
   const logoutUser = () => {
     setUser(null);
-    localStorage.removeItem("user"); // Supprimer l'utilisateur du localStorage
-    localStorage.removeItem("userToken"); // Supprimer le token
+    
+    if (typeof window !== 'undefined') {
+      localStorage.removeItem("user"); // Supprimer l'utilisateur du localStorage
+      localStorage.removeItem("userToken"); // Supprimer le token
+    }
+    
     router.replace("/"); // Rediriger après déconnexion
     // Suppression du reload automatique pour éviter les problèmes
   };

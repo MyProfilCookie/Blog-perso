@@ -136,7 +136,8 @@ export default function Connexion() {
             text: `Bienvenue sur AutiStudy, ${userData.pseudo || userData.prenom || userData.nom || userData.email}!`,
             confirmButtonText: "Ok",
           }).then(() => {
-            router.back(); // Redirection vers la page précédente
+            // Forcer le rafraîchissement pour mettre à jour la navbar
+            window.location.reload();
           });
         } else {
           handleLoginError(

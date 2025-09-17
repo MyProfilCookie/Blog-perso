@@ -86,8 +86,7 @@ interface Order {
 
 export const Navbar = () => {
   const userContext = useContext(UserContext) as any;
-  const contextUser = userContext?.user || null;
-  const [user, setUser] = useState<User | null>(null);
+  const user = userContext?.user || null;
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
@@ -123,58 +122,30 @@ export const Navbar = () => {
   }, []);
 
   /**
-   * Synchroniser l'utilisateur avec le contexte d'authentification
+   * Synchroniser le panier avec l'utilisateur
    */
   useEffect(() => {
-    if (contextUser) {
-      setUser(contextUser);
-      const userCart = localStorage.getItem(`cart_${contextUser.id}`);
+    if (user && typeof window !== 'undefined') {
+      const userCart = localStorage.getItem(`cart_${user.id}`);
       setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
+      fetchOrderCount();
     } else {
-      setUser(null);
       setCartItemsCount(0);
     }
-  }, [contextUser]);
+  }, [user]);
+
 
   /**
-   * Récupérer l'utilisateur et le panier depuis le localStorage (fallback)
+   * Mettre à jour le panier lors d'un événement "userUpdate"
    */
   useEffect(() => {
-    if (!contextUser) {
-      const storedUser = localStorage.getItem("user");
-      if (storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
-          setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
-        } catch (error) {
-          console.error("Error parsing user data:", error);
-        }
-      }
-    }
-  }, [contextUser]);
+    if (typeof window === 'undefined') return;
 
-  /**
-   * Mettre à jour l'utilisateur et le panier lors d'un événement "userUpdate"
-   */
-  useEffect(() => {
     const handleUserUpdate = () => {
-      const storedUser = localStorage.getItem("user");
-
-      if (storedUser) {
-        try {
-          const parsedUser = JSON.parse(storedUser);
-          setUser(parsedUser);
-          const userCart = localStorage.getItem(`cart_${parsedUser.id}`);
-          setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
-          fetchOrderCount();
-        } catch (error) {
-          console.error("Error parsing user data during update:", error);
-        }
-      } else {
-        setUser(null);
-        setCartItemsCount(0);
+      if (user && typeof window !== 'undefined') {
+        const userCart = localStorage.getItem(`cart_${user.id}`);
+        setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
+        fetchOrderCount();
       }
     };
 
@@ -183,7 +154,7 @@ export const Navbar = () => {
     return () => {
       window.removeEventListener("userUpdate", handleUserUpdate);
     };
-  }, []);
+  }, [user]);
 
   /**
    * Déconnexion de l'utilisateur
