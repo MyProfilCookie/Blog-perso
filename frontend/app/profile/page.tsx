@@ -525,20 +525,20 @@ const ProfilePage = () => {
         )}
 
         {activeTab === "edit" && (
-          <div className="space-y-8">
+          <div className="space-y-6 px-2 sm:px-0">
             <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-              <CardHeader>
-                <CardTitle className="text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
-                  <Edit3 className="w-5 h-5" />
+              <CardHeader className="px-4 sm:px-6">
+                <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+                  <Edit3 className="w-4 h-4 sm:w-5 sm:h-5" />
                   Édition du profil
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6">
+              <CardContent className="space-y-6 px-4 sm:px-6">
                 {/* Informations de contact */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Informations de contact</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Informations de contact</h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div className="grid grid-cols-1 gap-4">
                     <div>
                       <Label htmlFor="phone" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Numéro de téléphone *
@@ -549,7 +549,7 @@ const ProfilePage = () => {
                         value={editForm.phone}
                         onChange={(e) => handleEditFormChange("phone", e.target.value)}
                         placeholder="Ex: +33 6 12 34 56 78"
-                        className="mt-1"
+                        className="mt-1 w-full"
                       />
                     </div>
                   </div>
@@ -557,10 +557,10 @@ const ProfilePage = () => {
 
                 {/* Adresse de livraison */}
                 <div className="space-y-4">
-                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Adresse de livraison</h3>
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Adresse de livraison</h3>
                   
-                  <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="md:col-span-2">
+                  <div className="grid grid-cols-1 gap-4">
+                    <div>
                       <Label htmlFor="street" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Adresse *
                       </Label>
@@ -570,39 +570,41 @@ const ProfilePage = () => {
                         value={editForm.deliveryAddress.street}
                         onChange={(e) => handleEditFormChange("deliveryAddress.street", e.target.value)}
                         placeholder="Ex: 123 Rue de la Paix"
-                        className="mt-1"
+                        className="mt-1 w-full"
                       />
+                    </div>
+                    
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                      <div>
+                        <Label htmlFor="city" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Ville *
+                        </Label>
+                        <Input
+                          id="city"
+                          type="text"
+                          value={editForm.deliveryAddress.city}
+                          onChange={(e) => handleEditFormChange("deliveryAddress.city", e.target.value)}
+                          placeholder="Ex: Paris"
+                          className="mt-1 w-full"
+                        />
+                      </div>
+                      
+                      <div>
+                        <Label htmlFor="postalCode" className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                          Code postal *
+                        </Label>
+                        <Input
+                          id="postalCode"
+                          type="text"
+                          value={editForm.deliveryAddress.postalCode}
+                          onChange={(e) => handleEditFormChange("deliveryAddress.postalCode", e.target.value)}
+                          placeholder="Ex: 75001"
+                          className="mt-1 w-full"
+                        />
+                      </div>
                     </div>
                     
                     <div>
-                      <Label htmlFor="city" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Ville *
-                      </Label>
-                      <Input
-                        id="city"
-                        type="text"
-                        value={editForm.deliveryAddress.city}
-                        onChange={(e) => handleEditFormChange("deliveryAddress.city", e.target.value)}
-                        placeholder="Ex: Paris"
-                        className="mt-1"
-                      />
-                    </div>
-                    
-                    <div>
-                      <Label htmlFor="postalCode" className="text-sm font-medium text-gray-700 dark:text-gray-300">
-                        Code postal *
-                      </Label>
-                      <Input
-                        id="postalCode"
-                        type="text"
-                        value={editForm.deliveryAddress.postalCode}
-                        onChange={(e) => handleEditFormChange("deliveryAddress.postalCode", e.target.value)}
-                        placeholder="Ex: 75001"
-                        className="mt-1"
-                      />
-                    </div>
-                    
-                    <div className="md:col-span-2">
                       <Label htmlFor="country" className="text-sm font-medium text-gray-700 dark:text-gray-300">
                         Pays *
                       </Label>
@@ -612,17 +614,17 @@ const ProfilePage = () => {
                         value={editForm.deliveryAddress.country}
                         onChange={(e) => handleEditFormChange("deliveryAddress.country", e.target.value)}
                         placeholder="Ex: France"
-                        className="mt-1"
+                        className="mt-1 w-full"
                       />
                     </div>
                   </div>
                 </div>
 
                 {/* Boutons d'action */}
-                <div className="flex gap-4 pt-4">
+                <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 pt-4">
                   <Button
                     onClick={handleSaveProfile}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                    className="bg-blue-600 hover:bg-blue-700 text-white w-full sm:w-auto"
                     disabled={!editForm.phone || !editForm.deliveryAddress.street || !editForm.deliveryAddress.city || !editForm.deliveryAddress.postalCode || !editForm.deliveryAddress.country}
                   >
                     <Save className="w-4 h-4 mr-2" />
@@ -632,7 +634,7 @@ const ProfilePage = () => {
                   <Button
                     onClick={handleCancelEdit}
                     variant="outline"
-                    className="border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700"
+                    className="border-gray-300 text-gray-700 hover:bg-gray-50 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-700 w-full sm:w-auto"
                   >
                     <X className="w-4 h-4 mr-2" />
                     Annuler
@@ -640,8 +642,8 @@ const ProfilePage = () => {
                 </div>
 
                 {/* Informations sur les champs obligatoires */}
-                <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
-                  <p className="text-sm text-blue-800 dark:text-blue-200">
+                <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                  <p className="text-xs sm:text-sm text-blue-800 dark:text-blue-200">
                     <strong>Note :</strong> Les champs marqués d'un astérisque (*) sont obligatoires pour passer des commandes.
                     Assurez-vous de remplir tous les champs requis avant de procéder au paiement.
                   </p>
