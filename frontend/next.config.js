@@ -20,13 +20,32 @@ const nextConfig = {
   
   // Optimisations expérimentales pour LCP
   experimental: {
-    optimizeCss: true,
-    optimizePackageImports: ['lucide-react', '@nextui-org/react'],
-    // Désactiver les optimisations qui causent des problèmes de compatibilité
+    // Désactiver toutes les optimisations expérimentales qui peuvent causer des problèmes
+    // optimizeCss: true,
+    // optimizePackageImports: ['lucide-react', '@nextui-org/react'],
     // optimizeServerReact: true,
     // gzipSize: true,
   },
 
+  // Configuration webpack pour désactiver requestIdleCallback
+  webpack: (config, { isServer }) => {
+    if (!isServer) {
+      // Remplacer requestIdleCallback par setTimeout
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'requestIdleCallback': false,
+      };
+      
+      // Ajouter un plugin pour remplacer requestIdleCallback
+      config.plugins.push(
+        new (require('webpack')).DefinePlugin({
+          'requestIdleCallback': 'setTimeout',
+          'cancelIdleCallback': 'clearTimeout',
+        })
+      );
+    }
+    return config;
+  },
 
   // Headers pour optimiser le cache
   async headers() {

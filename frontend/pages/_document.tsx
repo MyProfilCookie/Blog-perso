@@ -4,31 +4,33 @@ export default function Document() {
   return (
     <Html lang="fr">
       <Head>
-        {/* Polyfill pour requestIdleCallback - doit être chargé en premier */}
+        {/* Polyfill agressif pour requestIdleCallback - doit être chargé en premier */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function() {
-                // Polyfill pour requestIdleCallback
-                if (!window.requestIdleCallback) {
-                  window.requestIdleCallback = function(callback, options) {
-                    var start = Date.now();
-                    return window.setTimeout(function() {
-                      callback({
-                        didTimeout: false,
-                        timeRemaining: function() {
-                          return Math.max(0, 50 - (Date.now() - start));
-                        }
-                      });
-                    }, 1);
-                  };
-                }
+                // Polyfill agressif pour requestIdleCallback
+                window.requestIdleCallback = window.requestIdleCallback || function(callback, options) {
+                  var start = Date.now();
+                  return window.setTimeout(function() {
+                    callback({
+                      didTimeout: false,
+                      timeRemaining: function() {
+                        return Math.max(0, 50 - (Date.now() - start));
+                      }
+                    });
+                  }, 1);
+                };
                 
                 // Polyfill pour cancelIdleCallback
-                if (!window.cancelIdleCallback) {
-                  window.cancelIdleCallback = function(id) {
-                    window.clearTimeout(id);
-                  };
+                window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
+                  window.clearTimeout(id);
+                };
+                
+                // Forcer la définition globale
+                if (typeof global !== 'undefined') {
+                  global.requestIdleCallback = window.requestIdleCallback;
+                  global.cancelIdleCallback = window.cancelIdleCallback;
                 }
               })();
             `,
