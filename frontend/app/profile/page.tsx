@@ -269,9 +269,9 @@ const ProfilePage = () => {
       </section>
 
       {/* Tab Navigation */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 lg:px-12">
         <div className="border-b border-gray-200 dark:border-gray-700">
-          <nav className="flex space-x-8">
+          <nav className="flex space-x-2 sm:space-x-4 md:space-x-8 overflow-x-auto">
             {[
               { id: "overview", label: "Vue d'ensemble", icon: Target },
               { id: "progress", label: "Progression", icon: TrendingUp },
@@ -281,14 +281,15 @@ const ProfilePage = () => {
             <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
-                className={`flex items-center gap-2 py-4 px-1 border-b-2 font-medium text-sm transition-colors ${
+                className={`flex items-center gap-1 sm:gap-2 py-3 sm:py-4 px-1 sm:px-2 border-b-2 font-medium text-xs sm:text-sm transition-colors whitespace-nowrap ${
                   activeTab === tab.id
                     ? "border-blue-600 text-blue-600 dark:text-blue-400"
                     : "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300 dark:text-gray-400 dark:hover:text-gray-300"
                 }`}
               >
-                <tab.icon className="w-4 h-4" />
-                {tab.label}
+                <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
+                <span className="hidden xs:inline">{tab.label}</span>
+                <span className="xs:hidden">{tab.label.split(' ')[0]}</span>
             </button>
             ))}
           </nav>
@@ -296,7 +297,7 @@ const ProfilePage = () => {
       </div>
 
       {/* Content */}
-      <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12 py-8">
+      <div className="max-w-7xl mx-auto px-2 sm:px-4 md:px-8 lg:px-12 py-4 sm:py-8">
         {activeTab === "overview" && (
           <div className="space-y-8">
             {/* Stats Cards */}
@@ -525,15 +526,15 @@ const ProfilePage = () => {
         )}
 
         {activeTab === "edit" && (
-          <div className="space-y-6 px-2 sm:px-0">
+          <div className="space-y-4 sm:space-y-6">
             <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
-              <CardHeader className="px-4 sm:px-6">
-                <CardTitle className="text-lg sm:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
+              <CardHeader className="px-3 sm:px-4 md:px-6">
+                <CardTitle className="text-base sm:text-lg md:text-xl font-bold text-gray-900 dark:text-white flex items-center gap-2">
                   <Edit3 className="w-4 h-4 sm:w-5 sm:h-5" />
                   Édition du profil
                 </CardTitle>
               </CardHeader>
-              <CardContent className="space-y-6 px-4 sm:px-6">
+              <CardContent className="space-y-4 sm:space-y-6 px-3 sm:px-4 md:px-6">
                 {/* Informations de contact */}
                 <div className="space-y-4">
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Informations de contact</h3>
