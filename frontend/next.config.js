@@ -22,19 +22,11 @@ const nextConfig = {
   experimental: {
     optimizeCss: true,
     optimizePackageImports: ['lucide-react', '@nextui-org/react'],
-    turbo: {
-      rules: {
-        '*.svg': {
-          loaders: ['@svgr/webpack'],
-          as: '*.js',
-        },
-      },
-    },
-    // Optimisations LCP agressives
-    optimizeServerReact: true,
-    // Compression agressive
-    gzipSize: true,
+    // Désactiver les optimisations qui causent des problèmes de compatibilité
+    // optimizeServerReact: true,
+    // gzipSize: true,
   },
+
 
   // Headers pour optimiser le cache
   async headers() {
