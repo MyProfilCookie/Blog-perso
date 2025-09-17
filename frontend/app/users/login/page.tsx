@@ -17,6 +17,7 @@ import { AutismLogo } from "@/components/icons"; // Vérifie le bon chemin
 
 export default function Connexion() {
   const userContext = useContext(UserContext) as any;
+  const user = userContext?.user;
   const loginUser = userContext?.loginUser;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -25,6 +26,30 @@ export default function Connexion() {
   const [passwordStrength, setPasswordStrength] = useState(""); // Force du mot de passe
   const router = useRouter();
   // const { login } = useAuth(); // Utilisation du contexte d'authentification
+
+  // Rediriger si l'utilisateur est déjà connecté
+  React.useEffect(() => {
+    if (user) {
+      router.push("/dashboard");
+    }
+  }, [user, router]);
+
+  // Afficher un message de chargement si l'utilisateur est connecté
+  if (user) {
+    return (
+      <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
+        <div className="text-center">
+          <AutismLogo size={48} />
+          <h2 className="text-xl font-semibold text-gray-900 dark:text-white mt-4">
+            Redirection en cours...
+          </h2>
+          <p className="text-gray-600 dark:text-gray-300 mt-2">
+            Vous êtes déjà connecté, redirection vers votre dashboard.
+          </p>
+        </div>
+      </div>
+    );
+  }
 
   // Fonction de validation du mot de passe
   const validatePassword = (value: string) => {
@@ -136,8 +161,8 @@ export default function Connexion() {
             text: `Bienvenue sur AutiStudy, ${userData.pseudo || userData.prenom || userData.nom || userData.email}!`,
             confirmButtonText: "Ok",
           }).then(() => {
-            // Forcer le rafraîchissement pour mettre à jour la navbar
-            window.location.reload();
+            // Rediriger vers la page d'accueil après connexion
+            router.push("/");
           });
         } else {
           handleLoginError(

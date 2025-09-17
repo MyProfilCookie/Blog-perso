@@ -1,7 +1,6 @@
 /* eslint-disable no-console */
 "use client";
-import React, { useState, useRef, useEffect, useContext } from "react";
-import { UserContext } from "@/context/UserContext";
+import React, { useState, useEffect, useContext } from "react";
 
 import {
   Navbar as NextUINavbar,
@@ -12,41 +11,34 @@ import {
   NavbarMenu,
   NavbarMenuItem,
 } from "@nextui-org/navbar";
-import { Avatar } from '@nextui-org/react'
-import { Button } from '@nextui-org/react'
-import { Dropdown } from '@nextui-org/react'
-import { DropdownTrigger } from '@nextui-org/react'
-import { DropdownMenu } from '@nextui-org/react'
-import { DropdownItem } from '@nextui-org/react'
-import { Badge } from '@nextui-org/react'
+import { Avatar } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import { Dropdown } from "@nextui-org/react";
+import { DropdownTrigger } from "@nextui-org/react";
+import { DropdownMenu } from "@nextui-org/react";
+import { DropdownItem } from "@nextui-org/react";
+import { Badge } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt,
-  faNewspaper,
-  faCrown,
-  faTachometerAlt,
   faUser,
   faMoon,
-  faHome,
   faInfoCircle,
   faBook,
   faGamepad,
   faShoppingCart,
-  faGraduationCap,
-  faUsers,
-  faHeart,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
 import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
+import { UserContext } from "@/context/UserContext";
 
-import { 
-  SunFilledIcon, 
-  MoonFilledIcon, 
-  AutismLogo, 
-  VisibleBurgerIcon,
+import {
+  SunFilledIcon,
+  MoonFilledIcon,
+  AutismLogo,
   PendingOrdersIcon,
   ShippedOrdersIcon,
   DeliveredOrdersIcon,
@@ -125,7 +117,7 @@ export const Navbar = () => {
    * Synchroniser le panier avec l'utilisateur
    */
   useEffect(() => {
-    if (user && typeof window !== 'undefined') {
+    if (user && typeof window !== "undefined") {
       const userCart = localStorage.getItem(`cart_${user.id}`);
       setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
       fetchOrderCount();
@@ -134,15 +126,14 @@ export const Navbar = () => {
     }
   }, [user]);
 
-
   /**
    * Mettre à jour le panier lors d'un événement "userUpdate"
    */
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    if (typeof window === "undefined") return;
 
     const handleUserUpdate = () => {
-      if (user && typeof window !== 'undefined') {
+      if (user && typeof window !== "undefined") {
         const userCart = localStorage.getItem(`cart_${user.id}`);
         setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
         fetchOrderCount();
@@ -172,7 +163,7 @@ export const Navbar = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const userId = user?.id;
-        
+
         localStorage.removeItem("user");
         localStorage.removeItem("userToken");
         localStorage.removeItem("accessToken");
@@ -181,17 +172,17 @@ export const Navbar = () => {
         localStorage.removeItem("userInfo");
         localStorage.removeItem("serInfo");
         localStorage.removeItem("token");
-        
+
         if (userId) {
           localStorage.removeItem(`cart_${userId}`);
         }
-        
+
         setCartItemsCount(0);
         setOrderCount({
           pending: 0,
           shipped: 0,
           delivered: 0,
-          total: 0
+          total: 0,
         });
 
         const event = new CustomEvent("userUpdate");
@@ -275,7 +266,10 @@ export const Navbar = () => {
 
       return userData;
     } catch (e) {
-      console.error("Erreur lors de la récupération des données utilisateur:", e);
+      console.error(
+        "Erreur lors de la récupération des données utilisateur:",
+        e,
+      );
       return null;
     }
   };
@@ -400,7 +394,11 @@ export const Navbar = () => {
       const handleVisibilityChange = () => {
         if (!document.hidden) {
           const currentUserData = getUserData();
-          if (!currentUserData || !currentUserData.id || !currentUserData.token) {
+          if (
+            !currentUserData ||
+            !currentUserData.id ||
+            !currentUserData.token
+          ) {
             return;
           }
           fetchOrderCount();
@@ -443,23 +441,35 @@ export const Navbar = () => {
   ];
 
   // Menu items utilisateur si connecté
-  const userMenuItems = user ? [
-    { name: "👤 Profil", href: "/profile", color: "foreground" },
-    { name: "🎓 Dashboard", href: user.role === 'admin' ? '/admin/dashboard' : '/dashboard', color: "foreground" },
-    { name: "🚪 Déconnexion", href: "#", color: "danger", action: handleLogout },
-  ] : [];
+  const userMenuItems = user
+    ? [
+        { name: "👤 Profil", href: "/profile", color: "foreground" },
+        {
+          name: "🎓 Dashboard",
+          href: user.role === "admin" ? "/admin/dashboard" : "/dashboard",
+          color: "foreground",
+        },
+        {
+          name: "🚪 Déconnexion",
+          href: "#",
+          color: "danger",
+          action: handleLogout,
+        },
+      ]
+    : [];
 
   return (
     <NextUINavbar
       className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative performance-optimized no-border-navbar"
       maxWidth="xl"
-      position="sticky"
       onMenuOpenChange={setIsMenuOpen}
-      style={{ 
+      position="sticky"
+      style={{
         boxShadow: "none",
-        background: resolvedTheme === 'dark'
-          ? "rgba(17, 24, 39, 0.95)"
-          : "rgba(248, 250, 255, 0.95)",
+        background:
+          resolvedTheme === "dark"
+            ? "rgba(17, 24, 39, 0.95)"
+            : "rgba(248, 250, 255, 0.95)",
         backdropFilter: "blur(10px)",
         contain: "layout style paint",
         borderBottom: "0",
@@ -470,7 +480,7 @@ export const Navbar = () => {
         outline: "0",
         borderWidth: "0",
         borderStyle: "none",
-        borderColor: "transparent"
+        borderColor: "transparent",
       }}
     >
       <NavbarContent>
@@ -479,7 +489,10 @@ export const Navbar = () => {
           className="md:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
         />
         <NavbarBrand as="li" className="gap-2 max-w-fit">
-          <NextLink className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized" href="/">
+          <NextLink
+            className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized"
+            href="/"
+          >
             <AutismLogo size={16} />
             <div className="flex flex-col">
               <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-base font-sans">
@@ -499,37 +512,36 @@ export const Navbar = () => {
             className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
             href="/about"
           >
-            <FontAwesomeIcon icon={faInfoCircle} className="w-4 h-4" />
-            À propos
+            <FontAwesomeIcon className="w-4 h-4" icon={faInfoCircle} />À propos
           </NextLink>
         </NavbarItem>
-        
+
         <NavbarItem>
           <NextLink
             className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
             href="/articles"
           >
-            <FontAwesomeIcon icon={faBook} className="w-4 h-4" />
+            <FontAwesomeIcon className="w-4 h-4" icon={faBook} />
             Articles
           </NextLink>
         </NavbarItem>
-        
+
         <NavbarItem>
           <NextLink
             className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
             href="/controle"
           >
-            <FontAwesomeIcon icon={faGamepad} className="w-4 h-4" />
+            <FontAwesomeIcon className="w-4 h-4" icon={faGamepad} />
             Contrôle
           </NextLink>
         </NavbarItem>
 
-        <NavbarItem key="shop" className="relative">
+        <NavbarItem className="relative" key="shop">
           <NextLink
             className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-base lg:text-lg font-medium tracking-wide transition-colors duration-200"
             href="/shop"
           >
-            <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
+            <FontAwesomeIcon className="w-4 h-4" icon={faShoppingCart} />
             Shop
             {cartItemsCount > 0 && (
               <Badge
@@ -558,11 +570,12 @@ export const Navbar = () => {
         {/* Avatar utilisateur */}
         {!user ? (
           <Avatar
-            isBordered
-            showFallback
             aria-label="Connectez-vous pour accéder à votre profil"
             className="cursor-pointer text-tiny text-default-500 transition-all duration-300 hover:scale-110"
+            isBordered
             name="Invité"
+            onClick={handleLoginRedirect}
+            showFallback
             size="sm"
             src="/assets/default-avatar.webp"
             style={{
@@ -570,16 +583,16 @@ export const Navbar = () => {
               borderWidth: "3px",
               boxShadow: `0 0 12px ${guestColors[avatarColorIndex]}`,
             }}
-            onClick={handleLoginRedirect}
           />
         ) : (
           <>
             {/* Avatar mobile */}
             <div className="md:hidden">
               <Avatar
-                isBordered
                 alt={`Avatar de ${user?.pseudo}`}
                 className="transition-all duration-300 cursor-pointer hover:scale-110"
+                isBordered
+                onClick={() => router.push("/profile")}
                 size="sm"
                 src={user?.avatar || "/assets/default-avatar.webp"}
                 style={{
@@ -594,7 +607,6 @@ export const Navbar = () => {
                       : userColors[avatarColorIndex]
                   }`,
                 }}
-                onClick={() => router.push("/profile")}
               />
             </div>
 
@@ -607,9 +619,9 @@ export const Navbar = () => {
                     className="bg-transparent relative button-cls-optimized hover:bg-violet-50 dark:hover:bg-gray-800 transition-colors duration-200 button-cls-optimized button-cls-optimized button-cls-optimized"
                   >
                     <Avatar
-                      isBordered
                       alt={`Avatar de ${user?.pseudo}`}
                       className="transition-all duration-300"
+                      isBordered
                       size="sm"
                       src={user?.avatar || "/assets/default-avatar.webp"}
                       style={{
@@ -632,34 +644,34 @@ export const Navbar = () => {
                 </DropdownTrigger>
                 <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700">
                   <DropdownItem
+                    className="dark:text-gray-200 dark:hover:bg-gray-700"
                     key="profile"
                     onClick={() => router.push("/profile")}
-                    className="dark:text-gray-200 dark:hover:bg-gray-700"
                   >
                     <FontAwesomeIcon className="mr-2" icon={faUser} />
                     Profil
                   </DropdownItem>
                   <DropdownItem
+                    className="font-medium dark:text-gray-300"
                     key="orders-title"
                     showDivider
-                    className="font-medium dark:text-gray-300"
                     textValue="Mes commandes"
                   >
                     Mes commandes
                   </DropdownItem>
 
                   <DropdownItem
-                    key="orders-pending"
                     className="relative"
+                    key="orders-pending"
                     onClick={() => {
                       router.push("/orders?status=pending");
                     }}
                   >
                     <div className="flex items-center justify-between p-2 md:p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/20 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-2 md:gap-3">
-                        <PendingOrdersIcon 
-                          size={24} 
+                        <PendingOrdersIcon
                           className="text-yellow-600 dark:text-yellow-400"
+                          size={24}
                         />
                         <div className="flex flex-col">
                           <div className="font-medium text-yellow-600 dark:text-yellow-400 text-sm">
@@ -677,17 +689,17 @@ export const Navbar = () => {
                   </DropdownItem>
 
                   <DropdownItem
-                    key="orders-shipped"
                     className="relative"
+                    key="orders-shipped"
                     onClick={() => {
                       router.push("/orders?status=shipped");
                     }}
                   >
                     <div className="flex items-center justify-between p-2 md:p-3 rounded-lg border border-violet-200 dark:border-violet-800 hover:bg-violet-50/30 dark:hover:bg-violet-900/20 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-2 md:gap-3">
-                        <ShippedOrdersIcon 
-                          size={24} 
+                        <ShippedOrdersIcon
                           className="text-violet-600 dark:text-violet-400"
+                          size={24}
                         />
                         <div className="flex flex-col">
                           <div className="font-medium text-violet-600 dark:text-violet-400 text-sm">
@@ -705,17 +717,17 @@ export const Navbar = () => {
                   </DropdownItem>
 
                   <DropdownItem
-                    key="orders-delivered"
                     className="relative"
+                    key="orders-delivered"
                     onClick={() => {
                       router.push("/orders?status=delivered");
                     }}
                   >
                     <div className="flex items-center justify-between p-2 md:p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/20 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-2 md:gap-3">
-                        <DeliveredOrdersIcon 
-                          size={24} 
+                        <DeliveredOrdersIcon
                           className="text-green-600 dark:text-green-400"
+                          size={24}
                         />
                         <div className="flex flex-col">
                           <div className="font-medium text-green-600 dark:text-green-400 text-sm">
@@ -733,12 +745,12 @@ export const Navbar = () => {
                   </DropdownItem>
 
                   <DropdownItem
-                    key="orders-all"
-                    showDivider
                     className="relative dark:text-gray-200 dark:hover:bg-gray-700"
+                    key="orders-all"
                     onClick={() => {
                       router.push("/orders");
                     }}
+                    showDivider
                   >
                     <div className="flex items-center justify-between w-full">
                       <span className="text-sm">Voir toutes mes commandes</span>
@@ -749,16 +761,20 @@ export const Navbar = () => {
                   </DropdownItem>
 
                   <DropdownItem
+                    className="dark:text-gray-200 dark:hover:bg-gray-700"
                     key="controle"
                     onClick={() => router.push("/controle")}
-                    className="dark:text-gray-200 dark:hover:bg-gray-700"
                   >
                     <FontAwesomeIcon className="mr-2" icon={faGamepad} />
                     Contrôle
                   </DropdownItem>
 
                   {/* Thème */}
-                  <DropdownItem key="theme" textValue="Thème" className="dark:text-gray-200 dark:hover:bg-gray-700">
+                  <DropdownItem
+                    className="dark:text-gray-200 dark:hover:bg-gray-700"
+                    key="theme"
+                    textValue="Thème"
+                  >
                     <Dropdown placement="left-start">
                       <DropdownTrigger>
                         <div className="flex items-center w-full cursor-pointer">
@@ -766,10 +782,13 @@ export const Navbar = () => {
                           Thème
                         </div>
                       </DropdownTrigger>
-                      <DropdownMenu aria-label="Options de thème" className="dark:bg-gray-800 dark:border-gray-700">
+                      <DropdownMenu
+                        aria-label="Options de thème"
+                        className="dark:bg-gray-800 dark:border-gray-700"
+                      >
                         <DropdownItem
+                          className="dark:text-gray-200 dark:hover:bg-gray-700"
                           key="light"
-                          textValue="Mode clair"
                           onClick={() => {
                             localStorage.removeItem("themeMode");
                             localStorage.removeItem("autoModeHours");
@@ -778,7 +797,7 @@ export const Navbar = () => {
                             setTheme("light");
                             setAvatarColorIndex((prev) => prev);
                           }}
-                          className="dark:text-gray-200 dark:hover:bg-gray-700"
+                          textValue="Mode clair"
                         >
                           <div className="flex items-center gap-2">
                             <SunFilledIcon
@@ -789,8 +808,8 @@ export const Navbar = () => {
                           </div>
                         </DropdownItem>
                         <DropdownItem
+                          className="dark:text-gray-200 dark:hover:bg-gray-700"
                           key="dark"
-                          textValue="Mode sombre"
                           onClick={() => {
                             localStorage.removeItem("themeMode");
                             localStorage.removeItem("autoModeHours");
@@ -799,7 +818,7 @@ export const Navbar = () => {
                             setTheme("dark");
                             setAvatarColorIndex((prev) => prev);
                           }}
-                          className="dark:text-gray-200 dark:hover:bg-gray-700"
+                          textValue="Mode sombre"
                         >
                           <div className="flex items-center gap-2">
                             <MoonFilledIcon
@@ -810,17 +829,25 @@ export const Navbar = () => {
                           </div>
                         </DropdownItem>
                         <DropdownItem
+                          className="dark:text-gray-200 dark:hover:bg-gray-700"
                           key="auto"
-                          textValue="Mode automatique"
                           onClick={() => {
-                            const savedHours = localStorage.getItem("autoModeHours");
-                            const autoModeHours = savedHours ? JSON.parse(savedHours) : { start: 20, end: 7 };
-                            
+                            const savedHours =
+                              localStorage.getItem("autoModeHours");
+                            const autoModeHours = savedHours
+                              ? JSON.parse(savedHours)
+                              : { start: 20, end: 7 };
+
                             localStorage.setItem("themeMode", "auto");
-                            localStorage.setItem("autoModeHours", JSON.stringify(autoModeHours));
-                            
+                            localStorage.setItem(
+                              "autoModeHours",
+                              JSON.stringify(autoModeHours),
+                            );
+
                             const currentHour = new Date().getHours();
-                            const shouldBeDark = currentHour >= autoModeHours.start || currentHour < autoModeHours.end;
+                            const shouldBeDark =
+                              currentHour >= autoModeHours.start ||
+                              currentHour < autoModeHours.end;
 
                             if (shouldBeDark) {
                               document.documentElement.classList.add("dark");
@@ -833,7 +860,7 @@ export const Navbar = () => {
                             }
                             setAvatarColorIndex((prev) => prev);
                           }}
-                          className="dark:text-gray-200 dark:hover:bg-gray-700"
+                          textValue="Mode automatique"
                         >
                           <div className="flex items-center gap-2">
                             <FontAwesomeIcon
@@ -846,7 +873,11 @@ export const Navbar = () => {
                       </DropdownMenu>
                     </Dropdown>
                   </DropdownItem>
-                  <DropdownItem key="logout" onClick={handleLogout} className="dark:text-gray-200 dark:hover:bg-gray-700">
+                  <DropdownItem
+                    className="dark:text-gray-200 dark:hover:bg-gray-700"
+                    key="logout"
+                    onClick={handleLogout}
+                  >
                     <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
                     Déconnexion
                   </DropdownItem>
@@ -865,8 +896,8 @@ export const Navbar = () => {
               className="w-full"
               color={item.color as any}
               href={item.href}
-              size="lg"
               onClick={() => setIsMenuOpen(false)}
+              size="lg"
             >
               {item.name}
             </Link>
@@ -878,13 +909,13 @@ export const Navbar = () => {
               className="w-full"
               color={item.color as any}
               href={item.href}
-              size="lg"
               onClick={() => {
                 if (item.action) {
                   item.action();
                 }
                 setIsMenuOpen(false);
               }}
+              size="lg"
             >
               {item.name}
             </Link>
