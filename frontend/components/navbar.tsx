@@ -186,7 +186,6 @@ export const Navbar = () => {
           localStorage.removeItem(`cart_${userId}`);
         }
         
-        setUser(null);
         setCartItemsCount(0);
         setOrderCount({
           pending: 0,
