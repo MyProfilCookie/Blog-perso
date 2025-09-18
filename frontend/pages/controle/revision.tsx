@@ -48,11 +48,24 @@ const RevisionPage: React.FC = () => {
         throw new Error("Token d&apos;authentification non trouvé");
       }
 
-      const userId = localStorage.getItem("userId");
+      // Récupérer l'ID utilisateur depuis l'objet user stocké
+      const userData = localStorage.getItem("user");
+      let userId = null;
+      
+      if (userData) {
+        try {
+          const user = JSON.parse(userData);
+          userId = user._id;
+        } catch (e) {
+          console.error("Erreur lors du parsing de l'utilisateur:", e);
+        }
+      }
 
       if (!userId) {
         throw new Error("ID utilisateur non trouvé");
       }
+      
+      console.log("🔍 ID utilisateur trouvé:", userId);
 
       const url =
         selectedCategory === "all"
