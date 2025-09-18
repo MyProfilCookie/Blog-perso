@@ -487,7 +487,11 @@ export default function ControleIndex() {
           </motion.div>
 
           {/* Synchronisation des statistiques */}
-          {userId && (
+          {(() => {
+            const userData = localStorage.getItem("user");
+            const userId = userData ? JSON.parse(userData)._id : null;
+            return userId;
+          })() && (
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -505,7 +509,10 @@ export default function ControleIndex() {
                     </p>
                   </div>
                   <StatsSync 
-                    userId={userId} 
+                    userId={(() => {
+                      const userData = localStorage.getItem("user");
+                      return userData ? JSON.parse(userData)._id : null;
+                    })()} 
                     onSyncComplete={(newStats) => {
                       console.log('📈 Nouvelles statistiques reçues:', newStats);
                       setStats(prevStats => ({
