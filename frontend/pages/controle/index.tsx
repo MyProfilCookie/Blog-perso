@@ -237,7 +237,7 @@ export default function ControleIndex() {
         setStats({
           totalEleves: response.data.totalEleves || 0,
           averageScore: response.data.averageScore || "0",
-          progression: response.data.progression || "0",
+          progression: "0", // Sera calculée automatiquement
           eleve: response.data.eleve || {
             nom: "",
             prenom: "",
@@ -375,7 +375,14 @@ export default function ControleIndex() {
     {
       icon: BarChart3,
       label: "Progression",
-      value: `${stats.progression || "0"}%`,
+      value: `${(() => {
+        // Calculer la progression basée sur les exercices complétés
+        const totalExercises = stats.totalEleves || 0;
+        // Supposons qu'il y a environ 50 exercices par matière x 9 matières = 450 exercices max
+        const maxExercises = 450;
+        const progression = totalExercises > 0 ? Math.min((totalExercises / maxExercises) * 100, 100) : 0;
+        return Math.round(progression);
+      })()}%`,
       color: "text-purple-500 dark:text-purple-400",
       bgColor: "bg-purple-50 dark:bg-purple-900/20",
     },
@@ -525,7 +532,7 @@ export default function ControleIndex() {
                       setStats(prevStats => ({
                         ...prevStats,
                         averageScore: newStats.averageScore?.toString() || "0",
-                        progression: newStats.globalStats?.averageScore?.toString() || "0",
+                        // La progression sera calculée automatiquement basée sur totalEleves
                         totalEleves: newStats.totalExercises || 0
                       }));
                     }}
