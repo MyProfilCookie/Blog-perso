@@ -160,7 +160,12 @@ const ProfilePage = () => {
 
   const handleSaveProfile = async () => {
     try {
+      console.log("🔍 Début de la sauvegarde du profil");
+      console.log("📝 Données à sauvegarder:", editForm);
+      
       const token = localStorage.getItem("userToken");
+      console.log("🔑 Token trouvé:", token ? "Oui" : "Non");
+      
       if (!token) {
         Swal.fire({
           title: "Erreur",
@@ -171,7 +176,10 @@ const ProfilePage = () => {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/update-profile`, {
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/update-profile`;
+      console.log("🌐 URL de l'API:", apiUrl);
+
+      const response = await fetch(apiUrl, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -183,14 +191,20 @@ const ProfilePage = () => {
         }),
       });
 
+      console.log("📡 Réponse du serveur:", response.status, response.statusText);
+
       if (!response.ok) {
-        throw new Error("Erreur lors de la mise à jour du profil");
+        const errorText = await response.text();
+        console.error("❌ Erreur de réponse:", errorText);
+        throw new Error(`Erreur lors de la mise à jour du profil: ${response.status} - ${errorText}`);
       }
 
       const updatedUser = await response.json();
+      console.log("✅ Utilisateur mis à jour:", updatedUser);
       
       // Update local storage
       localStorage.setItem("user", JSON.stringify(updatedUser.user));
+      console.log("💾 Utilisateur sauvegardé dans localStorage");
       
       // Update state
       setUser(updatedUser.user);
@@ -204,10 +218,10 @@ const ProfilePage = () => {
       });
 
     } catch (error) {
-      console.error("Erreur lors de la mise à jour du profil:", error);
+      console.error("❌ Erreur lors de la mise à jour du profil:", error);
       Swal.fire({
         title: "Erreur",
-        text: "Une erreur est survenue lors de la mise à jour de votre profil.",
+        text: `Une erreur est survenue lors de la mise à jour de votre profil: ${error instanceof Error ? error.message : 'Erreur inconnue'}`,
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -262,10 +276,10 @@ const ProfilePage = () => {
               </p>
               <p className="text-sm text-gray-500 dark:text-gray-400">
                 Heure actuelle : {currentTime} | Membre depuis le {createdAt}
-            </p>
+              </p>
+            </div>
           </div>
         </div>
-      </div>
       </section>
 
       {/* Tab Navigation */}
@@ -307,7 +321,7 @@ const ProfilePage = () => {
                   <div className="flex items-center">
                     <div className="p-2 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
                       <BookOpen className="w-6 h-6 text-blue-600 dark:text-blue-400" />
-            </div>
+                    </div>
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Matières</p>
                       <p className="text-2xl font-bold text-gray-900 dark:text-white">{stats?.subjects?.length || 0}</p>
@@ -328,7 +342,7 @@ const ProfilePage = () => {
                         {stats?.totalExercises || 0}
                       </p>
                     </div>
-          </div>
+                  </div>
                 </CardContent>
               </Card>
 
@@ -338,7 +352,7 @@ const ProfilePage = () => {
                   <div className="flex items-center">
                     <div className="p-2 bg-yellow-100 dark:bg-yellow-900/30 rounded-lg">
                       <Award className="w-6 h-6 text-yellow-600 dark:text-yellow-400" />
-            </div>
+                    </div>
                     <div className="ml-4">
                       <p className="text-sm font-medium text-gray-600 dark:text-gray-400">Réussites</p>
                       <p className="text-2xl font-bold text-gray-900 dark:text-white">
@@ -348,7 +362,7 @@ const ProfilePage = () => {
                   </div>
                 </CardContent>
               </Card>
-          </div>
+            </div>
 
             {/* Recent Activities */}
             <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
