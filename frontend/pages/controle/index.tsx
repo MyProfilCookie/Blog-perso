@@ -347,7 +347,14 @@ export default function ControleIndex() {
     {
       icon: Star,
       label: "Moyenne Générale",
-      value: `${stats.averageScore || "0"}/20`,
+      value: `${(() => {
+        const score = parseFloat(stats.averageScore || "0");
+        // Si le score est > 20, c'est probablement un pourcentage (0-100), on le convertit
+        if (score > 20) {
+          return (score / 5).toFixed(1); // Convertir de 0-100 à 0-20
+        }
+        return score.toFixed(1);
+      })()}/20`,
       color: "text-yellow-500 dark:text-yellow-400",
       bgColor: "bg-yellow-50 dark:bg-yellow-900/20",
     },
