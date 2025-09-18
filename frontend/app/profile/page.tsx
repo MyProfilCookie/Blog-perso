@@ -14,6 +14,7 @@ import { Badge } from "@/components/ui/badge";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Loading from "@/components/loading";
+import StatsSync from "@/components/StatsSync";
 
 // Configuration des matières avec icônes et couleurs
 const SUBJECTS_CONFIG = {
@@ -367,6 +368,29 @@ const ProfilePage = () => {
                 </CardContent>
               </Card>
             </div>
+
+            {/* Synchronisation des statistiques */}
+            {user && (
+              <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-6 border border-violet-200 dark:border-violet-700">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
+                      🔄 Synchronisation des statistiques
+                    </h3>
+                    <p className="text-sm text-violet-600 dark:text-violet-400">
+                      Synchronisez vos exercices locaux avec le serveur pour mettre à jour vos statistiques
+                    </p>
+                  </div>
+                  <StatsSync 
+                    userId={user._id} 
+                    onSyncComplete={(newStats) => {
+                      console.log('📈 Nouvelles statistiques reçues:', newStats);
+                      setStats(newStats);
+                    }}
+                  />
+                </div>
+              </div>
+            )}
 
             {/* Recent Activities */}
             <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">

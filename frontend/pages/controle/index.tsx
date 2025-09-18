@@ -34,6 +34,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import Link from "next/link";
+import StatsSync from "@/components/StatsSync";
 
 const courseThemes = [
   {
@@ -484,6 +485,41 @@ export default function ControleIndex() {
               </motion.div>
             ))}
           </motion.div>
+
+          {/* Synchronisation des statistiques */}
+          {userId && (
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
+              className="mt-8"
+            >
+              <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-6 border border-violet-200 dark:border-violet-700">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
+                      🔄 Synchronisation des statistiques
+                    </h3>
+                    <p className="text-sm text-violet-600 dark:text-violet-400">
+                      Synchronisez vos exercices locaux avec le serveur pour mettre à jour vos statistiques
+                    </p>
+                  </div>
+                  <StatsSync 
+                    userId={userId} 
+                    onSyncComplete={(newStats) => {
+                      console.log('📈 Nouvelles statistiques reçues:', newStats);
+                      setStats(prevStats => ({
+                        ...prevStats,
+                        averageScore: newStats.averageScore?.toString() || "0",
+                        progression: newStats.globalStats?.averageScore?.toString() || "0",
+                        totalEleves: newStats.totalExercises || 0
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
+            </motion.div>
+          )}
         </div>
       </section>
 
