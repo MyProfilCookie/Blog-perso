@@ -83,9 +83,12 @@ const ProfilePage = () => {
 
         // Fetch real statistics
         try {
+          const token = localStorage.getItem("userToken") || localStorage.getItem("token");
+          console.log("🔑 Token pour stats:", token ? "Oui" : "Non");
+          
           const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/eleves/complete-stats/${fetchedUser._id}`, {
             headers: {
-              'Authorization': `Bearer ${localStorage.getItem('token')}`,
+              'Authorization': `Bearer ${token}`,
               'Content-Type': 'application/json'
             }
           });
