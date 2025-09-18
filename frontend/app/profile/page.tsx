@@ -163,8 +163,9 @@ const ProfilePage = () => {
       console.log("🔍 Début de la sauvegarde du profil");
       console.log("📝 Données à sauvegarder:", editForm);
       
-      const token = localStorage.getItem("userToken");
+      const token = localStorage.getItem("userToken") || localStorage.getItem("token");
       console.log("🔑 Token trouvé:", token ? "Oui" : "Non");
+      console.log("🔑 Token value:", token);
       
       if (!token) {
         Swal.fire({
@@ -176,7 +177,7 @@ const ProfilePage = () => {
         return;
       }
 
-      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/update-profile`;
+      const apiUrl = `${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`;
       console.log("🌐 URL de l'API:", apiUrl);
 
       const response = await fetch(apiUrl, {
