@@ -3,7 +3,7 @@
 "use client";
 
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import Swal from "sweetalert2";
 
 // Importation des composants shadcn/ui
@@ -108,11 +108,13 @@ const OrderConfirmationPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const router = useRouter();
+  const searchParams = useSearchParams();
 
   useEffect(() => {
     const fetchOrderData = async () => {
       try {
-        const orderId = localStorage.getItem("orderId");
+        const orderIdFromUrl = searchParams ? searchParams.get("orderId") : null;
+        const orderId = orderIdFromUrl || localStorage.getItem("orderId");
 
         console.log("🔍 Récupération de la commande avec ID:", orderId);
         console.log("🔍 Contenu complet du localStorage:", {
@@ -150,7 +152,7 @@ const OrderConfirmationPage = () => {
     };
 
     fetchOrderData();
-  }, [router]);
+  }, [router, searchParams]);
 
   const handleBack = () => {
     // Nettoyer les données de commande lors du retour à l'accueil

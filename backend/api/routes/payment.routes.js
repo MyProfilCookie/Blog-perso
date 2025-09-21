@@ -33,9 +33,11 @@ router.post('/create-payment-intent', async (req, res) => {
 });
 
 /**
- * ✅ 2. Webhook Stripe - Écoute les événements de paiement
+ * ⚠️ 2. Webhook Stripe (legacy, non signé) - conservé pour debug. Préférer le webhook sécurisé dans index.js.
+ *    Déplacé sous '/webhook/stripe-legacy' pour éviter tout conflit avec '/api/payments/webhook/stripe'.
  */
-router.post('/webhook/stripe', express.json(), async (req, res) => {
+router.post('/webhook/stripe-legacy', express.json(), async (req, res) => {
+  console.warn("[DEPRECATED] Utilisation du webhook non signé '/api/payments/webhook/stripe-legacy'. Préférez le webhook sécurisé défini dans index.js.");
   console.log("🔔 Webhook Stripe reçu !");
   
   // Vérification du corps de la requête

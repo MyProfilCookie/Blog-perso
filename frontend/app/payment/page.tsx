@@ -16,6 +16,7 @@ import { Elements, CardElement, useStripe, useElements } from "@stripe/react-str
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
+import { saveOrderService, confirmPaymentService } from "@/services/paymentService";
 
 
 
@@ -33,10 +34,13 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     const router = useRouter();
     const [, setCartItems] = useState<any[]>([]);
     const [user, setUser] = useState<any>(null);
+    const [isProcessing, setIsProcessing] = useState<boolean>(false);
     
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
-    
+
+        if (isProcessing) return; // évite les doubles soumissions
+
         // Validate transporter selection
         if (!selectedTransporter) {
             Swal.fire({
@@ -47,7 +51,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
             return;
         }
-    
+
         // Validate Stripe readiness
         if (!stripe || !elements) {
             Swal.fire({
@@ -58,10 +62,10 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
             return;
         }
-    
+
         // Get card element
         const cardElement = elements.getElement(CardElement);
-    
+
         if (!cardElement) {
             Swal.fire({
                 title: "Erreur",
@@ -71,26 +75,72 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             });
             return;
         }
-    
+
         try {
-            // Process payment with Stripe
-            const { error, paymentMethod } = await stripe.createPaymentMethod({
-                type: "card",
-                card: cardElement,
+            setIsProcessing(true);
+            // 1) (Optionnel) Récupérer l'email utilisateur pour le reçu Stripe
+            let receiptEmail: string | undefined = undefined;
+            try {
+                const token = localStorage.getItem("userToken");
+                if (token) {
+                    const meRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
+                        headers: { Authorization: `Bearer ${token}` },
+                    });
+                    if (meRes.ok) {
+                        const meData = await meRes.json();
+                        receiptEmail = meData?.user?.email || undefined;
+                    }
+                }
+            } catch (e) {
+                console.warn("Impossible de récupérer l'email utilisateur pour le reçu Stripe", e);
+            }
+
+            // 2) Créer un PaymentIntent côté backend
+            const intentRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/create-payment-intent`, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ price: totalToPay, currency: "eur", email: receiptEmail })
             });
-    
-            if (error) {
+
+            if (!intentRes.ok) {
+                const errData = await intentRes.json().catch(() => ({}));
+                throw new Error(errData.message || "Impossible de créer l'intention de paiement.");
+            }
+
+            const { clientSecret } = await intentRes.json();
+            if (!clientSecret) {
+                throw new Error("Client secret manquant pour le paiement.");
+            }
+
+            // 3) Confirmer le paiement avec la carte
+            const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: {
+                    card: cardElement,
+                },
+            });
+
+            if (confirmError) {
                 Swal.fire({
                     title: "Erreur",
-                    text: error.message || "Une erreur est survenue lors du paiement.",
+                    text: confirmError.message || "Le paiement a échoué.",
                     icon: "error",
                     confirmButtonText: "Réessayer",
                 });
                 return;
             }
-    
-            // Create order and capture the returned order data with ID
-            const orderData = await saveOrder(cartItems, totalToPay, paymentMethod?.id);
+
+            if (!paymentIntent || paymentIntent.status !== "succeeded") {
+                Swal.fire({
+                    title: "Paiement non confirmé",
+                    text: "Le paiement n'a pas pu être confirmé.",
+                    icon: "error",
+                    confirmButtonText: "OK",
+                });
+                return;
+            }
+
+            // 4) Enregistrer la commande avec l'ID du PaymentIntent
+            const orderData = await saveOrder(cartItems, totalToPay, paymentIntent.id);
             
             // Vérifier que l'ID a bien été stocké après saveOrder
             const storedId = localStorage.getItem("orderId");
@@ -106,7 +156,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 await confirmPayment(
                     user,
                     orderId,
-                    paymentMethod?.id || "unknown",
+                    paymentIntent.id || "unknown",
                     totalToPay,
                     "card"
                 );
@@ -133,7 +183,13 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 }
                 
                 onPaymentSuccess(); // Update cart immediately
-                router.push("/payment-confirmations");
+                // Passer aussi l'orderId dans l'URL si disponible
+                const orderIdForUrl = localStorage.getItem("orderId");
+                if (orderIdForUrl) {
+                    router.push(`/payment-confirmations?orderId=${orderIdForUrl}`);
+                } else {
+                    router.push("/payment-confirmations");
+                }
             });
         } catch (err) {
             console.error("Erreur lors du paiement :", err);
@@ -144,202 +200,29 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 confirmButtonText: "OK",
             });
         }
+        finally {
+            setIsProcessing(false);
+        }
     };
     
     const saveOrder = async (items: any[], total: number, transactionId: string) => {
-        const token = localStorage.getItem("userToken");
-    
-        // Validation checks
-        if (!selectedTransporter) {
-            Swal.fire({
-                title: "Erreur",
-                text: "Veuillez sélectionner un transporteur avant de continuer.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-            return null;
-        }
-    
-        if (!token) {
-            Swal.fire({
-                title: "Erreur",
-                text: "Votre session a expiré. Veuillez vous reconnecter.",
-                icon: "error",
-                confirmButtonText: "Se reconnecter",
-            }).then(() => {
-                localStorage.removeItem("userToken");
-                window.location.href = "/users/login";
-            });
-            return null;
-        }
-    
-        if (!items || items.length === 0) {
-            Swal.fire({
-                title: "Erreur",
-                text: "Le panier est vide. Ajoutez des articles avant de passer commande.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
-            return null;
-        }
-    
         try {
-            // Get user data first to validate required fields
-            const userResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/me`, {
-                headers: { Authorization: `Bearer ${token}` },
-            });
-    
-            if (!userResponse.ok) {
-                throw new Error("Erreur lors de la récupération des informations utilisateur.");
-            }
-    
-            const userData = await userResponse.json();
-            setUser(userData.user); // Store user for later use
-            console.log("✅ Données utilisateur récupérées :", userData);
-    
-            // Validation des champs obligatoires
-            const missingFields = [];
-            
-            // Vérifier le numéro de téléphone
-            if (!userData.user.phone || userData.user.phone.trim() === "") {
-                missingFields.push("numéro de téléphone");
-            }
-            
-            // Vérifier l'adresse de livraison
-            if (!userData.user.deliveryAddress) {
-                missingFields.push("adresse de livraison");
-            } else {
-                const address = userData.user.deliveryAddress;
-                if (!address.street || !address.city || !address.postalCode || !address.country) {
-                    missingFields.push("adresse de livraison complète");
-                }
-            }
-            
-            // Si des champs manquent, afficher l'erreur
-            if (missingFields.length > 0) {
-                const fieldsText = missingFields.join(" et ");
-                Swal.fire({
-                    title: "Informations manquantes",
-                    html: `
-                        <p>Veuillez compléter votre profil avec les informations suivantes :</p>
-                        <ul style="text-align: left; margin: 10px 0;">
-                            ${missingFields.map(field => `<li>• ${field}</li>`).join('')}
-                        </ul>
-                        <p>Vous pouvez les ajouter dans votre <strong>profil utilisateur</strong>.</p>
-                    `,
-                    icon: "warning",
-                    confirmButtonText: "Aller au profil",
-                    showCancelButton: true,
-                    cancelButtonText: "Annuler",
-                }).then((result) => {
-                    if (result.isConfirmed) {
-                        router.push("/profile");
-                    }
-                });
-                return null;
-            }
-    
-            // Format order items
-            const formattedItems = items.map((item) => ({
-                productId: item.productId || item._id,
-                title: item.title,
-                quantity: item.quantity,
-                price: item.price,
-            }));
-    
-            // Prepare order data
-            const orderData = {
-                firstName: userData.user.prenom,
-                lastName: userData.user.nom,
-                email: userData.user.email,
-                phone: userData.user.phone || "Non renseigné", // Valeur par défaut si vide
-                userId: userData.user._id,
-                deliveryAddress: userData.user.deliveryAddress,
-                items: formattedItems,
-                totalAmount: total,
+            const result = await saveOrderService({
+                items,
+                total,
                 transactionId,
-                paymentMethod: "card",
-                deliveryMethod: selectedTransporter,
-                deliveryCost: deliveryCost,
-            };
-    
-            // Create order
-            console.log("📤 Envoi de la commande à l'API:", JSON.stringify(orderData, null, 2));
-            
-            const orderResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/orders`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${token}`,
-                },
-                body: JSON.stringify(orderData),
+                selectedTransporter,
+                deliveryCost,
+                router,
             });
-    
-            if (!orderResponse.ok) {
-                const errorData = await orderResponse.json().catch(() => ({}));
-                console.error("❌ Erreur API:", orderResponse.status, errorData);
-                
-                // Afficher le message d'erreur spécifique si disponible
-                let errorMessage = "Erreur lors de la création de la commande.";
-                if (errorData.error) {
-                    errorMessage = errorData.error;
-                } else if (errorData.message) {
-                    errorMessage = errorData.message;
-                } else if (errorData.details) {
-                    errorMessage = errorData.details;
-                }
-                
-                throw new Error(errorMessage);
+            if (result && result.user) {
+                setUser(result.user);
             }
-    
-            // Parse response to get the order with its ID
-            const createdOrder = await orderResponse.json();
-            console.log("✅ Commande créée avec succès:", createdOrder);
-            
-            // Vérifier et stocker l'ID de commande dans localStorage avec journalisation détaillée
-            console.log("Structure complète de la réponse:", JSON.stringify(createdOrder, null, 2));
-            
-            // Vérifier toutes les possibilités pour l'emplacement de l'ID
-            let orderId = null;
-            if (createdOrder.order && createdOrder.order._id) {
-                console.log("ID trouvé sous order._id:", createdOrder.order._id);
-                orderId = createdOrder.order._id;
-            } else if (createdOrder._id) {
-                console.log("ID trouvé sous _id:", createdOrder._id);
-                orderId = createdOrder._id;
-            } else if (createdOrder.id) {
-                console.log("ID trouvé sous id:", createdOrder.id);
-                orderId = createdOrder.id;
-            } else {
-                console.error("Aucun ID trouvé dans la réponse:", createdOrder);
-            }
-            
-            if (orderId) {
-                localStorage.setItem("orderId", orderId);
-                console.log("ID de commande stocké dans localStorage:", localStorage.getItem("orderId"));
-            } else {
-                console.error("Impossible de stocker l'ID de commande: ID non trouvé");
-            }
-    
-            // Clear cart data
-            localStorage.removeItem(`cartItems_${userData.user.pseudo}`);
-            localStorage.removeItem("totalPrice");
-            
-            // Trigger cart update event
-            window.dispatchEvent(new Event("cartUpdated"));
-            
-            // Update React state
+            // Mettre à jour l'état local du panier
             setCartItems([]);
-    
-            return createdOrder; // Return created order with its ID
+            return result ? result.createdOrder : null;
         } catch (error) {
-            console.error("❌ Erreur lors de l'enregistrement de la commande :", error);
-            Swal.fire({
-                title: "Erreur",
-                text: (error as Error).message || "Impossible d'enregistrer votre commande et le paiement.",
-                icon: "error",
-                confirmButtonText: "OK",
-            });
+            // Les erreurs sont gérées dans le service
             return null;
         }
     };
@@ -375,51 +258,12 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
         amount: number,
         paymentMethod: string
     ) => {
-        if (!user || !user._id || !orderId || !transactionId || !amount || !paymentMethod) {
-            console.error("❌ Erreur : Données manquantes pour la confirmation de paiement.");
-            return null;
-        }
-
-        const confirmationData = {
-            orderId,
-            userId: user._id,
-            transactionId,
-            paymentMethod: paymentMethod === "card" ? "Credit Card" : paymentMethod,
-            paymentStatus: "Paid",
-            amount,
-        };
-
-        try {
-            const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payment-confirmations`, {
-                method: "POST",
-                headers: { 
-                    "Content-Type": "application/json",
-                    Authorization: `Bearer ${localStorage.getItem("userToken")}`,
-                },
-                body: JSON.stringify(confirmationData),
-            });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                console.error("❌ Erreur lors de l'envoi de la confirmation de paiement :", errorData);
-                throw new Error(
-                    errorData.message || "Erreur lors de la confirmation du paiement."
-                );
-            }
-
-            const result = await response.json();
-            console.log("✅ Confirmation de paiement enregistrée avec succès :", result);
-            return result;
-        } catch (error: any) {
-            console.error("❌ Erreur lors de l'enregistrement de la confirmation de paiement :", error.message);
-            // Don't rethrow - we don't want payment confirmation errors to block the order process
-            return null;
-        }
+        return await confirmPaymentService(user, orderId, transactionId, amount, paymentMethod);
     };
     
     return (
         <form className="mt-6" onSubmit={handleSubmit}>
-            <div className="p-4 bg-gray-50 rounded-lg border shadow-md dark:bg-gray-800 dark:border-gray-700">
+            <div className={`p-4 rounded-lg border shadow-md ${!selectedTransporter ? "opacity-60" : ""} bg-gray-50 dark:bg-gray-800 dark:border-gray-700`}>
                 <label className="block mb-2 text-lg font-semibold text-gray-700 dark:text-white" htmlFor="card-element">
                     Informations de Carte Bancaire
                 </label>
@@ -435,12 +279,20 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                                 },
                                 invalid: { color: "#fa755a" },
                             },
+                            disabled: isProcessing || !selectedTransporter,
                         }}
                     />
                 </div>
+                {!selectedTransporter && (
+                    <p className="text-sm text-red-500 mt-1">Veuillez sélectionner un transporteur pour activer le paiement.</p>
+                )}
             </div>
-            <Button className="py-2 mt-4 w-full font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700" type="submit">
-                Payer {totalToPay} €
+            <Button 
+                className={`py-2 mt-4 w-full font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 ${isProcessing || !selectedTransporter ? "opacity-70 cursor-not-allowed" : ""}`}
+                type="submit"
+                isDisabled={isProcessing || !selectedTransporter}
+            >
+                {isProcessing ? "Traitement en cours..." : `Payer ${totalToPay} €`}
             </Button>
         </form>
     );
