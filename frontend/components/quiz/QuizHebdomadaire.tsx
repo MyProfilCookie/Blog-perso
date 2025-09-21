@@ -40,6 +40,8 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
   const [completedQuestions, setCompletedQuestions] = useState<boolean[]>([]);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [validatedAnswers, setValidatedAnswers] = useState<{ [questionIndex: number]: string }>({});
+  const [isAnswerValidated, setIsAnswerValidated] = useState<boolean[]>([]);
 
   // Couleurs par matière pour les adaptations visuelles
   const subjectColors: { [key: string]: string } = {
@@ -77,6 +79,9 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
         if (result.success && result.data) {
           setCurrentQuiz(result.data);
           setCompletedQuestions(new Array(result.data.questions.length).fill(false));
+          setIsAnswerValidated(new Array(result.data.questions.length).fill(false));
+          // Charger les réponses validées sauvegardées
+          loadValidatedAnswers(result.data.week);
         } else {
           toast.error(result.message || "Quiz non trouvé pour cette semaine");
         }
@@ -98,8 +103,46 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     return Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
   };
 
+  const loadValidatedAnswers = (week: number) => {
+    try {
+      const savedAnswers = localStorage.getItem(`quiz_answers_week_${week}`);
+      if (savedAnswers) {
+        const parsedAnswers = JSON.parse(savedAnswers);
+        setValidatedAnswers(parsedAnswers.answers || {});
+        setIsAnswerValidated(parsedAnswers.validated || []);
+        setCompletedQuestions(parsedAnswers.completed || []);
+        setScore(parsedAnswers.score || 0);
+      }
+    } catch (error) {
+      console.error('Erreur lors du chargement des réponses validées:', error);
+    }
+  };
+
+  const saveValidatedAnswers = (week: number) => {
+    try {
+      const dataToSave = {
+        answers: validatedAnswers,
+        validated: isAnswerValidated,
+        completed: completedQuestions,
+        score: score,
+        timestamp: new Date().toISOString()
+      };
+      localStorage.setItem(`quiz_answers_week_${week}`, JSON.stringify(dataToSave));
+    } catch (error) {
+      console.error('Erreur lors de la sauvegarde des réponses validées:', error);
+    }
+  };
+
   const handleAnswerSelect = (answer: string) => {
     if (showResult) return;
+    // Empêcher la modification si la réponse est déjà validée
+    if (isAnswerValidated[currentQuestionIndex]) {
+      toast.warning("Réponse déjà validée", {
+        description: "Vous ne pouvez plus modifier cette réponse.",
+        duration: 2000,
+      });
+      return;
+    }
     setSelectedAnswer(answer);
   };
 
@@ -111,6 +154,16 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     
     setIsCorrect(correct);
     setShowResult(true);
+    
+    // Enregistrer la réponse validée
+    const newValidatedAnswers = { ...validatedAnswers };
+    newValidatedAnswers[currentQuestionIndex] = selectedAnswer;
+    setValidatedAnswers(newValidatedAnswers);
+    
+    // Marquer la réponse comme validée
+    const newValidated = [...isAnswerValidated];
+    newValidated[currentQuestionIndex] = true;
+    setIsAnswerValidated(newValidated);
     
     if (correct) {
       setScore(prev => prev + 1);
@@ -129,13 +182,25 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     const newCompleted = [...completedQuestions];
     newCompleted[currentQuestionIndex] = true;
     setCompletedQuestions(newCompleted);
+    
+    // Sauvegarder les réponses validées
+    saveValidatedAnswers(currentQuiz.week);
   };
 
   const handleNextQuestion = async () => {
     if (currentQuestionIndex < currentQuiz!.questions.length - 1) {
-      setCurrentQuestionIndex(prev => prev + 1);
-      setSelectedAnswer(null);
-      setShowResult(false);
+      const nextIndex = currentQuestionIndex + 1;
+      setCurrentQuestionIndex(nextIndex);
+      
+      // Charger la réponse validée si elle existe
+      if (validatedAnswers[nextIndex]) {
+        setSelectedAnswer(validatedAnswers[nextIndex]);
+        setShowResult(true);
+        setIsCorrect(validatedAnswers[nextIndex] === currentQuiz!.questions[nextIndex].answer);
+      } else {
+        setSelectedAnswer(null);
+        setShowResult(false);
+      }
     } else {
       // Quiz terminé - soumettre les réponses
       await submitQuiz();
@@ -205,6 +270,10 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     setScore(0);
     setCompletedQuestions(new Array(currentQuiz!.questions.length).fill(false));
     setQuizCompleted(false);
+    setValidatedAnswers({});
+    setIsAnswerValidated(new Array(currentQuiz!.questions.length).fill(false));
+    // Supprimer les réponses sauvegardées
+    localStorage.removeItem(`quiz_answers_week_${currentQuiz!.week}`);
   };
 
   if (loading) {
@@ -391,9 +460,13 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
                             : showResult && selectedAnswer === option && !isCorrect
                             ? "ring-2 ring-red-500 bg-red-100 dark:bg-red-900 text-red-800 dark:text-red-200"
                             : ""
+                        } ${
+                          isAnswerValidated[currentQuestionIndex] && selectedAnswer === option
+                            ? "ring-2 ring-purple-500 bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200"
+                            : ""
                         }`}
                         onClick={() => handleAnswerSelect(option)}
-                        disabled={showResult}
+                        disabled={showResult || isAnswerValidated[currentQuestionIndex]}
                       >
                         <div className="flex items-center gap-3">
                           <div className={`w-8 h-8 rounded-full flex items-center justify-center font-bold ${
@@ -410,13 +483,20 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
                           {showResult && selectedAnswer === option && !isCorrect && (
                             <XCircle className="w-5 h-5 text-red-500 ml-auto" />
                           )}
+                          {isAnswerValidated[currentQuestionIndex] && selectedAnswer === option && (
+                            <div className="flex items-center gap-1 ml-auto">
+                              <span className="text-xs bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 px-2 py-1 rounded-full">
+                                Validé
+                              </span>
+                            </div>
+                          )}
                         </div>
                       </Button>
                     </motion.div>
                   ))}
                 </div>
 
-                {!showResult && selectedAnswer && (
+                {!showResult && selectedAnswer && !isAnswerValidated[currentQuestionIndex] && (
                   <motion.div
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -428,6 +508,23 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
                     >
                       Valider ma réponse
                     </Button>
+                  </motion.div>
+                )}
+
+                {isAnswerValidated[currentQuestionIndex] && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-6 text-center"
+                  >
+                    <div className="bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200 p-4 rounded-lg">
+                      <p className="text-lg font-semibold">
+                        ✅ Réponse validée
+                      </p>
+                      <p className="text-sm mt-1">
+                        Vous ne pouvez plus modifier cette réponse.
+                      </p>
+                    </div>
                   </motion.div>
                 )}
 
