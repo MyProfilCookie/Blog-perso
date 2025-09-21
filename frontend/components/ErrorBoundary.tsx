@@ -6,11 +6,13 @@ import ChunkErrorFallback from './ChunkErrorFallback';
 interface Props {
   children: ReactNode;
   fallback?: ReactNode;
+  onError?: (error: Error, errorInfo: ErrorInfo) => void;
 }
 
 interface State {
   hasError: boolean;
   error?: Error;
+  errorId?: string;
 }
 
 class ErrorBoundary extends Component<Props, State> {
@@ -19,21 +21,69 @@ class ErrorBoundary extends Component<Props, State> {
   };
 
   public static getDerivedStateFromError(error: Error): State {
-    // Mettre à jour l'état pour afficher l'UI de fallback
-    return { hasError: true, error };
+    // Générer un ID unique pour cette erreur
+    const errorId = `error_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
+    return { hasError: true, error, errorId };
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
     console.error('Erreur capturée par ErrorBoundary:', error, errorInfo);
     
-    // Envoyer l'erreur à un service de monitoring si nécessaire
+    // Appeler le callback d'erreur personnalisé si fourni
+    if (this.props.onError) {
+      this.props.onError(error, errorInfo);
+    }
+    
+    // Envoyer l'erreur à un service de monitoring
+    this.logErrorToService(error, errorInfo);
+  }
+
+  private logErrorToService = (error: Error, errorInfo: ErrorInfo) => {
     if (typeof window !== 'undefined') {
-      // Log pour le debugging
-      console.log('Détails de l\'erreur:', {
+      const errorData = {
+        errorId: this.state.errorId,
         message: error.message,
         stack: error.stack,
-        componentStack: errorInfo.componentStack
-      });
+        componentStack: errorInfo.componentStack,
+        timestamp: new Date().toISOString(),
+        userAgent: navigator.userAgent,
+        url: window.location.href,
+        userId: localStorage.getItem('userId') || 'anonymous',
+      };
+
+      // Log pour le debugging
+      console.log('Détails de l\'erreur:', errorData);
+
+      // En production, envoyer à un service de monitoring
+      if (process.env.NODE_ENV === 'production') {
+        // TODO: Intégrer avec un service de monitoring (Sentry, LogRocket, etc.)
+        this.sendToMonitoringService(errorData);
+      }
+    }
+  };
+
+  private sendToMonitoringService = async (errorData: any) => {
+    try {
+      // Placeholder pour l'envoi vers un service de monitoring
+      // await fetch('/api/errors', {
+      //   method: 'POST',
+      //   headers: { 'Content-Type': 'application/json' },
+      //   body: JSON.stringify(errorData)
+      // });
+      console.log('Error would be sent to monitoring service:', errorData);
+    } catch (err) {
+      console.error('Failed to send error to monitoring service:', err);
+    }
+  };
+
+  private handleRetry = () => {
+    this.setState({ hasError: false, error: undefined, errorId: undefined });
+  };
+
+  public componentDidUpdate(prevProps: Props) {
+    // Réinitialiser l'état d'erreur si les enfants changent
+    if (prevProps.children !== this.props.children && this.state.hasError) {
+      this.setState({ hasError: false, error: undefined, errorId: undefined });
     }
   }
 
