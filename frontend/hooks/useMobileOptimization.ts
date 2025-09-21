@@ -11,12 +11,16 @@ export function useMobileOptimization(config: MobileOptimizationConfig = {}) {
   const [isMobile, setIsMobile] = useState(false);
   const [isSlowConnection, setIsSlowConnection] = useState(false);
   const [isReducedMotion, setIsReducedMotion] = useState(false);
+  const [screenWidth, setScreenWidth] = useState(0);
+  const [screenHeight, setScreenHeight] = useState(0);
 
-  // Détection mobile
+  // Détection mobile et dimensions d'écran
   useEffect(() => {
     const checkMobile = () => {
       const mobile = window.innerWidth <= 768;
       setIsMobile(mobile);
+      setScreenWidth(window.innerWidth);
+      setScreenHeight(window.innerHeight);
     };
 
     checkMobile();
@@ -65,6 +69,29 @@ export function useMobileOptimization(config: MobileOptimizationConfig = {}) {
     return config.enableLazyLoading !== false;
   }, [config.enableLazyLoading]);
 
+  // Détection du type d'appareil
+  const isTablet = useCallback(() => {
+    return isMobile && screenWidth >= 768 && screenWidth <= 1024;
+  }, [isMobile, screenWidth]);
+
+  const isPhone = useCallback(() => {
+    return isMobile && screenWidth < 768;
+  }, [isMobile, screenWidth]);
+
+  // Détection de l'orientation
+  const getOrientation = useCallback(() => {
+    return screenWidth > screenHeight ? 'landscape' : 'portrait';
+  }, [screenWidth, screenHeight]);
+
+  const isLandscape = useCallback(() => {
+    return screenWidth > screenHeight;
+  }, [screenWidth, screenHeight]);
+
+  // Alias pour la compatibilité avec les tests
+  const shouldReduceAnimations = useCallback(() => {
+    return shouldReduceMotion();
+  }, [shouldReduceMotion]);
+
   // Préchargement des ressources critiques
   const preloadCriticalResources = useCallback(() => {
     if (!config.enablePreloadCritical || isSlowConnection) return;
@@ -102,9 +129,16 @@ export function useMobileOptimization(config: MobileOptimizationConfig = {}) {
     isMobile,
     isSlowConnection,
     isReducedMotion,
+    screenWidth,
+    screenHeight,
     getImageQuality,
     shouldReduceMotion,
     shouldLazyLoad,
+    isTablet: isTablet(),
+    isPhone: isPhone(),
+    getOrientation,
+    isLandscape: isLandscape(),
+    shouldReduceAnimations: shouldReduceAnimations(),
     preloadCriticalResources,
     optimizePerformance
   };
