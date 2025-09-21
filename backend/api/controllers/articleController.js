@@ -1,4 +1,4 @@
-const Article = require('../models/Article');
+const Article = require("../models/Article");
 
 // Obtenir tous les articles
 exports.getAllArticles = async (req, res) => {
@@ -6,7 +6,9 @@ exports.getAllArticles = async (req, res) => {
     const articles = await Article.find();
     res.status(200).json(articles);
   } catch (error) {
-    res.status(500).json({ message: "Erreur lors de la récupération des articles", error });
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération des articles", error });
   }
 };
 
@@ -25,9 +27,13 @@ exports.addArticle = async (req, res) => {
     });
 
     await newArticle.save();
-    res.status(201).json({ message: "Article créé avec succès", article: newArticle });
+    res
+      .status(201)
+      .json({ message: "Article créé avec succès", article: newArticle });
   } catch (error) {
-    res.status(500).json({ message: "Erreur lors de la création de l'article", error });
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la création de l'article", error });
   }
 };
 
@@ -40,16 +46,23 @@ exports.updateArticle = async (req, res) => {
     const updatedArticle = await Article.findByIdAndUpdate(
       id,
       { title, subtitle, image, date, author, content },
-      { new: true }
+      { new: true },
     );
 
     if (!updatedArticle) {
       return res.status(404).json({ message: "Article non trouvé" });
     }
 
-    res.status(200).json({ message: "Article mis à jour avec succès", article: updatedArticle });
+    res
+      .status(200)
+      .json({
+        message: "Article mis à jour avec succès",
+        article: updatedArticle,
+      });
   } catch (error) {
-    res.status(500).json({ message: "Erreur lors de la mise à jour de l'article", error });
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la mise à jour de l'article", error });
   }
 };
 
@@ -66,6 +79,8 @@ exports.deleteArticle = async (req, res) => {
 
     res.status(200).json({ message: "Article supprimé avec succès" });
   } catch (error) {
-    res.status(500).json({ message: "Erreur lors de la suppression de l'article", error });
+    res
+      .status(500)
+      .json({ message: "Erreur lors de la suppression de l'article", error });
   }
 };

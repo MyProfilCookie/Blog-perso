@@ -60,7 +60,7 @@ export const withRetry = async <T>(
     shouldRetry = shouldRetryRequest
   } = options;
 
-  let lastError: Error;
+  let lastError: Error | undefined;
 
   for (let attempt = 1; attempt <= maxRetries; attempt++) {
     try {
@@ -90,7 +90,7 @@ export const withRetry = async <T>(
   }
 
   // Sinon, lancer l'erreur
-  throw lastError;
+  throw lastError || new Error('Unknown error occurred');
 };
 
 export const handleApiError = (error: any): ApiError => {
