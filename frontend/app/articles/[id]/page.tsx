@@ -241,7 +241,7 @@ const ArticlePage = () => {
               
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
                 {article.title}
-              </h1>
+          </h1>
               
               <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
                 {article.subtitle}
@@ -283,7 +283,7 @@ const ArticlePage = () => {
             <Image
                   alt={article.title}
                   className="object-cover w-full h-[300px] sm:h-[400px] lg:h-[500px]"
-                  height={500}
+              height={500}
               width={1200}
                   src={article.img || article.image || "/assets/default-image.webp"}
               priority
