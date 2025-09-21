@@ -374,7 +374,11 @@ export default function QuizHebdomadairePage() {
                                 setSelectedWeek(week);
                               }}
                             >
-                              {isStarted ? "Continuer" : isCurrentWeek ? "Commencer" : "Réviser"}
+                              {(() => {
+                                const buttonText = isStarted ? "Continuer" : isCurrentWeek ? "Commencer" : "Réviser";
+                                console.log(`Bouton pour semaine ${week}:`, { isStarted, isCurrentWeek, buttonText });
+                                return buttonText;
+                              })()}
                             </Button>
                           </div>
                         )}
