@@ -99,9 +99,11 @@ export default function QuizHebdomadairePage() {
   };
 
   const handleQuizStart = (week: number) => {
+    console.log(`Marquage du quiz semaine ${week} comme commencé`);
     const newStarted = { ...quizStarted, [week]: true };
     setQuizStarted(newStarted);
     localStorage.setItem('quizStarted', JSON.stringify(newStarted));
+    console.log('Nouvel état quizStarted:', newStarted);
   };
 
   const getScoreColor = (score: number) => {
@@ -275,6 +277,15 @@ export default function QuizHebdomadairePage() {
               const isCurrentWeek = week === currentWeek;
               const isCompleted = score !== undefined;
               const isStarted = quizStarted[week] || false;
+              
+              // Debug logs
+              console.log(`Quiz semaine ${week}:`, {
+                isStarted,
+                isCompleted,
+                isCurrentWeek,
+                quizStarted,
+                score
+              });
 
               return (
                 <motion.div
