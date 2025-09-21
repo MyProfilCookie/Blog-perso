@@ -12,6 +12,7 @@ export default function QuizHebdomadairePage() {
   const router = useRouter();
   const [selectedWeek, setSelectedWeek] = useState<number | null>(null);
   const [quizScores, setQuizScores] = useState<{ [week: number]: number }>({});
+  const [quizStarted, setQuizStarted] = useState<{ [week: number]: boolean }>({});
   const [loading, setLoading] = useState(true);
   const [quizzes, setQuizzes] = useState<any[]>([]);
 
@@ -62,6 +63,12 @@ export default function QuizHebdomadairePage() {
         if (savedScores) {
           setQuizScores(JSON.parse(savedScores));
         }
+
+        // Charger les quiz commencés depuis localStorage
+        const savedStarted = localStorage.getItem('quizStarted');
+        if (savedStarted) {
+          setQuizStarted(JSON.parse(savedStarted));
+        }
       } catch (error) {
         console.error('Erreur lors du chargement des quiz:', error);
         // Fallback vers les scores locaux
@@ -89,6 +96,12 @@ export default function QuizHebdomadairePage() {
     const newScores = { ...quizScores, [week]: percentage };
     setQuizScores(newScores);
     localStorage.setItem('quizScores', JSON.stringify(newScores));
+  };
+
+  const handleQuizStart = (week: number) => {
+    const newStarted = { ...quizStarted, [week]: true };
+    setQuizStarted(newStarted);
+    localStorage.setItem('quizStarted', JSON.stringify(newStarted));
   };
 
   const getScoreColor = (score: number) => {
@@ -261,6 +274,7 @@ export default function QuizHebdomadairePage() {
               const score = quizScores[week];
               const isCurrentWeek = week === currentWeek;
               const isCompleted = score !== undefined;
+              const isStarted = quizStarted[week] || false;
 
               return (
                 <motion.div
@@ -276,20 +290,39 @@ export default function QuizHebdomadairePage() {
                     } ${
                       isCompleted 
                         ? 'border-green-200 dark:border-green-700' 
+                        : isStarted
+                        ? 'border-orange-200 dark:border-orange-700 bg-orange-50 dark:bg-orange-900/10'
                         : 'border-gray-200 dark:border-gray-700'
                     }`}
-                    onClick={() => setSelectedWeek(week)}
+                    onClick={() => {
+                      if (!isStarted) {
+                        handleQuizStart(week);
+                      }
+                      setSelectedWeek(week);
+                    }}
                   >
                     <CardHeader className="pb-3">
                       <div className="flex items-center justify-between">
                         <CardTitle className="text-lg">
                           Semaine {week}
                         </CardTitle>
-                        {isCurrentWeek && (
-                          <Badge className="bg-blue-600 text-white">
-                            Actuelle
-                          </Badge>
-                        )}
+                        <div className="flex gap-2">
+                          {isCurrentWeek && (
+                            <Badge className="bg-blue-600 text-white">
+                              Actuelle
+                            </Badge>
+                          )}
+                          {isStarted && !isCompleted && (
+                            <Badge className="bg-orange-500 text-white">
+                              Commencé
+                            </Badge>
+                          )}
+                          {isCompleted && (
+                            <Badge className="bg-green-600 text-white">
+                              Terminé
+                            </Badge>
+                          )}
+                        </div>
                       </div>
                       <p className="text-sm text-gray-600 dark:text-gray-400">
                         {quiz.title}
@@ -315,15 +348,22 @@ export default function QuizHebdomadairePage() {
                         ) : (
                           <div className="text-center">
                             <Button
-                              variant={isCurrentWeek ? "default" : "outline"}
+                              variant={isCurrentWeek ? "default" : isStarted ? "secondary" : "outline"}
                               size="sm"
-                              className="w-full"
+                              className={`w-full ${
+                                isStarted 
+                                  ? "bg-orange-100 hover:bg-orange-200 text-orange-800 dark:bg-orange-900 dark:hover:bg-orange-800 dark:text-orange-200"
+                                  : ""
+                              }`}
                               onClick={(e) => {
                                 e.stopPropagation();
+                                if (!isStarted) {
+                                  handleQuizStart(week);
+                                }
                                 setSelectedWeek(week);
                               }}
                             >
-                              {isCurrentWeek ? "Commencer" : "Réviser"}
+                              {isStarted ? "Continuer" : isCurrentWeek ? "Commencer" : "Réviser"}
                             </Button>
                           </div>
                         )}
@@ -337,7 +377,7 @@ export default function QuizHebdomadairePage() {
         </motion.div>
 
         {/* Statistiques */}
-        {Object.keys(quizScores).length > 0 && (
+        {(Object.keys(quizScores).length > 0 || Object.keys(quizStarted).length > 0) && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -351,7 +391,7 @@ export default function QuizHebdomadairePage() {
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-6 text-center">
                   <div>
                     <div className="text-3xl font-bold text-green-600 dark:text-green-400 mb-2">
                       {Object.keys(quizScores).length}
@@ -361,8 +401,16 @@ export default function QuizHebdomadairePage() {
                     </p>
                   </div>
                   <div>
+                    <div className="text-3xl font-bold text-orange-600 dark:text-orange-400 mb-2">
+                      {Object.keys(quizStarted).filter(week => !quizScores[parseInt(week)]).length}
+                    </div>
+                    <p className="text-gray-700 dark:text-gray-300">
+                      Quiz commencés
+                    </p>
+                  </div>
+                  <div>
                     <div className="text-3xl font-bold text-blue-600 dark:text-blue-400 mb-2">
-                      {Math.round(Object.values(quizScores).reduce((a, b) => a + b, 0) / Object.values(quizScores).length)}%
+                      {Object.keys(quizScores).length > 0 ? Math.round(Object.values(quizScores).reduce((a, b) => a + b, 0) / Object.values(quizScores).length) : 0}%
                     </div>
                     <p className="text-gray-700 dark:text-gray-300">
                       Moyenne générale
