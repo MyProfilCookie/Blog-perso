@@ -25,7 +25,7 @@ const PerformanceOptimizer: React.FC = () => {
       <link rel="dns-prefetch" href="//fonts.gstatic.com" />
       
       {/* Préconnexion aux domaines critiques */}
-      <link rel="preconnect" href="https://fonts.googleapis.com" />
+      <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
       <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       
       {/* Optimisations de rendu */}

@@ -100,8 +100,15 @@ export default function RootLayout({
         
         {/* Préchargement des polices critiques */}
         <link
+          rel="preload"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          as="style"
+          crossOrigin="anonymous"
+        />
+        <link
           rel="stylesheet"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          crossOrigin="anonymous"
         />
         
         {/* Meta tags pour les performances et iPhone avec encoche */}

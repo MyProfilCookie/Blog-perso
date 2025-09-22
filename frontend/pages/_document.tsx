@@ -41,6 +41,7 @@ export default function Document() {
           rel="preload"
           href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           as="style"
+          crossOrigin="anonymous"
         />
         <script
           dangerouslySetInnerHTML={{
@@ -49,6 +50,7 @@ export default function Document() {
                 var link = document.createElement('link');
                 link.rel = 'stylesheet';
                 link.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
+                link.crossOrigin = 'anonymous';
                 document.head.appendChild(link);
               })();
             `,
@@ -58,13 +60,14 @@ export default function Document() {
           <link
             href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
             rel="stylesheet"
+            crossOrigin="anonymous"
           />
         </noscript>
 
         {/* Préconnexions DNS */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
 
         {/* Manifest et PWA */}
