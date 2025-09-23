@@ -7,6 +7,8 @@ import {
   useState,
   useEffect,
   ReactNode,
+  useMemo,
+  useCallback,
 } from "react";
 import { toast } from "sonner";
 
@@ -40,6 +42,7 @@ type CartContextType = {
   calculateTotalItems: () => number;
   calculateTotal: () => string;
   user: User | null;
+  isAuthenticated: boolean;
 };
 
 // Create the context with default values
@@ -53,52 +56,94 @@ const CartContext = createContext<CartContextType>({
   calculateTotalItems: () => 0,
   calculateTotal: () => "0.00",
   user: null,
+  isAuthenticated: false,
 });
 
 // Hook to use the cart context
 export const useCart = () => useContext(CartContext);
 
+// Cache pour éviter les vérifications répétées
+let userCache: User | null = null;
+let userCacheTimestamp = 0;
+const USER_CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
+
 // Provider component
 export function CartProvider({ children }: { children: ReactNode }) {
   const [cartItems, setCartItems] = useState<Article[]>([]);
   const [user, setUser] = useState<User | null>(null);
+  const [isInitialized, setIsInitialized] = useState(false);
 
-  // Load user and cart from localStorage on component mount
+  // Mémoriser l'état d'authentification pour éviter les recalculs
+  const isAuthenticated = useMemo(() => {
+    return Boolean(user && user.pseudo && user._id);
+  }, [user]);
+
+  // Load user and cart from localStorage on component mount - optimisé
   useEffect(() => {
-    if (typeof window === "undefined") return;
+    if (typeof window === "undefined" || isInitialized) return;
 
-    try {
-      const storedUser = localStorage.getItem("user");
-
-      if (storedUser) {
-        const parsedUser: User = JSON.parse(storedUser);
-
-        // Vérifier que l'utilisateur a toutes les données nécessaires
-        if (parsedUser && parsedUser.pseudo && parsedUser._id) {
-          setUser(parsedUser);
-          const userCartKey = `cartItems_${parsedUser.pseudo}`;
+    const loadUserData = () => {
+      try {
+        const now = Date.now();
+        
+        // Utiliser le cache utilisateur si valide
+        if (userCache && (now - userCacheTimestamp) < USER_CACHE_DURATION) {
+          setUser(userCache);
+          const userCartKey = `cartItems_${userCache.pseudo}`;
           const storedUserCart = localStorage.getItem(userCartKey);
-
           if (storedUserCart) {
             setCartItems(JSON.parse(storedUserCart));
           }
-        } else {
-          console.warn("Données utilisateur incomplètes, utilisation du panier invité");
+          setIsInitialized(true);
+          return;
         }
-      } else {
-        const guestCart = localStorage.getItem("guestCart");
 
-        if (guestCart) {
-          setCartItems(JSON.parse(guestCart));
+        const storedUser = localStorage.getItem("user");
+
+        if (storedUser) {
+          const parsedUser: User = JSON.parse(storedUser);
+
+          // Vérifier que l'utilisateur a toutes les données nécessaires
+          if (parsedUser && parsedUser.pseudo && parsedUser._id) {
+            userCache = parsedUser;
+            userCacheTimestamp = now;
+            setUser(parsedUser);
+            
+            const userCartKey = `cartItems_${parsedUser.pseudo}`;
+            const storedUserCart = localStorage.getItem(userCartKey);
+
+            if (storedUserCart) {
+              setCartItems(JSON.parse(storedUserCart));
+            }
+          } else {
+            console.warn("Données utilisateur incomplètes, utilisation du panier invité");
+            userCache = null;
+          }
+        } else {
+          const guestCart = localStorage.getItem("guestCart");
+          if (guestCart) {
+            setCartItems(JSON.parse(guestCart));
+          }
+          userCache = null;
         }
+      } catch (error) {
+        console.error("Erreur lors du chargement des données utilisateur:", error);
+        // En cas d'erreur, nettoyer les données corrompues
+        localStorage.removeItem("user");
+        localStorage.removeItem("guestCart");
+        userCache = null;
+      } finally {
+        setIsInitialized(true);
       }
-    } catch (error) {
-      console.error("Erreur lors du chargement des données utilisateur:", error);
-      // En cas d'erreur, nettoyer les données corrompues
-      localStorage.removeItem("user");
-      localStorage.removeItem("guestCart");
+    };
+
+    // Utiliser requestIdleCallback pour ne pas bloquer le rendu
+    if ('requestIdleCallback' in window) {
+      requestIdleCallback(loadUserData);
+    } else {
+      setTimeout(loadUserData, 0);
     }
-  }, []);
+  }, [isInitialized]);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
@@ -226,6 +271,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
         calculateTotalItems,
         calculateTotal,
         user,
+        isAuthenticated,
       }}
     >
       {children}
