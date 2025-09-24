@@ -1,7 +1,7 @@
 "use client";
 
 import Link from "next/link";
-import Image from "next/image";
+import OptimizedImage from "@/components/OptimizedImage";
 
 interface ArticleCardProps {
   id: string;
@@ -15,11 +15,12 @@ export default function ArticleCard({ id, title, subtitle, img }: ArticleCardPro
     <Link href={`/articles/${id}`} className="block">
       <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
         <div className="relative h-48">
-          <Image
+          <OptimizedImage
             src={img}
             alt={title}
-            fill
-            className="object-cover"
+            width={400}
+            height={192}
+            className="object-cover w-full h-full"
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </div>
@@ -34,4 +35,4 @@ export default function ArticleCard({ id, title, subtitle, img }: ArticleCardPro
       </div>
     </Link>
   );
-} 
+}

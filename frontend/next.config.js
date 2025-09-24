@@ -20,11 +20,9 @@ const nextConfig = {
   
   // Optimisations expérimentales pour LCP
   experimental: {
-    // Désactiver toutes les optimisations expérimentales qui peuvent causer des problèmes
-    // optimizeCss: true,
-    // optimizePackageImports: ['lucide-react', '@nextui-org/react'],
-    // optimizeServerReact: true,
-    // gzipSize: true,
+    optimizePackageImports: ['lucide-react', '@nextui-org/react', 'framer-motion', 'chart.js'],
+    optimizeCss: true,
+    gzipSize: true,
   },
 
   // Configuration webpack pour désactiver requestIdleCallback
@@ -43,6 +41,47 @@ const nextConfig = {
           'cancelIdleCallback': 'clearTimeout',
         })
       );
+
+      // Optimisations de bundle splitting
+      config.optimization = {
+        ...config.optimization,
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+              priority: 10,
+            },
+            nextui: {
+              test: /[\\/]node_modules[\\/]@nextui-org[\\/]/,
+              name: 'nextui',
+              chunks: 'all',
+              priority: 20,
+            },
+            framerMotion: {
+              test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
+              name: 'framer-motion',
+              chunks: 'all',
+              priority: 20,
+            },
+            charts: {
+              test: /[\\/]node_modules[\\/](chart\.js|react-chartjs-2|recharts)[\\/]/,
+              name: 'charts',
+              chunks: 'all',
+              priority: 20,
+            },
+            common: {
+              name: 'common',
+              minChunks: 2,
+              chunks: 'all',
+              priority: 5,
+              reuseExistingChunk: true,
+            },
+          },
+        },
+      };
     }
     return config;
   },

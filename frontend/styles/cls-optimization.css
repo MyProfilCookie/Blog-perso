@@ -1,0 +1,331 @@
+/* Optimisations spécifiques pour réduire le CLS (Cumulative Layout Shift) */
+
+/* Réservation d'espace pour les images */
+.image-container {
+  position: relative;
+  overflow: hidden;
+}
+
+.image-container::before {
+  content: '';
+  display: block;
+  width: 100%;
+  padding-bottom: 56.25%; /* Ratio 16:9 par défaut */
+}
+
+.image-container img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+/* Ratios spécifiques pour différents types d'images */
+.image-container.ratio-1-1::before {
+  padding-bottom: 100%; /* Carré */
+}
+
+.image-container.ratio-4-3::before {
+  padding-bottom: 75%; /* 4:3 */
+}
+
+.image-container.ratio-3-2::before {
+  padding-bottom: 66.67%; /* 3:2 */
+}
+
+.image-container.ratio-21-9::before {
+  padding-bottom: 42.86%; /* Ultra-wide */
+}
+
+/* Skeleton loaders pour éviter les shifts */
+.skeleton {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+.dark .skeleton {
+  background: linear-gradient(90deg, #374151 25%, #4b5563 50%, #374151 75%);
+  background-size: 200% 100%;
+}
+
+@keyframes loading {
+  0% {
+    background-position: 200% 0;
+  }
+  100% {
+    background-position: -200% 0;
+  }
+}
+
+/* Skeleton pour texte */
+.skeleton-text {
+  height: 1em;
+  margin-bottom: 0.5em;
+  border-radius: 4px;
+}
+
+.skeleton-text.title {
+  height: 2em;
+  width: 70%;
+}
+
+.skeleton-text.subtitle {
+  height: 1.2em;
+  width: 90%;
+}
+
+.skeleton-text.paragraph {
+  height: 1em;
+  width: 100%;
+}
+
+.skeleton-text.paragraph:last-child {
+  width: 60%;
+}
+
+/* Skeleton pour cartes */
+.skeleton-card {
+  padding: 1rem;
+  border-radius: 8px;
+  background: #f9fafb;
+  border: 1px solid #e5e7eb;
+}
+
+.dark .skeleton-card {
+  background: #1f2937;
+  border-color: #374151;
+}
+
+/* Réservation d'espace pour les composants dynamiques */
+.dynamic-content-placeholder {
+  min-height: 200px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f9fafb;
+  border-radius: 8px;
+  border: 1px dashed #d1d5db;
+}
+
+.dark .dynamic-content-placeholder {
+  background: #1f2937;
+  border-color: #4b5563;
+}
+
+/* Optimisations pour les listes */
+.list-item-skeleton {
+  display: flex;
+  align-items: center;
+  padding: 1rem;
+  gap: 1rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dark .list-item-skeleton {
+  border-color: #374151;
+}
+
+.list-item-skeleton .avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.list-item-skeleton .content {
+  flex: 1;
+}
+
+/* Optimisations pour les grilles */
+.grid-skeleton {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+}
+
+.grid-item-skeleton {
+  aspect-ratio: 16/9;
+  border-radius: 8px;
+}
+
+/* Optimisations pour les formulaires */
+.form-skeleton .field {
+  margin-bottom: 1rem;
+}
+
+.form-skeleton .field .label {
+  height: 1.2em;
+  width: 30%;
+  margin-bottom: 0.5rem;
+  border-radius: 4px;
+}
+
+.form-skeleton .field .input {
+  height: 2.5em;
+  width: 100%;
+  border-radius: 6px;
+}
+
+/* Optimisations pour les boutons */
+.button-skeleton {
+  height: 2.5rem;
+  width: 120px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.button-skeleton.primary {
+  background: linear-gradient(90deg, #3b82f6 25%, #60a5fa 50%, #3b82f6 75%);
+  background-size: 200% 100%;
+  animation: loading 1.5s infinite;
+}
+
+/* Optimisations pour les tableaux */
+.table-skeleton {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+.table-skeleton th,
+.table-skeleton td {
+  padding: 0.75rem;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.dark .table-skeleton th,
+.dark .table-skeleton td {
+  border-color: #374151;
+}
+
+.table-skeleton .cell-skeleton {
+  height: 1em;
+  border-radius: 4px;
+}
+
+/* Optimisations pour les modales */
+.modal-skeleton {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 90%;
+  max-width: 500px;
+  background: white;
+  border-radius: 12px;
+  padding: 2rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+}
+
+.dark .modal-skeleton {
+  background: #1f2937;
+}
+
+/* Optimisations pour les graphiques */
+.chart-skeleton {
+  width: 100%;
+  height: 300px;
+  background: #f9fafb;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.dark .chart-skeleton {
+  background: #1f2937;
+}
+
+.chart-skeleton::before {
+  content: '';
+  position: absolute;
+  top: 20%;
+  left: 10%;
+  right: 10%;
+  bottom: 20%;
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    #e5e7eb 30%,
+    #e5e7eb 70%,
+    transparent 70%
+  );
+  background-size: 20px 20px;
+  opacity: 0.3;
+}
+
+.dark .chart-skeleton::before {
+  background: linear-gradient(
+    45deg,
+    transparent 30%,
+    #4b5563 30%,
+    #4b5563 70%,
+    transparent 70%
+  );
+}
+
+/* Optimisations pour les contenus riches */
+.rich-content-skeleton .paragraph {
+  margin-bottom: 1rem;
+}
+
+.rich-content-skeleton .heading {
+  height: 1.5em;
+  width: 60%;
+  margin-bottom: 1rem;
+  border-radius: 4px;
+}
+
+/* Animations d'entrée pour réduire le CLS */
+.fade-in {
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.slide-in-up {
+  animation: slideInUp 0.3s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+/* Optimisations pour les médias queries */
+@media (max-width: 768px) {
+  .image-container::before {
+    padding-bottom: 75%; /* Ratio plus carré sur mobile */
+  }
+  
+  .hero-content {
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  
+  .grid-skeleton {
+    grid-template-columns: 1fr;
+  }
+  
+  .modal-skeleton {
+    width: 95%;
+    padding: 1.5rem;
+  }
+}

@@ -2,27 +2,30 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "@/styles/critical.css";
 import "@/styles/globals.css";
-import "@/styles/mobile-optimizations.css";
-import { Providers } from "./providers";
+import "@/styles/cls-optimization.css";
 import { Toaster } from "sonner";
+import { Providers } from "./providers";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 import { ThemeColorManager } from "@/components/theme-color-manager";
 import LCPOptimizer from "@/components/LCPOptimizer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import IOSErrorHandler from "@/components/IOSErrorHandler";
+import PerformanceMonitor from "@/components/PerformanceMonitor";
 
-const inter = Inter({ 
+const inter = Inter({
   subsets: ["latin"],
-  display: 'swap',
+  display: "swap",
   preload: true,
-  fallback: ['system-ui', 'arial'],
+  fallback: ["system-ui", "arial"],
 });
 
 export const metadata: Metadata = {
   title: "AutiStudy - Apprentissage adapté pour enfants autistes",
-  description: "Plateforme éducative spécialisée pour les enfants autistes, offrant des ressources adaptées et un accompagnement personnalisé.",
-  keywords: "autisme, éducation, enfants, apprentissage, ressources, accompagnement",
+  description:
+    "Plateforme éducative spécialisée pour les enfants autistes, offrant des ressources adaptées et un accompagnement personnalisé.",
+  keywords:
+    "autisme, éducation, enfants, apprentissage, ressources, accompagnement",
   authors: [{ name: "AutiStudy Team" }],
   creator: "AutiStudy",
   publisher: "AutiStudy",
@@ -31,31 +34,33 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
-  metadataBase: new URL(process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.vercel.app'),
+  metadataBase: new URL(
+    process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.vercel.app",
+  ),
   alternates: {
-    canonical: '/',
+    canonical: "/",
   },
   openGraph: {
     title: "AutiStudy - Apprentissage adapté pour enfants autistes",
     description: "Plateforme éducative spécialisée pour les enfants autistes",
-    url: process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.vercel.app',
-    siteName: 'AutiStudy',
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.vercel.app",
+    siteName: "AutiStudy",
     images: [
       {
-        url: '/og-image.jpg',
+        url: "/og-image.jpg",
         width: 1200,
         height: 630,
-        alt: 'AutiStudy - Plateforme éducative',
+        alt: "AutiStudy - Plateforme éducative",
       },
     ],
-    locale: 'fr_FR',
-    type: 'website',
+    locale: "fr_FR",
+    type: "website",
   },
   twitter: {
-    card: 'summary_large_image',
+    card: "summary_large_image",
     title: "AutiStudy - Apprentissage adapté pour enfants autistes",
     description: "Plateforme éducative spécialisée pour les enfants autistes",
-    images: ['/og-image.jpg'],
+    images: ["/og-image.jpg"],
   },
   robots: {
     index: true,
@@ -63,13 +68,13 @@ export const metadata: Metadata = {
     googleBot: {
       index: true,
       follow: true,
-      'max-video-preview': -1,
-      'max-image-preview': 'large',
-      'max-snippet': -1,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
     },
   },
   verification: {
-    google: 'your-google-verification-code',
+    google: "your-google-verification-code",
   },
 };
 
@@ -79,57 +84,103 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fr" className="scroll-smooth">
+    <html className="scroll-smooth" lang="fr">
       <head>
         {/* Préchargement agressif des ressources critiques pour LCP */}
-        <link rel="preload" href="/assets/home/home.webp" as="image" type="image/webp" fetchPriority="high" />
-        <link rel="preload" href="/assets/family/chantal.webp" as="image" type="image/webp" fetchPriority="high" />
-        <link rel="preload" href="/assets/family/family.webp" as="image" type="image/webp" />
-        <link rel="preload" href="/assets/home/hero-bg.webp" as="image" type="image/webp" />
-        
+        <link
+          as="image"
+          fetchPriority="high"
+          href="/assets/home/home.webp"
+          rel="preload"
+          type="image/webp"
+        />
+        <link
+          as="image"
+          fetchPriority="high"
+          href="/assets/family/chantal.webp"
+          rel="preload"
+          type="image/webp"
+        />
+        <link
+          as="image"
+          href="/assets/family/family.webp"
+          rel="preload"
+          type="image/webp"
+        />
+        <link
+          as="image"
+          href="/assets/home/hero-bg.webp"
+          rel="preload"
+          type="image/webp"
+        />
+
         {/* Resource hints avancés pour LCP */}
-        <link rel="preload" href="/_next/static/chunks/framework.js" as="script" />
-        <link rel="preload" href="/_next/static/chunks/main.js" as="script" />
-        <link rel="preload" href="/_next/static/css/app.css" as="style" />
-        
+        <link
+          as="script"
+          href="/_next/static/chunks/framework.js"
+          rel="preload"
+        />
+        <link as="script" href="/_next/static/chunks/main.js" rel="preload" />
+        <link as="style" href="/_next/static/css/app.css" rel="preload" />
+
         {/* Préconnexions DNS pour les domaines externes */}
-        <link rel="dns-prefetch" href="//fonts.googleapis.com" />
-        <link rel="dns-prefetch" href="//fonts.gstatic.com" />
-        <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+        <link href="//fonts.googleapis.com" rel="dns-prefetch" />
+        <link href="//fonts.gstatic.com" rel="dns-prefetch" />
+        <link
+          crossOrigin="anonymous"
+          href="https://fonts.googleapis.com"
+          rel="preconnect"
+        />
+        <link
+          crossOrigin="anonymous"
+          href="https://fonts.gstatic.com"
+          rel="preconnect"
+        />
+
         {/* Préchargement des polices critiques */}
         <link
-          rel="preload"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           as="style"
           crossOrigin="anonymous"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="preload"
         />
         <link
-          rel="stylesheet"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
           crossOrigin="anonymous"
+          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+          rel="stylesheet"
         />
-        
+
         {/* Meta tags pour les performances et iPhone avec encoche */}
-        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover" />
-        <meta httpEquiv="x-dns-prefetch-control" content="on" />
-        <meta name="format-detection" content="telephone=no" />
-        
+        <meta
+          content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
+          name="viewport"
+        />
+        <meta content="on" httpEquiv="x-dns-prefetch-control" />
+        <meta content="telephone=no" name="format-detection" />
+
         {/* Meta tags pour le mode sombre iOS */}
-        <meta name="color-scheme" content="light dark" />
-        <meta name="theme-color" content="#f8faff" media="(prefers-color-scheme: light)" />
-        <meta name="theme-color" content="#111827" media="(prefers-color-scheme: dark)" />
-        <meta name="apple-mobile-web-app-capable" content="yes" />
-        <meta name="apple-mobile-web-app-status-bar-style" content="default" />
-        <meta name="apple-mobile-web-app-title" content="AutiStudy" />
-        
+        <meta content="light dark" name="color-scheme" />
+        <meta
+          content="#f8faff"
+          media="(prefers-color-scheme: light)"
+          name="theme-color"
+        />
+        <meta
+          content="#111827"
+          media="(prefers-color-scheme: dark)"
+          name="theme-color"
+        />
+        <meta content="yes" name="apple-mobile-web-app-capable" />
+        <meta content="default" name="apple-mobile-web-app-status-bar-style" />
+        <meta content="AutiStudy" name="apple-mobile-web-app-title" />
+
         {/* Support du mode sombre pour Safari */}
-        <meta name="supported-color-schemes" content="light dark" />
-        
+        <meta content="light dark" name="supported-color-schemes" />
+
         {/* CSS critique inline pour LCP optimisé */}
-        <style dangerouslySetInnerHTML={{
-          __html: `
+        <style
+          dangerouslySetInnerHTML={{
+            __html: `
             /* CSS critique pour LCP */
             body { 
               font-family: Inter, system-ui, -apple-system, sans-serif;
@@ -229,8 +280,9 @@ export default function RootLayout({
               display: none !important;
               content: none !important;
             }
-          `
-        }} />
+          `,
+          }}
+        />
       </head>
       <body className={inter.className}>
         <LCPOptimizer />
@@ -240,16 +292,18 @@ export default function RootLayout({
           <Providers>
             <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
               <Navbar />
-              <main className="flex-grow w-full">
-                {children}
-              </main>
+              <main className="flex-grow w-full">{children}</main>
               <Footer />
             </div>
-            <Toaster 
-              position="top-right"
-              richColors
+            <Toaster
               closeButton
               duration={4000}
+              position="top-right"
+              richColors
+            />
+            <PerformanceMonitor
+              enableReporting={false}
+              showDebugInfo={process.env.NODE_ENV === "development"}
             />
           </Providers>
         </ErrorBoundary>

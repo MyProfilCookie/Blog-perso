@@ -15,13 +15,21 @@ interface PerformanceData {
   fcp: number;
 }
 
-const PerformanceMonitor: React.FC = () => {
+interface PerformanceMonitorProps {
+  enableReporting?: boolean;
+  showDebugInfo?: boolean;
+}
+
+const PerformanceMonitor: React.FC<PerformanceMonitorProps> = ({ 
+  enableReporting = false, 
+  showDebugInfo = false 
+}) => {
   const [performanceData, setPerformanceData] = useState<PerformanceData | null>(null);
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Afficher le moniteur seulement en mode développement
-    if (process.env.NODE_ENV === 'development') {
+    // Afficher le moniteur seulement si showDebugInfo est activé
+    if (showDebugInfo) {
       setIsVisible(true);
     }
 
