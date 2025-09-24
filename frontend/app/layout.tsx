@@ -84,7 +84,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html className="scroll-smooth" lang="fr">
+    <html className="scroll-smooth" lang="fr" suppressHydrationWarning>
       <head>
         {/* Préchargement agressif des ressources critiques pour LCP */}
         <link

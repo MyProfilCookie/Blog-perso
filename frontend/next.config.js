@@ -1,7 +1,10 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  output: 'standalone',
   trailingSlash: false,
   skipTrailingSlashRedirect: true,
+  swcMinify: true,
+  reactStrictMode: false,
   
   images: {
     formats: ['image/webp', 'image/avif'],
@@ -9,20 +12,28 @@ const nextConfig = {
     imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
     minimumCacheTTL: 31536000,
     dangerouslyAllowSVG: true,
-    // Optimisations LCP
     unoptimized: false,
   },
 
-  // Optimisations de performance
+  // Optimisations de performance pour réduire TTFB
   compress: true,
   poweredByHeader: false,
   generateEtags: false,
   
-  // Optimisations expérimentales pour LCP
+  // Optimisations expérimentales pour améliorer les performances
   experimental: {
     optimizePackageImports: ['lucide-react', '@nextui-org/react', 'framer-motion', 'chart.js'],
     optimizeCss: true,
     gzipSize: true,
+    serverComponentsExternalPackages: ['sharp'],
+    turbo: {
+      rules: {
+        '*.svg': {
+          loaders: ['@svgr/webpack'],
+          as: '*.js',
+        },
+      },
+    },
   },
 
   // Configuration webpack pour désactiver requestIdleCallback
