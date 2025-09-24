@@ -137,18 +137,14 @@ export default function RootLayout({
           rel="preconnect"
         />
 
-        {/* Préchargement des polices critiques */}
-        <link
-          as="style"
-          crossOrigin="anonymous"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          rel="preload"
-        />
-        <link
-          crossOrigin="anonymous"
-          href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
-          rel="stylesheet"
-        />
+        {/* Préchargement des polices critiques avec Next.js Font */}
+        <style dangerouslySetInnerHTML={{
+          __html: `
+            :root {
+              --font-inter: ${inter.style.fontFamily};
+            }
+          `
+        }} />
 
         {/* Meta tags pour les performances et iPhone avec encoche */}
         <meta

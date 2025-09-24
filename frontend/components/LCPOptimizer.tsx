@@ -87,34 +87,8 @@ export default function LCPOptimizer() {
 
     // Optimisation des polices
     const optimizeFonts = () => {
-      // Vérifier si la police est déjà chargée
-      if (document.querySelector('link[href*="fonts.googleapis.com"]')) {
-        return;
-      }
-
-      // Précharger les polices avec font-display: swap
-      const fontLink = document.createElement('link');
-      fontLink.rel = 'preload';
-      fontLink.href = 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap';
-      fontLink.as = 'style';
-      fontLink.crossOrigin = 'anonymous';
-      
-      // Ajouter un gestionnaire d'erreur
-      fontLink.onerror = () => {
-        console.warn('Échec du chargement de Google Fonts, utilisation des polices système');
-      };
-      
-      document.head.appendChild(fontLink);
-
-      // Ajouter un fallback immédiat
-      const fallbackStyle = document.createElement('style');
-      fallbackStyle.textContent = `
-        body { 
-          font-family: Inter, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-          font-display: swap;
-        }
-      `;
-      document.head.appendChild(fallbackStyle);
+      // Les polices sont déjà gérées par Next.js Font, pas besoin de les charger manuellement
+      console.log('Polices optimisées via Next.js Font');
     };
 
     // Optimisation des ressources non critiques
