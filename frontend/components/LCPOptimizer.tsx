@@ -28,9 +28,7 @@ export default function LCPOptimizer() {
 
       // Précharger les scripts critiques avec modulepreload
       const criticalScripts = [
-        '/_next/static/chunks/framework.js',
-        '/_next/static/chunks/main.js',
-        '/_next/static/chunks/webpack.js'
+        '/_next/static/chunks/polyfills.js'
       ];
 
       criticalScripts.forEach((src) => {
@@ -40,19 +38,8 @@ export default function LCPOptimizer() {
         document.head.appendChild(link);
       });
 
-      // Précharger les CSS critiques
-      const criticalCSS = [
-        '/_next/static/css/app.css',
-        '/_next/static/css/globals.css'
-      ];
-
-      criticalCSS.forEach((href) => {
-        const link = document.createElement('link');
-        link.rel = 'preload';
-        link.as = 'style';
-        link.href = href;
-        document.head.appendChild(link);
-      });
+      // Note: CSS files are automatically handled by Next.js
+      // No need to manually preload them as they are bundled and optimized
     };
 
     // Optimisation agressive des images

@@ -35,6 +35,7 @@ import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import Link from "next/link";
 import StatsSync from "@/components/StatsSync";
+import LoginButton from "@/components/LoginButton";
 
 const courseThemes = [
   {
@@ -165,6 +166,7 @@ export default function ControleIndex() {
   const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const [userId, setUserId] = useState<string | null>(null);
   const [stats, setStats] = useState({
     totalEleves: 0,
     averageScore: "0",
@@ -206,6 +208,60 @@ export default function ControleIndex() {
 
   useEffect(() => {
     setMounted(true);
+    
+    // Initialiser l'userId
+    const initializeUser = () => {
+      console.log('🔍 Initialisation de l\'utilisateur...');
+      
+      // Essayer de récupérer l'userId depuis différentes sources
+      let userIdFromStorage = null;
+      
+      // Méthode 1: depuis localStorage "user"
+      const userData = localStorage.getItem("user");
+      if (userData) {
+        try {
+          const parsedUser = JSON.parse(userData);
+          userIdFromStorage = parsedUser._id;
+          console.log('✅ UserId trouvé dans localStorage "user":', userIdFromStorage);
+        } catch (e) {
+          console.warn('❌ Erreur parsing userData:', e);
+        }
+      }
+      
+      // Méthode 2: depuis localStorage "userId"
+      if (!userIdFromStorage) {
+        userIdFromStorage = localStorage.getItem("userId");
+        if (userIdFromStorage) {
+          console.log('✅ UserId trouvé dans localStorage "userId":', userIdFromStorage);
+        }
+      }
+      
+      // Méthode 3: depuis localStorage "userToken" (décoder le JWT)
+      if (!userIdFromStorage) {
+        const token = localStorage.getItem("userToken") || localStorage.getItem("token");
+        if (token) {
+          try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            userIdFromStorage = payload.userId || payload.id;
+            if (userIdFromStorage) {
+              console.log('✅ UserId trouvé dans le token:', userIdFromStorage);
+            }
+          } catch (e) {
+            console.warn('❌ Erreur décodage token:', e);
+          }
+        }
+      }
+      
+      if (userIdFromStorage) {
+        setUserId(userIdFromStorage);
+        console.log('🎯 UserId final défini:', userIdFromStorage);
+      } else {
+        console.log('❌ Aucun userId trouvé');
+      }
+    };
+
+    initializeUser();
+    
     const fetchStats = async () => {
       try {
         const token =
@@ -404,18 +460,25 @@ export default function ControleIndex() {
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Retour à l&apos;accueil
               </Button>
-              <Button
-                onClick={toggleDarkMode}
-                variant="outline"
-                size="sm"
-                className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
-              >
-                {isDarkMode ? (
-                  <Sun className="w-4 h-4" />
-                ) : (
-                  <Moon className="w-4 h-4" />
-                )}
-              </Button>
+              <div className="flex items-center gap-3">
+                <LoginButton 
+                  variant="outline" 
+                  size="sm"
+                  className="bg-white/20 hover:bg-white/30 border-white/30 text-white hover:text-gray-900"
+                />
+                <Button
+                  onClick={toggleDarkMode}
+                  variant="outline"
+                  size="sm"
+                  className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
+                >
+                  {isDarkMode ? (
+                    <Sun className="w-4 h-4" />
+                  ) : (
+                    <Moon className="w-4 h-4" />
+                  )}
+                </Button>
+              </div>
             </div>
             
             <motion.div
@@ -523,10 +586,7 @@ export default function ControleIndex() {
                     </p>
                   </div>
                   <StatsSync 
-                    userId={(() => {
-                      const userData = localStorage.getItem("user");
-                      return userData ? JSON.parse(userData)._id : null;
-                    })()} 
+                    userId={userId || ""} 
                     onSyncComplete={(newStats) => {
                       console.log('📈 Nouvelles statistiques reçues:', newStats);
                       setStats(prevStats => ({

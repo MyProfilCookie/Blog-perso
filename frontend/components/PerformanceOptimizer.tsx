@@ -5,20 +5,10 @@ const PerformanceOptimizer: React.FC = () => {
   return (
     <Head>
       {/* Préchargement des polices critiques */}
-      <link
-        rel="preload"
-        href="/fonts/inter-var.woff2"
-        as="font"
-        type="font/woff2"
-        crossOrigin="anonymous"
-      />
+      {/* Police Inter chargée via Next.js Font, pas besoin de préchargement manuel */}
       
-      {/* Préchargement des CSS critiques */}
-      <link
-        rel="preload"
-        href="/_next/static/css/app.css"
-        as="style"
-      />
+      {/* CSS files are automatically handled by Next.js */}
+      {/* No need to manually preload them as they are bundled and optimized */}
       
       {/* DNS prefetch pour les domaines externes */}
       <link rel="dns-prefetch" href="//fonts.googleapis.com" />
@@ -35,11 +25,7 @@ const PerformanceOptimizer: React.FC = () => {
       {/* Préchargement des modules critiques */}
       <link
         rel="modulepreload"
-        href="/_next/static/chunks/framework.js"
-      />
-      <link
-        rel="modulepreload"
-        href="/_next/static/chunks/main.js"
+        href="/_next/static/chunks/polyfills.js"
       />
       
       {/* Optimisations de cache */}

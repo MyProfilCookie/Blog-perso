@@ -17,8 +17,10 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
 
   // Fonction pour collecter toutes les données localStorage
   const collectLocalStorageData = () => {
-    const subjects = ['math', 'french', 'sciences', 'art', 'history', 'geography'];
+    const subjects = ['math', 'french', 'sciences', 'art', 'history', 'geography', 'language', 'music', 'technology'];
     const allSubjectsData: any = {};
+
+    console.log('🔍 Début de la collecte des données localStorage...');
 
     subjects.forEach(subject => {
       const data: any = {};
@@ -27,46 +29,70 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
       const validatedExercises = localStorage.getItem(`${subject}_validatedExercises`);
       if (validatedExercises) {
         try {
-          data.validatedExercises = JSON.parse(validatedExercises);
+          const parsed = JSON.parse(validatedExercises);
+          data.validatedExercises = parsed;
+          console.log(`✅ ${subject}_validatedExercises:`, Object.keys(parsed).length, 'exercices');
         } catch (e) {
-          console.warn(`Erreur parsing validatedExercises pour ${subject}:`, e);
+          console.warn(`❌ Erreur parsing validatedExercises pour ${subject}:`, e);
         }
+      } else {
+        console.log(`⚠️  Aucune donnée validatedExercises pour ${subject}`);
       }
 
       // Récupérer les résultats
       const results = localStorage.getItem(`${subject}_results`);
       if (results) {
         try {
-          data.results = JSON.parse(results);
+          const parsed = JSON.parse(results);
+          data.results = parsed;
+          console.log(`✅ ${subject}_results:`, Array.isArray(parsed) ? parsed.length : Object.keys(parsed).length, 'résultats');
         } catch (e) {
-          console.warn(`Erreur parsing results pour ${subject}:`, e);
+          console.warn(`❌ Erreur parsing results pour ${subject}:`, e);
         }
+      } else {
+        console.log(`⚠️  Aucune donnée results pour ${subject}`);
       }
 
       // Récupérer les réponses utilisateur
       const userAnswers = localStorage.getItem(`${subject}_userAnswers`);
       if (userAnswers) {
         try {
-          data.userAnswers = JSON.parse(userAnswers);
+          const parsed = JSON.parse(userAnswers);
+          data.userAnswers = parsed;
+          console.log(`✅ ${subject}_userAnswers:`, Object.keys(parsed).length, 'réponses');
         } catch (e) {
-          console.warn(`Erreur parsing userAnswers pour ${subject}:`, e);
+          console.warn(`❌ Erreur parsing userAnswers pour ${subject}:`, e);
         }
+      } else {
+        console.log(`⚠️  Aucune donnée userAnswers pour ${subject}`);
       }
 
       // Récupérer les scores sauvegardés
       const scores = localStorage.getItem(`${subject}_scores`);
       if (scores) {
         try {
-          data.scores = JSON.parse(scores);
+          const parsed = JSON.parse(scores);
+          data.scores = parsed;
+          console.log(`✅ ${subject}_scores:`, parsed);
         } catch (e) {
-          console.warn(`Erreur parsing scores pour ${subject}:`, e);
+          console.warn(`❌ Erreur parsing scores pour ${subject}:`, e);
         }
+      } else {
+        console.log(`⚠️  Aucune donnée scores pour ${subject}`);
       }
 
       // Ajouter seulement si on a des données
       if (Object.keys(data).length > 0) {
         allSubjectsData[subject] = data;
+        console.log(`📊 Données collectées pour ${subject}:`, Object.keys(data));
+      } else {
+        console.log(`❌ Aucune donnée trouvée pour ${subject}`);
       }
+    });
+
+    console.log('📈 Résumé de la collecte:', {
+      totalSubjects: Object.keys(allSubjectsData).length,
+      subjects: Object.keys(allSubjectsData)
     });
 
     return allSubjectsData;
@@ -147,15 +173,31 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
   // Synchronisation automatique au chargement
   useEffect(() => {
     const autoSync = async () => {
+      console.log('🚀 useEffect StatsSync déclenché pour userId:', userId);
+      
+      if (!userId) {
+        console.log('❌ Pas d\'userId, synchronisation annulée');
+        return;
+      }
+
       const lastSync = localStorage.getItem('lastStatsSync');
       const now = Date.now();
       const oneHour = 60 * 60 * 1000; // 1 heure
+
+      console.log('⏰ Vérification de la synchronisation:', {
+        lastSync,
+        now,
+        timeDiff: lastSync ? now - parseInt(lastSync) : 'N/A',
+        shouldSync: !lastSync || (now - parseInt(lastSync)) > oneHour
+      });
 
       // Synchroniser si c'est la première fois ou si plus d'1h s'est écoulée
       if (!lastSync || (now - parseInt(lastSync)) > oneHour) {
         console.log('🔄 Synchronisation automatique des statistiques...');
         await syncStats();
         localStorage.setItem('lastStatsSync', now.toString());
+      } else {
+        console.log('⏸️ Synchronisation non nécessaire (dernière sync récente)');
       }
     };
 

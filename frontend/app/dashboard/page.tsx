@@ -108,10 +108,13 @@ const ProfilePage = () => {
       document.documentElement.classList.remove('dark');
     }
 
-    // Update current time every second
-    const interval = setInterval(() => {
-      setCurrentTime(dayjs().format("HH:mm:ss"));
-    }, 1000);
+    // Update current time every minute instead of every second to reduce re-renders
+    const updateTime = () => {
+      setCurrentTime(dayjs().format("HH:mm"));
+    };
+    
+    updateTime(); // Set initial time
+    const interval = setInterval(updateTime, 60000); // Update every minute
 
     // Clean up interval to avoid memory leaks
     return () => clearInterval(interval);

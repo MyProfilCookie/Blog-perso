@@ -89,9 +89,14 @@ self.addEventListener('fetch', (event) => {
   if (CACHE_STRATEGIES.api.test(url.pathname)) {
     event.respondWith(
       fetch(event.request).then(response => {
-        if (response.ok) {
+        if (response.ok && response.body) {
           caches.open(DYNAMIC_CACHE).then(cache => {
-            cache.put(event.request, response.clone());
+            // Vérifier que la réponse peut être clonée
+            try {
+              cache.put(event.request, response.clone());
+            } catch (error) {
+              console.warn('Impossible de cloner la réponse pour le cache:', error);
+            }
           });
         }
         return response;
@@ -100,6 +105,32 @@ self.addEventListener('fetch', (event) => {
           return response || new Response('API non disponible', { status: 503 });
         });
       })
+    );
+    return;
+  }
+
+  // Gestion spéciale pour les polices Google
+  if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
+    event.respondWith(
+      caches.open(STATIC_CACHE).then(cache => 
+        cache.match(event.request).then(response => {
+          if (response) return response;
+          
+          return fetch(event.request).then(networkResponse => {
+            if (networkResponse.ok && networkResponse.body) {
+              try {
+                cache.put(event.request, networkResponse.clone());
+              } catch (error) {
+                console.warn('Impossible de mettre en cache la police:', error);
+              }
+            }
+            return networkResponse;
+          }).catch(error => {
+            console.warn('Erreur réseau pour les polices Google:', error);
+            return response || new Response('Police non disponible', { status: 503 });
+          });
+        })
+      )
     );
     return;
   }

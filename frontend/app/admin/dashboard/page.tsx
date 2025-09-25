@@ -108,9 +108,13 @@ const AdminDashboard = () => {
       router.push("/"); // Redirige si l'utilisateur n'est pas admin
     }
 
-    const interval = setInterval(() => {
-      setCurrentTime(dayjs().format("HH:mm:ss"));
-    }, 1000);
+    // Update current time every minute instead of every second to reduce re-renders
+    const updateTime = () => {
+      setCurrentTime(dayjs().format("HH:mm"));
+    };
+    
+    updateTime(); // Set initial time
+    const interval = setInterval(updateTime, 60000); // Update every minute
 
     return () => clearInterval(interval);
   }, [router]);

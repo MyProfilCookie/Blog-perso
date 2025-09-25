@@ -10,10 +10,11 @@
 
 import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faShoppingCart, faPlus, faMinus, faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faMinus } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
-
 // Import du contexte
 import { CartProvider, useCart } from "@/app/contexts/cart-context";
 import { useIsClient } from "@/hooks/useIsClient";
@@ -109,17 +110,8 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
 
             <div className="fixed right-4 bottom-4 z-50">
                 {isClient ? (
-                    <motion.div
-                        initial={{ scale: 0, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ 
-                            type: "spring", 
-                            stiffness: 200, 
-                            damping: 20,
-                            delay: 0.5 
-                        }}
-                        whileHover={{ scale: 1.1 }}
-                        whileTap={{ scale: 0.9 }}
+                    <div
+                        className="opacity-100 scale-100"
                         style={{ willChange: 'auto' }}
                     >
                         <Popover>
@@ -128,23 +120,15 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
                                     className="relative bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white p-4 h-14 w-14 rounded-full shadow-lg transition-all duration-300 hover:shadow-xl"
                                     variant="default"
                                 >
-                                    <motion.div
-                                        animate={{ rotate: [0, 5, -5, 0] }}
-                                        transition={{ duration: 0.6, repeat: Infinity, repeatDelay: 3 }}
+                                    <div
+                                        className="animate-pulse"
                                         style={{ willChange: 'auto' }}
                                     >
                                         <FontAwesomeIcon className="text-xl" icon={faShoppingCart} />
-                                    </motion.div>
+                                    </div>
                                     {calculateTotalItems() > 0 && (
-                                        <motion.div 
-                                            className="absolute -top-3 -right-3"
-                                            initial={{ scale: 0, opacity: 0 }}
-                                            animate={{ scale: 1, opacity: 1 }}
-                                            transition={{ 
-                                                type: "spring", 
-                                                stiffness: 300, 
-                                                damping: 15 
-                                            }}
+                                        <div 
+                                            className="absolute -top-3 -right-3 opacity-100 scale-100"
                                             style={{ willChange: 'auto' }}
                                         >
                                             <Badge
@@ -152,7 +136,7 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
                                             >
                                                 {calculateTotalItems()}
                                             </Badge>
-                                        </motion.div>
+                                        </div>
                                     )}
                                 </Button>
                             </PopoverTrigger>
@@ -245,7 +229,7 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
                                 </div>
                             </PopoverContent>
                         </Popover>
-                    </motion.div>
+                    </div>
                 ) : (
                     <div>
                         <Popover>

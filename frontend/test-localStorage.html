@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Test localStorage pour StatsSync</title>
+</head>
+<body>
+    <h1>Test localStorage pour StatsSync</h1>
+    <button onclick="createTestData()">Créer des données de test</button>
+    <button onclick="clearTestData()">Effacer les données</button>
+    <button onclick="showData()">Afficher les données</button>
+    <div id="output"></div>
+
+    <script>
+        function createTestData() {
+            // Créer des données de test pour math
+            localStorage.setItem('math_validatedExercises', JSON.stringify({
+                'ex1': true, 
+                'ex2': true, 
+                'ex3': false,
+                'ex4': true
+            }));
+            
+            localStorage.setItem('math_results', JSON.stringify([
+                {isCorrect: true, answer: 'A'},
+                {isCorrect: false, answer: 'B'},
+                {isCorrect: true, answer: 'C'},
+                {isCorrect: true, answer: 'D'}
+            ]));
+            
+            localStorage.setItem('math_userAnswers', JSON.stringify({
+                'ex1': 'A',
+                'ex2': 'B', 
+                'ex3': 'C',
+                'ex4': 'D'
+            }));
+            
+            localStorage.setItem('math_scores', JSON.stringify({
+                total: 85,
+                correct: 17,
+                incorrect: 3
+            }));
+
+            // Créer des données de test pour french
+            localStorage.setItem('french_validatedExercises', JSON.stringify({
+                'ex1': true,
+                'ex2': true,
+                'ex3': false
+            }));
+            
+            localStorage.setItem('french_results', JSON.stringify([
+                {isCorrect: true, answer: 'Correct'},
+                {isCorrect: false, answer: 'Wrong'}
+            ]));
+            
+            localStorage.setItem('french_userAnswers', JSON.stringify({
+                'ex1': 'Correct',
+                'ex2': 'Wrong',
+                'ex3': 'Maybe'
+            }));
+
+            // Créer des données de test pour sciences
+            localStorage.setItem('sciences_validatedExercises', JSON.stringify({
+                'ex1': true,
+                'ex2': true
+            }));
+            
+            localStorage.setItem('sciences_results', JSON.stringify([
+                {isCorrect: true, answer: 'H2O'},
+                {isCorrect: true, answer: 'CO2'}
+            ]));
+            
+            localStorage.setItem('sciences_userAnswers', JSON.stringify({
+                'ex1': 'H2O',
+                'ex2': 'CO2'
+            }));
+
+            document.getElementById('output').innerHTML = '<p style="color: green;">✅ Données de test créées avec succès!</p>';
+            console.log('✅ Données de test localStorage créées');
+        }
+
+        function clearTestData() {
+            const keys = Object.keys(localStorage).filter(key => 
+                key.includes('_validatedExercises') || 
+                key.includes('_results') || 
+                key.includes('_userAnswers') || 
+                key.includes('_scores')
+            );
+            
+            keys.forEach(key => localStorage.removeItem(key));
+            document.getElementById('output').innerHTML = '<p style="color: red;">🗑️ Données effacées</p>';
+            console.log('🗑️ Données localStorage effacées');
+        }
+
+        function showData() {
+            const subjects = ['math', 'french', 'sciences', 'art', 'history', 'geography', 'language', 'music', 'technology'];
+            let output = '<h3>Données localStorage actuelles:</h3>';
+            
+            subjects.forEach(subject => {
+                const validatedExercises = localStorage.getItem(`${subject}_validatedExercises`);
+                const results = localStorage.getItem(`${subject}_results`);
+                const userAnswers = localStorage.getItem(`${subject}_userAnswers`);
+                const scores = localStorage.getItem(`${subject}_scores`);
+                
+                if (validatedExercises || results || userAnswers || scores) {
+                    output += `<h4>${subject}:</h4>`;
+                    if (validatedExercises) output += `<p>validatedExercises: ${validatedExercises}</p>`;
+                    if (results) output += `<p>results: ${results}</p>`;
+                    if (userAnswers) output += `<p>userAnswers: ${userAnswers}</p>`;
+                    if (scores) output += `<p>scores: ${scores}</p>`;
+                }
+            });
+            
+            if (output === '<h3>Données localStorage actuelles:</h3>') {
+                output += '<p>Aucune donnée trouvée</p>';
+            }
+            
+            document.getElementById('output').innerHTML = output;
+        }
+
+        // Afficher les données au chargement
+        showData();
+    </script>
+</body>
+</html>

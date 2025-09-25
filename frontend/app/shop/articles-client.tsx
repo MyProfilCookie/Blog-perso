@@ -10,13 +10,12 @@
 // 📌 1. Imports de bibliothèques tierces
 import NextLink from "next/link";
 import { useEffect, useState, useMemo } from "react";
-import { motion } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 
 // 📌 2. Imports absolus (depuis "@/components/")
 import { Button } from "@/components/ui/button";
-import { CardSkeleton } from "@/components/SkeletonLoaders";
+import { CardSkeleton } from "@/components/SkeletonLoader";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useIsClient } from "@/hooks/useIsClient";
 
@@ -172,8 +171,8 @@ export default function ArticlesClient() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
         <div className="text-center max-w-md">
           <div className="mb-4">
-            <svg className="mx-auto h-12 w-12 text-red-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z" />
+            <svg className="mx-auto h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.732-.833-2.5 0L4.268 18.5c-.77.833.192 2.5 1.732 2.5z" strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} />
             </svg>
           </div>
           <p className="text-xl font-semibold text-red-600 dark:text-red-400 mb-4">
@@ -181,6 +180,7 @@ export default function ArticlesClient() {
           </p>
           <div className="space-y-2">
             <Button
+              className="mr-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white"
               onClick={() => {
                 setError(null);
                 setLoading(true);
@@ -192,14 +192,13 @@ export default function ArticlesClient() {
                 }
                 window.location.reload();
               }}
-              className="mr-2 bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white"
             >
               Réessayer
             </Button>
             <Button
               asChild
-              variant="outline"
               className="border-gray-300 dark:border-gray-600"
+              variant="outline"
             >
               <NextLink href="/">Retour à l'accueil</NextLink>
             </Button>
@@ -214,8 +213,8 @@ export default function ArticlesClient() {
       <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
         <div className="text-center">
           <div className="mb-4">
-            <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M16 11V7a4 4 0 00-8 0v4M8 11v6a2 2 0 002 2h4a2 2 0 002-2v-6M8 11h8" />
+            <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path d="M16 11V7a4 4 0 00-8 0v4M8 11v6a2 2 0 002 2h4a2 2 0 002-2v-6M8 11h8" strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} />
             </svg>
           </div>
           <p className="text-xl font-semibold mb-4">
@@ -242,11 +241,8 @@ export default function ArticlesClient() {
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
         <div className="relative w-full px-4 md:px-8 lg:px-12">
           <div className="max-w-7xl mx-auto text-center">
-            <motion.div
-              animate={{ opacity: 1, y: 0 }}
-              className="mb-8 md:mb-12"
-              initial={{ opacity: 0, y: -20 }}
-              transition={{ duration: 0.4, ease: "easeOut" }}
+            <div
+              className="mb-8 md:mb-12 opacity-100"
             >
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
                 Boutique{" "}
@@ -258,7 +254,7 @@ export default function ArticlesClient() {
                 Outils et ressources spécialisés pour l'apprentissage adapté des enfants autistes. 
                 Découvrez notre sélection d'équipements sensoriels et éducatifs.
               </p>
-            </motion.div>
+            </div>
           </div>
         </div>
       </section>
@@ -268,26 +264,21 @@ export default function ArticlesClient() {
         <div className="w-full">
           <div className="grid grid-cols-1 gap-6 sm:gap-8 md:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 max-w-7xl mx-auto">
             {memoizedArticles.map((article, index) => (
-              <motion.div
+              <div
+                className="h-full opacity-100"
                 key={article.productId || article._id || index}
-                animate={{ opacity: 1, y: 0 }}
-                className="h-full"
-                initial={{ opacity: 0, y: 20 }}
-                transition={{
-                  duration: 0.3,
-                  delay: Math.min(index * 0.05, 0.3), // Limite le délai pour éviter les animations trop longues
-                  ease: "easeOut"
-                }}
               >
                 <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 h-full flex flex-col overflow-hidden">
                   {/* Image Container - Optimisé */}
                   <div className="relative h-64 md:h-72 overflow-hidden rounded-t-2xl">
                     <OptimizedImage
-                      src={article.imageUrl}
                       alt={article.title}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      width={400}
+                      height={300}
                       priority={index < 3} // Chargement prioritaire pour les 3 premiers
                       sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                      src={article.imageUrl}
                     />
                     <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
                   </div>
@@ -314,20 +305,20 @@ export default function ArticlesClient() {
                     {/* Buttons */}
                     <div className="flex flex-col gap-3 mt-auto">
                       <Button
-                        onClick={() => addToCart(article)}
                         className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95"
+                        onClick={() => addToCart(article)}
                       >
-                        <FontAwesomeIcon icon={faShoppingCart} className="mr-2" />
+                        <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
                         Ajouter au panier
                       </Button>
                       
                       {article.link && (
                         <Button
                           asChild
-                          variant="outline"
                           className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20 font-semibold py-3 px-4 rounded-xl transition-all duration-200"
+                          variant="outline"
                         >
-                          <NextLink href={article.link} target="_blank" rel="noopener noreferrer">
+                          <NextLink href={article.link} rel="noopener noreferrer" target="_blank">
                             Voir les détails
                           </NextLink>
                         </Button>
@@ -335,7 +326,7 @@ export default function ArticlesClient() {
                     </div>
                   </div>
                 </div>
-              </motion.div>
+              </div>
             ))}
           </div>
         </div>

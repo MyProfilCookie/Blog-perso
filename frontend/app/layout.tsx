@@ -117,11 +117,10 @@ export default function RootLayout({
         {/* Resource hints avancés pour LCP */}
         <link
           as="script"
-          href="/_next/static/chunks/framework.js"
+          href="/_next/static/chunks/polyfills.js"
           rel="preload"
         />
-        <link as="script" href="/_next/static/chunks/main.js" rel="preload" />
-        <link as="style" href="/_next/static/css/app.css" rel="preload" />
+        <link as="style" href="/_next/static/css/app/layout.css" rel="preload" />
 
         {/* Préconnexions DNS pour les domaines externes */}
         <link href="//fonts.googleapis.com" rel="dns-prefetch" />
