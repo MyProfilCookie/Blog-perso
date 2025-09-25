@@ -589,12 +589,21 @@ export default function ControleIndex() {
                     userId={userId || ""} 
                     onSyncComplete={(newStats) => {
                       console.log('📈 Nouvelles statistiques reçues:', newStats);
-                      setStats(prevStats => ({
-                        ...prevStats,
-                        averageScore: newStats.averageScore?.toString() || "0",
-                        // La progression sera calculée automatiquement basée sur totalEleves
-                        totalEleves: newStats.totalExercises || 0
-                      }));
+                      // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
+                      setStats(prevStats => {
+                        const newAverageScore = newStats.averageScore?.toString() || "0";
+                        const newTotalEleves = newStats.totalExercises || 0;
+                        
+                        // Ne mettre à jour que si les valeurs ont changé
+                        if (prevStats.averageScore !== newAverageScore || prevStats.totalEleves !== newTotalEleves) {
+                          return {
+                            ...prevStats,
+                            averageScore: newAverageScore,
+                            totalEleves: newTotalEleves
+                          };
+                        }
+                        return prevStats;
+                      });
                     }}
                   />
                 </div>
