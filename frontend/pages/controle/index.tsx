@@ -22,8 +22,6 @@ import {
   User,
   CreditCard,
   ArrowLeft,
-  Sun,
-  Moon,
   Sparkles,
   RefreshCw,
   Crown,
@@ -45,8 +43,8 @@ const courseThemes = [
     route: "/controle/french",
     icon: BookOpen,
     color: "from-red-500 to-pink-500",
-    bgColor: "bg-red-50 dark:bg-red-900/20",
-    borderColor: "border-red-200 dark:border-red-800",
+    bgColor: "bg-red-50",
+    borderColor: "border-red-200",
   },
   {
     id: 2,
@@ -55,8 +53,8 @@ const courseThemes = [
     route: "/controle/sciences",
     icon: Beaker,
     color: "from-green-500 to-emerald-500",
-    bgColor: "bg-green-50 dark:bg-green-900/20",
-    borderColor: "border-green-200 dark:border-green-800",
+    bgColor: "bg-green-50",
+    borderColor: "border-green-200",
   },
   {
     id: 3,
@@ -65,8 +63,8 @@ const courseThemes = [
     route: "/controle/math",
     icon: Calculator,
     color: "from-yellow-500 to-orange-500",
-    bgColor: "bg-yellow-50 dark:bg-yellow-900/20",
-    borderColor: "border-yellow-200 dark:border-yellow-800",
+    bgColor: "bg-yellow-50",
+    borderColor: "border-yellow-200",
   },
   {
     id: 4,
@@ -165,7 +163,6 @@ export default function ControleIndex() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [stats, setStats] = useState({
     totalEleves: 0,
@@ -179,32 +176,7 @@ export default function ControleIndex() {
     },
   });
 
-  // Check for dark mode preference
-  useEffect(() => {
-    const darkMode =
-      localStorage.getItem("darkMode") === "true" ||
-      (!localStorage.getItem("darkMode") &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDarkMode(darkMode);
 
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    localStorage.setItem("darkMode", newDarkMode.toString());
-
-    if (newDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   useEffect(() => {
     setMounted(true);
@@ -448,7 +420,7 @@ export default function ControleIndex() {
     <div className="w-full">
       {/* Hero Section */}
       <section className="relative py-12 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100"></div>
         <div className="relative w-full px-4 md:px-8 lg:px-12">
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-between items-center mb-8">
@@ -466,18 +438,6 @@ export default function ControleIndex() {
                   size="sm"
                   className="bg-white/20 hover:bg-white/30 border-white/30 text-white hover:text-gray-900"
                 />
-                <Button
-                  onClick={toggleDarkMode}
-                  variant="outline"
-                  size="sm"
-                  className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
-                >
-                  {isDarkMode ? (
-                    <Sun className="w-4 h-4" />
-                  ) : (
-                    <Moon className="w-4 h-4" />
-                  )}
-                </Button>
               </div>
             </div>
             

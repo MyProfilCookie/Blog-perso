@@ -4,8 +4,6 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { motion } from "framer-motion";
 import {
-  Sun,
-  Moon,
   ArrowLeft,
   Clock,
   CheckCircle,
@@ -47,50 +45,50 @@ interface Result {
 
 const subjectColors = {
   Mathématiques: {
-    bg: "bg-yellow-100 dark:bg-yellow-900/30",
-    text: "text-yellow-600 dark:text-yellow-400",
+    bg: "bg-yellow-100",
+    text: "text-yellow-600",
     border: "border-yellow-500",
     icon: "🔢",
   },
   Sciences: {
-    bg: "bg-green-100 dark:bg-green-900/30",
-    text: "text-green-600 dark:text-green-400",
+    bg: "bg-green-100",
+    text: "text-green-600",
     border: "border-green-500",
     icon: "🧪",
   },
   Français: {
-    bg: "bg-red-100 dark:bg-red-900/30",
-    text: "text-red-600 dark:text-red-400",
+    bg: "bg-red-100",
+    text: "text-red-600",
     border: "border-red-500",
     icon: "📚",
   },
   Histoire: {
-    bg: "bg-indigo-100 dark:bg-indigo-900/30",
-    text: "text-indigo-600 dark:text-indigo-400",
+    bg: "bg-indigo-100",
+    text: "text-indigo-600",
     border: "border-indigo-500",
     icon: "🏛️",
   },
   Géographie: {
-    bg: "bg-teal-100 dark:bg-teal-900/30",
-    text: "text-teal-600 dark:text-teal-400",
+    bg: "bg-teal-100",
+    text: "text-teal-600",
     border: "border-teal-500",
     icon: "🌍",
   },
   Langues: {
-    bg: "bg-pink-100 dark:bg-pink-900/30",
-    text: "text-pink-600 dark:text-pink-400",
+    bg: "bg-pink-100",
+    text: "text-pink-600",
     border: "border-pink-500",
     icon: "🗣️",
   },
   "Arts Plastiques": {
-    bg: "bg-purple-100 dark:bg-purple-900/30",
-    text: "text-purple-600 dark:text-purple-400",
+    bg: "bg-purple-100",
+    text: "text-purple-600",
     border: "border-purple-500",
     icon: "🎨",
   },
   default: {
-    bg: "bg-gray-100 dark:bg-gray-900/30",
-    text: "text-gray-600 dark:text-gray-400",
+    bg: "bg-gray-100",
+    text: "text-gray-600",
     border: "border-gray-500",
     icon: "📖",
   },
@@ -129,7 +127,6 @@ export default function TrimestreDetails() {
   } | null>(null);
   const [timeSpent, setTimeSpent] = useState(0);
   const [results, setResults] = useState<Result[]>([]);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
 
   const encouragementMessages = [
     "Continue comme ça, tu es sur la bonne voie ! 🌟",
@@ -234,32 +231,7 @@ export default function TrimestreDetails() {
     return () => clearInterval(interval);
   }, []);
 
-  // Check for dark mode preference
-  useEffect(() => {
-    const darkMode =
-      localStorage.getItem("darkMode") === "true" ||
-      (!localStorage.getItem("darkMode") &&
-        window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDarkMode(darkMode);
 
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  }, []);
-
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    localStorage.setItem("darkMode", newDarkMode.toString());
-    
-    if (newDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   const getEncouragement = (isCorrect: boolean, streak: number) => {
     if (isCorrect) {
@@ -501,18 +473,6 @@ export default function TrimestreDetails() {
                   <ArrowLeft className="w-4 h-4 mr-2" />
                   Retour
                 </Button>
-                <Button
-                  className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
-                  onClick={toggleDarkMode}
-                  size="sm"
-                  variant="outline"
-                >
-                  {isDarkMode ? (
-                    <Sun className="w-4 h-4" />
-                  ) : (
-                    <Moon className="w-4 h-4" />
-                  )}
-                </Button>
               </div>
               
               <motion.div
@@ -627,18 +587,6 @@ export default function TrimestreDetails() {
             >
               <ArrowLeft className="w-4 h-4 mr-2" />
               Retour aux matières
-            </Button>
-            <Button
-              className="bg-white/20 hover:bg-white/30 border-white/30 text-gray-700 dark:text-gray-300"
-              onClick={toggleDarkMode}
-              size="sm"
-              variant="outline"
-            >
-              {isDarkMode ? (
-                <Sun className="w-4 h-4" />
-              ) : (
-                <Moon className="w-4 h-4" />
-              )}
             </Button>
           </div>
 
