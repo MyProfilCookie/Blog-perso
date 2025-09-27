@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { motion, AnimatePresence } from "framer-motion";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowLeft, faExclamationTriangle } from "@fortawesome/free-solid-svg-icons";
-import Image from "next/image";
 
 interface QuizBackButtonProps {
   label?: string;
@@ -25,7 +24,6 @@ export default function QuizBackButton({
 }: QuizBackButtonProps) {
   const router = useRouter();
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [showLyonImage, setShowLyonImage] = useState(false);
 
   const handleBackClick = () => {
     if (showWarning) {
@@ -39,12 +37,7 @@ export default function QuizBackButton({
     if (onConfirm) {
       onConfirm();
     } else {
-      // Afficher l'image de Lyon pendant 1 seconde
-      setShowLyonImage(true);
-      setTimeout(() => {
-        setShowLyonImage(false);
-        router.back();
-      }, 1000);
+      router.back();
     }
   };
 
@@ -119,37 +112,6 @@ export default function QuizBackButton({
         )}
       </AnimatePresence>
 
-      {/* Image de Lyon pendant 1 seconde */}
-      <AnimatePresence>
-        {showLyonImage && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="fixed inset-0 bg-black/80 flex items-center justify-center z-50"
-          >
-            <motion.div
-              initial={{ scale: 0.8 }}
-              animate={{ scale: 1 }}
-              exit={{ scale: 0.8 }}
-              className="relative w-96 h-64 rounded-xl overflow-hidden shadow-2xl"
-            >
-              <Image
-                src="/assets/geography.webp"
-                alt="Lyon - Ville de France"
-                fill
-                className="object-cover"
-                priority
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent flex items-end justify-center pb-4">
-                <h2 className="text-white text-xl font-bold">
-                  Lyon, France 🇫🇷
-                </h2>
-              </div>
-            </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </>
   );
 }
