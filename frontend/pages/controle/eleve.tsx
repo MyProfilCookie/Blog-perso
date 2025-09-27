@@ -1489,7 +1489,7 @@ const ElevePage: React.FC = () => {
             className="space-y-6 animation-optimized"
           >
             {/* Informations utilisateur */}
-            {userInfo && (
+            {userInfo ? (
               <Card className="w-full border border-purple-200 dark:border-purple-800 dark:from-purple-900/50 dark:to-pink-900/50 card-optimized shadow-optimized">
                 <CardBody className="p-6 spacing-optimized">
                   <div className="flex items-center gap-4 mb-4 flex-optimized">
@@ -1497,6 +1497,13 @@ const ElevePage: React.FC = () => {
                       className="ring-2 ring-purple-200 dark:ring-purple-800 avatar-optimized"
                       size="lg"
                       src={userInfo.avatar || "/assets/default-avatar.webp"}
+                      isBordered
+                      showFallback
+                      fallback={
+                        <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">
+                          {userInfo?.prenom?.charAt(0) || "U"}
+                        </div>
+                      }
                     />
                     <div>
                       <h2 className="text-xl font-bold text-purple-800 dark:text-purple-200">
@@ -1505,6 +1512,18 @@ const ElevePage: React.FC = () => {
                       <p className="text-purple-600 dark:text-purple-300">
                         {userInfo.email}
                       </p>
+                    </div>
+                  </div>
+                </CardBody>
+              </Card>
+            ) : (
+              <Card className="w-full border border-purple-200 dark:border-purple-800 dark:from-purple-900/50 dark:to-pink-900/50 card-optimized shadow-optimized">
+                <CardBody className="p-6 spacing-optimized">
+                  <div className="flex items-center gap-4 mb-4 flex-optimized">
+                    <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+                    <div className="flex-1">
+                      <div className="h-6 bg-gray-200 dark:bg-gray-700 rounded animate-pulse mb-2"></div>
+                      <div className="h-4 bg-gray-200 dark:bg-gray-700 rounded animate-pulse w-3/4"></div>
                     </div>
                   </div>
                 </CardBody>

@@ -8,6 +8,7 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { CheckCircle, XCircle, Star, Trophy, Heart, Sparkles } from 'lucide-react';
 import { toast } from 'sonner';
+import QuizBackButton from '@/components/QuizBackButton';
 // import quizData from '../../autistudy_quizzes_52.json'; // Remplacé par l'API
 
 interface Question {
@@ -413,6 +414,14 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-8"
         >
+          {/* Bouton de retour */}
+          <div className="flex justify-start mb-4">
+            <QuizBackButton
+              label="Retour aux quiz"
+              warningMessage="Êtes-vous sûr de vouloir quitter ce quiz ? Votre progression sera sauvegardée."
+            />
+          </div>
+          
           <h1 className="text-3xl font-bold text-gray-800 dark:text-white mb-2">
             {currentQuiz.title}
           </h1>

@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { ArrowLeft, Calendar, Star, Trophy, Target, Users } from 'lucide-react';
 import QuizHebdomadaire from '@/components/quiz/QuizHebdomadaire';
+import QuizBackButton from '@/components/QuizBackButton';
 // import quizData from '../../autistudy_quizzes_52.json'; // Remplacé par l'API
 
 export default function QuizHebdomadairePage() {
@@ -170,15 +171,11 @@ export default function QuizHebdomadairePage() {
           className="mb-8"
         >
           <div className="flex items-center gap-4 mb-6">
-            <Button
-              onClick={() => router.push('/controle')}
-              variant="outline"
-              size="sm"
-              className="flex items-center gap-2"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Retour au contrôle
-            </Button>
+            <QuizBackButton
+              label="Retour au contrôle"
+              onConfirm={() => router.push('/controle')}
+              warningMessage="Êtes-vous sûr de vouloir quitter le quiz ? Votre progression sera sauvegardée."
+            />
           </div>
 
           <div className="text-center">
