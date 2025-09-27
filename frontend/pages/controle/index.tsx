@@ -419,24 +419,24 @@ export default function ControleIndex() {
   return (
     <div className="w-full">
       {/* Hero Section */}
-      <section className="relative py-12 md:py-20 overflow-hidden">
+      <section className="relative py-8 sm:py-12 md:py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100"></div>
-        <div className="relative w-full px-4 md:px-8 lg:px-12">
+        <div className="relative w-full px-3 sm:px-4 md:px-8 lg:px-12">
           <div className="max-w-7xl mx-auto">
-            <div className="flex justify-between items-center mb-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
               <Button
                 onClick={() => router.push("/")}
                 variant="outline"
-                className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
+                className="bg-white/20 hover:bg-white/30 border-white/30 text-white w-full sm:w-auto"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Retour à l&apos;accueil
               </Button>
-              <div className="flex items-center gap-3">
+              <div className="flex items-center gap-3 w-full sm:w-auto">
                 <LoginButton 
                   variant="outline" 
                   size="sm"
-                  className="bg-white/20 hover:bg-white/30 border-white/30 text-white hover:text-gray-900"
+                  className="bg-white/20 hover:bg-white/30 border-white/30 text-white hover:text-gray-900 w-full sm:w-auto"
                 />
               </div>
             </div>
@@ -445,12 +445,12 @@ export default function ControleIndex() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7 }}
-              className="text-center mb-12"
+              className="text-center mb-8 sm:mb-12"
             >
-              <div className="w-20 h-20 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
-                <BookOpen className="w-10 h-10 text-white" />
+              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
+                <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 px-2">
                 Bonjour {(() => {
                   if (stats.eleve?.prenom) {
                     return stats.eleve.prenom;
@@ -469,13 +469,13 @@ export default function ControleIndex() {
                   return "Visiteur";
                 })()} ! 🌟
               </h1>
-              <p className="text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
+              <p className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-4">
                 {localStorage.getItem("user") ? "Bienvenue dans ton espace d'apprentissage magique ! ✨" : "Découvrez nos matières et fonctionnalités d'apprentissage ! ✨"}
               </p>
               {!localStorage.getItem("user") && (
-                <div className="mt-6 max-w-2xl mx-auto">
-                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <p className="text-blue-800 dark:text-blue-200 text-sm">
+                <div className="mt-6 max-w-2xl mx-auto px-4">
+                  <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
                       💡 <strong>Mode aperçu :</strong> Connectez-vous pour accéder à vos statistiques personnalisées et sauvegarder votre progression.
                     </p>
                   </div>
@@ -487,13 +487,13 @@ export default function ControleIndex() {
       </section>
 
       {/* Stats Cards */}
-      <section className="py-12">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
+      <section className="py-8 sm:py-12">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12"
           >
             {statsCards.map((stat, index) => (
               <motion.div
@@ -503,16 +503,16 @@ export default function ControleIndex() {
                 transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               >
                 <Card className={`${stat.bgColor} border-0 shadow-lg hover:shadow-xl transition-all duration-300`}>
-                  <CardContent className="p-6">
-                    <div className="flex items-center space-x-4">
-                      <div className={`p-3 rounded-full ${stat.bgColor}`}>
-                        <stat.icon className={`w-6 h-6 ${stat.color}`} />
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex items-center space-x-3 sm:space-x-4">
+                      <div className={`p-2 sm:p-3 rounded-full ${stat.bgColor}`}>
+                        <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
                       </div>
-                      <div>
-                        <p className="text-sm font-medium text-gray-600 dark:text-gray-400">
+                      <div className="min-w-0 flex-1">
+                        <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">
                           {stat.label}
                         </p>
-                        <p className={`text-2xl font-bold ${stat.color}`}>
+                        <p className={`text-lg sm:text-2xl font-bold ${stat.color} truncate`}>
                           {stat.value}
                         </p>
                       </div>
@@ -574,21 +574,21 @@ export default function ControleIndex() {
       </section>
 
       {/* Quiz Hebdomadaires - Section Spéciale */}
-      <section className="py-12 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
+      <section className="py-8 sm:py-12 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.3 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-4">
-              <Target className="w-8 h-8 text-white" />
+            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+              <Target className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <h2 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4">
               Quiz Hebdomadaires 🧩
             </h2>
-            <p className="text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto">
+            <p className="text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto px-4">
               Des quiz adaptés spécialement pour les enfants autistes de 6 à 18 ans. 
               Questions simples, feedback positif et progression douce !
             </p>
@@ -598,7 +598,7 @@ export default function ControleIndex() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.5 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8"
+            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8"
           >
             {/* Adaptations spéciales */}
             <Card className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300">
@@ -649,27 +649,27 @@ export default function ControleIndex() {
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7, delay: 0.6 }}
-            className="max-w-4xl mx-auto"
+            className="max-w-4xl mx-auto px-3 sm:px-4"
           >
             <Card className="bg-gradient-to-r from-purple-500 to-pink-500 border-0 shadow-2xl overflow-hidden">
-              <CardContent className="p-8">
+              <CardContent className="p-4 sm:p-6 md:p-8">
                 <div className="text-center text-white">
-                  <div className="w-20 h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-6">
-                    <Target className="w-10 h-10 text-white" />
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+                    <Target className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                   </div>
-                  <h3 className="text-2xl md:text-3xl font-bold mb-4">
+                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 px-2">
                     Commencer un Quiz
                   </h3>
-                  <p className="text-lg mb-6 opacity-90">
+                  <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 opacity-90 px-4">
                     52 quiz disponibles, adaptés pour chaque semaine de l'année
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2">
                     <Button
                       onClick={() => router.push('/controle/quiz-hebdomadaire')}
                       size="lg"
-                      className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-8 py-3"
+                      className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base"
                     >
-                      <Target className="w-5 h-5 mr-2" />
+                      <Target className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Choisir un Quiz
                     </Button>
                     <Button
@@ -679,9 +679,9 @@ export default function ControleIndex() {
                       }}
                       size="lg"
                       variant="outline"
-                      className="border-white text-white hover:bg-white/10 font-semibold px-8 py-3"
+                      className="border-white text-white hover:bg-white/10 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base"
                     >
-                      <Sparkles className="w-5 h-5 mr-2" />
+                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Quiz de cette Semaine
                     </Button>
                   </div>
@@ -693,21 +693,21 @@ export default function ControleIndex() {
       </section>
 
       {/* Matières */}
-      <section className="py-12 bg-gray-50 dark:bg-gray-800/50">
-        <div className="max-w-7xl mx-auto px-4 md:px-8 lg:px-12">
+      <section className="py-8 sm:py-12 bg-gray-50 dark:bg-gray-800/50">
+        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.4 }}
-            className="text-center mb-12"
+            className="text-center mb-8 sm:mb-12"
           >
-            <div className="w-16 h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-4">
-              <Sparkles className="w-8 h-8 text-white" />
+            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <h2 className="text-3xl font-bold text-gray-900 dark:text-white mb-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4">
               Choisis ta matière
             </h2>
-            <p className="text-lg text-gray-600 dark:text-gray-300">
+            <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 px-4">
               Explore les différentes matières et progresse à ton rythme
             </p>
           </motion.div>
@@ -716,7 +716,7 @@ export default function ControleIndex() {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.6 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
           >
             {courseThemes.map((theme, index) => (
               <motion.div
@@ -728,16 +728,16 @@ export default function ControleIndex() {
               >
                 <Link href={theme.route}>
                   <Card className={`cursor-pointer transform transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl ${theme.bgColor} border-2 ${theme.borderColor} hover:border-opacity-100`}>
-                    <CardContent className="p-6">
-                      <div className="flex items-center space-x-4">
-                        <div className={`p-4 rounded-full bg-gradient-to-r ${theme.color} shadow-lg`}>
-                          <theme.icon className="h-6 w-6 text-white" />
+                    <CardContent className="p-4 sm:p-6">
+                      <div className="flex items-center space-x-3 sm:space-x-4">
+                        <div className={`p-3 sm:p-4 rounded-full bg-gradient-to-r ${theme.color} shadow-lg`}>
+                          <theme.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                         </div>
-                        <div className="flex-1">
-                          <h3 className="text-xl font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 mb-2">
+                        <div className="flex-1 min-w-0">
+                          <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 mb-1 sm:mb-2 truncate">
                             {theme.title}
                           </h3>
-                          <p className="text-gray-600 dark:text-gray-300 text-sm">
+                          <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm line-clamp-2">
                             {theme.description}
                           </p>
                         </div>
