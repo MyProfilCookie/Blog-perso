@@ -469,17 +469,27 @@ export default function ControleIndex() {
               transition={{ duration: 0.7 }}
               className="text-center mb-8 sm:mb-12"
             >
-              <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
+              <motion.div 
+                initial={{ opacity: 0, scale: 0.8 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
+                className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg"
+              >
                 <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-              </div>
-              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 px-2">
+              </motion.div>
+              <motion.h1 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
+                className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 px-2"
+              >
                 Bonjour {(() => {
                   if (stats.eleve?.prenom) {
                     return stats.eleve.prenom;
                   }
                   
                   try {
-                    const storedUser = localStorage.getItem("user");
+                    const storedUser = typeof window !== 'undefined' ? localStorage.getItem("user") : null;
                     if (storedUser) {
                       const userData = JSON.parse(storedUser);
                       return userData.prenom || userData.firstName || userData.pseudo || "Élève";
@@ -490,18 +500,28 @@ export default function ControleIndex() {
                   
                   return "Visiteur";
                 })()} ! 🌟
-              </h1>
-              <p className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-4">
-                {localStorage.getItem("user") ? "Bienvenue dans ton espace d'apprentissage magique ! ✨" : "Découvrez nos matières et fonctionnalités d'apprentissage ! ✨"}
-              </p>
-              {!localStorage.getItem("user") && (
-                <div className="mt-6 max-w-2xl mx-auto px-4">
+              </motion.h1>
+              <motion.p 
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
+                className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-4"
+              >
+                {typeof window !== 'undefined' && localStorage.getItem("user") ? "Bienvenue dans ton espace d'apprentissage magique ! ✨" : "Découvrez nos matières et fonctionnalités d'apprentissage ! ✨"}
+              </motion.p>
+              {typeof window !== 'undefined' && !localStorage.getItem("user") && (
+                <motion.div 
+                  initial={{ opacity: 0, y: 10 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                  className="mt-6 max-w-2xl mx-auto px-4"
+                >
                   <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
                     <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
                       💡 <strong>Mode aperçu :</strong> Connectez-vous pour accéder à vos statistiques personnalisées et sauvegarder votre progression.
                     </p>
                   </div>
-                </div>
+                </motion.div>
               )}
             </motion.div>
           </div>
