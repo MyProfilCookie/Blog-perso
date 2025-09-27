@@ -427,7 +427,7 @@ export default function ControleIndex() {
               <Button
                 onClick={() => router.push("/")}
                 variant="outline"
-                className="bg-white/20 hover:bg-white/30 border-white/30 text-white w-full sm:w-auto"
+                className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Retour à l&apos;accueil
@@ -436,7 +436,7 @@ export default function ControleIndex() {
                 <LoginButton 
                   variant="outline" 
                   size="sm"
-                  className="bg-white/20 hover:bg-white/30 border-white/30 text-white hover:text-gray-900 w-full sm:w-auto"
+                  className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto"
                 />
               </div>
             </div>
@@ -533,39 +533,41 @@ export default function ControleIndex() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, delay: 0.6 }}
-              className="mt-8"
+              className="mt-6 sm:mt-8"
             >
-              <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-6 border border-violet-200 dark:border-violet-700">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h3 className="text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
+              <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-4 sm:p-6 border border-violet-200 dark:border-violet-700">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                  <div className="flex-1 min-w-0">
+                    <h3 className="text-base sm:text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
                       🔄 Synchronisation des statistiques
                     </h3>
-                    <p className="text-sm text-violet-600 dark:text-violet-400">
+                    <p className="text-xs sm:text-sm text-violet-600 dark:text-violet-400 break-words">
                       Synchronisez vos exercices locaux avec le serveur pour mettre à jour vos statistiques
                     </p>
                   </div>
-                  <StatsSync 
-                    userId={userId || ""} 
-                    onSyncComplete={(newStats) => {
-                      console.log('📈 Nouvelles statistiques reçues:', newStats);
-                      // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
-                      setStats(prevStats => {
-                        const newAverageScore = newStats.averageScore?.toString() || "0";
-                        const newTotalEleves = newStats.totalExercises || 0;
-                        
-                        // Ne mettre à jour que si les valeurs ont changé
-                        if (prevStats.averageScore !== newAverageScore || prevStats.totalEleves !== newTotalEleves) {
-                          return {
-                            ...prevStats,
-                            averageScore: newAverageScore,
-                            totalEleves: newTotalEleves
-                          };
-                        }
-                        return prevStats;
-                      });
-                    }}
-                  />
+                  <div className="flex-shrink-0 w-full sm:w-auto">
+                    <StatsSync 
+                      userId={userId || ""} 
+                      onSyncComplete={(newStats) => {
+                        console.log('📈 Nouvelles statistiques reçues:', newStats);
+                        // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
+                        setStats(prevStats => {
+                          const newAverageScore = newStats.averageScore?.toString() || "0";
+                          const newTotalEleves = newStats.totalExercises || 0;
+                          
+                          // Ne mettre à jour que si les valeurs ont changé
+                          if (prevStats.averageScore !== newAverageScore || prevStats.totalEleves !== newTotalEleves) {
+                            return {
+                              ...prevStats,
+                              averageScore: newAverageScore,
+                              totalEleves: newTotalEleves
+                            };
+                          }
+                          return prevStats;
+                        });
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             </motion.div>

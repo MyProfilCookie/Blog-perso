@@ -138,8 +138,8 @@ export function CartProvider({ children }: { children: ReactNode }) {
     };
 
     // Utiliser requestIdleCallback pour ne pas bloquer le rendu
-    if ('requestIdleCallback' in window) {
-      requestIdleCallback(loadUserData);
+    if (typeof window !== 'undefined' && 'requestIdleCallback' in window && typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(loadUserData);
     } else {
       setTimeout(loadUserData, 0);
     }
