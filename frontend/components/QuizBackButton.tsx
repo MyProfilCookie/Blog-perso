@@ -55,7 +55,7 @@ export default function QuizBackButton({
   return (
     <>
       <Button
-        variant="outline"
+        variant="bordered"
         size="sm"
         onClick={handleBackClick}
         className={`flex items-center gap-2 ${className}`}
