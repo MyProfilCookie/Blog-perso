@@ -23,6 +23,8 @@ export default function QuizHebdomadairePage() {
       const weekNumber = parseInt(router.query.week as string);
       if (!isNaN(weekNumber) && weekNumber >= 1 && weekNumber <= 52) {
         setSelectedWeek(weekNumber);
+        // Scroll vers le haut quand une semaine est sélectionnée
+        window.scrollTo({ top: 0, behavior: 'smooth' });
       }
     }
   }, [router.query.week]);
@@ -307,6 +309,8 @@ export default function QuizHebdomadairePage() {
                         handleQuizStart(week);
                       }
                       setSelectedWeek(week);
+                      // Scroll vers le haut quand on clique sur un quiz
+                      window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
                   >
                     <CardHeader className="pb-3">

@@ -66,6 +66,9 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
   };
 
   useEffect(() => {
+    // Scroll vers le haut de la page quand le quiz se charge
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+    
     const loadQuiz = async () => {
       try {
         const targetWeek = weekNumber || getCurrentWeek();
