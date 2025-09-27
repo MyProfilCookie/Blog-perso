@@ -8,9 +8,15 @@ import { useRouter } from 'next/navigation';
 import { UserContext } from '@/context/UserContext';
 import tokenManager from '@/utils/tokenManager';
 
+interface UserContextType {
+  user: any;
+  loginUser: (userData: any) => void;
+  logoutUser: () => void;
+}
+
 export const useTokenManager = () => {
   const router = useRouter();
-  const userContext = useContext(UserContext);
+  const userContext = useContext(UserContext) as UserContextType;
 
   // Callback appelé quand le token expire
   const handleTokenExpired = useCallback(() => {
