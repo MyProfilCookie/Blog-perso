@@ -186,7 +186,7 @@ exports.getUsers = async (req, res) => {
     const users = await User.find().select("-password");
     console.log(`✅ ${users.length} utilisateurs trouvés`);
     
-    res.status(200).json(users);
+    res.status(200).json({ users });
   } catch (error) {
     console.error("❌ Erreur lors de la récupération des utilisateurs:", error);
     res.status(500).json({ message: "Erreur serveur" });
@@ -354,7 +354,7 @@ exports.getUserById = async (req, res) => {
     }
     
     console.log("✅ Utilisateur trouvé:", user.pseudo);
-    res.status(200).json(user);
+    res.status(200).json({ user });
   } catch (error) {
     console.error("❌ Erreur lors de la récupération des données utilisateur:", error);
     res.status(500).json({ message: "Erreur serveur" });

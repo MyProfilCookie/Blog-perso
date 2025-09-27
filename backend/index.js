@@ -180,3 +180,6 @@ app.use((err, req, res, next) => {
 // 🚀 Lancement du serveur
 const PORT = process.env.PORT || 10000;
 app.listen(PORT, () => console.log(`✅ Serveur en écoute sur le port ${PORT}`));
+
+// Export de l'app pour les tests
+module.exports = app;

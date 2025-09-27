@@ -75,14 +75,6 @@ const userSchema = new Schema(
       }
     },
     phone: { type: String }, // Nouveau champ pour le numéro de téléphone
-    password: {
-      type: String,
-      required: true,
-      validate: {
-        validator: (v) => passwordRegex.test(v),
-        message: "Le mot de passe doit comporter au moins 8 caractères.",
-      },
-    },
     deliveryAddress: {
       street: { type: String },
       city: { type: String },

@@ -23,10 +23,10 @@ router.post("/login", UserController.login);
 router.get("/", UserController.getUsers);
 
 // Route pour promouvoir un utilisateur en administrateur
-router.post('/promote/:userId', UserController.makeAdmin);
+router.post('/promote/:userId', authMiddleware, isAdmin, UserController.makeAdmin);
 
 // Route pour supprimer un utilisateur
-router.delete("/:id", UserController.deleteUser);
+router.delete("/:id", authMiddleware, isAdmin, UserController.deleteUser);
 
 // Route pour mettre à jour les informations d'un utilisateur
 router.put("/:id", UserController.updateUser);

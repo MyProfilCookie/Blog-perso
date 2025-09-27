@@ -103,8 +103,13 @@ exports.authMiddleware = async (req, res, next) => {
     const userObj = user.toObject();
     userObj.id = user._id.toString();
     
+    // Ajouter les propriétés du token décodé (comme isAdmin) à l'objet utilisateur
+    if (decoded.isAdmin !== undefined) {
+      userObj.isAdmin = decoded.isAdmin;
+    }
+    
     req.user = userObj;
-    console.log("✅ Utilisateur attaché à la requête:", req.user.pseudo || req.user.email);
+    console.log("✅ Utilisateur attaché à la requête:", req.user.pseudo || req.user.email, "isAdmin:", req.user.isAdmin);
     next();
   } catch (error) {
     console.log("🚨 Erreur de vérification du token:", error.message);
