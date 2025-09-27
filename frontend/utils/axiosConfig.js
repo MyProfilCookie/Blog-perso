@@ -114,9 +114,35 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('userInfo');
         localStorage.removeItem('userRole');
 
-        // Rediriger vers la page de connexion
+        // Afficher une notification d'expiration de session
         if (typeof window !== 'undefined') {
-          window.location.href = '/users/login?expired=true';
+          // Importer dynamiquement SweetAlert2 pour éviter les problèmes SSR
+          const Swal = (await import('sweetalert2')).default;
+          
+          await Swal.fire({
+            title: '🔐 Session expirée',
+            html: `
+              <div class="text-center">
+                <p class="mb-4">Votre session a expiré pour des raisons de sécurité.</p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  Veuillez vous reconnecter pour continuer à utiliser l'application.
+                </p>
+              </div>
+            `,
+            icon: 'warning',
+            confirmButtonText: 'Se reconnecter',
+            confirmButtonColor: '#4ECDC4',
+            allowOutsideClick: false,
+            allowEscapeKey: false,
+            customClass: {
+              popup: 'dark:bg-gray-800 dark:text-white',
+              title: 'dark:text-white',
+              content: 'dark:text-gray-300',
+              confirmButton: 'bg-blue-500 hover:bg-blue-600 text-white px-6 py-2 rounded-lg'
+            }
+          }).then(() => {
+            window.location.href = '/users/login?expired=true';
+          });
         }
 
         return Promise.reject(refreshError);

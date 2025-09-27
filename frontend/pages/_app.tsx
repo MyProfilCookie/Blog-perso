@@ -6,12 +6,14 @@ import dynamic from "next/dynamic";
 // Chargement dynamique des composants non-critiques
 const SpeedInsights = dynamic(() => import("@vercel/speed-insights/next").then(mod => ({ default: mod.SpeedInsights })), { ssr: false });
 const ToasterThemeAware = dynamic(() => import("@/components/toaster-theme-aware"), { ssr: false });
+const TokenTestComponent = dynamic(() => import("@/components/TokenTestComponent"), { ssr: false });
 import clsx from "clsx";
 
 import { Providers } from "@/app/providers";
 import { Navbar } from "@/components/navbar";
 import Footer from "@/components/footer";
 import { ThemeColorManager } from "@/components/theme-color-manager";
+import TokenExpirationHandler from "@/components/TokenExpirationHandler";
 
 import { fontSans } from "@/config/fonts";
 import { RevisionProvider } from "@/app/RevisionContext";
@@ -38,18 +40,21 @@ export default function MyApp({ Component, pageProps }: AppProps) {
               storageKey: "theme",
             }}
           >
-            <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
-              <div style={{ border: 'none', outline: 'none', boxShadow: 'none' }}>
-                <Navbar />
+            <TokenExpirationHandler>
+              <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
+                <div style={{ border: 'none', outline: 'none', boxShadow: 'none' }}>
+                  <Navbar />
+                </div>
+                <main className="flex-grow pt-0 mx-auto max-w-7xl w-full">
+                  <Component {...pageProps} />
+                  <SpeedInsights />
+                </main>
+                <Footer />
               </div>
-              <main className="flex-grow pt-0 mx-auto max-w-7xl w-full">
-                <Component {...pageProps} />
-                <SpeedInsights />
-              </main>
-              <Footer />
-            </div>
 
-            <ToasterThemeAware />
+              <ToasterThemeAware />
+              <TokenTestComponent />
+            </TokenExpirationHandler>
           </Providers>
         </div>
       </RevisionProvider>
