@@ -10,8 +10,6 @@ import {
   Palette,
   Landmark,
   Globe,
-  Trophy,
-  ClipboardList,
   Cpu,
   Star,
   Clock,
@@ -19,17 +17,19 @@ import {
   BarChart3,
   Music,
   AlertTriangle,
-  User,
-  CreditCard,
   ArrowLeft,
   Sparkles,
   RefreshCw,
   Crown,
   Target,
 } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
 import axios from "axios";
 import Link from "next/link";
 import StatsSync from "@/components/StatsSync";
@@ -45,6 +45,7 @@ const courseThemes = [
     color: "from-red-500 to-pink-500",
     bgColor: "bg-red-50",
     borderColor: "border-red-200",
+    textColor: "text-red-700",
   },
   {
     id: 2,
@@ -55,6 +56,7 @@ const courseThemes = [
     color: "from-green-500 to-emerald-500",
     bgColor: "bg-green-50",
     borderColor: "border-green-200",
+    textColor: "text-green-700",
   },
   {
     id: 3,
@@ -65,6 +67,7 @@ const courseThemes = [
     color: "from-yellow-500 to-orange-500",
     bgColor: "bg-yellow-50",
     borderColor: "border-yellow-200",
+    textColor: "text-yellow-700",
   },
   {
     id: 4,
@@ -73,8 +76,9 @@ const courseThemes = [
     route: "/controle/language",
     icon: Languages,
     color: "from-pink-500 to-rose-500",
-    bgColor: "bg-pink-50 dark:bg-pink-900/20",
-    borderColor: "border-pink-200 dark:border-pink-800",
+    bgColor: "bg-pink-50",
+    borderColor: "border-pink-200",
+    textColor: "text-pink-700",
   },
   {
     id: 5,
@@ -83,8 +87,9 @@ const courseThemes = [
     route: "/controle/art",
     icon: Palette,
     color: "from-purple-500 to-violet-500",
-    bgColor: "bg-purple-50 dark:bg-purple-900/20",
-    borderColor: "border-purple-200 dark:border-purple-800",
+    bgColor: "bg-purple-50",
+    borderColor: "border-purple-200",
+    textColor: "text-purple-700",
   },
   {
     id: 6,
@@ -93,8 +98,9 @@ const courseThemes = [
     route: "/controle/history",
     icon: Landmark,
     color: "from-indigo-500 to-blue-500",
-    bgColor: "bg-indigo-50 dark:bg-indigo-900/20",
-    borderColor: "border-indigo-200 dark:border-indigo-800",
+    bgColor: "bg-indigo-50",
+    borderColor: "border-indigo-200",
+    textColor: "text-indigo-700",
   },
   {
     id: 7,
@@ -103,8 +109,9 @@ const courseThemes = [
     route: "/controle/geography",
     icon: Globe,
     color: "from-teal-500 to-cyan-500",
-    bgColor: "bg-teal-50 dark:bg-teal-900/20",
-    borderColor: "border-teal-200 dark:border-teal-800",
+    bgColor: "bg-teal-50",
+    borderColor: "border-teal-200",
+    textColor: "text-teal-700",
   },
   {
     id: 8,
@@ -113,8 +120,9 @@ const courseThemes = [
     route: "/controle/technology",
     icon: Cpu,
     color: "from-gray-500 to-slate-500",
-    bgColor: "bg-gray-50 dark:bg-gray-900/20",
-    borderColor: "border-gray-200 dark:border-gray-800",
+    bgColor: "bg-gray-50",
+    borderColor: "border-gray-200",
+    textColor: "text-gray-700",
   },
   {
     id: 9,
@@ -123,8 +131,9 @@ const courseThemes = [
     route: "/controle/music",
     icon: Music,
     color: "from-amber-500 to-yellow-500",
-    bgColor: "bg-amber-50 dark:bg-amber-900/20",
-    borderColor: "border-amber-200 dark:border-amber-800",
+    bgColor: "bg-amber-50",
+    borderColor: "border-amber-200",
+    textColor: "text-amber-700",
   },
   {
     id: 10,
@@ -133,8 +142,9 @@ const courseThemes = [
     route: "/controle/revision",
     icon: RefreshCw,
     color: "from-cyan-500 to-blue-500",
-    bgColor: "bg-cyan-50 dark:bg-cyan-900/20",
-    borderColor: "border-cyan-200 dark:border-cyan-800",
+    bgColor: "bg-cyan-50",
+    borderColor: "border-cyan-200",
+    textColor: "text-cyan-700",
   },
   {
     id: 11,
@@ -143,8 +153,9 @@ const courseThemes = [
     route: "/controle/quiz-hebdomadaire",
     icon: Target,
     color: "from-purple-500 to-pink-500",
-    bgColor: "bg-purple-50 dark:bg-purple-900/20",
-    borderColor: "border-purple-200 dark:border-purple-800",
+    bgColor: "bg-purple-50",
+    borderColor: "border-purple-200",
+    textColor: "text-purple-700",
   },
   {
     id: 12,
@@ -152,16 +163,16 @@ const courseThemes = [
     description: "Contenu exclusif et avancé",
     route: "/controle/subscription",
     icon: Crown,
-    color: "from-gradient-to-r from-yellow-400 via-yellow-500 to-yellow-600",
-    bgColor: "bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20",
-    borderColor: "border-yellow-300 dark:border-yellow-700",
+    color: "from-yellow-400 via-yellow-500 to-yellow-600",
+    bgColor: "bg-gradient-to-r from-yellow-50 to-yellow-100",
+    borderColor: "border-yellow-300",
+    textColor: "text-yellow-800",
   },
 ];
 
 export default function ControleIndex() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
   const [mounted, setMounted] = useState(false);
   const [userId, setUserId] = useState<string | null>(null);
   const [stats, setStats] = useState({
@@ -175,6 +186,7 @@ export default function ControleIndex() {
       lastModificationDate: "",
     },
   });
+
 
 
 
@@ -342,10 +354,10 @@ export default function ControleIndex() {
 
   if (!mounted || loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex justify-center items-center">
+      <div className="min-h-screen bg-white flex justify-center items-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-300">
+          <p className="text-gray-600">
             Chargement de votre espace d&apos;apprentissage...
           </p>
         </div>
@@ -353,23 +365,6 @@ export default function ControleIndex() {
     );
   }
 
-  if (error) {
-    return (
-      <div className="min-h-screen bg-white dark:bg-gray-900 flex flex-col items-center justify-center p-4">
-        <div className="bg-red-50 dark:bg-red-900/20 p-6 rounded-lg text-red-700 dark:text-red-300 max-w-md text-center border border-red-200 dark:border-red-800">
-          <AlertTriangle className="w-12 h-12 mx-auto mb-4" />
-          <p className="font-bold mb-2">⚠️ Erreur</p>
-          <p>{error}</p>
-        </div>
-        <Button
-          className="mt-4"
-          onClick={() => window.location.reload()}
-        >
-          Réessayer
-        </Button>
-      </div>
-    );
-  }
 
   const statsCards = [
     {
@@ -383,22 +378,25 @@ export default function ControleIndex() {
         }
         return score.toFixed(1);
       })()}/20`,
-      color: "text-yellow-500 dark:text-yellow-400",
-      bgColor: "bg-yellow-50 dark:bg-yellow-900/20",
+      color: "text-yellow-600",
+      bgColor: "bg-gradient-to-br from-yellow-50 to-amber-50",
+      borderColor: "border-yellow-200",
     },
     {
       icon: Clock,
       label: "Temps d'étude",
       value: "2h/jour",
-      color: "text-blue-500 dark:text-blue-400",
-      bgColor: "bg-blue-50 dark:bg-blue-900/20",
+      color: "text-blue-600",
+      bgColor: "bg-gradient-to-br from-blue-50 to-cyan-50",
+      borderColor: "border-blue-200",
     },
     {
       icon: Users,
       label: "Élèves actifs",
       value: (stats.totalEleves || 0).toString(),
-      color: "text-green-500 dark:text-green-400",
-      bgColor: "bg-green-50 dark:bg-green-900/20",
+      color: "text-green-600",
+      bgColor: "bg-gradient-to-br from-green-50 to-emerald-50",
+      borderColor: "border-green-200",
     },
     {
       icon: BarChart3,
@@ -411,8 +409,9 @@ export default function ControleIndex() {
         const progression = totalExercises > 0 ? Math.min((totalExercises / maxExercises) * 100, 100) : 0;
         return Math.round(progression);
       })()}%`,
-      color: "text-purple-500 dark:text-purple-400",
-      bgColor: "bg-purple-50 dark:bg-purple-900/20",
+      color: "text-purple-600",
+      bgColor: "bg-gradient-to-br from-purple-50 to-violet-50",
+      borderColor: "border-purple-200",
     },
   ];
 
@@ -420,14 +419,15 @@ export default function ControleIndex() {
     <div className="w-full">
       {/* Hero Section */}
       <section className="relative py-8 sm:py-12 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/50 via-transparent to-transparent"></div>
         <div className="relative w-full px-3 sm:px-4 md:px-8 lg:px-12">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
               <Button
                 onClick={() => router.push("/")}
                 variant="outline"
-                className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto"
+                className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 w-full sm:w-auto backdrop-blur-sm"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Retour à l&apos;accueil
@@ -436,7 +436,7 @@ export default function ControleIndex() {
                 <LoginButton 
                   variant="outline" 
                   size="sm"
-                  className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto"
+                  className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 w-full sm:w-auto backdrop-blur-sm"
                 />
               </div>
             </div>
@@ -450,7 +450,7 @@ export default function ControleIndex() {
               <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg">
                 <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </div>
-              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 px-2">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 mb-3 px-2">
                 Bonjour {(() => {
                   if (stats.eleve?.prenom) {
                     return stats.eleve.prenom;
@@ -469,13 +469,13 @@ export default function ControleIndex() {
                   return "Visiteur";
                 })()} ! 🌟
               </h1>
-              <p className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-4">
+              <p className="text-base sm:text-lg md:text-xl text-gray-700 max-w-2xl mx-auto px-4">
                 {localStorage.getItem("user") ? "Bienvenue dans ton espace d'apprentissage magique ! ✨" : "Découvrez nos matières et fonctionnalités d'apprentissage ! ✨"}
               </p>
               {!localStorage.getItem("user") && (
                 <div className="mt-6 max-w-2xl mx-auto px-4">
-                  <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
+                  <div className="p-3 sm:p-4 bg-blue-50 rounded-lg border border-blue-200">
+                    <p className="text-blue-800 text-xs sm:text-sm">
                       💡 <strong>Mode aperçu :</strong> Connectez-vous pour accéder à vos statistiques personnalisées et sauvegarder votre progression.
                     </p>
                   </div>
@@ -502,14 +502,14 @@ export default function ControleIndex() {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               >
-                <Card className={`${stat.bgColor} border-0 shadow-lg hover:shadow-xl transition-all duration-300`}>
+                <Card className={`${stat.bgColor} border-2 ${stat.borderColor} shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}>
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-center space-x-3 sm:space-x-4">
-                      <div className={`p-2 sm:p-3 rounded-full ${stat.bgColor}`}>
+                      <div className={`p-2 sm:p-3 rounded-full bg-white/50 backdrop-blur-sm`}>
                         <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">
+                        <p className="text-xs sm:text-sm font-medium text-gray-600 truncate">
                           {stat.label}
                         </p>
                         <p className={`text-lg sm:text-2xl font-bold ${stat.color} truncate`}>
@@ -535,38 +535,38 @@ export default function ControleIndex() {
               transition={{ duration: 0.7, delay: 0.6 }}
               className="mt-6 sm:mt-8"
             >
-              <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-4 sm:p-6 border border-violet-200 dark:border-violet-700">
+              <div className="bg-gradient-to-r from-violet-50 to-purple-50 rounded-xl p-4 sm:p-6 border border-violet-200 backdrop-blur-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex-1 min-w-0">
-                    <h3 className="text-base sm:text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
+                    <h3 className="text-base sm:text-lg font-semibold text-violet-700 mb-2">
                       🔄 Synchronisation des statistiques
                     </h3>
-                    <p className="text-xs sm:text-sm text-violet-600 dark:text-violet-400 break-words">
+                    <p className="text-xs sm:text-sm text-violet-600 break-words">
                       Synchronisez vos exercices locaux avec le serveur pour mettre à jour vos statistiques
                     </p>
                   </div>
                   <div className="flex-shrink-0 w-full sm:w-auto">
-                    <StatsSync 
-                      userId={userId || ""} 
-                      onSyncComplete={(newStats) => {
-                        console.log('📈 Nouvelles statistiques reçues:', newStats);
-                        // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
-                        setStats(prevStats => {
-                          const newAverageScore = newStats.averageScore?.toString() || "0";
-                          const newTotalEleves = newStats.totalExercises || 0;
-                          
-                          // Ne mettre à jour que si les valeurs ont changé
-                          if (prevStats.averageScore !== newAverageScore || prevStats.totalEleves !== newTotalEleves) {
-                            return {
-                              ...prevStats,
-                              averageScore: newAverageScore,
-                              totalEleves: newTotalEleves
-                            };
-                          }
-                          return prevStats;
-                        });
-                      }}
-                    />
+                  <StatsSync 
+                    userId={userId || ""} 
+                    onSyncComplete={(newStats) => {
+                      console.log('📈 Nouvelles statistiques reçues:', newStats);
+                      // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
+                      setStats(prevStats => {
+                        const newAverageScore = newStats.averageScore?.toString() || "0";
+                        const newTotalEleves = newStats.totalExercises || 0;
+                        
+                        // Ne mettre à jour que si les valeurs ont changé
+                        if (prevStats.averageScore !== newAverageScore || prevStats.totalEleves !== newTotalEleves) {
+                          return {
+                            ...prevStats,
+                            averageScore: newAverageScore,
+                            totalEleves: newTotalEleves
+                          };
+                        }
+                        return prevStats;
+                      });
+                    }}
+                  />
                   </div>
                 </div>
               </div>
@@ -576,7 +576,7 @@ export default function ControleIndex() {
       </section>
 
       {/* Quiz Hebdomadaires - Section Spéciale */}
-      <section className="py-8 sm:py-12 bg-gradient-to-r from-purple-50 to-pink-50 dark:from-purple-900/20 dark:to-pink-900/20">
+      <section className="py-8 sm:py-12 bg-gradient-to-r from-purple-50 via-pink-50 to-rose-50">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -584,13 +584,13 @@ export default function ControleIndex() {
             transition={{ duration: 0.7, delay: 0.3 }}
             className="text-center mb-8 sm:mb-12"
           >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-3 sm:mb-4 shadow-lg">
               <Target className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">
               Quiz Hebdomadaires 🧩
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto px-4">
+            <p className="text-sm sm:text-base md:text-lg text-gray-700 max-w-3xl mx-auto px-4">
               Des quiz adaptés spécialement pour les enfants autistes de 6 à 18 ans. 
               Questions simples, feedback positif et progression douce !
             </p>
@@ -603,43 +603,43 @@ export default function ControleIndex() {
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8"
           >
             {/* Adaptations spéciales */}
-            <Card className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="bg-white/80 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+                <CardTitle className="flex items-center gap-2 text-purple-700">
                   <span className="text-2xl">📝</span>
                   Questions Claires
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-gray-600">
                   Phrases courtes et simples, une difficulté à la fois pour éviter la surcharge cognitive.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="bg-white/80 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+                <CardTitle className="flex items-center gap-2 text-purple-700">
                   <span className="text-2xl">🎨</span>
                   Repères Visuels
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-gray-600">
                   Couleurs et icônes par matière, animations douces pour une expérience apaisante.
                 </p>
               </CardContent>
             </Card>
 
-            <Card className="bg-white dark:bg-gray-800 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300">
+            <Card className="bg-white/80 border-purple-200 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+                <CardTitle className="flex items-center gap-2 text-purple-700">
                   <span className="text-2xl">💪</span>
                   Feedback Positif
                 </CardTitle>
               </CardHeader>
               <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
+                <p className="text-gray-600">
                   Encouragements constants, progression visible et célébration des réussites.
                 </p>
               </CardContent>
@@ -653,10 +653,10 @@ export default function ControleIndex() {
             transition={{ duration: 0.7, delay: 0.6 }}
             className="max-w-4xl mx-auto px-3 sm:px-4"
           >
-            <Card className="bg-gradient-to-r from-purple-500 to-pink-500 border-0 shadow-2xl overflow-hidden">
+            <Card className="bg-gradient-to-r from-purple-500 to-pink-500 border-0 shadow-2xl overflow-hidden backdrop-blur-sm">
               <CardContent className="p-4 sm:p-6 md:p-8">
                 <div className="text-center text-white">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-4 sm:mb-6">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-4 sm:mb-6 backdrop-blur-sm">
                     <Target className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
                   </div>
                   <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 px-2">
@@ -669,7 +669,7 @@ export default function ControleIndex() {
                     <Button
                       onClick={() => router.push('/controle/quiz-hebdomadaire')}
                       size="lg"
-                      className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base"
+                      className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-300"
                     >
                       <Target className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Choisir un Quiz
@@ -681,7 +681,7 @@ export default function ControleIndex() {
                       }}
                       size="lg"
                       variant="outline"
-                      className="border-white text-white hover:bg-white/10 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base"
+                      className="border-white text-white hover:bg-white/10 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm"
                     >
                       <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Quiz de cette Semaine
@@ -695,7 +695,7 @@ export default function ControleIndex() {
       </section>
 
       {/* Matières */}
-      <section className="py-8 sm:py-12 bg-gray-50 dark:bg-gray-800/50">
+      <section className="py-8 sm:py-12 bg-gradient-to-b from-gray-50 to-white">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
@@ -703,13 +703,13 @@ export default function ControleIndex() {
             transition={{ duration: 0.7, delay: 0.4 }}
             className="text-center mb-8 sm:mb-12"
           >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3 sm:mb-4">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3 sm:mb-4 shadow-lg">
               <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
             </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4">
+            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 mb-3 sm:mb-4 px-4">
               Choisis ta matière
             </h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 px-4">
+            <p className="text-sm sm:text-base md:text-lg text-gray-600 px-4">
               Explore les différentes matières et progresse à ton rythme
             </p>
           </motion.div>
@@ -729,19 +729,28 @@ export default function ControleIndex() {
                 className="group"
               >
                 <Link href={theme.route}>
-                  <Card className={`cursor-pointer transform transition-all duration-300 hover:scale-105 shadow-lg hover:shadow-xl ${theme.bgColor} border-2 ${theme.borderColor} hover:border-opacity-100`}>
+                  <Card className={`cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-2xl ${theme.bgColor} border-2 ${theme.borderColor} hover:border-opacity-100 backdrop-blur-sm`}>
                     <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center space-x-3 sm:space-x-4">
-                        <div className={`p-3 sm:p-4 rounded-full bg-gradient-to-r ${theme.color} shadow-lg`}>
+                        <div className={`p-3 sm:p-4 rounded-full bg-gradient-to-r ${theme.color} shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
                           <theme.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className="text-base sm:text-lg md:text-xl font-semibold text-gray-900 dark:text-white group-hover:text-gray-700 dark:group-hover:text-gray-200 mb-1 sm:mb-2 truncate">
+                          <h3 className={`text-base sm:text-lg md:text-xl font-semibold ${theme.textColor} group-hover:opacity-80 mb-1 sm:mb-2 truncate transition-opacity duration-300`}>
                             {theme.title}
                           </h3>
-                          <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm line-clamp-2">
+                          <p className="text-gray-600 text-xs sm:text-sm line-clamp-2 group-hover:text-gray-700 transition-colors duration-300">
                             {theme.description}
                           </p>
+                        </div>
+                      </div>
+                      <div className="mt-3 flex items-center justify-between">
+                        <div className="flex items-center space-x-1">
+                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
+                          <span className="text-xs text-gray-500">Disponible</span>
+                        </div>
+                        <div className="text-xs text-gray-400 group-hover:text-gray-600 transition-colors duration-300">
+                          →
                         </div>
                       </div>
                     </CardContent>
