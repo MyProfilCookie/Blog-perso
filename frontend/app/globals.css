@@ -1,34 +1,18 @@
-/* Styles pour supprimer les animations du menu burger */
-[data-slot="trigger"] button,
-[data-slot="trigger"] button *,
-[data-slot="content"] *,
+/* Styles optimisés pour le menu burger - garde les animations essentielles */
+[data-slot="trigger"] button {
+  transition: color 0.2s ease, background-color 0.2s ease !important;
+}
+
 [data-slot="content"] {
-  transition: none !important;
-  animation: none !important;
-  transform: none !important;
+  transition: opacity 0.2s ease, transform 0.2s ease !important;
 }
 
-/* Suppression des animations NextUI */
-[data-slot="content"] {
-  transition: none !important;
-  animation: none !important;
-  transform: none !important;
+/* Garde les animations du menu mobile NextUI */
+.nextui-navbar-menu {
+  transition: all 0.3s ease !important;
 }
 
-/* Suppression des animations des DropdownItem */
-[data-slot="content"] [role="menuitem"] {
-  transition: none !important;
-  animation: none !important;
-  transform: none !important;
-}
-
-/* Suppression des animations du bouton burger */
-.xl\\:hidden button {
-  transition: none !important;
-}
-
-.xl\\:hidden button span {
-  transition: none !important;
-  animation: none !important;
-  transform: none !important;
+/* Animation du bouton burger */
+.nextui-navbar-menu-toggle {
+  transition: transform 0.2s ease !important;
 }

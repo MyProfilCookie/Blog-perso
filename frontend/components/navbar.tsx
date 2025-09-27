@@ -463,6 +463,7 @@ export const Navbar = () => {
       className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative performance-optimized no-border-navbar"
       maxWidth="xl"
       onMenuOpenChange={setIsMenuOpen}
+      isMenuOpen={isMenuOpen}
       position="sticky"
       style={{
         boxShadow: "none",
