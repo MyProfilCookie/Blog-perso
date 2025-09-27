@@ -29,7 +29,6 @@ const TestComponent = () => {
     addError,
     removeError,
     clearErrors,
-    loadErrors,
   } = useRevision();
 
   return (
@@ -58,10 +57,6 @@ const TestComponent = () => {
       
       <button onClick={clearErrors}>
         Clear Errors
-      </button>
-      
-      <button onClick={loadErrors}>
-        Load Errors
       </button>
 
       {errors.map(error => (
