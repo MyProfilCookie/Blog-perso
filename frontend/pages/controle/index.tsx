@@ -196,6 +196,61 @@ export default function ControleIndex() {
     setTheme(isDarkMode ? "light" : "dark");
   };
 
+  const fetchStats = async () => {
+    try {
+      setIsRefreshing(true);
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("userToken");
+      const userId =
+        localStorage.getItem("userId") ||
+        JSON.parse(localStorage.getItem("user") || "{}")._id;
+
+      if (!token || !userId) {
+        // Utiliser des stats par défaut si pas connecté
+        setStats({
+          totalEleves: 0,
+          averageScore: "0",
+          progression: "0",
+          eleve: {
+            prenom: "Visiteur",
+            nom: "",
+            modificationsCount: 0,
+            lastModificationDate: new Date().toISOString(),
+          },
+        });
+        setLastUpdate(new Date());
+        return;
+      }
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
+
+      setStats({
+        totalEleves: response.data.totalEleves || 0,
+        averageScore: response.data.averageScore || "0",
+        progression: "0", // Sera calculée automatiquement
+        eleve: response.data.eleve || {
+          nom: "",
+          prenom: "",
+          modificationsCount: 0,
+          lastModificationDate: "",
+        },
+      });
+      setLastUpdate(new Date());
+      console.log("📊 Statistiques mises à jour:", new Date().toLocaleTimeString());
+    } catch (err: any) {
+      console.error("Erreur lors de la récupération des statistiques:", err);
+      
+      // Gérer l'erreur 401 (Token expiré)
+      if (handleAuthError(err)) {
+        return;
+      }
+    } finally {
+      setIsRefreshing(false);
+    }
+  };
+
   useEffect(() => {
     setMounted(true);
     
@@ -258,61 +313,6 @@ export default function ControleIndex() {
     };
 
     initializeUser();
-    
-    const fetchStats = async () => {
-      try {
-        setIsRefreshing(true);
-        const token =
-          localStorage.getItem("token") || localStorage.getItem("userToken");
-        const userId =
-          localStorage.getItem("userId") ||
-          JSON.parse(localStorage.getItem("user") || "{}")._id;
-
-        if (!token || !userId) {
-          // Utiliser des stats par défaut si pas connecté
-          setStats({
-            totalEleves: 0,
-            averageScore: "0",
-            progression: "0",
-            eleve: {
-              prenom: "Visiteur",
-              nom: "",
-              modificationsCount: 0,
-              lastModificationDate: new Date().toISOString(),
-            },
-          });
-          setLastUpdate(new Date());
-          return;
-        }
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
-
-        setStats({
-          totalEleves: response.data.totalEleves || 0,
-          averageScore: response.data.averageScore || "0",
-          progression: "0", // Sera calculée automatiquement
-          eleve: response.data.eleve || {
-            nom: "",
-            prenom: "",
-            modificationsCount: 0,
-            lastModificationDate: "",
-          },
-        });
-        setLastUpdate(new Date());
-        console.log("📊 Statistiques mises à jour:", new Date().toLocaleTimeString());
-      } catch (err: any) {
-        console.error("Erreur lors de la récupération des statistiques:", err);
-        
-        // Gérer l'erreur 401 (Token expiré)
-        if (handleAuthError(err)) {
-          return;
-        }
-      } finally {
-        setIsRefreshing(false);
-      }
-    };
 
     const checkAuth = () => {
       const token =
@@ -384,7 +384,7 @@ export default function ControleIndex() {
   const { forceRefresh } = useAutoRefresh({
     interval: 30000, // 30 secondes
     enabled: mounted && userId !== null, // Seulement si la page est montée et qu'un utilisateur est connecté
-    onRefresh: fetchStats,
+    onRefresh: () => fetchStats(),
     onError: (error) => {
       console.error("Erreur lors du rafraîchissement automatique:", error);
     }
