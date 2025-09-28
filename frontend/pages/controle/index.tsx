@@ -723,7 +723,7 @@ export default function ControleIndex() {
                       }}
                       size="lg"
                       variant="outline"
-                      className="border-white text-white hover:bg-white/10 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm"
+                      className="border-white text-black hover:bg-white/10 hover:text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm"
                     >
                       <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Quiz de cette Semaine
