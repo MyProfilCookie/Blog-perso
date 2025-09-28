@@ -1,5 +1,6 @@
 import { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
+import { handleAuthError } from '@/utils/errorHandler';
 
 interface EleveStatsData {
   userId: string;
@@ -116,17 +117,8 @@ export const useEleveStats = () => {
     } catch (error: any) {
       console.error('❌ Erreur lors du chargement des statistiques:', error);
       
-      if (error.response?.status === 401) {
-        console.log('🔐 Token expiré ou invalide, nettoyage des données de session');
-        // Nettoyer les données de session
-        localStorage.removeItem('token');
-        localStorage.removeItem('userToken');
-        localStorage.removeItem('user');
-        localStorage.removeItem('userInfo');
-        localStorage.removeItem('userId');
+      if (handleAuthError(error)) {
         setError('Session expirée, veuillez vous reconnecter');
-        // Rediriger vers la page de connexion
-        window.location.href = '/users/login';
         return null;
       } else if (error.code === 'ECONNABORTED') {
         console.log('⏱️ Timeout détecté, utilisation de localStorage');
@@ -223,17 +215,8 @@ export const useEleveStats = () => {
     } catch (error: any) {
       console.error('❌ Erreur lors de la synchronisation:', error);
       
-      if (error.response?.status === 401) {
-        console.log('🔐 Token expiré lors de la synchronisation, nettoyage des données de session');
-        // Nettoyer les données de session
-        localStorage.removeItem('token');
-        localStorage.removeItem('userToken');
-        localStorage.removeItem('user');
-        localStorage.removeItem('userInfo');
-        localStorage.removeItem('userId');
+      if (handleAuthError(error)) {
         setError('Session expirée, veuillez vous reconnecter');
-        // Rediriger vers la page de connexion
-        window.location.href = '/users/login';
         return false;
       } else if (error.response) {
         setError(error.response.data?.message || 'Erreur lors de la synchronisation');

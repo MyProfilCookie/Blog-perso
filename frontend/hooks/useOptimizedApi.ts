@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback, useRef } from 'react';
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import { handleAuthError } from '@/utils/errorHandler';
 import { PERFORMANCE_CONFIG, retryRequest, optimizeLocalStorage } from '@/lib/performance';
 
 interface UseOptimizedApiOptions {
@@ -151,17 +152,8 @@ export const useOptimizedApi = <T = any>(options: UseOptimizedApiOptions): UseOp
         return null;
       }
 
-      if (err.response?.status === 401) {
-        console.log('🔐 Token expiré, nettoyage des données de session');
-        // Nettoyer les données de session
-        localStorage.removeItem('token');
-        localStorage.removeItem('userToken');
-        localStorage.removeItem('user');
-        localStorage.removeItem('userInfo');
-        localStorage.removeItem('userId');
+      if (handleAuthError(err)) {
         setError('Session expirée, veuillez vous reconnecter');
-        // Rediriger vers la page de connexion
-        window.location.href = '/users/login';
         return null;
       }
 

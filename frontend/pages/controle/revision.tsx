@@ -11,6 +11,7 @@ import { Tab } from "@nextui-org/react";
 import { Pagination } from "@nextui-org/react";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { handleAuthError } from "@/utils/errorHandler";
 
 import { LightAnimation } from "@/components/DynamicMotion";
 
@@ -87,8 +88,14 @@ const RevisionPage: React.FC = () => {
       }
 
       setLoading(false);
-    } catch (err) {
+    } catch (err: any) {
       console.error("Erreur lors de la récupération des erreurs:", err);
+      
+      // Gérer l'erreur 401 (Token expiré)
+      if (handleAuthError(err)) {
+        return;
+      }
+      
       setError("Erreur lors du chargement des erreurs de révision");
       setLoading(false);
     }

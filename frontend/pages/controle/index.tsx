@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
+import { handleAuthError } from "@/utils/errorHandler";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import StatsSync from "@/components/StatsSync";
@@ -294,8 +295,13 @@ export default function ControleIndex() {
             lastModificationDate: "",
           },
         });
-      } catch (err) {
+      } catch (err: any) {
         console.error("Erreur lors de la récupération des statistiques:", err);
+        
+        // Gérer l'erreur 401 (Token expiré)
+        if (handleAuthError(err)) {
+          return;
+        }
       }
     };
 
