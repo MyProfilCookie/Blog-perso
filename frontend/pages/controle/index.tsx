@@ -643,7 +643,7 @@ export default function ControleIndex() {
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-center space-x-3 sm:space-x-4">
                       <div
-                        className={`p-2 sm:p-3 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm`}
+                        className={`p-2 sm:p-3 rounded-full bg-white/50 dark:bg-gray-700/30 backdrop-blur-sm`}
                       >
                         <stat.icon
                           className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`}
