@@ -116,7 +116,19 @@ export const useEleveStats = () => {
     } catch (error: any) {
       console.error('❌ Erreur lors du chargement des statistiques:', error);
       
-      if (error.code === 'ECONNABORTED') {
+      if (error.response?.status === 401) {
+        console.log('🔐 Token expiré ou invalide, nettoyage des données de session');
+        // Nettoyer les données de session
+        localStorage.removeItem('token');
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('userInfo');
+        localStorage.removeItem('userId');
+        setError('Session expirée, veuillez vous reconnecter');
+        // Rediriger vers la page de connexion
+        window.location.href = '/users/login';
+        return null;
+      } else if (error.code === 'ECONNABORTED') {
         console.log('⏱️ Timeout détecté, utilisation de localStorage');
         setError('Connexion lente, utilisation des données locales');
       } else if (error.response?.status === 404) {
@@ -211,7 +223,19 @@ export const useEleveStats = () => {
     } catch (error: any) {
       console.error('❌ Erreur lors de la synchronisation:', error);
       
-      if (error.response) {
+      if (error.response?.status === 401) {
+        console.log('🔐 Token expiré lors de la synchronisation, nettoyage des données de session');
+        // Nettoyer les données de session
+        localStorage.removeItem('token');
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('userInfo');
+        localStorage.removeItem('userId');
+        setError('Session expirée, veuillez vous reconnecter');
+        // Rediriger vers la page de connexion
+        window.location.href = '/users/login';
+        return false;
+      } else if (error.response) {
         setError(error.response.data?.message || 'Erreur lors de la synchronisation');
       } else if (error.request) {
         setError('Erreur de connexion lors de la synchronisation');

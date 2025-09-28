@@ -151,6 +151,20 @@ export const useOptimizedApi = <T = any>(options: UseOptimizedApiOptions): UseOp
         return null;
       }
 
+      if (err.response?.status === 401) {
+        console.log('🔐 Token expiré, nettoyage des données de session');
+        // Nettoyer les données de session
+        localStorage.removeItem('token');
+        localStorage.removeItem('userToken');
+        localStorage.removeItem('user');
+        localStorage.removeItem('userInfo');
+        localStorage.removeItem('userId');
+        setError('Session expirée, veuillez vous reconnecter');
+        // Rediriger vers la page de connexion
+        window.location.href = '/users/login';
+        return null;
+      }
+
       const errorMessage = err.response?.data?.message || err.message || 'Erreur de requête';
       setError(errorMessage);
       
