@@ -236,6 +236,7 @@ const ElevePage: React.FC = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [userId, setUserId] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<any>(null);
+  const [avatarLoading, setAvatarLoading] = useState(true);
   const [advancedStats, setAdvancedStats] = useState<UserStats | null>(null);
   const [selectedTab, setSelectedTab] = useState<string>("overview");
 
@@ -297,10 +298,22 @@ const ElevePage: React.FC = () => {
       }
     } catch (err) {
       console.error("Erreur lors de la récupération de l'utilisateur:", err);
-      setError("Erreur lors de la récupération de l'utilisateur");
-      setLoading(false);
     }
   }, []);
+
+  // Gérer le chargement de l'avatar avec un délai pour éviter l'apparition soudaine
+  useEffect(() => {
+    if (userInfo) {
+      // Délai de 500ms pour éviter l'apparition soudaine de l'avatar
+      const timer = setTimeout(() => {
+        setAvatarLoading(false);
+      }, 500);
+      
+      return () => clearTimeout(timer);
+    } else {
+      setAvatarLoading(true);
+    }
+  }, [userInfo]);
 
   // Chargement simplifié du profil
   useEffect(() => {
@@ -1493,18 +1506,22 @@ const ElevePage: React.FC = () => {
               <Card className="w-full border border-purple-200 dark:border-purple-800 dark:from-purple-900/50 dark:to-pink-900/50 card-optimized shadow-optimized">
                 <CardBody className="p-6 spacing-optimized">
                   <div className="flex items-center gap-4 mb-4 flex-optimized">
-                    <Avatar
-                      className="ring-2 ring-purple-200 dark:ring-purple-800 avatar-optimized"
-                      size="lg"
-                      src={userInfo.avatar || "/assets/default-avatar.webp"}
-                      isBordered
-                      showFallback
-                      fallback={
-                        <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">
-                          {userInfo?.prenom?.charAt(0) || "U"}
-                        </div>
-                      }
-                    />
+                    {avatarLoading ? (
+                      <div className="w-16 h-16 bg-gray-200 dark:bg-gray-700 rounded-full animate-pulse"></div>
+                    ) : (
+                      <Avatar
+                        className="ring-2 ring-purple-200 dark:ring-purple-800 avatar-optimized"
+                        size="lg"
+                        src={userInfo.avatar || "/assets/default-avatar.webp"}
+                        isBordered
+                        showFallback
+                        fallback={
+                          <div className="w-full h-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white font-bold text-lg">
+                            {userInfo?.prenom?.charAt(0) || "U"}
+                          </div>
+                        }
+                      />
+                    )}
                     <div>
                       <h2 className="text-xl font-bold text-purple-800 dark:text-purple-200">
                         {userInfo.prenom} {userInfo.nom}
