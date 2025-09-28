@@ -17,7 +17,6 @@ import {
   Users,
   BarChart3,
   Music,
-  AlertTriangle,
   ArrowLeft,
   Sparkles,
   RefreshCw,
@@ -26,15 +25,10 @@ import {
   Moon,
   Sun,
 } from "lucide-react";
-import {
-  Card,
-  CardContent,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import axios from "axios";
 import Link from "next/link";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
 import StatsSync from "@/components/StatsSync";
 import LoginButton from "@/components/LoginButton";
 
@@ -167,7 +161,8 @@ const courseThemes = [
     route: "/controle/subscription",
     icon: Crown,
     color: "from-yellow-400 via-yellow-500 to-yellow-600",
-    bgColor: "bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20",
+    bgColor:
+      "bg-gradient-to-r from-yellow-50 to-yellow-100 dark:from-yellow-900/20 dark:to-yellow-800/20",
     borderColor: "border-yellow-300 dark:border-yellow-600",
     textColor: "text-yellow-800 dark:text-yellow-200",
   },
@@ -197,65 +192,69 @@ export default function ControleIndex() {
     setTheme(isDarkMode ? "light" : "dark");
   };
 
-
-
-
   useEffect(() => {
     setMounted(true);
-    
+
     // Initialiser l'userId
     const initializeUser = () => {
-      console.log('🔍 Initialisation de l\'utilisateur...');
-      
+      console.log("🔍 Initialisation de l'utilisateur...");
+
       // Essayer de récupérer l'userId depuis différentes sources
       let userIdFromStorage = null;
-      
+
       // Méthode 1: depuis localStorage "user"
       const userData = localStorage.getItem("user");
       if (userData) {
         try {
           const parsedUser = JSON.parse(userData);
           userIdFromStorage = parsedUser._id;
-          console.log('✅ UserId trouvé dans localStorage "user":', userIdFromStorage);
+          console.log(
+            '✅ UserId trouvé dans localStorage "user":',
+            userIdFromStorage,
+          );
         } catch (e) {
-          console.warn('❌ Erreur parsing userData:', e);
+          console.warn("❌ Erreur parsing userData:", e);
         }
       }
-      
+
       // Méthode 2: depuis localStorage "userId"
       if (!userIdFromStorage) {
         userIdFromStorage = localStorage.getItem("userId");
         if (userIdFromStorage) {
-          console.log('✅ UserId trouvé dans localStorage "userId":', userIdFromStorage);
+          console.log(
+            '✅ UserId trouvé dans localStorage "userId":',
+            userIdFromStorage,
+          );
         }
       }
-      
+
       // Méthode 3: depuis localStorage "userToken" (décoder le JWT)
       if (!userIdFromStorage) {
-        const token = localStorage.getItem("userToken") || localStorage.getItem("token");
+        const token =
+          localStorage.getItem("userToken") || localStorage.getItem("token");
         if (token) {
           try {
-            const payload = JSON.parse(atob(token.split('.')[1]));
+            const payload = JSON.parse(atob(token.split(".")[1]));
             userIdFromStorage = payload.userId || payload.id;
             if (userIdFromStorage) {
-              console.log('✅ UserId trouvé dans le token:', userIdFromStorage);
+              console.log("✅ UserId trouvé dans le token:", userIdFromStorage);
             }
           } catch (e) {
-            console.warn('❌ Erreur décodage token:', e);
+            console.warn("❌ Erreur décodage token:", e);
           }
         }
       }
-      
+
       if (userIdFromStorage) {
         setUserId(userIdFromStorage);
-        console.log('🎯 UserId final défini:', userIdFromStorage);
+        console.log("🎯 UserId final défini:", userIdFromStorage);
       } else {
-        console.log('❌ Aucun userId trouvé');
+        console.log("❌ Aucun userId trouvé");
       }
     };
 
     initializeUser();
-    
+
     const fetchStats = async () => {
       try {
         const token =
@@ -270,12 +269,12 @@ export default function ControleIndex() {
             totalEleves: 0,
             averageScore: "0",
             progression: "0",
-            eleve: { 
-              prenom: "Visiteur", 
-              nom: "", 
-              modificationsCount: 0, 
-              lastModificationDate: new Date().toISOString() 
-            }
+            eleve: {
+              prenom: "Visiteur",
+              nom: "",
+              modificationsCount: 0,
+              lastModificationDate: new Date().toISOString(),
+            },
           });
           return;
         }
@@ -345,11 +344,15 @@ export default function ControleIndex() {
       // }
 
       if (userData) {
-        setStats(prevStats => ({
+        setStats((prevStats) => ({
           ...prevStats,
           eleve: {
             ...prevStats.eleve,
-            prenom: userData.prenom || userData.firstName || userData.pseudo || "Élève",
+            prenom:
+              userData.prenom ||
+              userData.firstName ||
+              userData.pseudo ||
+              "Élève",
             nom: userData.nom || userData.lastName || "",
           },
         }));
@@ -375,7 +378,6 @@ export default function ControleIndex() {
     );
   }
 
-
   const statsCards = [
     {
       icon: Star,
@@ -389,7 +391,8 @@ export default function ControleIndex() {
         return score.toFixed(1);
       })()}/20`,
       color: "text-yellow-600 dark:text-yellow-400",
-      bgColor: "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20",
+      bgColor:
+        "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20",
       borderColor: "border-yellow-200 dark:border-yellow-700",
     },
     {
@@ -397,7 +400,8 @@ export default function ControleIndex() {
       label: "Temps d'étude",
       value: "2h/jour",
       color: "text-blue-600 dark:text-blue-400",
-      bgColor: "bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20",
+      bgColor:
+        "bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20",
       borderColor: "border-blue-200 dark:border-blue-700",
     },
     {
@@ -405,7 +409,8 @@ export default function ControleIndex() {
       label: "Élèves actifs",
       value: (stats.totalEleves || 0).toString(),
       color: "text-green-600 dark:text-green-400",
-      bgColor: "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
+      bgColor:
+        "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
       borderColor: "border-green-200 dark:border-green-700",
     },
     {
@@ -416,11 +421,15 @@ export default function ControleIndex() {
         const totalExercises = stats.totalEleves || 0;
         // Supposons qu'il y a environ 50 exercices par matière x 9 matières = 450 exercices max
         const maxExercises = 450;
-        const progression = totalExercises > 0 ? Math.min((totalExercises / maxExercises) * 100, 100) : 0;
+        const progression =
+          totalExercises > 0
+            ? Math.min((totalExercises / maxExercises) * 100, 100)
+            : 0;
         return Math.round(progression);
       })()}%`,
       color: "text-purple-600 dark:text-purple-400",
-      bgColor: "bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
+      bgColor:
+        "bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
       borderColor: "border-purple-200 dark:border-purple-700",
     },
   ];
@@ -435,19 +444,19 @@ export default function ControleIndex() {
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
               <Button
+                className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
                 onClick={() => router.push("/")}
                 variant="outline"
-                className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
               >
                 <ArrowLeft className="w-4 h-4 mr-2" />
                 Retour à l&apos;accueil
               </Button>
               <div className="flex items-center gap-3 w-full sm:w-auto">
                 <Button
-                  onClick={toggleTheme}
-                  variant="outline"
-                  size="sm"
                   className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 backdrop-blur-sm"
+                  onClick={toggleTheme}
+                  size="sm"
+                  variant="outline"
                 >
                   {isDarkMode ? (
                     <Sun className="w-4 h-4" />
@@ -455,74 +464,92 @@ export default function ControleIndex() {
                     <Moon className="w-4 h-4" />
                   )}
                 </Button>
-                <LoginButton 
-                  variant="outline" 
-                  size="sm"
+                <LoginButton
                   className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
+                  size="sm"
+                  variant="outline"
                 />
               </div>
             </div>
-            
+
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
               className="text-center mb-8 sm:mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.7 }}
             >
-              <motion.div 
-                initial={{ opacity: 0, scale: 0.8 }}
+              <motion.div
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
                 className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg"
+                initial={{ opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.5, delay: 0.2 }}
               >
                 <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </motion.div>
-              <motion.h1 
-                initial={{ opacity: 0, y: 10 }}
+              <motion.h1
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
                 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 px-2"
+                initial={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.6, delay: 0.3 }}
               >
-                Bonjour {(() => {
+                Bonjour{" "}
+                {(() => {
                   if (stats.eleve?.prenom) {
                     return stats.eleve.prenom;
                   }
-                  
+
                   try {
-                    const storedUser = typeof window !== 'undefined' ? localStorage.getItem("user") : null;
+                    const storedUser =
+                      typeof window !== "undefined"
+                        ? localStorage.getItem("user")
+                        : null;
                     if (storedUser) {
                       const userData = JSON.parse(storedUser);
-                      return userData.prenom || userData.firstName || userData.pseudo || "Élève";
+                      return (
+                        userData.prenom ||
+                        userData.firstName ||
+                        userData.pseudo ||
+                        "Élève"
+                      );
                     }
                   } catch (e) {
-                    console.error("Erreur lors de la récupération du prénom depuis localStorage:", e);
+                    console.error(
+                      "Erreur lors de la récupération du prénom depuis localStorage:",
+                      e,
+                    );
                   }
-                  
+
                   return "Visiteur";
-                })()} ! 🌟
+                })()}{" "}
+                ! 🌟
               </motion.h1>
-              <motion.p 
-                initial={{ opacity: 0, y: 10 }}
+              <motion.p
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
                 className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-4"
+                initial={{ opacity: 0, y: 10 }}
+                transition={{ duration: 0.6, delay: 0.4 }}
               >
-                {typeof window !== 'undefined' && localStorage.getItem("user") ? "Bienvenue dans ton espace d'apprentissage magique ! ✨" : "Découvrez nos matières et fonctionnalités d'apprentissage ! ✨"}
+                {typeof window !== "undefined" && localStorage.getItem("user")
+                  ? "Bienvenue dans ton espace d'apprentissage magique ! ✨"
+                  : "Découvrez nos matières et fonctionnalités d'apprentissage ! ✨"}
               </motion.p>
-              {typeof window !== 'undefined' && !localStorage.getItem("user") && (
-                <motion.div 
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                  className="mt-6 max-w-2xl mx-auto px-4"
-                >
-                  <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
-                      💡 <strong>Mode aperçu :</strong> Connectez-vous pour accéder à vos statistiques personnalisées et sauvegarder votre progression.
-                    </p>
-                  </div>
-                </motion.div>
-              )}
+              {typeof window !== "undefined" &&
+                !localStorage.getItem("user") && (
+                  <motion.div
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mt-6 max-w-2xl mx-auto px-4"
+                    initial={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                  >
+                    <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
+                        💡 <strong>Mode aperçu :</strong> Connectez-vous pour
+                        accéder à vos statistiques personnalisées et sauvegarder
+                        votre progression.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
             </motion.div>
           </div>
         </div>
@@ -532,29 +559,37 @@ export default function ControleIndex() {
       <section className="py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.7, delay: 0.2 }}
           >
             {statsCards.map((stat, index) => (
               <motion.div
-                key={index}
-                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
+                initial={{ opacity: 0, y: 20 }}
+                key={index}
                 transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               >
-                <Card className={`${stat.bgColor} border-2 ${stat.borderColor} shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}>
+                <Card
+                  className={`${stat.bgColor} border-2 ${stat.borderColor} shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}
+                >
                   <CardContent className="p-4 sm:p-6">
                     <div className="flex items-center space-x-3 sm:space-x-4">
-                      <div className={`p-2 sm:p-3 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm`}>
-                        <stat.icon className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`} />
+                      <div
+                        className={`p-2 sm:p-3 rounded-full bg-white/50 dark:bg-gray-800/50 backdrop-blur-sm`}
+                      >
+                        <stat.icon
+                          className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`}
+                        />
                       </div>
                       <div className="min-w-0 flex-1">
                         <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">
                           {stat.label}
                         </p>
-                        <p className={`text-lg sm:text-2xl font-bold ${stat.color} truncate`}>
+                        <p
+                          className={`text-lg sm:text-2xl font-bold ${stat.color} truncate`}
+                        >
                           {stat.value}
                         </p>
                       </div>
@@ -572,10 +607,10 @@ export default function ControleIndex() {
             return userId;
           })() && (
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.6 }}
               className="mt-6 sm:mt-8"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
             >
               <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-4 sm:p-6 border border-violet-200 dark:border-violet-700 backdrop-blur-sm">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
@@ -584,31 +619,39 @@ export default function ControleIndex() {
                       🔄 Synchronisation des statistiques
                     </h3>
                     <p className="text-xs sm:text-sm text-violet-600 dark:text-violet-400 break-words">
-                      Synchronisez vos exercices locaux avec le serveur pour mettre à jour vos statistiques
+                      Synchronisez vos exercices locaux avec le serveur pour
+                      mettre à jour vos statistiques
                     </p>
                   </div>
                   <div className="flex-shrink-0 w-full sm:w-auto">
-                  <StatsSync 
-                    userId={userId || ""} 
-                    onSyncComplete={(newStats) => {
-                      console.log('📈 Nouvelles statistiques reçues:', newStats);
-                      // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
-                      setStats(prevStats => {
-                        const newAverageScore = newStats.averageScore?.toString() || "0";
-                        const newTotalEleves = newStats.totalExercises || 0;
-                        
-                        // Ne mettre à jour que si les valeurs ont changé
-                        if (prevStats.averageScore !== newAverageScore || prevStats.totalEleves !== newTotalEleves) {
-                          return {
-                            ...prevStats,
-                            averageScore: newAverageScore,
-                            totalEleves: newTotalEleves
-                          };
-                        }
-                        return prevStats;
-                      });
-                    }}
-                  />
+                    <StatsSync
+                      onSyncComplete={(newStats) => {
+                        console.log(
+                          "📈 Nouvelles statistiques reçues:",
+                          newStats,
+                        );
+                        // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
+                        setStats((prevStats) => {
+                          const newAverageScore =
+                            newStats.averageScore?.toString() || "0";
+                          const newTotalEleves = newStats.totalExercises || 0;
+
+                          // Ne mettre à jour que si les valeurs ont changé
+                          if (
+                            prevStats.averageScore !== newAverageScore ||
+                            prevStats.totalEleves !== newTotalEleves
+                          ) {
+                            return {
+                              ...prevStats,
+                              averageScore: newAverageScore,
+                              totalEleves: newTotalEleves,
+                            };
+                          }
+                          return prevStats;
+                        });
+                      }}
+                      userId={userId || ""}
+                    />
                   </div>
                 </div>
               </div>
@@ -621,10 +664,10 @@ export default function ControleIndex() {
       <section className="py-8 sm:py-12 bg-gradient-to-r from-purple-50 via-pink-50 to-rose-50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-rose-900/20">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
             className="text-center mb-8 sm:mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.7, delay: 0.3 }}
           >
             <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-3 sm:mb-4 shadow-lg">
               <Target className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -633,16 +676,16 @@ export default function ControleIndex() {
               Quiz Hebdomadaires 🧩
             </h2>
             <p className="text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto px-4">
-              Des quiz adaptés spécialement pour les enfants autistes de 6 à 18 ans. 
-              Questions simples, feedback positif et progression douce !
+              Des quiz adaptés spécialement pour les enfants autistes de 6 à 18
+              ans. Questions simples, feedback positif et progression douce !
             </p>
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.7, delay: 0.5 }}
           >
             {/* Adaptations spéciales */}
             <Card className="bg-white/80 dark:bg-gray-800/80 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
@@ -654,7 +697,8 @@ export default function ControleIndex() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Phrases courtes et simples, une difficulté à la fois pour éviter la surcharge cognitive.
+                  Phrases courtes et simples, une difficulté à la fois pour
+                  éviter la surcharge cognitive.
                 </p>
               </CardContent>
             </Card>
@@ -668,7 +712,8 @@ export default function ControleIndex() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Couleurs et icônes par matière, animations douces pour une expérience apaisante.
+                  Couleurs et icônes par matière, animations douces pour une
+                  expérience apaisante.
                 </p>
               </CardContent>
             </Card>
@@ -682,7 +727,8 @@ export default function ControleIndex() {
               </CardHeader>
               <CardContent>
                 <p className="text-gray-600 dark:text-gray-300">
-                  Encouragements constants, progression visible et célébration des réussites.
+                  Encouragements constants, progression visible et célébration
+                  des réussites.
                 </p>
               </CardContent>
             </Card>
@@ -690,10 +736,10 @@ export default function ControleIndex() {
 
           {/* Carte principale du quiz */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
             className="max-w-4xl mx-auto px-3 sm:px-4"
+            initial={{ opacity: 0, scale: 0.95 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
           >
             <Card className="bg-gradient-to-r from-purple-500 to-pink-500 border-0 shadow-2xl overflow-hidden backdrop-blur-sm">
               <CardContent className="p-4 sm:p-6 md:p-8">
@@ -709,21 +755,31 @@ export default function ControleIndex() {
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2">
                     <Button
-                      onClick={() => router.push('/controle/quiz-hebdomadaire')}
-                      size="lg"
                       className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-300"
+                      onClick={() => router.push("/controle/quiz-hebdomadaire")}
+                      size="lg"
                     >
                       <Target className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Choisir un Quiz
                     </Button>
                     <Button
+                      className="border-white text-black hover:bg-white/10 hover:text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm"
                       onClick={() => {
-                        const currentWeek = Math.ceil((new Date().getTime() - new Date(new Date().getFullYear(), 0, 1).getTime()) / (86400000 * 7));
-                        router.push(`/controle/quiz-hebdomadaire?week=${currentWeek}`);
+                        const currentWeek = Math.ceil(
+                          (new Date().getTime() -
+                            new Date(
+                              new Date().getFullYear(),
+                              0,
+                              1,
+                            ).getTime()) /
+                            (86400000 * 7),
+                        );
+                        router.push(
+                          `/controle/quiz-hebdomadaire?week=${currentWeek}`,
+                        );
                       }}
                       size="lg"
                       variant="outline"
-                      className="border-white text-black hover:bg-white/10 hover:text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm"
                     >
                       <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
                       Quiz de cette Semaine
@@ -740,10 +796,10 @@ export default function ControleIndex() {
       <section className="py-8 sm:py-12 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
             className="text-center mb-8 sm:mb-12"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.7, delay: 0.4 }}
           >
             <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3 sm:mb-4 shadow-lg">
               <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
@@ -757,28 +813,34 @@ export default function ControleIndex() {
           </motion.div>
 
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.7, delay: 0.6 }}
           >
             {courseThemes.map((theme, index) => (
               <motion.div
-                key={theme.id}
-                initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
                 className="group"
+                initial={{ opacity: 0, y: 20 }}
+                key={theme.id}
+                transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
               >
                 <Link href={theme.route}>
-                  <Card className={`cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-2xl ${theme.bgColor} border-2 ${theme.borderColor} hover:border-opacity-100 backdrop-blur-sm`}>
+                  <Card
+                    className={`cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-2xl ${theme.bgColor} border-2 ${theme.borderColor} hover:border-opacity-100 backdrop-blur-sm`}
+                  >
                     <CardContent className="p-4 sm:p-6">
                       <div className="flex items-center space-x-3 sm:space-x-4">
-                        <div className={`p-3 sm:p-4 rounded-full bg-gradient-to-r ${theme.color} shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+                        <div
+                          className={`p-3 sm:p-4 rounded-full bg-gradient-to-r ${theme.color} shadow-lg group-hover:shadow-xl transition-shadow duration-300`}
+                        >
                           <theme.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                         </div>
                         <div className="flex-1 min-w-0">
-                          <h3 className={`text-base sm:text-lg md:text-xl font-semibold ${theme.textColor} group-hover:opacity-80 mb-1 sm:mb-2 truncate transition-opacity duration-300`}>
+                          <h3
+                            className={`text-base sm:text-lg md:text-xl font-semibold ${theme.textColor} group-hover:opacity-80 mb-1 sm:mb-2 truncate transition-opacity duration-300`}
+                          >
                             {theme.title}
                           </h3>
                           <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm line-clamp-2 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300">
@@ -789,7 +851,9 @@ export default function ControleIndex() {
                       <div className="mt-3 flex items-center justify-between">
                         <div className="flex items-center space-x-1">
                           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">Disponible</span>
+                          <span className="text-xs text-gray-500 dark:text-gray-400">
+                            Disponible
+                          </span>
                         </div>
                         <div className="text-xs text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-300">
                           →
