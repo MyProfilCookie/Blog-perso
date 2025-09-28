@@ -829,7 +829,7 @@ export default function ControleIndex() {
                       Choisir un Quiz
                     </Button>
                     <Button
-                      className="border-white text-black hover:bg-white/10 hover:text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm"
+                      className="border-white text-white hover:bg-white/10 hover:text-white dark:border-gray-300 dark:text-gray-100 dark:hover:bg-gray-300/10 dark:hover:text-gray-100 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm"
                       onClick={() => {
                         const currentWeek = Math.ceil(
                           (new Date().getTime() -
