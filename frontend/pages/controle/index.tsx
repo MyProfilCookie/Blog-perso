@@ -28,6 +28,7 @@ import {
 import axios from "axios";
 import Link from "next/link";
 import { handleAuthError } from "@/utils/errorHandler";
+import { useAutoRefresh } from "@/hooks/useAutoRefresh";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import StatsSync from "@/components/StatsSync";
@@ -186,6 +187,8 @@ export default function ControleIndex() {
       lastModificationDate: "",
     },
   });
+  const [isRefreshing, setIsRefreshing] = useState(false);
+  const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
   const isDarkMode = theme === "dark";
 
@@ -195,14 +198,14 @@ export default function ControleIndex() {
 
   useEffect(() => {
     setMounted(true);
-
+    
     // Initialiser l'userId
     const initializeUser = () => {
       console.log("🔍 Initialisation de l'utilisateur...");
-
+      
       // Essayer de récupérer l'userId depuis différentes sources
       let userIdFromStorage = null;
-
+      
       // Méthode 1: depuis localStorage "user"
       const userData = localStorage.getItem("user");
       if (userData) {
@@ -217,7 +220,7 @@ export default function ControleIndex() {
           console.warn("❌ Erreur parsing userData:", e);
         }
       }
-
+      
       // Méthode 2: depuis localStorage "userId"
       if (!userIdFromStorage) {
         userIdFromStorage = localStorage.getItem("userId");
@@ -228,7 +231,7 @@ export default function ControleIndex() {
           );
         }
       }
-
+      
       // Méthode 3: depuis localStorage "userToken" (décoder le JWT)
       if (!userIdFromStorage) {
         const token =
@@ -245,7 +248,7 @@ export default function ControleIndex() {
           }
         }
       }
-
+      
       if (userIdFromStorage) {
         setUserId(userIdFromStorage);
         console.log("🎯 UserId final défini:", userIdFromStorage);
@@ -255,9 +258,10 @@ export default function ControleIndex() {
     };
 
     initializeUser();
-
+    
     const fetchStats = async () => {
       try {
+        setIsRefreshing(true);
         const token =
           localStorage.getItem("token") || localStorage.getItem("userToken");
         const userId =
@@ -277,6 +281,7 @@ export default function ControleIndex() {
               lastModificationDate: new Date().toISOString(),
             },
           });
+          setLastUpdate(new Date());
           return;
         }
         const response = await axios.get(
@@ -295,6 +300,8 @@ export default function ControleIndex() {
             lastModificationDate: "",
           },
         });
+        setLastUpdate(new Date());
+        console.log("📊 Statistiques mises à jour:", new Date().toLocaleTimeString());
       } catch (err: any) {
         console.error("Erreur lors de la récupération des statistiques:", err);
         
@@ -302,6 +309,8 @@ export default function ControleIndex() {
         if (handleAuthError(err)) {
           return;
         }
+      } finally {
+        setIsRefreshing(false);
       }
     };
 
@@ -370,6 +379,16 @@ export default function ControleIndex() {
     checkAuth();
     setLoading(false);
   }, [router]);
+
+  // Rafraîchissement automatique des statistiques toutes les 30 secondes
+  const { forceRefresh } = useAutoRefresh({
+    interval: 30000, // 30 secondes
+    enabled: mounted && userId !== null, // Seulement si la page est montée et qu'un utilisateur est connecté
+    onRefresh: fetchStats,
+    onError: (error) => {
+      console.error("Erreur lors du rafraîchissement automatique:", error);
+    }
+  });
 
   if (!mounted || loading) {
     return (
@@ -470,21 +489,21 @@ export default function ControleIndex() {
                     <Moon className="w-4 h-4" />
                   )}
                 </Button>
-                <LoginButton
+                <LoginButton 
                   className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
                   size="sm"
                   variant="outline"
                 />
               </div>
             </div>
-
+            
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-8 sm:mb-12"
               initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.7 }}
             >
-              <motion.div
+              <motion.div 
                 animate={{ opacity: 1, scale: 1 }}
                 className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg"
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -492,7 +511,7 @@ export default function ControleIndex() {
               >
                 <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </motion.div>
-              <motion.h1
+              <motion.h1 
                 animate={{ opacity: 1, y: 0 }}
                 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 px-2"
                 initial={{ opacity: 0, y: 10 }}
@@ -503,7 +522,7 @@ export default function ControleIndex() {
                   if (stats.eleve?.prenom) {
                     return stats.eleve.prenom;
                   }
-
+                  
                   try {
                     const storedUser =
                       typeof window !== "undefined"
@@ -524,12 +543,12 @@ export default function ControleIndex() {
                       e,
                     );
                   }
-
+                  
                   return "Visiteur";
                 })()}{" "}
                 ! 🌟
               </motion.h1>
-              <motion.p
+              <motion.p 
                 animate={{ opacity: 1, y: 0 }}
                 className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-4"
                 initial={{ opacity: 0, y: 10 }}
@@ -541,21 +560,21 @@ export default function ControleIndex() {
               </motion.p>
               {typeof window !== "undefined" &&
                 !localStorage.getItem("user") && (
-                  <motion.div
+                <motion.div 
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-6 max-w-2xl mx-auto px-4"
-                    initial={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
-                  >
-                    <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
+                  initial={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.6, delay: 0.5 }}
+                >
+                  <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
                         💡 <strong>Mode aperçu :</strong> Connectez-vous pour
                         accéder à vos statistiques personnalisées et sauvegarder
                         votre progression.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
+                    </p>
+                  </div>
+                </motion.div>
+              )}
             </motion.div>
           </div>
         </div>
@@ -564,6 +583,47 @@ export default function ControleIndex() {
       {/* Stats Cards */}
       <section className="py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
+          {/* En-tête des statistiques avec rafraîchissement */}
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            className="flex flex-col sm:flex-row justify-between items-center mb-6"
+            initial={{ opacity: 0, y: 20 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+          >
+            <div className="mb-4 sm:mb-0">
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                📊 Statistiques
+              </h2>
+              <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
+                {isRefreshing ? (
+                  <div className="flex items-center space-x-2">
+                    <RefreshCw className="w-4 h-4 animate-spin text-blue-500" />
+                    <span>Mise à jour en cours...</span>
+                  </div>
+                ) : lastUpdate ? (
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-green-500" />
+                    <span>Dernière mise à jour: {lastUpdate.toLocaleTimeString()}</span>
+                  </div>
+                ) : (
+                  <div className="flex items-center space-x-2">
+                    <Clock className="w-4 h-4 text-gray-400" />
+                    <span>Chargement...</span>
+                  </div>
+                )}
+              </div>
+            </div>
+            
+            <Button
+              onClick={forceRefresh}
+              disabled={isRefreshing}
+              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors disabled:opacity-50"
+            >
+              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <span>Actualiser</span>
+            </Button>
+          </motion.div>
+
           <motion.div
             animate={{ opacity: 1, y: 0 }}
             className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12"
@@ -630,34 +690,34 @@ export default function ControleIndex() {
                     </p>
                   </div>
                   <div className="flex-shrink-0 w-full sm:w-auto">
-                    <StatsSync
-                      onSyncComplete={(newStats) => {
+                  <StatsSync 
+                    onSyncComplete={(newStats) => {
                         console.log(
                           "📈 Nouvelles statistiques reçues:",
                           newStats,
                         );
-                        // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
+                      // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
                         setStats((prevStats) => {
                           const newAverageScore =
                             newStats.averageScore?.toString() || "0";
-                          const newTotalEleves = newStats.totalExercises || 0;
-
-                          // Ne mettre à jour que si les valeurs ont changé
+                        const newTotalEleves = newStats.totalExercises || 0;
+                        
+                        // Ne mettre à jour que si les valeurs ont changé
                           if (
                             prevStats.averageScore !== newAverageScore ||
                             prevStats.totalEleves !== newTotalEleves
                           ) {
-                            return {
-                              ...prevStats,
-                              averageScore: newAverageScore,
+                          return {
+                            ...prevStats,
+                            averageScore: newAverageScore,
                               totalEleves: newTotalEleves,
-                            };
-                          }
-                          return prevStats;
-                        });
-                      }}
+                          };
+                        }
+                        return prevStats;
+                      });
+                    }}
                       userId={userId || ""}
-                    />
+                  />
                   </div>
                 </div>
               </div>
