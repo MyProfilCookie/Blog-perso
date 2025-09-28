@@ -237,6 +237,7 @@ const ElevePage: React.FC = () => {
   const [userId, setUserId] = useState<string | null>(null);
   const [userInfo, setUserInfo] = useState<any>(null);
   const [avatarLoading, setAvatarLoading] = useState(true);
+  const [showReconnectPrompt, setShowReconnectPrompt] = useState(false);
   const [advancedStats, setAdvancedStats] = useState<UserStats | null>(null);
   const [selectedTab, setSelectedTab] = useState<string>("overview");
 
@@ -283,18 +284,14 @@ const ElevePage: React.FC = () => {
       setUserId(foundUserId);
       setUserInfo(foundUserInfo);
 
-      // Si aucun utilisateur trouvé, créer des données par défaut pour permettre l'affichage
+      // Si aucun utilisateur trouvé, proposer une reconnexion
       if (!foundUserId) {
         console.log(
-          "⚠️ Aucun utilisateur trouvé, utilisation de données par défaut",
+          "⚠️ Aucun utilisateur trouvé, proposition de reconnexion",
         );
-        setUserId("default-user");
-        setUserInfo({
-          _id: "default-user",
-          nom: "Utilisateur",
-          prenom: "Invité",
-          email: "invite@example.com",
-        });
+        setShowReconnectPrompt(true);
+        setLoading(false);
+        return;
       }
     } catch (err) {
       console.error("Erreur lors de la récupération de l'utilisateur:", err);
@@ -314,6 +311,27 @@ const ElevePage: React.FC = () => {
       setAvatarLoading(true);
     }
   }, [userInfo]);
+
+  // Fonctions pour gérer la reconnexion
+  const handleReconnect = () => {
+    // Nettoyer le localStorage
+    localStorage.removeItem("user");
+    localStorage.removeItem("userInfo");
+    localStorage.removeItem("token");
+    localStorage.removeItem("userToken");
+    localStorage.removeItem("userId");
+    
+    // Rediriger vers la page de connexion
+    router.push("/users/login");
+  };
+
+  const handleRetry = () => {
+    setShowReconnectPrompt(false);
+    setLoading(true);
+    
+    // Recharger la page pour réessayer
+    window.location.reload();
+  };
 
   // Chargement simplifié du profil
   useEffect(() => {
@@ -1473,6 +1491,53 @@ const ElevePage: React.FC = () => {
         >
           Réessayer
         </Button>
+      </div>
+    );
+  }
+
+  if (showReconnectPrompt) {
+    return (
+      <div className="flex flex-col items-center justify-center min-h-screen p-4 bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-900 dark:via-pink-900 dark:to-orange-900">
+        <div className="bg-white dark:bg-gray-800 p-8 rounded-xl shadow-2xl max-w-md w-full text-center border border-purple-200 dark:border-purple-700">
+          <div className="w-20 h-20 mx-auto mb-6 bg-gradient-to-br from-purple-500 to-pink-500 rounded-full flex items-center justify-center">
+            <FontAwesomeIcon icon={faUser} className="text-3xl text-white" />
+          </div>
+          
+          <h2 className="text-2xl font-bold text-gray-800 dark:text-white mb-4">
+            Session expirée
+          </h2>
+          
+          <p className="text-gray-600 dark:text-gray-300 mb-6">
+            Nous n'avons pas pu récupérer vos données de session. 
+            Veuillez vous reconnecter pour accéder à votre profil.
+          </p>
+          
+          <div className="space-y-3">
+            <Button
+              color="primary"
+              size="lg"
+              onClick={handleReconnect}
+              className="w-full bg-gradient-to-r from-purple-500 to-pink-500 text-white font-semibold"
+            >
+              <FontAwesomeIcon icon={faUser} className="mr-2" />
+              Se reconnecter
+            </Button>
+            
+            <Button
+              variant="bordered"
+              size="lg"
+              onClick={handleRetry}
+              className="w-full border-purple-300 text-purple-600 dark:text-purple-400"
+            >
+              <FontAwesomeIcon icon={faExclamationTriangle} className="mr-2" />
+              Réessayer
+            </Button>
+          </div>
+          
+          <p className="text-xs text-gray-500 dark:text-gray-400 mt-4">
+            Si le problème persiste, contactez le support technique.
+          </p>
+        </div>
       </div>
     );
   }
