@@ -42,6 +42,23 @@ const nextConfig = {
         },
       };
     }
+    
+    // Désactiver requestIdleCallback pour Safari
+    if (!isServer) {
+      config.resolve.alias = {
+        ...config.resolve.alias,
+        'scheduler/tracing': false,
+      };
+      
+      // Remplacer requestIdleCallback par setTimeout
+      config.plugins.push(
+        new config.webpack.DefinePlugin({
+          'window.requestIdleCallback': 'window.setTimeout',
+          'window.cancelIdleCallback': 'window.clearTimeout',
+        })
+      );
+    }
+    
     return config;
   },
   
