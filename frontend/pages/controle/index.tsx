@@ -27,6 +27,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
+import { motion } from "framer-motion";
 import { handleAuthError } from "@/utils/errorHandler";
 import { useAutoRefresh } from "@/hooks/useAutoRefresh";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -35,16 +36,19 @@ import { Button } from "@/components/ui/button";
 // Lazy load des composants lourds
 const StatsSync = dynamic(() => import("@/components/StatsSync"), {
   ssr: false,
-  loading: () => <div className="animate-pulse bg-gray-200 h-8 w-32 rounded"></div>
+  loading: () => (
+    <div className="animate-pulse bg-gray-200 h-8 w-32 rounded"></div>
+  ),
 });
 
 const LoginButton = dynamic(() => import("@/components/LoginButton"), {
   ssr: false,
-  loading: () => <div className="animate-pulse bg-gray-200 h-10 w-24 rounded"></div>
+  loading: () => (
+    <div className="animate-pulse bg-gray-200 h-10 w-24 rounded"></div>
+  ),
 });
 
 // Import direct de Framer Motion (plus simple pour les performances)
-import { motion } from "framer-motion";
 
 const courseThemes = [
   {
@@ -204,6 +208,22 @@ export default function ControleIndex() {
 
   const isDarkMode = theme === "dark";
 
+  // Calculer les valeurs des cartes de manière stable (AVANT toute logique conditionnelle)
+  const averageScoreValue = useMemo(() => {
+    const score = parseFloat(stats.averageScore || "0");
+    if (score > 20) {
+      return (score / 5).toFixed(1);
+    }
+    return score.toFixed(1);
+  }, [stats.averageScore]);
+
+  const progressionValue = useMemo(() => {
+    const totalExercises = stats.totalEleves || 0;
+    const maxExercises = 450;
+    const progression = totalExercises > 0 ? Math.min((totalExercises / maxExercises) * 100, 100) : 0;
+    return Math.round(progression);
+  }, [stats.totalEleves]);
+
   const toggleTheme = () => {
     setTheme(isDarkMode ? "light" : "dark");
   };
@@ -211,44 +231,44 @@ export default function ControleIndex() {
   const fetchStats = useCallback(async () => {
     try {
       setIsRefreshing(true);
-      const token =
-        localStorage.getItem("token") || localStorage.getItem("userToken");
-      const userId =
-        localStorage.getItem("userId") ||
-        JSON.parse(localStorage.getItem("user") || "{}")._id;
+        const token =
+          localStorage.getItem("token") || localStorage.getItem("userToken");
+        const userId =
+          localStorage.getItem("userId") ||
+          JSON.parse(localStorage.getItem("user") || "{}")._id;
 
-      if (!token || !userId) {
-        // Utiliser des stats par défaut si pas connecté
-        setStats({
-          totalEleves: 0,
-          averageScore: "0",
-          progression: "0",
-          eleve: {
-            prenom: "Visiteur",
-            nom: "",
-            modificationsCount: 0,
+        if (!token || !userId) {
+          // Utiliser des stats par défaut si pas connecté
+          setStats({
+            totalEleves: 0,
+            averageScore: "0",
+            progression: "0",
+            eleve: { 
+              prenom: "Visiteur", 
+              nom: "", 
+              modificationsCount: 0, 
             lastModificationDate: new Date().toISOString(),
           },
-        });
+          });
         setLastUpdate(new Date());
-        return;
-      }
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
+          return;
+        }
+        const response = await axios.get(
+          `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
+          { headers: { Authorization: `Bearer ${token}` } },
+        );
 
-      setStats({
-        totalEleves: response.data.totalEleves || 0,
-        averageScore: response.data.averageScore || "0",
+        setStats({
+          totalEleves: response.data.totalEleves || 0,
+          averageScore: response.data.averageScore || "0",
         progression: "0", // Sera calculée automatiquement
-        eleve: response.data.eleve || {
-          nom: "",
-          prenom: "",
-          modificationsCount: 0,
-          lastModificationDate: "",
-        },
-      });
+          eleve: response.data.eleve || {
+            nom: "",
+            prenom: "",
+            modificationsCount: 0,
+            lastModificationDate: "",
+          },
+        });
       setLastUpdate(new Date());
     } catch (err: any) {
       // Gérer l'erreur 401 (Token expiré)
@@ -262,14 +282,14 @@ export default function ControleIndex() {
 
   useEffect(() => {
     setMounted(true);
-    
+
     // Initialiser l'userId
     const initializeUser = () => {
       console.log("🔍 Initialisation de l'utilisateur...");
-      
+
       // Essayer de récupérer l'userId depuis différentes sources
       let userIdFromStorage = null;
-      
+
       // Méthode 1: depuis localStorage "user"
       const userData = localStorage.getItem("user");
       if (userData) {
@@ -284,7 +304,7 @@ export default function ControleIndex() {
           console.warn("❌ Erreur parsing userData:", e);
         }
       }
-      
+
       // Méthode 2: depuis localStorage "userId"
       if (!userIdFromStorage) {
         userIdFromStorage = localStorage.getItem("userId");
@@ -295,7 +315,7 @@ export default function ControleIndex() {
           );
         }
       }
-      
+
       // Méthode 3: depuis localStorage "userToken" (décoder le JWT)
       if (!userIdFromStorage) {
         const token =
@@ -312,7 +332,7 @@ export default function ControleIndex() {
           }
         }
       }
-      
+
       if (userIdFromStorage) {
         setUserId(userIdFromStorage);
         console.log("🎯 UserId final défini:", userIdFromStorage);
@@ -396,7 +416,7 @@ export default function ControleIndex() {
     onRefresh: () => fetchStats(),
     onError: (error) => {
       console.error("Erreur lors du rafraîchissement automatique:", error);
-    }
+    },
   });
 
   if (!mounted || loading) {
@@ -413,32 +433,41 @@ export default function ControleIndex() {
   }
 
   // Composant optimisé pour les cartes de statistiques
-  const StatCard = memo(({ icon: Icon, label, value, color, bgColor, borderColor }: {
-    icon: any;
-    label: string;
-    value: string;
-    color: string;
-    bgColor: string;
-    borderColor: string;
-  }) => (
-    <Card className={`${bgColor} ${borderColor} border-2 transition-all duration-300 hover:shadow-lg hover:scale-105`}>
-      <CardContent className="p-4 sm:p-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
-              {label}
-            </p>
-            <p className={`text-2xl font-bold ${color}`}>
-              {value}
-            </p>
-          </div>
-          <Icon className={`w-8 h-8 ${color}`} />
+  const StatCard = memo(
+    ({
+      icon: Icon,
+      label,
+      value,
+      color,
+      bgColor,
+      borderColor,
+    }: {
+      icon: any;
+      label: string;
+      value: string;
+      color: string;
+      bgColor: string;
+      borderColor: string;
+    }) => (
+      <Card
+        className={`${bgColor} ${borderColor} border-2 transition-all duration-300 hover:shadow-lg hover:scale-105`}
+      >
+        <CardContent className="p-4 sm:p-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+                {label}
+              </p>
+              <p className={`text-2xl font-bold ${color}`}>{value}</p>
+            </div>
+            <Icon className={`w-8 h-8 ${color}`} />
         </div>
-      </CardContent>
-    </Card>
-  ));
+        </CardContent>
+      </Card>
+    ),
+  );
 
-  StatCard.displayName = 'StatCard';
+  StatCard.displayName = "StatCard";
 
   // Composant optimisé pour les cartes de cours
   const CourseCard = memo(({ theme, index }: { theme: any; index: number }) => (
@@ -448,44 +477,34 @@ export default function ControleIndex() {
       transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
     >
       <Link href={theme.route}>
-        <Card className={`${theme.bgColor} ${theme.borderColor} border-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group`}>
+        <Card
+          className={`${theme.bgColor} ${theme.borderColor} border-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group`}
+        >
           <CardContent className="p-4 sm:p-6">
             <div className="flex items-center space-x-3 sm:space-x-4">
-              <div className={`p-2 sm:p-3 rounded-full bg-gradient-to-r ${theme.color} shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+              <div
+                className={`p-2 sm:p-3 rounded-full bg-gradient-to-r ${theme.color} shadow-lg group-hover:shadow-xl transition-shadow duration-300`}
+              >
                 <theme.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
               </div>
               <div className="min-w-0 flex-1">
-                <h3 className={`text-sm sm:text-base font-bold ${theme.textColor} mb-1 truncate`}>
+                <h3
+                  className={`text-sm sm:text-base font-bold ${theme.textColor} mb-1 truncate`}
+                >
                   {theme.title}
                 </h3>
                 <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">
                   {theme.description}
                 </p>
               </div>
-            </div>
+      </div>
           </CardContent>
         </Card>
       </Link>
     </motion.div>
   ));
 
-  CourseCard.displayName = 'CourseCard';
-
-  // Calculer les valeurs des cartes de manière stable
-  const averageScoreValue = useMemo(() => {
-    const score = parseFloat(stats.averageScore || "0");
-    if (score > 20) {
-      return (score / 5).toFixed(1);
-    }
-    return score.toFixed(1);
-  }, [stats.averageScore]);
-
-  const progressionValue = useMemo(() => {
-    const totalExercises = stats.totalEleves || 0;
-    const maxExercises = 450;
-    const progression = totalExercises > 0 ? Math.min((totalExercises / maxExercises) * 100, 100) : 0;
-    return Math.round(progression);
-  }, [stats.totalEleves]);
+  CourseCard.displayName = "CourseCard";
 
   const statsCards = [
     {
@@ -493,7 +512,8 @@ export default function ControleIndex() {
       label: "Moyenne Générale",
       value: `${averageScoreValue}/20`,
       color: "text-yellow-600 dark:text-yellow-400",
-      bgColor: "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20",
+      bgColor:
+        "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20",
       borderColor: "border-yellow-200 dark:border-yellow-700",
     },
     {
@@ -501,7 +521,8 @@ export default function ControleIndex() {
       label: "Temps d'étude",
       value: "2h/jour",
       color: "text-blue-600 dark:text-blue-400",
-      bgColor: "bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20",
+      bgColor:
+        "bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20",
       borderColor: "border-blue-200 dark:border-blue-700",
     },
     {
@@ -509,7 +530,8 @@ export default function ControleIndex() {
       label: "Élèves actifs",
       value: (stats.totalEleves || 0).toString(),
       color: "text-green-600 dark:text-green-400",
-      bgColor: "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
+      bgColor:
+        "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
       borderColor: "border-green-200 dark:border-green-700",
     },
     {
@@ -517,7 +539,8 @@ export default function ControleIndex() {
       label: "Progression",
       value: `${progressionValue}%`,
       color: "text-purple-600 dark:text-purple-400",
-      bgColor: "bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
+      bgColor:
+        "bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
       borderColor: "border-purple-200 dark:border-purple-700",
     },
   ];
@@ -540,19 +563,19 @@ export default function ControleIndex() {
                 Retour à l&apos;accueil
               </Button>
               <div className="flex items-center gap-3 w-full sm:w-auto">
-                <Button
+              <Button
                   className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 backdrop-blur-sm"
                   onClick={toggleTheme}
                   size="sm"
-                  variant="outline"
-                >
-                  {isDarkMode ? (
-                    <Sun className="w-4 h-4" />
-                  ) : (
-                    <Moon className="w-4 h-4" />
-                  )}
-                </Button>
-                <LoginButton 
+                variant="outline"
+              >
+                {isDarkMode ? (
+                  <Sun className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
+              </Button>
+                <LoginButton
                   className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
                   size="sm"
                   variant="outline"
@@ -566,7 +589,7 @@ export default function ControleIndex() {
               initial={{ opacity: 0, y: 20 }}
               transition={{ duration: 0.7 }}
             >
-              <motion.div 
+              <motion.div
                 animate={{ opacity: 1, scale: 1 }}
                 className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg"
                 initial={{ opacity: 0, scale: 0.8 }}
@@ -574,7 +597,7 @@ export default function ControleIndex() {
               >
                 <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
               </motion.div>
-              <motion.h1 
+              <motion.h1
                 animate={{ opacity: 1, y: 0 }}
                 className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 px-2"
                 initial={{ opacity: 0, y: 10 }}
@@ -611,7 +634,7 @@ export default function ControleIndex() {
                 })()}{" "}
                 ! 🌟
               </motion.h1>
-              <motion.p 
+              <motion.p
                 animate={{ opacity: 1, y: 0 }}
                 className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-4"
                 initial={{ opacity: 0, y: 10 }}
@@ -623,20 +646,20 @@ export default function ControleIndex() {
               </motion.p>
               {typeof window !== "undefined" &&
                 !localStorage.getItem("user") && (
-                <motion.div 
+                  <motion.div
                     animate={{ opacity: 1, y: 0 }}
                     className="mt-6 max-w-2xl mx-auto px-4"
-                  initial={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.6, delay: 0.5 }}
-                >
-                  <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
+                    initial={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.6, delay: 0.5 }}
+                  >
+                    <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
                         💡 <strong>Mode aperçu :</strong> Connectez-vous pour
                         accéder à vos statistiques personnalisées et sauvegarder
                         votre progression.
                     </p>
                   </div>
-                </motion.div>
+                  </motion.div>
               )}
             </motion.div>
           </div>
@@ -666,7 +689,9 @@ export default function ControleIndex() {
                 ) : lastUpdate ? (
                   <div className="flex items-center space-x-2">
                     <Clock className="w-4 h-4 text-green-500" />
-                    <span>Dernière mise à jour: {lastUpdate.toLocaleTimeString()}</span>
+                    <span>
+                      Dernière mise à jour: {lastUpdate.toLocaleTimeString()}
+                    </span>
                   </div>
                 ) : (
                   <div className="flex items-center space-x-2">
@@ -676,13 +701,15 @@ export default function ControleIndex() {
                 )}
               </div>
             </div>
-            
+
             <Button
-              onClick={forceRefresh}
-              disabled={isRefreshing}
               className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors disabled:opacity-50"
+              disabled={isRefreshing}
+              onClick={forceRefresh}
             >
-              <RefreshCw className={`w-4 h-4 ${isRefreshing ? 'animate-spin' : ''}`} />
+              <RefreshCw
+                className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`}
+              />
               <span>Actualiser</span>
             </Button>
           </motion.div>
@@ -735,28 +762,28 @@ export default function ControleIndex() {
                           "📈 Nouvelles statistiques reçues:",
                           newStats,
                         );
-                      // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
+                        // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
                         setStats((prevStats) => {
                           const newAverageScore =
                             newStats.averageScore?.toString() || "0";
-                        const newTotalEleves = newStats.totalExercises || 0;
-                        
-                        // Ne mettre à jour que si les valeurs ont changé
+                          const newTotalEleves = newStats.totalExercises || 0;
+
+                          // Ne mettre à jour que si les valeurs ont changé
                           if (
                             prevStats.averageScore !== newAverageScore ||
                             prevStats.totalEleves !== newTotalEleves
                           ) {
-                          return {
-                            ...prevStats,
-                            averageScore: newAverageScore,
+                            return {
+                        ...prevStats,
+                              averageScore: newAverageScore,
                               totalEleves: newTotalEleves,
-                          };
-                        }
-                        return prevStats;
-                      });
-                    }}
+                            };
+                          }
+                          return prevStats;
+                        });
+                      }}
                       userId={userId || ""}
-                  />
+                    />
                   </div>
                 </div>
               </div>
@@ -924,7 +951,7 @@ export default function ControleIndex() {
             transition={{ duration: 0.7, delay: 0.6 }}
           >
             {courseThemes.map((theme, index) => (
-              <CourseCard key={theme.id} theme={theme} index={index} />
+              <CourseCard index={index} key={theme.id} theme={theme} />
             ))}
           </motion.div>
         </div>

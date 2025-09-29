@@ -110,13 +110,6 @@ const nextConfig = {
   
   // Configuration de la production
   productionBrowserSourceMaps: false,
-  
-  // Optimisation des API routes
-  api: {
-    bodyParser: {
-      sizeLimit: '1mb',
-    },
-  },
 };
 
 module.exports = nextConfig;
