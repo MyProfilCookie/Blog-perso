@@ -471,21 +471,29 @@ export default function ControleIndex() {
 
   CourseCard.displayName = 'CourseCard';
 
-  const statsCards = useMemo(() => [
+  // Calculer les valeurs des cartes de manière stable
+  const averageScoreValue = useMemo(() => {
+    const score = parseFloat(stats.averageScore || "0");
+    if (score > 20) {
+      return (score / 5).toFixed(1);
+    }
+    return score.toFixed(1);
+  }, [stats.averageScore]);
+
+  const progressionValue = useMemo(() => {
+    const totalExercises = stats.totalEleves || 0;
+    const maxExercises = 450;
+    const progression = totalExercises > 0 ? Math.min((totalExercises / maxExercises) * 100, 100) : 0;
+    return Math.round(progression);
+  }, [stats.totalEleves]);
+
+  const statsCards = [
     {
       icon: Star,
       label: "Moyenne Générale",
-      value: `${(() => {
-        const score = parseFloat(stats.averageScore || "0");
-        // Si le score est > 20, c'est probablement un pourcentage (0-100), on le convertit
-        if (score > 20) {
-          return (score / 5).toFixed(1); // Convertir de 0-100 à 0-20
-        }
-        return score.toFixed(1);
-      })()}/20`,
+      value: `${averageScoreValue}/20`,
       color: "text-yellow-600 dark:text-yellow-400",
-      bgColor:
-        "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20",
+      bgColor: "bg-gradient-to-br from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20",
       borderColor: "border-yellow-200 dark:border-yellow-700",
     },
     {
@@ -493,8 +501,7 @@ export default function ControleIndex() {
       label: "Temps d'étude",
       value: "2h/jour",
       color: "text-blue-600 dark:text-blue-400",
-      bgColor:
-        "bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20",
+      bgColor: "bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-900/20 dark:to-cyan-900/20",
       borderColor: "border-blue-200 dark:border-blue-700",
     },
     {
@@ -502,30 +509,18 @@ export default function ControleIndex() {
       label: "Élèves actifs",
       value: (stats.totalEleves || 0).toString(),
       color: "text-green-600 dark:text-green-400",
-      bgColor:
-        "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
+      bgColor: "bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20",
       borderColor: "border-green-200 dark:border-green-700",
     },
     {
       icon: BarChart3,
       label: "Progression",
-      value: `${(() => {
-        // Calculer la progression basée sur les exercices complétés
-        const totalExercises = stats.totalEleves || 0;
-        // Supposons qu'il y a environ 50 exercices par matière x 9 matières = 450 exercices max
-        const maxExercises = 450;
-        const progression =
-          totalExercises > 0
-            ? Math.min((totalExercises / maxExercises) * 100, 100)
-            : 0;
-        return Math.round(progression);
-      })()}%`,
+      value: `${progressionValue}%`,
       color: "text-purple-600 dark:text-purple-400",
-      bgColor:
-        "bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
+      bgColor: "bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
       borderColor: "border-purple-200 dark:border-purple-700",
     },
-  ], [stats.averageScore, stats.totalEleves]);
+  ];
 
   return (
     <div className="w-full">
