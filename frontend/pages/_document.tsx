@@ -4,8 +4,51 @@ export default function Document() {
   return (
     <Html lang="fr">
       <Head>
-        {/* Script externe pour polyfill Safari - chargé en premier */}
-        <script src="/safari-polyfill.js" />
+        {/* Polyfill ULTRA agressif pour Safari - chargé en premier */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Polyfill ULTRA agressif pour Safari
+              (function() {
+                // Définir immédiatement sur window
+                window.requestIdleCallback = function(callback, options) {
+                  var start = Date.now();
+                  return window.setTimeout(function() {
+                    callback({
+                      didTimeout: false,
+                      timeRemaining: function() {
+                        return Math.max(0, 50 - (Date.now() - start));
+                      }
+                    });
+                  }, 1);
+                };
+                
+                window.cancelIdleCallback = function(id) {
+                  window.clearTimeout(id);
+                };
+                
+                // Forcer la définition sur tous les contextes
+                if (typeof global !== 'undefined') {
+                  global.requestIdleCallback = window.requestIdleCallback;
+                  global.cancelIdleCallback = window.cancelIdleCallback;
+                }
+                
+                if (typeof self !== 'undefined') {
+                  self.requestIdleCallback = window.requestIdleCallback;
+                  self.cancelIdleCallback = window.cancelIdleCallback;
+                }
+                
+                // Définir sur l'objet global de manière plus agressive
+                try {
+                  eval('requestIdleCallback = window.requestIdleCallback');
+                  eval('cancelIdleCallback = window.cancelIdleCallback');
+                } catch(e) {}
+                
+                console.log('Safari polyfill ULTRA chargé - requestIdleCallback disponible:', typeof window.requestIdleCallback);
+              })();
+            `,
+          }}
+        />
         {/* Préchargement des polices critiques */}
         <link
           rel="preload"

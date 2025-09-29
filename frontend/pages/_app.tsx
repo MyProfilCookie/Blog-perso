@@ -1,9 +1,10 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
+import { useEffect } from "react";
 
-// Polyfill pour Safari - requestIdleCallback
-if (typeof window !== 'undefined' && !window.requestIdleCallback) {
-  window.requestIdleCallback = function(callback: IdleRequestCallback, options?: IdleRequestOptions) {
+// Polyfill Safari - requestIdleCallback
+if (typeof window !== 'undefined') {
+  window.requestIdleCallback = window.requestIdleCallback || function(callback: any, options?: any) {
     const start = Date.now();
     return window.setTimeout(function() {
       callback({
@@ -15,7 +16,7 @@ if (typeof window !== 'undefined' && !window.requestIdleCallback) {
     }, 1);
   };
   
-  window.cancelIdleCallback = function(id: number) {
+  window.cancelIdleCallback = window.cancelIdleCallback || function(id: number) {
     window.clearTimeout(id);
   };
 }
