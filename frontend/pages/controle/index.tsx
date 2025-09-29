@@ -1,7 +1,7 @@
 "use client";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
-import { motion } from "framer-motion";
+import { useEffect, useState, memo, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import { useTheme } from "next-themes";
 import {
   BookOpen,
@@ -31,8 +31,20 @@ import { handleAuthError } from "@/utils/errorHandler";
 import { useAutoRefresh } from "@/hooks/useAutoRefresh";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import StatsSync from "@/components/StatsSync";
-import LoginButton from "@/components/LoginButton";
+
+// Lazy load des composants lourds
+const StatsSync = dynamic(() => import("@/components/StatsSync"), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-8 w-32 rounded"></div>
+});
+
+const LoginButton = dynamic(() => import("@/components/LoginButton"), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-10 w-24 rounded"></div>
+});
+
+// Import direct de Framer Motion (plus simple pour les performances)
+import { motion } from "framer-motion";
 
 const courseThemes = [
   {
@@ -196,7 +208,7 @@ export default function ControleIndex() {
     setTheme(isDarkMode ? "light" : "dark");
   };
 
-  const fetchStats = async () => {
+  const fetchStats = useCallback(async () => {
     try {
       setIsRefreshing(true);
       const token =
@@ -238,10 +250,7 @@ export default function ControleIndex() {
         },
       });
       setLastUpdate(new Date());
-      console.log("📊 Statistiques mises à jour:", new Date().toLocaleTimeString());
     } catch (err: any) {
-      console.error("Erreur lors de la récupération des statistiques:", err);
-      
       // Gérer l'erreur 401 (Token expiré)
       if (handleAuthError(err)) {
         return;
@@ -249,7 +258,7 @@ export default function ControleIndex() {
     } finally {
       setIsRefreshing(false);
     }
-  };
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -403,7 +412,66 @@ export default function ControleIndex() {
     );
   }
 
-  const statsCards = [
+  // Composant optimisé pour les cartes de statistiques
+  const StatCard = memo(({ icon: Icon, label, value, color, bgColor, borderColor }: {
+    icon: any;
+    label: string;
+    value: string;
+    color: string;
+    bgColor: string;
+    borderColor: string;
+  }) => (
+    <Card className={`${bgColor} ${borderColor} border-2 transition-all duration-300 hover:shadow-lg hover:scale-105`}>
+      <CardContent className="p-4 sm:p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <p className="text-sm font-medium text-gray-600 dark:text-gray-400 mb-1">
+              {label}
+            </p>
+            <p className={`text-2xl font-bold ${color}`}>
+              {value}
+            </p>
+          </div>
+          <Icon className={`w-8 h-8 ${color}`} />
+        </div>
+      </CardContent>
+    </Card>
+  ));
+
+  StatCard.displayName = 'StatCard';
+
+  // Composant optimisé pour les cartes de cours
+  const CourseCard = memo(({ theme, index }: { theme: any; index: number }) => (
+    <motion.div
+      animate={{ opacity: 1, y: 0 }}
+      initial={{ opacity: 0, y: 20 }}
+      transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
+    >
+      <Link href={theme.route}>
+        <Card className={`${theme.bgColor} ${theme.borderColor} border-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group`}>
+          <CardContent className="p-4 sm:p-6">
+            <div className="flex items-center space-x-3 sm:space-x-4">
+              <div className={`p-2 sm:p-3 rounded-full bg-gradient-to-r ${theme.color} shadow-lg group-hover:shadow-xl transition-shadow duration-300`}>
+                <theme.icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <h3 className={`text-sm sm:text-base font-bold ${theme.textColor} mb-1 truncate`}>
+                  {theme.title}
+                </h3>
+                <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 truncate">
+                  {theme.description}
+                </p>
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+      </Link>
+    </motion.div>
+  ));
+
+  CourseCard.displayName = 'CourseCard';
+
+  const statsCards = useMemo(() => [
     {
       icon: Star,
       label: "Moyenne Générale",
@@ -457,7 +525,7 @@ export default function ControleIndex() {
         "bg-gradient-to-br from-purple-50 to-violet-50 dark:from-purple-900/20 dark:to-violet-900/20",
       borderColor: "border-purple-200 dark:border-purple-700",
     },
-  ];
+  ], [stats.averageScore, stats.totalEleves]);
 
   return (
     <div className="w-full">
@@ -637,31 +705,7 @@ export default function ControleIndex() {
                 key={index}
                 transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
               >
-                <Card
-                  className={`${stat.bgColor} border-2 ${stat.borderColor} shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105`}
-                >
-                  <CardContent className="p-4 sm:p-6">
-                    <div className="flex items-center space-x-3 sm:space-x-4">
-                      <div
-                        className={`p-2 sm:p-3 rounded-full bg-white/50 dark:bg-gray-700/30 backdrop-blur-sm`}
-                      >
-                        <stat.icon
-                          className={`w-5 h-5 sm:w-6 sm:h-6 ${stat.color}`}
-                        />
-                      </div>
-                      <div className="min-w-0 flex-1">
-                        <p className="text-xs sm:text-sm font-medium text-gray-600 dark:text-gray-400 truncate">
-                          {stat.label}
-                        </p>
-                        <p
-                          className={`text-lg sm:text-2xl font-bold ${stat.color} truncate`}
-                        >
-                          {stat.value}
-                        </p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
+                <StatCard {...stat} />
               </motion.div>
             ))}
           </motion.div>
@@ -885,50 +929,7 @@ export default function ControleIndex() {
             transition={{ duration: 0.7, delay: 0.6 }}
           >
             {courseThemes.map((theme, index) => (
-              <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                className="group"
-                initial={{ opacity: 0, y: 20 }}
-                key={theme.id}
-                transition={{ duration: 0.5, delay: 0.7 + index * 0.1 }}
-              >
-                <Link href={theme.route}>
-                  <Card
-                    className={`cursor-pointer transform transition-all duration-300 hover:scale-105 hover:-translate-y-1 shadow-lg hover:shadow-2xl ${theme.bgColor} border-2 ${theme.borderColor} hover:border-opacity-100 backdrop-blur-sm`}
-                  >
-                    <CardContent className="p-4 sm:p-6">
-                      <div className="flex items-center space-x-3 sm:space-x-4">
-                        <div
-                          className={`p-3 sm:p-4 rounded-full bg-gradient-to-r ${theme.color} shadow-lg group-hover:shadow-xl transition-shadow duration-300`}
-                        >
-                          <theme.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
-                        </div>
-                        <div className="flex-1 min-w-0">
-                          <h3
-                            className={`text-base sm:text-lg md:text-xl font-semibold ${theme.textColor} group-hover:opacity-80 mb-1 sm:mb-2 truncate transition-opacity duration-300`}
-                          >
-                            {theme.title}
-                          </h3>
-                          <p className="text-gray-600 dark:text-gray-300 text-xs sm:text-sm line-clamp-2 group-hover:text-gray-700 dark:group-hover:text-gray-200 transition-colors duration-300">
-                            {theme.description}
-                          </p>
-                        </div>
-                      </div>
-                      <div className="mt-3 flex items-center justify-between">
-                        <div className="flex items-center space-x-1">
-                          <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-                          <span className="text-xs text-gray-500 dark:text-gray-400">
-                            Disponible
-                          </span>
-                        </div>
-                        <div className="text-xs text-gray-400 dark:text-gray-500 group-hover:text-gray-600 dark:group-hover:text-gray-300 transition-colors duration-300">
-                          →
-                        </div>
-                      </div>
-                    </CardContent>
-                  </Card>
-                </Link>
-              </motion.div>
+              <CourseCard key={theme.id} theme={theme} index={index} />
             ))}
           </motion.div>
         </div>

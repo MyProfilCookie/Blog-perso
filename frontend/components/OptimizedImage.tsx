@@ -1,6 +1,4 @@
-"use client";
-
-import React from 'react';
+import React, { memo } from 'react';
 import Image from 'next/image';
 
 interface OptimizedImageProps {
@@ -10,27 +8,23 @@ interface OptimizedImageProps {
   height?: number;
   className?: string;
   priority?: boolean;
-  sizes?: string;
   quality?: number;
   placeholder?: 'blur' | 'empty';
   blurDataURL?: string;
+  sizes?: string;
 }
 
-const OptimizedImage: React.FC<OptimizedImageProps> = ({
+const OptimizedImage = memo(({
   src,
   alt,
-  width,
-  height,
+  width = 400,
+  height = 300,
   className = '',
   priority = false,
-  sizes = '(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw',
-  quality = 85,
+  quality = 75,
   placeholder = 'blur',
   blurDataURL = 'data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxEAPwCdABmX/9k=',
-}) => {
-  // Détection automatique de la priorité pour les images au-dessus de la ligne de flottaison
-  const isAboveTheFold = priority || src.includes('home') || src.includes('hero') || src.includes('banner');
-  
+}: OptimizedImageProps) => {
   return (
     <Image
       src={src}
@@ -38,19 +32,19 @@ const OptimizedImage: React.FC<OptimizedImageProps> = ({
       width={width}
       height={height}
       className={className}
-      priority={isAboveTheFold}
-      sizes={sizes}
+      priority={priority}
       quality={quality}
       placeholder={placeholder}
       blurDataURL={blurDataURL}
-      loading={isAboveTheFold ? 'eager' : 'lazy'}
-      decoding="async"
+      sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
       style={{
         objectFit: 'cover',
         objectPosition: 'center',
       }}
     />
   );
-};
+});
 
-export default React.memo(OptimizedImage);
+OptimizedImage.displayName = 'OptimizedImage';
+
+export default OptimizedImage;

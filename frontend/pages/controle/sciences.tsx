@@ -1,19 +1,47 @@
 "use client";
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
-import React, { useEffect, useState } from "react";
-import { Card } from '@nextui-org/react'
-import { CardBody } from '@nextui-org/react'
-import { Button } from '@nextui-org/react';
-import { LightAnimation } from "@/components/DynamicMotion";
+import React, { useEffect, useState, memo, useMemo, useCallback } from "react";
+import dynamic from "next/dynamic";
 import Image from "next/image";
-import BackButton from "@/components/back";
-import Timer from "@/components/Timer";
-import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRevision } from "@/app/RevisionContext";
+
+// Lazy load des composants lourds
+const Card = dynamic(() => import('@nextui-org/react').then(mod => ({ default: mod.Card })), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-32 w-full rounded"></div>
+});
+
+const CardBody = dynamic(() => import('@nextui-org/react').then(mod => ({ default: mod.CardBody })), {
+  ssr: false
+});
+
+const Button = dynamic(() => import('@nextui-org/react').then(mod => ({ default: mod.Button })), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-10 w-24 rounded"></div>
+});
+
+const LightAnimation = dynamic(() => import("@/components/DynamicMotion").then(mod => ({ default: mod.LightAnimation })), {
+  ssr: false
+});
+
+const BackButton = dynamic(() => import("@/components/back"), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-10 w-20 rounded"></div>
+});
+
+const Timer = dynamic(() => import("@/components/Timer"), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-8 w-16 rounded"></div>
+});
+
+const ProgressBar = dynamic(() => import("@/components/progress/ProgressBar").then(mod => ({ default: mod.ProgressBar })), {
+  ssr: false,
+  loading: () => <div className="animate-pulse bg-gray-200 h-4 w-full rounded"></div>
+});
 
 // Interface pour les exercices de sciences
 interface Exercise {
@@ -102,72 +130,72 @@ const SciencesPage: React.FC = () => {
     }
   };
 
-  useEffect(() => {
-    const fetchExercises = async () => {
-      try {
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/subjects/sciences`,
-        );
+  const fetchExercises = useCallback(async () => {
+    try {
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/subjects/sciences`,
+      );
 
-        setExercises(response.data.questions);
-        setLoading(false);
+      setExercises(response.data.questions);
+      setLoading(false);
 
-        // Charger l'historique des réponses seulement si pas de données dans le localStorage
-        const savedUserAnswers = localStorage.getItem('sciences_userAnswers');
-        const savedResults = localStorage.getItem('sciences_results');
-        const savedValidatedExercises = localStorage.getItem('sciences_validatedExercises');
+      // Charger l'historique des réponses seulement si pas de données dans le localStorage
+      const savedUserAnswers = localStorage.getItem('sciences_userAnswers');
+      const savedResults = localStorage.getItem('sciences_results');
+      const savedValidatedExercises = localStorage.getItem('sciences_validatedExercises');
+      
+      if (!savedUserAnswers || !savedResults || !savedValidatedExercises) {
+        const userId = localStorage.getItem("userId");
+        const token = localStorage.getItem("token");
         
-        if (!savedUserAnswers || !savedResults || !savedValidatedExercises) {
-          const userId = localStorage.getItem("userId");
-          const token = localStorage.getItem("token");
-          
-          if (userId && token) {
-            const answersResponse = await axios.get(
-              `${process.env.NEXT_PUBLIC_API_URL}/answers/${userId}/sciences`,
-              {
-                headers: {
-                  Authorization: `Bearer ${token}`
-                }
+        if (userId && token) {
+          const answersResponse = await axios.get(
+            `${process.env.NEXT_PUBLIC_API_URL}/answers/${userId}/sciences`,
+            {
+              headers: {
+                Authorization: `Bearer ${token}`
               }
+            }
+          );
+
+          // Mettre à jour les réponses et les résultats
+          const userAnswersMap: { [key: string]: string } = {};
+          const resultsMap: Result[] = [];
+          const validatedExercises: { [key: string]: boolean } = {};
+
+          answersResponse.data.forEach((answer: any) => {
+            userAnswersMap[answer.exerciseId] = answer.userAnswer;
+            validatedExercises[answer.exerciseId] = true;
+            const exerciseIndex = response.data.questions.findIndex(
+              (ex: Exercise) => ex._id === answer.exerciseId
             );
+            if (exerciseIndex !== -1) {
+              resultsMap[exerciseIndex] = {
+                isCorrect: answer.isCorrect,
+                answer: answer.userAnswer
+              };
+            }
+          });
 
-            // Mettre à jour les réponses et les résultats
-            const userAnswersMap: { [key: string]: string } = {};
-            const resultsMap: Result[] = [];
-            const validatedExercises: { [key: string]: boolean } = {};
-
-            answersResponse.data.forEach((answer: any) => {
-              userAnswersMap[answer.exerciseId] = answer.userAnswer;
-              validatedExercises[answer.exerciseId] = true;
-              const exerciseIndex = response.data.questions.findIndex(
-                (ex: Exercise) => ex._id === answer.exerciseId
-              );
-              if (exerciseIndex !== -1) {
-                resultsMap[exerciseIndex] = {
-                  isCorrect: answer.isCorrect,
-                  answer: answer.userAnswer
-                };
-              }
-            });
-
-            setUserAnswers(userAnswersMap);
-            setResults(resultsMap);
-            
-            // Sauvegarder dans le localStorage
-            localStorage.setItem('sciences_userAnswers', JSON.stringify(userAnswersMap));
-            localStorage.setItem('sciences_results', JSON.stringify(resultsMap));
-            localStorage.setItem('sciences_validatedExercises', JSON.stringify(validatedExercises));
-            
-            // Mettre à jour le nombre d'exercices complétés
-            setCompletedExercises(Object.values(validatedExercises).filter(Boolean).length);
-          }
+          setUserAnswers(userAnswersMap);
+          setResults(resultsMap);
+          
+          // Sauvegarder dans le localStorage
+          localStorage.setItem('sciences_userAnswers', JSON.stringify(userAnswersMap));
+          localStorage.setItem('sciences_results', JSON.stringify(resultsMap));
+          localStorage.setItem('sciences_validatedExercises', JSON.stringify(validatedExercises));
+          
+          // Mettre à jour le nombre d'exercices complétés
+          setCompletedExercises(Object.values(validatedExercises).filter(Boolean).length);
         }
-      } catch (err) {
-        console.error(err);
-        setError("Erreur lors du chargement des exercices");
-        setLoading(false);
       }
-    };
+    } catch (err) {
+      setError("Erreur lors du chargement des exercices");
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
 
     fetchExercises();
   }, []);
