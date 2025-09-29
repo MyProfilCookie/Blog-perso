@@ -1,6 +1,25 @@
 import "@/styles/globals.css";
 import type { AppProps } from "next/app";
 
+// Polyfill pour Safari - requestIdleCallback
+if (typeof window !== 'undefined' && !window.requestIdleCallback) {
+  window.requestIdleCallback = function(callback: IdleRequestCallback, options?: IdleRequestOptions) {
+    const start = Date.now();
+    return window.setTimeout(function() {
+      callback({
+        didTimeout: false,
+        timeRemaining: function() {
+          return Math.max(0, 50 - (Date.now() - start));
+        }
+      });
+    }, 1);
+  };
+  
+  window.cancelIdleCallback = function(id: number) {
+    window.clearTimeout(id);
+  };
+}
+
 import dynamic from "next/dynamic";
 
 // Chargement dynamique des composants non-critiques
