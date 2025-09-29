@@ -9,11 +9,10 @@ import { Tab } from '@nextui-org/react'
 import { Chip } from '@nextui-org/react'
 import { Divider } from '@nextui-org/react'
 import { Tooltip } from '@nextui-org/react'
-import {  } from '@nextui-org/react';
 import { motion } from "framer-motion";
 import { useRouter } from "next/navigation";
 
-import { RevisionProvider, useRevision } from "../../contexts/RevisionContext";
+import { RevisionProvider, useRevision } from "@/contexts/RevisionContext";
 
 // Utiliser le type any pour éviter les erreurs de linter
 type RevisionError = any;
