@@ -142,6 +142,25 @@ npm run lint         # Vérification du code
 npm run analyze      # Analyse du bundle
 ```
 
+### Compatibilité Safari
+La commande de build déclenche automatiquement `scripts/postbuild-transform.js`.
+Ce script applique Babel sur les bundles `.next/` afin de retirer l'optional chaining,
+le nullish coalescing et les affectations `??=`, ce qui garantit la compatibilité
+avec les versions plus anciennes de Safari.
+
+```bash
+npm run build
+```
+
+Après le build, tu peux vérifier rapidement avec :
+
+```bash
+rg -n '\?\.[A-Za-z_]' .next/server
+rg -n '\?\?' .next/server
+```
+
+Les deux commandes doivent rester silencieuses si la transformation a bien été appliquée.
+
 ### Backend
 ```bash
 npm run dev          # Développement avec nodemon
