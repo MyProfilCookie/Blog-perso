@@ -1,4 +1,4 @@
-"use client";
+import type { GetServerSideProps } from "next";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, memo, useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
@@ -32,6 +32,35 @@ import { handleAuthError } from "@/utils/errorHandler";
 import { useAutoRefresh } from "@/hooks/useAutoRefresh";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
+
+type StatsState = {
+  totalEleves: number;
+  averageScore: string;
+  progression: string;
+  eleve: {
+    nom: string;
+    prenom: string;
+    modificationsCount: number;
+    lastModificationDate: string;
+  };
+};
+
+const DEFAULT_STATS: StatsState = {
+  totalEleves: 0,
+  averageScore: "0",
+  progression: "0",
+  eleve: {
+    nom: "",
+    prenom: "",
+    modificationsCount: 0,
+    lastModificationDate: "",
+  },
+};
+
+type ControlePageProps = {
+  initialStats: StatsState | null;
+  initialTheme: string | null;
+};
 
 // Lazy load des composants lourds
 const StatsSync = dynamic(() => import("@/components/StatsSync"), {
@@ -186,23 +215,14 @@ const courseThemes = [
   },
 ];
 
-export default function ControleIndex() {
+export default function ControleIndex({ initialStats, initialTheme }: ControlePageProps) {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
-  const [loading, setLoading] = useState(true);
-  const [mounted, setMounted] = useState(false);
+  const isServer = typeof window === "undefined";
+  const [loading, setLoading] = useState(false);
+  const [mounted, setMounted] = useState(isServer);
   const [userId, setUserId] = useState<string | null>(null);
-  const [stats, setStats] = useState({
-    totalEleves: 0,
-    averageScore: "0",
-    progression: "0",
-    eleve: {
-      nom: "",
-      prenom: "",
-      modificationsCount: 0,
-      lastModificationDate: "",
-    },
-  });
+  const [stats, setStats] = useState<StatsState>(initialStats ?? DEFAULT_STATS);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
 
@@ -230,6 +250,9 @@ export default function ControleIndex() {
 
   const fetchStats = useCallback(async () => {
     try {
+      if (!initialStats) {
+        setLoading(true);
+      }
       setIsRefreshing(true);
         const token =
           localStorage.getItem("token") || localStorage.getItem("userToken");
@@ -277,11 +300,16 @@ export default function ControleIndex() {
       }
     } finally {
       setIsRefreshing(false);
+      setLoading(false);
     }
-  }, []);
+  }, [initialStats]);
 
   useEffect(() => {
     setMounted(true);
+
+    if (initialTheme) {
+      setTheme(initialTheme);
+    }
 
     // Initialiser l'userId
     const initializeUser = () => {
@@ -407,7 +435,7 @@ export default function ControleIndex() {
 
     checkAuth();
     setLoading(false);
-  }, [router]);
+  }, [router, fetchStats, initialTheme, setTheme]);
 
   // Rafraîchissement automatique des statistiques toutes les 30 secondes
   const { forceRefresh } = useAutoRefresh({
@@ -419,7 +447,7 @@ export default function ControleIndex() {
     },
   });
 
-  if (!mounted || loading) {
+  if (((!mounted && !isServer) && loading) || (loading && !initialStats)) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 flex justify-center items-center">
         <div className="text-center">
@@ -959,3 +987,83 @@ export default function ControleIndex() {
     </div>
   );
 }
+
+
+const parseCookies = (cookieHeader?: string): Record<string, string> => {
+  if (!cookieHeader) {
+    return {};
+  }
+
+  return cookieHeader.split(';').reduce<Record<string, string>>((acc, part) => {
+    const [key, ...rest] = part.trim().split('=');
+    if (!key) {
+      return acc;
+    }
+    acc[key] = decodeURIComponent(rest.join('=') || '');
+    return acc;
+  }, {});
+};
+
+const decodeUserIdFromToken = (token?: string): string | null => {
+  if (!token) {
+    return null;
+  }
+
+  try {
+    const payloadPart = token.split('.')[1];
+    if (!payloadPart) {
+      return null;
+    }
+    const decoded = JSON.parse(Buffer.from(payloadPart, 'base64').toString('utf8'));
+    return decoded.userId || decoded.id || decoded._id || null;
+  } catch (error) {
+    return null;
+  }
+};
+
+export const getServerSideProps: GetServerSideProps<ControlePageProps> = async ({ req }) => {
+  const cookies = parseCookies(req.headers.cookie);
+  const themeCookie = cookies['theme'] || cookies['next-theme'] || null;
+  const token = cookies['token'] || cookies['userToken'] || null;
+  const userIdFromCookie = cookies['userId'] || null;
+  const userIdFromToken = decodeUserIdFromToken(token);
+  const userId = userIdFromCookie || userIdFromToken;
+
+  const protocol = (req.headers['x-forwarded-proto'] as string) || 'http';
+  const host = req.headers.host;
+  const baseUrl = host ? `${protocol}://${host}` : null;
+
+  let initialStats: StatsState | null = null;
+
+  if (token && userId) {
+    const statsBaseUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || baseUrl;
+    if (statsBaseUrl) {
+      try {
+        const statsResponse = await fetch(`${statsBaseUrl}/eleves/stats/${userId}`, {
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        });
+
+        if (statsResponse.ok) {
+          const statsJson = await statsResponse.json();
+          initialStats = {
+            totalEleves: statsJson.totalEleves || 0,
+            averageScore: statsJson.averageScore || '0',
+            progression: '0',
+            eleve: statsJson.eleve || DEFAULT_STATS.eleve,
+          };
+        }
+      } catch (error) {
+        // Ignore fetch errors; fallback to defaults client-side
+      }
+    }
+  }
+
+  return {
+    props: {
+      initialStats,
+      initialTheme: themeCookie,
+    },
+  };
+};
