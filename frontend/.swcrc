@@ -1,0 +1,25 @@
+{
+  "jsc": {
+    "parser": {
+      "syntax": "ecmascript",
+      "jsx": true,
+      "dynamicImport": true
+    },
+    "target": "es5",
+    "loose": false,
+    "externalHelpers": false,
+    "transform": {
+      "react": {
+        "runtime": "automatic"
+      }
+    }
+  },
+  "env": {
+    "targets": {
+      "safari": "12",
+      "ios": "12"
+    },
+    "mode": "usage",
+    "coreJs": "3"
+  }
+}

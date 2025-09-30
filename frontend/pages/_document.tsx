@@ -4,63 +4,6 @@ export default function Document() {
   return (
     <Html lang="fr">
       <Head>
-        {/* Polyfill Safari ULTRA PRIORITAIRE - DOIT SE CHARGER EN PREMIER */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Polyfill Safari - requestIdleCallback ULTRA AGRESSIF
-              (function() {
-                // Vérifier si requestIdleCallback existe déjà
-                if (typeof window.requestIdleCallback === 'undefined') {
-                  window.requestIdleCallback = function(callback, options) {
-                    var start = Date.now();
-                    var timeout = (options && options.timeout) || 50;
-                    return window.setTimeout(function() {
-                      callback({
-                        didTimeout: false,
-                        timeRemaining: function() {
-                          return Math.max(0, timeout - (Date.now() - start));
-                        }
-                      });
-                    }, 1);
-                  };
-                }
-                
-                if (typeof window.cancelIdleCallback === 'undefined') {
-                  window.cancelIdleCallback = function(id) {
-                    window.clearTimeout(id);
-                  };
-                }
-                
-                // Polyfill pour IntersectionObserver si nécessaire
-                if (typeof window.IntersectionObserver === 'undefined') {
-                  window.IntersectionObserver = function(callback, options) {
-                    return {
-                      observe: function() {},
-                      unobserve: function() {},
-                      disconnect: function() {}
-                    };
-                  };
-                }
-                
-                // Forcer la définition sur tous les contextes possibles
-                if (typeof global !== 'undefined') {
-                  global.requestIdleCallback = window.requestIdleCallback;
-                  global.cancelIdleCallback = window.cancelIdleCallback;
-                }
-                
-                if (typeof self !== 'undefined') {
-                  self.requestIdleCallback = window.requestIdleCallback;
-                  self.cancelIdleCallback = window.cancelIdleCallback;
-                }
-                
-                console.log('Safari polyfill chargé - requestIdleCallback:', typeof window.requestIdleCallback);
-              })();
-            `,
-          }}
-        />
-        
-        {/* React 17 - Plus de problème requestIdleCallback */}
         {/* Préchargement des polices critiques */}
         <link
           rel="preload"
@@ -101,7 +44,7 @@ export default function Document() {
         <meta name="apple-mobile-web-app-capable" content="yes" />
         <meta name="apple-mobile-web-app-status-bar-style" content="default" />
         <meta name="apple-mobile-web-app-title" content="AutiStudy" />
-        
+
         {/* Meta tags pour le mode sombre iOS */}
         <meta name="color-scheme" content="light dark" />
         <meta name="theme-color" content="#f8faff" media="(prefers-color-scheme: light)" />
@@ -111,7 +54,48 @@ export default function Document() {
         {/* Optimisations de performance */}
         <meta httpEquiv="x-dns-prefetch-control" content="on" />
         <meta name="format-detection" content="telephone=no" />
-        
+      </Head>
+      <body className="antialiased">
+        {/* ⚡ POLYFILL SAFARI - SE CHARGE EN PREMIER DANS LE BODY */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                if (typeof window.requestIdleCallback === 'undefined') {
+                  window.requestIdleCallback = function(callback, options) {
+                    var start = Date.now();
+                    var timeout = (options && options.timeout) || 50;
+                    return window.setTimeout(function() {
+                      callback({
+                        didTimeout: false,
+                        timeRemaining: function() {
+                          return Math.max(0, timeout - (Date.now() - start));
+                        }
+                      });
+                    }, 1);
+                  };
+                  window.cancelIdleCallback = function(id) {
+                    window.clearTimeout(id);
+                  };
+                }
+                
+                if (typeof window.IntersectionObserver === 'undefined') {
+                  window.IntersectionObserver = function(callback, options) {
+                    return {
+                      observe: function() {},
+                      unobserve: function() {},
+                      disconnect: function() {}
+                    };
+                  };
+                }
+              })();
+            `,
+          }}
+        />
+
+        <Main />
+        <NextScript />
+
         {/* Service Worker Registration */}
         <script
           dangerouslySetInnerHTML={{
@@ -130,10 +114,6 @@ export default function Document() {
             `,
           }}
         />
-      </Head>
-      <body className="antialiased">
-        <Main />
-        <NextScript />
       </body>
     </Html>
   );

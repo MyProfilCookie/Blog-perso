@@ -10,21 +10,21 @@ import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { useState, useEffect } from "react";
-import { 
-  Calendar, 
-  User, 
-  Clock, 
-  Eye, 
-  Heart, 
-  Share2, 
-  ArrowLeft, 
+import {
+  Calendar,
+  User,
+  Clock,
+  Eye,
+  Heart,
+  Share2,
+  ArrowLeft,
   BookOpen,
   Tag,
   MessageCircle
 } from "lucide-react";
 
 import { title, subtitle } from "@/components/primitives";
-import articlesData from "@/public/dataarticles.json";
+import articlesData from "@/public/dataarticless.json";
 
 interface Article {
   id: number;
@@ -60,13 +60,13 @@ const ArticlePage = () => {
   // Fonction pour gérer les likes
   const handleLike = () => {
     if (!article) return;
-    
+
     const likedArticles = JSON.parse(localStorage.getItem('likedArticles') || '[]');
     const articleIdNum = parseInt(articleId, 10);
-    
+
     // Sauvegarder le nouveau nombre de likes
     const likesData = JSON.parse(localStorage.getItem('articleLikes') || '{}');
-    
+
     if (isLiked) {
       // Retirer le like
       const updatedLikes = likedArticles.filter((id: number) => id !== articleIdNum);
@@ -84,7 +84,7 @@ const ArticlePage = () => {
       setLikeCount(newCount);
       likesData[articleIdNum] = newCount;
     }
-    
+
     // Sauvegarder les données de likes
     localStorage.setItem('articleLikes', JSON.stringify(likesData));
   };
@@ -92,22 +92,22 @@ const ArticlePage = () => {
   // Fonction pour charger les données de like
   const loadLikeData = () => {
     if (!article) return;
-    
+
     const likedArticles = JSON.parse(localStorage.getItem('likedArticles') || '[]');
     const articleIdNum = parseInt(articleId, 10);
-    
+
     setIsLiked(likedArticles.includes(articleIdNum));
-    
+
     // Charger le nombre de likes depuis localStorage ou utiliser une valeur par défaut stable
     const likesData = JSON.parse(localStorage.getItem('articleLikes') || '{}');
-    
+
     if (!likesData[articleIdNum]) {
       // Générer une valeur par défaut stable basée sur l'ID de l'article
       const stableDefaultLikes = 15 + (articleIdNum % 35); // Valeur entre 15 et 50 basée sur l'ID
       likesData[articleIdNum] = stableDefaultLikes;
       localStorage.setItem('articleLikes', JSON.stringify(likesData));
     }
-    
+
     setLikeCount(likesData[articleIdNum]);
   };
 
@@ -115,9 +115,22 @@ const ArticlePage = () => {
     const fetchArticle = () => {
       try {
         const articles = articlesData.articles;
-        const foundArticle = articles.find((article: Article) => article.id === parseInt(articleId, 10));
+        const foundArticle = articles.find((article: any) => article.id === parseInt(articleId, 10));
 
-        setArticle(foundArticle || null);
+        setArticle(
+          foundArticle
+            ? {
+              ...foundArticle,
+              content: Array.isArray(foundArticle.content)
+                ? foundArticle.content
+                  .map((block: any) =>
+                    block.type === "text" ? block.text : ""
+                  )
+                  .join("\n")
+                : foundArticle.content || "",
+            }
+            : null
+        );
       } catch (err) {
         setError(err instanceof Error ? err.message : "Une erreur est survenue");
       } finally {
@@ -174,9 +187,9 @@ const ArticlePage = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       {/* Header avec navigation */}
-        <motion.div
+      <motion.div
         initial={{ opacity: 0, y: -20 }}
-          animate={{ opacity: 1, y: 0 }}
+        animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.6 }}
         className="sticky top-0 z-10 bg-white/80 dark:bg-gray-900/80 backdrop-blur-md border-b border-gray-200 dark:border-gray-700"
       >
@@ -190,7 +203,7 @@ const ArticlePage = () => {
               <ArrowLeft className="w-4 h-4" />
               Retour aux articles
             </Button>
-            
+
             <div className="flex items-center gap-2">
               <Button
                 isIconOnly
@@ -228,8 +241,8 @@ const ArticlePage = () => {
             >
               <div className="flex items-center gap-2 mb-4">
                 {article.category && (
-                  <Badge 
-                    color="primary" 
+                  <Badge
+                    color="primary"
                     variant="flat"
                     className="text-xs"
                   >
@@ -238,11 +251,11 @@ const ArticlePage = () => {
                   </Badge>
                 )}
               </div>
-              
+
               <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white leading-tight mb-4">
                 {article.title}
-          </h1>
-              
+              </h1>
+
               <p className="text-lg sm:text-xl text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
                 {article.subtitle}
               </p>
@@ -269,49 +282,49 @@ const ArticlePage = () => {
                   <Heart className="w-4 h-4" />
                   <span>{likeCount} j'aime</span>
                 </div>
-          </div>
-        </motion.div>
+              </div>
+            </motion.div>
 
             {/* Image principale */}
-        <motion.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.2 }}
               className="mb-8"
-        >
+            >
               <div className="relative overflow-hidden rounded-2xl shadow-2xl">
-            <Image
+                <Image
                   alt={article.title}
                   className="object-cover w-full h-[300px] sm:h-[400px] lg:h-[500px]"
-              height={500}
-              width={1200}
+                  height={500}
+                  width={1200}
                   src={article.img || article.image || "/assets/default-image.webp"}
-              priority
-              quality={95}
+                  priority
+                  quality={95}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 900px"
-            />
+                />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
-          </div>
-        </motion.div>
+              </div>
+            </motion.div>
 
             {/* Contenu de l'article */}
-        <motion.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.4 }}
             >
               <Card className="bg-white dark:bg-gray-800 shadow-lg border-0">
                 <CardBody className="p-6 sm:p-8 lg:p-10">
                   <div className="prose prose-lg dark:prose-invert max-w-none">
                     {article.content ? article.content.split('\n').map((paragraph, index) => (
-                  <motion.p
-                    key={index}
+                      <motion.p
+                        key={index}
                         initial={{ opacity: 0, y: 10 }}
                         animate={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.5, delay: index * 0.1 }}
                         className="text-gray-700 dark:text-gray-300 leading-relaxed mb-6 text-justify"
-                  >
-                    {paragraph.split(/(\*\*.*?\*\*)/g).map((part, i) =>
+                      >
+                        {paragraph.split(/(\*\*.*?\*\*)/g).map((part, i) =>
                           part.startsWith('**') ? (
                             <strong key={i} className="text-violet-600 dark:text-violet-400 font-semibold">
                               {part.slice(2, -2)}
@@ -329,15 +342,15 @@ const ArticlePage = () => {
                         Contenu de l'article en cours de chargement...
                       </motion.p>
                     )}
-              </div>
-            </CardBody>
-          </Card>
-        </motion.div>
+                  </div>
+                </CardBody>
+              </Card>
+            </motion.div>
 
             {/* Actions en bas d'article */}
-        <motion.div
+            <motion.div
               initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: 0.6 }}
               className="mt-8 flex flex-wrap items-center justify-between gap-4"
             >
@@ -366,18 +379,18 @@ const ArticlePage = () => {
                   Commenter
                 </Button>
               </div>
-              
-          <Link href="/articles">
+
+              <Link href="/articles">
                 <Button
                   color="primary"
                   variant="solid"
                   startContent={<ArrowLeft className="w-4 h-4" />}
                 >
                   Autres articles
-            </Button>
-          </Link>
-        </motion.div>
-      </div>
+                </Button>
+              </Link>
+            </motion.div>
+          </div>
 
           {/* Sidebar */}
           <div className="lg:col-span-1">

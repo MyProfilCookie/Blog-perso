@@ -9,7 +9,6 @@ import { Button } from '@nextui-org/react'
 import { Checkbox } from '@nextui-org/react';
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-import "sweetalert2/dist/sweetalert2.min.css";
 
 import { AutismLogo } from "@/components/icons"; // Assurez-vous que le chemin est correct pour votre logo
 export default function Inscription() {

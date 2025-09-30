@@ -9,7 +9,6 @@ import { Button } from '@nextui-org/react'
 import { Checkbox } from '@nextui-org/react';
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
-import "sweetalert2/dist/sweetalert2.min.css";
 import axios from "axios";
 
 import { useAuth } from "@/context/AuthContext"; // Assurez-vous d'avoir ce chemin correct

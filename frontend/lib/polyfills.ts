@@ -1,23 +1,35 @@
 // Polyfills pour la compatibilité des navigateurs
 
-// Polyfill pour requestIdleCallback
-if (typeof window !== 'undefined' && !window.requestIdleCallback) {
-  window.requestIdleCallback = function(callback: IdleRequestCallback, options?: IdleRequestOptions): number {
-    const start = Date.now();
-    return window.setTimeout(() => {
-      callback({
-        didTimeout: false,
-        timeRemaining: () => Math.max(0, 50 - (Date.now() - start))
-      });
-    }, 1);
-  };
-}
+// Polyfill robuste pour requestIdleCallback (Safari)
+if (typeof window !== 'undefined') {
+  // Vérification plus robuste pour Safari
+  if (!window.requestIdleCallback || typeof window.requestIdleCallback !== 'function') {
+    let lastTime = 0;
+    
+    window.requestIdleCallback = function(callback: IdleRequestCallback, options?: IdleRequestOptions): number {
+      const now = Date.now();
+      const timeout = options?.timeout || 0;
+      const timeToCall = Math.max(0, 16 - (now - lastTime));
+      
+      const id = window.setTimeout(() => {
+        const start = Date.now();
+        callback({
+          didTimeout: timeout > 0 && (Date.now() - now) >= timeout,
+          timeRemaining: () => Math.max(0, 50 - (Date.now() - start))
+        });
+      }, timeToCall);
+      
+      lastTime = now + timeToCall;
+      return id;
+    };
+  }
 
-// Polyfill pour cancelIdleCallback
-if (typeof window !== 'undefined' && !window.cancelIdleCallback) {
-  window.cancelIdleCallback = function(id: number): void {
-    window.clearTimeout(id);
-  };
+  // Polyfill pour cancelIdleCallback
+  if (!window.cancelIdleCallback || typeof window.cancelIdleCallback !== 'function') {
+    window.cancelIdleCallback = function(id: number): void {
+      window.clearTimeout(id);
+    };
+  }
 }
 
 // Polyfill pour ResizeObserver si nécessaire

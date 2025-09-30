@@ -38,6 +38,22 @@ npm install
 npm run dev
 ```
 
+### Production build & Safari compatibility
+
+This project runs a post-build Babel transform to strip optional chaining,
+nullish coalescing, and related modern syntax from the generated bundles. This
+keeps the output compatible with older Safari versions. The step is triggered
+automatically after each production build:
+
+```bash
+npm run build
+```
+
+If you inspect the files inside `.next/`, you should no longer find `?.`, `??`,
+or `??=` in the compiled JavaScript. The logic lives in
+`scripts/postbuild-transform.js` and depends on the Babel CLI listed in
+`devDependencies`.
+
 ### Setup pnpm (optional)
 
 If you are using `pnpm`, you need to add the following code to your `.npmrc` file:

@@ -110,8 +110,18 @@ export default function LCPOptimizer() {
     optimizeImages();
     optimizeFonts();
 
+    const scheduleNonCriticalWork = (callback: () => void) => {
+      if (typeof window === 'undefined') return;
+
+      if ('requestIdleCallback' in window && typeof window.requestIdleCallback === 'function') {
+        window.requestIdleCallback(() => callback());
+      } else {
+        window.setTimeout(callback, 1);
+      }
+    };
+
     // Optimisation différée pour les ressources non critiques
-    requestIdleCallback(() => {
+    scheduleNonCriticalWork(() => {
       optimizeNonCritical();
     });
 

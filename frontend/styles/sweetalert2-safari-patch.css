@@ -1,0 +1,89 @@
+/* Patch Safari pour SweetAlert2 - Remplacement des color-mix() */
+
+/* Variables de couleurs pour le thème sombre */
+:root {
+  --swal2-dark-theme-black: #1a1a1a;
+  --swal2-dark-theme-white: #ffffff;
+  --swal2-action-button-hover: rgba(0, 0, 0, 0.1);
+  --swal2-action-button-active: rgba(0, 0, 0, 0.2);
+  --swal2-backdrop: rgba(0, 0, 0, 0.4);
+}
+
+/* Remplacements pour les inputs et messages de validation en mode sombre */
+.swal2-dark {
+  --swal2-input-background: #2a2a2a !important;
+  --swal2-validation-message-background: #2a2a2a !important;
+}
+
+/* Remplacements pour les variables CSS utilisant color-mix */
+.swal2-container {
+  --swal2-input-background: #f8f9fa !important;
+  --swal2-validation-message-background: #f8f9fa !important;
+}
+
+.swal2-container.swal2-dark {
+  --swal2-input-background: #2a2a2a !important;
+  --swal2-validation-message-background: #2a2a2a !important;
+}
+
+/* Styles pour les boutons - compatibles Safari */
+.swal2-confirm {
+  background-color: #3b82f6 !important;
+}
+
+/* Styles spécifiques pour les boutons - remplacements de color-mix */
+.swal2-confirm:hover {
+  background-color: #0056b3 !important;
+}
+
+.swal2-confirm:active {
+  background-color: #004085 !important;
+}
+
+.swal2-deny {
+  background-color: #ef4444 !important;
+}
+
+.swal2-deny:hover {
+  background-color: #c82333 !important;
+}
+
+.swal2-deny:active {
+  background-color: #a71e2a !important;
+}
+
+.swal2-cancel {
+  background-color: #6b7280 !important;
+}
+
+.swal2-cancel:hover {
+  background-color: #5a6268 !important;
+}
+
+.swal2-cancel:active {
+  background-color: #495057 !important;
+}
+
+/* Remplacement pour le thème borderless */
+.swal2-borderless {
+  --swal2-progress-step-background: rgba(255, 255, 255, 0.3) !important;
+}
+
+/* Inputs en mode sombre */
+@media (prefers-color-scheme: dark) {
+  .swal2-input {
+    background-color: #2a2a2a !important;
+  }
+  
+  .swal2-validation-message {
+    background-color: #333333 !important;
+  }
+}
+
+.swal2-dark .swal2-input {
+  background-color: #2a2a2a !important;
+}
+
+.swal2-dark .swal2-validation-message {
+  background-color: #333333 !important;
+}

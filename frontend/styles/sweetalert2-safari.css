@@ -1,0 +1,106 @@
+/* SweetAlert2 CSS compatible Safari - Version simplifiée sans color-mix() */
+
+.swal2-popup {
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  font-family: inherit;
+}
+
+.swal2-title {
+  font-size: 1.875rem;
+  font-weight: 600;
+  color: #374151;
+  margin: 0 0 1rem;
+}
+
+.swal2-content {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0 0 1.5rem;
+}
+
+.swal2-confirm {
+  background-color: #3b82f6;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  margin: 0 0.25rem;
+}
+
+.swal2-confirm:hover {
+  background-color: #2563eb;
+}
+
+.swal2-cancel {
+  background-color: #6b7280;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 500;
+  padding: 0.75rem 1.5rem;
+  margin: 0 0.25rem;
+}
+
+.swal2-cancel:hover {
+  background-color: #4b5563;
+}
+
+.swal2-input {
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  padding: 0.75rem;
+  font-size: 1rem;
+  width: 100%;
+  margin: 0.5rem 0;
+}
+
+.swal2-input:focus {
+  border-color: #3b82f6;
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.swal2-success-circular-line-right,
+.swal2-success-circular-line-left {
+  background-color: #10b981;
+}
+
+.swal2-success-fix {
+  background-color: #10b981;
+}
+
+.swal2-error-x {
+  color: #ef4444;
+}
+
+.swal2-warning {
+  color: #f59e0b;
+}
+
+.swal2-info {
+  color: #3b82f6;
+}
+
+/* Dark mode support */
+@media (prefers-color-scheme: dark) {
+  .swal2-popup {
+    background-color: #1f2937;
+    color: #f9fafb;
+  }
+  
+  .swal2-title {
+    color: #f9fafb;
+  }
+  
+  .swal2-content {
+    color: #d1d5db;
+  }
+  
+  .swal2-input {
+    background-color: #374151;
+    border-color: #4b5563;
+    color: #f9fafb;
+  }
+}
