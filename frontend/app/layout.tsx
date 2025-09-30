@@ -103,18 +103,31 @@ export default function RootLayout({
             `,
           }}
         />
-        <link
-          as="image"
-          fetchPriority="high"
-          href="/assets/family/chantal.webp"
-          rel="preload"
-          type="image/webp"
-        />
-        <link
-          as="image"
-          href="/assets/family/family.webp"
-          rel="preload"
-          type="image/webp"
+        {/* Préchargement conditionnel des images de famille */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Précharger les images de famille seulement sur les pages qui les utilisent
+              if (window.location.pathname === '/' || 
+                  window.location.pathname === '/about' || 
+                  window.location.pathname === '/about/') {
+                const chantalLink = document.createElement('link');
+                chantalLink.rel = 'preload';
+                chantalLink.as = 'image';
+                chantalLink.href = '/assets/family/chantal.webp';
+                chantalLink.type = 'image/webp';
+                chantalLink.fetchPriority = 'high';
+                document.head.appendChild(chantalLink);
+                
+                const familyLink = document.createElement('link');
+                familyLink.rel = 'preload';
+                familyLink.as = 'image';
+                familyLink.href = '/assets/family/family.webp';
+                familyLink.type = 'image/webp';
+                document.head.appendChild(familyLink);
+              }
+            `,
+          }}
         />
         <link
           as="image"
@@ -123,13 +136,32 @@ export default function RootLayout({
           type="image/webp"
         />
 
-        {/* Resource hints avancés pour LCP */}
-        <link
-          as="script"
-          href="/_next/static/chunks/polyfills.js"
-          rel="preload"
+        {/* Resource hints avancés pour LCP - Préchargement conditionnel */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Précharger les ressources critiques seulement si elles existent
+              try {
+                // Vérifier si polyfills.js existe avant de le précharger
+                fetch('/_next/static/chunks/polyfills.js', { method: 'HEAD' })
+                  .then(response => {
+                    if (response.ok) {
+                      const link = document.createElement('link');
+                      link.rel = 'preload';
+                      link.as = 'script';
+                      link.href = '/_next/static/chunks/polyfills.js';
+                      document.head.appendChild(link);
+                    }
+                  })
+                  .catch(() => {
+                    // Ignorer les erreurs de préchargement
+                  });
+              } catch (e) {
+                // Ignorer les erreurs
+              }
+            `,
+          }}
         />
-        <link as="style" href="/_next/static/css/app/layout.css" rel="preload" />
 
         {/* Préconnexions DNS pour les domaines externes */}
         <link href="//fonts.googleapis.com" rel="dns-prefetch" />

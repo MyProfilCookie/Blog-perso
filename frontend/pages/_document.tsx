@@ -10,22 +10,38 @@ export default function Document() {
             __html: `
               // Polyfill Safari - requestIdleCallback ULTRA AGRESSIF
               (function() {
-                // Définir immédiatement sur window
-                window.requestIdleCallback = window.requestIdleCallback || function(callback, options) {
-                  var start = Date.now();
-                  return window.setTimeout(function() {
-                    callback({
-                      didTimeout: false,
-                      timeRemaining: function() {
-                        return Math.max(0, 50 - (Date.now() - start));
-                      }
-                    });
-                  }, 1);
-                };
+                // Vérifier si requestIdleCallback existe déjà
+                if (typeof window.requestIdleCallback === 'undefined') {
+                  window.requestIdleCallback = function(callback, options) {
+                    var start = Date.now();
+                    var timeout = (options && options.timeout) || 50;
+                    return window.setTimeout(function() {
+                      callback({
+                        didTimeout: false,
+                        timeRemaining: function() {
+                          return Math.max(0, timeout - (Date.now() - start));
+                        }
+                      });
+                    }, 1);
+                  };
+                }
                 
-                window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
-                  window.clearTimeout(id);
-                };
+                if (typeof window.cancelIdleCallback === 'undefined') {
+                  window.cancelIdleCallback = function(id) {
+                    window.clearTimeout(id);
+                  };
+                }
+                
+                // Polyfill pour IntersectionObserver si nécessaire
+                if (typeof window.IntersectionObserver === 'undefined') {
+                  window.IntersectionObserver = function(callback, options) {
+                    return {
+                      observe: function() {},
+                      unobserve: function() {},
+                      disconnect: function() {}
+                    };
+                  };
+                }
                 
                 // Forcer la définition sur tous les contextes possibles
                 if (typeof global !== 'undefined') {
@@ -38,7 +54,7 @@ export default function Document() {
                   self.cancelIdleCallback = window.cancelIdleCallback;
                 }
                 
-                console.log('Safari polyfill chargé - requestIdleCallback disponible:', typeof window.requestIdleCallback);
+                console.log('Safari polyfill chargé - requestIdleCallback:', typeof window.requestIdleCallback);
               })();
             `,
           }}
