@@ -4,7 +4,7 @@
 import React, { useEffect, useState, memo, useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter } from "next/router";
 import axios from "axios";
 import { toast } from "sonner";
 import { useRevision } from "@/app/RevisionContext";

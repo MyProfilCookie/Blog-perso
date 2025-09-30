@@ -63,10 +63,6 @@ const nextConfig = {
             value: 'DENY'
           },
           {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff'
-          },
-          {
             key: 'Referrer-Policy',
             value: 'origin-when-cross-origin'
           },
@@ -75,6 +71,19 @@ const nextConfig = {
           //   key: 'Content-Security-Policy',
           //   value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://api.stripe.com https://blog-perso.onrender.com https://*.onrender.com;"
           // },
+        ],
+      },
+      {
+        source: '/_next/static/css/(.*)',
+        headers: [
+          {
+            key: 'Content-Type',
+            value: 'text/css'
+          },
+          {
+            key: 'Cache-Control',
+            value: 'public, max-age=31536000, immutable',
+          },
         ],
       },
       {

@@ -1,0 +1,12 @@
+# Browserslist configuration pour la compatibilité Safari et iOS
+> 0.5%
+last 2 versions
+Firefox ESR
+not dead
+# Support spécifique Safari et iOS
+Safari >= 12
+iOS >= 12
+# Support des navigateurs modernes
+Chrome >= 88
+Firefox >= 85
+Edge >= 88

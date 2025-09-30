@@ -4,13 +4,14 @@ export default function Document() {
   return (
     <Html lang="fr">
       <Head>
-        {/* Polyfill ULTIME pour Safari - AVANT React */}
+        {/* Polyfill Safari ULTRA PRIORITAIRE - DOIT SE CHARGER EN PREMIER */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // Polyfill ULTIME pour Safari - AVANT React
-              if (!window.requestIdleCallback) {
-                window.requestIdleCallback = function(callback, options) {
+              // Polyfill Safari - requestIdleCallback ULTRA AGRESSIF
+              (function() {
+                // Définir immédiatement sur window
+                window.requestIdleCallback = window.requestIdleCallback || function(callback, options) {
                   var start = Date.now();
                   return window.setTimeout(function() {
                     callback({
@@ -21,29 +22,29 @@ export default function Document() {
                     });
                   }, 1);
                 };
-              }
-              
-              if (!window.cancelIdleCallback) {
-                window.cancelIdleCallback = function(id) {
+                
+                window.cancelIdleCallback = window.cancelIdleCallback || function(id) {
                   window.clearTimeout(id);
                 };
-              }
-              
-              // Forcer la définition sur tous les contextes
-              if (typeof global !== 'undefined') {
-                global.requestIdleCallback = window.requestIdleCallback;
-                global.cancelIdleCallback = window.cancelIdleCallback;
-              }
-              
-              if (typeof self !== 'undefined') {
-                self.requestIdleCallback = window.requestIdleCallback;
-                self.cancelIdleCallback = window.cancelIdleCallback;
-              }
-              
-              console.log('Safari polyfill ULTIME chargé - requestIdleCallback:', typeof window.requestIdleCallback);
+                
+                // Forcer la définition sur tous les contextes possibles
+                if (typeof global !== 'undefined') {
+                  global.requestIdleCallback = window.requestIdleCallback;
+                  global.cancelIdleCallback = window.cancelIdleCallback;
+                }
+                
+                if (typeof self !== 'undefined') {
+                  self.requestIdleCallback = window.requestIdleCallback;
+                  self.cancelIdleCallback = window.cancelIdleCallback;
+                }
+                
+                console.log('Safari polyfill chargé - requestIdleCallback disponible:', typeof window.requestIdleCallback);
+              })();
             `,
           }}
         />
+        
+        {/* React 17 - Plus de problème requestIdleCallback */}
         {/* Préchargement des polices critiques */}
         <link
           rel="preload"

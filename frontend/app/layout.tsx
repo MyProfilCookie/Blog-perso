@@ -86,13 +86,22 @@ export default function RootLayout({
   return (
     <html className="scroll-smooth" lang="fr" suppressHydrationWarning>
       <head>
-        {/* Préchargement agressif des ressources critiques pour LCP */}
-        <link
-          as="image"
-          fetchPriority="high"
-          href="/assets/home/home.webp"
-          rel="preload"
-          type="image/webp"
+        {/* Préchargement conditionnel des ressources critiques pour LCP */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Précharger seulement si on est sur la page d'accueil
+              if (window.location.pathname === '/' || window.location.pathname === '') {
+                const link = document.createElement('link');
+                link.rel = 'preload';
+                link.as = 'image';
+                link.href = '/assets/home/home.webp';
+                link.type = 'image/webp';
+                link.fetchPriority = 'high';
+                document.head.appendChild(link);
+              }
+            `,
+          }}
         />
         <link
           as="image"
