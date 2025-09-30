@@ -225,6 +225,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
   const [stats, setStats] = useState<StatsState>(initialStats ?? DEFAULT_STATS);
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
+  const [hasData, setHasData] = useState(Boolean(initialStats));
 
   const isDarkMode = theme === "dark";
 
@@ -250,9 +251,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
 
   const fetchStats = useCallback(async () => {
     try {
-      if (!initialStats) {
-        setLoading(true);
-      }
+      setLoading(true);
       setIsRefreshing(true);
         const token =
           localStorage.getItem("token") || localStorage.getItem("userToken");
@@ -274,6 +273,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
           },
           });
         setLastUpdate(new Date());
+        setHasData(true);
           return;
         }
         const response = await axios.get(
@@ -293,16 +293,18 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
           },
         });
       setLastUpdate(new Date());
+      setHasData(true);
     } catch (err: any) {
       // Gérer l'erreur 401 (Token expiré)
       if (handleAuthError(err)) {
         return;
       }
+      setHasData(true);
     } finally {
       setIsRefreshing(false);
       setLoading(false);
     }
-  }, [initialStats]);
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -447,7 +449,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
     },
   });
 
-  if (((!mounted && !isServer) && loading) || (loading && !initialStats)) {
+  if ((!mounted && !isServer && !hasData) || (!hasData && loading)) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 flex justify-center items-center">
         <div className="text-center">
