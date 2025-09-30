@@ -1,28 +1,28 @@
 // Imports optimisés pour NextUI - réduit la taille du bundle
-export { Button } from '@nextui-org/react'
-export { Card, CardBody, CardHeader, CardFooter } from '@nextui-org/react'
-export { Input } from '@nextui-org/react'
-export { Textarea } from '@nextui-org/react'
-export { Select, SelectItem } from '@nextui-org/react'
-export { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react'
-export { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react'
-export { Tabs, Tab } from '@nextui-org/react'
-export { Progress } from '@nextui-org/react'
-export { Avatar } from '@nextui-org/react'
-export { Badge } from '@nextui-org/react'
-export { Divider } from '@nextui-org/react'
-export { Spinner } from '@nextui-org/react'
-export { Tooltip } from '@nextui-org/react'
-export { Accordion, AccordionItem } from '@nextui-org/react'
-export { Switch } from '@nextui-org/react'
-export { Checkbox } from '@nextui-org/react'
-export { Radio, RadioGroup } from '@nextui-org/react'
-export { Slider } from '@nextui-org/react'
-export { Chip } from '@nextui-org/react'
-export { Link } from '@nextui-org/react'
-export { Image } from '@nextui-org/react'
-export { Skeleton } from '@nextui-org/react'
-export { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react'
-export { Pagination } from '@nextui-org/react'
-export { Breadcrumbs, BreadcrumbItem } from '@nextui-org/react'
-export { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from '@nextui-org/react'
+export { Button } from '@nextui-org/react';
+export { Card, CardBody, CardHeader, CardFooter } from '@nextui-org/react';
+export { Input } from '@nextui-org/react';
+export { Textarea } from '@nextui-org/react';
+export { Select, SelectItem } from '@nextui-org/react';
+export { Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from '@nextui-org/react';
+export { Modal, ModalContent, ModalHeader, ModalBody, ModalFooter } from '@nextui-org/react';
+export { Tabs, Tab } from '@nextui-org/react';
+export { Progress } from '@nextui-org/react';
+export { Avatar } from '@nextui-org/react';
+export { Badge } from '@nextui-org/react';
+export { Divider } from '@nextui-org/react';
+export { Spinner } from '@nextui-org/react';
+export { Tooltip } from '@nextui-org/react';
+export { Accordion, AccordionItem } from '@nextui-org/react';
+export { Switch } from '@nextui-org/react';
+export { Checkbox } from '@nextui-org/react';
+export { Radio, RadioGroup } from '@nextui-org/react';
+export { Slider } from '@nextui-org/react';
+export { Chip } from '@nextui-org/react';
+export { Link } from '@nextui-org/react';
+export { Image } from '@nextui-org/react';
+export { Skeleton } from '@nextui-org/react';
+export { Table, TableHeader, TableColumn, TableBody, TableRow, TableCell } from '@nextui-org/react';
+export { Pagination } from '@nextui-org/react';
+export { Breadcrumbs, BreadcrumbItem } from '@nextui-org/react';
+export { Navbar, NavbarBrand, NavbarContent, NavbarItem, NavbarMenu, NavbarMenuItem, NavbarMenuToggle } from '@nextui-org/react';

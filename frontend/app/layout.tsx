@@ -136,32 +136,7 @@ export default function RootLayout({
           type="image/webp"
         />
 
-        {/* Resource hints avancés pour LCP - Préchargement conditionnel */}
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `
-              // Précharger les ressources critiques seulement si elles existent
-              try {
-                // Vérifier si polyfills.js existe avant de le précharger
-                fetch('/_next/static/chunks/polyfills.js', { method: 'HEAD' })
-                  .then(response => {
-                    if (response.ok) {
-                      const link = document.createElement('link');
-                      link.rel = 'preload';
-                      link.as = 'script';
-                      link.href = '/_next/static/chunks/polyfills.js';
-                      document.head.appendChild(link);
-                    }
-                  })
-                  .catch(() => {
-                    // Ignorer les erreurs de préchargement
-                  });
-              } catch (e) {
-                // Ignorer les erreurs
-              }
-            `,
-          }}
-        />
+        {/* Resource hints avancés pour LCP - DNS prefetch seulement */}
 
         {/* Préconnexions DNS pour les domaines externes */}
         <link href="//fonts.googleapis.com" rel="dns-prefetch" />

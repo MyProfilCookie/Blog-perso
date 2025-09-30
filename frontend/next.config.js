@@ -2,7 +2,7 @@
 const nextConfig = {
   // Optimisations de performance
   experimental: {
-    optimizeCss: false, // Désactiver temporairement pour éviter les erreurs CSS
+    // Désactiver toutes les optimisations expérimentales pour éviter les erreurs
     optimizePackageImports: ['@nextui-org/react', 'lucide-react', 'framer-motion'],
   },
   
