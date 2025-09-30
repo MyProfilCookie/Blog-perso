@@ -31,6 +31,16 @@ interface QuizHebdomadaireProps {
   onComplete?: (score: number, totalQuestions: number) => void;
 }
 
+type SavedQuizState = {
+  answers: { [questionIndex: number]: string };
+  validated: boolean[];
+  completed: boolean[];
+  score: number;
+  currentIndex: number;
+  quizCompleted: boolean;
+  timestamp?: string;
+};
+
 export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdomadaireProps) {
   const [currentQuiz, setCurrentQuiz] = useState<Quiz | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
@@ -81,11 +91,18 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
         const result = await response.json();
         
         if (result.success && result.data) {
-          setCurrentQuiz(result.data);
-          setCompletedQuestions(new Array(result.data.questions.length).fill(false));
-          setIsAnswerValidated(new Array(result.data.questions.length).fill(false));
-          // Charger les réponses validées sauvegardées
-          loadValidatedAnswers(result.data.week);
+          const quizData: Quiz = result.data;
+          setCurrentQuiz(quizData);
+          setCompletedQuestions(new Array(quizData.questions.length).fill(false));
+          setIsAnswerValidated(new Array(quizData.questions.length).fill(false));
+          setValidatedAnswers({});
+          setScore(0);
+          setSelectedAnswer(null);
+          setShowResult(false);
+          setQuizCompleted(false);
+          setCurrentQuestionIndex(0);
+          // Charger les réponses validées sauvegardées et restaurer la progression
+          restoreQuizState(quizData);
         } else {
           toast.error(result.message || "Quiz non trouvé pour cette semaine");
         }
@@ -107,30 +124,82 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     return Math.ceil((pastDaysOfYear + startOfYear.getDay() + 1) / 7);
   };
 
-  const loadValidatedAnswers = (week: number) => {
+  const restoreQuizState = (quiz: Quiz) => {
     try {
-      const savedAnswers = localStorage.getItem(`quiz_answers_week_${week}`);
-      if (savedAnswers) {
-        const parsedAnswers = JSON.parse(savedAnswers);
-        setValidatedAnswers(parsedAnswers.answers || {});
-        setIsAnswerValidated(parsedAnswers.validated || []);
-        setCompletedQuestions(parsedAnswers.completed || []);
-        setScore(parsedAnswers.score || 0);
+      const saved = localStorage.getItem(`quiz_answers_week_${quiz.week}`);
+      if (!saved) {
+        return;
+      }
+
+      const parsed: SavedQuizState = JSON.parse(saved);
+      const length = quiz.questions.length;
+
+      const savedValidated = parsed.validated && parsed.validated.length === length
+        ? parsed.validated
+        : new Array(length).fill(false);
+      const savedCompleted = parsed.completed && parsed.completed.length === length
+        ? parsed.completed
+        : new Array(length).fill(false);
+
+      setValidatedAnswers(parsed.answers || {});
+      setIsAnswerValidated(savedValidated);
+      setCompletedQuestions(savedCompleted);
+
+      const savedScore = typeof parsed.score === 'number' ? parsed.score : 0;
+      setScore(savedScore);
+
+      const hasRemaining = savedCompleted.some(completed => !completed);
+      const savedIndex = typeof parsed.currentIndex === 'number' && parsed.currentIndex >= 0 && parsed.currentIndex < length
+        ? parsed.currentIndex
+        : savedCompleted.findIndex(completed => !completed);
+
+      if (!hasRemaining && (parsed.quizCompleted || savedCompleted.every(Boolean))) {
+        setQuizCompleted(true);
+        setCurrentQuestionIndex(Math.max(length - 1, 0));
+        setSelectedAnswer(null);
+        setShowResult(false);
+        return;
+      }
+
+      const nextIndex = savedIndex === -1 ? savedCompleted.findIndex(completed => !completed) : savedIndex;
+      const fallbackIndex = savedCompleted.findIndex(completed => !completed);
+      const resolvedIndex = nextIndex >= 0 && !savedCompleted[nextIndex]
+        ? nextIndex
+        : fallbackIndex >= 0
+          ? fallbackIndex
+          : Math.max(length - 1, 0);
+      setCurrentQuestionIndex(resolvedIndex);
+
+      const savedAnswer = (parsed.answers || {})[resolvedIndex];
+      if (savedAnswer) {
+        setSelectedAnswer(savedAnswer);
+        const correct = savedAnswer === quiz.questions[resolvedIndex].answer;
+        setIsCorrect(correct);
+        setShowResult(savedValidated[resolvedIndex]);
+      } else {
+        setSelectedAnswer(null);
+        setIsCorrect(false);
+        setShowResult(false);
       }
     } catch (error) {
       console.error('Erreur lors du chargement des réponses validées:', error);
     }
   };
 
-  const saveValidatedAnswers = (week: number) => {
+  const saveQuizState = (week: number, overrides: Partial<SavedQuizState> = {}) => {
+    if (!currentQuiz) return;
+
+    const dataToSave: SavedQuizState = {
+      answers: overrides.answers ?? validatedAnswers,
+      validated: overrides.validated ?? isAnswerValidated,
+      completed: overrides.completed ?? completedQuestions,
+      score: typeof overrides.score === 'number' ? overrides.score : score,
+      currentIndex: typeof overrides.currentIndex === 'number' ? overrides.currentIndex : currentQuestionIndex,
+      quizCompleted: typeof overrides.quizCompleted === 'boolean' ? overrides.quizCompleted : quizCompleted,
+      timestamp: new Date().toISOString(),
+    };
+
     try {
-      const dataToSave = {
-        answers: validatedAnswers,
-        validated: isAnswerValidated,
-        completed: completedQuestions,
-        score: score,
-        timestamp: new Date().toISOString()
-      };
       localStorage.setItem(`quiz_answers_week_${week}`, JSON.stringify(dataToSave));
     } catch (error) {
       console.error('Erreur lors de la sauvegarde des réponses validées:', error);
@@ -169,8 +238,10 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     newValidated[currentQuestionIndex] = true;
     setIsAnswerValidated(newValidated);
     
+    const updatedScore = correct ? score + 1 : score;
+
     if (correct) {
-      setScore(prev => prev + 1);
+      setScore(updatedScore);
       toast.success("Bravo ! 🎉", {
         description: "Excellente réponse !",
         duration: 2000,
@@ -188,7 +259,14 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     setCompletedQuestions(newCompleted);
     
     // Sauvegarder les réponses validées
-    saveValidatedAnswers(currentQuiz.week);
+    saveQuizState(currentQuiz.week, {
+      answers: newValidatedAnswers,
+      validated: newValidated,
+      completed: newCompleted,
+      score: updatedScore,
+      currentIndex: currentQuestionIndex,
+      quizCompleted: false,
+    });
   };
 
   const handleNextQuestion = async () => {
@@ -198,12 +276,18 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
       
       // Charger la réponse validée si elle existe
       if (validatedAnswers[nextIndex]) {
-        setSelectedAnswer(validatedAnswers[nextIndex]);
+        const savedAnswer = validatedAnswers[nextIndex];
+        setSelectedAnswer(savedAnswer);
         setShowResult(true);
-        setIsCorrect(validatedAnswers[nextIndex] === currentQuiz!.questions[nextIndex].answer);
+        setIsCorrect(savedAnswer === currentQuiz!.questions[nextIndex].answer);
       } else {
         setSelectedAnswer(null);
         setShowResult(false);
+        setIsCorrect(false);
+      }
+
+      if (currentQuiz) {
+        saveQuizState(currentQuiz.week, { currentIndex: nextIndex });
       }
     } else {
       // Quiz terminé - soumettre les réponses
@@ -245,6 +329,11 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
       
       if (result.success) {
         setQuizCompleted(true);
+        saveQuizState(currentQuiz.week, {
+          quizCompleted: true,
+          score,
+          currentIndex: currentQuestionIndex,
+        });
         if (onComplete) {
           onComplete(score, currentQuiz.questions.length);
         }
@@ -261,6 +350,11 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
       toast.error("Erreur lors de la sauvegarde du quiz");
       // Continuer quand même vers les résultats
       setQuizCompleted(true);
+      saveQuizState(currentQuiz.week, {
+        quizCompleted: true,
+        score,
+        currentIndex: currentQuestionIndex,
+      });
       if (onComplete) {
         onComplete(score, currentQuiz.questions.length);
       }
@@ -276,6 +370,7 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     setQuizCompleted(false);
     setValidatedAnswers({});
     setIsAnswerValidated(new Array(currentQuiz!.questions.length).fill(false));
+    setIsCorrect(false);
     // Supprimer les réponses sauvegardées
     localStorage.removeItem(`quiz_answers_week_${currentQuiz!.week}`);
   };
