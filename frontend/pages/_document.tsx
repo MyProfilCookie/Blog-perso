@@ -4,7 +4,46 @@ export default function Document() {
   return (
     <Html lang="fr">
       <Head>
-        {/* Next.js 13 - Plus de problème requestIdleCallback */}
+        {/* Polyfill ULTIME pour Safari - AVANT React */}
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              // Polyfill ULTIME pour Safari - AVANT React
+              if (!window.requestIdleCallback) {
+                window.requestIdleCallback = function(callback, options) {
+                  var start = Date.now();
+                  return window.setTimeout(function() {
+                    callback({
+                      didTimeout: false,
+                      timeRemaining: function() {
+                        return Math.max(0, 50 - (Date.now() - start));
+                      }
+                    });
+                  }, 1);
+                };
+              }
+              
+              if (!window.cancelIdleCallback) {
+                window.cancelIdleCallback = function(id) {
+                  window.clearTimeout(id);
+                };
+              }
+              
+              // Forcer la définition sur tous les contextes
+              if (typeof global !== 'undefined') {
+                global.requestIdleCallback = window.requestIdleCallback;
+                global.cancelIdleCallback = window.cancelIdleCallback;
+              }
+              
+              if (typeof self !== 'undefined') {
+                self.requestIdleCallback = window.requestIdleCallback;
+                self.cancelIdleCallback = window.cancelIdleCallback;
+              }
+              
+              console.log('Safari polyfill ULTIME chargé - requestIdleCallback:', typeof window.requestIdleCallback);
+            `,
+          }}
+        />
         {/* Préchargement des polices critiques */}
         <link
           rel="preload"
