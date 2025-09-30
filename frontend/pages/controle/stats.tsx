@@ -10,7 +10,7 @@ import { Tab } from '@nextui-org/react'
 import { Progress } from '@nextui-org/react'
 
 import { LightAnimation } from "@/components/DynamicMotion";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
 const Line = dynamic(() => import('react-chartjs-2').then(mod => ({ default: mod.Line })), { 
   ssr: false,
   loading: () => <div className="h-64 bg-gray-100 dark:bg-gray-800 animate-pulse rounded-lg" />
@@ -409,7 +409,7 @@ const StatsPage: React.FC = () => {
     if (subject === "lessons") {
       // Pour les leçons, utiliser les évaluations et la progression
       if (data.lessonsRatings && typeof data.lessonsRatings === 'object') {
-        exercisesCompleted = Object.values(data.lessonsRatings).reduce(
+        exercisesCompleted = (Object.values(data.lessonsRatings) as any[]).reduce(
           (sum: number, count: any) =>
             sum + (typeof count === "number" ? count : 0),
           0,
