@@ -699,49 +699,80 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
       {/* Stats Cards */}
       <section className="py-8 sm:py-12">
         <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
-          {/* En-tête des statistiques avec rafraîchissement */}
+          {/* En-tête des statistiques façon AutiStudy */}
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="flex flex-col sm:flex-row justify-between items-center mb-6"
+            className="mb-8"
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.6, delay: 0.1 }}
           >
-            <div className="mb-4 sm:mb-0">
-              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-2">
-                📊 Statistiques
-              </h2>
-              <div className="flex items-center space-x-2 text-sm text-gray-600 dark:text-gray-400">
-                {isRefreshing ? (
-                  <div className="flex items-center space-x-2">
-                    <RefreshCw className="w-4 h-4 animate-spin text-blue-500" />
-                    <span>Mise à jour en cours...</span>
+            <div className="relative overflow-hidden rounded-3xl border border-blue-200/60 dark:border-blue-900/50 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/40 dark:via-slate-900 dark:to-indigo-950/20 p-6 sm:p-8 shadow-xl">
+              <div className="absolute -top-24 -right-16 w-64 h-64 bg-blue-200/30 dark:bg-blue-500/10 rounded-full blur-3xl" />
+              <div className="absolute -bottom-20 -left-10 w-48 h-48 bg-purple-200/30 dark:bg-purple-500/10 rounded-full blur-3xl" />
+
+              <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                <div>
+                  <div className="flex items-center gap-3 mb-3">
+                    <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/30">
+                      <BarChart3 className="w-6 h-6" />
+                    </div>
+                    <div>
+                      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                        Ton tableau magique
+                      </h2>
+                      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                        Garde un œil sur tes progrès, ton temps d&apos;apprentissage et tes missions hebdo ✨
+                      </p>
+                    </div>
                   </div>
-                ) : lastUpdate ? (
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-green-500" />
-                    <span>
-                      Dernière mise à jour: {lastUpdate.toLocaleTimeString()}
-                    </span>
+
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
+                    {lastUpdate ? (
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-slate-900/60 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200 shadow-sm">
+                        <Clock className="w-4 h-4" />
+                        Mise à jour :
+                        <strong>
+                          {lastUpdate.toLocaleTimeString([], {
+                            hour: "2-digit",
+                            minute: "2-digit",
+                          })}
+                        </strong>
+                      </span>
+                    ) : (
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-slate-900/60 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200 shadow-sm">
+                        <Sparkles className="w-4 h-4" />
+                        Première mise en lumière !
+                      </span>
+                    )}
+                    {isRefreshing && (
+                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-slate-900/60 border border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-200 shadow-sm">
+                        <RefreshCw className="w-4 h-4 animate-spin" />
+                        Rafraîchissement en cours...
+                      </span>
+                    )}
                   </div>
-                ) : (
-                  <div className="flex items-center space-x-2">
-                    <Clock className="w-4 h-4 text-gray-400" />
-                    <span>Chargement...</span>
-                  </div>
-                )}
+                </div>
+
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <Button
+                    className="min-w-[160px] bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/20"
+                    disabled={isRefreshing}
+                    onClick={fetchStats}
+                  >
+                    <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
+                    {isRefreshing ? "Rafraîchissement..." : "Actualiser"}
+                  </Button>
+                  <Button
+                    className="min-w-[160px] border border-purple-200 text-purple-600 dark:text-purple-300 dark:border-purple-700 bg-white/80 dark:bg-slate-900/60"
+                    onClick={forceRefresh}
+                    variant="outline"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    Boost magique
+                  </Button>
+                </div>
               </div>
             </div>
-
-            <Button
-              className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center space-x-2 transition-colors disabled:opacity-50"
-              disabled={isRefreshing}
-              onClick={forceRefresh}
-            >
-              <RefreshCw
-                className={`w-4 h-4 ${isRefreshing ? "animate-spin" : ""}`}
-              />
-              <span>Actualiser</span>
-            </Button>
           </motion.div>
 
           <motion.div
