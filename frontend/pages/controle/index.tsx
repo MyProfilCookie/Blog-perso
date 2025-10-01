@@ -731,46 +731,32 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
 
                   <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-300 min-h-[40px]">
                     <AnimatePresence mode="wait">
-                      {isRefreshing ? (
-                        <motion.span
-                          key="refreshing"
-                          animate={{ opacity: 1, y: 0 }}
-                          className={`${statusChipBase} border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-200 min-w-[12rem]`}
-                          exit={{ opacity: 0, y: -6 }}
-                          initial={{ opacity: 0, y: 6 }}
-                        >
-                          <RefreshCw className="w-4 h-4 animate-spin" />
-                          Rafraîchissement en cours...
-                        </motion.span>
-                      ) : lastUpdate ? (
-                        <motion.span
-                          key="last-update"
-                          animate={{ opacity: 1, y: 0 }}
-                          className={`${statusChipBase} border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200 min-w-[12rem]`}
-                          exit={{ opacity: 0, y: -6 }}
-                          initial={{ opacity: 0, y: 6 }}
-                        >
-                          <Clock className="w-4 h-4" />
-                          Mise à jour :
-                          <strong>
-                            {lastUpdate.toLocaleTimeString([], {
-                              hour: "2-digit",
-                              minute: "2-digit",
-                            })}
-                          </strong>
-                        </motion.span>
-                      ) : (
-                        <motion.span
-                          key="first-time"
-                          animate={{ opacity: 1, y: 0 }}
-                          className={`${statusChipBase} border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200 min-w-[12rem]`}
-                          exit={{ opacity: 0, y: -6 }}
-                          initial={{ opacity: 0, y: 6 }}
-                        >
-                          <Sparkles className="w-4 h-4" />
-                          Première mise en lumière !
-                        </motion.span>
-                      )}
+                      <motion.span
+                        key={lastUpdate ? (isRefreshing ? "refreshing" : "last-update") : "first-time"}
+                        animate={{ opacity: 1, y: 0 }}
+                        className={`${statusChipBase} ${lastUpdate ? "border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200" : "border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200"} min-w-[12rem]`}
+                        exit={{ opacity: 0, y: -6 }}
+                        initial={{ opacity: 0, y: 6 }}
+                      >
+                        {lastUpdate ? (
+                          <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-indigo-500" : "text-blue-600"}`} />
+                        ) : (
+                          <Sparkles className="w-4 h-4 text-blue-500" />
+                        )}
+                        {lastUpdate ? (
+                          <span className="flex items-center gap-1">
+                            Mise à jour :
+                            <strong>
+                              {lastUpdate.toLocaleTimeString([], {
+                                hour: "2-digit",
+                                minute: "2-digit",
+                              })}
+                            </strong>
+                          </span>
+                        ) : (
+                          <span>Première mise en lumière !</span>
+                        )}
+                      </motion.span>
                     </AnimatePresence>
                   </div>
                 </div>
