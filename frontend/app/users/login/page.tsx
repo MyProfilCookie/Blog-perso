@@ -267,6 +267,13 @@ export default function Connexion() {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full"
+          classNames={{
+            input: "text-gray-900 dark:text-white",
+            inputWrapper: "bg-white dark:bg-slate-900",
+            label: "text-gray-700 dark:text-gray-300",
+            description: "text-gray-500 dark:text-gray-400",
+            errorMessage: "text-red-500",
+          }}
         />
 
         <Input
@@ -280,6 +287,13 @@ export default function Connexion() {
             validatePassword(e.target.value);
           }}
           className="w-full"
+          classNames={{
+            input: "text-gray-900 dark:text-white",
+            inputWrapper: "bg-white dark:bg-slate-900",
+            label: "text-gray-700 dark:text-gray-300",
+            description: "text-gray-500 dark:text-gray-400",
+            errorMessage: "text-red-500",
+          }}
         />
         {password && (
           <p

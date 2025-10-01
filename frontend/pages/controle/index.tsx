@@ -777,25 +777,6 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button
-                    className="min-w-[160px] bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/20 font-semibold tracking-wide"
-                    disabled={isRefreshing}
-                    onClick={fetchStats}
-                  >
-                    <RefreshCw className={`w-4 h-4 mr-2 transition-transform duration-300 ${isRefreshing ? "animate-spin" : ""}`} />
-                    <span className="relative inline-flex justify-center min-w-[8ch]">
-                      <span
-                        className={`transition-opacity duration-200 ${isRefreshing ? "opacity-0" : "opacity-100"}`}
-                      >
-                        Actualiser
-                      </span>
-                      <span
-                        className={`absolute inset-0 transition-opacity duration-200 ${isRefreshing ? "opacity-100" : "opacity-0"}`}
-                      >
-                        Mise à jour
-                      </span>
-                    </span>
-                  </Button>
-                  <Button
                     className="min-w-[160px] border border-purple-200 text-purple-600 dark:text-purple-300 dark:border-purple-700 bg-white/80 dark:bg-slate-900/60"
                     onClick={forceRefresh}
                     variant="outline"
