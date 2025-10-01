@@ -226,6 +226,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
   const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [hasData, setHasData] = useState(Boolean(initialStats));
+  const [hasPlayedIntro, setHasPlayedIntro] = useState(false);
 
   const isDarkMode = theme === "dark";
 
@@ -310,6 +311,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
   }, []);
 
   useEffect(() => {
+    setHasPlayedIntro(true);
     setMounted(true);
 
     if (initialTheme) {
@@ -503,10 +505,10 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
   StatCard.displayName = "StatCard";
 
   // Composant optimisé pour les cartes de cours
-  const CourseCard = memo(({ theme, index }: { theme: any; index: number }) => (
+  const CourseCard = ({ theme, index }: { theme: any; index: number }) => (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
-      initial={{ opacity: 0, y: 20 }}
+      initial={hasPlayedIntro ? false : { opacity: 0, y: 20 }}
       transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
     >
       <Link href={theme.route}>
@@ -530,14 +532,12 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                   {theme.description}
                 </p>
               </div>
-      </div>
+            </div>
           </CardContent>
         </Card>
       </Link>
     </motion.div>
-  ));
-
-  CourseCard.displayName = "CourseCard";
+  );
 
   const statsCards = [
     {
