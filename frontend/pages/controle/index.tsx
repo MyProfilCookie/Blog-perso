@@ -27,7 +27,7 @@ import {
 } from "lucide-react";
 import axios from "axios";
 import Link from "next/link";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { handleAuthError } from "@/utils/errorHandler";
 import { useAutoRefresh } from "@/hooks/useAutoRefresh";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -244,6 +244,9 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
     const progression = totalExercises > 0 ? Math.min((totalExercises / maxExercises) * 100, 100) : 0;
     return Math.round(progression);
   }, [stats.totalEleves]);
+
+  const statusChipBase =
+    "inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-slate-900/60 border text-sm shadow-sm transition-colors duration-300";
 
   const toggleTheme = () => {
     setTheme(isDarkMode ? "light" : "dark");
@@ -726,30 +729,49 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                     </div>
                   </div>
 
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-300">
-                    {lastUpdate ? (
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-slate-900/60 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200 shadow-sm">
-                        <Clock className="w-4 h-4" />
-                        Mise à jour :
-                        <strong>
-                          {lastUpdate.toLocaleTimeString([], {
-                            hour: "2-digit",
-                            minute: "2-digit",
-                          })}
-                        </strong>
-                      </span>
-                    ) : (
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-slate-900/60 border border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200 shadow-sm">
-                        <Sparkles className="w-4 h-4" />
-                        Première mise en lumière !
-                      </span>
-                    )}
-                    {isRefreshing && (
-                      <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-slate-900/60 border border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-200 shadow-sm">
-                        <RefreshCw className="w-4 h-4 animate-spin" />
-                        Rafraîchissement en cours...
-                      </span>
-                    )}
+                  <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-300 min-h-[40px]">
+                    <AnimatePresence mode="wait">
+                      {isRefreshing ? (
+                        <motion.span
+                          key="refreshing"
+                          animate={{ opacity: 1, y: 0 }}
+                          className={`${statusChipBase} border-indigo-200 dark:border-indigo-700 text-indigo-700 dark:text-indigo-200 min-w-[12rem]`}
+                          exit={{ opacity: 0, y: -6 }}
+                          initial={{ opacity: 0, y: 6 }}
+                        >
+                          <RefreshCw className="w-4 h-4 animate-spin" />
+                          Rafraîchissement en cours...
+                        </motion.span>
+                      ) : lastUpdate ? (
+                        <motion.span
+                          key="last-update"
+                          animate={{ opacity: 1, y: 0 }}
+                          className={`${statusChipBase} border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200 min-w-[12rem]`}
+                          exit={{ opacity: 0, y: -6 }}
+                          initial={{ opacity: 0, y: 6 }}
+                        >
+                          <Clock className="w-4 h-4" />
+                          Mise à jour :
+                          <strong>
+                            {lastUpdate.toLocaleTimeString([], {
+                              hour: "2-digit",
+                              minute: "2-digit",
+                            })}
+                          </strong>
+                        </motion.span>
+                      ) : (
+                        <motion.span
+                          key="first-time"
+                          animate={{ opacity: 1, y: 0 }}
+                          className={`${statusChipBase} border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200 min-w-[12rem]`}
+                          exit={{ opacity: 0, y: -6 }}
+                          initial={{ opacity: 0, y: 6 }}
+                        >
+                          <Sparkles className="w-4 h-4" />
+                          Première mise en lumière !
+                        </motion.span>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
 
@@ -759,8 +781,19 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                     disabled={isRefreshing}
                     onClick={fetchStats}
                   >
-                    <RefreshCw className={`w-4 h-4 mr-2 ${isRefreshing ? "animate-spin" : ""}`} />
-                    {isRefreshing ? "Rafraîchissement..." : "Actualiser"}
+                    <RefreshCw className={`w-4 h-4 mr-2 transition-transform duration-300 ${isRefreshing ? "animate-spin" : ""}`} />
+                    <span className="relative inline-flex justify-center min-w-[8ch]">
+                      <span
+                        className={`transition-opacity duration-200 ${isRefreshing ? "opacity-0" : "opacity-100"}`}
+                      >
+                        Actualiser
+                      </span>
+                      <span
+                        className={`absolute inset-0 transition-opacity duration-200 ${isRefreshing ? "opacity-100" : "opacity-0"}`}
+                      >
+                        Patience...
+                      </span>
+                    </span>
                   </Button>
                   <Button
                     className="min-w-[160px] border border-purple-200 text-purple-600 dark:text-purple-300 dark:border-purple-700 bg-white/80 dark:bg-slate-900/60"
