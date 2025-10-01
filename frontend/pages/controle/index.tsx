@@ -777,7 +777,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
 
                 <div className="flex flex-col sm:flex-row gap-3">
                   <Button
-                    className="min-w-[160px] bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/20"
+                    className="min-w-[160px] bg-gradient-to-r from-blue-500 to-indigo-600 hover:from-blue-600 hover:to-indigo-700 text-white shadow-lg shadow-blue-500/20 font-semibold tracking-wide"
                     disabled={isRefreshing}
                     onClick={fetchStats}
                   >
@@ -791,7 +791,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                       <span
                         className={`absolute inset-0 transition-opacity duration-200 ${isRefreshing ? "opacity-100" : "opacity-0"}`}
                       >
-                        Patience...
+                        Mise à jour
                       </span>
                     </span>
                   </Button>
