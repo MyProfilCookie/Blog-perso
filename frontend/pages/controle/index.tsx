@@ -978,8 +978,12 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                       size="lg"
                       variant="outline"
                     >
-                      <Sparkles className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                      Quiz de cette Semaine
+                      <span className="flex items-center gap-2">
+                        <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full bg-white/20 text-white">
+                          <Sparkles className="w-3 h-3" />
+                        </span>
+                        <span className="text-white">Quiz de cette Semaine</span>
+                      </span>
                     </Button>
                   </div>
                 </div>
