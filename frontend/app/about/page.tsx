@@ -436,7 +436,7 @@ export default function AboutUsPage() {
                           <Avatar
                             alt={member.name}
                             // centrer bien l'avatar
-                            className={`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4 mx-auto ${member.className} transition-all duration-300`}
+                            className={`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4 ${member.className} transition-all duration-300 flex items-center justify-center border-${member.borderColor}`}
                             color="default"
                             size="lg"
                             src={member.img}
