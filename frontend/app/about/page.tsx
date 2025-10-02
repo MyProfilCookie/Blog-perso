@@ -38,7 +38,7 @@ const familyMembers = [
     role: "Sœur",
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
-    className: "bg-pink-100 text-pink-600",
+    className: "bg-pink-100 text-pink-600 ring-4 ring-pink-300",
   },
   {
     name: "Joshua",
@@ -46,7 +46,7 @@ const familyMembers = [
     role: "Frère",
     status: "frère",
     // on va ajouter une classe pour la couleur de fond
-    className: "bg-yellow-100 text-yellow-600",
+    className: "bg-yellow-100 text-yellow-600 ring-4 ring-yellow-300",
   },
   {
     name: "Maeva",
@@ -54,7 +54,7 @@ const familyMembers = [
     role: "Notre inspiration",
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
-    className: "bg-green-100 text-green-600",
+    className: "bg-green-100 text-green-600 ring-4 ring-green-300",
   },
   {
     name: "Chantal",
@@ -62,7 +62,7 @@ const familyMembers = [
     role: "Maman",
     status: "maman",
     // on va ajouter une classe pour la couleur de fond
-    className: "bg-purple-100 text-purple-600",
+    className: "bg-purple-100 text-purple-600 ring-4 ring-purple-300",
   },
   {
     name: "Virginie",
@@ -70,7 +70,7 @@ const familyMembers = [
     role: "Sœur aînée",
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
-    className: "bg-blue-100 text-blue-600",
+    className: "bg-blue-100 text-blue-600 ring-4 ring-blue-300",
   },
   {
     name: "Paul",
@@ -78,7 +78,7 @@ const familyMembers = [
     role: "Papa",
     status: "papa",
     // on va ajouter une classe pour la couleur de fond
-    className: "bg-orange-100 text-orange-600",
+    className: "bg-orange-100 text-orange-600 ring-4 ring-orange-300",
   },
   {
     name: "Pauline",
@@ -86,7 +86,7 @@ const familyMembers = [
     role: "Sœur",
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
-    className: "bg-orange-100 text-orange-600",
+    className: "bg-orange-100 text-orange-600 ring-4 ring-orange-300",
   },
   {
     name: "Vanessa",
@@ -94,7 +94,7 @@ const familyMembers = [
     role: "Sœur",
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
-    className: "bg-red-100 text-red-600",
+    className: "bg-red-100 text-red-600 ring-4 ring-red-300",
   },
 ];
 
@@ -426,18 +426,15 @@ export default function AboutUsPage() {
                           className="flex flex-col items-center text-center"
                         >
                           <Avatar
-                            isBordered
                             alt={member.name}
                             // centrer bien l'avatar
                             className={`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4 mx-auto ${member.className} transition-all duration-300`}
-                            color="primary"
+                            color="default"
                             size="lg"
                             src={member.img}
                             style={{
-                              borderWidth: "4px",
                               boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
                               transition: "all 0.3s ease-in-out",
-                              borderColor: member.className,
                             }}
                           />
                           <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">
