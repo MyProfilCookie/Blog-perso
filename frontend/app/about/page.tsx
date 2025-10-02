@@ -429,13 +429,15 @@ export default function AboutUsPage() {
                             isBordered
                             alt={member.name}
                             // centrer bien l'avatar
-                            className={`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4 mx-auto ${member.className}`}
+                            className={`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4 mx-auto ${member.className} transition-all duration-300`}
                             color="primary"
                             size="lg"
                             src={member.img}
                             style={{
                               borderWidth: "4px",
                               boxShadow: "0 8px 25px rgba(0,0,0,0.15)",
+                              transition: "all 0.3s ease-in-out",
+                              borderColor: member.className,
                             }}
                           />
                           <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">
