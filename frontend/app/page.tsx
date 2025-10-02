@@ -12,11 +12,11 @@ import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import Link from "next/link";
 
 import { motion } from "framer-motion";
-import { 
-  BookOpen, 
-  Users, 
-  Heart, 
-  Star, 
+import {
+  BookOpen,
+  Users,
+  Heart,
+  Star,
   ArrowRight,
   CheckCircle,
   Brain,
@@ -87,10 +87,10 @@ const services = [
 // Témoignages
 const testimonials = [
   {
-    name: "Chantal",
+    name: "Famille Ayivor",
     role: "Maman de Maeva",
     content: "AutiStudy a transformé l'apprentissage de notre fille. Les exercices sont parfaitement adaptés à ses besoins.",
-    avatar: "/assets/family/avatar/chantal.webp",
+    avatar: "/assets/family/avatar/famille-ayivor.webp",
     rating: 5
   },
   {
@@ -134,19 +134,19 @@ export default function HomePage() {
                     pour enfants autistes
                   </h1>
                   <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-6 md:mb-8">
-                    Une plateforme éducative spécialisée qui s'adapte aux besoins 
+                    Une plateforme éducative spécialisée qui s'adapte aux besoins
                     uniques de chaque enfant pour un apprentissage efficace et bienveillant.
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
-                    <Link 
-                      href="/users/signup" 
+                    <Link
+                      href="/users/signup"
                       className="bg-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-lg hover:bg-blue-700 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
                     >
                       <Star className="w-4 h-4 md:w-5 md:h-5" />
                       Commencer gratuitement
                     </Link>
-                    <Link 
-                      href="/about" 
+                    <Link
+                      href="/about"
                       className="border-2 border-blue-600 text-blue-600 px-6 md:px-8 py-3 md:py-4 rounded-lg hover:bg-blue-50 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
                     >
                       <Shield className="w-4 h-4 md:w-5 md:h-5" />
@@ -154,7 +154,7 @@ export default function HomePage() {
                     </Link>
                   </div>
                 </motion.div>
-                
+
                 <motion.div
                   initial={{ opacity: 0, x: 30 }}
                   animate={{ opacity: 1, x: 0 }}
@@ -194,7 +194,7 @@ export default function HomePage() {
                   Tout ce dont vous avez besoin pour accompagner l'apprentissage de votre enfant
                 </p>
               </motion.div>
-              
+
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 grid-cls-optimized grid-cls-optimized grid-cls-optimized">
                 {services.map((service, index) => (
                   <motion.div
@@ -244,7 +244,7 @@ export default function HomePage() {
                   Découvrez les témoignages de nos utilisateurs
                 </p>
               </motion.div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 grid-cls-optimized grid-cls-optimized grid-cls-optimized">
                 {testimonials.map((testimonial, index) => (
                   <motion.div
@@ -257,13 +257,13 @@ export default function HomePage() {
                     <Card className="h-full">
                       <CardBody className="p-4 md:p-6">
                         <div className="flex items-center mb-3 md:mb-4 cls-image-container"><OptimizedImage
-                            src={testimonial.avatar}
-                            alt={testimonial.name}
-                            width={60}
-                            height={60}
-                            className="w-12 h-12 md:w-15 md:h-15 rounded-full mr-3 md:mr-4 image-optimized"
-                            sizes="60px"
-                          />
+                          src={testimonial.avatar}
+                          alt={testimonial.name}
+                          width={60}
+                          height={60}
+                          className="w-12 h-12 md:w-15 md:h-15 rounded-full mr-3 md:mr-4 image-optimized"
+                          sizes="60px"
+                        />
                           <div>
                             <h4 className="font-semibold text-gray-900 dark:text-white">
                               {testimonial.name}
@@ -308,7 +308,7 @@ export default function HomePage() {
                   Découvrez nos derniers articles et conseils
                 </p>
               </motion.div>
-              
+
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 grid-cls-optimized grid-cls-optimized grid-cls-optimized">
                 {articles.map((article, index) => (
                   <motion.div
@@ -342,8 +342,8 @@ export default function HomePage() {
                         <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mb-4">
                           {article.description}
                         </p>
-                        <Link 
-                          href={article.link} 
+                        <Link
+                          href={article.link}
                           className="text-blue-600 hover:underline font-semibold flex items-center gap-2"
                         >
                           Lire la suite
@@ -374,15 +374,15 @@ export default function HomePage() {
                 Rejoignez des centaines de familles qui font confiance à AutiStudy
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link 
-                  href="/users/signup" 
+                <Link
+                  href="/users/signup"
                   className="bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors font-semibold flex items-center justify-center gap-2"
                 >
                   <CheckCircle className="w-5 h-5" />
                   Créer un compte gratuit
                 </Link>
-                <Link 
-                  href="/contact" 
+                <Link
+                  href="/contact"
                   className="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-semibold flex items-center justify-center gap-2"
                 >
                   <Lightbulb className="w-5 h-5" />

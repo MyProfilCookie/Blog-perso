@@ -35,7 +35,7 @@ const familyMembers = [
   {
     name: "Jessica",
     img: "/assets/family/avatar/jessica.webp",
-    role: "Sœur aînée",
+    role: "Sœur",
     status: "soeur",
   },
   {
@@ -59,8 +59,10 @@ const familyMembers = [
   {
     name: "Virginie",
     img: "/assets/family/avatar/virginie.webp",
-    role: "Nini",
+    role: "Sœur aînée",
     status: "soeur",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-purple-100 text-purple-600",
   },
   {
     name: "Paul",
@@ -77,7 +79,7 @@ const familyMembers = [
   {
     name: "Vanessa",
     img: "/assets/family/avatar/vanessa.webp",
-    role: "Titi",
+    role: "Sœur",
     status: "soeur",
   },
 ];
@@ -484,7 +486,7 @@ export default function AboutUsPage() {
                   .map(
                     () =>
                       colorVariants[
-                        Math.floor(Math.random() * colorVariants.length)
+                      Math.floor(Math.random() * colorVariants.length)
                       ],
                   ),
               );
