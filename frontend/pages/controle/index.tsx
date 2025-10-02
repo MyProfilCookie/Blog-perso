@@ -952,8 +952,12 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                       onClick={() => router.push("/controle/quiz-hebdomadaire")}
                       size="lg"
                     >
-                      <Target className="w-4 h-4 sm:w-5 sm:h-5 mr-2" />
-                      Choisir un Quiz
+                      <span className="flex items-center gap-2">
+                        <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full bg-purple-500 text-white">
+                          <Target className="w-3 h-3" />
+                        </span>
+                        <span className="text-purple-600">Choisir un Quiz</span>
+                      </span>
                     </Button>
                     <Button
                       className="border-white text-white hover:bg-white/10 hover:text-white dark:border-gray-300 dark:text-gray-100 dark:hover:bg-gray-300/10 dark:hover:text-gray-100 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm"
