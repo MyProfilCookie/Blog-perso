@@ -948,19 +948,19 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                   </p>
                   <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2">
                     <Button
-                      className="bg-white text-purple-600 hover:bg-gray-100 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base shadow-lg hover:shadow-xl transition-all duration-300"
+                      className="border border-white/70 bg-white/15 hover:bg-white/25 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base shadow-lg shadow-purple-500/20 backdrop-blur-lg transition-all"
                       onClick={() => router.push("/controle/quiz-hebdomadaire")}
                       size="lg"
                     >
                       <span className="flex items-center gap-2">
-                        <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full bg-purple-500 text-white">
+                        <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full bg-white/40 text-purple-600">
                           <Target className="w-3 h-3" />
                         </span>
-                        <span className="text-purple-600">Choisir un Quiz</span>
+                        <span className="text-white">Choisir un Quiz</span>
                       </span>
                     </Button>
                     <Button
-                      className="border-white text-white hover:bg-white/10 hover:text-white dark:border-gray-300 dark:text-gray-100 dark:hover:bg-gray-300/10 dark:hover:text-gray-100 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-sm"
+                      className="border border-white/70 text-white hover:bg-white/15 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-lg transition-all"
                       onClick={() => {
                         const currentWeek = Math.ceil(
                           (new Date().getTime() -
@@ -979,7 +979,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                       variant="outline"
                     >
                       <span className="flex items-center gap-2">
-                        <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full bg-white/20 text-white">
+                        <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full border border-white/40 bg-transparent text-white/90">
                           <Sparkles className="w-3 h-3" />
                         </span>
                         <span className="text-white">Quiz de cette Semaine</span>
