@@ -257,45 +257,45 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
     try {
       setLoading(true);
       setIsRefreshing(true);
-        const token =
-          localStorage.getItem("token") || localStorage.getItem("userToken");
-        const userId =
-          localStorage.getItem("userId") ||
-          JSON.parse(localStorage.getItem("user") || "{}")._id;
+      const token =
+        localStorage.getItem("token") || localStorage.getItem("userToken");
+      const userId =
+        localStorage.getItem("userId") ||
+        JSON.parse(localStorage.getItem("user") || "{}")._id;
 
-        if (!token || !userId) {
-          // Utiliser des stats par défaut si pas connecté
-          setStats({
-            totalEleves: 0,
-            averageScore: "0",
-            progression: "0",
-            eleve: { 
-              prenom: "Visiteur", 
-              nom: "", 
-              modificationsCount: 0, 
+      if (!token || !userId) {
+        // Utiliser des stats par défaut si pas connecté
+        setStats({
+          totalEleves: 0,
+          averageScore: "0",
+          progression: "0",
+          eleve: {
+            prenom: "Visiteur",
+            nom: "",
+            modificationsCount: 0,
             lastModificationDate: new Date().toISOString(),
           },
-          });
+        });
         setLastUpdate(new Date());
         setHasData(true);
-          return;
-        }
-        const response = await axios.get(
-          `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
-          { headers: { Authorization: `Bearer ${token}` } },
-        );
+        return;
+      }
+      const response = await axios.get(
+        `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
+        { headers: { Authorization: `Bearer ${token}` } },
+      );
 
-        setStats({
-          totalEleves: response.data.totalEleves || 0,
-          averageScore: response.data.averageScore || "0",
+      setStats({
+        totalEleves: response.data.totalEleves || 0,
+        averageScore: response.data.averageScore || "0",
         progression: "0", // Sera calculée automatiquement
-          eleve: response.data.eleve || {
-            nom: "",
-            prenom: "",
-            modificationsCount: 0,
-            lastModificationDate: "",
-          },
-        });
+        eleve: response.data.eleve || {
+          nom: "",
+          prenom: "",
+          modificationsCount: 0,
+          lastModificationDate: "",
+        },
+      });
       setLastUpdate(new Date());
       setHasData(true);
     } catch (err: any) {
@@ -496,7 +496,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
               <p className={`text-2xl font-bold ${color}`}>{value}</p>
             </div>
             <Icon className={`w-8 h-8 ${color}`} />
-        </div>
+          </div>
         </CardContent>
       </Card>
     ),
@@ -596,18 +596,18 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                 Retour à l&apos;accueil
               </Button>
               <div className="flex items-center gap-3 w-full sm:w-auto">
-              <Button
+                <Button
                   className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 backdrop-blur-sm"
                   onClick={toggleTheme}
                   size="sm"
-                variant="outline"
-              >
-                {isDarkMode ? (
-                  <Sun className="w-4 h-4" />
-                ) : (
-                  <Moon className="w-4 h-4" />
-                )}
-              </Button>
+                  variant="outline"
+                >
+                  {isDarkMode ? (
+                    <Sun className="w-4 h-4" />
+                  ) : (
+                    <Moon className="w-4 h-4" />
+                  )}
+                </Button>
                 <LoginButton
                   className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
                   size="sm"
@@ -615,7 +615,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                 />
               </div>
             </div>
-            
+
             <motion.div
               animate={{ opacity: 1, y: 0 }}
               className="text-center mb-8 sm:mb-12"
@@ -641,7 +641,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                   if (stats.eleve?.prenom) {
                     return stats.eleve.prenom;
                   }
-                  
+
                   try {
                     const storedUser =
                       typeof window !== "undefined"
@@ -662,7 +662,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                       e,
                     );
                   }
-                  
+
                   return "Visiteur";
                 })()}{" "}
                 ! 🌟
@@ -690,10 +690,10 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                         💡 <strong>Mode aperçu :</strong> Connectez-vous pour
                         accéder à vos statistiques personnalisées et sauvegarder
                         votre progression.
-                    </p>
-                  </div>
+                      </p>
+                    </div>
                   </motion.div>
-              )}
+                )}
             </motion.div>
           </div>
         </div>
@@ -799,57 +799,57 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
             const userId = userData ? JSON.parse(userData)._id : null;
             return userId;
           })() && (
-            <motion.div
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-6 sm:mt-8"
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.7, delay: 0.6 }}
-            >
-              <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-4 sm:p-6 border border-violet-200 dark:border-violet-700 backdrop-blur-sm">
-                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="flex-1 min-w-0">
-                    <h3 className="text-base sm:text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
-                      🔄 Synchronisation des statistiques
-                    </h3>
-                    <p className="text-xs sm:text-sm text-violet-600 dark:text-violet-400 break-words">
-                      Synchronisez vos exercices locaux avec le serveur pour
-                      mettre à jour vos statistiques
-                    </p>
-                  </div>
-                  <div className="flex-shrink-0 w-full sm:w-auto">
-                  <StatsSync 
-                    onSyncComplete={(newStats) => {
-                        console.log(
-                          "📈 Nouvelles statistiques reçues:",
-                          newStats,
-                        );
-                        // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
-                        setStats((prevStats) => {
-                          const newAverageScore =
-                            newStats.averageScore?.toString() || "0";
-                          const newTotalEleves = newStats.totalExercises || 0;
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                className="mt-6 sm:mt-8"
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.7, delay: 0.6 }}
+              >
+                <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-4 sm:p-6 border border-violet-200 dark:border-violet-700 backdrop-blur-sm">
+                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div className="flex-1 min-w-0">
+                      <h3 className="text-base sm:text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
+                        🔄 Synchronisation des statistiques
+                      </h3>
+                      <p className="text-xs sm:text-sm text-violet-600 dark:text-violet-400 break-words">
+                        Synchronisez vos exercices locaux avec le serveur pour
+                        mettre à jour vos statistiques
+                      </p>
+                    </div>
+                    <div className="flex-shrink-0 w-full sm:w-auto">
+                      <StatsSync
+                        onSyncComplete={(newStats) => {
+                          console.log(
+                            "📈 Nouvelles statistiques reçues:",
+                            newStats,
+                          );
+                          // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
+                          setStats((prevStats) => {
+                            const newAverageScore =
+                              newStats.averageScore?.toString() || "0";
+                            const newTotalEleves = newStats.totalExercises || 0;
 
-                          // Ne mettre à jour que si les valeurs ont changé
-                          if (
-                            prevStats.averageScore !== newAverageScore ||
-                            prevStats.totalEleves !== newTotalEleves
-                          ) {
-                            return {
-                        ...prevStats,
-                              averageScore: newAverageScore,
-                              totalEleves: newTotalEleves,
-                            };
-                          }
-                          return prevStats;
-                        });
-                      }}
-                      userId={userId || ""}
-                    />
+                            // Ne mettre à jour que si les valeurs ont changé
+                            if (
+                              prevStats.averageScore !== newAverageScore ||
+                              prevStats.totalEleves !== newTotalEleves
+                            ) {
+                              return {
+                                ...prevStats,
+                                averageScore: newAverageScore,
+                                totalEleves: newTotalEleves,
+                              };
+                            }
+                            return prevStats;
+                          });
+                        }}
+                        userId={userId || ""}
+                      />
+                    </div>
                   </div>
                 </div>
-              </div>
-            </motion.div>
-          )}
+              </motion.div>
+            )}
         </div>
       </section>
 
@@ -960,7 +960,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                       </span>
                     </Button>
                     <Button
-                      className="border border-white/70 text-white hover:bg-white/15 font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base backdrop-blur-lg transition-all"
+                      className="border border-white/70 bg-white/15 hover:bg-white/25 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base shadow-lg shadow-purple-500/20 backdrop-blur-lg transition-all"
                       onClick={() => {
                         const currentWeek = Math.ceil(
                           (new Date().getTime() -
@@ -969,7 +969,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                               0,
                               1,
                             ).getTime()) /
-                            (86400000 * 7),
+                          (86400000 * 7),
                         );
                         router.push(
                           `/controle/quiz-hebdomadaire?week=${currentWeek}`,
