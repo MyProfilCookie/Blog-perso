@@ -90,7 +90,7 @@ const testimonials = [
     name: "Famille Ayivor",
     role: "Maman de Maeva",
     content: "AutiStudy a transformé l'apprentissage de notre fille. Les exercices sont parfaitement adaptés à ses besoins.",
-    avatar: "/assets/family/avatar/famille-ayivor.webp",
+    avatar: "/assets/family/avatar/family.webp",
     rating: 5
   },
   {

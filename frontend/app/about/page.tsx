@@ -37,24 +37,32 @@ const familyMembers = [
     img: "/assets/family/avatar/jessica.webp",
     role: "Sœur",
     status: "soeur",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-pink-100 text-pink-600",
   },
   {
     name: "Joshua",
     img: "/assets/family/avatar/joshua.webp",
     role: "Frère",
     status: "frère",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-yellow-100 text-yellow-600",
   },
   {
     name: "Maeva",
     img: "/assets/family/avatar/maeva.webp",
     role: "Notre inspiration",
     status: "soeur",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-green-100 text-green-600",
   },
   {
     name: "Chantal",
     img: "/assets/family/avatar/chantal.webp",
     role: "Maman",
     status: "maman",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-purple-100 text-purple-600",
   },
   {
     name: "Virginie",
@@ -62,25 +70,31 @@ const familyMembers = [
     role: "Sœur aînée",
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
-    className: "bg-purple-100 text-purple-600",
+    className: "bg-blue-100 text-blue-600",
   },
   {
     name: "Paul",
     img: "/assets/family/avatar/paul.webp",
     role: "Papa",
     status: "papa",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-orange-100 text-orange-600",
   },
   {
     name: "Pauline",
     img: "/assets/family/avatar/pauline.webp",
     role: "Sœur",
     status: "soeur",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-orange-100 text-orange-600",
   },
   {
     name: "Vanessa",
     img: "/assets/family/avatar/vanessa.webp",
     role: "Sœur",
     status: "soeur",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-red-100 text-red-600",
   },
 ];
 
@@ -414,7 +428,8 @@ export default function AboutUsPage() {
                           <Avatar
                             isBordered
                             alt={member.name}
-                            className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4"
+                            // centrer bien l'avatar
+                            className={`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4 mx-auto ${member.className}`}
                             color="primary"
                             size="lg"
                             src={member.img}
