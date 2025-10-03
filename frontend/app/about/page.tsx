@@ -265,13 +265,13 @@ export default function AboutUsPage() {
                 {[
                   {
                     title: "Notre Famille",
-                    text: "Nous sommes une grande famille unie, avec des enfants de 14 à 39 ans. Maeva, la benjamine, est notre source d'inspiration.",
+                    text: "Nous sommes une grande famille unie, avec des enfants allant de 14 à 39 ans. Maeva, la benjamine, est notre source d'inspiration.",
                     icon: <Users className="text-blue-600 w-8 h-8" />,
                     color: "from-blue-100 to-blue-200",
                   },
                   {
                     title: "Notre Maman",
-                    text: "Chantal, elle fait les activité ludiques avec Maeva.",
+                    text: "Chantal, elle fait les activités ludiques avec Maeva.",
                     icon: <HeartHandshake className="text-green-600 w-8 h-8" />,
                     color: "from-green-100 to-green-200",
                   },
