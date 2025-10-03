@@ -80,16 +80,38 @@ const normalizeArticleData = (raw: any): Article | null => {
     return null;
   }
 
-  const image = raw.image ?? raw.imageUrl ?? raw.img ?? raw.cover ?? "";
-  const content = sanitizeContent(raw.content ?? raw.body ?? raw.description);
+  const image =
+    raw.image ??
+    raw.imageUrl ??
+    raw.imageURL ??
+    raw.img ??
+    raw.cover ??
+    raw.imagePath ??
+    raw.image_path ??
+    "";
+  const content = sanitizeContent(
+    raw.content ?? raw.contenu ?? raw.body ?? raw.description ?? raw.text,
+  );
 
   return {
     id: String(identifier),
-    title: raw.title ?? "",
-    subtitle: raw.subtitle ?? raw.description ?? "",
-    category: raw.category ?? raw.tag ?? "",
-    author: raw.author ?? raw.writer ?? "",
-    date: raw.date ?? raw.createdAt ?? raw.updatedAt ?? "",
+    title: raw.title ?? raw.titre ?? raw.name ?? "",
+    subtitle:
+      raw.subtitle ??
+      raw["sous-titre"] ??
+      raw.sousTitre ??
+      raw.sous_titre ??
+      raw.description ??
+      "",
+    category:
+      raw.category ??
+      raw.categorie ??
+      raw["catégorie"] ??
+      raw.tag ??
+      raw.genre ??
+      "",
+    author: raw.author ?? raw.auteur ?? raw.writer ?? "",
+    date: raw.date ?? raw.createdAt ?? raw.updatedAt ?? raw.publishedAt ?? "",
     image,
     img: image,
     content,
@@ -220,17 +242,18 @@ const ArticlePage = () => {
     category?: string,
     currentId?: string,
     baseUrl?: string,
+    preloadedSources?: any[],
   ): Promise<Article[]> => {
-    let sources: any[] = [];
+    let sources: any[] = Array.isArray(preloadedSources) ? preloadedSources : [];
 
-    if (baseUrl) {
+    if (!sources.length && baseUrl) {
       try {
-        const response = await fetch(`${baseUrl}/blogs?page=1&limit=100`);
+        const response = await fetch(`${baseUrl}/articles`);
         if (response.ok) {
           const data = await response.json();
-          const blogs = Array.isArray(data) ? data : data.blogs;
-          if (Array.isArray(blogs)) {
-            sources = blogs;
+          const articles = Array.isArray(data) ? data : data.articles ?? data.data ?? [];
+          if (Array.isArray(articles)) {
+            sources = articles;
           }
         }
       } catch (fetchError) {
@@ -245,7 +268,16 @@ const ArticlePage = () => {
     const normalizedCategory = category ? category.toLowerCase() : null;
 
     return sources
-      .map((item: any) => normalizeArticleData(item))
+      .map((item: any) => {
+        const normalized = normalizeArticleData(item);
+        if (normalized) {
+          return normalized;
+        }
+        if (item && typeof item === "object" && typeof item.id !== "undefined" && typeof item.title === "string") {
+          return item as Article;
+        }
+        return null;
+      })
       .filter((item): item is Article => Boolean(item))
       .filter((item) =>
         item.id !== currentId &&
@@ -266,13 +298,25 @@ const ArticlePage = () => {
         : "";
 
       let normalizedArticle: Article | null = null;
+      let remoteArticles: any[] = [];
 
       if (baseUrl && isLikelyObjectId(articleId)) {
         try {
-          const response = await fetch(`${baseUrl}/blogs/${articleId}`);
+          const response = await fetch(`${baseUrl}/articles`);
           if (response.ok) {
             const data = await response.json();
-            normalizedArticle = normalizeArticleData(data.blog ?? data);
+            const items = Array.isArray(data)
+              ? data
+              : data.articles ?? data.data ?? [];
+
+            if (Array.isArray(items)) {
+              remoteArticles = items;
+              const found = items.find(
+                (item: any) =>
+                  String(item?._id ?? item?.id ?? item?.slug) === String(articleId),
+              );
+              normalizedArticle = normalizeArticleData(found);
+            }
           } else if (response.status !== 404) {
             throw new Error(`Erreur API (${response.status})`);
           }
@@ -286,6 +330,9 @@ const ArticlePage = () => {
           (item: any) => String(item.id) === String(articleId),
         );
         normalizedArticle = normalizeArticleData(fallbackArticle);
+        if (!remoteArticles.length) {
+          remoteArticles = articlesData.articles;
+        }
       }
 
       let relatedList: Article[] = [];
@@ -295,6 +342,7 @@ const ArticlePage = () => {
           normalizedArticle.category,
           normalizedArticle.id,
           baseUrl || undefined,
+          remoteArticles,
         );
       }
 

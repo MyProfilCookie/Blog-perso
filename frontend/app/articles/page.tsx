@@ -89,18 +89,40 @@ const normalizeArticleData = (raw: any): Article | null => {
     return null;
   }
 
-  const image = raw.image ?? raw.imageUrl ?? raw.img ?? raw.cover ?? "";
-  const content = sanitizeContent(raw.content ?? raw.body ?? raw.description);
+  const image =
+    raw.image ??
+    raw.imageUrl ??
+    raw.imageURL ??
+    raw.img ??
+    raw.cover ??
+    raw.imagePath ??
+    raw.image_path ??
+    "";
+  const content = sanitizeContent(
+    raw.content ?? raw.contenu ?? raw.body ?? raw.description ?? raw.text,
+  );
 
   return {
     id: String(identifier),
-    title: raw.title ?? "",
-    subtitle: raw.subtitle ?? raw.description ?? "",
+    title: raw.title ?? raw.titre ?? raw.name ?? "",
+    subtitle:
+      raw.subtitle ??
+      raw["sous-titre"] ??
+      raw.sousTitre ??
+      raw.sous_titre ??
+      raw.description ??
+      "",
     image,
     img: image,
-    category: raw.category ?? raw.tag ?? "",
-    author: raw.author ?? raw.writer ?? "",
-    date: raw.date ?? raw.createdAt ?? raw.updatedAt ?? "",
+    category:
+      raw.category ??
+      raw.categorie ??
+      raw["catégorie"] ??
+      raw.tag ??
+      raw.genre ??
+      "",
+    author: raw.author ?? raw.auteur ?? raw.writer ?? "",
+    date: raw.date ?? raw.createdAt ?? raw.updatedAt ?? raw.publishedAt ?? "",
     content,
   };
 };
@@ -265,13 +287,15 @@ const ArticlesPage = () => {
 
       if (baseUrl) {
         try {
-          const response = await fetch(`${baseUrl}/blogs?page=1&limit=100`);
+          const response = await fetch(`${baseUrl}/articles`);
           if (!response.ok) {
             throw new Error(`API error ${response.status}`);
           }
 
           const data = await response.json();
-          const items = Array.isArray(data) ? data : data.blogs;
+          const items = Array.isArray(data)
+            ? data
+            : data.articles ?? data.data ?? data.results ?? [];
 
           if (Array.isArray(items)) {
             normalizedArticles = items
