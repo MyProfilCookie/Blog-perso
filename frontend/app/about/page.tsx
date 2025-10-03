@@ -50,7 +50,7 @@ const familyMembers = [
     // on va ajouter une classe pour la couleur de fond
     className: "bg-yellow-100 text-yellow-600",
     borderColor: "#fdd68a",
-    imagePosition: "object-center",
+    imagePosition: "object-top",
   },
   {
     name: "Maeva",
