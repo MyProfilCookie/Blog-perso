@@ -1,5 +1,4 @@
 "use client";
-import dynamic from 'next/dynamic';
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 
@@ -18,29 +17,118 @@ import {
   Heart,
   Share2,
   ArrowLeft,
-  BookOpen,
   Tag,
   MessageCircle
 } from "lucide-react";
 
-import { title, subtitle } from "@/components/primitives";
-import articlesData from "@/public/dataarticless.json";
+import articlesData from "@/public/dataarticles.json";
 
 interface Article {
-  id: number;
+  id: string;
   title: string;
-  subtitle: string;
-  img?: string;
-  image?: string;
+  subtitle?: string;
   category?: string;
   author?: string;
   date?: string;
+  image?: string;
+  img?: string;
   content?: string;
 }
 
+const sanitizeContent = (rawContent: unknown): string => {
+  if (Array.isArray(rawContent)) {
+    return rawContent
+      .map((block) => {
+        if (typeof block === "string") {
+          return block;
+        }
+        if (block && typeof block === "object") {
+          if (typeof (block as { text?: string }).text === "string") {
+            return (block as { text: string }).text;
+          }
+          if (typeof (block as { content?: string }).content === "string") {
+            return (block as { content: string }).content;
+          }
+        }
+        return "";
+      })
+      .filter(Boolean)
+      .join("\n\n");
+  }
+
+  if (typeof rawContent === "string") {
+    return rawContent;
+  }
+
+  if (rawContent && typeof rawContent === "object") {
+    const maybeText = (rawContent as { text?: string; content?: string }).text ?? (rawContent as { content?: string }).content;
+    if (typeof maybeText === "string") {
+      return maybeText;
+    }
+  }
+
+  return "";
+};
+
+const normalizeArticleData = (raw: any): Article | null => {
+  if (!raw) {
+    return null;
+  }
+
+  const identifier = raw._id ?? raw.id ?? raw.slug;
+  if (identifier === undefined || identifier === null) {
+    return null;
+  }
+
+  const image = raw.image ?? raw.imageUrl ?? raw.img ?? raw.cover ?? "";
+  const content = sanitizeContent(raw.content ?? raw.body ?? raw.description);
+
+  return {
+    id: String(identifier),
+    title: raw.title ?? "",
+    subtitle: raw.subtitle ?? raw.description ?? "",
+    category: raw.category ?? raw.tag ?? "",
+    author: raw.author ?? raw.writer ?? "",
+    date: raw.date ?? raw.createdAt ?? raw.updatedAt ?? "",
+    image,
+    img: image,
+    content,
+  };
+};
+
+const computeStableHash = (value: string): number => {
+  if (!value) {
+    return 0;
+  }
+
+  const numericValue = Number(value);
+  if (!Number.isNaN(numericValue)) {
+    return Math.abs(Math.floor(numericValue));
+  }
+
+  let hash = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 31 + value.charCodeAt(i)) >>> 0;
+  }
+
+  return hash;
+};
+
+const getDefaultLikes = (id: string): number => 15 + (computeStableHash(id) % 35);
+
+const getDefaultViews = (id: string): number => 150 + (computeStableHash(id) % 200);
+
 // Fonction pour transformer la date au format "YYYY-MM-DD" en "DD Month YYYY"
 const formatDate = (dateString: string) => {
+  if (!dateString) {
+    return "";
+  }
+
   const date = new Date(dateString);
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
   const options: Intl.DateTimeFormatOptions = { year: 'numeric', month: 'long', day: 'numeric' };
 
   return date.toLocaleDateString('fr-FR', options);
@@ -56,95 +144,181 @@ const ArticlePage = () => {
   const [error, setError] = useState<string | null>(null);
   const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
+  const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
+  const articleMetricsKey = article?.id ?? (articleId ? String(articleId) : "");
 
   // Fonction pour gérer les likes
   const handleLike = () => {
-    if (!article) return;
+    const storageKey = article?.id ?? (articleId ? String(articleId) : "");
 
-    const likedArticles = JSON.parse(localStorage.getItem('likedArticles') || '[]');
-    const articleIdNum = parseInt(articleId, 10);
+    if (!storageKey) {
+      return;
+    }
 
-    // Sauvegarder le nouveau nombre de likes
-    const likesData = JSON.parse(localStorage.getItem('articleLikes') || '{}');
+    const likedArticlesRaw = JSON.parse(localStorage.getItem('likedArticles') || '[]');
+    const likedArticles: string[] = Array.isArray(likedArticlesRaw)
+      ? likedArticlesRaw.map((id: unknown) => String(id))
+      : [];
+
+    const likesDataRaw = JSON.parse(localStorage.getItem('articleLikes') || '{}');
+    const likesData: Record<string, number> =
+      likesDataRaw && typeof likesDataRaw === 'object' ? { ...likesDataRaw } : {};
 
     if (isLiked) {
-      // Retirer le like
-      const updatedLikes = likedArticles.filter((id: number) => id !== articleIdNum);
+      const updatedLikes = likedArticles.filter((id) => id !== storageKey);
       localStorage.setItem('likedArticles', JSON.stringify(updatedLikes));
       setIsLiked(false);
       const newCount = Math.max(0, likeCount - 1);
       setLikeCount(newCount);
-      likesData[articleIdNum] = newCount;
+      likesData[storageKey] = newCount;
     } else {
-      // Ajouter le like
-      const updatedLikes = [...likedArticles, articleIdNum];
+      const updatedLikes = likedArticles.includes(storageKey)
+        ? likedArticles
+        : [...likedArticles, storageKey];
       localStorage.setItem('likedArticles', JSON.stringify(updatedLikes));
       setIsLiked(true);
       const newCount = likeCount + 1;
       setLikeCount(newCount);
-      likesData[articleIdNum] = newCount;
+      likesData[storageKey] = newCount;
     }
 
-    // Sauvegarder les données de likes
     localStorage.setItem('articleLikes', JSON.stringify(likesData));
   };
 
   // Fonction pour charger les données de like
-  const loadLikeData = () => {
-    if (!article) return;
+  const loadLikeData = (storageKey: string) => {
+    const likedArticlesRaw = JSON.parse(localStorage.getItem('likedArticles') || '[]');
+    const likedArticles: string[] = Array.isArray(likedArticlesRaw)
+      ? likedArticlesRaw.map((id: unknown) => String(id))
+      : [];
 
-    const likedArticles = JSON.parse(localStorage.getItem('likedArticles') || '[]');
-    const articleIdNum = parseInt(articleId, 10);
+    setIsLiked(likedArticles.includes(storageKey));
 
-    setIsLiked(likedArticles.includes(articleIdNum));
+    const likesDataRaw = JSON.parse(localStorage.getItem('articleLikes') || '{}');
+    const likesData: Record<string, number> =
+      likesDataRaw && typeof likesDataRaw === 'object' ? { ...likesDataRaw } : {};
 
-    // Charger le nombre de likes depuis localStorage ou utiliser une valeur par défaut stable
-    const likesData = JSON.parse(localStorage.getItem('articleLikes') || '{}');
-
-    if (!likesData[articleIdNum]) {
-      // Générer une valeur par défaut stable basée sur l'ID de l'article
-      const stableDefaultLikes = 15 + (articleIdNum % 35); // Valeur entre 15 et 50 basée sur l'ID
-      likesData[articleIdNum] = stableDefaultLikes;
+    let storedCount = likesData[storageKey];
+    if (typeof storedCount !== 'number') {
+      storedCount = getDefaultLikes(storageKey);
+      likesData[storageKey] = storedCount;
       localStorage.setItem('articleLikes', JSON.stringify(likesData));
     }
 
-    setLikeCount(likesData[articleIdNum]);
+    setLikeCount(storedCount);
+  };
+
+  const getRelatedArticles = async (
+    category?: string,
+    currentId?: string,
+    baseUrl?: string,
+  ): Promise<Article[]> => {
+    let sources: any[] = [];
+
+    if (baseUrl) {
+      try {
+        const response = await fetch(`${baseUrl}/blogs?page=1&limit=100`);
+        if (response.ok) {
+          const data = await response.json();
+          const blogs = Array.isArray(data) ? data : data.blogs;
+          if (Array.isArray(blogs)) {
+            sources = blogs;
+          }
+        }
+      } catch (fetchError) {
+        console.error("❌ Erreur lors de la récupération des articles similaires :", fetchError);
+      }
+    }
+
+    if (!Array.isArray(sources) || sources.length === 0) {
+      sources = articlesData.articles;
+    }
+
+    const normalizedCategory = category ? category.toLowerCase() : null;
+
+    return sources
+      .map((item: any) => normalizeArticleData(item))
+      .filter((item): item is Article => Boolean(item))
+      .filter((item) =>
+        item.id !== currentId &&
+        (!normalizedCategory || (item.category ?? '').toLowerCase() === normalizedCategory)
+      )
+      .slice(0, 3);
   };
 
   useEffect(() => {
-    const fetchArticle = () => {
-      try {
-        const articles = articlesData.articles;
-        const foundArticle = articles.find((article: any) => article.id === parseInt(articleId, 10));
+    let isMounted = true;
 
-        setArticle(
-          foundArticle
-            ? {
-              ...foundArticle,
-              content: Array.isArray(foundArticle.content)
-                ? foundArticle.content
-                  .map((block: any) =>
-                    block.type === "text" ? block.text : ""
-                  )
-                  .join("\n")
-                : foundArticle.content || "",
-            }
-            : null
-        );
-      } catch (err) {
-        setError(err instanceof Error ? err.message : "Une erreur est survenue");
-      } finally {
-        setLoading(false);
+    const fetchArticle = async () => {
+      setLoading(true);
+      setError(null);
+
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL
+        ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")
+        : "";
+
+      let normalizedArticle: Article | null = null;
+
+      if (baseUrl) {
+        try {
+          const response = await fetch(`${baseUrl}/blogs/${articleId}`);
+          if (response.ok) {
+            const data = await response.json();
+            normalizedArticle = normalizeArticleData(data.blog ?? data);
+          } else if (response.status !== 404) {
+            throw new Error(`Erreur API (${response.status})`);
+          }
+        } catch (apiError) {
+          console.error("❌ Erreur lors de la récupération de l'article :", apiError);
+        }
       }
+
+      if (!normalizedArticle) {
+        const fallbackArticle = articlesData.articles.find(
+          (item: any) => String(item.id) === String(articleId),
+        );
+        normalizedArticle = normalizeArticleData(fallbackArticle);
+      }
+
+      let relatedList: Article[] = [];
+
+      if (normalizedArticle) {
+        relatedList = await getRelatedArticles(
+          normalizedArticle.category,
+          normalizedArticle.id,
+          baseUrl || undefined,
+        );
+      }
+
+      if (!isMounted) {
+        return;
+      }
+
+      if (normalizedArticle) {
+        setArticle(normalizedArticle);
+        setRelatedArticles(relatedList);
+        setError(null);
+      } else {
+        setArticle(null);
+        setRelatedArticles([]);
+        setError("Article non trouvé");
+      }
+
+      setLoading(false);
     };
 
     fetchArticle();
+
+    return () => {
+      isMounted = false;
+    };
   }, [articleId]);
 
   // Charger les données de like quand l'article est chargé
   useEffect(() => {
-    if (article) {
-      loadLikeData();
+    const storageKey = article?.id ?? (articleId ? String(articleId) : "");
+    if (storageKey) {
+      loadLikeData(storageKey);
     }
   }, [article, articleId]);
 
@@ -276,7 +450,7 @@ const ArticlePage = () => {
                 </div>
                 <div className="flex items-center gap-1">
                   <Eye className="w-4 h-4" />
-                  <span>{150 + (parseInt(articleId, 10) % 200)} vues</span>
+                  <span>{getDefaultViews(articleMetricsKey)} vues</span>
                 </div>
                 <div className="flex items-center gap-1">
                   <Heart className="w-4 h-4" />
@@ -435,10 +609,8 @@ const ArticlePage = () => {
                   </h3>
                 </CardHeader>
                 <CardBody className="pt-0 space-y-4">
-                  {articlesData.articles
-                    .filter((a: any) => a.id !== article.id && a.category === article.category)
-                    .slice(0, 3)
-                    .map((relatedArticle: any) => (
+                  {relatedArticles.length > 0 ? (
+                    relatedArticles.map((relatedArticle) => (
                       <Link key={relatedArticle.id} href={`/articles/${relatedArticle.id}`}>
                         <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
                           <div className="w-16 h-16 bg-gray-200 dark:bg-gray-600 rounded-lg flex-shrink-0">
@@ -460,7 +632,12 @@ const ArticlePage = () => {
                           </div>
                         </div>
                       </Link>
-                    ))}
+                    ))
+                  ) : (
+                    <p className="text-sm text-gray-500 dark:text-gray-400">
+                      Aucun autre article pour cette catégorie pour le moment.
+                    </p>
+                  )}
                 </CardBody>
               </Card>
 
@@ -475,7 +652,7 @@ const ArticlePage = () => {
                   <div className="flex items-center justify-between">
                     <span className="text-sm text-gray-600 dark:text-gray-300">Vues</span>
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
-                      {150 + (parseInt(articleId, 10) % 200)}
+                      {getDefaultViews(articleMetricsKey)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">
