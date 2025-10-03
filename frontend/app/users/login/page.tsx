@@ -9,6 +9,8 @@ import { Button } from '@nextui-org/react'
 import { Checkbox } from '@nextui-org/react';
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
+
+import { normalizeAvatarUrl } from "@/utils/normalizeAvatarUrl";
 import axios from "axios";
 
 import { useAuth } from "@/context/AuthContext"; // Assurez-vous d'avoir ce chemin correct
@@ -131,10 +133,9 @@ export default function Connexion() {
           // Normaliser les données utilisateur
           const userData = {
             ...response.data.user,
-            avatar:
-              response.data.user.image ||
-              response.data.user.avatar ||
-              "/assets/default-avatar.webp",
+            avatar: normalizeAvatarUrl(
+              response.data.user.image || response.data.user.avatar,
+            ),
             role: response.data.user.role || "user",
             deliveryAddress: response.data.user.deliveryAddress || {
               street: "Adresse inconnue",

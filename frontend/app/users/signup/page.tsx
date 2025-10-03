@@ -10,6 +10,8 @@ import { Checkbox } from '@nextui-org/react';
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 
+import { normalizeAvatarUrl } from "@/utils/normalizeAvatarUrl";
+
 import { AutismLogo } from "@/components/icons"; // Assurez-vous que le chemin est correct pour votre logo
 export default function Inscription() {
   const [pseudo, setPseudo] = useState("");
@@ -131,7 +133,7 @@ export default function Inscription() {
         JSON.stringify({
           pseudo: data.user.pseudo,
           email: data.user.email,
-          avatar: data.user.avatar || "assets/default-avatar.webp",
+          avatar: normalizeAvatarUrl(data.user.avatar),
         }),
       );
 

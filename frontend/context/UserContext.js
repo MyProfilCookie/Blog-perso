@@ -2,6 +2,7 @@ import React, { createContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation"; // Importer le routeur ici
 
 import LoadingAnimation from "@/components/loading";
+import { normalizeAvatarUrl } from "@/utils/normalizeAvatarUrl";
 
 // Créer le contexte utilisateur
 export const UserContext = createContext(null);
@@ -23,7 +24,11 @@ export const UserProvider = ({ children }) => {
 
     if (storedUser && storedToken) {
       try {
-        setUser(JSON.parse(storedUser)); // Charger l'utilisateur depuis localStorage
+        const parsedUser = JSON.parse(storedUser);
+        setUser({
+          ...parsedUser,
+          avatar: normalizeAvatarUrl(parsedUser?.avatar),
+        }); // Charger l'utilisateur depuis localStorage
       } catch (error) {
         console.error("Erreur lors du parsing des données utilisateur:", error);
         // En cas d'erreur de parsing, nettoyer les données corrompues
@@ -35,10 +40,14 @@ export const UserProvider = ({ children }) => {
   }, []);
 
   const loginUser = (userData) => {
-    setUser(userData);
+    const normalizedUser = {
+      ...userData,
+      avatar: normalizeAvatarUrl(userData?.avatar),
+    };
+    setUser(normalizedUser);
     
     if (typeof window !== 'undefined') {
-      localStorage.setItem("user", JSON.stringify(userData)); // Sauvegarder l'utilisateur dans le localStorage
+      localStorage.setItem("user", JSON.stringify(normalizedUser)); // Sauvegarder l'utilisateur dans le localStorage
 
       // Déclencher un événement personnalisé pour notifier les autres composants
       const event = new CustomEvent("userUpdate", { detail: userData });
