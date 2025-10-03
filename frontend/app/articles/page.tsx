@@ -6,8 +6,6 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable prettier/prettier */
 
-import dynamic from 'next/dynamic';
-
 import { useState, useEffect, useMemo } from "react";
 import React from "react";
 import { motion } from "framer-motion";
@@ -23,45 +21,128 @@ import {
   Calendar, 
   User, 
   Tag, 
-  BookOpen, 
   Star, 
   Eye,
   ArrowRight,
   Grid3X3,
-  List
+  List,
+  BookOpen,
 } from "lucide-react";
 
 import articlesData from "@/public/dataarticles.json";
 import { title } from "@/components/primitives";
 
 interface Article {
-  id: number;
+  id: string;
   title: string;
-  subtitle: string;
-  img?: string;
+  subtitle?: string;
   image?: string;
+  img?: string;
   category?: string;
   author?: string;
   date?: string;
   content?: string;
 }
 
+const sanitizeContent = (rawContent: unknown): string => {
+  if (Array.isArray(rawContent)) {
+    return rawContent
+      .map((block) => {
+        if (typeof block === "string") {
+          return block;
+        }
+        if (block && typeof block === "object") {
+          if (typeof (block as { text?: string }).text === "string") {
+            return (block as { text: string }).text;
+          }
+          if (typeof (block as { content?: string }).content === "string") {
+            return (block as { content: string }).content;
+          }
+        }
+        return "";
+      })
+      .filter(Boolean)
+      .join("\n\n");
+  }
+
+  if (typeof rawContent === "string") {
+    return rawContent;
+  }
+
+  if (rawContent && typeof rawContent === "object") {
+    const maybeText = (rawContent as { text?: string; content?: string }).text ?? (rawContent as { content?: string }).content;
+    if (typeof maybeText === "string") {
+      return maybeText;
+    }
+  }
+
+  return "";
+};
+
+const normalizeArticleData = (raw: any): Article | null => {
+  if (!raw) {
+    return null;
+  }
+
+  const identifier = raw._id ?? raw.id ?? raw.slug;
+  if (identifier === undefined || identifier === null) {
+    return null;
+  }
+
+  const image = raw.image ?? raw.imageUrl ?? raw.img ?? raw.cover ?? "";
+  const content = sanitizeContent(raw.content ?? raw.body ?? raw.description);
+
+  return {
+    id: String(identifier),
+    title: raw.title ?? "",
+    subtitle: raw.subtitle ?? raw.description ?? "",
+    image,
+    img: image,
+    category: raw.category ?? raw.tag ?? "",
+    author: raw.author ?? raw.writer ?? "",
+    date: raw.date ?? raw.createdAt ?? raw.updatedAt ?? "",
+    content,
+  };
+};
+
+const computeStableHash = (value: string): number => {
+  if (!value) {
+    return 0;
+  }
+
+  const numericValue = Number(value);
+  if (!Number.isNaN(numericValue)) {
+    return Math.abs(Math.floor(numericValue));
+  }
+
+  let hash = 0;
+  for (let i = 0; i < value.length; i += 1) {
+    hash = (hash * 31 + value.charCodeAt(i)) >>> 0;
+  }
+
+  return hash;
+};
+
 interface ArticleCardProps {
-  id: number;
+  id: string;
   title: string;
-  subtitle: string;
+  subtitle?: string;
   img?: string;
   image?: string;
   category?: string;
   author?: string;
   date?: string;
-  readTime?: string;
+  readTime?: number;
   views?: number;
   rating?: number;
 }
 
 const ArticleCard = ({ id, title, subtitle, img, image, category, author, date, readTime, views, rating }: ArticleCardProps) => {
   const imageSrc = img || image;
+  const hash = computeStableHash(id);
+  const priority = hash % 7 === 0;
+  const ratingDisplay = typeof rating === "number" ? rating.toFixed(1) : rating;
+
   return (
   <motion.div
     animate={{ opacity: 1, y: 0 }}
@@ -79,7 +160,7 @@ const ArticleCard = ({ id, title, subtitle, img, image, category, author, date, 
            width={600}
            height={400}
            quality={90}
-           priority={id <= 6}
+           priority={priority}
            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
          />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
@@ -133,6 +214,12 @@ const ArticleCard = ({ id, title, subtitle, img, image, category, author, date, 
               <span>{views} vues</span>
             </div>
           )}
+          {ratingDisplay && (
+            <div className="flex items-center gap-1">
+              <Star className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+              <span>{ratingDisplay}</span>
+            </div>
+          )}
         </div>
       </CardContent>
 
@@ -153,24 +240,72 @@ const ArticleCard = ({ id, title, subtitle, img, image, category, author, date, 
 
 const ArticlesPage = () => {
   const [search, setSearch] = useState("");
+  const [articles, setArticles] = useState<Article[]>([]);
   const [filteredArticles, setFilteredArticles] = useState<Article[]>([]);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewMode, setViewMode] = useState<"grid" | "list">("grid");
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [sortBy, setSortBy] = useState<string>("date");
+  const [loadingArticles, setLoadingArticles] = useState(true);
+  const [loadError, setLoadError] = useState<string | null>(null);
   const articlesPerPage = 12;
 
-  // Convertir les données d'articles au bon format
-  const articles: Article[] = useMemo(() => articlesData.articles.map((article: any, index: number) => ({
-    id: article.id || index,
-    title: article.title || "",
-    subtitle: article.subtitle || "",
-    img: article.image || article.img || "",
-    category: article.category || "",
-    author: article.author || "",
-    date: article.date || new Date().toISOString(),
-    content: article.content || ""
-  })), []);
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchArticles = async () => {
+      setLoadingArticles(true);
+      setLoadError(null);
+
+      const baseUrl = process.env.NEXT_PUBLIC_API_URL
+        ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")
+        : "";
+
+      let normalizedArticles: Article[] = [];
+
+      if (baseUrl) {
+        try {
+          const response = await fetch(`${baseUrl}/blogs?page=1&limit=100`);
+          if (!response.ok) {
+            throw new Error(`API error ${response.status}`);
+          }
+
+          const data = await response.json();
+          const items = Array.isArray(data) ? data : data.blogs;
+
+          if (Array.isArray(items)) {
+            normalizedArticles = items
+              .map((item: any) => normalizeArticleData(item))
+              .filter((item): item is Article => Boolean(item));
+          }
+        } catch (error) {
+          console.error("❌ Erreur lors du chargement des articles :", error);
+          if (isMounted) {
+            setLoadError("Impossible de récupérer les articles depuis le serveur. Affichage des données locales.");
+          }
+        }
+      }
+
+      if (normalizedArticles.length === 0) {
+        normalizedArticles = articlesData.articles
+          .map((item: any, index: number) => normalizeArticleData({ ...item, id: item.id ?? index }))
+          .filter((item): item is Article => Boolean(item));
+      }
+
+      if (!isMounted) {
+        return;
+      }
+
+      setArticles(normalizedArticles);
+      setLoadingArticles(false);
+    };
+
+    fetchArticles();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   // Calcul pour la pagination
   const { indexOfLastArticle, indexOfFirstArticle, currentArticles, totalPages } = useMemo(() => {
@@ -183,35 +318,111 @@ const ArticlesPage = () => {
   }, [currentPage, filteredArticles, articlesPerPage]);
 
   // Statistiques simulées
-  const stats = useMemo(() => ({
-    totalArticles: articles.length,
-    totalViews: 15420,
-    totalLikes: 3240,
-    averageRating: 4.6
-  }), [articles.length]);
+  const stats = useMemo(() => {
+    const totalArticles = articles.length;
+
+    if (totalArticles === 0) {
+      return {
+        totalArticles,
+        totalViews: 0,
+        totalLikes: 0,
+        averageRating: 0,
+      };
+    }
+
+    const aggregate = articles.reduce(
+      (acc, article) => {
+        const hash = computeStableHash(article.id);
+        acc.views += 300 + (hash % 1500);
+        acc.likes += 25 + (hash % 150);
+        acc.rating += 3.8 + (hash % 12) / 10;
+        return acc;
+      },
+      { views: 0, likes: 0, rating: 0 },
+    );
+
+    return {
+      totalArticles,
+      totalViews: aggregate.views,
+      totalLikes: aggregate.likes,
+      averageRating: Number((aggregate.rating / totalArticles).toFixed(1)),
+    };
+  }, [articles]);
 
   // Catégories populaires
-  const popularCategories = useMemo(() => [
-    { name: "Autisme", count: 8, color: "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300" },
-    { name: "Éducation", count: 12, color: "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300" },
-    { name: "Santé", count: 6, color: "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300" },
-    { name: "Technologie", count: 4, color: "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300" },
-    { name: "Lifestyle", count: 7, color: "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300" }
-  ], []);
+  const popularCategories = useMemo(() => {
+    if (articles.length === 0) {
+      return [] as Array<{ name: string; count: number; color: string }>;
+    }
+
+    const palette = [
+      "bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-300",
+      "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-300",
+      "bg-red-100 text-red-800 dark:bg-red-900/30 dark:text-red-300",
+      "bg-purple-100 text-purple-800 dark:bg-purple-900/30 dark:text-purple-300",
+      "bg-orange-100 text-orange-800 dark:bg-orange-900/30 dark:text-orange-300",
+    ];
+
+    const counts = articles.reduce((acc, article) => {
+      const key = (article.category ?? "Autisme").trim() || "Autisme";
+      acc.set(key, (acc.get(key) ?? 0) + 1);
+      return acc;
+    }, new Map<string, number>());
+
+    return Array.from(counts.entries())
+      .sort((a, b) => b[1] - a[1])
+      .slice(0, palette.length)
+      .map(([name, count], index) => ({
+        name,
+        count,
+        color: palette[index % palette.length],
+      }));
+  }, [articles]);
+
+  const categoriesOptions = useMemo(() => {
+    const fallback = ["Autisme", "Éducation", "Santé", "Technologie", "Lifestyle"];
+
+    if (articles.length === 0) {
+      return fallback;
+    }
+
+    const set = new Set<string>();
+    articles.forEach((article) => {
+      if (article.category) {
+        set.add(article.category);
+      }
+    });
+
+    if (set.size === 0) {
+      return fallback;
+    }
+
+    return Array.from(set).sort((a, b) => a.localeCompare(b, 'fr', { sensitivity: 'base' }));
+  }, [articles]);
 
   // Articles recommandés (simulés)
-  const recommendedArticles = useMemo(() => articles.slice(0, 3).map((article) => ({
-    ...article,
-    readTime: 3 + (article.id % 8),
-    views: 100 + (article.id % 900),
-    rating: (3.5 + (article.id % 20) / 10).toFixed(1)
-  })), [articles]);
+  const recommendedArticles = useMemo(
+    () =>
+      articles.slice(0, 3).map((article) => {
+        const hash = computeStableHash(article.id);
+        return {
+          ...article,
+          readTime: 3 + (hash % 8),
+          views: 100 + (hash % 900),
+          rating: Number((3.5 + (hash % 20) / 10).toFixed(1)),
+        };
+      }),
+    [articles],
+  );
 
   useEffect(() => {
-    let filtered = articles.filter((article) =>
-      article.title.toLowerCase().includes(search.toLowerCase()) ||
-      article.subtitle.toLowerCase().includes(search.toLowerCase())
-    );
+    const normalizedSearch = search.toLowerCase();
+
+    let filtered = articles.filter((article) => {
+      const titleMatch = (article.title ?? "").toLowerCase().includes(normalizedSearch);
+      const subtitleMatch = (article.subtitle ?? "").toLowerCase().includes(normalizedSearch);
+      return titleMatch || subtitleMatch;
+    });
 
     if (selectedCategory !== "all") {
       filtered = filtered.filter(article => 
@@ -352,11 +563,11 @@ const ArticlesPage = () => {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Toutes les catégories</SelectItem>
-                <SelectItem value="autisme">Autisme</SelectItem>
-                <SelectItem value="education">Éducation</SelectItem>
-                <SelectItem value="sante">Santé</SelectItem>
-                <SelectItem value="technologie">Technologie</SelectItem>
-                <SelectItem value="lifestyle">Lifestyle</SelectItem>
+                {categoriesOptions.map((category) => (
+                  <SelectItem key={category} value={category}>
+                    {category}
+                  </SelectItem>
+                ))}
               </SelectContent>
             </Select>
 
@@ -392,6 +603,17 @@ const ArticlesPage = () => {
           </div>
         </motion.div>
 
+        {loadError && (
+          <div className="mb-4 rounded-lg border border-yellow-300 bg-yellow-50 px-4 py-3 text-sm text-yellow-800 dark:border-yellow-700/60 dark:bg-yellow-900/30 dark:text-yellow-200">
+            {loadError}
+          </div>
+        )}
+
+        {loadingArticles ? (
+          <div className="flex justify-center py-16">
+            <div className="h-12 w-12 animate-spin rounded-full border-4 border-violet-200 border-t-transparent" />
+          </div>
+        ) : (
         <div className="grid grid-cols-1 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 lg:gap-6 xl:gap-8">
           {/* Sidebar */}
           <div className="md:col-span-1 space-y-2 sm:space-y-3 md:space-y-4 lg:space-y-6">
@@ -458,9 +680,13 @@ const ArticlesPage = () => {
                           </h4>
                           <div className="flex items-center gap-1 sm:gap-2 mt-1 text-xs text-gray-500 dark:text-gray-400">
                             <Eye className="w-3 h-3" />
-                            <span>{article.views || Math.floor((article.id % 900) + 100)}</span>
+                            <span>{article.views ?? 100 + (computeStableHash(article.id) % 900)}</span>
                             <Star className="w-3 h-3 fill-yellow-400 text-yellow-400" />
-                            <span>{article.rating}</span>
+                            <span>
+                              {typeof article.rating === 'number'
+                                ? article.rating.toFixed(1)
+                                : article.rating}
+                            </span>
                           </div>
                         </div>
                       </div>
@@ -508,9 +734,10 @@ const ArticlesPage = () => {
             >
               {currentArticles.map((article, index) => {
                 // Générer des valeurs stables pour éviter les problèmes de clés
-                const stableRating = 3.5 + (article.id % 20) / 10;
-                const stableReadTime = 3 + (article.id % 8);
-                const stableViews = 100 + (article.id % 900);
+                const hash = computeStableHash(article.id);
+                const stableRating = Number((3.5 + (hash % 20) / 10).toFixed(1));
+                const stableReadTime = 3 + (hash % 8);
+                const stableViews = 100 + (hash % 900);
                 
                 return (
                   <ArticleCard
@@ -522,7 +749,7 @@ const ArticlesPage = () => {
                     img={article.img}
                     image={article.image}
                     rating={stableRating}
-                    readTime={`${stableReadTime}`}
+                    readTime={stableReadTime}
                     subtitle={article.subtitle}
                     title={article.title}
                     views={stableViews}
@@ -610,6 +837,7 @@ const ArticlesPage = () => {
             )}
           </div>
         </div>
+        )}
       </div>
     </div>
   );

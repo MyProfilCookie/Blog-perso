@@ -134,6 +134,14 @@ const formatDate = (dateString: string) => {
   return date.toLocaleDateString('fr-FR', options);
 };
 
+const isLikelyObjectId = (value: string | undefined | null): boolean => {
+  if (!value) {
+    return false;
+  }
+
+  return /^[a-fA-F0-9]{24}$/.test(value);
+};
+
 
 const ArticlePage = () => {
   const params = useParams() as { id: string | string[] };
@@ -259,7 +267,7 @@ const ArticlePage = () => {
 
       let normalizedArticle: Article | null = null;
 
-      if (baseUrl) {
+      if (baseUrl && isLikelyObjectId(articleId)) {
         try {
           const response = await fetch(`${baseUrl}/blogs/${articleId}`);
           if (response.ok) {
