@@ -39,7 +39,8 @@ const familyMembers = [
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-pink-100 text-pink-600",
-    borderColor: '#f8b0c5',
+    borderColor: "#f8b0c5",
+    imagePosition: "object-top",
   },
   {
     name: "Joshua",
@@ -48,7 +49,8 @@ const familyMembers = [
     status: "frère",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-yellow-100 text-yellow-600",
-    borderColor: '#fdd68a',
+    borderColor: "#fdd68a",
+    imagePosition: "object-center",
   },
   {
     name: "Maeva",
@@ -57,7 +59,8 @@ const familyMembers = [
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-green-100 text-green-600",
-    borderColor: '#aee9c5',
+    borderColor: "#aee9c5",
+    imagePosition: "object-top",
   },
   {
     name: "Chantal",
@@ -66,7 +69,8 @@ const familyMembers = [
     status: "maman",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-purple-100 text-purple-600",
-    borderColor: '#cab7ff',
+    borderColor: "#cab7ff",
+    imagePosition: "object-top",
   },
   {
     name: "Virginie",
@@ -75,7 +79,8 @@ const familyMembers = [
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-blue-100 text-blue-600",
-    borderColor: '#a8d5ff',
+    borderColor: "#a8d5ff",
+    imagePosition: "object-top",
   },
   {
     name: "Paul",
@@ -84,7 +89,8 @@ const familyMembers = [
     status: "papa",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-orange-100 text-orange-600",
-    borderColor: '#fcd0a1',
+    borderColor: "#fcd0a1",
+    imagePosition: "object-top",
   },
   {
     name: "Pauline",
@@ -93,7 +99,8 @@ const familyMembers = [
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-orange-100 text-orange-600",
-    borderColor: '#fcd0a1',
+    borderColor: "#fcd0a1",
+    imagePosition: "object-center",
   },
   {
     name: "Vanessa",
@@ -102,7 +109,8 @@ const familyMembers = [
     status: "soeur",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-red-100 text-red-600",
-    borderColor: '#f8b4b4',
+    borderColor: "#f8b4b4",
+    imagePosition: "object-top",
   },
 ];
 
@@ -438,7 +446,7 @@ export default function AboutUsPage() {
                             // centrer bien l'avatar
                             className={`w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 lg:w-36 lg:h-36 mb-4 ${member.className} transition-all duration-300 flex items-center justify-center border-${member.borderColor}`}
                             classNames={{
-                              img: "w-full h-full object-cover object-center",
+                              img: `w-full h-full object-cover ${member.imagePosition ?? "object-center"}`,
                             }}
                             color="default"
                             size="lg"
