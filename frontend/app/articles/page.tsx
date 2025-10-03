@@ -507,37 +507,48 @@ const ArticlesPage = () => {
 
       <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-4 lg:px-6 xl:px-8 py-2 sm:py-3 md:py-4 lg:py-6 xl:py-8">
         {/* Statistiques */}
-        <motion.div
-          animate={{ opacity: 1, y: 0 }}
-          className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12"
-          initial={{ opacity: 0, y: 30 }}
-          transition={{ duration: 0.8, delay: 0.3 }}
-        >
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
-            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-violet-600 dark:text-violet-400 mb-1 sm:mb-2">
-              {stats.totalArticles}
-            </div>
-            <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">Articles</div>
-          </Card>
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
-            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 mb-1 sm:mb-2">
-              {stats.totalViews.toLocaleString()}
-            </div>
-            <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">Vues</div>
-          </Card>
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
-            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1 sm:mb-2">
-              {stats.totalLikes.toLocaleString()}
-            </div>
-            <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">J'aime</div>
-          </Card>
-          <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
-            <div className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-1 sm:mb-2">
-              {stats.averageRating}
-            </div>
-            <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">Note moyenne</div>
-          </Card>
-        </motion.div>
+        {loadingArticles ? (
+          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12">
+            {Array.from({ length: 4 }).map((_, index) => (
+              <div
+                key={`stats-skeleton-${index}`}
+                className="h-24 sm:h-28 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 animate-pulse"
+              />
+            ))}
+          </div>
+        ) : (
+          <motion.div
+            animate={{ opacity: 1, y: 0 }}
+            className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12"
+            initial={{ opacity: 0, y: 30 }}
+            transition={{ duration: 0.8, delay: 0.3 }}
+          >
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-violet-600 dark:text-violet-400 mb-1 sm:mb-2">
+                {stats.totalArticles}
+              </div>
+              <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">Articles</div>
+            </Card>
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 mb-1 sm:mb-2">
+                {stats.totalViews.toLocaleString()}
+              </div>
+              <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">Vues</div>
+            </Card>
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1 sm:mb-2">
+                {stats.totalLikes.toLocaleString()}
+              </div>
+              <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">J'aime</div>
+            </Card>
+            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-1 sm:mb-2">
+                {stats.averageRating}
+              </div>
+              <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">Note moyenne</div>
+            </Card>
+          </motion.div>
+        )}
 
         {/* Filtres et recherche */}
         <motion.div
