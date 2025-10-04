@@ -319,11 +319,15 @@ const ArticlePage = () => {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL
         ? process.env.NEXT_PUBLIC_API_URL.trim().replace(/\/$/, "")
         : "";
+      
+      // En production, si l'API n'est pas disponible, utiliser les données locales
+      const isProduction = process.env.NODE_ENV === 'production';
+      const shouldUseLocalData = isProduction && (!baseUrl || baseUrl.includes('localhost'));
 
       let normalizedArticle: Article | null = null;
 
-      // Toujours tenter de récupérer depuis l'API si une baseUrl est définie
-      if (baseUrl && articleId) {
+      // Toujours tenter de récupérer depuis l'API si une baseUrl est définie et qu'on n'est pas en production avec localhost
+      if (baseUrl && articleId && !shouldUseLocalData) {
         try {
           const response = await fetch(`${baseUrl}/articles/${articleId}`);
           if (response.ok) {

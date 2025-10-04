@@ -306,10 +306,14 @@ const ArticlesPage = () => {
       const baseUrl = process.env.NEXT_PUBLIC_API_URL
         ? process.env.NEXT_PUBLIC_API_URL.trim().replace(/\/$/, "")
         : "";
+      
+      // En production, si l'API n'est pas disponible, utiliser les données locales
+      const isProduction = process.env.NODE_ENV === 'production';
+      const shouldUseLocalData = isProduction && (!baseUrl || baseUrl.includes('localhost'));
 
       let normalizedArticles: Article[] = [];
 
-      if (baseUrl) {
+      if (baseUrl && !shouldUseLocalData) {
         try {
           const response = await fetch(`${baseUrl}/articles`);
           if (!response.ok) {
