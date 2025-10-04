@@ -327,7 +327,7 @@ const ArticlePage = () => {
       
       // En production, si l'API n'est pas disponible, utiliser les données locales
       const isProduction = process.env.NODE_ENV === 'production';
-      const shouldUseLocalData = isProduction && (!baseUrl || baseUrl.includes('localhost'));
+      const shouldUseLocalData = isProduction && (!baseUrl || baseUrl.includes('localhost') || baseUrl.includes('render.com'));
       
       console.log("🔍 Should use local data:", shouldUseLocalData);
 
