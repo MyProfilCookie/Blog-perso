@@ -4,7 +4,27 @@ const Article = require("../models/Article");
 exports.getAllArticles = async (req, res) => {
   try {
     const articles = await Article.find();
-    res.status(200).json(articles);
+    
+    // Mapper les champs avec emojis vers les champs standards
+    const mappedArticles = articles.map(article => {
+      const articleObj = article.toObject();
+      const mapped = {
+        _id: articleObj._id,
+        id: articleObj._id.toString(),
+        title: articleObj['📌 titre'] || articleObj.title || 'Titre non disponible',
+        subtitle: articleObj['📝 sous-titre'] || articleObj.subtitle || '',
+        image: articleObj['🔗 imageUrl'] || articleObj.image || '/assets/default-article.jpg',
+        img: articleObj['🔗 imageUrl'] || articleObj.image || '/assets/default-article.jpg',
+        date: articleObj['📅 date'] || articleObj.date || new Date().toISOString(),
+        author: articleObj['✍️ auteur'] || articleObj.author || 'Auteur inconnu',
+        category: articleObj['📂 category'] || articleObj.category || 'Non classé',
+        content: articleObj['📖 content'] || articleObj.content || '',
+        description: articleObj['🧠 description'] || articleObj.description || ''
+      };
+      return mapped;
+    });
+    
+    res.status(200).json(mappedArticles);
   } catch (error) {
     res
       .status(500)
@@ -23,7 +43,23 @@ exports.getArticleById = async (req, res) => {
       return res.status(404).json({ message: "Article non trouvé" });
     }
 
-    return res.status(200).json(article);
+    // Mapper les champs avec emojis vers les champs standards
+    const articleObj = article.toObject();
+    const mappedArticle = {
+      _id: articleObj._id,
+      id: articleObj._id.toString(),
+      title: articleObj['📌 titre'] || articleObj.title || 'Titre non disponible',
+      subtitle: articleObj['📝 sous-titre'] || articleObj.subtitle || '',
+      image: articleObj['🔗 imageUrl'] || articleObj.image || '/assets/default-article.jpg',
+      img: articleObj['🔗 imageUrl'] || articleObj.image || '/assets/default-article.jpg',
+      date: articleObj['📅 date'] || articleObj.date || new Date().toISOString(),
+      author: articleObj['✍️ auteur'] || articleObj.author || 'Auteur inconnu',
+      category: articleObj['📂 category'] || articleObj.category || 'Non classé',
+      content: articleObj['📖 content'] || articleObj.content || '',
+      description: articleObj['🧠 description'] || articleObj.description || ''
+    };
+
+    return res.status(200).json(mappedArticle);
   } catch (error) {
     return res
       .status(500)

@@ -304,7 +304,7 @@ const ArticlesPage = () => {
       setLoadError(null);
 
       const baseUrl = process.env.NEXT_PUBLIC_API_URL
-        ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")
+        ? process.env.NEXT_PUBLIC_API_URL.trim().replace(/\/$/, "")
         : "";
 
       let normalizedArticles: Article[] = [];

@@ -2,8 +2,11 @@
 import axios from 'axios';
 
 // Configuration de base pour Axios
+const rawBase = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+const normalizedBaseURL = (rawBase || '').trim().replace(/\/$/, '');
+
 const apiClient = axios.create({
-  baseURL: process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api',
+  baseURL: normalizedBaseURL,
   timeout: 10000,
 });
 
@@ -70,8 +73,9 @@ apiClient.interceptors.response.use(
         console.log('🔄 Tentative de rafraîchissement du token...');
 
         // Utiliser une instance axios séparée pour éviter l'interception
+        const refreshBase = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api').trim().replace(/\/$/, '');
         const refreshResponse = await axios.post(
-          `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api'}/auth/refresh-token`,
+          `${refreshBase}/auth/refresh-token`,
           { refreshToken }
         );
 

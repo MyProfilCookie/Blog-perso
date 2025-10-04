@@ -317,12 +317,13 @@ const ArticlePage = () => {
       setError(null);
 
       const baseUrl = process.env.NEXT_PUBLIC_API_URL
-        ? process.env.NEXT_PUBLIC_API_URL.replace(/\/$/, "")
+        ? process.env.NEXT_PUBLIC_API_URL.trim().replace(/\/$/, "")
         : "";
 
       let normalizedArticle: Article | null = null;
 
-      if (baseUrl && isLikelyObjectId(articleId)) {
+      // Toujours tenter de récupérer depuis l'API si une baseUrl est définie
+      if (baseUrl && articleId) {
         try {
           const response = await fetch(`${baseUrl}/articles/${articleId}`);
           if (response.ok) {

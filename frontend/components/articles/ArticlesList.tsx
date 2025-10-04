@@ -37,8 +37,8 @@ export default function ArticlesList() {
     const fetchArticles = async () => {
       try {
         const apiUrl = (
-          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
-        ).replace(/\/$/, "");
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api"
+        ).trim().replace(/\/$/, "");
         const response = await axios.get(`${apiUrl}/articles`);
 
         setArticles(response.data);
