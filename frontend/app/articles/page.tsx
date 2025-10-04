@@ -309,7 +309,7 @@ const ArticlesPage = () => {
       
       // En production, si l'API n'est pas disponible, utiliser les données locales
       const isProduction = process.env.NODE_ENV === 'production';
-      const shouldUseLocalData = isProduction && (!baseUrl || baseUrl.includes('localhost') || baseUrl.includes('render.com'));
+      const shouldUseLocalData = isProduction && (!baseUrl || baseUrl.includes('localhost'));
 
       let normalizedArticles: Article[] = [];
 
