@@ -70,6 +70,26 @@ const sanitizeContent = (rawContent: unknown): string => {
   return "";
 };
 
+const DEFAULT_ARTICLE_IMAGE = "/assets/default-image.webp";
+
+const resolveImagePath = (value?: string | null): string => {
+  if (!value || typeof value !== "string") {
+    return DEFAULT_ARTICLE_IMAGE;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return DEFAULT_ARTICLE_IMAGE;
+  }
+
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) {
+    return trimmed;
+  }
+
+  const normalized = trimmed.replace(/^\.\/?/, "");
+  return normalized.startsWith("/") ? normalized : `/${normalized}`;
+};
+
 const normalizeArticleData = (raw: any): Article | null => {
   if (!raw) {
     return null;
@@ -80,15 +100,19 @@ const normalizeArticleData = (raw: any): Article | null => {
     return null;
   }
 
-  const image =
+  const image = resolveImagePath(
     raw.image ??
-    raw.imageUrl ??
-    raw.imageURL ??
-    raw.img ??
-    raw.cover ??
-    raw.imagePath ??
-    raw.image_path ??
-    "";
+      raw.imageUrl ??
+      raw.imageURL ??
+      raw.img ??
+      raw.cover ??
+      raw.imagePath ??
+      raw.image_path ??
+      raw.image_name ??
+      raw.imageName ??
+      raw.image_url ??
+      "",
+  );
   const content = sanitizeContent(
     raw.content ?? raw.contenu ?? raw.body ?? raw.description ?? raw.text,
   );
@@ -163,7 +187,6 @@ const isLikelyObjectId = (value: string | undefined | null): boolean => {
 
   return /^[a-fA-F0-9]{24}$/.test(value);
 };
-
 
 const ArticlePage = () => {
   const params = useParams() as { id: string | string[] };
@@ -298,25 +321,18 @@ const ArticlePage = () => {
         : "";
 
       let normalizedArticle: Article | null = null;
-      let remoteArticles: any[] = [];
 
       if (baseUrl && isLikelyObjectId(articleId)) {
         try {
-          const response = await fetch(`${baseUrl}/articles`);
+          const response = await fetch(`${baseUrl}/articles/${articleId}`);
           if (response.ok) {
             const data = await response.json();
-            const items = Array.isArray(data)
-              ? data
-              : data.articles ?? data.data ?? [];
-
-            if (Array.isArray(items)) {
-              remoteArticles = items;
-              const found = items.find(
-                (item: any) =>
-                  String(item?._id ?? item?.id ?? item?.slug) === String(articleId),
-              );
-              normalizedArticle = normalizeArticleData(found);
-            }
+            const rawArticle =
+              data.article ??
+              data.data ??
+              data.result ??
+              data;
+            normalizedArticle = normalizeArticleData(rawArticle);
           } else if (response.status !== 404) {
             throw new Error(`Erreur API (${response.status})`);
           }
@@ -330,9 +346,6 @@ const ArticlePage = () => {
           (item: any) => String(item.id) === String(articleId),
         );
         normalizedArticle = normalizeArticleData(fallbackArticle);
-        if (!remoteArticles.length) {
-          remoteArticles = articlesData.articles;
-        }
       }
 
       let relatedList: Article[] = [];
@@ -342,7 +355,6 @@ const ArticlePage = () => {
           normalizedArticle.category,
           normalizedArticle.id,
           baseUrl || undefined,
-          remoteArticles,
         );
       }
 
@@ -528,7 +540,7 @@ const ArticlePage = () => {
                   className="object-cover w-full h-[300px] sm:h-[400px] lg:h-[500px]"
                   height={500}
                   width={1200}
-                  src={article.img || article.image || "/assets/default-image.webp"}
+                  src={resolveImagePath(article.img || article.image)}
                   priority
                   quality={95}
                   sizes="(max-width: 768px) 100vw, (max-width: 1200px) 75vw, 900px"
@@ -671,7 +683,7 @@ const ArticlePage = () => {
                         <div className="flex gap-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors cursor-pointer">
                           <div className="w-16 h-16 bg-gray-200 dark:bg-gray-600 rounded-lg flex-shrink-0">
                             <Image
-                              src={relatedArticle.image || relatedArticle.img || "/assets/default-image.webp"}
+                              src={resolveImagePath(relatedArticle.image || relatedArticle.img)}
                               alt={relatedArticle.title}
                               width={64}
                               height={64}

@@ -89,15 +89,19 @@ const normalizeArticleData = (raw: any): Article | null => {
     return null;
   }
 
-  const image =
+  const image = resolveImagePath(
     raw.image ??
-    raw.imageUrl ??
-    raw.imageURL ??
-    raw.img ??
-    raw.cover ??
-    raw.imagePath ??
-    raw.image_path ??
-    "";
+      raw.imageUrl ??
+      raw.imageURL ??
+      raw.img ??
+      raw.cover ??
+      raw.imagePath ??
+      raw.image_path ??
+      raw.image_name ??
+      raw.imageName ??
+      raw.image_url ??
+      "",
+  );
   const content = sanitizeContent(
     raw.content ?? raw.contenu ?? raw.body ?? raw.description ?? raw.text,
   );
@@ -145,6 +149,26 @@ const computeStableHash = (value: string): number => {
   return hash;
 };
 
+const DEFAULT_ARTICLE_IMAGE = "/assets/default-image.webp";
+
+const resolveImagePath = (value?: string | null): string => {
+  if (!value || typeof value !== "string") {
+    return DEFAULT_ARTICLE_IMAGE;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return DEFAULT_ARTICLE_IMAGE;
+  }
+
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) {
+    return trimmed;
+  }
+
+  const normalized = trimmed.replace(/^\.\/?/, "");
+  return normalized.startsWith("/") ? normalized : `/${normalized}`;
+};
+
 interface ArticleCardProps {
   id: string;
   title: string;
@@ -160,7 +184,7 @@ interface ArticleCardProps {
 }
 
 const ArticleCard = ({ id, title, subtitle, img, image, category, author, date, readTime, views, rating }: ArticleCardProps) => {
-  const imageSrc = img || image;
+  const imageSrc = resolveImagePath(img || image);
   const hash = computeStableHash(id);
   const priority = hash % 7 === 0;
   const ratingDisplay = typeof rating === "number" ? rating.toFixed(1) : rating;
@@ -175,16 +199,16 @@ const ArticleCard = ({ id, title, subtitle, img, image, category, author, date, 
   >
     <Card className="shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800 rounded-xl overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-700 group">
       <Link className="block relative overflow-hidden h-[160px] sm:h-[180px] md:h-[200px]" href={`/articles/${id}`}>
-                 <Image
-           alt={title}
-           className="object-cover w-full h-full transition-transform duration-500 group-hover:scale-110"
-           src={imageSrc || "/assets/default-image.webp"}
-           width={600}
-           height={400}
-           quality={90}
-           priority={priority}
-           sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-         />
+        <Image
+          alt={title}
+          className="object-cover w-full h-full transition-transform durée-500 group-hover:scale-110"
+          src={imageSrc || DEFAULT_ARTICLE_IMAGE}
+          width={600}
+          height={400}
+          quality={90}
+          priority={priority}
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+        />
         <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         {category && (
           <Badge className="absolute top-3 left-3 bg-violet-600 hover:bg-violet-700 text-white">
@@ -704,7 +728,7 @@ const ArticlesPage = () => {
                         <Image
                           alt={article.title}
                           className="w-10 h-10 sm:w-12 sm:h-12 md:w-16 md:h-16 object-cover rounded-lg"
-                          src={article.img || article.image || "/assets/default-image.webp"}
+                          src={resolveImagePath(article.img || article.image)}
                           width={64}
                           height={64}
                           quality={90}

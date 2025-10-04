@@ -12,6 +12,25 @@ exports.getAllArticles = async (req, res) => {
   }
 };
 
+// Obtenir un article par ID
+exports.getArticleById = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const article = await Article.findById(id);
+
+    if (!article) {
+      return res.status(404).json({ message: "Article non trouvé" });
+    }
+
+    return res.status(200).json(article);
+  } catch (error) {
+    return res
+      .status(500)
+      .json({ message: "Erreur lors de la récupération de l'article", error });
+  }
+};
+
 // Ajouter un nouvel article
 exports.addArticle = async (req, res) => {
   const { title, subtitle, image, date, author, content } = req.body;
