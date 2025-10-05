@@ -578,16 +578,16 @@ export const Navbar = () => {
       <NavbarContent justify="end">
         {/* Bouton AI Assistant */}
         <NavbarItem>
-          <NextLink href="/ai-assistant">
-            <Button
-              isIconOnly
-              variant="flat"
-              className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all"
-              aria-label="Assistant IA"
-            >
-              <Sparkles className="w-5 h-5" />
-            </Button>
-          </NextLink>
+          <Button
+            as={NextLink}
+            href="/ai-assistant"
+            isIconOnly
+            variant="flat"
+            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all"
+            aria-label="Assistant IA"
+          >
+            <Sparkles className="w-5 h-5" />
+          </Button>
         </NavbarItem>
 
         {/* Bouton de thème */}
