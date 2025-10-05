@@ -19,11 +19,14 @@ export const StripeProvider: React.FC<StripeProviderProps> = ({ children, stripe
       let retries = 3;
       let lastError: Error | null = null;
 
+      console.log("🔄 Tentative de chargement de Stripe...", { stripeKey: stripeKey?.substring(0, 20) + '...' });
+
       while (retries > 0) {
         try {
           setIsLoading(true);
           setError(null);
           
+          console.log(`🔄 Tentative ${4 - retries}/3 de chargement Stripe`);
           const stripe = await loadStripe(stripeKey);
           
           if (stripe) {
@@ -37,16 +40,23 @@ export const StripeProvider: React.FC<StripeProviderProps> = ({ children, stripe
         } catch (err) {
           lastError = err as Error;
           retries--;
-          console.warn(`⚠️ Tentative de chargement Stripe échouée (${3 - retries}/3):`, err);
+          console.error(`⚠️ Tentative de chargement Stripe échouée (${3 - retries}/3):`, err);
+          console.error("Détails de l'erreur:", {
+            message: (err as Error).message,
+            name: (err as Error).name,
+            stack: (err as Error).stack
+          });
           
           // Vérifier si c'est une erreur CSP
-          if (err instanceof Error && err.message.includes('Content Security Policy')) {
+          if (err instanceof Error && (err.message.includes('Content Security Policy') || err.message.includes('CSP'))) {
+            console.error("❌ Erreur CSP détectée");
             setError("Erreur de sécurité : Le chargement de Stripe est bloqué par la politique de sécurité du navigateur. Veuillez contacter l'administrateur du site.");
             setIsLoading(false);
             return;
           }
           
           if (retries > 0) {
+            console.log(`⏳ Attente de 2 secondes avant la prochaine tentative...`);
             // Attendre avant de réessayer
             await new Promise(resolve => setTimeout(resolve, 2000));
           }
@@ -54,14 +64,15 @@ export const StripeProvider: React.FC<StripeProviderProps> = ({ children, stripe
       }
 
       // Toutes les tentatives ont échoué
-      setError(`Impossible de charger Stripe après 3 tentatives: ${lastError?.message}`);
+      console.error("❌ Échec du chargement de Stripe après 3 tentatives:", lastError);
+      setError(`Impossible de charger Stripe: ${lastError?.message || 'Erreur inconnue'}`);
       setIsLoading(false);
-      console.error("❌ Échec du chargement de Stripe:", lastError);
     };
 
     if (stripeKey) {
       loadStripeWithRetry();
     } else {
+      console.error("❌ Clé Stripe non configurée");
       setError("Clé Stripe non configurée");
       setIsLoading(false);
     }
