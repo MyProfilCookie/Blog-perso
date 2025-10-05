@@ -36,13 +36,18 @@ const AIAssistantPremium: React.FC = () => {
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const prevMessagesLengthRef = useRef(messages.length);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    scrollToBottom();
+    // Scroller uniquement si un nouveau message a été ajouté
+    if (messages.length > prevMessagesLengthRef.current) {
+      scrollToBottom();
+      prevMessagesLengthRef.current = messages.length;
+    }
   }, [messages]);
 
   const getAIResponse = async (userMessage: string) => {
