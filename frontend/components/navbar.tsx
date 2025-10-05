@@ -465,7 +465,7 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar
-      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative performance-optimized no-border-navbar h-16 md:h-20"
+      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-['Segoe_UI',_'Roboto',_'Helvetica_Neue',_Arial,_sans-serif] relative performance-optimized no-border-navbar h-16 md:h-20"
       maxWidth="full"
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}
@@ -483,10 +483,10 @@ export const Navbar = () => {
           >
             <AutismLogo size={14} />
             <div className="flex flex-col">
-              <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-lg lg:text-xl">
+              <p className="font-bold text-violet-600 dark:text-violet-400 text-base md:text-xl lg:text-2xl tracking-tight">
                 AutiStudy
               </p>
-              <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
+              <p className="text-xs md:text-sm lg:text-base text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
                 Créé par une famille
               </p>
             </div>
@@ -497,50 +497,50 @@ export const Navbar = () => {
       <NavbarContent className="hidden lg:flex gap-4 xl:gap-8 flex-1" justify="center">
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5 px-1"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
             href="/about"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faInfoCircle} />
+            <FontAwesomeIcon className="w-5 h-5" icon={faInfoCircle} />
             À propos
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5 px-1"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
             href="/articles"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faBook} />
+            <FontAwesomeIcon className="w-5 h-5" icon={faBook} />
             Publications
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5 px-1"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
             href="/posts"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faNewspaper} />
+            <FontAwesomeIcon className="w-5 h-5" icon={faNewspaper} />
             Posts
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5 px-1"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
             href="/controle"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faGamepad} />
+            <FontAwesomeIcon className="w-5 h-5" icon={faGamepad} />
             Contrôle
           </NextLink>
         </NavbarItem>
 
         <NavbarItem className="relative" key="shop">
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-1.5 relative text-sm xl:text-base font-medium transition-colors duration-200 px-1"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-base xl:text-lg font-semibold transition-colors duration-200 px-1"
             href="/shop"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faShoppingCart} />
+            <FontAwesomeIcon className="w-5 h-5" icon={faShoppingCart} />
             Shop
             {cartItemsCount > 0 && (
               <Badge
