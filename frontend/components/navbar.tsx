@@ -494,53 +494,53 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden lg:flex gap-6 xl:gap-10 flex-1 max-w-4xl mx-auto" justify="center">
+      <NavbarContent className="hidden lg:flex gap-4 xl:gap-8 flex-1" justify="center">
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium transition-colors duration-200 flex items-center gap-2 px-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5 px-1"
             href="/about"
           >
-            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faInfoCircle} />
+            <FontAwesomeIcon className="w-4 h-4" icon={faInfoCircle} />
             À propos
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium transition-colors duration-200 flex items-center gap-2 px-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5 px-1"
             href="/articles"
           >
-            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faBook} />
+            <FontAwesomeIcon className="w-4 h-4" icon={faBook} />
             Publications
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium transition-colors duration-200 flex items-center gap-2 px-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5 px-1"
             href="/posts"
           >
-            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faNewspaper} />
+            <FontAwesomeIcon className="w-4 h-4" icon={faNewspaper} />
             Posts
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium transition-colors duration-200 flex items-center gap-2 px-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5 px-1"
             href="/controle"
           >
-            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faGamepad} />
+            <FontAwesomeIcon className="w-4 h-4" icon={faGamepad} />
             Contrôle
           </NextLink>
         </NavbarItem>
 
         <NavbarItem className="relative" key="shop">
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-base lg:text-lg font-medium transition-colors duration-200 px-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-1.5 relative text-sm xl:text-base font-medium transition-colors duration-200 px-1"
             href="/shop"
           >
-            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faShoppingCart} />
+            <FontAwesomeIcon className="w-4 h-4" icon={faShoppingCart} />
             Shop
             {cartItemsCount > 0 && (
               <Badge
