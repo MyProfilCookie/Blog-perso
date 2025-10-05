@@ -34,6 +34,21 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     const [, setCartItems] = useState<any[]>([]);
     const [user, setUser] = useState<any>(null);
     const [isProcessing, setIsProcessing] = useState<boolean>(false);
+    const [isDarkMode, setIsDarkMode] = useState(false);
+
+    // Détecter le mode sombre
+    useEffect(() => {
+        const checkDarkMode = () => {
+            setIsDarkMode(document.documentElement.classList.contains('dark'));
+        };
+        checkDarkMode();
+        
+        // Observer les changements de thème
+        const observer = new MutationObserver(checkDarkMode);
+        observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
+        
+        return () => observer.disconnect();
+    }, []);
     
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
@@ -273,10 +288,18 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                             style: {
                                 base: {
                                     fontSize: "16px",
-                                    color: "#32325d",
-                                    "::placeholder": { color: "#aab7c4" },
+                                    color: isDarkMode ? "#ffffff" : "#32325d",
+                                    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif',
+                                    fontSmoothing: "antialiased",
+                                    "::placeholder": { 
+                                        color: isDarkMode ? "#9ca3af" : "#aab7c4" 
+                                    },
+                                    iconColor: isDarkMode ? "#ffffff" : "#32325d",
                                 },
-                                invalid: { color: "#fa755a" },
+                                invalid: { 
+                                    color: "#fa755a",
+                                    iconColor: "#fa755a"
+                                },
                             },
                             disabled: isProcessing || !selectedTransporter,
                         }}
