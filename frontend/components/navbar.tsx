@@ -465,7 +465,7 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar
-      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-['Segoe_UI',_'Roboto',_'Helvetica_Neue',_Arial,_sans-serif] relative performance-optimized no-border-navbar h-16 md:h-20"
+      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-['Inter',_'system-ui',_-apple-system,_'SF_Pro_Display',_sans-serif] relative performance-optimized no-border-navbar h-16 md:h-20"
       maxWidth="full"
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}
