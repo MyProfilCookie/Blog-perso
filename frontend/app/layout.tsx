@@ -133,12 +133,7 @@ export default function RootLayout({
             `,
           }}
         />
-        <link
-          as="image"
-          href="/assets/home/hero-bg.webp"
-          rel="preload"
-          type="image/webp"
-        />
+        {/* Preload supprimé - géré dynamiquement ci-dessus */}
 
         {/* Resource hints avancés pour LCP - DNS prefetch seulement */}
 
