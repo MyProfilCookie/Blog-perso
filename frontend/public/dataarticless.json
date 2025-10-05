@@ -317,6 +317,326 @@
                     "alt": "Un enfant explorant son intérêt pour les trains"
                 }
             ]
+        },
+        {
+            "id": 11,
+            "title": "L'art-thérapie pour les enfants autistes",
+            "subtitle": "Comment l'expression artistique favorise la communication et l'épanouissement",
+            "image": "/assets/art.webp",
+            "date": "2024-10-15",
+            "author": "Sophie Martin",
+            "category": "Thérapies",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "L'art-thérapie est une approche thérapeutique qui utilise le processus créatif pour améliorer le bien-être physique, mental et émotionnel. Pour les enfants autistes, elle offre un moyen d'expression non verbal particulièrement adapté à leurs besoins."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Les bienfaits de l'art-thérapie"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "L'art-thérapie permet aux enfants autistes de développer leurs capacités motrices fines, d'améliorer leur concentration et de favoriser l'expression émotionnelle. Le dessin, la peinture, le modelage ou le collage deviennent des outils de communication alternatifs pour exprimer des sentiments difficiles à verbaliser."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "De nombreux thérapeutes rapportent que les séances d'art-thérapie aident à réduire l'anxiété et les comportements stéréotypés, tout en renforçant l'estime de soi et la confiance en leurs capacités créatives."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/art.webp",
+                    "alt": "Enfant autiste créant une œuvre d'art"
+                }
+            ]
+        },
+        {
+            "id": 12,
+            "title": "Les technologies d'assistance pour l'autonomie",
+            "subtitle": "Comment les outils numériques facilitent le quotidien des personnes autistes",
+            "image": "/assets/app.webp",
+            "date": "2024-10-22",
+            "author": "Thomas Leroy",
+            "category": "Technologie",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Les technologies d'assistance ont révolutionné l'accompagnement des personnes autistes. Des applications mobiles aux dispositifs intelligents, ces outils numériques offrent un soutien précieux pour développer l'autonomie et faciliter la communication."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Applications et dispositifs innovants"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les applications de gestion du temps et des routines, comme TimeTimer ou Choiceworks, permettent de visualiser le déroulement de la journée. Les outils de communication augmentée et alternative (CAA) comme TouchChat ou LAMP Words for Life facilitent l'expression pour les personnes non-verbales."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les montres connectées et les trackers peuvent aider à gérer l'anxiété en proposant des exercices de respiration ou en alertant lors de surcharges sensorielles. Ces technologies deviennent des compagnons quotidiens qui favorisent l'indépendance."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/app.webp",
+                    "alt": "Tablette avec applications d'assistance"
+                }
+            ]
+        },
+        {
+            "id": 13,
+            "title": "La musicothérapie et ses effets sur l'autisme",
+            "subtitle": "Le pouvoir thérapeutique de la musique pour les enfants autistes",
+            "image": "/assets/music_therapy.webp",
+            "date": "2024-11-03",
+            "author": "Claire Dubois",
+            "category": "Thérapies",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "La musicothérapie est une intervention thérapeutique qui utilise la musique pour atteindre des objectifs non musicaux. Pour les enfants autistes, elle offre des opportunités uniques de développement social, émotionnel et cognitif."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Comment fonctionne la musicothérapie"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "La musique active simultanément plusieurs zones du cerveau, favorisant ainsi des connexions neurologiques bénéfiques. Les enfants autistes répondent souvent positivement aux stimuli musicaux, même lorsqu'ils ont des difficultés avec le langage verbal."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les séances peuvent inclure l'écoute active, le chant, le jeu d'instruments ou la composition. Ces activités améliorent la communication, renforcent les compétences sociales et offrent un exutoire émotionnel dans un cadre structuré et prévisible."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/music_therapy.webp",
+                    "alt": "Session de musicothérapie avec un enfant autiste"
+                }
+            ]
+        },
+        {
+            "id": 14,
+            "title": "Le diagnostic précoce de l'autisme",
+            "subtitle": "L'importance d'une détection et d'une intervention rapides",
+            "image": "/assets/autism-daily.webp",
+            "date": "2024-11-12",
+            "author": "Dr. Émilie Rousseau",
+            "category": "Diagnostic",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Le diagnostic précoce de l'autisme est crucial pour mettre en place des interventions adaptées le plus tôt possible. Les recherches montrent que plus l'intervention débute tôt, meilleurs sont les résultats à long terme."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Les signes précoces à surveiller"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Dès 12-18 mois, certains signes peuvent alerter : absence de pointage du doigt, peu de contact visuel, absence de réponse à son prénom, retard dans le développement du langage, jeux répétitifs ou mouvements stéréotypés."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les outils de dépistage comme le M-CHAT (Modified Checklist for Autism in Toddlers) permettent aux professionnels de santé d'identifier précocement les enfants nécessitant une évaluation plus approfondie. Un diagnostic posé avant 3 ans permet de débuter les interventions pendant la période de plasticité cérébrale maximale."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/autism-daily.webp",
+                    "alt": "Évaluation précoce d'un jeune enfant"
+                }
+            ]
+        },
+        {
+            "id": 15,
+            "title": "La transition vers l'âge adulte pour les personnes autistes",
+            "subtitle": "Préparer l'avenir : études supérieures, emploi et vie autonome",
+            "image": "/assets/adult_transition.webp",
+            "date": "2024-11-20",
+            "author": "Marc Leblanc",
+            "category": "Vie adulte",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "La transition vers l'âge adulte représente un défi majeur pour les personnes autistes et leurs familles. Cette période nécessite une planification soignée pour assurer une intégration réussie dans la vie professionnelle et sociale."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Préparer l'avenir professionnel"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les programmes de transition commencent idéalement dès le lycée, avec un focus sur le développement des compétences professionnelles, l'autonomie dans les transports et la gestion de la vie quotidienne. Les stages en entreprise et les formations adaptées permettent d'explorer différents métiers."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "De nombreuses entreprises reconnaissent aujourd'hui les forces des personnes autistes : attention aux détails, rigueur, expertise dans des domaines spécifiques. Des structures d'accompagnement comme les ESAT ou les entreprises adaptées offrent des environnements de travail inclusifs."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/adult_transition.webp",
+                    "alt": "Jeune adulte autiste en formation professionnelle"
+                }
+            ]
+        },
+        {
+            "id": 16,
+            "title": "Les groupes d'habiletés sociales",
+            "subtitle": "Apprendre les codes sociaux dans un environnement bienveillant",
+            "image": "/assets/community-support.webp",
+            "date": "2024-12-01",
+            "author": "Julie Lefebvre",
+            "category": "Développement social",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Les groupes d'habiletés sociales offrent un espace structuré et sécurisant où les enfants et adolescents autistes peuvent apprendre et pratiquer les compétences sociales essentielles."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Structure et objectifs des groupes"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Ces groupes, généralement animés par des psychologues ou des éducateurs spécialisés, travaillent sur des compétences spécifiques : initier et maintenir une conversation, comprendre le langage corporel, gérer les conflits, développer l'empathie et l'amitié."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les séances utilisent des jeux de rôle, des scénarios sociaux et des activités de groupe pour pratiquer ces compétences. L'environnement bienveillant permet aux participants de faire des erreurs sans jugement et de recevoir un feedback constructif immédiat."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/community-support.webp",
+                    "alt": "Groupe d'habiletés sociales en action"
+                }
+            ]
+        },
+        {
+            "id": 17,
+            "title": "L'importance du sommeil chez les enfants autistes",
+            "subtitle": "Comprendre et améliorer la qualité du sommeil",
+            "image": "/assets/sleep_autism.webp",
+            "date": "2024-12-10",
+            "author": "Dr. Paul Fontaine",
+            "category": "Santé",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Les troubles du sommeil affectent jusqu'à 80% des enfants autistes, impactant significativement leur comportement, leurs apprentissages et leur qualité de vie. Comprendre ces difficultés est essentiel pour y apporter des solutions."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Les défis du sommeil dans l'autisme"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les enfants autistes peuvent présenter des difficultés d'endormissement, des réveils nocturnes fréquents ou un sommeil fragmenté. Ces troubles sont souvent liés à des particularités sensorielles, de l'anxiété ou des déséquilibres dans la production de mélatonine."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Des stratégies peuvent aider : établir une routine de coucher prévisible, créer un environnement de sommeil optimal (chambre sombre, température fraîche, réduction des stimuli), limiter les écrans avant le coucher et parfois utiliser des suppléments de mélatonine sous supervision médicale."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/sleep_autism.webp",
+                    "alt": "Environnement de sommeil adapté pour enfant autiste"
+                }
+            ]
+        },
+        {
+            "id": 18,
+            "title": "Les frères et sœurs d'enfants autistes",
+            "subtitle": "Soutenir la fratrie dans son rôle unique",
+            "image": "/assets/family.webp",
+            "date": "2024-12-18",
+            "author": "Camille Fontaine",
+            "category": "Famille",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Les frères et sœurs d'enfants autistes vivent une expérience familiale particulière qui les façonne profondément. Ils ont besoin d'attention, de compréhension et de soutien pour s'épanouir dans ce contexte."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Les défis et les forces de la fratrie"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les frères et sœurs peuvent ressentir de la jalousie face à l'attention portée à l'enfant autiste, de l'embarras face aux comportements atypiques en public, ou de l'inquiétude pour l'avenir. Ils peuvent aussi développer une maturité précoce et une grande empathie."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Il est crucial de consacrer du temps individuel à chaque enfant, d'expliquer l'autisme de manière adaptée à leur âge, et de valoriser leur rôle unique dans la famille. Les groupes de fratrie permettent aux enfants de partager leurs expériences avec des pairs qui les comprennent."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/family.webp",
+                    "alt": "Fratrie jouant ensemble"
+                }
+            ]
+        },
+        {
+            "id": 19,
+            "title": "L'ergothérapie pour les enfants autistes",
+            "subtitle": "Développer l'autonomie dans les activités quotidiennes",
+            "image": "/assets/accompagnement.webp",
+            "date": "2025-01-05",
+            "author": "Laura Girard",
+            "category": "Thérapies",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "L'ergothérapie joue un rôle essentiel dans le développement de l'autonomie des enfants autistes. Elle vise à améliorer leurs capacités à réaliser les activités de la vie quotidienne et à participer pleinement à leur environnement."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Les domaines d'intervention"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "L'ergothérapeute travaille sur la motricité fine (écriture, boutonner ses vêtements), l'intégration sensorielle, la planification motrice, l'organisation spatiale et les compétences d'auto-soins (s'habiller, manger, se laver)."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Des adaptations de l'environnement peuvent être proposées : outils d'écriture adaptés, sièges spéciaux, organisation visuelle de l'espace. L'objectif est de maximiser l'indépendance de l'enfant et de réduire les obstacles dans son quotidien."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/accompagnement.webp",
+                    "alt": "Séance d'ergothérapie avec un enfant autiste"
+                }
+            ]
+        },
+        {
+            "id": 20,
+            "title": "Le syndrome d'Asperger : comprendre ce profil autistique",
+            "subtitle": "Caractéristiques et forces des personnes Asperger",
+            "image": "/assets/asperger.webp",
+            "date": "2025-01-15",
+            "author": "Dr. Alexandre Rousseau",
+            "category": "Types d'autisme",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Le syndrome d'Asperger, aujourd'hui intégré dans le spectre autistique comme autisme sans déficience intellectuelle, se caractérise par des particularités sociales et comportementales associées à des compétences cognitives préservées voire supérieures."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Caractéristiques principales"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les personnes Asperger présentent généralement un langage développé mais peuvent avoir des difficultés avec les aspects pragmatiques de la communication : comprendre l'implicite, l'ironie, adapter leur discours à l'interlocuteur. Elles ont souvent des intérêts spécifiques très poussés."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Leurs forces incluent une mémoire exceptionnelle pour les détails, une pensée logique et systématique, une honnêteté remarquable et une expertise approfondie dans leurs domaines d'intérêt. De nombreuses personnes Asperger réussissent brillamment dans des carrières en sciences, technologies, arts ou recherche."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/asperger.webp",
+                    "alt": "Personne Asperger concentrée sur son domaine d'expertise"
+                }
+            ]
         }
     ]
 }
