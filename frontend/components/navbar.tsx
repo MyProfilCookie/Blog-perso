@@ -476,12 +476,12 @@ export const Navbar = () => {
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           className="lg:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
         />
-        <NavbarBrand as="li" className="gap-3 flex-shrink-0">
+        <NavbarBrand as="li" className="gap-2 flex-shrink-0">
           <NextLink
-            className="flex items-center justify-start gap-3 hover:scale-105 transition-transform duration-200"
+            className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200"
             href="/"
           >
-            <AutismLogo size={18} />
+            <AutismLogo size={14} />
             <div className="flex flex-col">
               <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-lg lg:text-xl">
                 AutiStudy
