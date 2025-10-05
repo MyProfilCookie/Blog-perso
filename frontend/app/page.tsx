@@ -11,13 +11,7 @@ import OptimizedImage from "@/components/OptimizedImage";
 import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import Link from "next/link";
 
-import dynamic from "next/dynamic";
-
-// Chargement dynamique de Framer Motion pour réduire le bundle initial
-const motion = dynamic(() => import("framer-motion").then(mod => ({ default: mod.motion })), {
-  ssr: false,
-  loading: () => <div />
-}) as any;
+import { motion } from "framer-motion";
 import {
   BookOpen,
   Users,
