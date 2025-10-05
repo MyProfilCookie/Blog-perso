@@ -124,6 +124,16 @@ router.get('/complete-stats/:userId', isAuthenticated, async (req, res) => {
       totalCorrect,
       averageScore,
       subjects,
+      scores: scores.map(score => ({
+        _id: score._id,
+        subjectName: score.subjectName,
+        pageNumber: score.pageNumber,
+        score: score.score,
+        correctAnswers: score.correctAnswers,
+        totalQuestions: score.totalQuestions,
+        timeSpent: score.timeSpent,
+        createdAt: score.createdAt
+      })),
       dailyStats,
       categoryStats,
       globalStats: {
