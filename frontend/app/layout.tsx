@@ -40,10 +40,14 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/icon?v=2', type: 'image/png', sizes: '32x32' },
+      { url: '/favicon.svg?v=2', type: 'image/svg+xml' },
+      { url: '/favicon.ico?v=2', sizes: 'any' },
     ],
-    apple: '/favicon.svg',
+    apple: [
+      { url: '/apple-icon?v=2', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/icon?v=2',
   },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.vercel.app",
