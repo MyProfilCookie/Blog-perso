@@ -41,7 +41,6 @@ export default function JournalPostsPage() {
   const [selectedAuthor, setSelectedAuthor] = useState<string>("Tous");
   const [sortBy, setSortBy] = useState<string>("recent");
   const [showAI, setShowAI] = useState(false);
-  const [featuredArticle, setFeaturedArticle] = useState<Article | null>(null);
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -92,6 +91,14 @@ export default function JournalPostsPage() {
 
   const categories = ["Tous", ...Array.from(new Set(articles.map(a => a.category).filter(Boolean)))];
   const authors = ["Tous", ...Array.from(new Set(articles.map(a => a.author).filter(Boolean)))];
+  
+  // Article en vedette (le premier des résultats filtrés si aucun filtre actif)
+  const featuredArticle = (searchTerm === "" && selectedCategory === "Tous" && selectedAuthor === "Tous") 
+    ? filteredArticles[0] 
+    : null;
+  
+  // Les autres articles (exclure l'article en vedette)
+  const otherArticles = featuredArticle ? filteredArticles.slice(1) : filteredArticles;
 
   if (loading) {
     return (
@@ -296,7 +303,7 @@ export default function JournalPostsPage() {
         </AnimatePresence>
 
         {/* Article en vedette */}
-        {featuredArticle && !searchTerm && selectedCategory === "Tous" && (
+        {featuredArticle && (
           <motion.div
             initial={{ opacity: 0, scale: 0.95 }}
             animate={{ opacity: 1, scale: 1 }}
@@ -389,7 +396,7 @@ export default function JournalPostsPage() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredArticles.slice(featuredArticle ? 1 : 0).map((article, index) => (
+              {otherArticles.map((article, index) => (
                 <motion.div
                   key={article.id}
                   initial={{ opacity: 0, y: 20 }}
