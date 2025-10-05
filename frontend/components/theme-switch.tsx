@@ -51,8 +51,12 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
 
       if (shouldBeDark && theme !== "dark") {
         setTheme("dark");
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
       } else if (!shouldBeDark && theme !== "light") {
         setTheme("light");
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
       }
     };
 
@@ -75,6 +79,14 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
     const newTheme = isDarkMode ? "light" : "dark";
     setTheme(newTheme);
     localStorage.setItem("theme", newTheme);
+    
+    // Appliquer immédiatement le thème au DOM
+    if (newTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+    
     // Nettoyer le localStorage du mode automatique
     localStorage.removeItem("themeMode");
     localStorage.removeItem("autoModeHours");
@@ -94,6 +106,13 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
       const newTheme = shouldBeDark ? "dark" : "light";
       setTheme(newTheme);
       localStorage.setItem("theme", newTheme);
+      
+      // Appliquer immédiatement le thème au DOM
+      if (newTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     } else {
       // Désactiver le mode automatique et nettoyer le localStorage
       localStorage.removeItem("themeMode");
@@ -102,6 +121,13 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
       // Garder le thème actuel mais en mode manuel
       const currentTheme = theme === "dark" ? "dark" : "light";
       localStorage.setItem("theme", currentTheme);
+      
+      // S'assurer que le thème est appliqué au DOM
+      if (currentTheme === "dark") {
+        document.documentElement.classList.add("dark");
+      } else {
+        document.documentElement.classList.remove("dark");
+      }
     }
   };
 
