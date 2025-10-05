@@ -465,28 +465,28 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar
-      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative performance-optimized no-border-navbar"
-      maxWidth="2xl"
+      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative performance-optimized no-border-navbar h-16 md:h-20"
+      maxWidth="full"
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}
       position="sticky"
     >
-      <NavbarContent className="flex-shrink-0">
+      <NavbarContent className="flex-shrink-0 basis-1/5 sm:basis-full">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           className="lg:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
         />
-        <NavbarBrand as="li" className="gap-2 flex-shrink-0">
+        <NavbarBrand as="li" className="gap-3 flex-shrink-0">
           <NextLink
-            className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200"
+            className="flex items-center justify-start gap-3 hover:scale-105 transition-transform duration-200"
             href="/"
           >
-            <AutismLogo size={16} />
+            <AutismLogo size={18} />
             <div className="flex flex-col">
-              <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-base lg:text-lg">
+              <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-lg lg:text-xl">
                 AutiStudy
               </p>
-              <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
+              <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
                 Créé par une famille
               </p>
             </div>
@@ -494,54 +494,53 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden lg:flex gap-3 xl:gap-6 flex-1" justify="center">
+      <NavbarContent className="hidden lg:flex gap-6 xl:gap-10 flex-1 max-w-4xl mx-auto" justify="center">
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium transition-colors duration-200 flex items-center gap-2 px-2"
             href="/about"
           >
-            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faInfoCircle} />
-            <span className="hidden xl:inline">À propos</span>
-            <span className="xl:hidden">À propos</span>
+            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faInfoCircle} />
+            À propos
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium transition-colors duration-200 flex items-center gap-2 px-2"
             href="/articles"
           >
-            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faBook} />
+            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faBook} />
             Publications
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium transition-colors duration-200 flex items-center gap-2 px-2"
             href="/posts"
           >
-            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faNewspaper} />
+            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faNewspaper} />
             Posts
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium transition-colors duration-200 flex items-center gap-2 px-2"
             href="/controle"
           >
-            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faGamepad} />
+            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faGamepad} />
             Contrôle
           </NextLink>
         </NavbarItem>
 
         <NavbarItem className="relative" key="shop">
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-1.5 relative text-sm xl:text-base font-medium transition-colors duration-200"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-base lg:text-lg font-medium transition-colors duration-200 px-2"
             href="/shop"
           >
-            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faShoppingCart} />
+            <FontAwesomeIcon className="w-4 h-4 lg:w-5 lg:h-5" icon={faShoppingCart} />
             Shop
             {cartItemsCount > 0 && (
               <Badge
@@ -550,8 +549,8 @@ export const Navbar = () => {
                 size="sm"
                 style={{
                   position: "absolute",
-                  top: "-8px",
-                  right: "-8px",
+                  top: "-10px",
+                  right: "-10px",
                 }}
               >
                 {cartItemsCount}
@@ -561,7 +560,7 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent className="flex-shrink-0 gap-2 md:gap-3" justify="end">
+      <NavbarContent className="flex-shrink-0 gap-3 md:gap-5" justify="end">
         {/* Bouton AI Assistant */}
         <NavbarItem>
           <Button
@@ -569,11 +568,11 @@ export const Navbar = () => {
             href="/ai-assistant"
             isIconOnly
             variant="flat"
-            size="sm"
-            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all w-9 h-9 md:w-10 md:h-10"
+            size="md"
+            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all w-10 h-10 md:w-12 md:h-12"
             aria-label="Assistant IA"
           >
-            <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
+            <Sparkles className="w-5 h-5 md:w-6 md:h-6" />
           </Button>
         </NavbarItem>
 
