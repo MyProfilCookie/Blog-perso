@@ -11,8 +11,8 @@ import dynamic from 'next/dynamic';
 import React, { useState, useEffect } from "react";
 import { Button } from '@nextui-org/react'
 import { Avatar } from '@nextui-org/react';
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { StripeProvider } from "@/components/StripeProvider";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
@@ -22,7 +22,6 @@ import { saveOrderService, confirmPaymentService } from "@/services/paymentServi
 
 // Vérifier si la clé Stripe est disponible
 const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
-const stripePromise = stripeKey ? loadStripe(stripeKey) : null;
 console.log("✅ Clé Stripe chargée :", stripeKey);
 
 // Définir une interface pour l'utilisateur
@@ -518,8 +517,8 @@ const PaymentPage = () => {
 
             {/* 💳 Paiement */}
             <motion.div className="mt-6">
-                {stripePromise && (
-                    <Elements stripe={stripePromise}>
+                {stripeKey && (
+                    <StripeProvider stripeKey={stripeKey}>
                         <CheckoutForm
                             totalToPay={totalToPay}
                             cartItems={cartItems}
@@ -527,9 +526,9 @@ const PaymentPage = () => {
                             selectedTransporter={selectedTransporter}
                             deliveryCost={deliveryCost}
                         />
-                    </Elements>
+                    </StripeProvider>
                 )}
-                {!stripePromise && (
+                {!stripeKey && (
                     <div className="p-4 bg-red-100 border border-red-400 rounded-lg">
                         <p className="text-red-800">Erreur : Impossible de charger Stripe. Veuillez réessayer plus tard.</p>
                     </div>

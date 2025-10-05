@@ -1,13 +1,12 @@
 /* eslint-disable prettier/prettier */
 "use client";
 import { useEffect } from "react";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+import { StripeProvider } from "@/components/StripeProvider";
 
 import CheckoutForm from "@/components/checkoutForm";
 
-// Charger Stripe avec votre clé publique
-const stripePromise = loadStripe(process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY!);
+// Récupérer la clé Stripe
+const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
 
 export default function CheckoutPage() {
     useEffect(() => {
@@ -22,9 +21,16 @@ export default function CheckoutPage() {
             <div className="w-full max-w-lg p-6 bg-cream shadow-md rounded-md">
                 <h1 className="text-3xl font-bold text-center">Paiement sécurisé</h1>
 
-                <Elements stripe={stripePromise}>
+            {stripeKey && (
+                <StripeProvider stripeKey={stripeKey}>
                     <CheckoutForm />
-                </Elements>
+                </StripeProvider>
+            )}
+            {!stripeKey && (
+                <div className="p-4 bg-red-100 border border-red-400 rounded-lg">
+                    <p className="text-red-800">Erreur : Configuration Stripe manquante.</p>
+                </div>
+            )}
             </div>
         </section>
     );
