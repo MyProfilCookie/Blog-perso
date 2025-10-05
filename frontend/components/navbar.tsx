@@ -45,6 +45,8 @@ import {
   DeliveredOrdersIcon,
 } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
+import { useAI } from "@/app/contexts/AIContext";
+import { Sparkles } from "lucide-react";
 
 // Type definition for user
 type User = {
@@ -80,6 +82,7 @@ interface Order {
 export const Navbar = () => {
   const userContext = useContext(UserContext) as any;
   const user = userContext?.user || null;
+  const { toggleAI } = useAI();
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
@@ -575,6 +578,19 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent justify="end">
+        {/* Bouton AI Assistant */}
+        <NavbarItem>
+          <Button
+            isIconOnly
+            variant="flat"
+            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all"
+            onPress={toggleAI}
+            aria-label="Assistant IA"
+          >
+            <Sparkles className="w-5 h-5" />
+          </Button>
+        </NavbarItem>
+
         {/* Bouton de thème */}
         <NavbarItem>
           <ThemeSwitch />
@@ -903,6 +919,21 @@ export const Navbar = () => {
 
       {/* Menu mobile HeroUI */}
       <NavbarMenu>
+        {/* Bouton AI Assistant en haut du menu mobile */}
+        <NavbarMenuItem>
+          <Button
+            className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold"
+            size="lg"
+            onPress={() => {
+              toggleAI();
+              setIsMenuOpen(false);
+            }}
+            startContent={<Sparkles className="w-5 h-5" />}
+          >
+            🤖 Assistant IA Alia
+          </Button>
+        </NavbarMenuItem>
+        
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Link

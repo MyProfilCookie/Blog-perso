@@ -16,6 +16,8 @@ import LCPOptimizer from "@/components/LCPOptimizer";
 import ErrorBoundary from "@/components/ErrorBoundary";
 import IOSErrorHandler from "@/components/IOSErrorHandler";
 import PerformanceMonitor from "@/components/PerformanceMonitor";
+import { AIProvider } from "./contexts/AIContext";
+import AIModal from "@/components/AIModal";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -300,11 +302,14 @@ export default function RootLayout({
         <IOSErrorHandler />
         <ErrorBoundary>
           <Providers>
-            <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
-              <Navbar />
-              <main className="flex-grow w-full">{children}</main>
-              <Footer />
-            </div>
+            <AIProvider>
+              <div className="flex flex-col min-h-screen bg-cream dark:bg-gray-900">
+                <Navbar />
+                <main className="flex-grow w-full">{children}</main>
+                <Footer />
+                <AIModal />
+              </div>
+            </AIProvider>
             <Toaster
               closeButton
               duration={4000}
