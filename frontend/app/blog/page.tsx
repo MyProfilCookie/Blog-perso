@@ -299,7 +299,7 @@ const BlogPage = () => {
     <div className="min-h-screen bg-cream dark:bg-gray-900">
       {/* Header avec titre animé */}
       <div className="bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-700 dark:to-purple-700 py-6 sm:py-8 md:py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 text-center">
+        <div className="w-full px-3 sm:px-4 text-center">
           <motion.h1
             animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.05, 1] }}
             className={`${title()} text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4`}
@@ -309,7 +309,7 @@ const BlogPage = () => {
           </motion.h1>
           <motion.p
             animate={{ opacity: 1, y: 0 }}
-            className="text-base sm:text-lg md:text-xl text-violet-100 max-w-2xl mx-auto leading-relaxed px-2 sm:px-4"
+            className="text-base sm:text-lg md:text-xl text-violet-100 max-w-4xl mx-auto leading-relaxed px-2 sm:px-4"
             initial={{ opacity: 0, y: 20 }}
             transition={{ duration: 0.8, delay: 0.2 }}
           >
@@ -318,7 +318,7 @@ const BlogPage = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-3 sm:px-4 py-3 sm:py-4 md:py-6 lg:py-8">
+      <div className="w-full px-3 sm:px-4 py-3 sm:py-4 md:py-6 lg:py-8">
         {/* Statistiques */}
         <motion.div
           animate={{ opacity: 1, y: 0 }}
