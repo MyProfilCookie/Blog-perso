@@ -435,6 +435,7 @@ export const Navbar = () => {
     { name: "🏠 Accueil", href: "/", color: "foreground" },
     { name: "ℹ️ À propos", href: "/about", color: "foreground" },
     { name: "📄 Publications", href: "/articles", color: "foreground" },
+    { name: "📝 Posts", href: "/posts", color: "foreground" },
     { name: "🎮 Contrôle", href: "/controle", color: "foreground" },
     { name: "🛒 Shop", href: "/shop", color: "foreground" },
     { name: "❤️ Contact", href: "/contact", color: "foreground" },
@@ -524,6 +525,16 @@ export const Navbar = () => {
           >
             <FontAwesomeIcon className="w-4 h-4" icon={faBook} />
             Publications
+          </NextLink>
+        </NavbarItem>
+
+        <NavbarItem>
+          <NextLink
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            href="/posts"
+          >
+            <FontAwesomeIcon className="w-4 h-4" icon={faNewspaper} />
+            Posts
           </NextLink>
         </NavbarItem>
 
