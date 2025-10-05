@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { Card, CardBody, CardHeader, Button, Badge, Chip } from "@nextui-org/react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { 
   Download, 
   Copy, 
@@ -24,7 +25,6 @@ import {
   Grid3X3,
   List
 } from "lucide-react";
-import Image from "next/image";
 
 interface Article {
   id: string;
