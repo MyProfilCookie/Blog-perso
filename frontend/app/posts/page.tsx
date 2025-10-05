@@ -49,7 +49,9 @@ export default function PostsPage() {
         const response = await fetch(`${baseUrl}/articles`);
         if (response.ok) {
           const data = await response.json();
-          setArticles(data);
+          // S'assurer que les données sont un tableau
+          const articlesArray = Array.isArray(data) ? data : [];
+          setArticles(articlesArray);
           return;
         }
       }
@@ -58,7 +60,9 @@ export default function PostsPage() {
       const localResponse = await fetch('/dataarticles.json');
       if (localResponse.ok) {
         const localData = await localResponse.json();
-        setArticles(localData);
+        // S'assurer que les données sont un tableau
+        const articlesArray = Array.isArray(localData) ? localData : [];
+        setArticles(articlesArray);
       } else {
         throw new Error('Impossible de charger les données');
       }
@@ -108,7 +112,9 @@ export default function PostsPage() {
   };
 
   const downloadAllArticles = () => {
-    downloadJson(articles, `all-articles-${new Date().toISOString().split('T')[0]}`);
+    if (Array.isArray(articles)) {
+      downloadJson(articles, `all-articles-${new Date().toISOString().split('T')[0]}`);
+    }
   };
 
   if (loading) {
@@ -176,7 +182,7 @@ export default function PostsPage() {
                 <div className="flex items-center gap-4">
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <Database className="w-4 h-4" />
-                    <span>{articles.length} articles trouvés</span>
+                    <span>{Array.isArray(articles) ? articles.length : 0} articles trouvés</span>
                   </div>
                   <div className="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
                     <FileText className="w-4 h-4" />
@@ -223,7 +229,7 @@ export default function PostsPage() {
 
         {/* Articles List */}
         <div className="space-y-6">
-          {articles.map((article, index) => (
+          {Array.isArray(articles) && articles.map((article, index) => (
             <motion.div
               key={article.id}
               initial={{ opacity: 0, y: 20 }}
@@ -298,7 +304,7 @@ export default function PostsPage() {
           ))}
         </div>
 
-        {articles.length === 0 && (
+        {(!Array.isArray(articles) || articles.length === 0) && (
           <Card className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700">
             <CardBody className="text-center py-12">
               <p className="text-gray-600 dark:text-gray-400 text-lg">Aucun article trouvé</p>
