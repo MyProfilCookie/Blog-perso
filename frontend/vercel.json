@@ -1,4 +1,11 @@
 {
+<<<<<<< HEAD
+=======
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "framework": "nextjs",
+>>>>>>> f6eda0e82 (fix: Configuration Vercel corrigée et CSP Stripe activée)
   "headers": [
     {
       "source": "/(.*)",
