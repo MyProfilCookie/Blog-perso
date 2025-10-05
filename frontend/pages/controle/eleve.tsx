@@ -21,6 +21,7 @@ import {  } from '@nextui-org/react';
 import { LightAnimation } from "@/components/DynamicMotion";
 import axios from "axios";
 import { useRouter } from "next/navigation";
+import { redirectToLogin } from "@/utils/redirectToLogin";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBookOpen,
@@ -322,7 +323,7 @@ const ElevePage: React.FC = () => {
     localStorage.removeItem("userId");
     
     // Rediriger vers la page de connexion
-    router.push("/users/login");
+    redirectToLogin(router, "/controle/eleve");
   };
 
   const handleRetry = () => {

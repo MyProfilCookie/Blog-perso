@@ -175,7 +175,7 @@ const RevisionContent: React.FC = () => {
           <Button
             className="px-6"
             color="primary"
-            onClick={() => router.push("/users/login")}
+            onClick={() => router.push(`/users/login?returnUrl=${encodeURIComponent('/controle/revision-errors')}`)}
           >
             Se connecter
           </Button>

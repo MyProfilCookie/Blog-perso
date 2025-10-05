@@ -2,7 +2,7 @@
 
 import * as React from "react";
 import { useState, useContext } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import { UserContext } from "@/context/UserContext";
 import { Input } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
@@ -26,14 +26,16 @@ export default function Connexion() {
   const [loading, setLoading] = useState(false); // État de chargement
   const [passwordStrength, setPasswordStrength] = useState(""); // Force du mot de passe
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const returnUrl = searchParams.get("returnUrl") || "/dashboard";
   // const { login } = useAuth(); // Utilisation du contexte d'authentification
 
   // Rediriger si l'utilisateur est déjà connecté
   React.useEffect(() => {
     if (user) {
-      router.push("/dashboard");
+      router.push(returnUrl);
     }
-  }, [user, router]);
+  }, [user, router, returnUrl]);
 
   // Afficher un message de chargement si l'utilisateur est connecté
   if (user) {
@@ -161,8 +163,8 @@ export default function Connexion() {
             text: `Bienvenue sur AutiStudy, ${userData.pseudo || userData.prenom || userData.nom || userData.email}!`,
             confirmButtonText: "Ok",
           }).then(() => {
-            // Rediriger vers la page d'accueil après connexion
-            router.push("/");
+            // Rediriger vers la page d'origine ou dashboard
+            router.push(returnUrl);
           });
         } else {
           handleLoginError(
