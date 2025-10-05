@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from "react";
 import { Card, CardBody, CardHeader, Button, Badge, Chip } from "@nextui-org/react";
 import { motion } from "framer-motion";
+import Link from "next/link";
 import { 
   Download, 
   Copy, 
@@ -395,20 +396,32 @@ export default function PostsPage() {
 
                     {/* Actions */}
                     <div className="flex flex-wrap gap-2 mt-auto">
+                      <Link href={`/posts/${article.id}`} className="flex-1">
+                        <Button
+                          color="primary"
+                          variant="flat"
+                          size="sm"
+                          startContent={<BookOpen className="w-4 h-4" />}
+                          className="w-full"
+                        >
+                          Lire l'article
+                        </Button>
+                      </Link>
+                      
                       <Button
-                        color="primary"
+                        color="secondary"
                         variant="flat"
                         size="sm"
-                        startContent={expandedArticles.has(article.id) ? <ChevronUp className="w-4 h-4" /> : <BookOpen className="w-4 h-4" />}
+                        startContent={expandedArticles.has(article.id) ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
                         onClick={() => toggleExpanded(article.id)}
                         className="flex-1"
                       >
-                        {expandedArticles.has(article.id) ? 'Réduire' : 'Lire l\'article'}
+                        {expandedArticles.has(article.id) ? 'Réduire' : 'Aperçu'}
                       </Button>
                       
                       {showJson && (
                         <Button
-                          color="secondary"
+                          color="default"
                           variant="flat"
                           size="sm"
                           startContent={<Copy className="w-4 h-4" />}
