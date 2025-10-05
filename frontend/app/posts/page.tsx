@@ -38,6 +38,8 @@ export default function JournalPostsPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedCategory, setSelectedCategory] = useState<string>("Tous");
+  const [selectedAuthor, setSelectedAuthor] = useState<string>("Tous");
+  const [sortBy, setSortBy] = useState<string>("recent");
   const [showAI, setShowAI] = useState(false);
   const [featuredArticle, setFeaturedArticle] = useState<Article | null>(null);
 
@@ -64,14 +66,32 @@ export default function JournalPostsPage() {
     fetchArticles();
   }, []);
 
-  const filteredArticles = articles.filter((article) => {
-    const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.subtitle?.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = selectedCategory === "Tous" || article.category === selectedCategory;
-    return matchesSearch && matchesCategory;
-  });
+  // Filtrage et tri des articles
+  const filteredArticles = articles
+    .filter((article) => {
+      const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        article.subtitle?.toLowerCase().includes(searchTerm.toLowerCase());
+      const matchesCategory = selectedCategory === "Tous" || article.category === selectedCategory;
+      const matchesAuthor = selectedAuthor === "Tous" || article.author === selectedAuthor;
+      return matchesSearch && matchesCategory && matchesAuthor;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case "recent":
+          return new Date(b.date).getTime() - new Date(a.date).getTime();
+        case "oldest":
+          return new Date(a.date).getTime() - new Date(b.date).getTime();
+        case "title":
+          return a.title.localeCompare(b.title);
+        case "readTime":
+          return (a.readTimeMinutes || 0) - (b.readTimeMinutes || 0);
+        default:
+          return 0;
+      }
+    });
 
   const categories = ["Tous", ...Array.from(new Set(articles.map(a => a.category).filter(Boolean)))];
+  const authors = ["Tous", ...Array.from(new Set(articles.map(a => a.author).filter(Boolean)))];
 
   if (loading) {
     return (
@@ -113,53 +133,152 @@ export default function JournalPostsPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Barre de recherche et filtres */}
+        {/* Barre de recherche et filtres avancés */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-8 flex flex-col md:flex-row gap-4"
+          className="mb-8"
         >
-          <Input
-            className="flex-1"
-            placeholder="Rechercher un article..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            startContent={<Search className="w-5 h-5 text-gray-400" />}
-            classNames={{
-              input: "text-gray-900 dark:text-white",
-              inputWrapper: "bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700",
-            }}
-          />
-          
-          <Dropdown>
-            <DropdownTrigger>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 space-y-4 border border-gray-200 dark:border-gray-700">
+            {/* Recherche principale */}
+            <div className="flex flex-col md:flex-row gap-4">
+              <Input
+                className="flex-1"
+                placeholder="Rechercher un article..."
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                startContent={<Search className="w-5 h-5 text-violet-600" />}
+                size="lg"
+                classNames={{
+                  input: "text-base",
+                  inputWrapper: "h-12 bg-gray-50 dark:bg-gray-900"
+                }}
+              />
               <Button
-                variant="flat"
-                endContent={<ChevronDown className="w-4 h-4" />}
-                className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700"
+                color="secondary"
+                variant={showAI ? "solid" : "flat"}
+                onClick={() => setShowAI(!showAI)}
+                startContent={<Sparkles className="w-5 h-5" />}
+                size="lg"
+                className="h-12"
               >
-                <Filter className="w-4 h-4 mr-2" />
-                {selectedCategory}
+                Assistant IA
               </Button>
-            </DropdownTrigger>
-            <DropdownMenu
-              aria-label="Catégories"
-              onAction={(key) => setSelectedCategory(key as string)}
-            >
-              {categories.map((cat) => (
-                <DropdownItem key={cat}>{cat}</DropdownItem>
-              ))}
-            </DropdownMenu>
-          </Dropdown>
-
-          <Button
-            color="secondary"
-            variant={showAI ? "solid" : "flat"}
-            onClick={() => setShowAI(!showAI)}
-            startContent={<Sparkles className="w-4 h-4" />}
-          >
-            Assistant IA
-          </Button>
+            </div>
+            
+            {/* Filtres avancés */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    variant="flat"
+                    className="w-full justify-between bg-gray-50 dark:bg-gray-900"
+                    endContent={<ChevronDown className="w-4 h-4" />}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Tag className="w-4 h-4 text-violet-600" />
+                      <span className="font-medium">Catégorie:</span>
+                      <span className="text-violet-600 truncate">{selectedCategory}</span>
+                    </div>
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Catégories"
+                  onAction={(key) => setSelectedCategory(key as string)}
+                  selectedKeys={[selectedCategory]}
+                  selectionMode="single"
+                >
+                  {categories.map((cat) => (
+                    <DropdownItem key={cat}>{cat}</DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+              
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    variant="flat"
+                    className="w-full justify-between bg-gray-50 dark:bg-gray-900"
+                    endContent={<ChevronDown className="w-4 h-4" />}
+                  >
+                    <div className="flex items-center gap-2">
+                      <User className="w-4 h-4 text-violet-600" />
+                      <span className="font-medium">Auteur:</span>
+                      <span className="text-violet-600 truncate">{selectedAuthor}</span>
+                    </div>
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Auteurs"
+                  onAction={(key) => setSelectedAuthor(key as string)}
+                  selectedKeys={[selectedAuthor]}
+                  selectionMode="single"
+                >
+                  {authors.map((author) => (
+                    <DropdownItem key={author}>{author}</DropdownItem>
+                  ))}
+                </DropdownMenu>
+              </Dropdown>
+              
+              <Dropdown>
+                <DropdownTrigger>
+                  <Button
+                    variant="flat"
+                    className="w-full justify-between bg-gray-50 dark:bg-gray-900"
+                    endContent={<ChevronDown className="w-4 h-4" />}
+                  >
+                    <div className="flex items-center gap-2">
+                      <Filter className="w-4 h-4 text-violet-600" />
+                      <span className="font-medium">Trier:</span>
+                      <span className="text-violet-600 truncate">
+                        {sortBy === "recent" && "Plus récents"}
+                        {sortBy === "oldest" && "Plus anciens"}
+                        {sortBy === "title" && "A-Z"}
+                        {sortBy === "readTime" && "Temps"}
+                      </span>
+                    </div>
+                  </Button>
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Trier"
+                  onAction={(key) => setSortBy(key as string)}
+                  selectedKeys={[sortBy]}
+                  selectionMode="single"
+                >
+                  <DropdownItem key="recent">Plus récents</DropdownItem>
+                  <DropdownItem key="oldest">Plus anciens</DropdownItem>
+                  <DropdownItem key="title">Titre (A-Z)</DropdownItem>
+                  <DropdownItem key="readTime">Temps de lecture</DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
+            </div>
+            
+            {/* Badge de résultats et reset */}
+            {(searchTerm || selectedCategory !== "Tous" || selectedAuthor !== "Tous") && (
+              <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                <Chip
+                  color="primary"
+                  variant="flat"
+                  size="md"
+                  startContent={<BookOpen className="w-4 h-4" />}
+                >
+                  {filteredArticles.length} résultat{filteredArticles.length > 1 ? "s" : ""}
+                </Chip>
+                <Button
+                  size="sm"
+                  variant="light"
+                  color="danger"
+                  onClick={() => {
+                    setSearchTerm("");
+                    setSelectedCategory("Tous");
+                    setSelectedAuthor("Tous");
+                  }}
+                >
+                  Réinitialiser
+                </Button>
+              </div>
+            )}
+          </div>
         </motion.div>
 
         {/* Assistant IA */}
@@ -239,15 +358,15 @@ export default function JournalPostsPage() {
                     </div>
                     
                     <div className="mt-auto">
-                      <Link href={`/posts/${featuredArticle.id}`}>
-                        <Button
-                          color="primary"
-                          size="lg"
-                          className="font-semibold"
-                        >
-                          Lire l'article
-                        </Button>
-                      </Link>
+                      <Button
+                        as={Link}
+                        href={`/posts/${featuredArticle.id}`}
+                        color="primary"
+                        size="lg"
+                        className="font-semibold"
+                      >
+                        Lire l'article
+                      </Button>
                     </div>
                   </div>
                 </div>
