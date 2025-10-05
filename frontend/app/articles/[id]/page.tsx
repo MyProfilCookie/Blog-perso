@@ -20,6 +20,7 @@ import {
   Tag,
   MessageCircle
 } from "lucide-react";
+import ArticleDataViewer from "@/components/articles/ArticleDataViewer";
 
 import articlesData from "@/public/dataarticles.json";
 
@@ -757,6 +758,12 @@ const ArticlePage = () => {
                   </div>
                 </CardBody>
               </Card>
+
+              {/* Données techniques de l'article */}
+              <ArticleDataViewer 
+                articleData={article} 
+                articleId={articleId || ''} 
+              />
             </motion.div>
           </div>
         </div>

@@ -434,7 +434,7 @@ export const Navbar = () => {
   const menuItems = [
     { name: "🏠 Accueil", href: "/", color: "foreground" },
     { name: "ℹ️ À propos", href: "/about", color: "foreground" },
-    { name: "📚 Articles", href: "/articles", color: "foreground" },
+    { name: "📄 Publications", href: "/articles", color: "foreground" },
     { name: "🎮 Contrôle", href: "/controle", color: "foreground" },
     { name: "🛒 Shop", href: "/shop", color: "foreground" },
     { name: "❤️ Contact", href: "/contact", color: "foreground" },
@@ -523,7 +523,7 @@ export const Navbar = () => {
             href="/articles"
           >
             <FontAwesomeIcon className="w-4 h-4" icon={faBook} />
-            Articles
+            Publications
           </NextLink>
         </NavbarItem>
 
