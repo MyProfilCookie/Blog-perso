@@ -1,0 +1,71 @@
+import { NextRequest, NextResponse } from "next/server";
+
+export async function POST(request: NextRequest) {
+  try {
+    const { prompt } = await request.json();
+
+    if (!prompt || typeof prompt !== "string") {
+      return NextResponse.json(
+        { error: "Le prompt est requis et doit être une chaîne de caractères" },
+        { status: 400 }
+      );
+    }
+
+    // Simulation de réponse IA pour le moment
+    // TODO: Remplacer par un vrai appel à une API IA (OpenAI, Anthropic, etc.)
+    const aiResponses = [
+      "🎓 Excellente question ! Pour mieux apprendre, je te conseille de diviser tes sessions d'étude en petits blocs de 25 minutes avec des pauses. C'est ce qu'on appelle la technique Pomodoro ! 🍅",
+      "💡 Voici quelques astuces : \n1. Crée des fiches résumées colorées 🌈\n2. Explique ce que tu apprends à quelqu'un d'autre 👥\n3. Utilise des mnémoniques pour mémoriser 🧠\n4. Pratique régulièrement plutôt que de réviser au dernier moment ⏰",
+      "🚀 AutiStudy est une plateforme éducative spécialement conçue pour rendre l'apprentissage accessible et agréable pour tous les enfants, notamment ceux avec autisme. Nous proposons des ressources, des outils et un accompagnement personnalisé !",
+      "📚 C'est une super question ! L'important est de trouver la méthode qui te convient le mieux. Chaque personne apprend différemment, et c'est tout à fait normal ! 🌟",
+      "✨ Je suis là pour t'aider ! N'hésite pas à me poser d'autres questions. Ensemble, on va rendre l'apprentissage plus fun et efficace ! 💪",
+      "🎯 Pour mieux comprendre un concept difficile, essaie de le dessiner ou de créer un schéma. Les représentations visuelles aident énormément le cerveau à intégrer l'information ! 🎨",
+      "🌟 Super initiative de vouloir améliorer tes méthodes d'apprentissage ! La clé, c'est la régularité et la patience. Chaque petit progrès compte ! 🎉",
+      "🧩 Si tu rencontres des difficultés, décompose le problème en petites parties. C'est comme un puzzle : on avance pièce par pièce ! Et n'oublie pas de célébrer tes réussites ! 🎊",
+    ];
+
+    // Analyse basique du prompt pour choisir une réponse appropriée
+    const lowerPrompt = prompt.toLowerCase();
+    let response = "";
+
+    if (lowerPrompt.includes("apprendre") || lowerPrompt.includes("apprentissage")) {
+      response = aiResponses[0];
+    } else if (lowerPrompt.includes("astuce") || lowerPrompt.includes("conseil")) {
+      response = aiResponses[1];
+    } else if (lowerPrompt.includes("autistudy") || lowerPrompt.includes("plateforme")) {
+      response = aiResponses[2];
+    } else if (lowerPrompt.includes("difficile") || lowerPrompt.includes("problème")) {
+      response = aiResponses[7];
+    } else if (lowerPrompt.includes("méthode") || lowerPrompt.includes("technique")) {
+      response = aiResponses[6];
+    } else {
+      // Réponse aléatoire parmi les réponses génériques
+      const genericResponses = [aiResponses[3], aiResponses[4], aiResponses[5]];
+      response = genericResponses[Math.floor(Math.random() * genericResponses.length)];
+    }
+
+    // Simuler un délai de traitement pour rendre l'expérience plus réaliste
+    await new Promise((resolve) => setTimeout(resolve, 500));
+
+    return NextResponse.json({
+      reply: response,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    console.error("Erreur dans l'API chat:", error);
+    return NextResponse.json(
+      { error: "Erreur lors du traitement de la demande" },
+      { status: 500 }
+    );
+  }
+}
+
+// Méthode GET pour vérifier que l'API fonctionne
+export async function GET() {
+  return NextResponse.json({
+    message: "API Chat AutiStudy - Utilisez POST avec un 'prompt' dans le body",
+    status: "online",
+    version: "1.0.0",
+  });
+}
+
