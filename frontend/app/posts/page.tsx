@@ -24,11 +24,12 @@ interface Article {
   title: string;
   subtitle?: string;
   description?: string;
-  imageUrl: string;
-  category: string;
+  image?: string;
+  imageUrl?: string;
+  category?: string;
   author: string;
   date: string;
-  readTimeMinutes: number;
+  readTimeMinutes?: number;
   tags?: string[];
 }
 
@@ -65,12 +66,12 @@ export default function JournalPostsPage() {
 
   const filteredArticles = articles.filter((article) => {
     const matchesSearch = article.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      article.description?.toLowerCase().includes(searchTerm.toLowerCase());
+      article.subtitle?.toLowerCase().includes(searchTerm.toLowerCase());
     const matchesCategory = selectedCategory === "Tous" || article.category === selectedCategory;
     return matchesSearch && matchesCategory;
   });
 
-  const categories = ["Tous", ...Array.from(new Set(articles.map(a => a.category)))];
+  const categories = ["Tous", ...Array.from(new Set(articles.map(a => a.category).filter(Boolean)))];
 
   if (loading) {
     return (
@@ -95,11 +96,11 @@ export default function JournalPostsPage() {
           >
             <div className="flex items-center justify-center gap-3 mb-2">
               <Newspaper className="w-10 h-10 text-violet-600" />
-              <h1 className="text-4xl md:text-5xl font-serif font-bold text-gray-900 dark:text-white">
+              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
                 Le Journal AutiStudy
               </h1>
             </div>
-            <p className="text-gray-600 dark:text-gray-300 font-serif italic">
+            <p className="text-gray-600 dark:text-gray-300 italic">
               {new Date().toLocaleDateString("fr-FR", { 
                 weekday: "long", 
                 year: "numeric", 
@@ -184,7 +185,7 @@ export default function JournalPostsPage() {
           >
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-6 h-6 text-violet-600" />
-              <h2 className="text-2xl font-serif font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
                 À la Une
               </h2>
             </div>
@@ -195,7 +196,7 @@ export default function JournalPostsPage() {
                   <div className="grid md:grid-cols-2 gap-0">
                     <div className="relative h-80 md:h-auto">
                       <Image
-                        src={featuredArticle.imageUrl}
+                        src={featuredArticle.image || featuredArticle.imageUrl || "/assets/default.webp"}
                         alt={featuredArticle.title}
                         fill
                         className="object-cover"
@@ -212,16 +213,16 @@ export default function JournalPostsPage() {
                     </div>
                     
                     <div className="p-8 flex flex-col justify-center">
-                      <h3 className="text-3xl md:text-4xl font-serif font-bold text-gray-900 dark:text-white mb-4">
+                      <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
                         {featuredArticle.title}
                       </h3>
                       {featuredArticle.subtitle && (
-                        <p className="text-xl text-gray-600 dark:text-gray-300 mb-4 font-serif italic">
+                        <p className="text-xl text-gray-600 dark:text-gray-300 mb-4 italic">
                           {featuredArticle.subtitle}
                         </p>
                       )}
                       <p className="text-gray-700 dark:text-gray-300 mb-6 line-clamp-3">
-                        {featuredArticle.description}
+                        {featuredArticle.subtitle}
                       </p>
                       
                       <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
@@ -233,10 +234,12 @@ export default function JournalPostsPage() {
                           <Calendar className="w-4 h-4" />
                           <span>{new Date(featuredArticle.date).toLocaleDateString("fr-FR")}</span>
                         </div>
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          <span>{featuredArticle.readTimeMinutes} min</span>
-                        </div>
+                        {featuredArticle.readTimeMinutes && (
+                          <div className="flex items-center gap-1">
+                            <Clock className="w-4 h-4" />
+                            <span>{featuredArticle.readTimeMinutes} min</span>
+                          </div>
+                        )}
                       </div>
                       
                       <div className="mt-6">
@@ -258,7 +261,7 @@ export default function JournalPostsPage() {
 
         {/* Grille d'articles */}
         <div className="mb-6">
-          <h2 className="text-2xl font-serif font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
             {searchTerm || selectedCategory !== "Tous" ? "Résultats" : "Derniers Articles"}
           </h2>
           
@@ -282,7 +285,7 @@ export default function JournalPostsPage() {
                       <CardBody className="p-0">
                         <div className="relative h-48 overflow-hidden">
                           <Image
-                            src={article.imageUrl}
+                            src={article.image || article.imageUrl || "/assets/default.webp"}
                             alt={article.title}
                             fill
                             className="object-cover group-hover:scale-110 transition-transform duration-300"
@@ -298,12 +301,12 @@ export default function JournalPostsPage() {
                         </div>
                         
                         <div className="p-5">
-                          <h3 className="text-xl font-serif font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-violet-600 transition-colors">
+                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-violet-600 transition-colors">
                             {article.title}
                           </h3>
                           
                           <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
-                            {article.description || article.subtitle}
+                            {article.subtitle || ""}
                           </p>
                           
                           <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
@@ -311,10 +314,12 @@ export default function JournalPostsPage() {
                               <Calendar className="w-3 h-3" />
                               <span>{new Date(article.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}</span>
                             </div>
-                            <div className="flex items-center gap-1">
-                              <Clock className="w-3 h-3" />
-                              <span>{article.readTimeMinutes} min</span>
-                            </div>
+                            {article.readTimeMinutes && (
+                              <div className="flex items-center gap-1">
+                                <Clock className="w-3 h-3" />
+                                <span>{article.readTimeMinutes} min</span>
+                              </div>
+                            )}
                           </div>
                         </div>
                       </CardBody>
