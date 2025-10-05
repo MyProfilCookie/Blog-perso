@@ -37,8 +37,8 @@ export default function PostsPage() {
   const [showJson, setShowJson] = useState(true);
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com/api';
-  const shouldUseLocalData = process.env.NODE_ENV === 'production' && 
-    (baseUrl?.includes('localhost') || baseUrl?.includes('127.0.0.1'));
+  // Utiliser toujours les données locales du fichier dataarticless.json
+  const shouldUseLocalData = true;
 
   const fetchArticles = async () => {
     try {
@@ -66,13 +66,14 @@ export default function PostsPage() {
       }
 
       // Fallback vers les données locales
-      console.log('📁 Fallback vers données locales: /dataarticles.json');
-      const localResponse = await fetch('/dataarticles.json');
+      console.log('📁 Fallback vers données locales: /dataarticless.json');
+      const localResponse = await fetch('/dataarticless.json');
       if (localResponse.ok) {
         const localData = await localResponse.json();
-        console.log('📁 Données locales reçues:', Array.isArray(localData) ? `${localData.length} articles` : 'Pas un tableau');
-        // S'assurer que les données sont un tableau
-        const articlesArray = Array.isArray(localData) ? localData : [];
+        console.log('📁 Données locales reçues:', localData);
+        // Le fichier dataarticless.json a une structure { articles: [...] }
+        const articlesArray = Array.isArray(localData.articles) ? localData.articles : [];
+        console.log('📁 Articles extraits:', `${articlesArray.length} articles`);
         setArticles(articlesArray);
       } else {
         throw new Error('Impossible de charger les données');
