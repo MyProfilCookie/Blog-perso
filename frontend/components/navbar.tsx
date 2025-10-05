@@ -27,6 +27,7 @@ import {
   faBook,
   faGamepad,
   faShoppingCart,
+  faNewspaper,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
