@@ -575,13 +575,8 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent justify="end">
-        {/* Bouton de thème mobile/tablette */}
-        <NavbarItem className="flex lg:hidden">
-          <ThemeSwitch />
-        </NavbarItem>
-
-        {/* Bouton de thème desktop */}
-        <NavbarItem className="hidden lg:flex">
+        {/* Bouton de thème */}
+        <NavbarItem>
           <ThemeSwitch />
         </NavbarItem>
 
