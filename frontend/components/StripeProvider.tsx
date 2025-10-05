@@ -39,6 +39,13 @@ export const StripeProvider: React.FC<StripeProviderProps> = ({ children, stripe
           retries--;
           console.warn(`⚠️ Tentative de chargement Stripe échouée (${3 - retries}/3):`, err);
           
+          // Vérifier si c'est une erreur CSP
+          if (err instanceof Error && err.message.includes('Content Security Policy')) {
+            setError("Erreur de sécurité : Le chargement de Stripe est bloqué par la politique de sécurité du navigateur. Veuillez contacter l'administrateur du site.");
+            setIsLoading(false);
+            return;
+          }
+          
           if (retries > 0) {
             // Attendre avant de réessayer
             await new Promise(resolve => setTimeout(resolve, 2000));
