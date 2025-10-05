@@ -466,27 +466,27 @@ export const Navbar = () => {
   return (
     <NextUINavbar
       className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative performance-optimized no-border-navbar"
-      maxWidth="xl"
+      maxWidth="2xl"
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}
       position="sticky"
     >
-      <NavbarContent>
+      <NavbarContent className="flex-shrink-0">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="md:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
+          className="lg:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
         />
-        <NavbarBrand as="li" className="gap-2 max-w-fit">
+        <NavbarBrand as="li" className="gap-2 flex-shrink-0">
           <NextLink
-            className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized"
+            className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200"
             href="/"
           >
             <AutismLogo size={16} />
             <div className="flex flex-col">
-              <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-base font-sans">
+              <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-base lg:text-lg">
                 AutiStudy
               </p>
-              <p className="text-xs text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
+              <p className="text-[10px] md:text-xs text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
                 Créé par une famille
               </p>
             </div>
@@ -494,52 +494,54 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden md:flex gap-6" justify="center">
+      <NavbarContent className="hidden lg:flex gap-3 xl:gap-6 flex-1" justify="center">
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5"
             href="/about"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faInfoCircle} />À propos
+            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faInfoCircle} />
+            <span className="hidden xl:inline">À propos</span>
+            <span className="xl:hidden">À propos</span>
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5"
             href="/articles"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faBook} />
+            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faBook} />
             Publications
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5"
             href="/posts"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faNewspaper} />
+            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faNewspaper} />
             Posts
           </NextLink>
         </NavbarItem>
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base lg:text-lg font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-base font-medium transition-colors duration-200 flex items-center gap-1.5"
             href="/controle"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faGamepad} />
+            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faGamepad} />
             Contrôle
           </NextLink>
         </NavbarItem>
 
         <NavbarItem className="relative" key="shop">
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-base lg:text-lg font-medium tracking-wide transition-colors duration-200"
+            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-1.5 relative text-sm xl:text-base font-medium transition-colors duration-200"
             href="/shop"
           >
-            <FontAwesomeIcon className="w-4 h-4" icon={faShoppingCart} />
+            <FontAwesomeIcon className="w-3.5 h-3.5 xl:w-4 xl:h-4" icon={faShoppingCart} />
             Shop
             {cartItemsCount > 0 && (
               <Badge
@@ -548,8 +550,8 @@ export const Navbar = () => {
                 size="sm"
                 style={{
                   position: "absolute",
-                  top: "-6px",
-                  right: "-6px",
+                  top: "-8px",
+                  right: "-8px",
                 }}
               >
                 {cartItemsCount}
@@ -559,7 +561,7 @@ export const Navbar = () => {
         </NavbarItem>
       </NavbarContent>
 
-      <NavbarContent justify="end">
+      <NavbarContent className="flex-shrink-0 gap-2 md:gap-3" justify="end">
         {/* Bouton AI Assistant */}
         <NavbarItem>
           <Button
@@ -567,15 +569,16 @@ export const Navbar = () => {
             href="/ai-assistant"
             isIconOnly
             variant="flat"
-            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all"
+            size="sm"
+            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all w-9 h-9 md:w-10 md:h-10"
             aria-label="Assistant IA"
           >
-            <Sparkles className="w-5 h-5" />
+            <Sparkles className="w-4 h-4 md:w-5 md:h-5" />
           </Button>
         </NavbarItem>
 
         {/* Bouton de thème */}
-        <NavbarItem>
+        <NavbarItem className="hidden sm:flex">
           <ThemeSwitch />
         </NavbarItem>
 
@@ -583,7 +586,7 @@ export const Navbar = () => {
         {!user ? (
           <Avatar
             aria-label="Connectez-vous pour accéder à votre profil"
-            className="cursor-pointer text-tiny text-default-500 transition-all duration-300 hover:scale-110"
+            className="cursor-pointer text-tiny text-default-500 transition-all duration-300 hover:scale-110 flex-shrink-0"
             isBordered
             name="Invité"
             onClick={handleLoginRedirect}
