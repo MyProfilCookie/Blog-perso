@@ -38,6 +38,13 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  icons: {
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon.ico', sizes: 'any' },
+    ],
+    apple: '/favicon.svg',
+  },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.vercel.app",
   ),
