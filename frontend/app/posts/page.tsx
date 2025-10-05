@@ -145,11 +145,6 @@ export default function PostsPage() {
     URL.revokeObjectURL(url);
   };
 
-  const downloadAllArticles = () => {
-    if (Array.isArray(articles)) {
-      downloadJson(articles, `all-articles-${new Date().toISOString().split('T')[0]}`);
-    }
-  };
 
   if (loading) {
     return (
@@ -215,7 +210,7 @@ export default function PostsPage() {
               Posts Data
             </h1>
             <p className="text-xl text-violet-100 max-w-3xl mx-auto mb-8">
-              Explorez et téléchargez les données JSON de vos articles avec une interface moderne
+              Lisez et explorez vos articles avec une interface moderne et intuitive
             </p>
             <div className="flex flex-wrap justify-center gap-4 text-violet-200">
               <div className="flex items-center gap-2">
@@ -223,12 +218,12 @@ export default function PostsPage() {
                 <span>{articles.length} articles</span>
               </div>
               <div className="flex items-center gap-2">
-                <FileText className="w-5 h-5" />
-                <span>Données structurées</span>
+                <BookOpen className="w-5 h-5" />
+                <span>Lecture intégrée</span>
               </div>
               <div className="flex items-center gap-2">
-                <Download className="w-5 h-5" />
-                <span>Export JSON</span>
+                <FileText className="w-5 h-5" />
+                <span>Contenu structuré</span>
               </div>
             </div>
           </motion.div>
@@ -287,24 +282,13 @@ export default function PostsPage() {
 
                   {/* JSON Toggle */}
                   <Button
-                    color={showJson ? "danger" : "primary"}
+                    color={showJson ? "danger" : "secondary"}
                     variant="flat"
                     startContent={showJson ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                     onClick={() => setShowJson(!showJson)}
                     size="sm"
                   >
                     {showJson ? 'Masquer JSON' : 'Afficher JSON'}
-                  </Button>
-                  
-                  {/* Download All */}
-                  <Button
-                    color="secondary"
-                    variant="flat"
-                    startContent={<Download className="w-4 h-4" />}
-                    onClick={downloadAllArticles}
-                    size="sm"
-                  >
-                    Télécharger tout
                   </Button>
 
                   {/* Link to Articles */}
@@ -415,55 +399,103 @@ export default function PostsPage() {
                         color="primary"
                         variant="flat"
                         size="sm"
-                        startContent={<Copy className="w-4 h-4" />}
-                        onClick={() => copyToClipboard(article)}
+                        startContent={expandedArticles.has(article.id) ? <ChevronUp className="w-4 h-4" /> : <BookOpen className="w-4 h-4" />}
+                        onClick={() => toggleExpanded(article.id)}
                         className="flex-1"
                       >
-                        Copier
-                      </Button>
-                      
-                      <Button
-                        color="secondary"
-                        variant="flat"
-                        size="sm"
-                        startContent={<Download className="w-4 h-4" />}
-                        onClick={() => downloadJson(article, `article-${article.id}`)}
-                        className="flex-1"
-                      >
-                        Télécharger
+                        {expandedArticles.has(article.id) ? 'Réduire' : 'Lire l\'article'}
                       </Button>
                       
                       {showJson && (
                         <Button
-                          color="default"
+                          color="secondary"
                           variant="flat"
                           size="sm"
-                          startContent={expandedArticles.has(article.id) ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
-                          onClick={() => toggleExpanded(article.id)}
+                          startContent={<Copy className="w-4 h-4" />}
+                          onClick={() => copyToClipboard(article)}
                           className="flex-1"
                         >
-                          {expandedArticles.has(article.id) ? 'Réduire' : 'JSON'}
+                          Copier JSON
                         </Button>
                       )}
                     </div>
                   </CardBody>
 
-                  {/* JSON Content */}
-                  {showJson && (
+                  {/* Article Content */}
+                  {expandedArticles.has(article.id) && (
                     <CardBody className="pt-0 px-6 pb-6">
-                      <div className="bg-gray-900 rounded-lg p-4 overflow-hidden">
-                        <div className="flex items-center justify-between mb-2">
-                          <span className="text-green-400 text-sm font-medium">JSON Data</span>
-                          <span className="text-green-400/70 text-xs">
-                            {Object.keys(article).length} propriétés
-                          </span>
+                      <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
+                        <h4 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
+                          Contenu de l'article
+                        </h4>
+                        
+                        {/* Article Content */}
+                        <div className="prose prose-gray dark:prose-invert max-w-none">
+                          {Array.isArray(article.content) ? (
+                            article.content.map((block: any, blockIndex: number) => {
+                              if (block.type === 'paragraph') {
+                                return (
+                                  <p key={blockIndex} className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
+                                    {block.text}
+                                  </p>
+                                );
+                              } else if (block.type === 'subtitle') {
+                                return (
+                                  <h3 key={blockIndex} className="text-lg font-semibold text-gray-900 dark:text-white mb-3 mt-6">
+                                    {block.text}
+                                  </h3>
+                                );
+                              } else if (block.type === 'image') {
+                                return (
+                                  <div key={blockIndex} className="my-6">
+                                    <Image
+                                      src={resolveImagePath(block.src)}
+                                      alt={block.alt || 'Image de l\'article'}
+                                      width={600}
+                                      height={400}
+                                      className="rounded-lg shadow-md mx-auto"
+                                    />
+                                    {block.alt && (
+                                      <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-2 italic">
+                                        {block.alt}
+                                      </p>
+                                    )}
+                                  </div>
+                                );
+                              }
+                              return null;
+                            })
+                          ) : (
+                            <div className="text-gray-700 dark:text-gray-300 leading-relaxed whitespace-pre-wrap">
+                              {article.content || 'Aucun contenu disponible'}
+                            </div>
+                          )}
                         </div>
-                        <pre className="text-green-400 text-xs overflow-x-auto whitespace-pre-wrap max-h-96 overflow-y-auto">
-                          {expandedArticles.has(article.id) 
-                            ? JSON.stringify(article, null, 2)
-                            : JSON.stringify(article, null, 2).substring(0, 300) + '...'
-                          }
-                        </pre>
+
+                        {/* JSON Toggle */}
+                        {showJson && (
+                          <div className="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
+                            <div className="flex items-center justify-between mb-4">
+                              <h5 className="text-md font-medium text-gray-900 dark:text-white">
+                                Données JSON
+                              </h5>
+                              <Button
+                                size="sm"
+                                variant="flat"
+                                color="secondary"
+                                startContent={<Copy className="w-4 h-4" />}
+                                onClick={() => copyToClipboard(article)}
+                              >
+                                Copier JSON
+                              </Button>
+                            </div>
+                            <div className="bg-gray-900 rounded-lg p-4 overflow-hidden">
+                              <pre className="text-green-400 text-xs overflow-x-auto whitespace-pre-wrap max-h-64 overflow-y-auto">
+                                {JSON.stringify(article, null, 2)}
+                              </pre>
+                            </div>
+                          </div>
+                        )}
                       </div>
                     </CardBody>
                   )}
