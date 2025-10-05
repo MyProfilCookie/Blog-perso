@@ -36,7 +36,7 @@ export default function PostsPage() {
   const [expandedArticles, setExpandedArticles] = useState<Set<string>>(new Set());
   const [showJson, setShowJson] = useState(true);
 
-  const baseUrl = process.env.NEXT_PUBLIC_API_URL;
+  const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com/api';
   const shouldUseLocalData = process.env.NODE_ENV === 'production' && 
     (baseUrl?.includes('localhost') || baseUrl?.includes('render.com'));
 
@@ -45,10 +45,19 @@ export default function PostsPage() {
       setLoading(true);
       setError(null);
 
+      console.log('🔍 Debug Posts Page:');
+      console.log('- baseUrl:', baseUrl);
+      console.log('- shouldUseLocalData:', shouldUseLocalData);
+      console.log('- NODE_ENV:', process.env.NODE_ENV);
+
       if (baseUrl && !shouldUseLocalData) {
+        console.log('📡 Tentative d\'appel API:', `${baseUrl}/articles`);
         const response = await fetch(`${baseUrl}/articles`);
+        console.log('📡 Réponse API:', response.status, response.ok);
+        
         if (response.ok) {
           const data = await response.json();
+          console.log('📡 Données reçues:', Array.isArray(data) ? `${data.length} articles` : 'Pas un tableau');
           // S'assurer que les données sont un tableau
           const articlesArray = Array.isArray(data) ? data : [];
           setArticles(articlesArray);
@@ -57,9 +66,11 @@ export default function PostsPage() {
       }
 
       // Fallback vers les données locales
+      console.log('📁 Fallback vers données locales: /dataarticles.json');
       const localResponse = await fetch('/dataarticles.json');
       if (localResponse.ok) {
         const localData = await localResponse.json();
+        console.log('📁 Données locales reçues:', Array.isArray(localData) ? `${localData.length} articles` : 'Pas un tableau');
         // S'assurer que les données sont un tableau
         const articlesArray = Array.isArray(localData) ? localData : [];
         setArticles(articlesArray);
