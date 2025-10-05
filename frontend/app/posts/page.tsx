@@ -38,7 +38,7 @@ export default function PostsPage() {
 
   const baseUrl = process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com/api';
   const shouldUseLocalData = process.env.NODE_ENV === 'production' && 
-    (baseUrl?.includes('localhost') || baseUrl?.includes('render.com'));
+    (baseUrl?.includes('localhost') || baseUrl?.includes('127.0.0.1'));
 
   const fetchArticles = async () => {
     try {
