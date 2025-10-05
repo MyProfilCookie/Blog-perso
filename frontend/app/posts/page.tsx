@@ -24,7 +24,6 @@ import {
   Grid3X3,
   List
 } from "lucide-react";
-import Link from "next/link";
 import Image from "next/image";
 
 interface Article {
