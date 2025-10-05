@@ -45,7 +45,6 @@ import {
   DeliveredOrdersIcon,
 } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { useAI } from "@/app/contexts/AIContext";
 import { Sparkles } from "lucide-react";
 
 // Type definition for user
@@ -82,7 +81,6 @@ interface Order {
 export const Navbar = () => {
   const userContext = useContext(UserContext) as any;
   const user = userContext?.user || null;
-  const { toggleAI } = useAI();
   const [cartItemsCount, setCartItemsCount] = useState<number>(0);
   const [orderCount, setOrderCount] = useState<OrderCountType>({
     pending: 0,
@@ -580,15 +578,16 @@ export const Navbar = () => {
       <NavbarContent justify="end">
         {/* Bouton AI Assistant */}
         <NavbarItem>
-          <Button
-            isIconOnly
-            variant="flat"
-            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all"
-            onPress={toggleAI}
-            aria-label="Assistant IA"
-          >
-            <Sparkles className="w-5 h-5" />
-          </Button>
+          <NextLink href="/ai-assistant">
+            <Button
+              isIconOnly
+              variant="flat"
+              className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all"
+              aria-label="Assistant IA"
+            >
+              <Sparkles className="w-5 h-5" />
+            </Button>
+          </NextLink>
         </NavbarItem>
 
         {/* Bouton de thème */}
@@ -921,17 +920,20 @@ export const Navbar = () => {
       <NavbarMenu>
         {/* Bouton AI Assistant en haut du menu mobile */}
         <NavbarMenuItem>
-          <Button
-            className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold"
+          <Link
+            className="w-full"
+            href="/ai-assistant"
+            onClick={() => setIsMenuOpen(false)}
             size="lg"
-            onPress={() => {
-              toggleAI();
-              setIsMenuOpen(false);
-            }}
-            startContent={<Sparkles className="w-5 h-5" />}
           >
-            🤖 Assistant IA Alia
-          </Button>
+            <Button
+              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold"
+              size="lg"
+              startContent={<Sparkles className="w-5 h-5" />}
+            >
+              🤖 Assistant IA Alia
+            </Button>
+          </Link>
         </NavbarMenuItem>
         
         {menuItems.map((item, index) => (
