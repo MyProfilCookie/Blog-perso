@@ -18,7 +18,7 @@ import {
   ChevronDown,
   BookOpen
 } from "lucide-react";
-import AIAssistant from "@/components/AIAssistant";
+import AIAssistantPremium from "@/components/AIAssistantPremium";
 
 interface Article {
   id: string;
@@ -298,7 +298,7 @@ export default function JournalPostsPage() {
               exit={{ opacity: 0, height: 0 }}
               className="mb-8"
             >
-              <AIAssistant />
+              <AIAssistantPremium />
             </motion.div>
           )}
         </AnimatePresence>
