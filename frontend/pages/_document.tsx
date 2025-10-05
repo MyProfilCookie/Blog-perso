@@ -96,19 +96,18 @@ export default function Document() {
         <Main />
         <NextScript />
 
-        {/* Service Worker Registration */}
+        {/* Service Worker désactivé - causait des problèmes avec Stripe CSP */}
+        {/* Script pour désenregistrer les anciens Service Workers */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               if ('serviceWorker' in navigator) {
-                window.addEventListener('load', function() {
-                  navigator.serviceWorker.register('/sw.js')
-                    .then(function(registration) {
-                      console.log('SW registered: ', registration);
-                    })
-                    .catch(function(registrationError) {
-                      console.log('SW registration failed: ', registrationError);
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                  for(let registration of registrations) {
+                    registration.unregister().then(function(success) {
+                      console.log('✅ Service Worker désenregistré avec succès');
                     });
+                  }
                 });
               }
             `,
