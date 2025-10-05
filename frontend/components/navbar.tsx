@@ -920,20 +920,16 @@ export const Navbar = () => {
       <NavbarMenu>
         {/* Bouton AI Assistant en haut du menu mobile */}
         <NavbarMenuItem>
-          <Link
-            className="w-full"
-            href="/ai-assistant"
-            onClick={() => setIsMenuOpen(false)}
-            size="lg"
-          >
+          <NextLink href="/ai-assistant" className="w-full">
             <Button
               className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold"
               size="lg"
               startContent={<Sparkles className="w-5 h-5" />}
+              onPress={() => setIsMenuOpen(false)}
             >
               🤖 Assistant IA Alia
             </Button>
-          </Link>
+          </NextLink>
         </NavbarMenuItem>
         
         {menuItems.map((item, index) => (

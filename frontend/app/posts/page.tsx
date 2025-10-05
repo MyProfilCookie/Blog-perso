@@ -51,10 +51,6 @@ export default function JournalPostsPage() {
         
         if (data.articles && Array.isArray(data.articles)) {
           setArticles(data.articles);
-          // Premier article comme featured
-          if (data.articles.length > 0) {
-            setFeaturedArticle(data.articles[0]);
-          }
         }
       } catch (error) {
         console.error("Erreur lors du chargement des articles:", error);
