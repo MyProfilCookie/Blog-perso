@@ -69,7 +69,7 @@ const nextConfig = {
           // CSP avec support Stripe
           {
             key: 'Content-Security-Policy',
-            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://api.stripe.com https://js.stripe.com https://blog-perso.onrender.com https://*.onrender.com;"
+            value: "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://api.stripe.com https://js.stripe.com https://blog-perso.onrender.com https://*.onrender.com; frame-src https://js.stripe.com https://hooks.stripe.com;"
           },
         ],
       },
