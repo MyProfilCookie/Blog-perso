@@ -189,10 +189,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     });
 
     // Notification avec Sonner
-    toast.success("Article ajouté au panier", {
-      description: `${article.title} a été ajouté à votre panier`,
+    toast.success("Ajouté au panier ✓", {
+      description: article.title,
       position: "bottom-right",
-      duration: 3000,
+      duration: 2000,
     });
   };
 
