@@ -15,7 +15,8 @@ import {
   Newspaper,
   Sparkles,
   Filter,
-  ChevronDown
+  ChevronDown,
+  BookOpen
 } from "lucide-react";
 import AIAssistant from "@/components/AIAssistant";
 
