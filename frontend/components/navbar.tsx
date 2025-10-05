@@ -110,7 +110,7 @@ export const Navbar = () => {
   useEffect(() => {
     const colorInterval = setInterval(() => {
       setAvatarColorIndex((prevIndex) => (prevIndex + 1) % 4);
-    }, 4000);
+    }, 8000); // Réduit la fréquence pour alléger la charge
 
     return () => clearInterval(colorInterval);
   }, []);
@@ -122,7 +122,9 @@ export const Navbar = () => {
     if (user && typeof window !== "undefined") {
       const userCart = localStorage.getItem(`cart_${user.id}`);
       setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
-      fetchOrderCount();
+      // Chargement différé des commandes (uniquement si nécessaire)
+      const timer = setTimeout(() => fetchOrderCount(), 500);
+      return () => clearTimeout(timer);
     } else {
       setCartItemsCount(0);
     }
@@ -468,24 +470,6 @@ export const Navbar = () => {
       onMenuOpenChange={setIsMenuOpen}
       isMenuOpen={isMenuOpen}
       position="sticky"
-      style={{
-        boxShadow: "none",
-        background:
-          resolvedTheme === "dark"
-            ? "rgba(17, 24, 39, 0.95)"
-            : "rgba(248, 250, 255, 0.95)",
-        backdropFilter: "blur(10px)",
-        contain: "layout style paint",
-        borderBottom: "0",
-        borderTop: "0",
-        borderLeft: "0",
-        borderRight: "0",
-        border: "0",
-        outline: "0",
-        borderWidth: "0",
-        borderStyle: "none",
-        borderColor: "transparent",
-      }}
     >
       <NavbarContent>
         <NavbarMenuToggle

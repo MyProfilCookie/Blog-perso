@@ -1,4 +1,29 @@
-/* Styles optimisés pour le menu burger - garde les animations essentielles */
+/* ========================================
+   NAVBAR OPTIMISATIONS
+   ======================================== */
+
+/* Navbar sans bordures */
+.no-border-navbar {
+  box-shadow: none !important;
+  backdrop-filter: blur(10px);
+  border: 0 !important;
+  outline: 0 !important;
+  contain: layout style paint;
+}
+
+.no-border-navbar * {
+  border: 0 !important;
+  outline: 0 !important;
+}
+
+/* Performance optimisée */
+.performance-optimized {
+  will-change: auto;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+}
+
+/* Optimisation animations navbar */
 [data-slot="trigger"] button {
   transition: color 0.2s ease, background-color 0.2s ease !important;
 }
