@@ -96,11 +96,11 @@ export default function JournalPostsPage() {
           >
             <div className="flex items-center justify-center gap-3 mb-2">
               <Newspaper className="w-10 h-10 text-violet-600" />
-              <h1 className="text-4xl md:text-5xl font-bold text-gray-900 dark:text-white">
+              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                 Le Journal AutiStudy
               </h1>
             </div>
-            <p className="text-gray-600 dark:text-gray-300 italic">
+            <p className="text-gray-600 dark:text-gray-300 font-light">
               {new Date().toLocaleDateString("fr-FR", { 
                 weekday: "long", 
                 year: "numeric", 
@@ -185,64 +185,61 @@ export default function JournalPostsPage() {
           >
             <div className="flex items-center gap-2 mb-4">
               <TrendingUp className="w-6 h-6 text-violet-600" />
-              <h2 className="text-2xl font-bold text-gray-900 dark:text-white">
+              <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
                 À la Une
               </h2>
             </div>
             
-            <Link href={`/posts/${featuredArticle.id}`}>
-              <Card className="hover:shadow-2xl transition-all duration-300 cursor-pointer overflow-hidden">
-                <CardBody className="p-0">
-                  <div className="grid md:grid-cols-2 gap-0">
-                    <div className="relative h-80 md:h-auto">
-                      <Image
-                        src={featuredArticle.image || featuredArticle.imageUrl || "/assets/default.webp"}
-                        alt={featuredArticle.title}
-                        fill
-                        className="object-cover"
-                        priority
-                      />
-                      <div className="absolute top-4 left-4">
-                        <Chip
-                          className="bg-violet-600 text-white font-semibold"
-                          startContent={<Tag className="w-4 h-4" />}
-                        >
-                          {featuredArticle.category}
-                        </Chip>
-                      </div>
+            <Card className="hover:shadow-2xl transition-all duration-300 overflow-hidden">
+              <CardBody className="p-0">
+                <div className="grid md:grid-cols-2 gap-0">
+                  <div className="relative h-80 md:h-auto">
+                    <Image
+                      src={featuredArticle.image || featuredArticle.imageUrl || "/assets/default.webp"}
+                      alt={featuredArticle.title}
+                      fill
+                      className="object-cover"
+                      priority
+                    />
+                    <div className="absolute top-4 left-4">
+                      <Chip
+                        className="bg-violet-600 text-white font-semibold"
+                        startContent={<Tag className="w-4 h-4" />}
+                      >
+                        {featuredArticle.category}
+                      </Chip>
                     </div>
-                    
-                    <div className="p-8 flex flex-col justify-center">
-                      <h3 className="text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-4">
-                        {featuredArticle.title}
-                      </h3>
-                      {featuredArticle.subtitle && (
-                        <p className="text-xl text-gray-600 dark:text-gray-300 mb-4 italic">
-                          {featuredArticle.subtitle}
-                        </p>
-                      )}
-                      <p className="text-gray-700 dark:text-gray-300 mb-6 line-clamp-3">
+                  </div>
+                  
+                  <div className="p-8 flex flex-col justify-center">
+                    <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
+                      {featuredArticle.title}
+                    </h3>
+                    {featuredArticle.subtitle && (
+                      <p className="text-xl text-gray-600 dark:text-gray-300 mb-4 font-light">
                         {featuredArticle.subtitle}
                       </p>
-                      
-                      <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
-                        <div className="flex items-center gap-1">
-                          <User className="w-4 h-4" />
-                          <span>{featuredArticle.author}</span>
-                        </div>
-                        <div className="flex items-center gap-1">
-                          <Calendar className="w-4 h-4" />
-                          <span>{new Date(featuredArticle.date).toLocaleDateString("fr-FR")}</span>
-                        </div>
-                        {featuredArticle.readTimeMinutes && (
-                          <div className="flex items-center gap-1">
-                            <Clock className="w-4 h-4" />
-                            <span>{featuredArticle.readTimeMinutes} min</span>
-                          </div>
-                        )}
+                    )}
+                    
+                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-6">
+                      <div className="flex items-center gap-1">
+                        <User className="w-4 h-4" />
+                        <span>{featuredArticle.author}</span>
                       </div>
-                      
-                      <div className="mt-6">
+                      <div className="flex items-center gap-1">
+                        <Calendar className="w-4 h-4" />
+                        <span>{new Date(featuredArticle.date).toLocaleDateString("fr-FR")}</span>
+                      </div>
+                      {featuredArticle.readTimeMinutes && (
+                        <div className="flex items-center gap-1">
+                          <Clock className="w-4 h-4" />
+                          <span>{featuredArticle.readTimeMinutes} min</span>
+                        </div>
+                      )}
+                    </div>
+                    
+                    <div className="mt-auto">
+                      <Link href={`/posts/${featuredArticle.id}`}>
                         <Button
                           color="primary"
                           size="lg"
@@ -250,18 +247,18 @@ export default function JournalPostsPage() {
                         >
                           Lire l'article
                         </Button>
-                      </div>
+                      </Link>
                     </div>
                   </div>
-                </CardBody>
-              </Card>
-            </Link>
+                </div>
+              </CardBody>
+            </Card>
           </motion.div>
         )}
 
         {/* Grille d'articles */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-6">
+          <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
             {searchTerm || selectedCategory !== "Tous" ? "Résultats" : "Derniers Articles"}
           </h2>
           
@@ -301,11 +298,11 @@ export default function JournalPostsPage() {
                         </div>
                         
                         <div className="p-5">
-                          <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-violet-600 transition-colors">
+                          <h3 className="text-xl font-extrabold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-violet-600 transition-colors tracking-tight">
                             {article.title}
                           </h3>
                           
-                          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2 font-light">
                             {article.subtitle || ""}
                           </p>
                           
