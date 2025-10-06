@@ -329,19 +329,31 @@
             "content": [
                 {
                     "type": "paragraph",
-                    "text": "L'art-thérapie est une approche thérapeutique qui utilise le processus créatif pour améliorer le bien-être physique, mental et émotionnel. Pour les enfants autistes, elle offre un moyen d'expression non verbal particulièrement adapté à leurs besoins."
+                    "text": "L'art-thérapie est une approche thérapeutique qui utilise le processus créatif pour améliorer le bien-être physique, mental et émotionnel. Pour les enfants autistes, elle offre un moyen d'expression non verbal particulièrement adapté à leurs besoins. Cette pratique millénaire, reconnue par l'Organisation Mondiale de la Santé, a prouvé son efficacité dans l'accompagnement des troubles du spectre autistique."
                 },
                 {
                     "type": "subtitle",
-                    "text": "Les bienfaits de l'art-thérapie"
+                    "text": "Les bienfaits multiples de l'art-thérapie"
                 },
                 {
                     "type": "paragraph",
-                    "text": "L'art-thérapie permet aux enfants autistes de développer leurs capacités motrices fines, d'améliorer leur concentration et de favoriser l'expression émotionnelle. Le dessin, la peinture, le modelage ou le collage deviennent des outils de communication alternatifs pour exprimer des sentiments difficiles à verbaliser."
+                    "text": "L'art-thérapie permet aux enfants autistes de développer leurs capacités motrices fines à travers la manipulation de pinceaux, crayons et argile. Ces activités améliorent la coordination œil-main et renforcent les muscles des mains et des doigts, essentiels pour l'écriture et les activités quotidiennes. La concentration requise pour créer une œuvre aide également à développer l'attention soutenue, une compétence souvent difficile à acquérir pour les enfants autistes."
                 },
                 {
                     "type": "paragraph",
-                    "text": "De nombreux thérapeutes rapportent que les séances d'art-thérapie aident à réduire l'anxiété et les comportements stéréotypés, tout en renforçant l'estime de soi et la confiance en leurs capacités créatives."
+                    "text": "Le dessin, la peinture, le modelage ou le collage deviennent des outils de communication alternatifs pour exprimer des sentiments difficiles à verbaliser. Les enfants qui ont du mal à exprimer leurs émotions par les mots peuvent utiliser les couleurs, les formes et les textures pour communiquer leur monde intérieur. Cette expression non verbale permet aux thérapeutes et aux parents de mieux comprendre l'état émotionnel de l'enfant."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Une approche personnalisée et sécurisante"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "De nombreux thérapeutes rapportent que les séances d'art-thérapie aident à réduire l'anxiété et les comportements stéréotypés. L'environnement créatif offre un espace sûr où l'enfant peut expérimenter sans jugement, ce qui renforce l'estime de soi et la confiance en leurs capacités créatives. Les réussites artistiques, même petites, procurent un sentiment d'accomplissement qui se transfère positivement dans d'autres domaines de la vie."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les séances peuvent être individuelles ou en groupe, selon les besoins de l'enfant. En groupe, l'art-thérapie favorise aussi les interactions sociales dans un contexte moins intimidant que la conversation traditionnelle. Les enfants peuvent partager leurs créations, observer le travail des autres et développer progressivement des compétences sociales tout en s'amusant."
                 },
                 {
                     "type": "image",
@@ -635,6 +647,438 @@
                     "type": "image",
                     "src": "/assets/asperger.webp",
                     "alt": "Personne Asperger concentrée sur son domaine d'expertise"
+                }
+            ]
+        },
+        {
+            "id": 21,
+            "title": "Les animaux de compagnie et l'autisme",
+            "subtitle": "Le rôle thérapeutique des animaux dans le développement des enfants autistes",
+            "image": "/assets/therapy_animals.webp",
+            "date": "2025-01-25",
+            "author": "Dr. Marie Blanchard",
+            "category": "Thérapies",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "La zoothérapie, ou thérapie assistée par l'animal, montre des résultats remarquables dans l'accompagnement des enfants autistes. Les animaux, par leur nature non-jugeante et leur communication non verbale, offrent un lien unique avec les enfants qui peuvent avoir des difficultés dans les interactions humaines."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Les bienfaits de la présence animale"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les chiens, chevaux, lapins et même les poissons peuvent avoir un impact positif. Le contact avec un animal réduit le stress et l'anxiété, diminue les comportements agressifs et améliore les capacités d'attention. Les enfants autistes développent souvent un attachement fort avec leur animal, qui devient un confident et une source de réconfort inconditionnelle."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "L'équithérapie (thérapie par le cheval) est particulièrement efficace. Le mouvement rythmique du cheval stimule le système sensoriel et vestibulaire, aidant l'enfant à mieux percevoir son corps dans l'espace. De plus, le fait de s'occuper d'un animal enseigne la responsabilité, l'empathie et les routines structurées."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Choisir le bon animal"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Tous les enfants autistes ne réagiront pas de la même manière aux animaux. Certains préfèrent les animaux calmes comme les chats ou les lapins, tandis que d'autres s'épanouissent avec des chiens énergiques. Il est important de considérer les sensibilités sensorielles de l'enfant : certains peuvent être hypersensibles aux aboiements ou aux odeurs, tandis que d'autres recherchent activement le contact tactile avec la fourrure."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/therapy_dog.webp",
+                    "alt": "Enfant autiste interagissant avec un chien de thérapie"
+                }
+            ]
+        },
+        {
+            "id": 22,
+            "title": "L'activité physique adaptée pour les enfants autistes",
+            "subtitle": "Sport, mouvement et bien-être pour favoriser le développement",
+            "image": "/assets/sport_autism.webp",
+            "date": "2025-02-05",
+            "author": "Thomas Rivière",
+            "category": "Développement",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "L'activité physique adaptée (APA) est un outil puissant pour améliorer la qualité de vie des enfants autistes. Au-delà des bienfaits physiques évidents, le sport aide à développer les compétences sociales, la régulation émotionnelle et la confiance en soi."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Les bénéfices du mouvement"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "L'exercice physique régulier réduit les comportements stéréotypés et l'hyperactivité souvent observés chez les enfants autistes. Le mouvement aide également à réguler le système sensoriel : courir, sauter, grimper fournissent une stimulation proprioceptive qui apaise et organise le système nerveux. De plus, l'activité physique améliore le sommeil, un défi majeur pour de nombreuses familles."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les sports collectifs, lorsqu'ils sont adaptés, offrent des opportunités précieuses d'interaction sociale. Le football, le basketball ou la natation en groupe enseignent le respect des règles, la coopération et l'attente de son tour. Les arts martiaux comme le judo ou le karaté sont particulièrement appréciés car ils allient structure, répétition et respect des rituels."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Adapter les activités"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "L'adaptation est clé : environnements calmes, instructions visuelles claires, routines prévisibles. Les activités individuelles comme la natation, le vélo ou la course à pied peuvent être moins stressantes pour commencer. Progressivement, avec un accompagnement bienveillant, l'enfant peut s'ouvrir à des activités plus sociales. L'important est de trouver une activité qui plaît à l'enfant, transformant l'exercice en plaisir plutôt qu'en contrainte."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/sport_adapted.webp",
+                    "alt": "Enfants autistes participant à une activité sportive adaptée"
+                }
+            ]
+        },
+        {
+            "id": 23,
+            "title": "La gestion des crises et des effondrements autistiques",
+            "subtitle": "Comprendre, prévenir et accompagner les moments de détresse",
+            "image": "/assets/meltdown_support.webp",
+            "date": "2025-02-15",
+            "author": "Dr. Lucie Mercier",
+            "category": "Gestion émotionnelle",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Les crises autistiques, souvent appelées 'meltdowns', ne sont pas des caprices mais des réponses à une surcharge sensorielle, émotionnelle ou cognitive. Contrairement aux crises de colère typiques, les meltdowns sont involontaires et l'enfant perd temporairement le contrôle de ses réactions."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Identifier les signes précurseurs"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Apprendre à reconnaître les signes avant-coureurs permet d'intervenir avant que la situation ne dégénère. Les signaux peuvent inclure : agitation accrue, mains qui battent, respiration rapide, retrait social soudain, répétition de phrases ou de sons. Chaque enfant a ses propres indicateurs, et tenir un journal des crises aide à identifier les déclencheurs spécifiques."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les déclencheurs courants incluent les changements imprévus de routine, la surstimulation sensorielle (bruits forts, lumières vives, foules), la fatigue, la faim ou la frustration face à une tâche difficile. Les transitions entre activités sont également des moments à risque. Un planning visuel et des avertissements avant les changements peuvent grandement aider."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Accompagner pendant et après la crise"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Pendant un meltdown, la priorité est la sécurité. Éloigner l'enfant des dangers, réduire les stimuli sensoriels (éteindre les lumières, diminuer le bruit), donner de l'espace. Éviter de toucher l'enfant sans son accord, car le contact peut aggraver la situation. Rester calme et patient, même si c'est difficile. L'enfant n'est pas en contrôle et a besoin de soutien, pas de punition."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Après la crise, l'enfant est souvent épuisé émotionnellement et physiquement. C'est le moment de réconforter, de rassurer et de parler doucement de ce qui s'est passé, si l'enfant est réceptif. Éviter les longues discussions ou reproches immédiatement après. Plus tard, dans un moment calme, on peut explorer ensemble des stratégies pour prévenir les futures crises."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/calm_down_corner.webp",
+                    "alt": "Espace calme aménagé pour la gestion des crises"
+                }
+            ]
+        },
+        {
+            "id": 24,
+            "title": "L'alimentation sélective chez les enfants autistes",
+            "subtitle": "Comprendre et élargir le répertoire alimentaire",
+            "image": "/assets/selective_eating.webp",
+            "date": "2025-02-25",
+            "author": "Nutritionniste Emma Dubois",
+            "category": "Alimentation",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "L'alimentation sélective touche jusqu'à 70% des enfants autistes. Elle va au-delà de la simple 'difficulté à manger' et peut sérieusement impacter la nutrition et la vie familiale. Les particularités sensorielles, le besoin de prévisibilité et les difficultés motrices orales contribuent à cette sélectivité."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Les causes de la sélectivité alimentaire"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les hypersensibilités sensorielles sont souvent en cause : certaines textures (crémeux, croquant, grumeleux) peuvent provoquer du dégoût ou de l'inconfort. Les odeurs fortes, les couleurs inhabituelles ou la température des aliments peuvent également être rejetées. Certains enfants acceptent uniquement des aliments d'une couleur spécifique ou d'une marque particulière."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Le besoin de prévisibilité joue aussi un rôle : l'enfant préfère manger les mêmes aliments car il sait exactement à quoi s'attendre. L'anxiété face à la nouveauté (néophobie alimentaire) est exacerbée chez les enfants autistes. Enfin, certains enfants ont des difficultés de mastication ou de déglutition qui les amènent à éviter certains aliments."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Stratégies pour élargir le répertoire"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "L'approche doit être progressive et respectueuse. Commencer par exposer l'enfant aux nouveaux aliments sans pression pour manger : simplement les avoir à table, les toucher, les sentir. Créer des associations positives avec la nourriture à travers le jeu : jardiner ensemble, cuisiner, faire les courses. Respecter les préférences sensorielles : si l'enfant aime le croquant, proposer différents aliments croquants."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Présenter les nouveaux aliments à côté des favoris, sans pression. Célébrer les petites victoires : toucher un nouvel aliment est un succès ! Impliquer un ergothérapeute spécialisé ou un orthophoniste si les difficultés persistent. En cas de carences nutritionnelles, des suppléments peuvent être nécessaires temporairement, toujours sous supervision médicale."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/food_therapy.webp",
+                    "alt": "Thérapie alimentaire avec un enfant autiste"
+                }
+            ]
+        },
+        {
+            "id": 25,
+            "title": "Les applications numériques pour l'apprentissage",
+            "subtitle": "Sélection et utilisation des meilleures apps éducatives",
+            "image": "/assets/learning_apps.webp",
+            "date": "2025-03-05",
+            "author": "Alexandre Nguyen",
+            "category": "Technologie",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Les applications numériques offrent des opportunités d'apprentissage personnalisé particulièrement adaptées aux enfants autistes. Les interfaces visuelles, le rythme individuel et la répétition infinie sans jugement en font des outils pédagogiques précieux."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Applications de communication"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Proloquo2Go et TouchChat sont des systèmes de communication augmentée et alternative (CAA) leaders. Ils permettent aux enfants non-verbaux ou ayant des difficultés de langage de s'exprimer en sélectionnant des images ou des symboles qui génèrent de la parole. Ces applications peuvent être personnalisées avec des photos familières et des phrases courantes de la vie quotidienne."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Pour les enfants qui développent leur langage, des apps comme 'Otsimo Speech Therapy' ou 'Autism Parenting Magazine' proposent des exercices de prononciation et de vocabulaire ludiques. Les jeux de séquençage d'histoires aident à développer les compétences narratives et la compréhension sociale."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Applications d'organisation et de routines"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les supports visuels sont essentiels pour les enfants autistes. 'Choiceworks' et 'First Then Visual Schedule' permettent de créer des emplois du temps visuels personnalisés avec des images ou des photos. 'Time Timer' visualise l'écoulement du temps avec un disque coloré qui se rétrécit, aidant l'enfant à anticiper les transitions."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "'Breathe, Think, Do with Sesame' enseigne les stratégies de gestion émotionnelle à travers des personnages familiers. Les applications de méditation guidée adaptées comme 'Headspace for Kids' peuvent aider à développer des compétences de relaxation. L'important est de commencer doucement et d'intégrer progressivement ces outils dans la routine quotidienne."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/tablet_learning.webp",
+                    "alt": "Enfant utilisant une tablette éducative"
+                }
+            ]
+        },
+        {
+            "id": 26,
+            "title": "L'hypersensibilité auditive et les solutions",
+            "subtitle": "Gérer les défis des bruits quotidiens",
+            "image": "/assets/noise_sensitivity.webp",
+            "date": "2025-03-15",
+            "author": "Dr. Pierre Fontaine",
+            "category": "Sensorialité",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "L'hypersensibilité auditive affecte de nombreux enfants autistes, transformant des sons ordinaires en expériences douloureuses ou terrifiantes. Les bruits forts, aigus ou imprévisibles peuvent déclencher de l'anxiété, des meltdowns ou un retrait social."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Comprendre l'hypersensibilité auditive"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Cette hypersensibilité n'est pas simplement une préférence pour le calme. Le cerveau autiste traite les sons différemment, avec moins de filtrage des stimuli auditifs. Les bruits de fond que les neurotypiques ignorent facilement (ventilateur, réfrigérateur, conversations lointaines) peuvent être amplifiés et capturer constamment l'attention de l'enfant autiste."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les déclencheurs courants incluent : les aspirateurs, les mixeurs, les chasse d'eau, les alarmes, les cris d'enfants, les foules bruyantes, les restaurants, les feux d'artifice. Certains enfants développent une anticipation anxieuse de ces sons, devenant hypervigilants dans certains environnements."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Stratégies et outils d'adaptation"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les casques antibruit ou les bouchons d'oreilles offrent une protection immédiate. Certains enfants préfèrent les écouteurs avec musique apaisante plutôt que le silence complet. Des applications de bruit blanc ou de sons naturels peuvent masquer les bruits gênants. Anticiper les environnements bruyants et préparer l'enfant mentalement fait une grande différence."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "La thérapie de désensibilisation, menée par un professionnel, peut aider progressivement. Elle consiste à exposer l'enfant à des sons problématiques à volume faible et contrôlé, augmentant graduellement l'intensité. Créer des espaces calmes à la maison où l'enfant peut se retirer pour récupérer est essentiel. L'acceptation et l'accommodation de ces besoins sensoriels sont plus bénéfiques que de forcer l'enfant à endurer."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/noise_cancelling.webp",
+                    "alt": "Enfant portant un casque antibruit"
+                }
+            ]
+        },
+        {
+            "id": 27,
+            "title": "La scolarité à domicile pour les enfants autistes",
+            "subtitle": "Une alternative éducative adaptée et personnalisée",
+            "image": "/assets/homeschool.webp",
+            "date": "2025-03-25",
+            "author": "Isabelle Moreau",
+            "category": "Éducation",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Pour certaines familles, l'école à la maison (homeschooling) devient la meilleure option éducative pour leur enfant autiste. Cette décision, souvent difficile, peut transformer positivement la vie familiale lorsque l'école traditionnelle ne répond pas aux besoins de l'enfant."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Pourquoi choisir l'école à la maison ?"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Plusieurs raisons motivent ce choix : l'environnement scolaire surchargé sensoriellement, le manque de soutien adéquat, le harcèlement, l'anxiété scolaire sévère ou simplement le sentiment que l'enfant n'atteint pas son potentiel dans le système traditionnel. L'école à la maison permet d'adapter totalement l'enseignement au style d'apprentissage unique de l'enfant."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les avantages incluent : un rythme personnalisé (pauses fréquentes, horaires flexibles), un environnement sensoriel contrôlé, l'intégration des intérêts spécifiques dans l'apprentissage, plus de temps pour approfondir les sujets difficiles, et la possibilité d'utiliser des méthodes d'enseignement variées (visuel, kinesthésique, etc.)."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Organisation et socialisation"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "L'organisation est cruciale : établir une routine claire avec supports visuels, créer un espace d'apprentissage dédié, alterner entre activités académiques et pauses sensorielles. De nombreuses ressources existent : programmes en ligne, livres adaptés, groupes de soutien pour parents. Certains enfants combinent école à la maison et scolarité partielle, profitant du meilleur des deux mondes."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "La socialisation préoccupe souvent les parents, mais de nombreuses opportunités existent : groupes de homeschooling, activités parascolaires (sport, musique, art), clubs basés sur les intérêts spécifiques, bénévolat adapté. La qualité des interactions sociales importe plus que la quantité. L'école à la maison permet de travailler intensivement sur les compétences sociales dans un cadre sécurisant avant de les pratiquer dans des contextes plus larges."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/home_education.webp",
+                    "alt": "Parent enseignant à un enfant autiste à la maison"
+                }
+            ]
+        },
+        {
+            "id": 28,
+            "title": "Les stéréotypies et comportements répétitifs",
+            "subtitle": "Comprendre leur fonction et quand intervenir",
+            "image": "/assets/stimming.webp",
+            "date": "2025-04-05",
+            "author": "Dr. Caroline Lefort",
+            "category": "Comportement",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Les stéréotypies, aussi appelées 'stimming', sont des comportements répétitifs caractéristiques de l'autisme : balancements, battements de mains, rotation d'objets, répétition de sons. Loin d'être uniquement problématiques, ces comportements ont souvent des fonctions importantes d'autorégulation."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Les fonctions des stéréotypies"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les stéréotypies servent plusieurs objectifs : gérer le stress et l'anxiété, bloquer les stimuli sensoriels envahissants, exprimer l'excitation ou la joie, aider à la concentration, fournir une stimulation sensorielle agréable. Elles sont un outil d'autorégulation naturel que l'enfant a développé pour naviguer dans un monde souvent trop stimulant."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Différents types de stéréotypies existent : motrices (balancements, sauts, tournoiements), vocales (répétition de mots, sons), visuelles (regarder des lumières, faire défiler des objets), tactiles (frotter des textures, manipuler des objets). Chaque enfant a son répertoire unique de stéréotypies préférées."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Quand et comment intervenir"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "La question n'est pas d'éliminer toutes les stéréotypies, mais de déterminer lesquelles peuvent être acceptées et lesquelles nécessitent une intervention. Intervenir est justifié si le comportement : cause des blessures, interfère significativement avec l'apprentissage, isole socialement l'enfant, ou devient exclusif au détriment d'autres activités."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Plutôt que de simplement arrêter un comportement, proposer des alternatives acceptables : remplacer les balancements par un ballon d'exercice, offrir des objets à manipuler (fidgets, balles anti-stress), créer des moments dédiés aux stéréotypies préférées. Enseigner quand et où certains comportements sont appropriés plutôt que de les interdire totalement. Reconnaître que ces comportements communiquent quelque chose : stress, ennui, besoin de pause, surcharge sensorielle."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/fidget_tools.webp",
+                    "alt": "Collection d'outils sensoriels et fidgets"
+                }
+            ]
+        },
+        {
+            "id": 29,
+            "title": "Le soutien aux aidants familiaux",
+            "subtitle": "Prendre soin de soi pour mieux accompagner",
+            "image": "/assets/caregiver_support.webp",
+            "date": "2025-04-15",
+            "author": "Psychologue Anne-Marie Dubois",
+            "category": "Famille",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "Élever un enfant autiste est enrichissant mais aussi épuisant physiquement et émotionnellement. Les parents et aidants familiaux font face à des défis uniques : naviguer dans les systèmes de santé et d'éducation, gérer les comportements difficiles, jongler entre les thérapies et le travail, tout en s'inquiétant constamment pour l'avenir de leur enfant."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Reconnaître l'épuisement parental"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Le burn-out parental est fréquent mais souvent minimisé. Les signes incluent : fatigue persistante, irritabilité accrue, sentiment d'être dépassé, perte d'intérêt pour les activités autrefois plaisantes, problèmes de sommeil, anxiété ou dépression. Reconnaître ces signes est la première étape pour demander de l'aide, ce qui n'est ni un échec ni de l'égoïsme."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "La culpabilité est omniprésente : culpabilité de ne pas en faire assez, de ressentir de la colère ou de la frustration, de vouloir du temps pour soi, de penser que les autres enfants sont délaissés. Il est crucial de comprendre que ces sentiments sont normaux et partagés par de nombreux parents dans la même situation."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Stratégies de soutien et de résilience"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Prendre soin de soi n'est pas du luxe, c'est une nécessité : dormir suffisamment (même si c'est difficile), manger sainement, faire de l'exercice régulièrement, maintenir des connexions sociales. Même 15 minutes par jour pour soi peuvent faire une différence. Accepter l'aide offerte : famille, amis, services de répit. Déléguer quand possible plutôt que de tout porter seul."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Rejoindre des groupes de soutien, en personne ou en ligne, connecte avec d'autres parents qui comprennent vraiment. Partager les expériences, échanger des conseils, se sentir moins isolé. Considérer une thérapie individuelle ou de couple : un thérapeute peut aider à développer des stratégies de coping et à traiter le stress. Se rappeler qu'un parent équilibré et reposé est plus capable d'accompagner efficacement son enfant."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/parent_selfcare.webp",
+                    "alt": "Parent prenant un moment pour soi"
+                }
+            ]
+        },
+        {
+            "id": 30,
+            "title": "L'autisme au féminin : particularités et diagnostic tardif",
+            "subtitle": "Comprendre comment l'autisme se manifeste différemment chez les filles",
+            "image": "/assets/autism_girls.webp",
+            "date": "2025-04-25",
+            "author": "Dr. Sophie Lambert",
+            "category": "Types d'autisme",
+            "content": [
+                {
+                    "type": "paragraph",
+                    "text": "L'autisme chez les filles et les femmes est longtemps resté sous-diagnostiqué. Pendant des décennies, l'autisme a été considéré comme principalement masculin, avec un ratio diagnostique de 4 garçons pour 1 fille. Aujourd'hui, les chercheurs reconnaissent que ce ratio reflète davantage des biais de diagnostic qu'une réalité biologique."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Le camouflage social"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les filles autistes développent souvent des stratégies de camouflage social (masking) plus sophistiquées que les garçons. Elles observent et imitent les comportements sociaux de leurs pairs, créant un 'personnage' social qui cache leurs difficultés réelles. Ce masquage constant est épuisant mentalement et peut conduire à l'anxiété, la dépression et le burn-out, souvent à l'adolescence ou à l'âge adulte."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Les intérêts spécifiques des filles sont souvent plus socialement acceptables : animaux, livres, célébrités, nature. Ces intérêts passent inaperçus car ils ressemblent aux passions 'normales' des filles, alors que l'intensité et la nature obsessionnelle sont similaires aux intérêts spécifiques des garçons autistes. Les difficultés sociales peuvent aussi être masquées par des amitiés unidirectionnelles où la fille suit passivement."
+                },
+                {
+                    "type": "subtitle",
+                    "text": "Conséquences du diagnostic tardif"
+                },
+                {
+                    "type": "paragraph",
+                    "text": "De nombreuses femmes ne reçoivent un diagnostic qu'à l'âge adulte, après des années d'incompréhension. Les conséquences incluent : faible estime de soi, sentiment d'être 'défectueuse', diagnostic erroné de troubles anxieux ou de la personnalité, difficultés professionnelles et relationnelles. Le diagnostic, même tardif, apporte souvent un soulagement immense : enfin une explication cohérente à leurs expériences de vie."
+                },
+                {
+                    "type": "paragraph",
+                    "text": "Pour les parents, il est important de rester vigilant aux signes subtils chez les filles : perfectionnisme extrême, anxiété sociale masquée, épuisement après les interactions sociales, difficultés de régulation émotionnelle en privé malgré un comportement 'parfait' en public, amitiés limitées ou superficielles. Les professionnels doivent aussi être formés à reconnaître le profil autistique féminin pour éviter les diagnostics manqués."
+                },
+                {
+                    "type": "image",
+                    "src": "/assets/girl_autism.webp",
+                    "alt": "Fille autiste dans un environnement social"
                 }
             ]
         }
