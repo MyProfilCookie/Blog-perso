@@ -2,6 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import { useTheme } from "next-themes";
 import dayjs from "dayjs";
 import { Sun, Moon, User, Mail, Calendar, Award, BookOpen, Target, TrendingUp, Edit3, Save, X } from "lucide-react";
 import Swal from "sweetalert2";
@@ -42,7 +43,7 @@ const ProfilePage = () => {
   const [user, setUser] = useState<any>(null);
   const [createdAt, setCreatedAt] = useState<string>("");
   const [currentTime, setCurrentTime] = useState<string>("");
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const { theme, setTheme } = useTheme();
   const [activeTab, setActiveTab] = useState<"overview" | "progress" | "achievements" | "edit">("overview");
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -112,18 +113,6 @@ const ProfilePage = () => {
 
     fetchData();
 
-    // Check for dark mode preference
-    const darkMode = localStorage.getItem("darkMode") === "true" || 
-                     (!localStorage.getItem("darkMode") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDarkMode(darkMode);
-    
-    // Apply dark mode to document
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-
     // Update current time every second
     const interval = setInterval(() => {
       setCurrentTime(dayjs().format("HH:mm:ss"));
@@ -133,15 +122,7 @@ const ProfilePage = () => {
   }, [router]);
 
   const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    localStorage.setItem("darkMode", newDarkMode.toString());
-    
-    if (newDarkMode) {
-      document.documentElement.classList.add("dark");
-        } else {
-      document.documentElement.classList.remove("dark");
-    }
+    setTheme(theme === "dark" ? "light" : "dark");
   };
 
   const handleEditFormChange = (field: string, value: string) => {
@@ -265,7 +246,7 @@ const ProfilePage = () => {
                 size="sm"
                 className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
               >
-                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {theme === "dark" ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>
             </div>
             
