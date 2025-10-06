@@ -7,6 +7,7 @@
             "image": "/assets/routine_autisme.jpg",
             "date": "2024-01-15",
             "author": "Jean Dupont",
+            "category": "Quotidien",
             "content": [
                 {
                     "type": "paragraph",
@@ -42,6 +43,7 @@
             "image": "/assets/aba_therapy.jpg",
             "date": "2024-02-10",
             "author": "Sophie Martin",
+            "category": "Thérapies",
             "content": [
                 {
                     "type": "paragraph",
@@ -81,6 +83,7 @@
             "image": "/assets/philosophie_autisme.jpg",
             "date": "2024-03-05",
             "author": "Clara Renault",
+            "category": "Société",
             "content": [
                 {
                     "type": "paragraph",
@@ -112,6 +115,7 @@
             "image": "/assets/sensory_autism.jpg",
             "date": "2024-04-18",
             "author": "Marc Leblanc",
+            "category": "Sensorialité",
             "content": [
                 {
                     "type": "paragraph",
@@ -143,6 +147,7 @@
             "image": "/assets/communication_nonverbal.jpg",
             "date": "2024-05-25",
             "author": "Julie Lefebvre",
+            "category": "Communication",
             "content": [
                 {
                     "type": "paragraph",
@@ -174,6 +179,7 @@
             "image": "/assets/parents_autisme.jpg",
             "date": "2024-06-12",
             "author": "Alexandre Rousseau",
+            "category": "Famille",
             "content": [
                 {
                     "type": "paragraph",
@@ -205,6 +211,7 @@
             "image": "/assets/education_autisme.jpg",
             "date": "2024-07-08",
             "author": "Marie Dubois",
+            "category": "Éducation",
             "content": [
                 {
                     "type": "paragraph",
@@ -240,6 +247,7 @@
             "image": "/assets/alimentation_autisme.jpg",
             "date": "2024-08-19",
             "author": "Nicolas Petit",
+            "category": "Alimentation",
             "content": [
                 {
                     "type": "paragraph",
@@ -267,6 +275,7 @@
             "image": "/assets/inclusion_scolaire.jpg",
             "date": "2024-09-01",
             "author": "Camille Fontaine",
+            "category": "Éducation",
             "content": [
                 {
                     "type": "paragraph",
@@ -294,6 +303,7 @@
             "image": "/assets/interets_specifiques_autisme.jpg",
             "date": "2024-09-10",
             "author": "Laura Girard",
+            "category": "Développement",
             "content": [
                 {
                     "type": "paragraph",

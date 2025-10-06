@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, CardBody, Input, Chip, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem } from "@nextui-org/react";
+import { Card, CardBody, Input, Chip, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Pagination } from "@nextui-org/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -42,6 +42,8 @@ export default function JournalPostsPage() {
   const [selectedAuthor, setSelectedAuthor] = useState<string>("Tous");
   const [sortBy, setSortBy] = useState<string>("recent");
   const [showAI, setShowAI] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const articlesPerPage = 9; // 9 articles par page (3x3 grille)
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -96,6 +98,17 @@ export default function JournalPostsPage() {
   
   // Les autres articles (exclure l'article en vedette)
   const otherArticles = featuredArticle ? filteredArticles.slice(1) : filteredArticles;
+  
+  // Pagination
+  const totalPages = Math.ceil(otherArticles.length / articlesPerPage);
+  const startIndex = (currentPage - 1) * articlesPerPage;
+  const endIndex = startIndex + articlesPerPage;
+  const paginatedArticles = otherArticles.slice(startIndex, endIndex);
+  
+  // Réinitialiser la page lors du changement de filtre
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [searchTerm, selectedCategory, selectedAuthor, sortBy]);
 
   if (loading) {
     return (
@@ -393,7 +406,7 @@ export default function JournalPostsPage() {
             </div>
           ) : (
             <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {otherArticles.map((article, index) => (
+              {paginatedArticles.map((article, index) => (
                 <motion.div
                   key={article.id}
                   initial={{ opacity: 0, y: 20 }}
@@ -450,6 +463,38 @@ export default function JournalPostsPage() {
             </div>
           )}
         </div>
+        
+        {/* Pagination */}
+        {totalPages > 1 && (
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="flex justify-center items-center gap-4 py-8"
+          >
+            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-200 dark:border-gray-700">
+              <Pagination
+                total={totalPages}
+                page={currentPage}
+                onChange={setCurrentPage}
+                color="secondary"
+                size="lg"
+                showControls
+                classNames={{
+                  wrapper: "gap-2",
+                  item: "w-10 h-10 text-base font-semibold",
+                  cursor: "bg-violet-600 text-white font-bold shadow-lg"
+                }}
+              />
+            </div>
+            
+            {/* Info pagination */}
+            <div className="hidden md:block text-sm text-gray-600 dark:text-gray-400">
+              <span className="font-medium">
+                Articles {startIndex + 1} - {Math.min(endIndex, otherArticles.length)} sur {otherArticles.length}
+              </span>
+            </div>
+          </motion.div>
+        )}
       </div>
     </div>
   );
