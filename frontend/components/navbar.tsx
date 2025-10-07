@@ -451,7 +451,7 @@ export const Navbar = () => {
         { name: "👤 Profil", href: "/profile", color: "foreground" },
         {
           name: "🎓 Dashboard",
-          href: user.role === "admin" ? "/admin/dashboard" : "/dashboard",
+          href: user.role === "admin" ? "/admin/dashboard" : "/profile",
           color: "foreground",
         },
         {

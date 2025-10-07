@@ -59,7 +59,7 @@ export const siteConfig = {
     },
     {
       label: "Dashboard",
-      href: "/dashboard",
+      href: "/profile",
     },
     {
       label: "Projects",

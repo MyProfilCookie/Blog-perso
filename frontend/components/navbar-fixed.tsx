@@ -633,7 +633,7 @@ export const Navbar = () => {
               }
               as={Link}
               className="text-sm font-normal text-gray-600 dark:text-gray-300 bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 hover:from-blue-100 hover:to-indigo-100 dark:hover:from-gray-700 dark:hover:to-gray-600 button-cls-optimized border border-blue-200 dark:border-gray-600"
-              href={user.role === "admin" ? "/admin/dashboard" : "/dashboard"}
+              href={user.role === "admin" ? "/admin/dashboard" : "/profile"}
             >
               <FontAwesomeIcon
                 className="mr-2"
@@ -1034,7 +1034,7 @@ export const Navbar = () => {
                       href={
                         user.role === "admin"
                           ? "/admin/dashboard"
-                          : "/dashboard"
+                          : "/profile"
                       }
                       onClick={() => setIsMenuOpen(false)}
                     >

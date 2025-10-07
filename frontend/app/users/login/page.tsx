@@ -27,7 +27,7 @@ export default function Connexion() {
   const [passwordStrength, setPasswordStrength] = useState(""); // Force du mot de passe
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnUrl = searchParams.get("returnUrl") || "/dashboard";
+  const returnUrl = searchParams.get("returnUrl") || "/profile";
   // const { login } = useAuth(); // Utilisation du contexte d'authentification
 
   // Rediriger si l'utilisateur est déjà connecté

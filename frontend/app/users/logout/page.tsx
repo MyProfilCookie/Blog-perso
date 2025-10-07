@@ -78,7 +78,7 @@ export default function Connexion() {
           confirmButton: "bg-green-500 text-white",
         },
       }).then(() => {
-        router.push("/dashboard"); // Redirige vers le tableau de bord
+        router.push("/profile"); // Redirige vers le profil
       });
     }, 2000);
   };

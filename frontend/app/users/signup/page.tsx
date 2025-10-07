@@ -152,7 +152,7 @@ export default function Inscription() {
           confirmButton: "bg-green-500 text-white",
         },
       }).then(() => {
-        router.push("/dashboard");
+        router.push("/profile");
       });
     } catch (error) {
       setLoading(false);
