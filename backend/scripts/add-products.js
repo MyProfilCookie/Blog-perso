@@ -2,8 +2,11 @@ const mongoose = require('mongoose');
 const Produit = require('../api/models/products');
 require('dotenv').config();
 
-// Connexion à MongoDB
-mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/autistudy', {
+// Connexion à MongoDB (utilise la même variable que le backend principal)
+const dbUri = process.env.DB || process.env.MONGODB_URI || 'mongodb://localhost:27017/autistudy';
+console.log('🔗 Connexion à:', dbUri.includes('mongodb.net') ? 'MongoDB Atlas (Production)' : 'MongoDB Local');
+
+mongoose.connect(dbUri, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 })
@@ -209,21 +212,31 @@ const products = [
 // Fonction pour ajouter les produits
 async function addProducts() {
   try {
-    // Supprimer tous les produits existants (optionnel)
-    const deleteResult = await Produit.deleteMany({});
-    console.log(`🗑️  ${deleteResult.deletedCount} produit(s) existant(s) supprimé(s)`);
+    // Compter les produits existants
+    const existingCount = await Produit.countDocuments();
+    console.log(`📦 Produits existants: ${existingCount}`);
+
+    // Option: Supprimer les anciens produits ? (décommentez la ligne suivante si nécessaire)
+    // await Produit.deleteMany({});
+    // console.log('🗑️  Tous les produits existants ont été supprimés');
 
     // Ajouter les nouveaux produits
     const result = await Produit.insertMany(products);
-    console.log(`✅ ${result.length} produits ajoutés avec succès !`);
+    console.log(`\n✅ ${result.length} nouveaux produits ajoutés avec succès !\n`);
     
     // Afficher les produits ajoutés
     result.forEach((product, index) => {
       console.log(`${index + 1}. ${product.title} - ${product.price}€`);
     });
 
+    const newTotal = await Produit.countDocuments();
+    console.log(`\n📊 Total de produits dans la base: ${newTotal}`);
+
   } catch (error) {
     console.error('❌ Erreur lors de l\'ajout des produits:', error);
+    if (error.code === 11000) {
+      console.log('⚠️  Certains produits existent déjà (doublon détecté)');
+    }
   } finally {
     mongoose.connection.close();
     console.log('\n👋 Connexion fermée');
