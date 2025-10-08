@@ -12,6 +12,8 @@ import NextLink from "next/link";
 import { useEffect, useState, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
+import { motion } from "framer-motion";
+import { ShoppingBag } from "lucide-react";
 
 // 📌 2. Imports absolus (depuis "@/components/")
 import { Button } from "@/components/ui/button";
@@ -131,29 +133,31 @@ export default function ArticlesClient() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-white dark:bg-gray-900">
-        <section className="relative py-12 md:py-20 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
-          <div className="relative w-full px-4 md:px-8 lg:px-12">
-            <div className="max-w-7xl mx-auto text-center">
-              <div className="mb-8 md:mb-12">
-                <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                  Boutique{" "}
-                  <span className="text-blue-600 dark:text-blue-400">
-                    AutiStudy
-                  </span>
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+        {/* Header de la boutique */}
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center"
+            >
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <ShoppingBag className="w-10 h-10 md:w-12 md:h-12 text-white" />
+                <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+                  Boutique AutiStudy
                 </h1>
-                <div className="flex items-center justify-center space-x-2">
-                  <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-blue-600"></div>
-                  <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300">
-                    Chargement des produits...
-                  </p>
-                </div>
               </div>
-            </div>
+              <div className="flex items-center justify-center gap-2">
+                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
+                <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">
+                  Chargement des produits...
+                </p>
+              </div>
+            </motion.div>
           </div>
-        </section>
-        <section className="px-2 py-6 md:px-4 lg:px-6 bg-white dark:bg-gray-900">
+        </div>
+        <section className="px-2 py-8 md:px-4 lg:px-6">
           <div className="w-full">
             <div className="grid grid-cols-1 gap-6 sm:gap-8 md:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 max-w-7xl mx-auto">
               {[...Array(6)].map((_, index) => (
@@ -168,7 +172,7 @@ export default function ArticlesClient() {
 
   if (error) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200">
         <div className="text-center max-w-md">
           <div className="mb-4">
             <svg className="mx-auto h-12 w-12 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -210,7 +214,7 @@ export default function ArticlesClient() {
 
   if (memoizedArticles.length === 0) {
     return (
-      <div className="flex flex-col items-center justify-center min-h-screen bg-white dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+      <div className="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 text-gray-800 dark:text-gray-200">
         <div className="text-center">
           <div className="mb-4">
             <svg className="mx-auto h-16 w-16 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -235,32 +239,30 @@ export default function ArticlesClient() {
   }
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
-      {/* Hero Section - Optimisé */}
-      <section className="relative py-12 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
-        <div className="relative w-full px-4 md:px-8 lg:px-12">
-          <div className="max-w-7xl mx-auto text-center">
-            <div
-              className="mb-8 md:mb-12 opacity-100"
-            >
-              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
-                Boutique{" "}
-                <span className="text-blue-600 dark:text-blue-400">
-                  AutiStudy
-                </span>
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+      {/* Header de la boutique */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center"
+          >
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <ShoppingBag className="w-10 h-10 md:w-12 md:h-12 text-white" />
+              <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+                Boutique AutiStudy
               </h1>
-              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                Outils et ressources spécialisés pour l'apprentissage adapté des enfants autistes. 
-                Découvrez notre sélection d'équipements sensoriels et éducatifs.
-              </p>
             </div>
-          </div>
+            <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">
+              Outils et ressources spécialisés pour l'apprentissage adapté
+            </p>
+          </motion.div>
         </div>
-      </section>
+      </div>
 
       {/* Products Section - Optimisé */}
-      <section className="px-2 py-6 md:px-4 lg:px-6 bg-white dark:bg-gray-900 transition-colors">
+      <section className="px-2 py-8 md:px-4 lg:px-6 transition-colors">
         <div className="w-full">
           <div className="grid grid-cols-1 gap-6 sm:gap-8 md:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 max-w-7xl mx-auto">
             {memoizedArticles.map((article, index) => (
