@@ -18,7 +18,7 @@ import { ShoppingBag, Star, TrendingUp, Package, Sparkles } from "lucide-react";
 // 📌 2. Imports absolus (depuis "@/components/")
 import { Button } from "@/components/ui/button";
 import { CardSkeleton } from "@/components/SkeletonLoader";
-import OptimizedImage from "@/components/OptimizedImage";
+import Image from "next/image";
 import { useIsClient } from "@/hooks/useIsClient";
 
 // 📌 3. Imports relatifs (fichiers du projet)
@@ -350,11 +350,10 @@ export default function ArticlesClient() {
 
                 {/* Image Container */}
                 <div className="relative h-64 overflow-hidden bg-gray-100 dark:bg-gray-700">
-                  <OptimizedImage
+                  <Image
                     alt={article.title}
-                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
-                    width={400}
-                    height={300}
+                    className="object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                    fill
                     priority={index < 3}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
                     src={article.imageUrl}
