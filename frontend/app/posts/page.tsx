@@ -1,7 +1,6 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { Card, CardBody, Input, Chip, Button, Dropdown, DropdownTrigger, DropdownMenu, DropdownItem, Pagination } from "@nextui-org/react";
 import { motion, AnimatePresence } from "framer-motion";
 import Link from "next/link";
 import Image from "next/image";
@@ -16,8 +15,22 @@ import {
   Sparkles,
   Filter,
   ChevronDown,
-  BookOpen
+  BookOpen,
+  X
 } from "lucide-react";
+
+// shadcn/ui components
+import { Card, CardContent } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 import AIAssistantPremium from "@/components/AIAssistantPremium";
 
 interface Article {
@@ -43,7 +56,7 @@ export default function JournalPostsPage() {
   const [sortBy, setSortBy] = useState<string>("recent");
   const [showAI, setShowAI] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
-  const articlesPerPage = 9; // 9 articles par page (3x3 grille)
+  const articlesPerPage = 9;
 
   useEffect(() => {
     const fetchArticles = async () => {
@@ -91,12 +104,12 @@ export default function JournalPostsPage() {
   const categories = ["Tous", ...Array.from(new Set(articles.map(a => a.category).filter(Boolean)))];
   const authors = ["Tous", ...Array.from(new Set(articles.map(a => a.author).filter(Boolean)))];
   
-  // Article en vedette (le premier des résultats filtrés si aucun filtre actif)
+  // Article en vedette
   const featuredArticle = (searchTerm === "" && selectedCategory === "Tous" && selectedAuthor === "Tous") 
     ? filteredArticles[0] 
     : null;
   
-  // Les autres articles (exclure l'article en vedette)
+  // Les autres articles
   const otherArticles = featuredArticle ? filteredArticles.slice(1) : filteredArticles;
   
   // Pagination
@@ -110,9 +123,16 @@ export default function JournalPostsPage() {
     setCurrentPage(1);
   }, [searchTerm, selectedCategory, selectedAuthor, sortBy]);
 
+  const resetFilters = () => {
+    setSearchTerm("");
+    setSelectedCategory("Tous");
+    setSelectedAuthor("Tous");
+    setSortBy("recent");
+  };
+
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center">
+      <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4"></div>
           <p className="text-gray-600 dark:text-gray-300">Chargement des articles...</p>
@@ -122,22 +142,22 @@ export default function JournalPostsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Header du journal */}
-      <div className="bg-white dark:bg-gray-900 border-b-4 border-violet-600 shadow-md">
-        <div className="max-w-7xl mx-auto px-4 py-6">
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
           <motion.div
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center"
           >
-            <div className="flex items-center justify-center gap-3 mb-2">
-              <Newspaper className="w-10 h-10 text-violet-600" />
-              <h1 className="text-4xl md:text-5xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <Newspaper className="w-10 h-10 md:w-12 md:h-12 text-white" />
+              <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
                 Le Journal AutiStudy
               </h1>
             </div>
-            <p className="text-gray-600 dark:text-gray-300 font-light">
+            <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">
               {new Date().toLocaleDateString("fr-FR", { 
                 weekday: "long", 
                 year: "numeric", 
@@ -150,152 +170,135 @@ export default function JournalPostsPage() {
       </div>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Barre de recherche et filtres avancés */}
+        {/* Barre de recherche et filtres */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           className="mb-8"
         >
-          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-lg p-6 space-y-4 border border-gray-200 dark:border-gray-700">
-            {/* Recherche principale */}
-            <div className="flex flex-col md:flex-row gap-4">
-              <Input
-                className="flex-1"
-                placeholder="Rechercher un article..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                startContent={<Search className="w-5 h-5 text-violet-600" />}
-                size="lg"
-                classNames={{
-                  input: "text-base",
-                  inputWrapper: "h-12 bg-gray-50 dark:bg-gray-900"
-                }}
-              />
-              <Button
-                color="secondary"
-                variant={showAI ? "solid" : "flat"}
-                onClick={() => setShowAI(!showAI)}
-                startContent={<Sparkles className="w-5 h-5" />}
-                size="lg"
-                className="h-12"
-              >
-                Assistant IA
-              </Button>
-            </div>
-            
-            {/* Filtres avancés */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button
-                    variant="flat"
-                    className="w-full justify-between bg-gray-50 dark:bg-gray-900"
-                    endContent={<ChevronDown className="w-4 h-4" />}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Tag className="w-4 h-4 text-violet-600" />
-                      <span className="font-medium">Catégorie:</span>
-                      <span className="text-violet-600 truncate">{selectedCategory}</span>
-                    </div>
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="Catégories"
-                  onAction={(key) => setSelectedCategory(key as string)}
-                  selectedKeys={[selectedCategory]}
-                  selectionMode="single"
-                >
-                  {categories.map((cat) => (
-                    <DropdownItem key={cat}>{cat}</DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown>
-              
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button
-                    variant="flat"
-                    className="w-full justify-between bg-gray-50 dark:bg-gray-900"
-                    endContent={<ChevronDown className="w-4 h-4" />}
-                  >
-                    <div className="flex items-center gap-2">
-                      <User className="w-4 h-4 text-violet-600" />
-                      <span className="font-medium">Auteur:</span>
-                      <span className="text-violet-600 truncate">{selectedAuthor}</span>
-                    </div>
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="Auteurs"
-                  onAction={(key) => setSelectedAuthor(key as string)}
-                  selectedKeys={[selectedAuthor]}
-                  selectionMode="single"
-                >
-                  {authors.map((author) => (
-                    <DropdownItem key={author}>{author}</DropdownItem>
-                  ))}
-                </DropdownMenu>
-              </Dropdown>
-              
-              <Dropdown>
-                <DropdownTrigger>
-                  <Button
-                    variant="flat"
-                    className="w-full justify-between bg-gray-50 dark:bg-gray-900"
-                    endContent={<ChevronDown className="w-4 h-4" />}
-                  >
-                    <div className="flex items-center gap-2">
-                      <Filter className="w-4 h-4 text-violet-600" />
-                      <span className="font-medium">Trier:</span>
-                      <span className="text-violet-600 truncate">
-                        {sortBy === "recent" && "Plus récents"}
-                        {sortBy === "oldest" && "Plus anciens"}
-                        {sortBy === "title" && "A-Z"}
-                        {sortBy === "readTime" && "Temps"}
-                      </span>
-                    </div>
-                  </Button>
-                </DropdownTrigger>
-                <DropdownMenu
-                  aria-label="Trier"
-                  onAction={(key) => setSortBy(key as string)}
-                  selectedKeys={[sortBy]}
-                  selectionMode="single"
-                >
-                  <DropdownItem key="recent">Plus récents</DropdownItem>
-                  <DropdownItem key="oldest">Plus anciens</DropdownItem>
-                  <DropdownItem key="title">Titre (A-Z)</DropdownItem>
-                  <DropdownItem key="readTime">Temps de lecture</DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
-            </div>
-            
-            {/* Badge de résultats et reset */}
-            {(searchTerm || selectedCategory !== "Tous" || selectedAuthor !== "Tous") && (
-              <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
-                <Chip
-                  color="primary"
-                  variant="flat"
-                  size="md"
-                  startContent={<BookOpen className="w-4 h-4" />}
-                >
-                  {filteredArticles.length} résultat{filteredArticles.length > 1 ? "s" : ""}
-                </Chip>
+          <Card className="border-gray-200 dark:border-gray-700">
+            <CardContent className="p-6 space-y-4">
+              {/* Recherche principale */}
+              <div className="flex flex-col md:flex-row gap-4">
+                <div className="relative flex-1">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-violet-600" />
+                  <Input
+                    placeholder="Rechercher un article..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-10 h-12 bg-gray-50 dark:bg-gray-900 border-gray-300 dark:border-gray-700"
+                  />
+                </div>
                 <Button
-                  size="sm"
-                  variant="light"
-                  color="danger"
-                  onClick={() => {
-                    setSearchTerm("");
-                    setSelectedCategory("Tous");
-                    setSelectedAuthor("Tous");
-                  }}
+                  variant={showAI ? "default" : "outline"}
+                  onClick={() => setShowAI(!showAI)}
+                  className="h-12"
                 >
-                  Réinitialiser
+                  <Sparkles className="w-5 h-5 mr-2" />
+                  Assistant IA
                 </Button>
               </div>
-            )}
-          </div>
+              
+              {/* Filtres avancés */}
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="w-full justify-between h-11">
+                      <div className="flex items-center gap-2">
+                        <Tag className="w-4 h-4 text-violet-600" />
+                        <span className="font-medium">Catégorie:</span>
+                        <span className="text-violet-600 truncate">{selectedCategory}</span>
+                      </div>
+                      <ChevronDown className="w-4 h-4 ml-2" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    {categories.map((cat) => (
+                      <DropdownMenuItem
+                        key={cat}
+                        onClick={() => setSelectedCategory(cat)}
+                      >
+                        {cat}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="w-full justify-between h-11">
+                      <div className="flex items-center gap-2">
+                        <User className="w-4 h-4 text-violet-600" />
+                        <span className="font-medium">Auteur:</span>
+                        <span className="text-violet-600 truncate">{selectedAuthor}</span>
+                      </div>
+                      <ChevronDown className="w-4 h-4 ml-2" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    {authors.map((author) => (
+                      <DropdownMenuItem
+                        key={author}
+                        onClick={() => setSelectedAuthor(author)}
+                      >
+                        {author}
+                      </DropdownMenuItem>
+                    ))}
+                  </DropdownMenuContent>
+                </DropdownMenu>
+                
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="outline" className="w-full justify-between h-11">
+                      <div className="flex items-center gap-2">
+                        <Filter className="w-4 h-4 text-violet-600" />
+                        <span className="font-medium">Trier:</span>
+                        <span className="text-violet-600 truncate">
+                          {sortBy === "recent" && "Plus récents"}
+                          {sortBy === "oldest" && "Plus anciens"}
+                          {sortBy === "title" && "A-Z"}
+                          {sortBy === "readTime" && "Temps"}
+                        </span>
+                      </div>
+                      <ChevronDown className="w-4 h-4 ml-2" />
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent className="w-56">
+                    <DropdownMenuItem onClick={() => setSortBy("recent")}>
+                      Plus récents
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy("oldest")}>
+                      Plus anciens
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy("title")}>
+                      Titre (A-Z)
+                    </DropdownMenuItem>
+                    <DropdownMenuItem onClick={() => setSortBy("readTime")}>
+                      Temps de lecture
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              </div>
+              
+              {/* Badge de résultats et reset */}
+              {(searchTerm || selectedCategory !== "Tous" || selectedAuthor !== "Tous") && (
+                <div className="flex items-center justify-between gap-2 pt-2 border-t border-gray-200 dark:border-gray-700">
+                  <Badge variant="secondary" className="px-3 py-1">
+                    <BookOpen className="w-4 h-4 mr-1" />
+                    {filteredArticles.length} résultat{filteredArticles.length > 1 ? "s" : ""}
+                  </Badge>
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={resetFilters}
+                  >
+                    <X className="w-4 h-4 mr-1" />
+                    Réinitialiser
+                  </Button>
+                </div>
+              )}
+            </CardContent>
+          </Card>
         </motion.div>
 
         {/* Assistant IA */}
@@ -326,136 +329,127 @@ export default function JournalPostsPage() {
               </h2>
             </div>
             
-            <Card className="hover:shadow-2xl transition-all duration-300 overflow-hidden">
-              <CardBody className="p-0">
-                <div className="grid md:grid-cols-2 gap-0">
-                  <div className="relative h-80 md:h-auto">
-                    <Image
-                      src={featuredArticle.image || featuredArticle.imageUrl || "/assets/default.webp"}
-                      alt={featuredArticle.title}
-                      fill
-                      className="object-cover"
-                      priority
-                    />
-                    <div className="absolute top-4 left-4">
-                      <Chip
-                        className="bg-violet-600 text-white font-semibold"
-                        startContent={<Tag className="w-4 h-4" />}
-                      >
-                        {featuredArticle.category}
-                      </Chip>
-                    </div>
-                  </div>
-                  
-                  <div className="p-8 flex flex-col justify-center">
-                    <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
-                      {featuredArticle.title}
-                    </h3>
-                    {featuredArticle.subtitle && (
-                      <p className="text-xl text-gray-600 dark:text-gray-300 mb-4 font-light">
-                        {featuredArticle.subtitle}
-                      </p>
-                    )}
-                    
-                    <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-6">
-                      <div className="flex items-center gap-1">
-                        <User className="w-4 h-4" />
-                        <span>{featuredArticle.author}</span>
-                      </div>
-                      <div className="flex items-center gap-1">
-                        <Calendar className="w-4 h-4" />
-                        <span>{new Date(featuredArticle.date).toLocaleDateString("fr-FR")}</span>
-                      </div>
-                      {featuredArticle.readTimeMinutes && (
-                        <div className="flex items-center gap-1">
-                          <Clock className="w-4 h-4" />
-                          <span>{featuredArticle.readTimeMinutes} min</span>
-                        </div>
-                      )}
-                    </div>
-                    
-                    <div className="mt-auto">
-                      <Button
-                        as={Link}
-                        href={`/posts/${featuredArticle.id}`}
-                        color="primary"
-                        size="lg"
-                        className="font-semibold"
-                      >
-                        Lire l'article
-                      </Button>
-                    </div>
+            <Card className="overflow-hidden hover:shadow-2xl transition-shadow duration-300 border-gray-200 dark:border-gray-700">
+              <div className="grid md:grid-cols-2 gap-0">
+                <div className="relative h-80 md:h-auto w-full">
+                  <Image
+                    src={featuredArticle.image || featuredArticle.imageUrl || "/assets/default.webp"}
+                    alt={featuredArticle.title}
+                    fill
+                    sizes="(max-width: 768px) 100vw, 50vw"
+                    className="object-cover"
+                    priority
+                  />
+                  <div className="absolute top-4 left-4">
+                    <Badge className="bg-violet-600 text-white">
+                      <Tag className="w-3 h-3 mr-1" />
+                      {featuredArticle.category}
+                    </Badge>
                   </div>
                 </div>
-              </CardBody>
+                
+                <CardContent className="p-8 flex flex-col justify-center">
+                  <h3 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-4 tracking-tight">
+                    {featuredArticle.title}
+                  </h3>
+                  {featuredArticle.subtitle && (
+                    <p className="text-xl text-gray-600 dark:text-gray-300 mb-4">
+                      {featuredArticle.subtitle}
+                    </p>
+                  )}
+                  
+                  <div className="flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400 mb-6">
+                    <div className="flex items-center gap-1">
+                      <User className="w-4 h-4" />
+                      <span>{featuredArticle.author}</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      <Calendar className="w-4 h-4" />
+                      <span>{new Date(featuredArticle.date).toLocaleDateString("fr-FR")}</span>
+                    </div>
+                    {featuredArticle.readTimeMinutes && (
+                      <div className="flex items-center gap-1">
+                        <Clock className="w-4 h-4" />
+                        <span>{featuredArticle.readTimeMinutes} min</span>
+                      </div>
+                    )}
+                  </div>
+                  
+                  <div className="mt-auto">
+                    <Link href={`/posts/${featuredArticle.id}`}>
+                      <Button size="lg" className="bg-violet-600 hover:bg-violet-700">
+                        Lire l'article
+                      </Button>
+                    </Link>
+                  </div>
+                </CardContent>
+              </div>
             </Card>
           </motion.div>
         )}
 
         {/* Grille d'articles */}
-        <div className="mb-6">
+        <div className="mb-8">
           <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white mb-6 tracking-tight">
             {searchTerm || selectedCategory !== "Tous" ? "Résultats" : "Derniers Articles"}
           </h2>
           
           {filteredArticles.length === 0 ? (
-            <div className="text-center py-12">
-              <p className="text-gray-500 dark:text-gray-400 text-lg">
-                Aucun article trouvé
-              </p>
-            </div>
+            <Card className="border-gray-200 dark:border-gray-700">
+              <CardContent className="text-center py-12">
+                <p className="text-gray-500 dark:text-gray-400 text-lg">
+                  Aucun article trouvé
+                </p>
+              </CardContent>
+            </Card>
           ) : (
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
               {paginatedArticles.map((article, index) => (
                 <motion.div
                   key={article.id}
                   initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 }}
+                  transition={{ delay: index * 0.05 }}
                 >
                   <Link href={`/posts/${article.id}`}>
-                    <Card className="h-full hover:shadow-xl transition-all duration-300 cursor-pointer group">
-                      <CardBody className="p-0">
-                        <div className="relative h-48 overflow-hidden">
-                          <Image
-                            src={article.image || article.imageUrl || "/assets/default.webp"}
-                            alt={article.title}
-                            fill
-                            className="object-cover group-hover:scale-110 transition-transform duration-300"
-                          />
-                          <div className="absolute top-3 left-3">
-                            <Chip
-                              size="sm"
-                              className="bg-violet-600 text-white font-semibold"
-                            >
-                              {article.category}
-                            </Chip>
-                          </div>
+                    <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group border-gray-200 dark:border-gray-700">
+                      <div className="relative h-48 w-full overflow-hidden">
+                        <Image
+                          src={article.image || article.imageUrl || "/assets/default.webp"}
+                          alt={article.title}
+                          fill
+                          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                          className="object-cover group-hover:scale-110 transition-transform duration-300"
+                        />
+                        <div className="absolute top-3 left-3">
+                          <Badge className="bg-violet-600 text-white text-xs">
+                            {article.category}
+                          </Badge>
                         </div>
+                      </div>
+                      
+                      <CardContent className="p-5">
+                        <h3 className="text-xl font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-violet-600 transition-colors">
+                          {article.title}
+                        </h3>
                         
-                        <div className="p-5">
-                          <h3 className="text-xl font-extrabold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-violet-600 transition-colors tracking-tight">
-                            {article.title}
-                          </h3>
-                          
-                          <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2 font-light">
-                            {article.subtitle || ""}
-                          </p>
-                          
-                          <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
-                            <div className="flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
-                              <span>{new Date(article.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}</span>
-                            </div>
-                            {article.readTimeMinutes && (
-                              <div className="flex items-center gap-1">
-                                <Clock className="w-3 h-3" />
-                                <span>{article.readTimeMinutes} min</span>
-                              </div>
-                            )}
+                        <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2">
+                          {article.subtitle || ""}
+                        </p>
+                        
+                        <div className="flex items-center justify-between text-xs text-gray-500 dark:text-gray-400">
+                          <div className="flex items-center gap-1">
+                            <Calendar className="w-3 h-3" />
+                            <span>{new Date(article.date).toLocaleDateString("fr-FR", { day: "numeric", month: "short" })}</span>
                           </div>
+                          {article.readTimeMinutes && (
+                            <div className="flex items-center gap-1">
+                              <Clock className="w-3 h-3" />
+                              <span>{article.readTimeMinutes} min</span>
+                            </div>
+                          )}
                         </div>
-                      </CardBody>
+                      </CardContent>
                     </Card>
                   </Link>
                 </motion.div>
@@ -469,26 +463,61 @@ export default function JournalPostsPage() {
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="flex justify-center items-center gap-4 py-8"
+            className="flex flex-col md:flex-row justify-center items-center gap-4 py-8"
           >
-            <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-4 border border-gray-200 dark:border-gray-700">
-              <Pagination
-                total={totalPages}
-                page={currentPage}
-                onChange={setCurrentPage}
-                color="secondary"
-                size="lg"
-                showControls
-                classNames={{
-                  wrapper: "gap-2",
-                  item: "w-10 h-10 text-base font-semibold",
-                  cursor: "bg-violet-600 text-white font-bold shadow-lg"
-                }}
-              />
+            <div className="flex gap-2">
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
+                disabled={currentPage === 1}
+              >
+                Précédent
+              </Button>
+              
+              {Array.from({ length: totalPages }, (_, i) => i + 1)
+                .filter(page => {
+                  if (totalPages <= 7) return true;
+                  if (page === 1 || page === totalPages) return true;
+                  if (page >= currentPage - 1 && page <= currentPage + 1) return true;
+                  return false;
+                })
+                .map((page, index, array) => {
+                  if (index > 0 && page - array[index - 1] > 1) {
+                    return (
+                      <React.Fragment key={`ellipsis-${page}`}>
+                        <span className="px-2">...</span>
+                        <Button
+                          variant={currentPage === page ? "default" : "outline"}
+                          onClick={() => setCurrentPage(page)}
+                          className={currentPage === page ? "bg-violet-600 hover:bg-violet-700" : ""}
+                        >
+                          {page}
+                        </Button>
+                      </React.Fragment>
+                    );
+                  }
+                  return (
+                    <Button
+                      key={page}
+                      variant={currentPage === page ? "default" : "outline"}
+                      onClick={() => setCurrentPage(page)}
+                      className={currentPage === page ? "bg-violet-600 hover:bg-violet-700" : ""}
+                    >
+                      {page}
+                    </Button>
+                  );
+                })}
+              
+              <Button
+                variant="outline"
+                onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
+                disabled={currentPage === totalPages}
+              >
+                Suivant
+              </Button>
             </div>
             
-            {/* Info pagination */}
-            <div className="hidden md:block text-sm text-gray-600 dark:text-gray-400">
+            <div className="text-sm text-gray-600 dark:text-gray-400">
               <span className="font-medium">
                 Articles {startIndex + 1} - {Math.min(endIndex, otherArticles.length)} sur {otherArticles.length}
               </span>
