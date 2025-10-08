@@ -13,7 +13,7 @@ import { useEffect, useState, useMemo } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faShoppingCart } from "@fortawesome/free-solid-svg-icons";
 import { motion } from "framer-motion";
-import { ShoppingBag } from "lucide-react";
+import { ShoppingBag, Star, TrendingUp, Package, Sparkles } from "lucide-react";
 
 // 📌 2. Imports absolus (depuis "@/components/")
 import { Button } from "@/components/ui/button";
@@ -254,83 +254,167 @@ export default function ArticlesClient() {
                 Boutique AutiStudy
               </h1>
             </div>
-            <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">
-              Outils et ressources spécialisés pour l'apprentissage adapté
+            <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base max-w-2xl mx-auto">
+              Des outils pédagogiques et sensoriels soigneusement sélectionnés pour accompagner l'apprentissage de votre enfant
             </p>
           </motion.div>
         </div>
       </div>
 
-      {/* Products Section - Optimisé */}
-      <section className="px-2 py-8 md:px-4 lg:px-6 transition-colors">
-        <div className="w-full">
-          <div className="grid grid-cols-1 gap-6 sm:gap-8 md:gap-10 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-3 2xl:grid-cols-3 max-w-7xl mx-auto">
-            {memoizedArticles.map((article, index) => (
-              <div
-                className="h-full opacity-100"
-                key={article.productId || article._id || index}
-              >
-                <div className="group relative bg-white dark:bg-gray-800 rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 transform hover:-translate-y-2 border border-gray-100 dark:border-gray-700 h-full flex flex-col overflow-hidden">
-                  {/* Image Container - Optimisé */}
-                  <div className="relative h-64 md:h-72 overflow-hidden rounded-t-2xl">
-                    <OptimizedImage
-                      alt={article.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                      width={400}
-                      height={300}
-                      priority={index < 3} // Chargement prioritaire pour les 3 premiers
-                      sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                      src={article.imageUrl}
-                    />
-                    <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
+      {/* Info Cards */}
+      <div className="max-w-7xl mx-auto px-4 -mt-8 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.1 }}
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-blue-100 dark:bg-blue-900/30 rounded-lg">
+                <Package className="w-6 h-6 text-blue-600 dark:text-blue-400" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white">Livraison rapide</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Sous 48-72h</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.2 }}
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-purple-100 dark:bg-purple-900/30 rounded-lg">
+                <Star className="w-6 h-6 text-purple-600 dark:text-purple-400" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white">Qualité garantie</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Produits testés</p>
+              </div>
+            </div>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.3 }}
+            className="bg-white dark:bg-gray-800 rounded-xl p-6 shadow-lg border border-gray-100 dark:border-gray-700"
+          >
+            <div className="flex items-center gap-3">
+              <div className="p-3 bg-green-100 dark:bg-green-900/30 rounded-lg">
+                <Sparkles className="w-6 h-6 text-green-600 dark:text-green-400" />
+              </div>
+              <div>
+                <h3 className="font-bold text-gray-900 dark:text-white">Sélection experte</h3>
+                <p className="text-sm text-gray-600 dark:text-gray-400">Par des professionnels</p>
+              </div>
+            </div>
+          </motion.div>
+        </div>
+      </div>
+
+      {/* Products Section */}
+      <section className="max-w-7xl mx-auto px-4 pb-16">
+        <div className="mb-8">
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+            Nos Produits
+          </h2>
+          <p className="text-gray-600 dark:text-gray-400">
+            {memoizedArticles.length} produit{memoizedArticles.length > 1 ? 's' : ''} disponible{memoizedArticles.length > 1 ? 's' : ''}
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {memoizedArticles.map((article, index) => (
+            <motion.div
+              key={article.productId || article._id || index}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: index * 0.1 }}
+              className="group h-full"
+            >
+              <div className="relative bg-white dark:bg-gray-800 rounded-2xl shadow-md hover:shadow-2xl transition-all duration-300 h-full flex flex-col overflow-hidden border border-gray-200 dark:border-gray-700">
+                {/* Badge Nouveau si index < 2 */}
+                {index < 2 && (
+                  <div className="absolute top-4 left-4 z-10">
+                    <span className="inline-flex items-center gap-1 bg-gradient-to-r from-purple-600 to-pink-600 text-white text-xs font-bold px-3 py-1.5 rounded-full shadow-lg">
+                      <Sparkles className="w-3 h-3" />
+                      Nouveau
+                    </span>
+                  </div>
+                )}
+
+                {/* Image Container */}
+                <div className="relative h-64 overflow-hidden bg-gray-100 dark:bg-gray-700">
+                  <OptimizedImage
+                    alt={article.title}
+                    className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700 ease-out"
+                    width={400}
+                    height={300}
+                    priority={index < 3}
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    src={article.imageUrl}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
+
+                {/* Content */}
+                <div className="p-5 flex-1 flex flex-col">
+                  {/* Title */}
+                  <h3 className="text-lg font-bold text-gray-900 dark:text-white mb-2 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
+                    {article.title}
+                  </h3>
+                  
+                  {/* Description */}
+                  <p className="text-gray-600 dark:text-gray-300 text-sm mb-4 line-clamp-2 flex-1">
+                    {article.description}
+                  </p>
+
+                  {/* Price & Rating */}
+                  <div className="flex items-center justify-between mb-4">
+                    <div className="flex items-baseline gap-1">
+                      <span className="text-3xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+                        {typeof article.price === 'number' ? article.price.toFixed(2) : article.price}
+                      </span>
+                      <span className="text-lg font-semibold text-gray-600 dark:text-gray-400">€</span>
+                    </div>
+                    <div className="flex items-center gap-1">
+                      {[...Array(5)].map((_, i) => (
+                        <Star key={i} className="w-4 h-4 fill-yellow-400 text-yellow-400" />
+                      ))}
+                    </div>
                   </div>
 
-                  {/* Content - Optimisé */}
-                  <div className="p-6 flex-1 flex flex-col">
-                    {/* Title */}
-                    <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-3 line-clamp-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                      {article.title}
-                    </h3>
+                  {/* Buttons */}
+                  <div className="flex flex-col gap-2 mt-auto">
+                    <Button
+                      className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-semibold py-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg transform hover:scale-[1.02] active:scale-95"
+                      onClick={() => addToCart(article)}
+                    >
+                      <ShoppingBag className="w-4 h-4 mr-2" />
+                      Ajouter au panier
+                    </Button>
                     
-                    {/* Description */}
-                    <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base mb-4 line-clamp-3 flex-1">
-                      {article.description}
-                    </p>
-
-                    {/* Price */}
-                    <div className="mb-4">
-                      <span className="text-2xl font-bold text-blue-600 dark:text-blue-400">
-                        {typeof article.price === 'number' ? article.price.toFixed(2) : article.price}€
-                      </span>
-                    </div>
-
-                    {/* Buttons */}
-                    <div className="flex flex-col gap-3 mt-auto">
+                    {article.link && (
                       <Button
-                        className="w-full bg-blue-600 hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-800 text-white font-semibold py-3 px-4 rounded-xl transition-all duration-200 transform hover:scale-105 active:scale-95"
-                        onClick={() => addToCart(article)}
+                        asChild
+                        className="w-full border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-600 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400 font-medium py-3 rounded-xl transition-all duration-300"
+                        variant="outline"
                       >
-                        <FontAwesomeIcon className="mr-2" icon={faShoppingCart} />
-                        Ajouter au panier
+                        <NextLink href={article.link} rel="noopener noreferrer" target="_blank">
+                          Voir les détails
+                        </NextLink>
                       </Button>
-                      
-                      {article.link && (
-                        <Button
-                          asChild
-                          className="w-full border-blue-600 text-blue-600 hover:bg-blue-50 dark:border-blue-400 dark:text-blue-400 dark:hover:bg-blue-900/20 font-semibold py-3 px-4 rounded-xl transition-all duration-200"
-                          variant="outline"
-                        >
-                          <NextLink href={article.link} rel="noopener noreferrer" target="_blank">
-                            Voir les détails
-                          </NextLink>
-                        </Button>
-                      )}
-                    </div>
+                    )}
                   </div>
                 </div>
               </div>
-            ))}
-          </div>
+            </motion.div>
+          ))}
         </div>
       </section>
     </div>
