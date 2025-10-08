@@ -298,7 +298,7 @@ const BlogPage = () => {
   return (
     <div className="min-h-screen bg-cream dark:bg-gray-900">
       {/* Header avec titre animé */}
-      <div className="bg-gradient-to-r from-violet-600 to-purple-600 dark:from-violet-700 dark:to-purple-700 py-6 sm:py-8 md:py-12 lg:py-16">
+      <div className="bg-gradient-to-r from-blue-600 via-violet-600 to-purple-600 py-6 sm:py-8 md:py-12 lg:py-16">
         <div className="w-full px-3 sm:px-4 text-center">
           <motion.h1
             animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.05, 1] }}
