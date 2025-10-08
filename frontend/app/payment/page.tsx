@@ -7,27 +7,46 @@
 /* eslint-disable prettier/prettier */
 
 import dynamic from 'next/dynamic';
-
 import React, { useState, useEffect } from "react";
-import { Button } from '@nextui-org/react'
-import { Avatar } from '@nextui-org/react';
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { StripeProvider } from "@/components/StripeProvider";
 import { useRouter } from "next/navigation";
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 import { saveOrderService, confirmPaymentService } from "@/services/paymentService";
-
-
+import { 
+  User, 
+  Mail, 
+  Phone, 
+  MapPin, 
+  Package, 
+  Truck, 
+  CreditCard, 
+  ShoppingCart,
+  CheckCircle,
+  AlertCircle
+} from "lucide-react";
+import Image from "next/image";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 
 // Vérifier si la clé Stripe est disponible
 const stripeKey = process.env.NEXT_PUBLIC_STRIPE_PUBLIC_KEY;
 console.log("✅ Clé Stripe chargée :", stripeKey);
 
-// Définir une interface pour l'utilisateur
-
-
-const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTransporter, deliveryCost }: { totalToPay: number; cartItems: any[]; onPaymentSuccess: () => void; selectedTransporter: string; deliveryCost: number; }) => {
+const CheckoutForm = ({ 
+  totalToPay, 
+  cartItems, 
+  onPaymentSuccess, 
+  selectedTransporter, 
+  deliveryCost 
+}: { 
+  totalToPay: number; 
+  cartItems: any[]; 
+  onPaymentSuccess: () => void; 
+  selectedTransporter: string; 
+  deliveryCost: number; 
+}) => {
     const stripe = useStripe();
     const elements = useElements();
     const router = useRouter();
@@ -43,7 +62,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
         };
         checkDarkMode();
         
-        // Observer les changements de thème
         const observer = new MutationObserver(checkDarkMode);
         observer.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] });
         
@@ -53,9 +71,8 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     const handleSubmit = async (event: React.FormEvent) => {
         event.preventDefault();
 
-        if (isProcessing) return; // évite les doubles soumissions
+        if (isProcessing) return;
 
-        // Validate transporter selection
         if (!selectedTransporter) {
             Swal.fire({
                 title: "Erreur",
@@ -66,7 +83,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             return;
         }
 
-        // Validate Stripe readiness
         if (!stripe || !elements) {
             Swal.fire({
                 title: "Erreur",
@@ -77,7 +93,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             return;
         }
 
-        // Get card element
         const cardElement = elements.getElement(CardElement);
 
         if (!cardElement) {
@@ -92,7 +107,7 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
 
         try {
             setIsProcessing(true);
-            // 1) (Optionnel) Récupérer l'email utilisateur pour le reçu Stripe
+            
             let receiptEmail: string | undefined = undefined;
             try {
                 const token = localStorage.getItem("userToken");
@@ -109,7 +124,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 console.warn("Impossible de récupérer l'email utilisateur pour le reçu Stripe", e);
             }
 
-            // 2) Créer un PaymentIntent côté backend
             const intentRes = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/payments/create-payment-intent`, {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -126,7 +140,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 throw new Error("Client secret manquant pour le paiement.");
             }
 
-            // 3) Confirmer le paiement avec la carte
             const { error: confirmError, paymentIntent } = await stripe.confirmCardPayment(clientSecret, {
                 payment_method: {
                     card: cardElement,
@@ -153,10 +166,8 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 return;
             }
 
-            // 4) Enregistrer la commande avec l'ID du PaymentIntent
             const orderData = await saveOrder(cartItems, totalToPay, paymentIntent.id);
             
-            // Vérifier que l'ID a bien été stocké après saveOrder
             const storedId = localStorage.getItem("orderId");
             console.log("Vérification après saveOrder - ID stocké dans localStorage:", storedId);
             
@@ -164,7 +175,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 console.error("ALERTE: ID de commande non trouvé dans localStorage après saveOrder");
             }
             
-            // Record payment confirmation if user is available
             if (user && orderData && (orderData._id || orderData.id || (orderData.order && orderData.order._id))) {
                 const orderId = orderData._id || orderData.id || orderData.order._id;
                 await confirmPayment(
@@ -176,28 +186,24 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                 );
             }
     
-            // Show success message and redirect
             Swal.fire({
                 title: "Paiement réussi",
                 text: "Merci pour votre achat !",
                 icon: "success",
                 confirmButtonText: "OK",
             }).then(() => {
-                // Dernière vérification avant redirection
                 const finalStoredId = localStorage.getItem("orderId");
                 console.log("🔍 Vérification avant redirection - ID stocké:", finalStoredId);
                 
                 if (!finalStoredId) {
                     console.error("❌ ALERTE: ID de commande manquant avant redirection !");
-                    // Essayer de récupérer l'ID depuis la réponse de l'API
                     if (orderData && orderData.order && orderData.order._id) {
                         localStorage.setItem("orderId", orderData.order._id);
                         console.log("✅ ID de commande récupéré et stocké:", orderData.order._id);
                     }
                 }
                 
-                onPaymentSuccess(); // Update cart immediately
-                // Passer aussi l'orderId dans l'URL si disponible
+                onPaymentSuccess();
                 const orderIdForUrl = localStorage.getItem("orderId");
                 if (orderIdForUrl) {
                     router.push(`/payment-confirmations?orderId=${orderIdForUrl}`);
@@ -232,31 +238,25 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
             if (result && result.user) {
                 setUser(result.user);
             }
-            // Mettre à jour l'état local du panier
             setCartItems([]);
             return result ? result.createdOrder : null;
         } catch (error) {
-            // Les erreurs sont gérées dans le service
             return null;
         }
     };
     
-    // Reste du composant inchangé...
     useEffect(() => {
-        if (!user) return; // Prevent execution if user isn't defined yet
+        if (!user) return;
     
         const updateCart = () => {
             console.log("🔄 Mise à jour du panier après paiement...");
             
-            // Remove cart from localStorage
             localStorage.removeItem(`cartItems_${user.pseudo}`);
             localStorage.removeItem("totalPrice");
     
-            // Update React state
             setCartItems([]);
         };
     
-        // Listen for cartUpdated event
         window.addEventListener("cartUpdated", updateCart);
     
         return () => {
@@ -264,7 +264,6 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
         };
     }, [user]);
 
-    // Payment confirmation function
     const confirmPayment = async (
         user: any,
         orderId: string,
@@ -276,12 +275,23 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
     };
     
     return (
-        <form className="mt-6" onSubmit={handleSubmit}>
-            <div className={`p-4 rounded-lg border shadow-md ${!selectedTransporter ? "opacity-60" : ""} bg-gray-50 dark:bg-gray-800 dark:border-gray-700`}>
-                <label className="block mb-2 text-lg font-semibold text-gray-700 dark:text-white" htmlFor="card-element">
+        <motion.form 
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.4 }}
+          className="mt-6" 
+          onSubmit={handleSubmit}
+        >
+            <Card className={`${!selectedTransporter ? "opacity-60" : ""}`}>
+              <CardContent className="p-6">
+                <div className="flex items-center gap-2 mb-4">
+                  <CreditCard className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                  <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                     Informations de Carte Bancaire
-                </label>
-                <div className="p-4 mb-4 bg-gray-50 dark:bg-slate-900 rounded-lg border shadow-sm">
+                  </h3>
+                </div>
+                
+                <div className="p-4 bg-gray-50 dark:bg-gray-900 rounded-lg border border-gray-200 dark:border-gray-700">
                     <CardElement
                         id="card-element"
                         options={{
@@ -305,20 +315,34 @@ const CheckoutForm = ({ totalToPay, cartItems, onPaymentSuccess, selectedTranspo
                         }}
                     />
                 </div>
+                
                 {!selectedTransporter && (
-                    <p className="text-sm text-red-500 mt-1">Veuillez sélectionner un transporteur pour activer le paiement.</p>
+                    <div className="flex items-center gap-2 mt-3 text-sm text-red-600 dark:text-red-400">
+                      <AlertCircle className="w-4 h-4" />
+                      <span>Veuillez sélectionner un transporteur pour activer le paiement.</span>
+                    </div>
                 )}
-            </div>
+              </CardContent>
+            </Card>
+            
             <Button 
-                className={`py-2 mt-4 w-full font-semibold text-white bg-indigo-600 rounded-lg hover:bg-indigo-700 ${isProcessing || !selectedTransporter ? "opacity-70 cursor-not-allowed" : ""}`}
+                className="w-full mt-6 h-12 text-lg font-semibold bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 disabled:opacity-50"
                 type="submit"
-                isDisabled={isProcessing || !selectedTransporter}
+                disabled={isProcessing || !selectedTransporter}
             >
-                {isProcessing ? "Traitement en cours..." : `Payer ${totalToPay} €`}
+                {isProcessing ? (
+                  <span className="flex items-center gap-2">
+                    <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+                    Traitement en cours...
+                  </span>
+                ) : (
+                  `Payer ${totalToPay.toFixed(2)} €`
+                )}
             </Button>
-        </form>
+        </motion.form>
     );
 };
+
 const PaymentPage = () => {
     const [user, setUser] = useState<any>(null);
     const [cartItems, setCartItems] = useState<any[]>([]);
@@ -328,12 +352,10 @@ const PaymentPage = () => {
     const [totalWeight, setTotalWeight] = useState<number>(0);
     const router = useRouter();
 
-    // ✅ Fonction pour calculer le poids total du colis
     const calculateTotalWeight = (items: any[]) => {
         return items.reduce((sum, item) => sum + (item.weight || 0) * item.quantity, 0);
     };
 
-    // ✅ Fonction pour calculer les frais de livraison en fonction du poids et du transporteur
     const calculateDeliveryCost = (weight: number, transporter: string) => {
         const pricing = {
             Colissimo: weight <= 1 ? 4 : weight <= 3 ? 6 : weight <= 5 ? 8 : 12,
@@ -343,7 +365,6 @@ const PaymentPage = () => {
         return pricing[transporter] || 0;
     };
 
-    // ✅ Vérifier l'authentification et charger les données utilisateur et panier
     const checkAuthStatus = async () => {
         const token = localStorage.getItem("userToken");
 
@@ -369,15 +390,12 @@ const PaymentPage = () => {
             console.log("✅ Utilisateur authentifié :", userData);
             setUser(userData.user);
 
-            // Validation des informations obligatoires
             const missingFields = [];
             
-            // Vérifier le numéro de téléphone
             if (!userData.user.phone || userData.user.phone.trim() === "") {
                 missingFields.push("numéro de téléphone");
             }
             
-            // Vérifier l'adresse de livraison
             if (!userData.user.deliveryAddress) {
                 missingFields.push("adresse de livraison");
             } else {
@@ -387,7 +405,6 @@ const PaymentPage = () => {
                 }
             }
             
-            // Si des champs manquent, afficher l'erreur et rediriger
             if (missingFields.length > 0) {
                 const fieldsText = missingFields.join(" et ");
                 Swal.fire({
@@ -408,7 +425,6 @@ const PaymentPage = () => {
                 return;
             }
 
-            // Charger le panier correspondant au pseudo de l'utilisateur
             const userCartKey = `cartItems_${userData.user.pseudo}`;
             const storedCart = localStorage.getItem(userCartKey);
 
@@ -416,15 +432,12 @@ const PaymentPage = () => {
                 const parsedCart = JSON.parse(storedCart);
                 setCartItems(parsedCart);
 
-                // ✅ Calcul du poids total du colis
                 const weight = calculateTotalWeight(parsedCart);
                 setTotalWeight(weight);
 
-                // ✅ Calcul du coût de livraison initial
                 const cost = calculateDeliveryCost(weight, selectedTransporter);
                 setDeliveryCost(cost);
 
-                // ✅ Calcul du total
                 const total = parsedCart.reduce(
                     (sum: number, item: any) => sum + item.price * item.quantity,
                     0
@@ -444,16 +457,12 @@ const PaymentPage = () => {
         checkAuthStatus();
     }, [router, selectedTransporter]);
 
-    // ✅ Gestion du changement de transporteur
-    const handleTransporterChange = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const transporter = event.target.value;
+    const handleTransporterChange = (transporter: string) => {
         setSelectedTransporter(transporter);
 
-        // 🔥 Mise à jour du coût de livraison en fonction du poids
         const cost = calculateDeliveryCost(totalWeight, transporter);
         setDeliveryCost(cost);
 
-        // 🔥 Mise à jour du total à payer
         const totalCartAmount = cartItems.reduce(
             (sum: number, item: any) => sum + item.price * item.quantity,
             0
@@ -461,103 +470,273 @@ const PaymentPage = () => {
         setTotalToPay(totalCartAmount + cost);
     };
 
+    const transporters = [
+        {
+            id: "Colissimo",
+            name: "Colissimo",
+            description: "Livraison standard 3-5 jours",
+            icon: "📦",
+            price: calculateDeliveryCost(totalWeight, "Colissimo")
+        },
+        {
+            id: "UPS",
+            name: "UPS",
+            description: "Livraison express 2-3 jours",
+            icon: "📮",
+            price: calculateDeliveryCost(totalWeight, "UPS")
+        },
+        {
+            id: "DHL",
+            name: "DHL",
+            description: "Livraison rapide 1-2 jours",
+            icon: "✈️",
+            price: calculateDeliveryCost(totalWeight, "DHL")
+        }
+    ];
+
     return (
-        <motion.div
-            initial={{ opacity: 0, scale: 0.95 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.5 }}
-            className="container p-6 mx-auto mt-10 bg-cream dark:bg-gray-800 rounded-lg shadow-lg dark:shadow-none"
-        >
-            {user && (
-                <motion.h1 className="mb-6 text-4xl font-bold text-center text-indigo-600">
-                    Commande de {user.nom} {user.prenom}
-                </motion.h1>
-            )}
-
-            {/* 🏠 Informations Utilisateur */}
-            {user && (
-                <motion.div className="mb-6 p-4 bg-indigo-50 rounded-lg dark:bg-gray-800 shadow-md">
-                    <h2 className="text-2xl font-semibold text-gray-700 mb-4 dark:text-white">Informations utilisateur</h2>
-                    <Avatar src={user.avatar || "/assets/default-avatar.webp"} size="lg" />
-                    <p className="text-gray-500 dark:text-white"><strong>Nom :</strong> {user.nom}</p>
-                    <p className="text-gray-500 dark:text-white"><strong>Prénom :</strong> {user.prenom}</p>
-                    <p className="text-gray-500 dark:text-white"><strong>Pseudo :</strong> {user.pseudo}</p>
-                    <p className="text-gray-500 dark:text-white">
-                        <strong>Adresse de livraison :</strong> {
-                            user.deliveryAddress ? 
-                            `${user.deliveryAddress.street}, ${user.deliveryAddress.city}, ${user.deliveryAddress.postalCode}, ${user.deliveryAddress.country}` :
-                            <span className="text-red-500">⚠️ Adresse manquante</span>
-                        }
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 py-8">
+            <div className="max-w-4xl mx-auto px-4">
+                {/* Header */}
+                <motion.div
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className="text-center mb-8"
+                >
+                    <h1 className="text-3xl md:text-4xl font-extrabold text-gray-900 dark:text-white mb-2">
+                        Finaliser votre commande
+                    </h1>
+                    <p className="text-gray-600 dark:text-gray-400">
+                        Vérifiez vos informations et procédez au paiement
                     </p>
-                    <p className="text-gray-500 dark:text-white">
-                        <strong>Téléphone :</strong> {
-                            user.phone && user.phone.trim() !== "" ? 
-                            user.phone : 
-                            <span className="text-red-500">⚠️ Téléphone manquant</span>
-                        }
-                    </p>
-                    <p className="text-gray-500 dark:text-white"><strong>Email :</strong> {user.email}</p>
-                    
-                    {/* Vérifier s'il y a des informations manquantes */}
-                    {(!user.phone || user.phone.trim() === "" || !user.deliveryAddress || 
-                      !user.deliveryAddress.street || !user.deliveryAddress.city || 
-                      !user.deliveryAddress.postalCode || !user.deliveryAddress.country) && (
-                        <div className="mt-4 p-3 bg-yellow-100 border border-yellow-400 rounded-lg">
-                            <p className="text-yellow-800 mb-2">
-                                ⚠️ Certaines informations sont manquantes pour la livraison.
-                            </p>
-                            <Button 
-                                color="warning" 
-                                size="sm"
-                                onClick={() => router.push("/profile")}
-                            >
-                                Compléter mon profil
-                            </Button>
-                        </div>
-                    )}
                 </motion.div>
-            )}
 
-            {/* 🛒 Détails du panier */}
-            <motion.div className="mb-6">
-                <h2 className="text-2xl font-semibold text-gray-700 mb-4 dark:text-white">Votre panier :</h2>
-                <p><strong>Poids total :</strong> {totalWeight.toFixed(2)} kg</p>
-                <p><strong>Total avant livraison :</strong> {totalToPay - deliveryCost} €</p>
-                <p><strong>Frais de livraison :</strong> {deliveryCost} €</p>
-                <p className="text-xl font-bold text-green-500">Total à payer : {totalToPay} €</p>
-            </motion.div>
+                {user && (
+                    <>
+                        {/* User Information Card */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.1 }}
+                        >
+                            <Card className="mb-6">
+                                <CardContent className="p-6">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <User className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                            Informations utilisateur
+                                        </h2>
+                                    </div>
 
-            {/* 🚚 Sélection du transporteur */}
-            <motion.div className="mt-4">
-                <label htmlFor="transporter" className="block mb-2 font-semibold">Sélectionnez un transporteur :</label>
-                <select id="transporter" value={selectedTransporter} className="p-3 w-full rounded-lg border" onChange={handleTransporterChange}>
-                    <option value="">Sélectionnez un transporteur</option>
-                    <option value="Colissimo">Colissimo</option>
-                    <option value="UPS">UPS</option>
-                    <option value="DHL">DHL</option>
-                </select>
-            </motion.div>
+                                    <div className="flex items-start gap-4">
+                                        <div className="relative w-16 h-16 rounded-full overflow-hidden border-2 border-blue-200 dark:border-blue-800">
+                                            <Image
+                                                src={user.avatar || "/assets/default-avatar.webp"}
+                                                alt={user.nom}
+                                                fill
+                                                className="object-cover"
+                                            />
+                                        </div>
 
-            {/* 💳 Paiement */}
-            <motion.div className="mt-6">
-                {stripeKey && (
-                    <StripeProvider stripeKey={stripeKey}>
-                        <CheckoutForm
-                            totalToPay={totalToPay}
-                            cartItems={cartItems}
-                            onPaymentSuccess={() => console.log("Paiement terminé")}
-                            selectedTransporter={selectedTransporter}
-                            deliveryCost={deliveryCost}
-                        />
-                    </StripeProvider>
+                                        <div className="flex-1 space-y-2">
+                                            <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
+                                                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                                    <User className="w-4 h-4" />
+                                                    <span><strong>Nom :</strong> {user.nom} {user.prenom}</span>
+                                                </div>
+                                                
+                                                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                                    <Mail className="w-4 h-4" />
+                                                    <span><strong>Email :</strong> {user.email}</span>
+                                                </div>
+                                                
+                                                <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                                    <Phone className="w-4 h-4" />
+                                                    <span>
+                                                        <strong>Téléphone :</strong>{" "}
+                                                        {user.phone && user.phone.trim() !== "" ? 
+                                                            user.phone : 
+                                                            <span className="text-red-500">⚠️ Manquant</span>
+                                                        }
+                                                    </span>
+                                                </div>
+                                                
+                                                <div className="flex items-start gap-2 text-gray-700 dark:text-gray-300 md:col-span-2">
+                                                    <MapPin className="w-4 h-4 mt-1" />
+                                                    <span>
+                                                        <strong>Adresse :</strong>{" "}
+                                                        {user.deliveryAddress ? 
+                                                            `${user.deliveryAddress.street}, ${user.deliveryAddress.city}, ${user.deliveryAddress.postalCode}, ${user.deliveryAddress.country}` :
+                                                            <span className="text-red-500">⚠️ Manquante</span>
+                                                        }
+                                                    </span>
+                                                </div>
+                                            </div>
+
+                                            {(!user.phone || user.phone.trim() === "" || !user.deliveryAddress || 
+                                              !user.deliveryAddress.street || !user.deliveryAddress.city || 
+                                              !user.deliveryAddress.postalCode || !user.deliveryAddress.country) && (
+                                                <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
+                                                    <div className="flex items-start gap-2">
+                                                        <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
+                                                        <div className="flex-1">
+                                                            <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-2">
+                                                                Certaines informations sont manquantes pour la livraison.
+                                                            </p>
+                                                            <Button 
+                                                                size="sm"
+                                                                onClick={() => router.push("/profile")}
+                                                                className="bg-yellow-600 hover:bg-yellow-700"
+                                                            >
+                                                                Compléter mon profil
+                                                            </Button>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+
+                        {/* Cart Summary */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.2 }}
+                        >
+                            <Card className="mb-6">
+                                <CardContent className="p-6">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <ShoppingCart className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                            Récapitulatif du panier
+                                        </h2>
+                                    </div>
+
+                                    <div className="space-y-3">
+                                        <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700">
+                                            <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                                <Package className="w-4 h-4" />
+                                                <span>Poids total</span>
+                                            </div>
+                                            <span className="font-semibold text-gray-900 dark:text-white">
+                                                {totalWeight.toFixed(2)} kg
+                                            </span>
+                                        </div>
+
+                                        <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700">
+                                            <span className="text-gray-700 dark:text-gray-300">Total avant livraison</span>
+                                            <span className="font-semibold text-gray-900 dark:text-white">
+                                                {(totalToPay - deliveryCost).toFixed(2)} €
+                                            </span>
+                                        </div>
+
+                                        <div className="flex items-center justify-between py-2 border-b border-gray-200 dark:border-gray-700">
+                                            <div className="flex items-center gap-2 text-gray-700 dark:text-gray-300">
+                                                <Truck className="w-4 h-4" />
+                                                <span>Frais de livraison</span>
+                                            </div>
+                                            <span className="font-semibold text-gray-900 dark:text-white">
+                                                {deliveryCost.toFixed(2)} €
+                                            </span>
+                                        </div>
+
+                                        <div className="flex items-center justify-between py-3 bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 rounded-lg px-4 mt-4">
+                                            <span className="text-lg font-bold text-gray-900 dark:text-white">
+                                                Total à payer
+                                            </span>
+                                            <span className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600 dark:from-blue-400 dark:to-purple-400">
+                                                {totalToPay.toFixed(2)} €
+                                            </span>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+
+                        {/* Transporter Selection */}
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ delay: 0.3 }}
+                        >
+                            <Card className="mb-6">
+                                <CardContent className="p-6">
+                                    <div className="flex items-center gap-2 mb-4">
+                                        <Truck className="w-5 h-5 text-blue-600 dark:text-blue-400" />
+                                        <h2 className="text-xl font-semibold text-gray-900 dark:text-white">
+                                            Sélectionnez un transporteur
+                                        </h2>
+                                    </div>
+
+                                    <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                                        {transporters.map((transporter) => (
+                                            <div
+                                                key={transporter.id}
+                                                onClick={() => handleTransporterChange(transporter.id)}
+                                                className={`
+                                                    relative p-4 border-2 rounded-xl cursor-pointer transition-all duration-300
+                                                    ${selectedTransporter === transporter.id
+                                                        ? 'border-blue-600 bg-blue-50 dark:bg-blue-900/20 ring-2 ring-blue-600'
+                                                        : 'border-gray-200 dark:border-gray-700 hover:border-blue-300 dark:hover:border-blue-700'
+                                                    }
+                                                `}
+                                            >
+                                                {selectedTransporter === transporter.id && (
+                                                    <div className="absolute -top-2 -right-2">
+                                                        <CheckCircle className="w-6 h-6 text-blue-600 bg-white dark:bg-gray-900 rounded-full" />
+                                                    </div>
+                                                )}
+
+                                                <div className="text-center">
+                                                    <div className="text-3xl mb-2">{transporter.icon}</div>
+                                                    <h3 className="font-bold text-gray-900 dark:text-white mb-1">
+                                                        {transporter.name}
+                                                    </h3>
+                                                    <p className="text-xs text-gray-600 dark:text-gray-400 mb-2">
+                                                        {transporter.description}
+                                                    </p>
+                                                    <p className="text-lg font-bold text-blue-600 dark:text-blue-400">
+                                                        {transporter.price.toFixed(2)} €
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </motion.div>
+
+                        {/* Payment Form */}
+                        {stripeKey ? (
+                            <StripeProvider stripeKey={stripeKey}>
+                                <CheckoutForm
+                                    totalToPay={totalToPay}
+                                    cartItems={cartItems}
+                                    onPaymentSuccess={() => console.log("Paiement terminé")}
+                                    selectedTransporter={selectedTransporter}
+                                    deliveryCost={deliveryCost}
+                                />
+                            </StripeProvider>
+                        ) : (
+                            <Card className="border-red-200 dark:border-red-800">
+                                <CardContent className="p-6">
+                                    <div className="flex items-start gap-3 text-red-600 dark:text-red-400">
+                                        <AlertCircle className="w-5 h-5 mt-0.5" />
+                                        <div>
+                                            <p className="font-semibold mb-1">Erreur de configuration</p>
+                                            <p className="text-sm">Impossible de charger Stripe. Veuillez réessayer plus tard.</p>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )}
+                    </>
                 )}
-                {!stripeKey && (
-                    <div className="p-4 bg-red-100 border border-red-400 rounded-lg">
-                        <p className="text-red-800">Erreur : Impossible de charger Stripe. Veuillez réessayer plus tard.</p>
-                    </div>
-                )}
-            </motion.div>
-        </motion.div>
+            </div>
+        </div>
     );
 };
 
