@@ -27,8 +27,28 @@ export default function Connexion() {
   const [passwordStrength, setPasswordStrength] = useState(""); // Force du mot de passe
   const router = useRouter();
   const searchParams = useSearchParams();
-  const returnUrl = searchParams.get("returnUrl") || "/profile";
+  const [returnUrl, setReturnUrl] = React.useState("/profile");
   // const { login } = useAuth(); // Utilisation du contexte d'authentification
+
+  // Sauvegarder la page actuelle au chargement
+  React.useEffect(() => {
+    if (typeof window !== "undefined") {
+      const currentPath = searchParams.get("returnUrl") || sessionStorage.getItem("returnUrl") || window.document.referrer || "/profile";
+      setReturnUrl(currentPath);
+      
+      // Si pas de returnUrl dans l'URL, sauvegarder le referrer
+      if (!searchParams.get("returnUrl") && window.document.referrer) {
+        try {
+          const referrerUrl = new URL(window.document.referrer);
+          if (referrerUrl.origin === window.location.origin) {
+            sessionStorage.setItem("returnUrl", referrerUrl.pathname);
+          }
+        } catch (e) {
+          // Ignore les erreurs de parsing d'URL
+        }
+      }
+    }
+  }, [searchParams]);
 
   // Rediriger si l'utilisateur est déjà connecté
   React.useEffect(() => {
@@ -163,6 +183,12 @@ export default function Connexion() {
             text: `Bienvenue sur AutiStudy, ${userData.pseudo || userData.prenom || userData.nom || userData.email}!`,
             confirmButtonText: "Ok",
           }).then(() => {
+            // Nettoyer le returnUrl du sessionStorage
+            sessionStorage.removeItem("returnUrl");
+            
+            // Déclencher l'événement de mise à jour du panier pour fusionner
+            window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: userData }));
+            
             // Rediriger vers la page d'origine ou dashboard
             router.push(returnUrl);
           });

@@ -78,6 +78,70 @@ export function CartProvider({ children }: { children: ReactNode }) {
     return Boolean(user && user.pseudo && user._id);
   }, [user]);
 
+  // Fonction pour fusionner le panier invité avec le panier utilisateur
+  const mergeGuestCartWithUserCart = useCallback((userData: User) => {
+    try {
+      const guestCart = localStorage.getItem("guestCart");
+      const userCartKey = `cartItems_${userData.pseudo}`;
+      const userCart = localStorage.getItem(userCartKey);
+
+      if (!guestCart) {
+        console.log("📦 Pas de panier invité à fusionner");
+        return;
+      }
+
+      const guestItems: Article[] = JSON.parse(guestCart);
+      const userItems: Article[] = userCart ? JSON.parse(userCart) : [];
+
+      console.log("🔄 Fusion des paniers:", {
+        guestItems: guestItems.length,
+        userItems: userItems.length
+      });
+
+      // Fusionner les articles
+      const mergedItems = [...userItems];
+      
+      guestItems.forEach((guestItem) => {
+        const existingIndex = mergedItems.findIndex(
+          (item) => item._id === guestItem._id
+        );
+
+        if (existingIndex !== -1) {
+          // L'article existe déjà, additionner les quantités
+          mergedItems[existingIndex] = {
+            ...mergedItems[existingIndex],
+            quantity: (mergedItems[existingIndex].quantity || 1) + (guestItem.quantity || 1)
+          };
+        } else {
+          // Nouvel article, l'ajouter
+          mergedItems.push(guestItem);
+        }
+      });
+
+      console.log("✅ Panier fusionné:", mergedItems.length, "articles");
+
+      // Sauvegarder le panier fusionné
+      localStorage.setItem(userCartKey, JSON.stringify(mergedItems));
+      
+      // Nettoyer le panier invité
+      localStorage.removeItem("guestCart");
+      
+      // Mettre à jour l'état
+      setCartItems(mergedItems);
+
+      // Notification
+      if (guestItems.length > 0) {
+        toast.success("Panier restauré ✓", {
+          description: `${guestItems.length} article(s) ajouté(s) à votre panier`,
+          position: "bottom-right",
+          duration: 3000,
+        });
+      }
+    } catch (error) {
+      console.error("Erreur lors de la fusion des paniers:", error);
+    }
+  }, []);
+
   // Load user and cart from localStorage on component mount - optimisé
   useEffect(() => {
     if (typeof window === "undefined" || isInitialized) return;
@@ -144,6 +208,30 @@ export function CartProvider({ children }: { children: ReactNode }) {
       setTimeout(loadUserData, 0);
     }
   }, [isInitialized]);
+
+  // Écouter l'événement de connexion utilisateur pour fusionner les paniers
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleUserLogin = (event: CustomEvent) => {
+      const userData = event.detail;
+      console.log("👤 Utilisateur connecté, fusion des paniers...");
+      
+      // Mettre à jour l'utilisateur
+      userCache = userData;
+      userCacheTimestamp = Date.now();
+      setUser(userData);
+      
+      // Fusionner les paniers
+      mergeGuestCartWithUserCart(userData);
+    };
+
+    window.addEventListener("userLoggedIn", handleUserLogin as EventListener);
+
+    return () => {
+      window.removeEventListener("userLoggedIn", handleUserLogin as EventListener);
+    };
+  }, [mergeGuestCartWithUserCart]);
 
   // Save cart to localStorage whenever it changes
   useEffect(() => {
