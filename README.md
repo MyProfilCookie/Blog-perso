@@ -1,66 +1,96 @@
-# AutiStudy - Plateforme Éducative pour l'Autisme
+# Siteblog - Plateforme Éducative Interactive
 
-![Version](https://img.shields.io/badge/version-1.0.0-blue.svg)
+![Version](https://img.shields.io/badge/version-2.0.0-blue.svg)
 ![License](https://img.shields.io/badge/license-MIT-green.svg)
 ![Next.js](https://img.shields.io/badge/Next.js-14.2.3-black.svg)
 ![Node.js](https://img.shields.io/badge/Node.js-18+-green.svg)
 
-AutiStudy est une plateforme éducative interactive spécialement conçue pour accompagner les enfants autistes dans leur apprentissage. Elle propose des quiz personnalisés, un système de suivi des progrès, et des outils de gestion pour les éducateurs et parents.
+Siteblog est une plateforme éducative complète qui combine un système de gestion de contenu avec des outils d'apprentissage interactifs. Elle propose des quiz personnalisés, un système de suivi des progrès, une boutique en ligne et des outils de gestion pour les éducateurs.
 
 ## 🌟 Fonctionnalités Principales
 
-### Pour les Élèves
-- **Quiz Interactifs** : Questions adaptées par matière (Mathématiques, Français, Sciences, etc.)
-- **Suivi des Progrès** : Tableaux de bord personnalisés avec statistiques détaillées
-- **Interface Adaptée** : Design pensé pour les besoins spécifiques des enfants autistes
-- **Système de Récompenses** : Badges et encouragements pour maintenir la motivation
+### Pour les Étudiants
+- **Apprentissage Interactif** : Quiz et exercices adaptés par matière (Mathématiques, Français, Sciences, Arts, etc.)
+- **Suivi des Progrès** : Tableaux de bord personnalisés avec statistiques détaillées et graphiques
+- **Système de Révision** : Suivi des erreurs et recommandations d'apprentissage
+- **Rapports Hebdomadaires** : Analyses détaillées de la progression
+- **Assistant IA** : Aide personnalisée pour l'apprentissage (mode premium)
 
-### Pour les Éducateurs/Parents
-- **Dashboard Administrateur** : Vue d'ensemble des progrès de tous les élèves
+### Pour les Enseignants/Administrateurs
+- **Dashboard Complet** : Vue d'ensemble des progrès de tous les élèves
+- **Gestion des Élèves** : Création et suivi de profils d'étudiants
+- **Gestion des Contenus** : Création et modification de leçons, quiz et articles
 - **Rapports Détaillés** : Analyses hebdomadaires et trimestrielles
-- **Gestion des Contenus** : Création et modification des quiz
-- **Système de Paiement** : Intégration Stripe pour les abonnements
+- **Statistiques Avancées** : Suivi des performances par matière et par élève
+
+### Plateforme de Contenu
+- **Blog Éducatif** : Articles et ressources pédagogiques
+- **Boutique en Ligne** : Vente de produits éducatifs et de cours
+- **Système de Messagerie** : Communication entre utilisateurs et administration
+- **Contact** : Formulaire de contact intégré
 
 ### Fonctionnalités Techniques
-- **Authentification JWT** : Système de connexion sécurisé
+- **Authentification JWT** : Système de connexion sécurisé avec gestion des rôles
 - **API RESTful** : Backend Node.js/Express avec MongoDB
-- **Interface Moderne** : Frontend Next.js 14 avec NextUI
-- **Performance Optimisée** : Service Worker, lazy loading, optimisations d'images
-- **Tests Automatisés** : Suite de tests unitaires et d'intégration
+- **Interface Moderne** : Frontend Next.js 14 avec NextUI et Tailwind CSS
+- **Paiements Sécurisés** : Intégration Stripe pour les abonnements et achats
+- **Performance Optimisée** : Optimisations d'images, lazy loading, bundle optimization
+- **Responsive Design** : Adapté à tous les appareils (mobile, tablette, desktop)
 
 ## 🏗️ Architecture du Projet
 
 ```
 Siteblog/
-├── frontend/          # Application Next.js 14
-│   ├── app/          # App Router (pages et layouts)
-│   ├── components/   # Composants React réutilisables
-│   ├── hooks/        # Hooks personnalisés
-│   ├── lib/          # Utilitaires et configurations
-│   ├── pages/        # Pages Router (API routes)
-│   ├── public/       # Assets statiques
-│   └── styles/       # Styles CSS globaux
-├── backend/          # API Node.js/Express
-│   ├── api/          # Routes et contrôleurs
-│   ├── models/       # Modèles MongoDB
-│   ├── scripts/      # Scripts d'import/migration
-│   └── uploads/      # Fichiers uploadés
-└── docs/            # Documentation
+├── frontend/                    # Application Next.js 14
+│   ├── app/                    # App Router (pages et layouts)
+│   │   ├── admin/             # Interface d'administration
+│   │   ├── ai-assistant/      # Assistant IA
+│   │   ├── articles/          # Articles éducatifs
+│   │   ├── blog/              # Blog
+│   │   ├── dashboard/         # Tableaux de bord
+│   │   ├── lessons/           # Leçons et cours
+│   │   ├── profile/           # Profils utilisateurs
+│   │   ├── shop/              # Boutique en ligne
+│   │   └── users/             # Gestion des utilisateurs
+│   ├── components/            # Composants React réutilisables
+│   ├── hooks/                 # Hooks personnalisés
+│   ├── lib/                   # Utilitaires et configurations
+│   ├── public/                # Assets statiques
+│   ├── scripts/               # Scripts d'optimisation
+│   └── styles/                # Styles CSS globaux
+├── backend/                    # API Node.js/Express
+│   ├── api/
+│   │   ├── controllers/       # Logique métier
+│   │   ├── middlewares/       # Middlewares (auth, validation)
+│   │   ├── models/            # Modèles MongoDB (20+ modèles)
+│   │   ├── routes/            # Routes API (20+ endpoints)
+│   │   ├── utils/             # Utilitaires
+│   │   └── validation/        # Schémas de validation
+│   ├── scripts/               # Scripts d'import/migration
+│   ├── uploads/               # Fichiers uploadés
+│   └── __tests__/             # Tests unitaires
+├── docs/                       # Documentation technique
+│   ├── API_DOCUMENTATION.md
+│   ├── ARCHITECTURE.md
+│   ├── COMPONENTS_DOCUMENTATION.md
+│   └── CONTRIBUTING.md
+└── cahier-des-charges/         # Spécifications du projet
 ```
 
 ## 🚀 Installation et Configuration
 
 ### Prérequis
-- Node.js 18+ 
+- Node.js 18+
 - MongoDB 5+
 - npm ou yarn
+- Compte Stripe (pour les paiements)
 
 ### Installation
 
 1. **Cloner le repository**
 ```bash
-git clone https://github.com/votre-username/autistudy.git
-cd autistudy
+git clone <votre-repo-url>
+cd siteblog
 ```
 
 2. **Configuration du Backend**
@@ -71,9 +101,10 @@ npm install
 # Créer le fichier .env
 cp .env.example .env
 # Configurer les variables d'environnement :
-# - MONGODB_URI
-# - JWT_SECRET
-# - STRIPE_SECRET_KEY
+# - DB=mongodb://localhost:27017/siteblog
+# - JWT_SECRET=votre_secret_jwt
+# - STRIPE_SECRET_KEY=sk_test_...
+# - STRIPE_WEBHOOK_SECRET=whsec_...
 ```
 
 3. **Configuration du Frontend**
@@ -84,20 +115,20 @@ npm install
 # Créer le fichier .env.local
 cp .env.local.example .env.local
 # Configurer les variables d'environnement :
-# - NEXT_PUBLIC_API_URL
-# - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY
+# - NEXT_PUBLIC_API_URL=http://localhost:3001
+# - NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_...
 ```
 
 ### Démarrage en Développement
 
-1. **Démarrer le Backend**
+**Terminal 1 - Backend :**
 ```bash
 cd backend
 npm run dev
-# Serveur disponible sur http://localhost:5000
+# Serveur disponible sur http://localhost:3001
 ```
 
-2. **Démarrer le Frontend**
+**Terminal 2 - Frontend :**
 ```bash
 cd frontend
 npm run dev
@@ -108,12 +139,17 @@ npm run dev
 
 ### Frontend
 - **Next.js 14** - Framework React avec App Router
-- **NextUI v2** - Bibliothèque de composants UI
-- **Tailwind CSS** - Framework CSS utilitaire
+- **React 18** - Bibliothèque UI
 - **TypeScript** - Typage statique
+- **NextUI v2** - Bibliothèque de composants UI
+- **Radix UI** - Composants UI accessibles
+- **Tailwind CSS** - Framework CSS utilitaire
 - **Framer Motion** - Animations fluides
 - **Stripe** - Système de paiement
-- **Chart.js/Recharts** - Graphiques et statistiques
+- **Chart.js / Recharts** - Graphiques et statistiques
+- **Axios** - Client HTTP
+- **SweetAlert2** - Modales et notifications
+- **React Hot Toast** - Notifications toast
 
 ### Backend
 - **Node.js** - Runtime JavaScript
@@ -121,51 +157,48 @@ npm run dev
 - **MongoDB** - Base de données NoSQL
 - **Mongoose** - ODM pour MongoDB
 - **JWT** - Authentification
+- **bcryptjs** - Hachage des mots de passe
 - **Stripe** - Traitement des paiements
 - **Nodemailer** - Envoi d'emails
+- **express-validator** - Validation des données
 
 ### Outils de Développement
 - **Jest** - Tests unitaires
 - **ESLint** - Linting du code
 - **Prettier** - Formatage du code
 - **TypeScript** - Vérification de types
+- **Nodemon** - Rechargement automatique (dev)
 
 ## 📊 Scripts Disponibles
 
 ### Frontend
 ```bash
-npm run dev          # Développement
-npm run build        # Build de production
-npm run start        # Serveur de production
-npm run test         # Tests unitaires
-npm run lint         # Vérification du code
-npm run analyze      # Analyse du bundle
+npm run dev              # Développement avec warnings
+npm run build            # Build de production
+npm run postbuild        # Transformation Babel (compatibilité Safari)
+npm run start            # Serveur de production
+npm run test             # Tests unitaires
+npm run test:coverage    # Tests avec couverture
+npm run lint             # Vérification du code
+npm run analyze          # Analyse du bundle
+
+# Scripts d'optimisation
+npm run images:optimize          # Optimisation des images
+npm run bundle:optimize          # Optimisation du bundle
+npm run performance:analyze      # Analyse de performance
+npm run mobile:optimize          # Optimisation mobile
 ```
 
 ### Compatibilité Safari
-La commande de build déclenche automatiquement `scripts/postbuild-transform.js`.
-Ce script applique Babel sur les bundles `.next/` afin de retirer l'optional chaining,
-le nullish coalescing et les affectations `??=`, ce qui garantit la compatibilité
-avec les versions plus anciennes de Safari.
-
-```bash
-npm run build
-```
-
-Après le build, tu peux vérifier rapidement avec :
-
-```bash
-rg -n '\?\.[A-Za-z_]' .next/server
-rg -n '\?\?' .next/server
-```
-
-Les deux commandes doivent rester silencieuses si la transformation a bien été appliquée.
+Le script `postbuild` transforme automatiquement le code pour assurer la compatibilité avec Safari en retirant l'optional chaining et le nullish coalescing.
 
 ### Backend
 ```bash
-npm run dev          # Développement avec nodemon
-npm start            # Production
-npm run import-quizzes # Import des données de quiz
+npm run dev              # Développement avec nodemon
+npm start                # Production
+npm run test             # Tests unitaires
+npm run test:coverage    # Tests avec couverture
+npm run import-quizzes   # Import des données de quiz
 ```
 
 ## 🧪 Tests
@@ -173,52 +206,99 @@ npm run import-quizzes # Import des données de quiz
 Le projet inclut une suite complète de tests :
 
 ```bash
-# Tests unitaires
-npm run test
+# Frontend
+cd frontend
+npm run test              # Tests unitaires
+npm run test:coverage     # Tests avec couverture
+npm run test:integration  # Tests d'intégration
+npm run test:smoke        # Tests de fumée
 
-# Tests avec couverture
-npm run test:coverage
-
-# Tests d'intégration
-npm run test:integration
-
-# Tests de fumée
-npm run test:smoke
+# Backend
+cd backend
+npm run test              # Tests unitaires
+npm run test:coverage     # Tests avec couverture
 ```
+
+## 📋 Routes API Principales
+
+### Authentification
+- `POST /api/users/signup` - Inscription
+- `POST /api/users/login` - Connexion
+- `GET /api/users/me` - Profil utilisateur
+
+### Étudiants & Apprentissage
+- `GET /api/eleves` - Liste des élèves
+- `POST /api/eleves` - Créer un élève
+- `GET /api/lessons` - Leçons disponibles
+- `POST /api/subjects/score` - Enregistrer un score
+- `GET /api/rapportHebdos/:eleveId` - Rapports hebdomadaires
+
+### Administration
+- `GET /api/admin/stats` - Statistiques globales
+- `GET /api/stats/eleve/:id` - Statistiques d'un élève
+- `GET /api/trimestre/:eleveId` - Données trimestrielles
+
+### Commerce
+- `GET /api/products` - Liste des produits
+- `POST /api/orders` - Créer une commande
+- `POST /api/payments/create-payment-intent` - Créer un paiement
+- `POST /api/payments/webhook/stripe` - Webhook Stripe
+
+### Contenu
+- `GET /api/articles` - Articles du blog
+- `GET /api/blogs` - Posts de blog
+- `POST /api/contact` - Formulaire de contact
+- `GET /api/messages` - Messages
+
+> Voir [docs/API_DOCUMENTATION.md](docs/API_DOCUMENTATION.md) pour la documentation complète de l'API.
 
 ## 🚀 Déploiement
 
-### Production avec Vercel (Frontend)
+### Frontend (Vercel)
 ```bash
-npm run build:prod
+cd frontend
+npm run build
 vercel --prod
 ```
 
-### Production avec Render/Railway (Backend)
-```bash
-# Variables d'environnement requises :
-# - MONGODB_URI
-# - JWT_SECRET
-# - STRIPE_SECRET_KEY
-# - NODE_ENV=production
-```
+Variables d'environnement requises :
+- `NEXT_PUBLIC_API_URL`
+- `NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY`
 
-## 📈 Performance
+### Backend (Render/Railway/Heroku)
+Variables d'environnement requises :
+- `DB` (MongoDB URI)
+- `JWT_SECRET`
+- `STRIPE_SECRET_KEY`
+- `STRIPE_WEBHOOK_SECRET`
+- `NODE_ENV=production`
 
-Le projet est optimisé pour les performances :
-- **Lighthouse Score** : 95+ sur tous les critères
-- **Core Web Vitals** : Optimisés
-- **Bundle Size** : Minimisé avec tree-shaking
-- **Images** : Optimisation automatique avec Next.js
-- **Caching** : Service Worker et cache HTTP
+## 📈 Performance & Optimisations
+
+Le projet inclut de nombreuses optimisations :
+- **Images optimisées** : WebP, compression, responsive images
+- **Bundle optimization** : Code splitting, tree-shaking
+- **Lazy loading** : Composants et images chargés à la demande
+- **Caching** : Stratégies de cache avancées
+- **Mobile optimization** : Performance mobile optimisée
+- **Core Web Vitals** : LCP, FID, CLS optimisés
 
 ## 🔒 Sécurité
 
-- **Authentification JWT** avec refresh tokens
-- **Validation des données** côté client et serveur
-- **Headers de sécurité** (CSP, HSTS, XSS Protection)
-- **Chiffrement des mots de passe** avec bcrypt
-- **Protection CSRF** et rate limiting
+- **Authentification JWT** avec tokens sécurisés
+- **Validation des données** côté client et serveur (express-validator)
+- **Hachage des mots de passe** avec bcryptjs
+- **Protection CORS** configurée
+- **Variables d'environnement** pour les secrets
+- **Webhooks Stripe** sécurisés avec signatures
+
+## 📚 Documentation
+
+- [API Documentation](docs/API_DOCUMENTATION.md) - Documentation complète de l'API
+- [Architecture](docs/ARCHITECTURE.md) - Architecture technique du projet
+- [Components](docs/COMPONENTS_DOCUMENTATION.md) - Documentation des composants
+- [Contributing](docs/CONTRIBUTING.md) - Guide de contribution
+- [Cahier des Charges](cahier-des-charges/) - Spécifications du projet
 
 ## 🤝 Contribution
 
@@ -230,19 +310,15 @@ Le projet est optimisé pour les performances :
 
 ## 📝 License
 
-Ce projet est sous licence MIT. Voir le fichier [LICENSE](LICENSE) pour plus de détails.
+Ce projet est sous licence MIT.
 
-## 👥 Équipe
-
-- **Développeur Principal** - [Votre Nom](https://github.com/votre-username)
-
-## 📞 Support
+## 👥 Support
 
 Pour toute question ou support :
-- 📧 Email : support@autistudy.com
-- 🐛 Issues : [GitHub Issues](https://github.com/votre-username/autistudy/issues)
-- 📖 Documentation : [Wiki](https://github.com/votre-username/autistudy/wiki)
+- 📧 Email : support@siteblog.com
+- 🐛 Issues : Ouvrez une issue sur le repository
+- 📖 Documentation : Consultez le dossier `docs/`
 
 ---
 
-⭐ **N'hésitez pas à donner une étoile si ce projet vous aide !**
+**⭐ N'hésitez pas à donner une étoile si ce projet vous aide !**
