@@ -535,25 +535,25 @@ const ArticlesPage = () => {
   }, [currentPage, totalPages]);
 
   return (
-    <div className="min-h-screen bg-cream dark:bg-gray-900">
-      {/* Header avec titre animé */}
-      <div className="bg-gradient-to-r from-blue-600 via-violet-600 to-purple-600 py-6 sm:py-8 md:py-12 lg:py-16">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 text-center">
-          <motion.h1
-            animate={{ opacity: [0.5, 1, 0.5], scale: [1, 1.05, 1] }}
-            className={`${title()} text-2xl sm:text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-white mb-3 sm:mb-4`}
-            transition={{ duration: 3, repeat: Infinity }}
-          >
-            Articles et Astuces
-          </motion.h1>
-          <motion.p
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+      {/* Header des articles */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
+        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
-            className="text-base sm:text-lg md:text-xl text-violet-100 max-w-2xl mx-auto leading-relaxed px-2 sm:px-4"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.8, delay: 0.2 }}
+            className="text-center"
           >
-            Découvrez nos articles spécialisés sur l'autisme, l'éducation et le bien-être
-          </motion.p>
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <BookOpen className="w-10 h-10 md:w-12 md:h-12 text-white" />
+              <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+                Articles et Astuces
+              </h1>
+            </div>
+            <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">
+              Découvrez nos articles spécialisés sur l'autisme, l'éducation et le bien-être
+            </p>
+          </motion.div>
         </div>
       </div>
 
