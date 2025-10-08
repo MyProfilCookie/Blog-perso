@@ -79,6 +79,10 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
     };
 
     const handleLoginConfirm = () => {
+        // Sauvegarder l'URL actuelle pour revenir après connexion
+        if (typeof window !== 'undefined') {
+            sessionStorage.setItem("returnUrl", window.location.pathname);
+        }
         router.push("/users/login");
     };
 
