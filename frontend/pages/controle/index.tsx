@@ -595,7 +595,7 @@ export default function ControleIndex() {
                     }
 
                     // Prénom AutiStudy si non connecté
-                    return "Explorateur";
+                    return "Auti";
                   })()}
                 </span>
                 {" 👋"}
