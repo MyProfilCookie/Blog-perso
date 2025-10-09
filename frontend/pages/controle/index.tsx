@@ -556,6 +556,59 @@ export default function ControleIndex() {
           </div>
         </div>
 
+        {/* Message de bienvenue personnalisé */}
+        <div className="bg-white dark:bg-gray-900 border-b border-gray-200 dark:border-gray-800">
+          <div className="max-w-7xl mx-auto px-4 py-6">
+            <motion.div
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="text-center"
+            >
+              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-2">
+                Bonjour{" "}
+                <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-purple-600">
+                  {(() => {
+                    if (stats.eleve?.prenom) {
+                      return stats.eleve.prenom;
+                    }
+
+                    try {
+                      const storedUser =
+                        typeof window !== "undefined"
+                          ? localStorage.getItem("user")
+                          : null;
+                      if (storedUser) {
+                        const userData = JSON.parse(storedUser);
+                        return (
+                          userData.prenom ||
+                          userData.firstName ||
+                          userData.pseudo ||
+                          "Champion"
+                        );
+                      }
+                    } catch (e) {
+                      console.error(
+                        "Erreur parsing userData for firstName:",
+                        e,
+                      );
+                    }
+
+                    // Prénom AutiStudy si non connecté
+                    return "Explorateur";
+                  })()}
+                </span>
+                {" 👋"}
+              </h2>
+              <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base">
+                {typeof window !== "undefined" && localStorage.getItem("user")
+                  ? "Prêt à continuer ton aventure d'apprentissage aujourd'hui ? ✨"
+                  : "Bienvenue dans ton espace d'apprentissage magique ! 🌟"}
+              </p>
+            </motion.div>
+          </div>
+        </div>
+
         <section className="relative py-8 sm:py-12 md:py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800"></div>
         <div className="relative w-full px-3 sm:px-4 md:px-8 lg:px-12">
