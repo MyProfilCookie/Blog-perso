@@ -10,6 +10,14 @@ export const fallbackProducts = [
     imageUrl: "/assets/shop/casque-anti-bruit.webp",
     link: "https://www.amazon.fr/dp/B07QRSTUVW",
     category: "Protection",
+    features: [
+      "Protection auditive efficace",
+      "Confortable pour un usage prolongé",
+      "Réglable pour tous les âges",
+      "Matériaux hypoallergéniques"
+    ],
+    weight: 250,
+    dimensions: "18 x 15 x 10 cm"
   },
   {
     _id: "fallback-2",
@@ -20,6 +28,14 @@ export const fallbackProducts = [
     imageUrl: "/assets/shop/balle-sensorielle-lumineuse.webp",
     link: "https://www.amazon.fr/dp/B08XYZABC1",
     category: "Sensoriel",
+    features: [
+      "6 textures différentes",
+      "Stimule le développement sensoriel",
+      "Facile à nettoyer",
+      "Sans BPA"
+    ],
+    weight: 350,
+    dimensions: "Diamètre 7-10 cm"
   },
   {
     _id: "fallback-3",
@@ -30,6 +46,14 @@ export const fallbackProducts = [
     imageUrl: "/assets/shop/timer-visuel.webp",
     link: "https://www.amazon.fr/dp/B07VWXYZAB",
     category: "Organisation",
+    features: [
+      "Affichage visuel du temps restant",
+      "Magnétique - Se fixe au réfrigérateur",
+      "Idéal pour les routines",
+      "Minuterie silencieuse"
+    ],
+    weight: 180,
+    dimensions: "20 x 20 x 5 cm"
   },
   {
     _id: "fallback-4",
@@ -40,6 +64,14 @@ export const fallbackProducts = [
     imageUrl: "/assets/shop/tapis-sensoriel.webp",
     link: "https://www.amazon.fr/dp/B09QRSTUVW",
     category: "Sensoriel",
+    features: [
+      "Plusieurs zones de textures",
+      "Développe la motricité",
+      "Facile à nettoyer",
+      "Antidérapant"
+    ],
+    weight: 1200,
+    dimensions: "120 x 80 x 2 cm"
   },
   {
     _id: "fallback-5",
@@ -50,6 +82,14 @@ export const fallbackProducts = [
     imageUrl: "/assets/shop/classeur-pecs.webp",
     link: "https://www.amazon.fr/dp/B08JKLMNOP",
     category: "Organisation",
+    features: [
+      "Inclut 48 pictogrammes",
+      "Support magnétique",
+      "Personnalisable",
+      "Aide à la structuration"
+    ],
+    weight: 450,
+    dimensions: "30 x 40 x 1 cm"
   },
   {
     _id: "fallback-6",
@@ -60,6 +100,14 @@ export const fallbackProducts = [
     imageUrl: "/assets/shop/chaise-bascule.webp",
     link: "https://www.amazon.fr/dp/B08KLMNSTU",
     category: "Sensoriel",
+    features: [
+      "Pression profonde apaisante",
+      "Poids de 2kg",
+      "Housse lavable",
+      "Perles en verre non toxiques"
+    ],
+    weight: 2000,
+    dimensions: "40 x 40 x 8 cm"
   },
 ];
 

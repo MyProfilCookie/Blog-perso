@@ -415,17 +415,15 @@ export default function ArticlesClient({ initialProducts }: ArticlesClientProps 
                       Ajouter au panier
                     </Button>
                     
-                    {article.link && (
-                      <Button
-                        asChild
-                        className="w-full border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-600 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400 font-medium py-3 rounded-xl transition-all duration-300"
-                        variant="outline"
-                      >
-                        <NextLink href={article.link} rel="noopener noreferrer" target="_blank">
-                          Voir les détails
-                        </NextLink>
-                      </Button>
-                    )}
+                    <Button
+                      asChild
+                      className="w-full border-2 border-gray-300 dark:border-gray-600 text-gray-700 dark:text-gray-300 hover:border-blue-600 hover:text-blue-600 dark:hover:border-blue-400 dark:hover:text-blue-400 font-medium py-3 rounded-xl transition-all duration-300"
+                      variant="outline"
+                    >
+                      <NextLink href={`/shop/${article.productId || article._id}`}>
+                        Voir les détails
+                      </NextLink>
+                    </Button>
                   </div>
                 </div>
               </div>
