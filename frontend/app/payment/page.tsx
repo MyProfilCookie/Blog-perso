@@ -498,7 +498,7 @@ const PaymentPage = () => {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 py-8">
             <div className="max-w-4xl mx-auto px-4">
                 {/* Header */}
-                <motion.div
+        <motion.div
                     initial={{ opacity: 0, y: -20 }}
                     animate={{ opacity: 1, y: 0 }}
                     className="text-center mb-8"
@@ -555,7 +555,7 @@ const PaymentPage = () => {
                                                     <span>
                                                         <strong>Téléphone :</strong>{" "}
                                                         {user.phone && user.phone.trim() !== "" ? 
-                                                            user.phone : 
+                            user.phone : 
                                                             <span className="text-red-500">⚠️ Manquant</span>
                                                         }
                                                     </span>
@@ -573,32 +573,32 @@ const PaymentPage = () => {
                                                 </div>
                                             </div>
 
-                                            {(!user.phone || user.phone.trim() === "" || !user.deliveryAddress || 
-                                              !user.deliveryAddress.street || !user.deliveryAddress.city || 
-                                              !user.deliveryAddress.postalCode || !user.deliveryAddress.country) && (
+                    {(!user.phone || user.phone.trim() === "" || !user.deliveryAddress || 
+                      !user.deliveryAddress.street || !user.deliveryAddress.city || 
+                      !user.deliveryAddress.postalCode || !user.deliveryAddress.country) && (
                                                 <div className="mt-4 p-3 bg-yellow-50 dark:bg-yellow-900/20 border border-yellow-200 dark:border-yellow-800 rounded-lg">
                                                     <div className="flex items-start gap-2">
                                                         <AlertCircle className="w-5 h-5 text-yellow-600 dark:text-yellow-400 mt-0.5" />
                                                         <div className="flex-1">
                                                             <p className="text-sm text-yellow-800 dark:text-yellow-200 mb-2">
                                                                 Certaines informations sont manquantes pour la livraison.
-                                                            </p>
-                                                            <Button 
-                                                                size="sm"
-                                                                onClick={() => router.push("/profile")}
+                            </p>
+                            <Button 
+                                size="sm"
+                                onClick={() => router.push("/profile")}
                                                                 className="bg-yellow-600 hover:bg-yellow-700"
-                                                            >
-                                                                Compléter mon profil
-                                                            </Button>
+                            >
+                                Compléter mon profil
+                            </Button>
                                                         </div>
                                                     </div>
-                                                </div>
-                                            )}
+                        </div>
+                    )}
                                         </div>
                                     </div>
                                 </CardContent>
                             </Card>
-                        </motion.div>
+                </motion.div>
 
                         {/* Cart Summary */}
                         <motion.div
@@ -654,7 +654,7 @@ const PaymentPage = () => {
                                     </div>
                                 </CardContent>
                             </Card>
-                        </motion.div>
+            </motion.div>
 
                         {/* Transporter Selection */}
                         <motion.div
@@ -707,19 +707,19 @@ const PaymentPage = () => {
                                     </div>
                                 </CardContent>
                             </Card>
-                        </motion.div>
+            </motion.div>
 
                         {/* Payment Form */}
                         {stripeKey ? (
-                            <StripeProvider stripeKey={stripeKey}>
-                                <CheckoutForm
-                                    totalToPay={totalToPay}
-                                    cartItems={cartItems}
-                                    onPaymentSuccess={() => console.log("Paiement terminé")}
-                                    selectedTransporter={selectedTransporter}
-                                    deliveryCost={deliveryCost}
-                                />
-                            </StripeProvider>
+                    <StripeProvider stripeKey={stripeKey}>
+                        <CheckoutForm
+                            totalToPay={totalToPay}
+                            cartItems={cartItems}
+                            onPaymentSuccess={() => console.log("Paiement terminé")}
+                            selectedTransporter={selectedTransporter}
+                            deliveryCost={deliveryCost}
+                        />
+                    </StripeProvider>
                         ) : (
                             <Card className="border-red-200 dark:border-red-800">
                                 <CardContent className="p-6">
@@ -736,7 +736,7 @@ const PaymentPage = () => {
                     </>
                 )}
             </div>
-        </div>
+                    </div>
     );
 };
 

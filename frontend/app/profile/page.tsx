@@ -91,28 +91,28 @@ const ProfilePage = () => {
   };
 
   useEffect(() => {
-    // Retrieve user data from localStorage
-    const fetchedUser = fetchUserData();
+      // Retrieve user data from localStorage
+      const fetchedUser = fetchUserData();
 
-    if (fetchedUser) {
-      setUser(fetchedUser);
-      const formattedCreatedAt = fetchedUser.createdAt
-        ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
-        : "Non disponible";
+      if (fetchedUser) {
+        setUser(fetchedUser);
+        const formattedCreatedAt = fetchedUser.createdAt
+          ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
+          : "Non disponible";
 
-      setCreatedAt(formattedCreatedAt);
-      
-      // Initialize edit form with current user data
-      setEditForm({
-        phone: fetchedUser.phone || "",
-        deliveryAddress: {
-          street: fetchedUser.deliveryAddress?.street || "",
-          city: fetchedUser.deliveryAddress?.city || "",
-          postalCode: fetchedUser.deliveryAddress?.postalCode || "",
-          country: fetchedUser.deliveryAddress?.country || ""
-        }
-      });
-      
+        setCreatedAt(formattedCreatedAt);
+
+        // Initialize edit form with current user data
+        setEditForm({
+          phone: fetchedUser.phone || "",
+          deliveryAddress: {
+            street: fetchedUser.deliveryAddress?.street || "",
+            city: fetchedUser.deliveryAddress?.city || "",
+            postalCode: fetchedUser.deliveryAddress?.postalCode || "",
+            country: fetchedUser.deliveryAddress?.country || ""
+          }
+        });
+
       // Récupérer les statistiques
       fetchStats(fetchedUser._id);
     } else {
@@ -127,7 +127,7 @@ const ProfilePage = () => {
     // Apply dark mode to document
     if (darkMode) {
       document.documentElement.classList.add('dark');
-    } else {
+          } else {
       document.documentElement.classList.remove('dark');
     }
 
@@ -263,18 +263,18 @@ const ProfilePage = () => {
                 {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>
             </div>
-            <div className="w-24 h-24 mx-auto mb-6 bg-blue-600 rounded-full flex items-center justify-center">
-              <User className="w-12 h-12 text-white" />
-            </div>
-            <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
+              <div className="w-24 h-24 mx-auto mb-6 bg-blue-600 rounded-full flex items-center justify-center">
+                <User className="w-12 h-12 text-white" />
+              </div>
+              <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Bonjour {user.pseudo} ! 👋
             </h1>
-            <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-2">
+              <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-2">
               Bienvenue sur votre profil AutiStudy
-            </p>
-            <p className="text-sm text-gray-500 dark:text-gray-400">
-              Heure actuelle : {currentTime} | Membre depuis le {createdAt}
-            </p>
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-400">
+                Heure actuelle : {currentTime} | Membre depuis le {createdAt}
+              </p>
           </div>
         </div>
       </section>
@@ -289,7 +289,7 @@ const ProfilePage = () => {
               { id: "achievements", label: "Réussites", icon: Award },
               { id: "edit", label: "Édition", icon: Edit3 },
             ].map((tab) => (
-              <button
+            <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id as any)}
                 className={`flex items-center gap-1 sm:gap-2 py-3 sm:py-4 px-1 sm:px-2 border-b-2 font-medium text-sm sm:text-base transition-colors whitespace-nowrap ${
@@ -301,7 +301,7 @@ const ProfilePage = () => {
                 <tab.icon className="w-3 h-3 sm:w-4 sm:h-4" />
                 <span className="hidden xs:inline">{tab.label}</span>
                 <span className="xs:hidden">{tab.label.split(' ')[0]}</span>
-              </button>
+            </button>
             ))}
           </nav>
         </div>
@@ -385,23 +385,23 @@ const ProfilePage = () => {
             {user && (
               <Card className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 border-violet-200 dark:border-violet-700">
                 <CardContent className="p-6">
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <h3 className="text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
-                        🔄 Synchronisation des statistiques
-                      </h3>
-                      <p className="text-sm text-violet-600 dark:text-violet-400">
-                        Synchronisez vos exercices locaux avec le serveur pour mettre à jour vos statistiques
-                      </p>
-                    </div>
-                    <StatsSync 
-                      userId={user._id} 
-                      onSyncComplete={(newStats) => {
-                        console.log('📈 Nouvelles statistiques reçues:', newStats);
-                        setStats(newStats);
-                      }}
-                    />
+                <div className="flex items-center justify-between">
+                  <div>
+                    <h3 className="text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
+                      🔄 Synchronisation des statistiques
+                    </h3>
+                    <p className="text-sm text-violet-600 dark:text-violet-400">
+                      Synchronisez vos exercices locaux avec le serveur pour mettre à jour vos statistiques
+                    </p>
                   </div>
+                  <StatsSync 
+                    userId={user._id} 
+                    onSyncComplete={(newStats) => {
+                      console.log('📈 Nouvelles statistiques reçues:', newStats);
+                      setStats(newStats);
+                    }}
+                  />
+                </div>
                 </CardContent>
               </Card>
             )}
@@ -467,8 +467,8 @@ const ProfilePage = () => {
                 <CardHeader className="bg-green-600 dark:bg-green-700 p-4">
                   <CardTitle className="text-lg text-center text-white md:text-xl">
                     ✅ Exercices Réalisés
-                  </CardTitle>
-                </CardHeader>
+                </CardTitle>
+              </CardHeader>
                 <CardContent className="p-4 bg-white dark:bg-gray-800">
                   {stats?.subjects?.length > 0 ? (
                     stats.subjects.slice(0, 3).map((subject: any, index: number) => {
@@ -623,8 +623,8 @@ const ProfilePage = () => {
                 </div>
               </CardContent>
             </Card>
-          </div>
-        )}
+        </div>
+      )}
 
         {activeTab === "progress" && (
           <div className="space-y-8">
