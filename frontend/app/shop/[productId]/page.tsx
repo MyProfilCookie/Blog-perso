@@ -46,12 +46,21 @@ export default function ProductDetailPage() {
 
         const products = await response.json();
         
-        // Trouver le produit correspondant au productId
+        // Trouver le produit correspondant au productId ou _id
+        // Note: productId peut être null dans la DB, donc on utilise aussi _id
         const foundProduct = products.find(
-          (p: Product) => p.productId === params.productId || p._id === params.productId
+          (p: Product) => {
+            // Si le produit a un productId valide, on le compare
+            if (p.productId && p.productId === params.productId) {
+              return true;
+            }
+            // Sinon on compare avec _id
+            return p._id === params.productId;
+          }
         );
 
         if (!foundProduct) {
+          console.error("Produit introuvable pour l'ID:", params.productId);
           setError("Produit introuvable");
           return;
         }
