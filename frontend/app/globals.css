@@ -41,3 +41,32 @@
 .nextui-navbar-menu-toggle {
   transition: transform 0.2s ease !important;
 }
+
+/* ========================================
+   ANIMATIONS OPTIMISÉES
+   ======================================== */
+
+/* Animation fadeInUp - Alternative performante à Framer Motion */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-fadeInUp {
+  animation: fadeInUp 0.5s ease-out forwards;
+}
+
+/* Respecter prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-fadeInUp {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+}

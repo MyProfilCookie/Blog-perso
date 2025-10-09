@@ -6,19 +6,51 @@
   "regions": ["cdg1"],
   "functions": {
     "pages/**/*.tsx": {
-      "maxDuration": 10
+      "maxDuration": 5,
+      "memory": 1024
     },
     "pages/api/**/*.ts": {
-      "maxDuration": 10
+      "maxDuration": 10,
+      "memory": 1024
     }
   },
+  "crons": [],
   "headers": [
     {
       "source": "/(.*)",
       "headers": [
         {
+          "key": "X-DNS-Prefetch-Control",
+          "value": "on"
+        },
+        {
+          "key": "X-Frame-Options",
+          "value": "DENY"
+        },
+        {
+          "key": "X-Content-Type-Options",
+          "value": "nosniff"
+        },
+        {
+          "key": "Referrer-Policy",
+          "value": "strict-origin-when-cross-origin"
+        },
+        {
+          "key": "Permissions-Policy",
+          "value": "camera=(), microphone=(), geolocation=()"
+        },
+        {
           "key": "Content-Security-Policy",
           "value": "default-src 'self'; script-src 'self' 'unsafe-eval' 'unsafe-inline' https://js.stripe.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com https://fonts.googleapis.com; img-src 'self' data: https:; connect-src 'self' https://api.stripe.com https://js.stripe.com https://blog-perso.onrender.com https://*.onrender.com; frame-src https://js.stripe.com https://hooks.stripe.com;"
+        }
+      ]
+    },
+    {
+      "source": "/controle",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, s-maxage=60, stale-while-revalidate=300"
         }
       ]
     },

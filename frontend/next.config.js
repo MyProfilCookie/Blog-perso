@@ -3,8 +3,10 @@ const nextConfig = {
   // Optimisations de performance
   experimental: {
     // Optimisations expérimentales pour améliorer les performances
-    optimizePackageImports: ['@nextui-org/react', 'lucide-react', 'framer-motion'],
+    optimizePackageImports: ['@nextui-org/react', 'lucide-react', 'framer-motion', 'recharts', '@radix-ui/react-dialog'],
     optimizeCss: true,
+    // Améliorer les temps de build et runtime
+    webpackBuildWorker: true,
   },
   
   // Compression

@@ -20,9 +20,21 @@ export function middleware(request: NextRequest) {
     );
   }
   
-  // Headers de performance
+  // Cache optimisé pour la page controle (60s avec stale-while-revalidate)
+  if (request.nextUrl.pathname.startsWith('/controle')) {
+    response.headers.set(
+      'Cache-Control',
+      'public, s-maxage=60, stale-while-revalidate=300'
+    );
+    // Early hints pour précharger les ressources critiques
+    response.headers.set('X-DNS-Prefetch-Control', 'on');
+  }
+  
+  // Headers de performance et sécurité
   response.headers.set('X-Content-Type-Options', 'nosniff');
   response.headers.set('X-XSS-Protection', '1; mode=block');
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
   
   return response;
 }

@@ -1,7 +1,7 @@
-import type { GetServerSideProps } from "next";
 import { useRouter } from "next/navigation";
 import { useEffect, useState, memo, useMemo, useCallback } from "react";
 import dynamic from "next/dynamic";
+import Head from "next/head";
 import { useTheme } from "next-themes";
 import {
   BookOpen,
@@ -30,6 +30,7 @@ import Link from "next/link";
 import { motion, AnimatePresence } from "framer-motion";
 import { handleAuthError } from "@/utils/errorHandler";
 import { useAutoRefresh } from "@/hooks/useAutoRefresh";
+import { useStatsCache } from "@/hooks/useStatsCache";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 
@@ -57,25 +58,26 @@ const DEFAULT_STATS: StatsState = {
   },
 };
 
-type ControlePageProps = {
-  initialStats: StatsState | null;
-  initialTheme: string | null;
-};
-
-// Lazy load des composants lourds
+// Lazy load des composants lourds avec prefetch
 const StatsSync = dynamic(() => import("@/components/StatsSync"), {
   ssr: false,
   loading: () => (
-    <div className="animate-pulse bg-gray-200 h-8 w-32 rounded"></div>
+    <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-8 w-32 rounded"></div>
   ),
 });
 
 const LoginButton = dynamic(() => import("@/components/LoginButton"), {
   ssr: false,
   loading: () => (
-    <div className="animate-pulse bg-gray-200 h-10 w-24 rounded"></div>
+    <div className="animate-pulse bg-gray-200 dark:bg-gray-700 h-10 w-24 rounded"></div>
   ),
 });
+
+// Lazy load des icônes non critiques
+const AnimatePresenceLazy = dynamic(
+  () => import("framer-motion").then((mod) => ({ default: mod.AnimatePresence })),
+  { ssr: false }
+);
 
 // Import direct de Framer Motion (plus simple pour les performances)
 
@@ -215,18 +217,19 @@ const courseThemes = [
   },
 ];
 
-export default function ControleIndex({ initialStats, initialTheme }: ControlePageProps) {
+export default function ControleIndex() {
   const router = useRouter();
   const { theme, setTheme } = useTheme();
   const isServer = typeof window === "undefined";
-  const [loading, setLoading] = useState(false);
   const [mounted, setMounted] = useState(isServer);
   const [userId, setUserId] = useState<string | null>(null);
-  const [stats, setStats] = useState<StatsState>(initialStats ?? DEFAULT_STATS);
-  const [isRefreshing, setIsRefreshing] = useState(false);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
-  const [hasData, setHasData] = useState(Boolean(initialStats));
   const [hasPlayedIntro, setHasPlayedIntro] = useState(false);
+
+  // Utiliser le hook de cache pour les stats
+  const { stats: cachedStats, loading, fetchStats, refetch } = useStatsCache(userId);
+  const stats = cachedStats || DEFAULT_STATS;
+  const [isRefreshing, setIsRefreshing] = useState(false);
 
   const isDarkMode = theme === "dark";
 
@@ -253,70 +256,18 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
     setTheme(isDarkMode ? "light" : "dark");
   };
 
-  const fetchStats = useCallback(async () => {
-    try {
-      setLoading(true);
-      setIsRefreshing(true);
-      const token =
-        localStorage.getItem("token") || localStorage.getItem("userToken");
-      const userId =
-        localStorage.getItem("userId") ||
-        JSON.parse(localStorage.getItem("user") || "{}")._id;
-
-      if (!token || !userId) {
-        // Utiliser des stats par défaut si pas connecté
-        setStats({
-          totalEleves: 0,
-          averageScore: "0",
-          progression: "0",
-          eleve: {
-            prenom: "Visiteur",
-            nom: "",
-            modificationsCount: 0,
-            lastModificationDate: new Date().toISOString(),
-          },
-        });
-        setLastUpdate(new Date());
-        setHasData(true);
-        return;
-      }
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
-        { headers: { Authorization: `Bearer ${token}` } },
-      );
-
-      setStats({
-        totalEleves: response.data.totalEleves || 0,
-        averageScore: response.data.averageScore || "0",
-        progression: "0", // Sera calculée automatiquement
-        eleve: response.data.eleve || {
-          nom: "",
-          prenom: "",
-          modificationsCount: 0,
-          lastModificationDate: "",
-        },
-      });
+  const handleFetchStats = useCallback(async () => {
+    setIsRefreshing(true);
+    const result = await fetchStats();
+    if (result) {
       setLastUpdate(new Date());
-      setHasData(true);
-    } catch (err: any) {
-      // Gérer l'erreur 401 (Token expiré)
-      if (handleAuthError(err)) {
-        return;
-      }
-      setHasData(true);
-    } finally {
-      setIsRefreshing(false);
-      setLoading(false);
     }
-  }, []);
+    setIsRefreshing(false);
+  }, [fetchStats]);
 
   useEffect(() => {
     setHasPlayedIntro(true);
     setMounted(true);
-
-    if (initialTheme) {
-      setTheme(initialTheme);
-    }
 
     // Initialiser l'userId
     const initializeUser = () => {
@@ -422,39 +373,30 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
       //   return;
       // }
 
-      if (userData) {
-        setStats((prevStats) => ({
-          ...prevStats,
-          eleve: {
-            ...prevStats.eleve,
-            prenom:
-              userData.prenom ||
-              userData.firstName ||
-              userData.pseudo ||
-              "Élève",
-            nom: userData.nom || userData.lastName || "",
-          },
-        }));
+      if (userId) {
+        handleFetchStats();
       }
-
-      fetchStats();
     };
 
     checkAuth();
-    setLoading(false);
-  }, [router, fetchStats, initialTheme, setTheme]);
+  }, [router, handleFetchStats, setTheme, userId]);
 
   // Rafraîchissement automatique des statistiques toutes les 30 secondes
   const { forceRefresh } = useAutoRefresh({
     interval: 30000, // 30 secondes
     enabled: mounted && userId !== null, // Seulement si la page est montée et qu'un utilisateur est connecté
-    onRefresh: () => fetchStats(),
+    onRefresh: async () => {
+      setIsRefreshing(true);
+      await refetch();
+      setLastUpdate(new Date());
+      setIsRefreshing(false);
+    },
     onError: (error) => {
       console.error("Erreur lors du rafraîchissement automatique:", error);
     },
   });
 
-  if ((!mounted && !isServer && !hasData) || (!hasData && loading)) {
+  if ((!mounted && !isServer) || loading) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 flex justify-center items-center">
         <div className="text-center">
@@ -504,13 +446,9 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
 
   StatCard.displayName = "StatCard";
 
-  // Composant optimisé pour les cartes de cours
+  // Composant optimisé pour les cartes de cours - animations simplifiées
   const CourseCard = ({ theme, index }: { theme: any; index: number }) => (
-    <motion.div
-      animate={{ opacity: 1, y: 0 }}
-      initial={hasPlayedIntro ? false : { opacity: 0, y: 20 }}
-      transition={{ duration: 0.5, delay: 0.1 + index * 0.1 }}
-    >
+    <div className={hasPlayedIntro ? '' : 'animate-fadeInUp'} style={hasPlayedIntro ? {} : { animationDelay: `${index * 50}ms` }}>
       <Link href={theme.route}>
         <Card
           className={`${theme.bgColor} ${theme.borderColor} border-2 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer group`}
@@ -536,7 +474,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
           </CardContent>
         </Card>
       </Link>
-    </motion.div>
+    </div>
   );
 
   const statsCards = [
@@ -579,9 +517,26 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
   ];
 
   return (
-    <div className="w-full">
-      {/* Hero Section */}
-      <section className="relative py-8 sm:py-12 md:py-20 overflow-hidden">
+    <>
+      <Head>
+        <title>Espace d'apprentissage - AutiStudy</title>
+        <meta name="description" content="Ton espace d'apprentissage personnalisé avec des quiz adaptés et des matières variées" />
+        
+        {/* Preconnect vers l'API backend pour réduire le TTFB */}
+        <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com'} />
+        <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com'} />
+        
+        {/* Preconnect vers les CDN utilisés */}
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        
+        {/* Viewport optimisé pour mobile */}
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+      </Head>
+      
+      <div className="w-full">
+        {/* Hero Section */}
+        <section className="relative py-8 sm:py-12 md:py-20 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20"></div>
         <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/50 via-transparent to-transparent dark:from-blue-500/10"></div>
         <div className="relative w-full px-3 sm:px-4 md:px-8 lg:px-12">
@@ -823,25 +778,8 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
                             "📈 Nouvelles statistiques reçues:",
                             newStats,
                           );
-                          // Éviter les re-renders en ne mettant à jour que si les valeurs ont vraiment changé
-                          setStats((prevStats) => {
-                            const newAverageScore =
-                              newStats.averageScore?.toString() || "0";
-                            const newTotalEleves = newStats.totalExercises || 0;
-
-                            // Ne mettre à jour que si les valeurs ont changé
-                            if (
-                              prevStats.averageScore !== newAverageScore ||
-                              prevStats.totalEleves !== newTotalEleves
-                            ) {
-                              return {
-                                ...prevStats,
-                                averageScore: newAverageScore,
-                                totalEleves: newTotalEleves,
-                              };
-                            }
-                            return prevStats;
-                          });
+                          // Rafraîchir les stats depuis le serveur après la synchronisation
+                          handleFetchStats();
                         }}
                         userId={userId || ""}
                       />
@@ -1025,86 +963,7 @@ export default function ControleIndex({ initialStats, initialTheme }: ControlePa
           </motion.div>
         </div>
       </section>
-    </div>
+      </div>
+    </>
   );
 }
-
-
-const parseCookies = (cookieHeader?: string): Record<string, string> => {
-  if (!cookieHeader) {
-    return {};
-  }
-
-  return cookieHeader.split(';').reduce<Record<string, string>>((acc, part) => {
-    const [key, ...rest] = part.trim().split('=');
-    if (!key) {
-      return acc;
-    }
-    acc[key] = decodeURIComponent(rest.join('=') || '');
-    return acc;
-  }, {});
-};
-
-const decodeUserIdFromToken = (token?: string): string | null => {
-  if (!token) {
-    return null;
-  }
-
-  try {
-    const payloadPart = token.split('.')[1];
-    if (!payloadPart) {
-      return null;
-    }
-    const decoded = JSON.parse(Buffer.from(payloadPart, 'base64').toString('utf8'));
-    return decoded.userId || decoded.id || decoded._id || null;
-  } catch (error) {
-    return null;
-  }
-};
-
-export const getServerSideProps: GetServerSideProps<ControlePageProps> = async ({ req }) => {
-  const cookies = parseCookies(req.headers.cookie);
-  const themeCookie = cookies['theme'] || cookies['next-theme'] || null;
-  const token = cookies['token'] || cookies['userToken'] || null;
-  const userIdFromCookie = cookies['userId'] || null;
-  const userIdFromToken = decodeUserIdFromToken(token);
-  const userId = userIdFromCookie || userIdFromToken;
-
-  const protocol = (req.headers['x-forwarded-proto'] as string) || 'http';
-  const host = req.headers.host;
-  const baseUrl = host ? `${protocol}://${host}` : null;
-
-  let initialStats: StatsState | null = null;
-
-  if (token && userId) {
-    const statsBaseUrl = process.env.API_URL || process.env.NEXT_PUBLIC_API_URL || baseUrl;
-    if (statsBaseUrl) {
-      try {
-        const statsResponse = await fetch(`${statsBaseUrl}/eleves/stats/${userId}`, {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        });
-
-        if (statsResponse.ok) {
-          const statsJson = await statsResponse.json();
-          initialStats = {
-            totalEleves: statsJson.totalEleves || 0,
-            averageScore: statsJson.averageScore || '0',
-            progression: '0',
-            eleve: statsJson.eleve || DEFAULT_STATS.eleve,
-          };
-        }
-      } catch (error) {
-        // Ignore fetch errors; fallback to defaults client-side
-      }
-    }
-  }
-
-  return {
-    props: {
-      initialStats,
-      initialTheme: themeCookie,
-    },
-  };
-};
