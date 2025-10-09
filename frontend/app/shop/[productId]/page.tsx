@@ -120,15 +120,30 @@ export default function ProductDetailPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Header */}
       <div className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-6">
-          <Button
-            onClick={() => router.push("/shop")}
-            variant="ghost"
-            className="text-white hover:bg-white/10 mb-4"
+        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+          <motion.div
+            initial={{ opacity: 0, y: -20 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="text-center"
           >
-            <ArrowLeft className="w-4 h-4 mr-2" />
-            Retour à la boutique
-          </Button>
+            <div className="flex items-center justify-center gap-3 mb-3">
+              <ShoppingBag className="w-10 h-10 md:w-12 md:h-12 text-white" />
+              <h1 className="text-2xl md:text-4xl font-extrabold text-white tracking-tight">
+                Détails du Produit
+              </h1>
+            </div>
+            <p className="text-blue-100 text-sm md:text-base max-w-2xl mx-auto mb-6">
+              Découvrez tous les détails et caractéristiques de ce produit
+            </p>
+            <Button
+              onClick={() => router.push("/shop")}
+              variant="ghost"
+              className="text-white hover:bg-white/10 border border-white/20"
+            >
+              <ArrowLeft className="w-4 h-4 mr-2" />
+              Retour à la boutique
+            </Button>
+          </motion.div>
         </div>
       </div>
 
