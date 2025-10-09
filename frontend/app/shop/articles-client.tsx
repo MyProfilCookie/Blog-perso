@@ -23,6 +23,7 @@ import { useIsClient } from "@/hooks/useIsClient";
 
 // 📌 3. Imports relatifs (fichiers du projet)
 import { useCart } from "../contexts/cart-context";
+import { fallbackProducts } from "./fallback-products";
 // Import du contexte du panier
 
 type Article = {
@@ -42,9 +43,13 @@ let globalProductsCache: Article[] | null = null;
 let globalCacheTimestamp: number = 0;
 const CACHE_DURATION = 15 * 60 * 1000; // 15 minutes au lieu de 5
 
-export default function ArticlesClient() {
-  const [articles, setArticles] = useState<Article[]>([]);
-  const [loading, setLoading] = useState(true);
+type ArticlesClientProps = {
+  initialProducts?: Article[];
+};
+
+export default function ArticlesClient({ initialProducts }: ArticlesClientProps = {}) {
+  const [articles, setArticles] = useState<Article[]>(initialProducts || []);
+  const [loading, setLoading] = useState(!initialProducts);
   const [error, setError] = useState<string | null>(null);
   const isClient = useIsClient();
 
@@ -55,6 +60,13 @@ export default function ArticlesClient() {
   const memoizedArticles = useMemo(() => articles, [articles]);
 
   useEffect(() => {
+    // Si on a déjà des produits initiaux, pas besoin de fetcher
+    if (initialProducts && initialProducts.length > 0) {
+      globalProductsCache = initialProducts;
+      globalCacheTimestamp = Date.now();
+      return;
+    }
+
     // Démarrer le chargement immédiatement, même sans isClient
     const fetchArticles = async () => {
       try {
@@ -82,9 +94,9 @@ export default function ArticlesClient() {
           }
         }
 
-        // Fetch avec optimisations
+        // Fetch avec optimisations - Timeout réduit à 5s
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 10000); // Timeout de 10s
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // Timeout de 5s au lieu de 10s
 
         const response = await fetch(
           `${process.env.NEXT_PUBLIC_API_URL}/products`,
@@ -94,6 +106,7 @@ export default function ArticlesClient() {
               'Accept': 'application/json',
             },
             signal: controller.signal,
+            next: { revalidate: 300 }, // ISR: Revalider toutes les 5 minutes
           }
         );
 
@@ -117,11 +130,15 @@ export default function ArticlesClient() {
         setArticles(data);
       } catch (error) {
         if (error instanceof Error && error.name === 'AbortError') {
-          console.error("Timeout lors du chargement des produits");
-          setError("Le chargement prend trop de temps. Veuillez réessayer.");
+          console.error("Timeout lors du chargement des produits - Utilisation du fallback");
+          // Utiliser les produits de fallback au lieu d'une erreur
+          setArticles(fallbackProducts);
+          console.info("📦 Produits de fallback chargés");
         } else {
           console.error("Erreur lors de la récupération des articles :", error);
-          setError("Impossible de charger les produits. Vérifiez votre connexion.");
+          // Utiliser les produits de fallback au lieu d'une erreur
+          setArticles(fallbackProducts);
+          console.info("📦 Produits de fallback chargés suite à une erreur");
         }
       } finally {
         setLoading(false);
@@ -129,7 +146,7 @@ export default function ArticlesClient() {
     };
 
     fetchArticles();
-  }, []); // Supprimer la dépendance isClient pour un chargement plus rapide
+  }, [initialProducts]); // Dépendance sur initialProducts
 
   if (loading) {
     return (

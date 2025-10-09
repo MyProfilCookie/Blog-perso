@@ -1,0 +1,58 @@
+// Produits de fallback en cas d'échec de l'API
+export const fallbackProducts = [
+  {
+    _id: "fallback-1",
+    productId: "casque-anti-bruit",
+    title: "Casque Anti-Bruit",
+    description: "Casque réducteur de bruit pour enfants, confortable et ajustable",
+    price: 29.99,
+    imageUrl: "/assets/shop/casque-anti-bruit.webp",
+    link: "#",
+  },
+  {
+    _id: "fallback-2",
+    productId: "balle-sensorielle",
+    title: "Balle Sensorielle Lumineuse",
+    description: "Balle tactile avec effets lumineux pour stimulation sensorielle",
+    price: 19.99,
+    imageUrl: "/assets/shop/balle-sensorielle-lumineuse.webp",
+    link: "#",
+  },
+  {
+    _id: "fallback-3",
+    productId: "timer-visuel",
+    title: "Timer Visuel",
+    description: "Minuteur visuel pour aider à la gestion du temps",
+    price: 24.99,
+    imageUrl: "/assets/shop/timer-visuel.webp",
+    link: "#",
+  },
+  {
+    _id: "fallback-4",
+    productId: "tapis-sensoriel",
+    title: "Tapis Sensoriel",
+    description: "Tapis avec différentes textures pour stimulation tactile",
+    price: 39.99,
+    imageUrl: "/assets/shop/tapis-sensoriel.webp",
+    link: "#",
+  },
+  {
+    _id: "fallback-5",
+    productId: "classeur-pecs",
+    title: "Classeur PECS",
+    description: "Système de communication par échange d'images",
+    price: 34.99,
+    imageUrl: "/assets/shop/classeur-pecs.webp",
+    link: "#",
+  },
+  {
+    _id: "fallback-6",
+    productId: "chaise-bascule",
+    title: "Chaise à Bascule",
+    description: "Chaise ergonomique pour stimulation vestibulaire",
+    price: 89.99,
+    imageUrl: "/assets/shop/chaise-bascule.webp",
+    link: "#",
+  },
+];
+
