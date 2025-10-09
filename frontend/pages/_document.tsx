@@ -35,8 +35,10 @@ export default function Document() {
         {/* Préconnexions DNS */}
         <link rel="dns-prefetch" href="//fonts.googleapis.com" />
         <link rel="dns-prefetch" href="//fonts.gstatic.com" />
+        <link rel="dns-prefetch" href="//blog-perso.onrender.com" />
         <link rel="preconnect" href="https://fonts.googleapis.com" crossOrigin="anonymous" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://blog-perso.onrender.com" crossOrigin="anonymous" />
 
         {/* Manifest et PWA */}
         <link rel="manifest" href="/manifest.json" />

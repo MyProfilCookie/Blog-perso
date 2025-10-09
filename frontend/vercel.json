@@ -3,6 +3,15 @@
   "outputDirectory": ".next",
   "installCommand": "npm install",
   "framework": "nextjs",
+  "regions": ["cdg1"],
+  "functions": {
+    "pages/**/*.tsx": {
+      "maxDuration": 10
+    },
+    "pages/api/**/*.ts": {
+      "maxDuration": 10
+    }
+  },
   "headers": [
     {
       "source": "/(.*)",

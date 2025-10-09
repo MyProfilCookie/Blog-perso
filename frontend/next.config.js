@@ -2,12 +2,19 @@
 const nextConfig = {
   // Optimisations de performance
   experimental: {
-    // Désactiver toutes les optimisations expérimentales pour éviter les erreurs
+    // Optimisations expérimentales pour améliorer les performances
     optimizePackageImports: ['@nextui-org/react', 'lucide-react', 'framer-motion'],
+    optimizeCss: true,
   },
   
   // Compression
   compress: true,
+  
+  // Optimisation du rendu
+  swcMinify: true,
+  
+  // Réduire le Time to First Byte
+  poweredByHeader: false,
   
   // Optimisation des images
   images: {
@@ -35,23 +42,39 @@ const nextConfig = {
   webpack: (config, { dev, isServer }) => {
     if (!dev && !isServer) {
       // Optimisation pour la production
-      config.optimization.splitChunks = {
-        chunks: 'all',
-        cacheGroups: {
-          vendor: {
-            test: /[\\/]node_modules[\\/]/,
-            name: 'vendors',
-            chunks: 'all',
-          },
-          nextui: {
-            test: /[\\/]node_modules[\\/]@nextui-org[\\/]/,
-            name: 'nextui',
-            chunks: 'all',
-          },
-          framer: {
-            test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
-            name: 'framer-motion',
-            chunks: 'all',
+      config.optimization = {
+        ...config.optimization,
+        moduleIds: 'deterministic',
+        runtimeChunk: 'single',
+        splitChunks: {
+          chunks: 'all',
+          cacheGroups: {
+            default: false,
+            vendors: false,
+            vendor: {
+              test: /[\\/]node_modules[\\/]/,
+              name: 'vendors',
+              chunks: 'all',
+              priority: 20,
+            },
+            nextui: {
+              test: /[\\/]node_modules[\\/]@nextui-org[\\/]/,
+              name: 'nextui',
+              chunks: 'all',
+              priority: 30,
+            },
+            framer: {
+              test: /[\\/]node_modules[\\/]framer-motion[\\/]/,
+              name: 'framer-motion',
+              chunks: 'all',
+              priority: 25,
+            },
+            common: {
+              minChunks: 2,
+              priority: 10,
+              reuseExistingChunk: true,
+              enforce: true,
+            },
           },
         },
       };
@@ -73,8 +96,16 @@ const nextConfig = {
             value: 'on'
           },
           {
+            key: 'Strict-Transport-Security',
+            value: 'max-age=31536000; includeSubDomains'
+          },
+          {
             key: 'X-Frame-Options',
             value: 'DENY'
+          },
+          {
+            key: 'X-Content-Type-Options',
+            value: 'nosniff'
           },
           {
             key: 'Referrer-Policy',

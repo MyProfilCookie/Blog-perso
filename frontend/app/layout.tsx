@@ -38,6 +38,9 @@ export const metadata: Metadata = {
     address: false,
     telephone: false,
   },
+  other: {
+    'google-site-verification': process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '',
+  },
   icons: {
     icon: [
       { url: '/icon?v=2', type: 'image/png', sizes: '32x32' },
