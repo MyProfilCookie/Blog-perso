@@ -535,10 +535,29 @@ export default function ControleIndex() {
       </Head>
       
       <div className="w-full">
-        {/* Hero Section */}
+        {/* Hero Section - Style Posts */}
+        <div className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
+          <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+            <motion.div
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center"
+            >
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <BookOpen className="w-10 h-10 md:w-12 md:h-12 text-white" />
+                <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
+                  Espace de Contrôle
+                </h1>
+              </div>
+              <p className="text-blue-100 text-sm md:text-base max-w-2xl mx-auto">
+                Suivez votre progression et accédez à tous vos cours et exercices
+              </p>
+            </motion.div>
+          </div>
+        </div>
+
         <section className="relative py-8 sm:py-12 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-indigo-50 to-purple-50 dark:from-gray-900 dark:via-blue-900/20 dark:to-purple-900/20"></div>
-        <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_var(--tw-gradient-stops))] from-blue-100/50 via-transparent to-transparent dark:from-blue-500/10"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800"></div>
         <div className="relative w-full px-3 sm:px-4 md:px-8 lg:px-12">
           <div className="max-w-7xl mx-auto">
             <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
@@ -571,85 +590,21 @@ export default function ControleIndex() {
               </div>
             </div>
 
-            <motion.div
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center mb-8 sm:mb-12"
-              initial={{ opacity: 0, y: 20 }}
-              transition={{ duration: 0.7 }}
-            >
-              <motion.div
-                animate={{ opacity: 1, scale: 1 }}
-                className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-blue-600 rounded-full flex items-center justify-center mb-4 shadow-lg"
-                initial={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.5, delay: 0.2 }}
-              >
-                <BookOpen className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-              </motion.div>
-              <motion.h1
-                animate={{ opacity: 1, y: 0 }}
-                className="text-2xl sm:text-4xl md:text-5xl font-bold text-gray-900 dark:text-white mb-3 px-2"
-                initial={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.6, delay: 0.3 }}
-              >
-                Bonjour{" "}
-                {(() => {
-                  if (stats.eleve?.prenom) {
-                    return stats.eleve.prenom;
-                  }
-
-                  try {
-                    const storedUser =
-                      typeof window !== "undefined"
-                        ? localStorage.getItem("user")
-                        : null;
-                    if (storedUser) {
-                      const userData = JSON.parse(storedUser);
-                      return (
-                        userData.prenom ||
-                        userData.firstName ||
-                        userData.pseudo ||
-                        "Élève"
-                      );
-                    }
-                  } catch (e) {
-                    console.error(
-                      "Erreur lors de la récupération du prénom depuis localStorage:",
-                      e,
-                    );
-                  }
-
-                  return "Visiteur";
-                })()}{" "}
-                ! 🌟
-              </motion.h1>
-              <motion.p
-                animate={{ opacity: 1, y: 0 }}
-                className="text-base sm:text-lg md:text-xl text-gray-700 dark:text-gray-300 max-w-2xl mx-auto px-4"
-                initial={{ opacity: 0, y: 10 }}
-                transition={{ duration: 0.6, delay: 0.4 }}
-              >
-                {typeof window !== "undefined" && localStorage.getItem("user")
-                  ? "Bienvenue dans ton espace d'apprentissage magique ! ✨"
-                  : "Découvrez nos matières et fonctionnalités d'apprentissage ! ✨"}
-              </motion.p>
-              {typeof window !== "undefined" &&
-                !localStorage.getItem("user") && (
-                  <motion.div
-                    animate={{ opacity: 1, y: 0 }}
-                    className="mt-6 max-w-2xl mx-auto px-4"
-                    initial={{ opacity: 0, y: 10 }}
-                    transition={{ duration: 0.6, delay: 0.5 }}
-                  >
-                    <div className="p-3 sm:p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                      <p className="text-blue-800 dark:text-blue-200 text-xs sm:text-sm">
-                        💡 <strong>Mode aperçu :</strong> Connectez-vous pour
-                        accéder à vos statistiques personnalisées et sauvegarder
-                        votre progression.
-                      </p>
-                    </div>
-                  </motion.div>
-                )}
-            </motion.div>
+            {typeof window !== "undefined" &&
+              !localStorage.getItem("user") && (
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mb-6 max-w-2xl mx-auto"
+                  initial={{ opacity: 0, y: 10 }}
+                  transition={{ duration: 0.6, delay: 0.2 }}
+                >
+                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                    <p className="text-blue-800 dark:text-blue-200 text-sm text-center">
+                      💡 <strong>Mode aperçu :</strong> Connectez-vous pour accéder à vos statistiques personnalisées et sauvegarder votre progression.
+                    </p>
+                  </div>
+                </motion.div>
+              )}
           </div>
         </div>
       </section>
