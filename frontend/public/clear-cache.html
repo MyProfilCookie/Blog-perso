@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vider le cache Shop</title>
+    <style>
+        body {
+            font-family: system-ui, -apple-system, sans-serif;
+            max-width: 600px;
+            margin: 50px auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .card {
+            background: white;
+            border-radius: 20px;
+            padding: 40px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        h1 {
+            color: #667eea;
+            margin-bottom: 20px;
+        }
+        button {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            padding: 15px 30px;
+            font-size: 16px;
+            border-radius: 10px;
+            cursor: pointer;
+            width: 100%;
+            margin: 10px 0;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+        }
+        .status {
+            margin: 20px 0;
+            padding: 15px;
+            border-radius: 10px;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        .info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+        code {
+            background: #f8f9fa;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-family: monospace;
+        }
+    </style>
+</head>
+<body>
+    <div class="card">
+        <h1>🧹 Vider le cache Shop</h1>
+        
+        <div id="status" class="status"></div>
+        
+        <p>
+            <strong>Produits actuels en cache:</strong> <span id="count">Vérification...</span>
+        </p>
+        
+        <button onclick="clearCache()">🗑️ Vider le cache et recharger</button>
+        
+        <button onclick="checkAPI()">🔍 Vérifier l'API</button>
+        
+        <hr style="margin: 30px 0;">
+        
+        <h3>📊 Informations</h3>
+        <ul>
+            <li><strong>Produits dans la DB:</strong> 37</li>
+            <li><strong>Cache duration:</strong> 15 minutes</li>
+            <li><strong>Produits fallback:</strong> 6</li>
+        </ul>
+        
+        <h3>💡 Pourquoi seulement 6 produits ?</h3>
+        <ul>
+            <li>Le cache localStorage affiche les anciens produits</li>
+            <li>Ou les produits de fallback si l'API était lente</li>
+        </ul>
+    </div>
+
+    <script>
+        // Vérifier le cache au chargement
+        function checkCache() {
+            const cached = localStorage.getItem('shop-products');
+            if (cached) {
+                try {
+                    const products = JSON.parse(cached);
+                    document.getElementById('count').textContent = products.length + ' produits';
+                    document.getElementById('count').style.color = products.length < 37 ? 'red' : 'green';
+                } catch (e) {
+                    document.getElementById('count').textContent = 'Erreur de lecture';
+                }
+            } else {
+                document.getElementById('count').textContent = 'Aucun cache';
+            }
+        }
+
+        // Vider le cache
+        function clearCache() {
+            localStorage.removeItem('shop-products');
+            localStorage.removeItem('shop-products-timestamp');
+            
+            const status = document.getElementById('status');
+            status.className = 'status success';
+            status.style.display = 'block';
+            status.innerHTML = '✅ Cache vidé ! Redirection vers la boutique...';
+            
+            setTimeout(() => {
+                window.location.href = '/shop';
+            }, 1500);
+        }
+
+        // Vérifier l'API
+        async function checkAPI() {
+            const status = document.getElementById('status');
+            status.className = 'status info';
+            status.style.display = 'block';
+            status.innerHTML = '⏳ Vérification de l\'API...';
+            
+            try {
+                const apiUrl = window.location.hostname === 'localhost' 
+                    ? 'http://localhost:3000/api/products'
+                    : 'https://blog-perso.onrender.com/api/products';
+                
+                const response = await fetch(apiUrl);
+                const products = await response.json();
+                
+                status.className = 'status success';
+                status.innerHTML = `
+                    ✅ API fonctionne !<br>
+                    <strong>${products.length} produits</strong> disponibles<br>
+                    <small>URL: ${apiUrl}</small>
+                `;
+            } catch (error) {
+                status.className = 'status';
+                status.style.background = '#f8d7da';
+                status.style.color = '#721c24';
+                status.style.display = 'block';
+                status.innerHTML = `❌ Erreur: ${error.message}`;
+            }
+        }
+
+        // Vérifier au chargement
+        checkCache();
+    </script>
+</body>
+</html>
+
