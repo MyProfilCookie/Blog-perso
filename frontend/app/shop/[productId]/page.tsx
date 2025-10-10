@@ -46,7 +46,7 @@ export default function ProductDetailPage() {
 
         // Récupérer tous les produits depuis l'API
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/products`,
+          `${process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com/api'}/products`,
         );
 
         if (!response.ok) {

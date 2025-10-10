@@ -99,7 +99,7 @@ export default function ArticlesClient({ initialProducts }: ArticlesClientProps 
         const timeoutId = setTimeout(() => controller.abort(), 5000); // Timeout de 5s au lieu de 10s
 
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL}/products`,
+          `${process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com/api'}/products`,
           {
             headers: {
               'Cache-Control': 'max-age=900', // 15 minutes
