@@ -194,6 +194,7 @@ export default function RootLayout({
           media="(prefers-color-scheme: dark)"
           name="theme-color"
         />
+        <meta content="yes" name="mobile-web-app-capable" />
         <meta content="yes" name="apple-mobile-web-app-capable" />
         <meta content="default" name="apple-mobile-web-app-status-bar-style" />
         <meta content="AutiStudy" name="apple-mobile-web-app-title" />
