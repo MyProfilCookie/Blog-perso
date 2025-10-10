@@ -53,7 +53,7 @@ export const metadata: Metadata = {
     shortcut: '/icon?v=2',
   },
   metadataBase: new URL(
-    process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.vercel.app",
+    process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.com",
   ),
   alternates: {
     canonical: "/",
@@ -61,7 +61,7 @@ export const metadata: Metadata = {
   openGraph: {
     title: "AutiStudy - Apprentissage adapté pour enfants autistes",
     description: "Plateforme éducative spécialisée pour les enfants autistes",
-    url: process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.vercel.app",
+    url: process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.com",
     siteName: "AutiStudy",
     images: [
       {

@@ -88,7 +88,7 @@ open http://localhost:3000/controle
 ### Lighthouse (Chrome DevTools)
 
 ```bash
-1. Ouvrir https://votre-site.vercel.app/controle
+1. Ouvrir https://votre-site.com/controle
 2. F12 → Lighthouse
 3. Cocher "Performance"
 4. "Analyze page load"
