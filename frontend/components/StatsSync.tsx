@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { Button } from '@nextui-org/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync, faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
@@ -14,9 +14,11 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
   const [isSyncing, setIsSyncing] = useState(false);
   const [syncStatus, setSyncStatus] = useState<'idle' | 'success' | 'error'>('idle');
   const [syncMessage, setSyncMessage] = useState('');
+  const isSyncingRef = useRef(false); // Ref pour vérifier l'état de sync sans dépendance
+  const hasAutoSyncedRef = useRef(false); // Ref pour éviter les re-sync
 
-  // Fonction pour collecter toutes les données localStorage
-  const collectLocalStorageData = () => {
+  // Fonction pour collecter toutes les données localStorage - mémorisée avec useCallback
+  const collectLocalStorageData = useCallback(() => {
     const subjects = ['math', 'french', 'sciences', 'art', 'history', 'geography', 'language', 'music', 'technology'];
     const allSubjectsData: any = {};
 
@@ -96,11 +98,17 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
     });
 
     return allSubjectsData;
-  };
+  }, []); // Pas de dépendances car utilise uniquement localStorage
 
   // Fonction de synchronisation avec useCallback pour éviter les re-créations
   const syncStats = useCallback(async () => {
+    if (isSyncingRef.current) {
+      console.log('⏸️ Synchronisation déjà en cours, annulation');
+      return;
+    }
+    
     try {
+      isSyncingRef.current = true;
       setIsSyncing(true);
       setSyncStatus('idle');
       setSyncMessage('');
@@ -166,17 +174,25 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
       setSyncMessage(`Erreur: ${error.message}`);
       setSyncStatus('error');
     } finally {
+      isSyncingRef.current = false;
       setIsSyncing(false);
     }
-  }, [userId, onSyncComplete]); // Dépendances du useCallback
+  }, [userId, onSyncComplete, collectLocalStorageData]); // Dépendances du useCallback (pas isSyncing)
 
-  // Synchronisation automatique au chargement
+  // Synchronisation automatique au chargement - UNE SEULE FOIS
   useEffect(() => {
+    // Si on a déjà fait la synchronisation automatique, ne rien faire
+    if (hasAutoSyncedRef.current) {
+      console.log('✅ Synchronisation automatique déjà effectuée, skip');
+      return;
+    }
+
     const autoSync = async () => {
       console.log('🚀 useEffect StatsSync déclenché pour userId:', userId);
       
       if (!userId) {
         console.log('❌ Pas d\'userId, synchronisation annulée');
+        hasAutoSyncedRef.current = true;
         return;
       }
 
@@ -199,10 +215,12 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
       } else {
         console.log('⏸️ Synchronisation non nécessaire (dernière sync récente)');
       }
+      
+      hasAutoSyncedRef.current = true; // Marquer comme vérifié dans tous les cas
     };
 
     autoSync();
-  }, [userId, syncStats]); // Ajouter syncStats dans les dépendances
+  }, [userId, syncStats]); // userId et syncStats (syncStats est stable grâce à useCallback)
 
   const getStatusIcon = () => {
     switch (syncStatus) {
