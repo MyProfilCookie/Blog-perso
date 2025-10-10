@@ -165,7 +165,7 @@ export default function PostPage() {
       {/* Header */}
       <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-violet-600 to-purple-600">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative max-w-5xl mx-auto px-4 py-12 md:py-20">
+        <div className="relative w-full px-4 md:px-8 lg:px-12 py-12 md:py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -180,13 +180,13 @@ export default function PostPage() {
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight max-w-4xl mx-auto">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight w-full">
               {article.title || 'Titre non disponible'}
             </h1>
 
             {/* Subtitle */}
             {article.subtitle && (
-              <p className="text-xl text-blue-100 mb-8 max-w-3xl mx-auto">
+              <p className="text-xl text-blue-100 mb-8 w-full">
                 {article.subtitle}
               </p>
             )}
@@ -215,30 +215,30 @@ export default function PostPage() {
       </div>
 
       {/* Article Content */}
-      <div className="max-w-5xl mx-auto px-4 py-8 md:py-12">
+      <div className="w-full px-4 md:px-8 lg:px-12 py-8 md:py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-gray-200 dark:border-gray-700 overflow-hidden">
+          <Card className="border-gray-200 dark:border-gray-700 overflow-hidden w-full">
             {/* Featured Image */}
             {(article.image || article.img) && (
-              <div className="relative h-64 sm:h-80 lg:h-96 w-full">
+              <div className="relative h-80 sm:h-96 lg:h-[500px] w-full">
                 <Image
                   src={resolveImagePath(article.image || article.img || '')}
                   alt={article.title}
                   fill
-                  sizes="(max-width: 1280px) 100vw, 1280px"
+                  sizes="100vw"
                   className="object-cover"
                   priority
                 />
               </div>
             )}
 
-            <CardContent className="p-6 md:p-10">
+            <CardContent className="p-6 md:p-10 lg:p-16">
               {/* Article Content */}
-              <div className="prose prose-lg prose-gray dark:prose-invert max-w-none">
+              <div className="prose prose-lg prose-gray dark:prose-invert max-w-none w-full">
                 {Array.isArray(article.content) ? (
                   article.content.map((block: any, blockIndex: number) => {
                     if (block.type === 'paragraph') {
