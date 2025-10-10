@@ -15,32 +15,51 @@ export const useAutoRefresh = ({
 }: UseAutoRefreshOptions) => {
   const intervalRef = useRef<NodeJS.Timeout | null>(null);
   const isRefreshingRef = useRef(false);
+  const onRefreshRef = useRef(onRefresh); // Stocker onRefresh dans un ref
+  const onErrorRef = useRef(onError); // Stocker onError dans un ref
+  const hasInitializedRef = useRef(false); // Flag pour éviter le rafraîchissement initial multiple
+
+  // Mettre à jour les refs quand les fonctions changent
+  useEffect(() => {
+    onRefreshRef.current = onRefresh;
+  }, [onRefresh]);
+
+  useEffect(() => {
+    onErrorRef.current = onError;
+  }, [onError]);
 
   const refresh = useCallback(async () => {
     if (isRefreshingRef.current) {
+      console.log('⏸️ Rafraîchissement déjà en cours, skip');
       return; // Éviter les rafraîchissements simultanés
     }
 
     try {
       isRefreshingRef.current = true;
-      await onRefresh();
+      await onRefreshRef.current(); // Utiliser la ref au lieu de la dépendance
     } catch (error) {
       console.error('Erreur lors du rafraîchissement automatique:', error);
-      if (onError) {
-        onError(error as Error);
+      if (onErrorRef.current) {
+        onErrorRef.current(error as Error);
       }
     } finally {
       isRefreshingRef.current = false;
     }
-  }, [onRefresh, onError]);
+  }, []); // Pas de dépendances - utilise des refs
 
   useEffect(() => {
     if (!enabled) {
+      hasInitializedRef.current = false;
       return;
     }
 
-    // Rafraîchissement initial
-    refresh();
+    // Éviter le rafraîchissement initial multiple
+    if (!hasInitializedRef.current) {
+      console.log('🔄 Initialisation du rafraîchissement automatique');
+      // Rafraîchissement initial
+      refresh();
+      hasInitializedRef.current = true;
+    }
 
     // Configurer l'intervalle
     intervalRef.current = setInterval(refresh, interval);
@@ -49,9 +68,10 @@ export const useAutoRefresh = ({
     return () => {
       if (intervalRef.current) {
         clearInterval(intervalRef.current);
+        intervalRef.current = null;
       }
     };
-  }, [enabled, interval, refresh]);
+  }, [enabled, interval, refresh]); // refresh est stable maintenant
 
   // Fonction pour forcer un rafraîchissement manuel
   const forceRefresh = useCallback(() => {
