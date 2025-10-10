@@ -329,56 +329,8 @@ export default function ControleIndex() {
 
     initializeUser();
 
-    const checkAuth = () => {
-      const token =
-        localStorage.getItem("token") || localStorage.getItem("userToken");
-      const userId = localStorage.getItem("userId");
-      const userInfo = localStorage.getItem("userInfo");
-      const user = localStorage.getItem("user");
-
-      let isAuthenticated = false;
-      let userData = null;
-
-      if (token && userId) {
-        isAuthenticated = true;
-      }
-
-      if (userInfo) {
-        try {
-          const parsedUserInfo = JSON.parse(userInfo);
-          if (parsedUserInfo && parsedUserInfo._id) {
-            isAuthenticated = true;
-            userData = parsedUserInfo;
-          }
-        } catch (e) {
-          console.error("Erreur parsing userInfo:", e);
-        }
-      }
-
-      if (user) {
-        try {
-          const parsedUser = JSON.parse(user);
-          if (parsedUser && (parsedUser._id || parsedUser.id)) {
-            isAuthenticated = true;
-            userData = parsedUser;
-          }
-        } catch (e) {
-          console.error("Erreur parsing user:", e);
-        }
-      }
-
-      // Permettre un aperçu même sans connexion
-      // if (!isAuthenticated) {
-      //   router.push("/users/login");
-      //   return;
-      // }
-
-      if (userId) {
-        handleFetchStats();
-      }
-    };
-
-    checkAuth();
+    // Note: Le chargement des stats est maintenant géré automatiquement par useStatsCache
+    // quand userId change, donc plus besoin d'appeler handleFetchStats ici
   }, [router, handleFetchStats, setTheme, userId]);
 
   // Rafraîchissement automatique des statistiques toutes les 30 secondes

@@ -23,7 +23,7 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
 export function useStatsCache(userId: string | null) {
   const [stats, setStats] = useState<StatsData | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // Commence à true pour éviter le blocage initial
   const [error, setError] = useState<Error | null>(null);
 
   const getCachedStats = useCallback((): StatsData | null => {
@@ -62,7 +62,10 @@ export function useStatsCache(userId: string | null) {
   }, [userId]);
 
   const fetchStats = useCallback(async (forceRefresh = false) => {
-    if (!userId) return;
+    if (!userId) {
+      setLoading(false);
+      return null;
+    }
 
     // Try cache first unless force refresh
     if (!forceRefresh) {
@@ -81,6 +84,7 @@ export function useStatsCache(userId: string | null) {
       const token = localStorage.getItem('token') || localStorage.getItem('userToken');
       
       if (!token) {
+        console.warn('⚠️ Pas de token trouvé, affichage en mode aperçu');
         setLoading(false);
         return null;
       }
@@ -89,8 +93,9 @@ export function useStatsCache(userId: string | null) {
         `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
-          // Add axios cache config
+          // Add axios cache config and timeout
           adapter: 'fetch' as any,
+          timeout: 10000, // 10 secondes max
         }
       );
 
@@ -110,12 +115,16 @@ export function useStatsCache(userId: string | null) {
       setCachedStats(statsData);
       return statsData;
     } catch (err: any) {
+      console.error('❌ Erreur lors du chargement des stats:', err);
       setError(err);
       // Try to use stale cache on error
       const cached = getCachedStats();
       if (cached) {
+        console.log('✅ Utilisation du cache en cas d\'erreur');
         setStats(cached);
       }
+      // Ne pas bloquer l'affichage même en cas d'erreur
+      setLoading(false);
       return null;
     } finally {
       setLoading(false);
@@ -127,6 +136,15 @@ export function useStatsCache(userId: string | null) {
       localStorage.removeItem(`${CACHE_KEY}_${userId}`);
     }
   }, [userId]);
+
+  // Charger automatiquement les stats quand userId change
+  useEffect(() => {
+    if (userId) {
+      fetchStats();
+    } else {
+      setLoading(false);
+    }
+  }, [userId, fetchStats]);
 
   return {
     stats,
