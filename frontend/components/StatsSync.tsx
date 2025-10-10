@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Button } from '@nextui-org/react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faSync, faCheck, faExclamationTriangle } from '@fortawesome/free-solid-svg-icons';
@@ -98,8 +98,8 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
     return allSubjectsData;
   };
 
-  // Fonction de synchronisation
-  const syncStats = async () => {
+  // Fonction de synchronisation avec useCallback pour éviter les re-créations
+  const syncStats = useCallback(async () => {
     try {
       setIsSyncing(true);
       setSyncStatus('idle');
@@ -168,7 +168,7 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
     } finally {
       setIsSyncing(false);
     }
-  };
+  }, [userId, onSyncComplete]); // Dépendances du useCallback
 
   // Synchronisation automatique au chargement
   useEffect(() => {
@@ -202,7 +202,7 @@ const StatsSync: React.FC<StatsSyncProps> = ({ userId, onSyncComplete }) => {
     };
 
     autoSync();
-  }, [userId]);
+  }, [userId, syncStats]); // Ajouter syncStats dans les dépendances
 
   const getStatusIcon = () => {
     switch (syncStatus) {
