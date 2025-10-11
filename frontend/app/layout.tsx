@@ -43,14 +43,12 @@ export const metadata: Metadata = {
   },
   icons: {
     icon: [
-      { url: '/icon.svg', type: 'image/svg+xml', sizes: '32x32' },
-      { url: '/favicon.svg', type: 'image/svg+xml' },
-      { url: '/favicon.ico', sizes: 'any' },
+      { url: '/favicon.png', type: 'image/png' },
     ],
     apple: [
-      { url: '/apple-icon.svg', sizes: '180x180', type: 'image/svg+xml' },
+      { url: '/favicon.png', sizes: '180x180', type: 'image/png' },
     ],
-    shortcut: '/icon.svg',
+    shortcut: '/favicon.png',
   },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.com",
