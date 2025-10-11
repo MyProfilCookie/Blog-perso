@@ -22,7 +22,7 @@ export default function AppleIcon() {
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
-          background: 'linear-gradient(135deg, #e8e4d9 0%, #f5f1e6 100%)',
+          background: 'transparent',
           borderRadius: '22%',
         }}
       >
