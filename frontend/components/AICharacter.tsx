@@ -321,25 +321,6 @@ const AICharacter: React.FC<AICharacterProps> = ({
         </svg>
       </motion.div>
 
-      {/* Bulle de dialogue occasionnelle */}
-      <AnimatePresence>
-        {isHappy && (
-          <motion.div
-            initial={{ opacity: 0, scale: 0, y: 10 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0, y: -10 }}
-            transition={{ delay: 0.5, duration: 0.4 }}
-            className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-white rounded-lg px-3 py-2 shadow-lg border-2 border-yellow-300"
-          >
-            <div className="text-sm font-medium text-gray-800">
-              🐨 Eucalyptus !
-            </div>
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
-              <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-yellow-300"></div>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
     </div>
   );
 };
