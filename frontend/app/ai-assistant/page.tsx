@@ -17,6 +17,7 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AIAssistantPremium from "@/components/AIAssistantPremium";
+import AICharacter from "@/components/AICharacter";
 
 export default function AIAssistantPage() {
   const router = useRouter();
@@ -152,6 +153,20 @@ export default function AIAssistantPage() {
               <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 mb-3 tracking-tight">
                 Rencontre Alia 🤖
               </h1>
+              
+              {/* Personnage mignon */}
+              <motion.div
+                initial={{ opacity: 0, scale: 0 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{ delay: 0.4, duration: 0.8, type: "spring" }}
+                className="flex justify-center mb-4"
+              >
+                <AICharacter 
+                  size="large" 
+                  isHappy={true}
+                  className="drop-shadow-lg"
+                />
+              </motion.div>
               <AnimatePresence mode="wait">
                 <motion.p
                   key={currentEncouragement}

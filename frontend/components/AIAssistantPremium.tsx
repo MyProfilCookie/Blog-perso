@@ -16,6 +16,7 @@ import {
   Rocket
 } from "lucide-react";
 import { toast } from "sonner";
+import AICharacter from "./AICharacter";
 
 interface Message {
   role: "user" | "assistant";
@@ -177,12 +178,21 @@ const AIAssistantPremium: React.FC = () => {
             <div className="relative flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <motion.div
-                  animate={{ rotate: 360 }}
-                  transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                  animate={{ 
+                    y: [0, -5, 0],
+                    rotate: [0, 5, 0, -5, 0]
+                  }}
+                  transition={{ 
+                    duration: 4, 
+                    repeat: Infinity,
+                    ease: "easeInOut"
+                  }}
                 >
-                  <Avatar
-                    icon={<Bot className="w-8 h-8" />}
-                    className="bg-white text-violet-600 w-16 h-16"
+                  <AICharacter 
+                    size="medium" 
+                    isTyping={isLoading}
+                    isHappy={!isLoading && messages.length > 1}
+                    className="drop-shadow-lg"
                   />
                 </motion.div>
                 <div>
