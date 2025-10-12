@@ -1,25 +1,25 @@
-<svg width="32" height="32" viewBox="0 0 32 32" xmlns="http://www.w3.org/2000/svg">
+<svg width="64" height="64" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg">
   <defs>
     <mask id="circle">
-      <rect width="32" height="32" fill="white"/>
-      <circle cx="16" cy="16" r="16" fill="black"/>
+      <rect width="64" height="64" fill="white"/>
+      <circle cx="32" cy="32" r="32" fill="black"/>
     </mask>
   </defs>
   
   <!-- Fond circulaire beige -->
-  <circle cx="16" cy="16" r="16" fill="#f5f1e6" mask="url(#circle)"/>
+  <circle cx="32" cy="32" r="32" fill="#f5f1e6" mask="url(#circle)"/>
   
   <!-- Pièce de puzzle bleue -->
   <path
-    d="M 9.6 6.4 L 13.6 6.4 C 13.6 5.12 15.2 5.12 15.2 6.4 C 15.2 5.12 16.8 5.12 16.8 6.4 L 20.8 6.4 C 22.08 6.4 22.4 6.72 22.4 8 L 22.4 12 C 23.68 12 23.68 13.6 22.4 14.4 C 23.68 14.4 23.68 16 22.4 16 L 22.4 20 C 22.4 21.28 22.08 21.6 20.8 21.6 L 16.8 21.6 C 16.8 22.88 16.8 24.48 15.2 24.48 C 13.6 24.48 13.6 22.88 13.6 21.6 L 9.6 21.6 C 8.32 21.6 8 21.28 8 20 L 8 16 C 6.72 16 6.72 14.4 8 14.4 C 6.72 14.4 6.72 12.8 8 12 L 8 8 C 8 6.72 8.32 6.4 9.6 6.4 Z"
+    d="M 19.2 12.8 L 27.2 12.8 C 27.2 10.24 30.4 10.24 30.4 12.8 C 30.4 10.24 33.6 10.24 33.6 12.8 L 41.6 12.8 C 44.16 12.8 44.8 13.44 44.8 16 L 44.8 24 C 47.36 24 47.36 27.2 44.8 28.8 C 47.36 28.8 47.36 32 44.8 32 L 44.8 40 C 44.8 42.56 44.16 43.2 41.6 43.2 L 33.6 43.2 C 33.6 45.76 33.6 48.96 30.4 48.96 C 27.2 48.96 27.2 45.76 27.2 43.2 L 19.2 43.2 C 16.64 43.2 16 42.56 16 40 L 16 32 C 13.44 32 13.44 28.8 16 28.8 C 13.44 28.8 13.44 25.6 16 24 L 16 16 C 16 13.44 16.64 12.8 19.2 12.8 Z"
     fill="#5eb3d6"
     stroke="#1e3a5f"
-    stroke-width="0.5"
+    stroke-width="1"
   />
   
   <!-- Points décoratifs -->
-  <circle cx="25.6" cy="15.2" r="1" fill="#e07856" />
-  <circle cx="6.4" cy="15.2" r="0.8" fill="#e07856" opacity="0.7" />
-  <circle cx="15.2" cy="4.48" r="0.8" fill="#e07856" />
-  <circle cx="15.2" cy="25.92" r="0.8" fill="#e07856" opacity="0.7" />
+  <circle cx="51.2" cy="30.4" r="2" fill="#e07856" />
+  <circle cx="12.8" cy="30.4" r="1.6" fill="#e07856" opacity="0.7" />
+  <circle cx="30.4" cy="8.96" r="1.6" fill="#e07856" />
+  <circle cx="30.4" cy="51.84" r="1.6" fill="#e07856" opacity="0.7" />
 </svg>
