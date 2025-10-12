@@ -11,8 +11,51 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Simulation de réponse IA pour le moment
-    // TODO: Remplacer par un vrai appel à une API IA (OpenAI, Anthropic, etc.)
+    // Utiliser l'API Groq (gratuite et rapide) si disponible, sinon simulation
+    const apiKey = process.env.GROQ_API_KEY;
+    
+    if (apiKey) {
+      try {
+        const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
+          method: "POST",
+          headers: {
+            "Authorization": `Bearer ${apiKey}`,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            model: "llama-3.1-70b-versatile",
+            messages: [
+              {
+                role: "system",
+                content: "Tu es Alia, une assistante IA bienveillante et encourageante pour AutiStudy, une plateforme d'apprentissage pour enfants autistes. Tu es enthousiaste, patiente et utilises parfois des emojis pour rendre la conversation plus chaleureuse. Réponds de manière claire, simple et structurée. Utilise des listes à puces si nécessaire. Sois toujours positive et encourage l'utilisateur. Réponds en français."
+              },
+              {
+                role: "user",
+                content: prompt
+              }
+            ],
+            temperature: 0.7,
+            max_tokens: 500,
+          }),
+        });
+
+        if (groqResponse.ok) {
+          const data = await groqResponse.json();
+          const reply = data.choices?.[0]?.message?.content || "";
+          
+          return NextResponse.json({
+            reply: reply,
+            timestamp: new Date().toISOString(),
+            source: "groq"
+          });
+        }
+      } catch (groqError) {
+        console.error("Erreur Groq API:", groqError);
+        // Continue avec la simulation en cas d'erreur
+      }
+    }
+
+    // Simulation de réponse IA (fallback)
     const aiResponses = [
       "🎓 Excellente question ! Pour mieux apprendre, je te conseille de diviser tes sessions d'étude en petits blocs de 25 minutes avec des pauses. C'est ce qu'on appelle la technique Pomodoro ! 🍅",
       "💡 Voici quelques astuces : \n1. Crée des fiches résumées colorées 🌈\n2. Explique ce que tu apprends à quelqu'un d'autre 👥\n3. Utilise des mnémoniques pour mémoriser 🧠\n4. Pratique régulièrement plutôt que de réviser au dernier moment ⏰",
@@ -50,6 +93,7 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({
       reply: response,
       timestamp: new Date().toISOString(),
+      source: "simulation"
     });
   } catch (error) {
     console.error("Erreur dans l'API chat:", error);
