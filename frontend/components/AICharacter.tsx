@@ -70,14 +70,14 @@ const AICharacter: React.FC<AICharacterProps> = ({
           className="w-full h-full"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Corps de l'ours/lion */}
+          {/* Corps du chaton */}
           <motion.ellipse
             cx="60"
             cy="85"
-            rx="35"
-            ry="25"
-            fill="#FFB366"
-            stroke="#E67E22"
+            rx="30"
+            ry="22"
+            fill="#FFB6C1"
+            stroke="#FF69B4"
             strokeWidth="2"
             animate={{
               scale: isHappy ? [1, 1.05, 1] : 1,
@@ -89,13 +89,13 @@ const AICharacter: React.FC<AICharacterProps> = ({
             }}
           />
           
-          {/* Tête */}
+          {/* Tête du chaton */}
           <motion.circle
             cx="60"
             cy="50"
-            r="28"
-            fill="#FFB366"
-            stroke="#E67E22"
+            r="26"
+            fill="#FFB6C1"
+            stroke="#FF69B4"
             strokeWidth="2"
             animate={{
               y: isHappy ? [0, -2, 0] : 0,
@@ -107,16 +107,14 @@ const AICharacter: React.FC<AICharacterProps> = ({
             }}
           />
 
-          {/* Oreilles */}
-          <motion.circle
-            cx="45"
-            cy="30"
-            r="12"
-            fill="#FFB366"
-            stroke="#E67E22"
+          {/* Oreilles pointues du chat */}
+          <motion.polygon
+            points="45,25 35,40 55,40"
+            fill="#FFB6C1"
+            stroke="#FF69B4"
             strokeWidth="2"
             animate={{
-              rotate: isHappy ? [0, 5, 0] : 0,
+              rotate: isHappy ? [0, 3, 0] : 0,
             }}
             transition={{
               duration: 0.4,
@@ -124,15 +122,13 @@ const AICharacter: React.FC<AICharacterProps> = ({
               repeatType: "reverse"
             }}
           />
-          <motion.circle
-            cx="75"
-            cy="30"
-            r="12"
-            fill="#FFB366"
-            stroke="#E67E22"
+          <motion.polygon
+            points="75,25 85,40 65,40"
+            fill="#FFB6C1"
+            stroke="#FF69B4"
             strokeWidth="2"
             animate={{
-              rotate: isHappy ? [0, -5, 0] : 0,
+              rotate: isHappy ? [0, -3, 0] : 0,
             }}
             transition={{
               duration: 0.4,
@@ -142,24 +138,26 @@ const AICharacter: React.FC<AICharacterProps> = ({
           />
 
           {/* Intérieur des oreilles */}
-          <ellipse cx="45" cy="30" rx="6" ry="8" fill="#FFE0B3" />
-          <ellipse cx="75" cy="30" rx="6" ry="8" fill="#FFE0B3" />
+          <polygon points="45,30 40,38 50,38" fill="#FFC0CB" />
+          <polygon points="75,30 80,38 70,38" fill="#FFC0CB" />
 
-          {/* Yeux */}
-          <motion.circle
+          {/* Yeux du chaton (plus grands et expressifs) */}
+          <motion.ellipse
             cx="52"
             cy="45"
-            r="4"
+            rx="5"
+            ry="6"
             fill="white"
             animate={{
               scaleY: isBlinking ? 0.1 : 1,
             }}
             transition={{ duration: 0.15 }}
           />
-          <motion.circle
+          <motion.ellipse
             cx="68"
             cy="45"
-            r="4"
+            rx="5"
+            ry="6"
             fill="white"
             animate={{
               scaleY: isBlinking ? 0.1 : 1,
@@ -167,11 +165,12 @@ const AICharacter: React.FC<AICharacterProps> = ({
             transition={{ duration: 0.15 }}
           />
 
-          {/* Pupilles */}
-          <motion.circle
+          {/* Pupilles du chaton (verticales) */}
+          <motion.ellipse
             cx="52"
             cy="45"
-            r="2"
+            rx="1.5"
+            ry="4"
             fill="#2C3E50"
             animate={{
               x: currentEmotion === "happy" ? [0, 1, 0] : 0,
@@ -179,10 +178,11 @@ const AICharacter: React.FC<AICharacterProps> = ({
             }}
             transition={{ duration: 0.3 }}
           />
-          <motion.circle
+          <motion.ellipse
             cx="68"
             cy="45"
-            r="2"
+            rx="1.5"
+            ry="4"
             fill="#2C3E50"
             animate={{
               x: currentEmotion === "happy" ? [0, -1, 0] : 0,
@@ -192,16 +192,13 @@ const AICharacter: React.FC<AICharacterProps> = ({
           />
 
           {/* Reflets dans les yeux */}
-          <circle cx="53" cy="44" r="1" fill="white" opacity="0.8" />
-          <circle cx="69" cy="44" r="1" fill="white" opacity="0.8" />
+          <ellipse cx="53" cy="43" rx="1" ry="2" fill="white" opacity="0.9" />
+          <ellipse cx="69" cy="43" rx="1" ry="2" fill="white" opacity="0.9" />
 
-          {/* Nez */}
-          <motion.ellipse
-            cx="60"
-            cy="55"
-            rx="3"
-            ry="2"
-            fill="#2C3E50"
+          {/* Nez du chaton (triangle) */}
+          <motion.polygon
+            points="60,52 55,58 65,58"
+            fill="#FF69B4"
             animate={{
               scale: currentEmotion === "happy" ? [1, 1.1, 1] : 1,
             }}
@@ -251,13 +248,35 @@ const AICharacter: React.FC<AICharacterProps> = ({
             )}
           </AnimatePresence>
 
-          {/* Pattes */}
-          <ellipse cx="45" cy="100" rx="8" ry="12" fill="#FFB366" stroke="#E67E22" strokeWidth="2" />
-          <ellipse cx="75" cy="100" rx="8" ry="12" fill="#FFB366" stroke="#E67E22" strokeWidth="2" />
+          {/* Pattes du chaton */}
+          <ellipse cx="45" cy="100" rx="7" ry="10" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2" />
+          <ellipse cx="75" cy="100" rx="7" ry="10" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2" />
 
-          {/* Pattes avant */}
-          <ellipse cx="40" cy="90" rx="6" ry="10" fill="#FFB366" stroke="#E67E22" strokeWidth="2" />
-          <ellipse cx="80" cy="90" rx="6" ry="10" fill="#FFB366" stroke="#E67E22" strokeWidth="2" />
+          {/* Pattes avant du chaton */}
+          <ellipse cx="40" cy="90" rx="5" ry="8" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2" />
+          <ellipse cx="80" cy="90" rx="5" ry="8" fill="#FFB6C1" stroke="#FF69B4" strokeWidth="2" />
+
+          {/* Moustaches du chaton */}
+          <line x1="35" y1="55" x2="25" y2="55" stroke="#2C3E50" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="35" y1="58" x2="25" y2="58" stroke="#2C3E50" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="85" y1="55" x2="95" y2="55" stroke="#2C3E50" strokeWidth="1.5" strokeLinecap="round" />
+          <line x1="85" y1="58" x2="95" y2="58" stroke="#2C3E50" strokeWidth="1.5" strokeLinecap="round" />
+
+          {/* Queue du chaton */}
+          <motion.path
+            d="M 30 85 Q 20 75 15 85 Q 20 95 30 85"
+            fill="#FFB6C1"
+            stroke="#FF69B4"
+            strokeWidth="2"
+            animate={{
+              rotate: isHappy ? [0, 10, 0] : 0,
+            }}
+            transition={{
+              duration: 1,
+              repeat: isHappy ? Infinity : 0,
+              repeatType: "reverse"
+            }}
+          />
 
           {/* Effet de brillance quand il est heureux */}
           <AnimatePresence>
@@ -310,7 +329,7 @@ const AICharacter: React.FC<AICharacterProps> = ({
             className="absolute -top-16 left-1/2 transform -translate-x-1/2 bg-white rounded-lg px-3 py-2 shadow-lg border-2 border-yellow-300"
           >
             <div className="text-sm font-medium text-gray-800">
-              🎉 Génial !
+              🐱 Miaou !
             </div>
             <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full">
               <div className="w-0 h-0 border-l-4 border-r-4 border-t-4 border-transparent border-t-yellow-300"></div>
