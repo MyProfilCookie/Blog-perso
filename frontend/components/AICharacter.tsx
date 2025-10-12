@@ -70,17 +70,14 @@ const AICharacter: React.FC<AICharacterProps> = ({
           className="w-full h-full"
           xmlns="http://www.w3.org/2000/svg"
         >
-          {/* Corps du koala (plus doux) */}
-          <motion.ellipse
+          {/* Fond circulaire beige */}
+          <motion.circle
             cx="60"
-            cy="85"
-            rx="28"
-            ry="22"
-            fill="#D3D3D3"
-            stroke="#B8B8B8"
-            strokeWidth="1.5"
+            cy="60"
+            r="55"
+            fill="#f5f1e6"
             animate={{
-              scale: isHappy ? [1, 1.03, 1] : 1,
+              scale: isHappy ? [1, 1.02, 1] : 1,
             }}
             transition={{
               duration: 0.8,
@@ -89,193 +86,81 @@ const AICharacter: React.FC<AICharacterProps> = ({
             }}
           />
           
-          {/* Tête du koala (plus ronde et douce) */}
-          <motion.circle
-            cx="60"
-            cy="50"
-            r="25"
-            fill="#E8E8E8"
-            stroke="#B8B8B8"
-            strokeWidth="1.5"
-            animate={{
-              y: isHappy ? [0, -1, 0] : 0,
-            }}
-            transition={{
-              duration: 1,
-              repeat: isHappy ? Infinity : 0,
-              repeatType: "reverse"
-            }}
-          />
-
-          {/* Oreilles du koala (plus petites et douces) */}
-          <motion.circle
-            cx="45"
-            cy="32"
-            r="10"
-            fill="#E8E8E8"
-            stroke="#B8B8B8"
-            strokeWidth="1.5"
-            animate={{
-              rotate: isHappy ? [0, 3, 0] : 0,
-            }}
-            transition={{
-              duration: 0.6,
-              repeat: isHappy ? Infinity : 0,
-              repeatType: "reverse"
-            }}
-          />
-          <motion.circle
-            cx="75"
-            cy="32"
-            r="10"
-            fill="#E8E8E8"
-            stroke="#B8B8B8"
-            strokeWidth="1.5"
-            animate={{
-              rotate: isHappy ? [0, -3, 0] : 0,
-            }}
-            transition={{
-              duration: 0.6,
-              repeat: isHappy ? Infinity : 0,
-              repeatType: "reverse"
-            }}
-          />
-
-          {/* Intérieur des oreilles (rose doux) */}
-          <ellipse cx="45" cy="32" rx="5" ry="6" fill="#FFB6C1" opacity="0.7" />
-          <ellipse cx="75" cy="32" rx="5" ry="6" fill="#FFB6C1" opacity="0.7" />
-
-          {/* Yeux du koala (plus grands et expressifs) */}
-          <motion.circle
-            cx="52"
-            cy="47"
-            r="7"
-            fill="white"
-            animate={{
-              scaleY: isBlinking ? 0.1 : 1,
-            }}
-            transition={{ duration: 0.15 }}
-          />
-          <motion.circle
-            cx="68"
-            cy="47"
-            r="7"
-            fill="white"
-            animate={{
-              scaleY: isBlinking ? 0.1 : 1,
-            }}
-            transition={{ duration: 0.15 }}
-          />
-
-          {/* Pupilles du koala (plus grandes et noires) */}
-          <motion.circle
-            cx="52"
-            cy="47"
-            r="4"
-            fill="#2C2C2C"
-            animate={{
-              x: currentEmotion === "happy" ? [0, 1, 0] : 0,
-              y: currentEmotion === "happy" ? [0, -1, 0] : 0,
-            }}
-            transition={{ duration: 0.4 }}
-          />
-          <motion.circle
-            cx="68"
-            cy="47"
-            r="4"
-            fill="#2C2C2C"
-            animate={{
-              x: currentEmotion === "happy" ? [0, -1, 0] : 0,
-              y: currentEmotion === "happy" ? [0, -1, 0] : 0,
-            }}
-            transition={{ duration: 0.4 }}
-          />
-
-          {/* Reflets dans les yeux (plus grands) */}
-          <circle cx="54" cy="45" r="2" fill="white" opacity="0.9" />
-          <circle cx="70" cy="45" r="2" fill="white" opacity="0.9" />
-
-          {/* Nez du koala (plus grand et noir) */}
-          <motion.ellipse
-            cx="60"
-            cy="57"
-            rx="5"
-            ry="4"
-            fill="#2C2C2C"
-            animate={{
-              scale: currentEmotion === "happy" ? [1, 1.1, 1] : 1,
-            }}
-            transition={{ duration: 0.5 }}
-          />
-
-          {/* Bouche */}
-          <AnimatePresence>
-            {currentEmotion === "happy" ? (
-              <motion.path
-                key="happy"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                exit={{ pathLength: 0 }}
-                d="M 50 65 Q 60 75 70 65"
-                stroke="#2C3E50"
-                strokeWidth="2"
-                fill="none"
-                strokeLinecap="round"
-                transition={{ duration: 0.3 }}
-              />
-            ) : currentEmotion === "thinking" ? (
-              <motion.ellipse
-                key="thinking"
-                initial={{ scale: 0 }}
-                animate={{ scale: 1 }}
-                exit={{ scale: 0 }}
-                cx="60"
-                cy="65"
-                rx="4"
-                ry="2"
-                fill="#2C3E50"
-                transition={{ duration: 0.3 }}
-              />
-            ) : (
-              <motion.path
-                key="neutral"
-                initial={{ pathLength: 0 }}
-                animate={{ pathLength: 1 }}
-                exit={{ pathLength: 0 }}
-                d="M 52 65 L 68 65"
-                stroke="#2C3E50"
-                strokeWidth="2"
-                strokeLinecap="round"
-                transition={{ duration: 0.3 }}
-              />
-            )}
-          </AnimatePresence>
-
-          {/* Pattes du koala (plus douces) */}
-          <ellipse cx="45" cy="100" rx="7" ry="10" fill="#D3D3D3" stroke="#B8B8B8" strokeWidth="1.5" />
-          <ellipse cx="75" cy="100" rx="7" ry="10" fill="#D3D3D3" stroke="#B8B8B8" strokeWidth="1.5" />
-
-          {/* Pattes avant du koala */}
-          <ellipse cx="40" cy="88" rx="5" ry="8" fill="#D3D3D3" stroke="#B8B8B8" strokeWidth="1.5" />
-          <ellipse cx="80" cy="88" rx="5" ry="8" fill="#D3D3D3" stroke="#B8B8B8" strokeWidth="1.5" />
-
-          {/* Coussinets des pattes (rose doux) */}
-          <ellipse cx="42" cy="105" rx="3" ry="2" fill="#FFB6C1" opacity="0.8" />
-          <ellipse cx="72" cy="105" rx="3" ry="2" fill="#FFB6C1" opacity="0.8" />
-
-          {/* Queue courte du koala (plus douce) */}
-          <motion.circle
-            cx="25"
-            cy="88"
-            r="6"
-            fill="#D3D3D3"
-            stroke="#B8B8B8"
-            strokeWidth="1.5"
+          {/* Pièce de puzzle bleue */}
+          <motion.path
+            d="M 30 25 L 45 25 C 45 20 50 20 50 25 C 50 20 55 20 55 25 L 70 25 C 75 25 75 30 75 35 L 75 50 C 80 50 80 55 75 60 C 80 60 80 65 75 65 L 75 80 C 75 85 70 85 65 85 L 50 85 C 50 90 50 95 45 95 C 40 95 40 90 40 85 L 25 85 C 20 85 20 80 20 75 L 20 60 C 15 60 15 55 20 55 C 15 55 15 50 20 50 L 20 35 C 20 30 25 25 30 25 Z"
+            fill="#5eb3d6"
+            stroke="#1e3a5f"
+            strokeWidth="2"
             animate={{
               scale: isHappy ? [1, 1.05, 1] : 1,
+              rotate: isHappy ? [0, 2, 0] : 0,
             }}
             transition={{
-              duration: 1,
+              duration: 0.6,
+              repeat: isHappy ? Infinity : 0,
+              repeatType: "reverse"
+            }}
+          />
+          
+          {/* Points décoratifs */}
+          <motion.circle
+            cx="85"
+            cy="50"
+            r="4"
+            fill="#e07856"
+            animate={{
+              scale: isHappy ? [1, 1.2, 1] : 1,
+            }}
+            transition={{
+              duration: 0.8,
+              repeat: isHappy ? Infinity : 0,
+              repeatType: "reverse"
+            }}
+          />
+          <motion.circle
+            cx="35"
+            cy="50"
+            r="3"
+            fill="#e07856"
+            opacity="0.7"
+            animate={{
+              scale: isHappy ? [1, 1.2, 1] : 1,
+            }}
+            transition={{
+              duration: 0.8,
+              delay: 0.2,
+              repeat: isHappy ? Infinity : 0,
+              repeatType: "reverse"
+            }}
+          />
+          <motion.circle
+            cx="50"
+            cy="15"
+            r="3"
+            fill="#e07856"
+            animate={{
+              scale: isHappy ? [1, 1.2, 1] : 1,
+            }}
+            transition={{
+              duration: 0.8,
+              delay: 0.4,
+              repeat: isHappy ? Infinity : 0,
+              repeatType: "reverse"
+            }}
+          />
+          <motion.circle
+            cx="50"
+            cy="85"
+            r="3"
+            fill="#e07856"
+            opacity="0.7"
+            animate={{
+              scale: isHappy ? [1, 1.2, 1] : 1,
+            }}
+            transition={{
+              duration: 0.8,
+              delay: 0.6,
               repeat: isHappy ? Infinity : 0,
               repeatType: "reverse"
             }}
@@ -290,13 +175,13 @@ const AICharacter: React.FC<AICharacterProps> = ({
                 exit={{ opacity: 0, scale: 0 }}
                 transition={{ duration: 0.5 }}
               >
-                <circle cx="35" cy="25" r="2" fill="#FFD700" opacity="0.8">
+                <circle cx="25" cy="25" r="2" fill="#FFD700" opacity="0.8">
                   <animate attributeName="opacity" values="0.8;0.2;0.8" dur="1s" repeatCount="indefinite" />
                 </circle>
-                <circle cx="85" cy="20" r="1.5" fill="#FFD700" opacity="0.6">
+                <circle cx="95" cy="25" r="1.5" fill="#FFD700" opacity="0.6">
                   <animate attributeName="opacity" values="0.6;0.1;0.6" dur="1.2s" repeatCount="indefinite" />
                 </circle>
-                <circle cx="25" cy="40" r="1" fill="#FFD700" opacity="0.7">
+                <circle cx="25" cy="75" r="1" fill="#FFD700" opacity="0.7">
                   <animate attributeName="opacity" values="0.7;0.2;0.7" dur="0.8s" repeatCount="indefinite" />
                 </circle>
               </motion.g>
