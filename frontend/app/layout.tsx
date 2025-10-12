@@ -41,6 +41,11 @@ export const metadata: Metadata = {
   other: {
     'google-site-verification': process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '',
   },
+  icons: {
+    icon: '/favicon.svg',
+    apple: '/favicon.svg',
+    shortcut: '/favicon.svg',
+  },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.com",
   ),
