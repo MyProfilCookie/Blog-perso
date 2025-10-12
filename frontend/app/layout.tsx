@@ -42,9 +42,14 @@ export const metadata: Metadata = {
     'google-site-verification': process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION || '',
   },
   icons: {
-    icon: '/favicon.ico',
-    apple: '/favicon.ico',
-    shortcut: '/favicon.ico',
+    icon: [
+      { url: '/favicon.svg', type: 'image/svg+xml' },
+      { url: '/favicon-32.png', sizes: '32x32', type: 'image/png' },
+    ],
+    apple: [
+      { url: '/favicon-48.png', sizes: '180x180', type: 'image/png' },
+    ],
+    shortcut: '/favicon.svg',
   },
   metadataBase: new URL(
     process.env.NEXT_PUBLIC_SITE_URL || "https://autistudy.com",
