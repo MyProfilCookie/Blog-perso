@@ -17,7 +17,6 @@ import {
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AIAssistantPremium from "@/components/AIAssistantPremium";
-import AICharacter from "@/components/AICharacter";
 
 export default function AIAssistantPage() {
   const router = useRouter();
@@ -75,12 +74,12 @@ export default function AIAssistantPage() {
   }, [encouragements.length]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-violet-950 dark:to-purple-950">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Effet de gradient qui suit la souris */}
       <motion.div
         className="pointer-events-none fixed inset-0 opacity-30"
         animate={{
-          background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(124, 58, 237, 0.3), transparent 80%)`,
+          background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.2), transparent 80%)`,
         }}
         transition={{ duration: 0.3 }}
       />
@@ -90,7 +89,7 @@ export default function AIAssistantPage() {
         {floatingParticles.map((particle) => (
           <motion.div
             key={particle.id}
-            className="absolute rounded-full bg-gradient-to-r from-violet-400 to-purple-400 opacity-20"
+            className="absolute rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20"
             style={{
               width: particle.size,
               height: particle.size,
@@ -150,21 +149,30 @@ export default function AIAssistantPage() {
               transition={{ delay: 0.2, duration: 0.5 }}
               className="text-center mb-6"
             >
-              <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 mb-3 tracking-tight">
-                Rencontre Alia 🤖
-              </h1>
+              <div className="flex items-center justify-center gap-3 mb-3">
+                <img 
+                  src="/logo/logo.webp" 
+                  alt="Autistudy Logo" 
+                  className="w-12 h-12 object-contain"
+                />
+                <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 tracking-tight">
+                  Rencontre Alia
+                </h1>
+              </div>
               
-              {/* Personnage mignon */}
+              {/* Logo Autistudy */}
               <motion.div
                 initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{ delay: 0.4, duration: 0.8, type: "spring" }}
                 className="flex justify-center mb-4"
               >
-                <AICharacter 
-                  size="large" 
-                  isHappy={true}
-                  className="drop-shadow-lg"
+                <motion.img 
+                  src="/uploads/logo.webp" 
+                  alt="Autistudy Logo" 
+                  className="w-32 h-32 object-contain drop-shadow-2xl"
+                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  transition={{ type: "spring", stiffness: 300 }}
                 />
               </motion.div>
               <AnimatePresence mode="wait">
