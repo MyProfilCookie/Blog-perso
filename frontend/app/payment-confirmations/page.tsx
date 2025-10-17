@@ -142,6 +142,13 @@ const OrderConfirmationPage = () => {
         );
 
         setOrder(orderData as Order);
+        
+        // Déclencher l'événement userUpdate pour mettre à jour la navbar
+        if (typeof window !== "undefined") {
+          const event = new CustomEvent("userUpdate");
+          window.dispatchEvent(event);
+          console.log("✅ Événement userUpdate déclenché depuis la page de confirmation");
+        }
       } catch (error) {
         console.error("❌ Erreur lors de la récupération de la commande:", error);
         const errorMessage = error instanceof Error

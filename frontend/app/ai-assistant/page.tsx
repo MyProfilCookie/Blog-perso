@@ -3,20 +3,21 @@
 import React, { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button, Card, CardBody, Chip } from "@nextui-org/react";
-import { 
-  ArrowLeft, 
-  Sparkles, 
-  Zap, 
-  Stars, 
-  Brain, 
-  Lightbulb, 
+import {
+  ArrowLeft,
+  Sparkles,
+  Zap,
+  Stars,
+  Brain,
+  Lightbulb,
   Rocket,
   Heart,
   TrendingUp,
-  Award
+  Award,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
 import AIAssistantPremium from "@/components/AIAssistantPremium";
+import { AutismLogo } from "@/components/icons";
 
 export default function AIAssistantPage() {
   const router = useRouter();
@@ -30,7 +31,7 @@ export default function AIAssistantPage() {
     };
 
     window.addEventListener("mousemove", handleMouseMove);
-    
+
     // Afficher les stats après 1 seconde
     setTimeout(() => setShowStats(true), 1000);
 
@@ -49,9 +50,24 @@ export default function AIAssistantPage() {
 
   // Stats IA
   const stats = [
-    { icon: Brain, label: "Questions répondues", value: "10K+", color: "text-violet-600" },
-    { icon: Heart, label: "Satisfaction", value: "98%", color: "text-pink-600" },
-    { icon: TrendingUp, label: "Temps de réponse", value: "<2s", color: "text-purple-600" },
+    {
+      icon: Brain,
+      label: "Questions répondues",
+      value: "10K+",
+      color: "text-violet-600",
+    },
+    {
+      icon: Heart,
+      label: "Satisfaction",
+      value: "98%",
+      color: "text-pink-600",
+    },
+    {
+      icon: TrendingUp,
+      label: "Temps de réponse",
+      value: "<2s",
+      color: "text-purple-600",
+    },
     { icon: Award, label: "Précision", value: "95%", color: "text-indigo-600" },
   ];
 
@@ -77,10 +93,10 @@ export default function AIAssistantPage() {
     <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
       {/* Effet de gradient qui suit la souris */}
       <motion.div
-        className="pointer-events-none fixed inset-0 opacity-30"
         animate={{
           background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.2), transparent 80%)`,
         }}
+        className="pointer-events-none fixed inset-0 opacity-30"
         transition={{ duration: 0.3 }}
       />
 
@@ -88,19 +104,19 @@ export default function AIAssistantPage() {
       <div className="pointer-events-none fixed inset-0 overflow-hidden">
         {floatingParticles.map((particle) => (
           <motion.div
-            key={particle.id}
-            className="absolute rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20"
-            style={{
-              width: particle.size,
-              height: particle.size,
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-            }}
             animate={{
               y: [0, -100, 0],
               x: [0, Math.random() * 50 - 25, 0],
               scale: [1, 1.5, 1],
               opacity: [0.2, 0.4, 0.2],
+            }}
+            className="absolute rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20"
+            key={particle.id}
+            style={{
+              width: particle.size,
+              height: particle.size,
+              left: `${particle.x}%`,
+              top: `${particle.y}%`,
             }}
             transition={{
               duration: particle.duration,
@@ -117,18 +133,21 @@ export default function AIAssistantPage() {
         <div className="max-w-5xl mx-auto">
           {/* Header avec animations */}
           <motion.div
-            initial={{ opacity: 0, y: -30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, type: "spring" }}
             className="mb-8"
+            initial={{ opacity: 0, y: -30 }}
+            transition={{ duration: 0.6, type: "spring" }}
           >
             <div className="flex items-center justify-between mb-4">
-              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
                 <Button
-                  variant="flat"
-                  startContent={<ArrowLeft className="w-5 h-5" />}
-                  onPress={() => router.back()}
                   className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md hover:bg-violet-50 dark:hover:bg-violet-900/50 shadow-lg"
+                  onPress={() => router.back()}
+                  startContent={<ArrowLeft className="w-5 h-5" />}
+                  variant="flat"
                 >
                   Retour
                 </Button>
@@ -144,45 +163,41 @@ export default function AIAssistantPage() {
 
             {/* Titre principal avec animation */}
             <motion.div
-              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
               className="text-center mb-6"
+              initial={{ scale: 0.9, opacity: 0 }}
+              transition={{ delay: 0.2, duration: 0.5 }}
             >
               <div className="flex items-center justify-center gap-3 mb-3">
-                <img 
-                  src="/logo/logo.webp" 
-                  alt="Autistudy Logo" 
-                  className="w-12 h-12 object-contain"
-                />
+                <AutismLogo className="w-12 h-12 object-contain" size={40} />
                 <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 tracking-tight">
                   Rencontre Alia
                 </h1>
               </div>
-              
+
               {/* Logo Autistudy */}
               <motion.div
-                initial={{ opacity: 0, scale: 0 }}
                 animate={{ opacity: 1, scale: 1 }}
-                transition={{ delay: 0.4, duration: 0.8, type: "spring" }}
                 className="flex justify-center mb-4"
+                initial={{ opacity: 0, scale: 0 }}
+                transition={{ delay: 0.4, duration: 0.8, type: "spring" }}
               >
-                <motion.img 
-                  src="/uploads/logo.webp" 
-                  alt="Autistudy Logo" 
+                <motion.img
+                  alt="Autistudy Logo"
                   className="w-32 h-32 object-contain drop-shadow-2xl"
-                  whileHover={{ scale: 1.1, rotate: 5 }}
+                  src="/uploads/logo.webp"
                   transition={{ type: "spring", stiffness: 300 }}
+                  whileHover={{ scale: 1.1, rotate: 5 }}
                 />
               </motion.div>
               <AnimatePresence mode="wait">
                 <motion.p
-                  key={currentEncouragement}
-                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
-                  transition={{ duration: 0.5 }}
                   className="text-lg text-gray-600 dark:text-gray-300 font-medium"
+                  exit={{ opacity: 0, y: -20 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  key={currentEncouragement}
+                  transition={{ duration: 0.5 }}
                 >
                   {encouragements[currentEncouragement]}
                 </motion.p>
@@ -193,25 +208,27 @@ export default function AIAssistantPage() {
             <AnimatePresence>
               {showStats && (
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
                   animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -20 }}
                   className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"
+                  exit={{ opacity: 0, y: -20 }}
+                  initial={{ opacity: 0, y: 20 }}
                 >
                   {stats.map((stat, index) => {
                     const Icon = stat.icon;
                     return (
                       <motion.div
-                        key={stat.label}
-                        initial={{ opacity: 0, scale: 0.8 }}
                         animate={{ opacity: 1, scale: 1 }}
+                        initial={{ opacity: 0, scale: 0.8 }}
+                        key={stat.label}
                         transition={{ delay: index * 0.1, type: "spring" }}
                         whileHover={{ scale: 1.05, y: -5 }}
                         whileTap={{ scale: 0.95 }}
                       >
                         <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md border-2 border-violet-200 dark:border-violet-800 shadow-lg hover:shadow-xl transition-all cursor-pointer">
                           <CardBody className="text-center p-4">
-                            <Icon className={`w-8 h-8 mx-auto mb-2 ${stat.color}`} />
+                            <Icon
+                              className={`w-8 h-8 mx-auto mb-2 ${stat.color}`}
+                            />
                             <p className="text-2xl font-extrabold text-gray-900 dark:text-white">
                               {stat.value}
                             </p>
@@ -229,33 +246,37 @@ export default function AIAssistantPage() {
 
             {/* Badges interactifs */}
             <motion.div
-              initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={{ delay: 0.8 }}
               className="flex flex-wrap justify-center gap-3 mb-6"
+              initial={{ opacity: 0 }}
+              transition={{ delay: 0.8 }}
             >
               {[
                 { icon: Brain, text: "IA Intelligente", color: "primary" },
                 { icon: Zap, text: "Réponses rapides", color: "warning" },
-                { icon: Stars, text: "Toujours disponible", color: "secondary" },
+                {
+                  icon: Stars,
+                  text: "Toujours disponible",
+                  color: "secondary",
+                },
                 { icon: Lightbulb, text: "Pédagogique", color: "success" },
                 { icon: Rocket, text: "Innovante", color: "danger" },
               ].map((badge, index) => {
                 const Icon = badge.icon;
                 return (
                   <motion.div
-                    key={badge.text}
-                    initial={{ opacity: 0, scale: 0 }}
                     animate={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, scale: 0 }}
+                    key={badge.text}
                     transition={{ delay: 0.8 + index * 0.1, type: "spring" }}
                     whileHover={{ scale: 1.1, rotate: 5 }}
                     whileTap={{ scale: 0.9 }}
                   >
                     <Chip
-                      startContent={<Icon className="w-4 h-4" />}
-                      color={badge.color as any}
-                      variant="flat"
                       className="font-semibold shadow-md cursor-pointer"
+                      color={badge.color as any}
+                      startContent={<Icon className="w-4 h-4" />}
+                      variant="flat"
                     >
                       {badge.text}
                     </Chip>
@@ -267,8 +288,8 @@ export default function AIAssistantPage() {
 
           {/* Composant AI Assistant avec animation d'entrée */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.95, y: 30 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
+            initial={{ opacity: 0, scale: 0.95, y: 30 }}
             transition={{ delay: 0.4, duration: 0.6, type: "spring" }}
           >
             <AIAssistantPremium />
@@ -278,4 +299,3 @@ export default function AIAssistantPage() {
     </div>
   );
 }
-

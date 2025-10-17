@@ -204,6 +204,14 @@ const CheckoutForm = ({
                 }
                 
                 onPaymentSuccess();
+                
+                // Déclencher l'événement userUpdate pour mettre à jour la navbar
+                if (typeof window !== "undefined") {
+                    const event = new CustomEvent("userUpdate");
+                    window.dispatchEvent(event);
+                    console.log("✅ Événement userUpdate déclenché - navbar va se mettre à jour");
+                }
+                
                 const orderIdForUrl = localStorage.getItem("orderId");
                 if (orderIdForUrl) {
                     router.push(`/payment-confirmations?orderId=${orderIdForUrl}`);
