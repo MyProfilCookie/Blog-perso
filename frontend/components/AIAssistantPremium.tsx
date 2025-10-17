@@ -39,8 +39,16 @@ const AIAssistantPremium: React.FC = () => {
   const inputRef = useRef<HTMLInputElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollToBottom = (smooth = true) => {
+    if (messagesEndRef.current) {
+      // Utiliser setTimeout pour s'assurer que le DOM est mis à jour
+      setTimeout(() => {
+        messagesEndRef.current?.scrollIntoView({ 
+          behavior: smooth ? "smooth" : "auto",
+          block: "end"
+        });
+      }, 100);
+    }
   };
 
   useEffect(() => {
@@ -50,6 +58,11 @@ const AIAssistantPremium: React.FC = () => {
       prevMessagesLengthRef.current = messages.length;
     }
   }, [messages]);
+  
+  // Forcer le scroll après chaque rendu
+  useEffect(() => {
+    scrollToBottom();
+  }, [messages.length]);
 
   const getAIResponse = async (userMessage: string) => {
     try {
@@ -101,6 +114,9 @@ const AIAssistantPremium: React.FC = () => {
     setMessages((prev) => [...prev, newUserMessage]);
     setIsLoading(true);
     setIsTyping(true);
+    
+    // Scroller immédiatement après l'ajout du message utilisateur
+    setTimeout(() => scrollToBottom(), 100);
 
     try {
       // Simuler un délai de "réflexion"
@@ -117,6 +133,9 @@ const AIAssistantPremium: React.FC = () => {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, newAIMessage]);
+      
+      // Scroller après l'ajout de la réponse de l'IA
+      setTimeout(() => scrollToBottom(), 100);
     } catch (error) {
       toast.error("Une erreur est survenue 😔");
     } finally {
@@ -222,7 +241,7 @@ const AIAssistantPremium: React.FC = () => {
           </motion.div>
 
           {/* Zone de messages */}
-          <div className="h-[500px] overflow-y-auto p-6 space-y-4 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
+          <div className="h-[700px] md:h-[600px] lg:h-[700px] overflow-y-auto p-6 space-y-4 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
             <AnimatePresence mode="popLayout">
               {messages.map((message, index) => (
                 <motion.div
