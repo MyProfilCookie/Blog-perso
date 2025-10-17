@@ -3,7 +3,7 @@
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
 import Link from "next/link";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -80,6 +80,7 @@ export default function OrdersPage() {
     const [expandedOrders, setExpandedOrders] = useState<Record<string, boolean>>({});
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const router = useRouter();
+    const searchParams = useSearchParams();
 
     // Toggle expanded state for an order
     const toggleOrder = (orderId: string) => {
@@ -88,6 +89,28 @@ export default function OrdersPage() {
             [orderId]: !prev[orderId]
         }));
     };
+    
+    // Auto-expand order if orderId is in URL
+    useEffect(() => {
+        const orderId = searchParams?.get('orderId');
+        if (orderId && !loading && orders.length > 0) {
+            // Trouver et auto-expand la commande
+            const orderExists = orders.find(order => order._id === orderId);
+            if (orderExists) {
+                setExpandedOrders(prev => ({
+                    ...prev,
+                    [orderId]: true
+                }));
+                // Scroll vers la commande après un court délai
+                setTimeout(() => {
+                    const element = document.getElementById(`order-${orderId}`);
+                    if (element) {
+                        element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    }
+                }, 300);
+            }
+        }
+    }, [searchParams, loading, orders]);
 
     // Format price with currency
     const formatPrice = (price: number) => {
@@ -361,6 +384,7 @@ export default function OrdersPage() {
                     return (
                         <Card
                             key={order._id}
+                            id={`order-${order._id}`}
                             className="overflow-hidden transition-all duration-300 hover:shadow-md bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
                         >
                             {/* Order Header - Always visible */}
