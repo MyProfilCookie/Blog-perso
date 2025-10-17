@@ -373,23 +373,28 @@ const SubscriptionPage: React.FC = () => {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-blue-50 to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800">
-        <motion.div
-          animate={{ opacity: 1, scale: 1 }}
-          className="text-center"
-          initial={{ opacity: 0, scale: 0.9 }}
-        >
-          <div className="relative">
-            <Loader2 className="h-12 w-12 animate-spin text-blue-500 dark:text-blue-400" />
-            <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-purple-400 dark:text-purple-300 animate-pulse" />
+      <div className="min-h-screen bg-gradient-to-br from-gray-50 via-blue-50 to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-800 py-8 px-4 sm:px-6 lg:px-8">
+        <div className="max-w-7xl mx-auto">
+          <div className="flex items-center justify-center" style={{ minHeight: '600px' }}>
+            <motion.div
+              animate={{ opacity: 1 }}
+              className="text-center"
+              initial={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+            >
+              <div className="relative">
+                <Loader2 className="h-12 w-12 animate-spin text-blue-500 dark:text-blue-400" />
+                <Sparkles className="absolute -top-2 -right-2 h-6 w-6 text-purple-400 dark:text-purple-300 animate-pulse" />
+              </div>
+              <p className="mt-6 text-lg text-gray-600 dark:text-gray-200 font-medium">
+                Préparation de votre espace d'apprentissage...
+              </p>
+              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                Nous adaptons tout spécialement pour vous
+              </p>
+            </motion.div>
           </div>
-          <p className="mt-6 text-lg text-gray-600 dark:text-gray-200 font-medium">
-            Préparation de votre espace d'apprentissage...
-          </p>
-          <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-            Nous adaptons tout spécialement pour vous
-          </p>
-        </motion.div>
+        </div>
       </div>
     );
   }
@@ -435,9 +440,10 @@ const SubscriptionPage: React.FC = () => {
       <div className="max-w-7xl mx-auto">
         {/* Header avec philosophie du site */}
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1 }}
           className="text-center mb-12"
-          initial={{ opacity: 0, y: -20 }}
+          initial={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         >
           <BackButton />
           <div className="mt-8">
@@ -477,9 +483,10 @@ const SubscriptionPage: React.FC = () => {
         {/* Statut actuel de l'abonnement */}
         {subscriptionInfo && (
           <motion.div
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1 }}
             className="mb-12"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
           >
             <Card className="bg-gradient-to-r from-blue-50 to-purple-50 dark:from-blue-950/50 dark:to-purple-950/50 border-2 border-blue-200 dark:border-blue-700 shadow-xl">
               <CardContent className="p-8">
@@ -545,9 +552,9 @@ const SubscriptionPage: React.FC = () => {
         {/* Message spécial pour les administrateurs */}
         {subscriptionInfo?.role === "admin" ? (
           <motion.div
-            animate={{ opacity: 1, y: 0 }}
+            animate={{ opacity: 1 }}
             className="text-center mb-12"
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
           >
             <Card className="bg-gradient-to-r from-yellow-50 to-orange-50 dark:from-yellow-950/50 dark:to-orange-950/50 border-2 border-yellow-200 dark:border-yellow-700 shadow-xl">
@@ -571,10 +578,10 @@ const SubscriptionPage: React.FC = () => {
           <div className="grid md:grid-cols-2 gap-8 mb-12">
             {/* Plan Gratuit - Bienveillant */}
             <motion.div
-              animate={{ opacity: 1, x: 0 }}
-              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1 }}
+              initial={{ opacity: 0 }}
               transition={{ duration: 0.3 }}
-              whileHover={{ scale: 1.02 }}
+              whileHover={{ scale: 1.01 }}
             >
               <Card className="bg-white dark:bg-gray-900 border-2 border-blue-200 dark:border-blue-700 shadow-xl">
                 <CardHeader className="text-center pb-4">
@@ -599,10 +606,10 @@ const SubscriptionPage: React.FC = () => {
                     {features.free.map((feature, index) => (
                       <motion.li
                         key={index}
-                        animate={{ opacity: 1, x: 0 }}
+                        animate={{ opacity: 1 }}
                         className="flex items-start gap-3 p-3 rounded-lg bg-blue-50 dark:bg-blue-950/50 border border-blue-200 dark:border-blue-800"
-                        initial={{ opacity: 0, x: -20 }}
-                        transition={{ delay: index * 0.1 }}
+                        initial={{ opacity: 0 }}
+                        transition={{ duration: 0.2, delay: index * 0.05 }}
                       >
                         <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 dark:text-gray-200">
@@ -637,10 +644,10 @@ const SubscriptionPage: React.FC = () => {
 
             {/* Plan Premium - Accompagnement complet */}
             <motion.div
-              animate={{ opacity: 1, x: 0 }}
-              initial={{ opacity: 0, x: 20 }}
-              transition={{ duration: 0.3 }}
-              whileHover={{ scale: 1.02 }}
+              animate={{ opacity: 1 }}
+              initial={{ opacity: 0 }}
+              transition={{ duration: 0.3, delay: 0.1 }}
+              whileHover={{ scale: 1.01 }}
             >
               <Card className="bg-gradient-to-br from-purple-50 to-pink-50 dark:from-purple-950/50 dark:to-pink-950/50 border-2 border-purple-300 dark:border-purple-600 shadow-xl relative">
                 <div className="absolute -top-3 right-6">
@@ -671,10 +678,10 @@ const SubscriptionPage: React.FC = () => {
                     {features.premium.map((feature, index) => (
                       <motion.li
                         key={index}
-                        animate={{ opacity: 1, x: 0 }}
+                        animate={{ opacity: 1 }}
                         className="flex items-start gap-3 p-3 rounded-lg bg-white dark:bg-gray-800 shadow-sm border border-gray-200 dark:border-gray-700"
-                        initial={{ opacity: 0, x: 20 }}
-                        transition={{ delay: index * 0.1 }}
+                        initial={{ opacity: 0 }}
+                        transition={{ duration: 0.2, delay: index * 0.05 }}
                       >
                         <CheckCircle className="h-5 w-5 text-green-500 dark:text-green-400 mt-0.5 flex-shrink-0" />
                         <span className="text-gray-700 dark:text-gray-200">
@@ -713,9 +720,10 @@ const SubscriptionPage: React.FC = () => {
 
         {/* Section valeurs et engagement */}
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1 }}
           className="text-center mb-12"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         >
           <Card className="bg-gradient-to-r from-green-50 to-blue-50 dark:from-green-950/50 dark:to-blue-950/50 border-2 border-green-200 dark:border-green-700 shadow-xl">
             <CardContent className="p-8">
@@ -756,9 +764,10 @@ const SubscriptionPage: React.FC = () => {
 
         {/* Appel à l'action final */}
         <motion.div
-          animate={{ opacity: 1, y: 0 }}
+          animate={{ opacity: 1 }}
           className="text-center"
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0 }}
+          transition={{ duration: 0.3 }}
         >
           <div className="bg-white dark:bg-gray-900 rounded-2xl p-8 shadow-xl border-2 border-purple-200 dark:border-purple-700">
             <Sparkles className="h-12 w-12 text-purple-500 dark:text-purple-400 mx-auto mb-4" />
