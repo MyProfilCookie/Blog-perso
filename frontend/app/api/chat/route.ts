@@ -14,6 +14,10 @@ export async function POST(request: NextRequest) {
     // Utiliser l'API Groq (gratuite et rapide) si disponible, sinon simulation
     const apiKey = process.env.GROQ_API_KEY;
     
+    // Debug logs
+    console.log("GROQ_API_KEY présente:", !!apiKey);
+    console.log("Longueur de la clé:", apiKey?.length || 0);
+    
     if (apiKey) {
       try {
         const groqResponse = await fetch("https://api.groq.com/openai/v1/chat/completions", {
@@ -43,16 +47,22 @@ export async function POST(request: NextRequest) {
           const data = await groqResponse.json();
           const reply = data.choices?.[0]?.message?.content || "";
           
+          console.log("✅ Réponse Groq réussie");
+          
           return NextResponse.json({
             reply: reply,
             timestamp: new Date().toISOString(),
             source: "groq"
           });
+        } else {
+          console.error("❌ Groq API erreur HTTP:", groqResponse.status, await groqResponse.text());
         }
       } catch (groqError) {
-        console.error("Erreur Groq API:", groqError);
+        console.error("❌ Erreur Groq API:", groqError);
         // Continue avec la simulation en cas d'erreur
       }
+    } else {
+      console.log("⚠️ Aucune clé API Groq trouvée, utilisation de la simulation");
     }
 
     // Simulation de réponse IA (fallback)
