@@ -304,13 +304,13 @@ export default function OrdersPage() {
     if (error) {
         return (
             <div className="max-w-4xl mx-auto p-6">
-                <h1 className="text-2xl font-bold mb-6">Mes commandes</h1>
-                <Card>
+                <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Mes commandes</h1>
+                <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                     <CardContent className="pt-6">
-                        <div className="text-red-500 font-medium mb-4">{error}</div>
+                        <div className="text-red-500 dark:text-red-400 font-medium mb-4">{error}</div>
                         <div className="flex space-x-4">
                             <Link
-                                className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded-md transition-colors"
+                                className="px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700 rounded-md transition-colors"
                                 href="/users/login"
                             >
                                 Se connecter
@@ -326,12 +326,12 @@ export default function OrdersPage() {
     if (orders.length === 0) {
         return (
             <div className="max-w-4xl mx-auto p-6">
-                <h1 className="text-2xl font-bold mb-6">Mes commandes</h1>
-                <Card>
+                <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Mes commandes</h1>
+                <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
                     <CardContent className="pt-6">
-                        <div className="text-gray-500 font-medium mb-4">Vous n'avez pas encore de commandes.</div>
+                        <div className="text-gray-500 dark:text-gray-400 font-medium mb-4">Vous n'avez pas encore de commandes.</div>
                         <Link
-                            className="px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 rounded-md transition-colors inline-block"
+                            className="px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700 rounded-md transition-colors inline-block"
                             href="/shop"
                         >
                             Découvrir nos produits
@@ -345,10 +345,10 @@ export default function OrdersPage() {
     // Render orders list with expandable details
     return (
         <div className="max-w-4xl mx-auto p-6">
-            <h1 className="text-2xl font-bold mb-6">Mes commandes</h1>
+            <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Mes commandes</h1>
             {isAdmin && (
-                <div className="mb-4 p-3 bg-green-50 border border-green-200 rounded-md">
-                    <p className="text-green-700 font-medium flex items-center">
+                <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-md">
+                    <p className="text-green-700 dark:text-green-400 font-medium flex items-center">
                         <FontAwesomeIcon className="mr-2" icon={faTags} />
                         Mode administrateur : Tous les produits sont gratuits pour vous !
                     </p>
@@ -361,20 +361,20 @@ export default function OrdersPage() {
                     return (
                         <Card
                             key={order._id}
-                            className="overflow-hidden transition-all duration-300 hover:shadow-md"
+                            className="overflow-hidden transition-all duration-300 hover:shadow-md bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
                         >
                             {/* Order Header - Always visible */}
                             <CardHeader
-                                className="pb-3 cursor-pointer"
+                                className="pb-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
                                 onClick={() => toggleOrder(order._id)}
                             >
                                 <div className="flex justify-between items-center">
                                     <div className="flex items-center gap-2">
                                         <FontAwesomeIcon
-                                            className="text-blue-500 transition-transform duration-300"
+                                            className="text-blue-500 dark:text-blue-400 transition-transform duration-300"
                                             icon={expandedOrders[order._id] ? faChevronDown : faChevronRight}
                                         />
-                                        <CardTitle className="text-lg">
+                                        <CardTitle className="text-lg text-gray-900 dark:text-gray-100">
                                             Commande #{order._id.substring(0, 8).toUpperCase()}
                                         </CardTitle>
                                     </div>
@@ -382,17 +382,17 @@ export default function OrdersPage() {
                                 </div>
 
                                 {/* Order Summary - Always visible */}
-                                <div className="flex justify-between items-center mt-2 text-sm text-gray-600">
+                                <div className="flex justify-between items-center mt-2 text-sm text-gray-600 dark:text-gray-400">
                                     <div className="flex items-center">
                                         <FontAwesomeIcon className="mr-2" icon={faCalendarAlt} />
                                         {dayjs(order.orderDate).format("DD/MM/YYYY")}
                                     </div>
-                                    <div className="font-medium">
+                                    <div className="font-medium text-gray-900 dark:text-gray-100">
                                         <FontAwesomeIcon className="mr-1" icon={faEuroSign} />
                                         {isAdmin ? (
                                             <span>
                                                 <span className="line-through mr-2">{formatPrice(order.totalAmount)}</span>
-                                                <span className="text-green-600 font-medium">Gratuit</span>
+                                                <span className="text-green-600 dark:text-green-400 font-medium">Gratuit</span>
                                             </span>
                                         ) : (
                                             formatPrice(order.totalAmount)
@@ -411,29 +411,29 @@ export default function OrdersPage() {
                                         transition={{ duration: 0.3 }}
                                     >
                                         <CardContent className="pt-0">
-                                            <div className="border-t pt-4 mt-2">
+                                            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
                                                 {/* Order Details */}
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="space-y-2">
-                                                        <h3 className="font-medium text-gray-800">Informations client</h3>
-                                                        <p className="text-sm text-gray-600">
+                                                        <h3 className="font-medium text-gray-800 dark:text-gray-200">Informations client</h3>
+                                                        <p className="text-sm text-gray-600 dark:text-gray-400">
                                                             {order.firstName} {order.lastName}
                                                         </p>
                                                         {order.email && (
-                                                            <p className="text-sm text-gray-600">{order.email}</p>
+                                                            <p className="text-sm text-gray-600 dark:text-gray-400">{order.email}</p>
                                                         )}
                                                     </div>
 
                                                     <div className="space-y-2">
-                                                        <h3 className="font-medium text-gray-800">Livraison</h3>
+                                                        <h3 className="font-medium text-gray-800 dark:text-gray-200">Livraison</h3>
                                                         {order.deliveryMethod && (
-                                                            <p className="text-sm text-gray-600">
+                                                            <p className="text-sm text-gray-600 dark:text-gray-400">
                                                                 <FontAwesomeIcon className="mr-2" icon={faTruck} />
                                                                 {order.deliveryMethod}
                                                             </p>
                                                         )}
                                                         {order.deliveryAddress && (
-                                                            <p className="text-sm text-gray-600">
+                                                            <p className="text-sm text-gray-600 dark:text-gray-400">
                                                                 <FontAwesomeIcon className="mr-2" icon={faMapMarkerAlt} />
                                                                 {order.deliveryAddress.street}{', '}
                                                                 {order.deliveryAddress.postalCode}{' '}
@@ -442,7 +442,7 @@ export default function OrdersPage() {
                                                             </p>
                                                         )}
                                                         {order.trackingNumber && (
-                                                            <p className="text-sm text-gray-600">
+                                                            <p className="text-sm text-gray-600 dark:text-gray-400">
                                                                 <FontAwesomeIcon className="mr-2" icon={faBarcode} />
                                                                 <span className="font-medium">Suivi:</span> {order.trackingNumber}
                                                                 {order.carrierInfo && ` (${order.carrierInfo})`}
@@ -453,21 +453,21 @@ export default function OrdersPage() {
 
                                                 {/* Order Items */}
                                                 <div className="mt-4">
-                                                    <h3 className="font-medium text-gray-800 mb-2">Articles commandés</h3>
-                                                    <div className="bg-gray-50 dark:bg-gray-800 rounded-lg overflow-hidden">
-                                                        <table className="min-w-full divide-y divide-gray-200">
+                                                    <h3 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Articles commandés</h3>
+                                                    <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                                                        <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                                             <thead className="bg-gray-100 dark:bg-gray-700">
                                                                 <tr>
-                                                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                                                                    <th className="px-4 py-3 text-left text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" scope="col">
                                                                         Produit
                                                                     </th>
-                                                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                                                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" scope="col">
                                                                         Quantité
                                                                     </th>
-                                                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                                                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" scope="col">
                                                                         Prix unitaire
                                                                     </th>
-                                                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider" scope="col">
+                                                                    <th className="px-4 py-3 text-right text-xs font-medium text-gray-500 dark:text-gray-300 uppercase tracking-wider" scope="col">
                                                                         Total
                                                                     </th>
                                                                 </tr>
@@ -477,7 +477,7 @@ export default function OrdersPage() {
                                                                     <tr key={index} className="hover:bg-gray-50 dark:hover:bg-gray-700">
                                                                         <td className="px-4 py-3 whitespace-nowrap text-sm text-gray-800 dark:text-gray-200">
                                                                             <div className="flex items-center">
-                                                                                <FontAwesomeIcon className="mr-2 text-gray-400" icon={faBox} />
+                                                                                <FontAwesomeIcon className="mr-2 text-gray-400 dark:text-gray-500" icon={faBox} />
                                                                                 {item.title || item.name || "Produit"}
                                                                             </div>
                                                                         </td>
@@ -488,7 +488,7 @@ export default function OrdersPage() {
                                                                             {isAdmin ? (
                                                                                 <span>
                                                                                     <span className="line-through mr-2">{formatPrice(item.price)}</span>
-                                                                                    <span className="text-green-600 font-medium">Gratuit</span>
+                                                                                    <span className="text-green-600 dark:text-green-400 font-medium">Gratuit</span>
                                                                                 </span>
                                                                             ) : (
                                                                                 formatPrice(item.price)
@@ -498,7 +498,7 @@ export default function OrdersPage() {
                                                                             {isAdmin ? (
                                                                                 <span>
                                                                                     <span className="line-through mr-2">{formatPrice(item.price * item.quantity)}</span>
-                                                                                    <span className="text-green-600 font-medium">Gratuit</span>
+                                                                                    <span className="text-green-600 dark:text-green-400 font-medium">Gratuit</span>
                                                                                 </span>
                                                                             ) : (
                                                                                 formatPrice(item.price * item.quantity)
@@ -517,7 +517,7 @@ export default function OrdersPage() {
                                                                         {isAdmin ? (
                                                                             <span>
                                                                                 <span className="line-through mr-2">{formatPrice(totals.subtotal)}</span>
-                                                                                <span className="text-green-600 font-medium">Gratuit</span>
+                                                                                <span className="text-green-600 dark:text-green-400 font-medium">Gratuit</span>
                                                                             </span>
                                                                         ) : (
                                                                             formatPrice(totals.subtotal)
@@ -534,7 +534,7 @@ export default function OrdersPage() {
                                                                         {isAdmin ? (
                                                                             <span>
                                                                                 <span className="line-through mr-2">{formatPrice(order.deliveryCost || 0)}</span>
-                                                                                <span className="text-green-600 font-medium">Gratuit</span>
+                                                                                <span className="text-green-600 dark:text-green-400 font-medium">Gratuit</span>
                                                                             </span>
                                                                         ) : (
                                                                             formatPrice(order.deliveryCost || 0)
@@ -551,7 +551,7 @@ export default function OrdersPage() {
                                                                         {isAdmin ? (
                                                                             <span>
                                                                                 <span className="line-through mr-2">{formatPrice(order.totalAmount)}</span>
-                                                                                <span className="text-green-600 font-medium">Gratuit</span>
+                                                                                <span className="text-green-600 dark:text-green-400 font-medium">Gratuit</span>
                                                                             </span>
                                                                         ) : (
                                                                             formatPrice(order.totalAmount)
@@ -565,10 +565,10 @@ export default function OrdersPage() {
 
                                                 {/* Tracking information */}
                                                 {order.status === "Shipped" && order.trackingNumber && (
-                                                    <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+                                                    <div className="mt-4 p-3 bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-700 rounded-lg">
                                                         <h3 className="font-medium text-gray-800 dark:text-gray-200 mb-1">Information de suivi</h3>
                                                         <div className="flex items-start">
-                                                            <FontAwesomeIcon className="mt-1 mr-2 text-blue-500" icon={faTruck} />
+                                                            <FontAwesomeIcon className="mt-1 mr-2 text-blue-500 dark:text-blue-400" icon={faTruck} />
                                                             <div>
                                                                 <p className="text-sm text-gray-600 dark:text-gray-300">
                                                                     <span className="font-medium">Transporteur:</span> {order.carrierInfo || order.deliveryMethod || "Transporteur"}
