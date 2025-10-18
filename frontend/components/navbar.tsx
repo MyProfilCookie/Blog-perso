@@ -498,7 +498,7 @@ export const Navbar = () => {
       <NavbarContent className="flex-shrink-0 basis-1/5 sm:basis-full">
         <NavbarMenuToggle
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="lg:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
+          className="lg:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 w-8 h-8 min-w-8"
         />
         <NavbarBrand as="li" className="gap-2 flex-shrink-0">
           <NextLink
@@ -927,31 +927,30 @@ export const Navbar = () => {
       </NavbarContent>
 
       {/* Menu mobile - visible uniquement sur mobile/tablette */}
-      <NavbarMenu className="lg:hidden pt-6 pb-4 bg-white dark:bg-gray-900">
+      <NavbarMenu className="lg:hidden pt-3 pb-2 bg-white dark:bg-gray-900">
         {/* Bouton AI Assistant en haut du menu mobile */}
-        <NavbarMenuItem className="mb-4">
+        <NavbarMenuItem className="mb-2">
           <NextLink href="/ai-assistant" className="w-full" onClick={() => setIsMenuOpen(false)}>
             <Button
-              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
-              size="lg"
-              startContent={<Sparkles className="w-5 h-5" />}
+              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+              size="md"
+              startContent={<Sparkles className="w-4 h-4" />}
             >
-              🤖 Assistant IA Alia
+              🤖 Assistant IA
             </Button>
           </NextLink>
         </NavbarMenuItem>
         
         {/* Séparateur */}
-        <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+        <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
         
         {/* Liens principaux */}
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Link
-              className="w-full py-3 px-2 text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-colors"
+              className="w-full py-2 px-2 text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-colors text-sm"
               href={item.href}
               onClick={() => setIsMenuOpen(false)}
-              size="lg"
             >
               {item.name}
             </Link>
@@ -961,11 +960,11 @@ export const Navbar = () => {
         {/* Liens utilisateur si connecté */}
         {userMenuItems.length > 0 && (
           <>
-            <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+            <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
             {userMenuItems.map((item, index) => (
               <NavbarMenuItem key={`user-${item.name}-${index}`}>
                 <Link
-                  className="w-full py-3 px-2 font-medium transition-colors"
+                  className="w-full py-2 px-2 font-medium transition-colors text-sm"
                   color={item.color as any}
                   href={item.href}
                   onClick={() => {
@@ -974,7 +973,6 @@ export const Navbar = () => {
                     }
                     setIsMenuOpen(false);
                   }}
-                  size="lg"
                 >
                   {item.name}
                 </Link>
