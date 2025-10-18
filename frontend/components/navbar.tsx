@@ -106,6 +106,23 @@ export const Navbar = () => {
     setMounted(true);
   }, []);
 
+  // Fermer automatiquement le menu sur desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024 && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    // Vérifier au montage
+    if (mounted) {
+      handleResize();
+    }
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [mounted, isMenuOpen]);
+
   // Animation de couleur de l'avatar - optimisée pour les performances
   useEffect(() => {
     const colorInterval = setInterval(() => {
@@ -467,7 +484,14 @@ export const Navbar = () => {
     <NextUINavbar
       className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-['Inter',_'system-ui',_-apple-system,_'SF_Pro_Display',_sans-serif] relative performance-optimized no-border-navbar h-16 md:h-20"
       maxWidth="full"
-      onMenuOpenChange={setIsMenuOpen}
+      onMenuOpenChange={(open) => {
+        // Empêcher l'ouverture du menu sur desktop
+        if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
+          setIsMenuOpen(false);
+        } else {
+          setIsMenuOpen(open);
+        }
+      }}
       isMenuOpen={isMenuOpen}
       position="sticky"
     >
@@ -903,26 +927,28 @@ export const Navbar = () => {
       </NavbarContent>
 
       {/* Menu mobile - visible uniquement sur mobile/tablette */}
-      <NavbarMenu className="lg:hidden">
+      <NavbarMenu className="lg:hidden pt-6 pb-4 bg-white dark:bg-gray-900">
         {/* Bouton AI Assistant en haut du menu mobile */}
-        <NavbarMenuItem>
-          <NextLink href="/ai-assistant" className="w-full">
+        <NavbarMenuItem className="mb-4">
+          <NextLink href="/ai-assistant" className="w-full" onClick={() => setIsMenuOpen(false)}>
             <Button
-              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold"
+              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-lg hover:shadow-xl transition-all"
               size="lg"
               startContent={<Sparkles className="w-5 h-5" />}
-              onPress={() => setIsMenuOpen(false)}
             >
               🤖 Assistant IA Alia
             </Button>
           </NextLink>
         </NavbarMenuItem>
         
+        {/* Séparateur */}
+        <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+        
+        {/* Liens principaux */}
         {menuItems.map((item, index) => (
           <NavbarMenuItem key={`${item.name}-${index}`}>
             <Link
-              className="w-full"
-              color={item.color as any}
+              className="w-full py-3 px-2 text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-colors"
               href={item.href}
               onClick={() => setIsMenuOpen(false)}
               size="lg"
@@ -931,24 +957,31 @@ export const Navbar = () => {
             </Link>
           </NavbarMenuItem>
         ))}
-        {userMenuItems.map((item, index) => (
-          <NavbarMenuItem key={`user-${item.name}-${index}`}>
-            <Link
-              className="w-full"
-              color={item.color as any}
-              href={item.href}
-              onClick={() => {
-                if (item.action) {
-                  item.action();
-                }
-                setIsMenuOpen(false);
-              }}
-              size="lg"
-            >
-              {item.name}
-            </Link>
-          </NavbarMenuItem>
-        ))}
+        
+        {/* Liens utilisateur si connecté */}
+        {userMenuItems.length > 0 && (
+          <>
+            <div className="border-t border-gray-200 dark:border-gray-700 my-2"></div>
+            {userMenuItems.map((item, index) => (
+              <NavbarMenuItem key={`user-${item.name}-${index}`}>
+                <Link
+                  className="w-full py-3 px-2 font-medium transition-colors"
+                  color={item.color as any}
+                  href={item.href}
+                  onClick={() => {
+                    if (item.action) {
+                      item.action();
+                    }
+                    setIsMenuOpen(false);
+                  }}
+                  size="lg"
+                >
+                  {item.name}
+                </Link>
+              </NavbarMenuItem>
+            ))}
+          </>
+        )}
       </NavbarMenu>
     </NextUINavbar>
   );
