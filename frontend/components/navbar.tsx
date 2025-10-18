@@ -943,13 +943,13 @@ export const Navbar = () => {
             
             {/* Menu sidebar */}
             <motion.div 
-              initial={{ x: -300 }}
-              animate={{ x: 0 }}
-              exit={{ x: -300 }}
+              initial={{ x: -300, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -300, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed top-0 left-0 h-full w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto"
+              className="lg:hidden fixed top-0 left-0 h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto"
             >
-            <div className="p-4">
+              <div className="p-4 h-full flex flex-col">
               {/* Header avec logo et bouton fermer */}
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2">
@@ -984,16 +984,16 @@ export const Navbar = () => {
               <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
               
               {/* Liens principaux */}
-              <div className="space-y-1">
+              <div className="space-y-1 flex-1 overflow-y-auto">
                 {menuItems.map((item, index) => (
-                  <Link
+                  <NextLink
                     key={`${item.name}-${index}`}
-                    className="block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"
                     href={item.href}
                     onClick={() => setIsMenuOpen(false)}
+                    className="block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"
                   >
                     {item.name}
-                  </Link>
+                  </NextLink>
                 ))}
               </div>
               
@@ -1001,25 +1001,39 @@ export const Navbar = () => {
               {userMenuItems.length > 0 && (
                 <>
                   <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
-                  <div className="space-y-1">
+                  <div className="space-y-1 pb-4">
                     {userMenuItems.map((item, index) => (
-                      <Link
-                        key={`user-${item.name}-${index}`}
-                        className={`block py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
-                          item.color === 'danger' 
-                            ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20' 
-                            : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
-                        }`}
-                        href={item.href}
-                        onClick={() => {
-                          if (item.action) {
-                            item.action();
-                          }
-                          setIsMenuOpen(false);
-                        }}
-                      >
-                        {item.name}
-                      </Link>
+                      item.href === "#" ? (
+                        <button
+                          key={`user-${item.name}-${index}`}
+                          className={`block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
+                            item.color === 'danger' 
+                              ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20' 
+                              : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
+                          }`}
+                          onClick={() => {
+                            if (item.action) {
+                              item.action();
+                            }
+                            setIsMenuOpen(false);
+                          }}
+                        >
+                          {item.name}
+                        </button>
+                      ) : (
+                        <NextLink
+                          key={`user-${item.name}-${index}`}
+                          href={item.href}
+                          onClick={() => setIsMenuOpen(false)}
+                          className={`block py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
+                            item.color === 'danger' 
+                              ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20' 
+                              : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
+                          }`}
+                        >
+                          {item.name}
+                        </NextLink>
+                      )
                     ))}
                   </div>
                 </>
