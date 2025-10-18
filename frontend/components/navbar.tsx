@@ -32,6 +32,7 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { UserContext } from "@/context/UserContext";
+import { Sparkles } from "lucide-react";
 
 import {
   SunFilledIcon,
