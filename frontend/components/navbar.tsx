@@ -934,7 +934,7 @@ export const Navbar = () => {
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
               className="lg:hidden fixed top-0 left-0 h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto"
             >
-              <div className="p-4 h-full flex flex-col">
+              <div className="p-4 flex flex-col">
               {/* Header avec logo et bouton fermer */}
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
                 <div className="flex items-center gap-2">
