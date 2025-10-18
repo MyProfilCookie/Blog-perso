@@ -315,6 +315,100 @@ export default function JournalPostsPage() {
           )}
         </AnimatePresence>
 
+        {/* Section Statistiques du Journal */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
+        >
+          <Card className="border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30">
+            <CardContent className="p-6 text-center">
+              <BookOpen className="w-10 h-10 text-violet-600 dark:text-violet-400 mx-auto mb-3" />
+              <div className="text-3xl font-extrabold text-violet-600 dark:text-violet-400 mb-1">
+                {articles.length}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+                Articles publiés
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30">
+            <CardContent className="p-6 text-center">
+              <Tag className="w-10 h-10 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
+              <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-1">
+                {categories.length - 1}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+                Catégories
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-pink-200 dark:border-pink-800 bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-950/30 dark:to-rose-950/30">
+            <CardContent className="p-6 text-center">
+              <User className="w-10 h-10 text-pink-600 dark:text-pink-400 mx-auto mb-3" />
+              <div className="text-3xl font-extrabold text-pink-600 dark:text-pink-400 mb-1">
+                {authors.length - 1}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+                Auteurs
+              </div>
+            </CardContent>
+          </Card>
+          
+          <Card className="border-green-200 dark:border-green-800 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
+            <CardContent className="p-6 text-center">
+              <TrendingUp className="w-10 h-10 text-green-600 dark:text-green-400 mx-auto mb-3" />
+              <div className="text-3xl font-extrabold text-green-600 dark:text-green-400 mb-1">
+                +{Math.floor(Math.random() * 20) + 5}
+              </div>
+              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
+                Nouveaux ce mois
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+        
+        {/* Section À propos du Journal */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          <Card className="bg-gradient-to-r from-violet-600 to-purple-600 border-none text-white overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+            <CardContent className="p-8 md:p-12 relative z-10">
+              <div className="max-w-3xl mx-auto text-center">
+                <Sparkles className="w-12 h-12 mx-auto mb-4 text-yellow-300" />
+                <h2 className="text-3xl font-extrabold mb-4">
+                  Le Journal AutiStudy
+                </h2>
+                <p className="text-blue-100 text-lg mb-6 leading-relaxed">
+                  Découvrez des articles éducatifs, des conseils pratiques et des ressources adaptées 
+                  pour accompagner les enfants avec autisme dans leur apprentissage. Notre équipe 
+                  passionnée partage régulièrement du contenu de qualité pour vous aider.
+                </p>
+                <div className="flex flex-wrap justify-center gap-4">
+                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-sm px-4 py-2">
+                    Éducation adaptée
+                  </Badge>
+                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-sm px-4 py-2">
+                    Conseils d'experts
+                  </Badge>
+                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-sm px-4 py-2">
+                    Ressources gratuites
+                  </Badge>
+                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-sm px-4 py-2">
+                    Communauté bienveillante
+                  </Badge>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
         {/* Article en vedette */}
         {featuredArticle && (
           <motion.div
@@ -524,100 +618,6 @@ export default function JournalPostsPage() {
             </div>
           </motion.div>
         )}
-        
-        {/* Section Statistiques du Journal */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 mb-12"
-        >
-          <Card className="border-violet-200 dark:border-violet-800 bg-gradient-to-br from-violet-50 to-purple-50 dark:from-violet-950/30 dark:to-purple-950/30">
-            <CardContent className="p-6 text-center">
-              <BookOpen className="w-10 h-10 text-violet-600 dark:text-violet-400 mx-auto mb-3" />
-              <div className="text-3xl font-extrabold text-violet-600 dark:text-violet-400 mb-1">
-                {articles.length}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
-                Articles publiés
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-blue-200 dark:border-blue-800 bg-gradient-to-br from-blue-50 to-cyan-50 dark:from-blue-950/30 dark:to-cyan-950/30">
-            <CardContent className="p-6 text-center">
-              <Tag className="w-10 h-10 text-blue-600 dark:text-blue-400 mx-auto mb-3" />
-              <div className="text-3xl font-extrabold text-blue-600 dark:text-blue-400 mb-1">
-                {categories.length - 1}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
-                Catégories
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-pink-200 dark:border-pink-800 bg-gradient-to-br from-pink-50 to-rose-50 dark:from-pink-950/30 dark:to-rose-950/30">
-            <CardContent className="p-6 text-center">
-              <User className="w-10 h-10 text-pink-600 dark:text-pink-400 mx-auto mb-3" />
-              <div className="text-3xl font-extrabold text-pink-600 dark:text-pink-400 mb-1">
-                {authors.length - 1}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
-                Auteurs
-              </div>
-            </CardContent>
-          </Card>
-          
-          <Card className="border-green-200 dark:border-green-800 bg-gradient-to-br from-green-50 to-emerald-50 dark:from-green-950/30 dark:to-emerald-950/30">
-            <CardContent className="p-6 text-center">
-              <TrendingUp className="w-10 h-10 text-green-600 dark:text-green-400 mx-auto mb-3" />
-              <div className="text-3xl font-extrabold text-green-600 dark:text-green-400 mb-1">
-                +{Math.floor(Math.random() * 20) + 5}
-              </div>
-              <div className="text-sm text-gray-600 dark:text-gray-300 font-medium">
-                Nouveaux ce mois
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
-        
-        {/* Section À propos du Journal */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="mb-12"
-        >
-          <Card className="bg-gradient-to-r from-violet-600 to-purple-600 border-none text-white overflow-hidden relative">
-            <div className="absolute top-0 right-0 w-64 h-64 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
-            <div className="absolute bottom-0 left-0 w-48 h-48 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
-            <CardContent className="p-8 md:p-12 relative z-10">
-              <div className="max-w-3xl mx-auto text-center">
-                <Sparkles className="w-12 h-12 mx-auto mb-4 text-yellow-300" />
-                <h2 className="text-3xl font-extrabold mb-4">
-                  Le Journal AutiStudy
-                </h2>
-                <p className="text-blue-100 text-lg mb-6 leading-relaxed">
-                  Découvrez des articles éducatifs, des conseils pratiques et des ressources adaptées 
-                  pour accompagner les enfants avec autisme dans leur apprentissage. Notre équipe 
-                  passionnée partage régulièrement du contenu de qualité pour vous aider.
-                </p>
-                <div className="flex flex-wrap justify-center gap-4">
-                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-sm px-4 py-2">
-                    Éducation adaptée
-                  </Badge>
-                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-sm px-4 py-2">
-                    Conseils d'experts
-                  </Badge>
-                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-sm px-4 py-2">
-                    Ressources gratuites
-                  </Badge>
-                  <Badge variant="secondary" className="bg-white/20 text-white border-white/30 text-sm px-4 py-2">
-                    Communauté bienveillante
-                  </Badge>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        </motion.div>
       </div>
     </div>
   );
