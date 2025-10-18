@@ -463,23 +463,8 @@ export const Navbar = () => {
     { name: "❤️ Contact", href: "/contact", color: "foreground" },
   ];
 
-  // Menu items utilisateur si connecté
-  const userMenuItems = user
-    ? [
-        { name: "👤 Profil", href: "/profile", color: "foreground" },
-        {
-          name: "🎓 Dashboard",
-          href: user.role === "admin" ? "/admin/dashboard" : "/profile",
-          color: "foreground",
-        },
-        {
-          name: "🚪 Déconnexion",
-          href: "#",
-          color: "danger",
-          action: handleLogout,
-        },
-      ]
-    : [];
+  // Menu items utilisateur - vide pour ne pas afficher ces liens dans le menu burger
+  const userMenuItems: any[] = [];
 
   return (
     <NextUINavbar
