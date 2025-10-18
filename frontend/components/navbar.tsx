@@ -926,61 +926,96 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Menu mobile - visible uniquement sur mobile/tablette */}
-      <NavbarMenu className="lg:hidden pt-3 pb-2 bg-white dark:bg-gray-900">
-        {/* Bouton AI Assistant en haut du menu mobile */}
-        <NavbarMenuItem className="mb-2">
-          <NextLink href="/ai-assistant" className="w-full" onClick={() => setIsMenuOpen(false)}>
-            <Button
-              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
-              size="md"
-              startContent={<Sparkles className="w-4 h-4" />}
-            >
-              🤖 Assistant IA
-            </Button>
-          </NextLink>
-        </NavbarMenuItem>
-        
-        {/* Séparateur */}
-        <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-        
-        {/* Liens principaux */}
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item.name}-${index}`}>
-            <Link
-              className="w-full py-2 px-2 text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-colors text-sm"
-              href={item.href}
-              onClick={() => setIsMenuOpen(false)}
-            >
-              {item.name}
-            </Link>
-          </NavbarMenuItem>
-        ))}
-        
-        {/* Liens utilisateur si connecté */}
-        {userMenuItems.length > 0 && (
-          <>
-            <div className="border-t border-gray-200 dark:border-gray-700 my-1"></div>
-            {userMenuItems.map((item, index) => (
-              <NavbarMenuItem key={`user-${item.name}-${index}`}>
-                <Link
-                  className="w-full py-2 px-2 font-medium transition-colors text-sm"
-                  color={item.color as any}
-                  href={item.href}
-                  onClick={() => {
-                    if (item.action) {
-                      item.action();
-                    }
-                    setIsMenuOpen(false);
-                  }}
+      {/* Menu mobile - sidebar compact */}
+      {isMenuOpen && (
+        <>
+          {/* Overlay sombre pour fermer le menu */}
+          <div 
+            className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+            onClick={() => setIsMenuOpen(false)}
+          />
+          
+          {/* Menu sidebar */}
+          <div className="lg:hidden fixed top-0 left-0 h-full w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto">
+            <div className="p-4">
+              {/* Header avec logo et bouton fermer */}
+              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                <div className="flex items-center gap-2">
+                  <AutismLogo size={12} />
+                  <span className="font-bold text-violet-600 dark:text-violet-400 text-lg">AutiStudy</span>
+                </div>
+                <button
+                  onClick={() => setIsMenuOpen(false)}
+                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                  aria-label="Fermer le menu"
                 >
-                  {item.name}
-                </Link>
-              </NavbarMenuItem>
-            ))}
-          </>
-        )}
-      </NavbarMenu>
+                  <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+
+              {/* Bouton AI Assistant */}
+              <div className="mb-3">
+                <NextLink href="/ai-assistant" className="w-full" onClick={() => setIsMenuOpen(false)}>
+                  <Button
+                    className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+                    size="md"
+                    startContent={<Sparkles className="w-4 h-4" />}
+                  >
+                    🤖 Assistant IA
+                  </Button>
+                </NextLink>
+              </div>
+              
+              {/* Séparateur */}
+              <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
+              
+              {/* Liens principaux */}
+              <div className="space-y-1">
+                {menuItems.map((item, index) => (
+                  <Link
+                    key={`${item.name}-${index}`}
+                    className="block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"
+                    href={item.href}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    {item.name}
+                  </Link>
+                ))}
+              </div>
+              
+              {/* Liens utilisateur si connecté */}
+              {userMenuItems.length > 0 && (
+                <>
+                  <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
+                  <div className="space-y-1">
+                    {userMenuItems.map((item, index) => (
+                      <Link
+                        key={`user-${item.name}-${index}`}
+                        className={`block py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
+                          item.color === 'danger' 
+                            ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20' 
+                            : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
+                        }`}
+                        href={item.href}
+                        onClick={() => {
+                          if (item.action) {
+                            item.action();
+                          }
+                          setIsMenuOpen(false);
+                        }}
+                      >
+                        {item.name}
+                      </Link>
+                    ))}
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </>
+      )}
     </NextUINavbar>
   );
 };
