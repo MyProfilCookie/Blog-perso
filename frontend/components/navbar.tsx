@@ -7,9 +7,6 @@ import {
   NavbarContent,
   NavbarBrand,
   NavbarItem,
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Avatar } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
@@ -45,7 +42,6 @@ import {
   DeliveredOrdersIcon,
 } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
-import { Sparkles } from "lucide-react";
 
 // Type definition for user
 type User = {
@@ -92,7 +88,6 @@ export const Navbar = () => {
   const [orderLoadError, setOrderLoadError] = useState<string | null>(null);
   const router = useRouter();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   // Couleurs pour l'animation de l'avatar - couleurs de l'autisme
   const adminColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"];
@@ -105,23 +100,6 @@ export const Navbar = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  // Détecter le redimensionnement et forcer la fermeture du menu sur desktop
-  useEffect(() => {
-    if (!mounted) return;
-
-    const handleResize = () => {
-      if (window.innerWidth >= 1024) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    // Vérifier immédiatement
-    handleResize();
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [mounted]);
 
   // Animation de couleur de l'avatar - optimisée pour les performances
   useEffect(() => {
@@ -451,58 +429,13 @@ export const Navbar = () => {
     };
   }, []);
 
-  // Menu items pour le menu mobile
-  const menuItems = [
-    { name: "🏠 Accueil", href: "/", color: "foreground" },
-    { name: "ℹ️ À propos", href: "/about", color: "foreground" },
-    { name: "📄 Publications", href: "/articles", color: "foreground" },
-    { name: "📝 Posts", href: "/posts", color: "foreground" },
-    { name: "🎮 Contrôle", href: "/controle", color: "foreground" },
-    { name: "🛒 Shop", href: "/shop", color: "foreground" },
-    { name: "❤️ Contact", href: "/contact", color: "foreground" },
-  ];
-
-  // Menu items utilisateur si connecté
-  const userMenuItems = user
-    ? [
-        { name: "👤 Profil", href: "/profile", color: "foreground" },
-        {
-          name: "🎓 Dashboard",
-          href: user.role === "admin" ? "/admin/dashboard" : "/profile",
-          color: "foreground",
-        },
-        {
-          name: "🚪 Déconnexion",
-          href: "#",
-          color: "danger",
-          action: handleLogout,
-        },
-      ]
-    : [];
-
-  // Vérifier si on est sur mobile
-  const isMobile = mounted && typeof window !== 'undefined' ? window.innerWidth < 1024 : false;
-
   return (
     <NextUINavbar
       className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-['Inter',_'system-ui',_-apple-system,_'SF_Pro_Display',_sans-serif] relative performance-optimized no-border-navbar h-16 md:h-20"
       maxWidth="full"
-      onMenuOpenChange={(open) => {
-        // Empêcher l'ouverture du menu sur desktop
-        if (mounted && typeof window !== 'undefined' && window.innerWidth >= 1024) {
-          setIsMenuOpen(false);
-        } else {
-          setIsMenuOpen(open);
-        }
-      }}
-      isMenuOpen={isMobile && isMenuOpen}
       position="sticky"
     >
       <NavbarContent className="flex-shrink-0 basis-1/5 sm:basis-full">
-        <NavbarMenuToggle
-          aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="lg:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
-        />
         <NavbarBrand as="li" className="gap-2 flex-shrink-0">
           <NextLink
             className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200"
@@ -929,54 +862,6 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Menu mobile HeroUI - caché sur desktop */}
-      <NavbarMenu className="lg:hidden">
-        {/* Bouton AI Assistant en haut du menu mobile */}
-        <NavbarMenuItem>
-          <NextLink href="/ai-assistant" className="w-full">
-            <Button
-              className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold"
-              size="lg"
-              startContent={<Sparkles className="w-5 h-5" />}
-              onPress={() => setIsMenuOpen(false)}
-            >
-              🤖 Assistant IA Alia
-            </Button>
-          </NextLink>
-        </NavbarMenuItem>
-        
-        {menuItems.map((item, index) => (
-          <NavbarMenuItem key={`${item.name}-${index}`}>
-            <Link
-              className="w-full"
-              color={item.color as any}
-              href={item.href}
-              onClick={() => setIsMenuOpen(false)}
-              size="lg"
-            >
-              {item.name}
-            </Link>
-          </NavbarMenuItem>
-        ))}
-        {userMenuItems.map((item, index) => (
-          <NavbarMenuItem key={`user-${item.name}-${index}`}>
-            <Link
-              className="w-full"
-              color={item.color as any}
-              href={item.href}
-              onClick={() => {
-                if (item.action) {
-                  item.action();
-                }
-                setIsMenuOpen(false);
-              }}
-              size="lg"
-            >
-              {item.name}
-            </Link>
-          </NavbarMenuItem>
-        ))}
-      </NavbarMenu>
     </NextUINavbar>
   );
 };
