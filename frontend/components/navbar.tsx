@@ -36,6 +36,7 @@ import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 import { UserContext } from "@/context/UserContext";
 import { Sparkles } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
 
 import {
   SunFilledIcon,
@@ -926,17 +927,28 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Menu mobile - sidebar compact */}
-      {isMenuOpen && (
-        <>
-          {/* Overlay sombre pour fermer le menu */}
-          <div 
-            className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
-            onClick={() => setIsMenuOpen(false)}
-          />
-          
-          {/* Menu sidebar */}
-          <div className="lg:hidden fixed top-0 left-0 h-full w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto">
+      {/* Menu mobile - sidebar compact avec animation */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <>
+            {/* Overlay sombre pour fermer le menu */}
+            <motion.div 
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2 }}
+              className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+              onClick={() => setIsMenuOpen(false)}
+            />
+            
+            {/* Menu sidebar */}
+            <motion.div 
+              initial={{ x: -300 }}
+              animate={{ x: 0 }}
+              exit={{ x: -300 }}
+              transition={{ type: "spring", damping: 25, stiffness: 300 }}
+              className="lg:hidden fixed top-0 left-0 h-full w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto"
+            >
             <div className="p-4">
               {/* Header avec logo et bouton fermer */}
               <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
@@ -1013,9 +1025,10 @@ export const Navbar = () => {
                 </>
               )}
             </div>
-          </div>
+          </motion.div>
         </>
       )}
+      </AnimatePresence>
     </NextUINavbar>
   );
 };
