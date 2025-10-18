@@ -106,6 +106,18 @@ export const Navbar = () => {
     setMounted(true);
   }, []);
 
+  // Fermer le menu mobile si on redimensionne vers desktop
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024 && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [isMenuOpen]);
+
   // Animation de couleur de l'avatar - optimisée pour les performances
   useEffect(() => {
     const colorInterval = setInterval(() => {
@@ -902,8 +914,8 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Menu mobile HeroUI */}
-      <NavbarMenu>
+      {/* Menu mobile HeroUI - caché sur desktop */}
+      <NavbarMenu className="lg:hidden">
         {/* Bouton AI Assistant en haut du menu mobile */}
         <NavbarMenuItem>
           <NextLink href="/ai-assistant" className="w-full">
