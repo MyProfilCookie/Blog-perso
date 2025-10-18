@@ -932,7 +932,7 @@ export const Navbar = () => {
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -300, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed top-0 left-0 h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto"
+              className="lg:hidden fixed top-0 left-0 h-auto max-h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto rounded-r-2xl"
             >
               <div className="p-4 flex flex-col">
               {/* Header avec logo et bouton fermer */}
