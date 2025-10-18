@@ -16,7 +16,12 @@ import {
   Filter,
   ChevronDown,
   BookOpen,
-  X
+  X,
+  Mail,
+  Heart,
+  Star,
+  Users,
+  ArrowRight
 } from "lucide-react";
 
 // shadcn/ui components
@@ -409,6 +414,60 @@ export default function JournalPostsPage() {
           </Card>
         </motion.div>
 
+        {/* Section Catégories Populaires */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center gap-2">
+              <Tag className="w-6 h-6 text-violet-600 dark:text-violet-400" />
+              <h2 className="text-2xl font-extrabold text-gray-900 dark:text-white tracking-tight">
+                Explorer par Catégorie
+              </h2>
+            </div>
+          </div>
+          
+          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+            {categories.filter(cat => cat !== "Tous").slice(0, 8).map((category, index) => {
+              const categoryColors = [
+                { bg: "from-violet-500 to-purple-600", icon: "text-violet-100" },
+                { bg: "from-blue-500 to-cyan-600", icon: "text-blue-100" },
+                { bg: "from-pink-500 to-rose-600", icon: "text-pink-100" },
+                { bg: "from-green-500 to-emerald-600", icon: "text-green-100" },
+                { bg: "from-orange-500 to-amber-600", icon: "text-orange-100" },
+                { bg: "from-indigo-500 to-blue-600", icon: "text-indigo-100" },
+                { bg: "from-red-500 to-pink-600", icon: "text-red-100" },
+                { bg: "from-teal-500 to-cyan-600", icon: "text-teal-100" }
+              ];
+              const colors = categoryColors[index % categoryColors.length];
+              const articlesCount = articles.filter(a => a.category === category).length;
+              
+              return (
+                <motion.div
+                  key={category}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.05 }}
+                  whileHover={{ scale: 1.02 }}
+                >
+                  <Card 
+                    className="cursor-pointer overflow-hidden border-none shadow-lg hover:shadow-xl transition-all duration-300"
+                    onClick={() => setSelectedCategory(category)}
+                  >
+                    <div className={`bg-gradient-to-br ${colors.bg} p-6 text-white`}>
+                      <BookOpen className={`w-8 h-8 mb-3 ${colors.icon}`} />
+                      <h3 className="font-bold text-lg mb-1">{category}</h3>
+                      <p className="text-sm opacity-90">{articlesCount} article{articlesCount > 1 ? 's' : ''}</p>
+                    </div>
+                  </Card>
+                </motion.div>
+              );
+            })}
+          </div>
+        </motion.div>
+
         {/* Article en vedette */}
         {featuredArticle && (
           <motion.div
@@ -551,6 +610,117 @@ export default function JournalPostsPage() {
             </div>
           )}
         </div>
+        
+        {/* Section Newsletter / Communauté */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          <Card className="bg-gradient-to-r from-blue-600 via-violet-600 to-purple-600 border-none text-white overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2"></div>
+            <div className="absolute bottom-0 left-0 w-64 h-64 bg-white/10 rounded-full translate-y-1/2 -translate-x-1/2"></div>
+            <CardContent className="p-8 md:p-12 relative z-10">
+              <div className="grid md:grid-cols-2 gap-8 items-center">
+                <div>
+                  <div className="flex items-center gap-3 mb-4">
+                    <Mail className="w-10 h-10 text-yellow-300" />
+                    <h2 className="text-3xl font-extrabold">
+                      Restez Informé
+                    </h2>
+                  </div>
+                  <p className="text-blue-100 text-lg mb-6">
+                    Recevez nos derniers articles, conseils et ressources directement dans votre boîte mail. 
+                    Rejoignez notre communauté de parents et professionnels engagés !
+                  </p>
+                  <div className="flex gap-3 items-center">
+                    <Users className="w-6 h-6 text-yellow-300" />
+                    <span className="text-blue-100 font-medium">Déjà plus de 5 000 abonnés !</span>
+                  </div>
+                </div>
+                
+                <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-6 border border-white/20">
+                  <div className="flex flex-col gap-4">
+                    <Input 
+                      placeholder="Votre adresse email"
+                      className="h-12 bg-white/90 border-white/30 text-gray-900 placeholder:text-gray-600"
+                    />
+                    <Button 
+                      size="lg" 
+                      className="h-12 bg-yellow-400 hover:bg-yellow-300 text-gray-900 font-bold shadow-lg"
+                    >
+                      S'abonner à la Newsletter
+                      <ArrowRight className="w-5 h-5 ml-2" />
+                    </Button>
+                    <p className="text-xs text-blue-100 text-center">
+                      ✨ Pas de spam, uniquement du contenu de qualité
+                    </p>
+                  </div>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+        
+        {/* Section Pourquoi nous suivre */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          className="mb-12"
+        >
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-extrabold text-gray-900 dark:text-white mb-3">
+              Pourquoi Lire le Journal AutiStudy ?
+            </h2>
+            <p className="text-gray-600 dark:text-gray-300 max-w-2xl mx-auto">
+              Des ressources fiables, actualisées et adaptées pour accompagner votre parcours
+            </p>
+          </div>
+          
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Card className="border-violet-200 dark:border-violet-800 hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6 text-center">
+                <div className="w-14 h-14 bg-violet-100 dark:bg-violet-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Star className="w-7 h-7 text-violet-600 dark:text-violet-400" />
+                </div>
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">
+                  Contenu Expert
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  Articles rédigés par des professionnels et validés scientifiquement
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-blue-200 dark:border-blue-800 hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6 text-center">
+                <div className="w-14 h-14 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Heart className="w-7 h-7 text-blue-600 dark:text-blue-400" />
+                </div>
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">
+                  Approche Bienveillante
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  Des conseils pratiques avec empathie et compréhension
+                </p>
+              </CardContent>
+            </Card>
+            
+            <Card className="border-green-200 dark:border-green-800 hover:shadow-xl transition-all duration-300">
+              <CardContent className="p-6 text-center">
+                <div className="w-14 h-14 bg-green-100 dark:bg-green-900/30 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <TrendingUp className="w-7 h-7 text-green-600 dark:text-green-400" />
+                </div>
+                <h3 className="font-bold text-lg text-gray-900 dark:text-white mb-2">
+                  Mise à Jour Régulière
+                </h3>
+                <p className="text-gray-600 dark:text-gray-300 text-sm">
+                  Nouveaux articles chaque semaine sur des sujets variés
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+        </motion.div>
         
         {/* Pagination */}
         {totalPages > 1 && (
