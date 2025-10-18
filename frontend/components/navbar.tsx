@@ -106,17 +106,22 @@ export const Navbar = () => {
     setMounted(true);
   }, []);
 
-  // Fermer le menu mobile si on redimensionne vers desktop
+  // Détecter le redimensionnement et forcer la fermeture du menu sur desktop
   useEffect(() => {
+    if (!mounted) return;
+
     const handleResize = () => {
-      if (window.innerWidth >= 1024 && isMenuOpen) {
+      if (window.innerWidth >= 1024) {
         setIsMenuOpen(false);
       }
     };
 
+    // Vérifier immédiatement
+    handleResize();
+
     window.addEventListener('resize', handleResize);
     return () => window.removeEventListener('resize', handleResize);
-  }, [isMenuOpen]);
+  }, [mounted]);
 
   // Animation de couleur de l'avatar - optimisée pour les performances
   useEffect(() => {
@@ -475,12 +480,22 @@ export const Navbar = () => {
       ]
     : [];
 
+  // Vérifier si on est sur mobile
+  const isMobile = mounted && typeof window !== 'undefined' ? window.innerWidth < 1024 : false;
+
   return (
     <NextUINavbar
       className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-['Inter',_'system-ui',_-apple-system,_'SF_Pro_Display',_sans-serif] relative performance-optimized no-border-navbar h-16 md:h-20"
       maxWidth="full"
-      onMenuOpenChange={setIsMenuOpen}
-      isMenuOpen={isMenuOpen}
+      onMenuOpenChange={(open) => {
+        // Empêcher l'ouverture du menu sur desktop
+        if (mounted && typeof window !== 'undefined' && window.innerWidth >= 1024) {
+          setIsMenuOpen(false);
+        } else {
+          setIsMenuOpen(open);
+        }
+      }}
+      isMenuOpen={isMobile && isMenuOpen}
       position="sticky"
     >
       <NavbarContent className="flex-shrink-0 basis-1/5 sm:basis-full">
