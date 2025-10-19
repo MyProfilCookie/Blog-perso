@@ -954,15 +954,16 @@ export const Navbar = () => {
 
               {/* Bouton AI Assistant */}
               <div className="mb-3">
-                <NextLink href="/ai-assistant" className="w-full" onClick={() => setIsMenuOpen(false)}>
-                  <Button
-                    className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
-                    size="md"
-                    startContent={<Sparkles className="w-4 h-4" />}
-                  >
-                    🤖 Assistant IA
-                  </Button>
-                </NextLink>
+                <Button
+                  as={NextLink}
+                  href="/ai-assistant"
+                  className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+                  size="md"
+                  startContent={<Sparkles className="w-4 h-4" />}
+                  onClick={() => setIsMenuOpen(false)}
+                >
+                  🤖 Assistant IA
+                </Button>
               </div>
               
               {/* Séparateur */}
