@@ -129,27 +129,29 @@ export default function AIAssistantPage() {
       </div>
 
       {/* Contenu principal */}
-      <div className="relative z-10 py-8 px-4">
+      <div className="relative z-10 py-4 sm:py-6 md:py-8 px-3 sm:px-4">
         <div className="max-w-5xl mx-auto">
           {/* Header avec animations */}
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
+            className="mb-4 sm:mb-6 md:mb-8"
             initial={{ opacity: 0, y: -30 }}
             transition={{ duration: 0.6, type: "spring" }}
           >
-            <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center justify-between mb-3 sm:mb-4">
               <motion.div
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
               >
                 <Button
-                  className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md hover:bg-violet-50 dark:hover:bg-violet-900/50 shadow-lg"
+                  className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md hover:bg-violet-50 dark:hover:bg-violet-900/50 shadow-lg text-sm sm:text-base"
                   onPress={() => router.back()}
-                  startContent={<ArrowLeft className="w-5 h-5" />}
+                  size="sm"
+                  startContent={<ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />}
                   variant="flat"
                 >
-                  Retour
+                  <span className="hidden sm:inline">Retour</span>
+                  <span className="sm:hidden">←</span>
                 </Button>
               </motion.div>
 
@@ -157,20 +159,23 @@ export default function AIAssistantPage() {
                 animate={{ rotate: 360 }}
                 transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
               >
-                <Sparkles className="w-8 h-8 text-violet-600" />
+                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-violet-600" />
               </motion.div>
             </div>
 
             {/* Titre principal avec animation */}
             <motion.div
               animate={{ scale: 1, opacity: 1 }}
-              className="text-center mb-6"
+              className="text-center mb-4 sm:mb-6"
               initial={{ scale: 0.9, opacity: 0 }}
               transition={{ delay: 0.2, duration: 0.5 }}
             >
-              <div className="flex items-center justify-center gap-3 mb-3">
-                <AutismLogo className="w-12 h-12 object-contain" size={40} />
-                <h1 className="text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 tracking-tight">
+              <div className="flex items-center justify-center gap-2 md:gap-3 mb-2 sm:mb-3">
+                <AutismLogo
+                  className="w-8 h-8 md:w-12 md:h-12 object-contain"
+                  size={40}
+                />
+                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 tracking-tight">
                   Rencontre Alia
                 </h1>
               </div>
@@ -178,13 +183,13 @@ export default function AIAssistantPage() {
               {/* Logo Autistudy */}
               <motion.div
                 animate={{ opacity: 1, scale: 1 }}
-                className="flex justify-center mb-4"
+                className="flex justify-center mb-3 sm:mb-4"
                 initial={{ opacity: 0, scale: 0 }}
                 transition={{ delay: 0.4, duration: 0.8, type: "spring" }}
               >
                 <motion.img
                   alt="Autistudy Logo"
-                  className="w-32 h-32 object-contain drop-shadow-2xl"
+                  className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-2xl"
                   src="/uploads/logo.webp"
                   transition={{ type: "spring", stiffness: 300 }}
                   whileHover={{ scale: 1.1, rotate: 5 }}
@@ -193,7 +198,7 @@ export default function AIAssistantPage() {
               <AnimatePresence mode="wait">
                 <motion.p
                   animate={{ opacity: 1, y: 0 }}
-                  className="text-lg text-gray-600 dark:text-gray-300 font-medium"
+                  className="text-base sm:text-lg text-gray-600 dark:text-gray-300 font-medium px-2"
                   exit={{ opacity: 0, y: -20 }}
                   initial={{ opacity: 0, y: 20 }}
                   key={currentEncouragement}
@@ -209,7 +214,7 @@ export default function AIAssistantPage() {
               {showStats && (
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6"
+                  className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6"
                   exit={{ opacity: 0, y: -20 }}
                   initial={{ opacity: 0, y: 20 }}
                 >
@@ -225,14 +230,14 @@ export default function AIAssistantPage() {
                         whileTap={{ scale: 0.95 }}
                       >
                         <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md border-2 border-violet-200 dark:border-violet-800 shadow-lg hover:shadow-xl transition-all cursor-pointer">
-                          <CardBody className="text-center p-4">
+                          <CardBody className="text-center p-3 sm:p-4">
                             <Icon
-                              className={`w-8 h-8 mx-auto mb-2 ${stat.color}`}
+                              className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 ${stat.color}`}
                             />
-                            <p className="text-2xl font-extrabold text-gray-900 dark:text-white">
+                            <p className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">
                               {stat.value}
                             </p>
-                            <p className="text-xs text-gray-600 dark:text-gray-400 font-medium">
+                            <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 font-medium">
                               {stat.label}
                             </p>
                           </CardBody>
@@ -247,7 +252,7 @@ export default function AIAssistantPage() {
             {/* Badges interactifs */}
             <motion.div
               animate={{ opacity: 1 }}
-              className="flex flex-wrap justify-center gap-3 mb-6"
+              className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 px-2"
               initial={{ opacity: 0 }}
               transition={{ delay: 0.8 }}
             >
@@ -273,9 +278,10 @@ export default function AIAssistantPage() {
                     whileTap={{ scale: 0.9 }}
                   >
                     <Chip
-                      className="font-semibold shadow-md cursor-pointer"
+                      className="font-semibold shadow-md cursor-pointer text-xs sm:text-sm"
                       color={badge.color as any}
-                      startContent={<Icon className="w-4 h-4" />}
+                      size="sm"
+                      startContent={<Icon className="w-3 h-3 sm:w-4 sm:h-4" />}
                       variant="flat"
                     >
                       {badge.text}
