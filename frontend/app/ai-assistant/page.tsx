@@ -54,21 +54,26 @@ export default function AIAssistantPage() {
       icon: Brain,
       label: "Questions répondues",
       value: "10K+",
-      color: "text-violet-600",
+      color: "text-violet-600 dark:text-violet-400",
     },
     {
       icon: Heart,
       label: "Satisfaction",
       value: "98%",
-      color: "text-pink-600",
+      color: "text-pink-600 dark:text-pink-400",
     },
     {
       icon: TrendingUp,
       label: "Temps de réponse",
       value: "<2s",
-      color: "text-purple-600",
+      color: "text-purple-600 dark:text-purple-400",
     },
-    { icon: Award, label: "Précision", value: "95%", color: "text-indigo-600" },
+    {
+      icon: Award,
+      label: "Précision",
+      value: "95%",
+      color: "text-indigo-600 dark:text-indigo-400",
+    },
   ];
 
   // Messages d'encouragement rotatifs
@@ -90,13 +95,13 @@ export default function AIAssistantPage() {
   }, [encouragements.length]);
 
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-950/20 dark:to-gray-900">
       {/* Effet de gradient qui suit la souris */}
       <motion.div
         animate={{
-          background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(59, 130, 246, 0.2), transparent 80%)`,
+          background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(139, 92, 246, 0.15), transparent 80%)`,
         }}
-        className="pointer-events-none fixed inset-0 opacity-30"
+        className="pointer-events-none fixed inset-0 opacity-40"
         transition={{ duration: 0.3 }}
       />
 
@@ -110,7 +115,7 @@ export default function AIAssistantPage() {
               scale: [1, 1.5, 1],
               opacity: [0.2, 0.4, 0.2],
             }}
-            className="absolute rounded-full bg-gradient-to-r from-blue-400 to-purple-400 opacity-20"
+            className="absolute rounded-full bg-gradient-to-r from-violet-400 to-purple-400 opacity-20"
             key={particle.id}
             style={{
               width: particle.size,
@@ -144,14 +149,14 @@ export default function AIAssistantPage() {
                 whileTap={{ scale: 0.95 }}
               >
                 <Button
-                  className="bg-white/80 dark:bg-gray-800/80 backdrop-blur-md hover:bg-violet-50 dark:hover:bg-violet-900/50 shadow-lg text-sm sm:text-base"
+                  className="bg-white dark:bg-gray-800 backdrop-blur-md hover:bg-violet-100 dark:hover:bg-violet-900/30 shadow-md hover:shadow-lg transition-all text-sm sm:text-base border border-violet-200 dark:border-violet-800"
                   onPress={() => router.back()}
                   size="sm"
-                  startContent={<ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5" />}
+                  startContent={<ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-violet-600 dark:text-violet-400" />}
                   variant="flat"
                 >
-                  <span className="hidden sm:inline">Retour</span>
-                  <span className="sm:hidden">←</span>
+                  <span className="hidden sm:inline text-gray-700 dark:text-gray-200">Retour</span>
+                  <span className="sm:hidden text-violet-600 dark:text-violet-400">←</span>
                 </Button>
               </motion.div>
 
@@ -229,7 +234,7 @@ export default function AIAssistantPage() {
                         whileHover={{ scale: 1.05, y: -5 }}
                         whileTap={{ scale: 0.95 }}
                       >
-                        <Card className="bg-white/60 dark:bg-gray-800/60 backdrop-blur-md border-2 border-violet-200 dark:border-violet-800 shadow-lg hover:shadow-xl transition-all cursor-pointer">
+                        <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-violet-200/50 dark:border-violet-700/50 shadow-md hover:shadow-lg transition-all cursor-pointer">
                           <CardBody className="text-center p-3 sm:p-4">
                             <Icon
                               className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 ${stat.color}`}

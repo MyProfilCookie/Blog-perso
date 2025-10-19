@@ -195,7 +195,7 @@ const AIAssistantPremium: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       className="w-full"
     >
-      <Card className="w-full bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-violet-950 dark:to-purple-950 border-2 border-violet-200 dark:border-violet-800 shadow-2xl overflow-hidden">
+      <Card className="w-full bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-violet-200/50 dark:border-violet-800/50 shadow-xl overflow-hidden">
         <CardBody className="p-0 flex flex-col">
           {/* Header avec animation */}
           <motion.div
@@ -275,7 +275,7 @@ const AIAssistantPremium: React.FC = () => {
           </motion.div>
 
           {/* Zone de messages */}
-          <div className="h-[500px] sm:h-[600px] md:h-[600px] lg:h-[700px] overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 bg-white/50 dark:bg-gray-900/50 backdrop-blur-sm">
+          <div className="h-[500px] sm:h-[600px] md:h-[600px] lg:h-[700px] overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 bg-gradient-to-b from-violet-50/30 to-purple-50/30 dark:from-gray-900/50 dark:to-purple-950/20 backdrop-blur-sm">
             <AnimatePresence mode="popLayout">
               {messages.map((message, index) => (
                 <motion.div
@@ -353,7 +353,7 @@ const AIAssistantPremium: React.FC = () => {
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 bg-violet-50/50 dark:bg-gray-800/50 border-t border-violet-200 dark:border-violet-800"
+              className="px-3 sm:px-4 md:px-6 py-3 sm:py-4 bg-gradient-to-r from-violet-50/80 via-purple-50/80 to-pink-50/80 dark:from-gray-800/80 dark:via-violet-900/30 dark:to-purple-900/30 border-t border-violet-200/50 dark:border-violet-800/50"
             >
               <p className="text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-2 sm:mb-3 font-medium flex items-center gap-2">
                 <MessageCircle className="w-3 h-3 sm:w-4 sm:h-4 text-violet-600" />
@@ -380,7 +380,7 @@ const AIAssistantPremium: React.FC = () => {
           )}
 
           {/* Zone de saisie */}
-          <div className="sticky bottom-0 p-3 sm:p-4 md:p-6 bg-gradient-to-r from-violet-100/50 via-purple-100/50 to-pink-100/50 dark:from-gray-800/50 dark:via-violet-900/50 dark:to-purple-900/50 border-t border-violet-200 dark:border-violet-800 backdrop-blur-md">
+          <div className="sticky bottom-0 p-3 sm:p-4 md:p-6 bg-gradient-to-r from-white/95 via-violet-50/95 to-purple-50/95 dark:from-gray-900/95 dark:via-violet-950/50 dark:to-purple-950/50 border-t border-violet-200/50 dark:border-violet-800/50 backdrop-blur-md">
             <form ref={formRef} onSubmit={handleSubmit} className="flex gap-2 sm:gap-3">
               <input
                 ref={inputRef}
