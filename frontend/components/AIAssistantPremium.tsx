@@ -38,6 +38,7 @@ const AIAssistantPremium: React.FC = () => {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
+  const formRef = useRef<HTMLFormElement>(null);
 
   const scrollToBottom = (smooth = true) => {
     if (messagesEndRef.current) {
@@ -58,11 +59,38 @@ const AIAssistantPremium: React.FC = () => {
       prevMessagesLengthRef.current = messages.length;
     }
   }, [messages]);
-  
+
   // Forcer le scroll après chaque rendu
   useEffect(() => {
     scrollToBottom();
   }, [messages.length]);
+
+  // Gérer le scroll du conteneur lors du focus sur mobile
+  useEffect(() => {
+    const handleFocus = () => {
+      // Attendre que le clavier s'ouvre
+      setTimeout(() => {
+        if (inputRef.current) {
+          inputRef.current.scrollIntoView({
+            behavior: 'smooth',
+            block: 'end',
+            inline: 'nearest'
+          });
+        }
+      }, 300);
+    };
+
+    const input = inputRef.current;
+    if (input) {
+      input.addEventListener('focus', handleFocus);
+    }
+
+    return () => {
+      if (input) {
+        input.removeEventListener('focus', handleFocus);
+      }
+    };
+  }, []);
 
   const getAIResponse = async (userMessage: string) => {
     try {
@@ -104,6 +132,11 @@ const AIAssistantPremium: React.FC = () => {
 
     const userMessage = input.trim();
     setInput("");
+
+    // Empêcher le scroll lors de la soumission
+    if (inputRef.current) {
+      inputRef.current.blur();
+    }
 
     // Ajouter le message utilisateur
     const newUserMessage: Message = {
@@ -162,8 +195,8 @@ const AIAssistantPremium: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       className="w-full"
     >
-      <Card className="w-full bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-violet-950 dark:to-purple-950 border-2 border-violet-200 dark:border-violet-800 shadow-2xl">
-        <CardBody className="p-0">
+      <Card className="w-full bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-violet-950 dark:to-purple-950 border-2 border-violet-200 dark:border-violet-800 shadow-2xl overflow-hidden">
+        <CardBody className="p-0 flex flex-col">
           {/* Header avec animation */}
           <motion.div
             className="relative overflow-hidden bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 p-4 sm:p-6"
@@ -347,8 +380,8 @@ const AIAssistantPremium: React.FC = () => {
           )}
 
           {/* Zone de saisie */}
-          <div className="p-3 sm:p-4 md:p-6 bg-gradient-to-r from-violet-100/50 via-purple-100/50 to-pink-100/50 dark:from-gray-800/50 dark:via-violet-900/50 dark:to-purple-900/50 border-t border-violet-200 dark:border-violet-800">
-            <form onSubmit={handleSubmit} className="flex gap-2 sm:gap-3">
+          <div className="sticky bottom-0 p-3 sm:p-4 md:p-6 bg-gradient-to-r from-violet-100/50 via-purple-100/50 to-pink-100/50 dark:from-gray-800/50 dark:via-violet-900/50 dark:to-purple-900/50 border-t border-violet-200 dark:border-violet-800 backdrop-blur-md">
+            <form ref={formRef} onSubmit={handleSubmit} className="flex gap-2 sm:gap-3">
               <input
                 ref={inputRef}
                 type="text"
