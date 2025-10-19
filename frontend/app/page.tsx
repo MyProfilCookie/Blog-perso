@@ -87,9 +87,9 @@ const services = [
 // Témoignages
 const testimonials = [
   {
-    name: "Famille Ayivor",
-    role: "Maman de Maeva",
-    content: "AutiStudy a transformé l'apprentissage de notre fille. Les exercices sont parfaitement adaptés à ses besoins.",
+    name: "Parent d'élève",
+    role: "Parent de Maeva",
+    content: "AutiStudy a transformé l'apprentissage de Maeva. Les exercices sont parfaitement adaptés à ses besoins.",
     avatar: "/assets/family/avatar/family.webp",
     rating: 5
   },

@@ -187,7 +187,7 @@ export default function AboutUsPage() {
                   >
                     <Sparkles className="w-5 h-5 text-blue-600" />
                     <span className="text-blue-700 dark:text-blue-300 font-semibold">
-                      Famille Ayivor
+                      AutiStudy Family
                     </span>
                   </motion.div>
 
@@ -237,7 +237,7 @@ export default function AboutUsPage() {
                 >
                   <OptimizedImage
                     src="/assets/family/family.webp"
-                    alt="Famille Ayivor"
+                    alt="AutiStudy Family"
                     width={600}
                     height={400}
                     className="rounded-2xl shadow-2xl"
@@ -273,19 +273,19 @@ export default function AboutUsPage() {
                 {[
                   {
                     title: "Notre Famille",
-                    text: "Nous sommes une grande famille unie, avec des enfants allant de 14 à 39 ans. Maeva, la benjamine, est notre source d'inspiration.",
+                    text: "Nous sommes une grande famille unie, avec des enfants allant de 14 à 39 ans. Nos enfants sont notre source d'inspiration.",
                     icon: <Users className="text-blue-600 w-8 h-8" />,
                     color: "from-blue-100 to-blue-200",
                   },
                   {
-                    title: "Notre Maman",
-                    text: "Chantal, elle fait les activités ludiques avec Maeva.",
+                    title: "Nos Éducateurs",
+                    text: "Une équipe dévouée qui crée des activités ludiques et éducatives adaptées.",
                     icon: <HeartHandshake className="text-green-600 w-8 h-8" />,
                     color: "from-green-100 to-green-200",
                   },
                   {
-                    title: "Notre Papa",
-                    text: "Paul, papa ingénieur, co-fondateur de la plateforme.",
+                    title: "Notre Équipe",
+                    text: "Des professionnels passionnés, ingénieurs et éducateurs, qui co-fondent et développent la plateforme.",
                     icon: <Code className="text-purple-600 w-8 h-8" />,
                     color: "from-purple-100 to-purple-200",
                   },
@@ -410,7 +410,7 @@ export default function AboutUsPage() {
                 className="text-center mb-16"
               >
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
-                  Rencontrez la Famille Ayivor
+                  Rencontrez l'Équipe AutiStudy
                 </h2>
                 <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
                   Chaque membre apporte sa contribution unique à notre mission
