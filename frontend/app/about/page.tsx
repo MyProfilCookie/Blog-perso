@@ -73,6 +73,16 @@ const familyMembers = [
     imagePosition: "object-top",
   },
   {
+    name: "Mickael",
+    img: "/assets/family/avatar/mickael.webp",
+    role: "Fils de Benjamin",
+    status: "membre",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-teal-100 text-teal-600",
+    borderColor: "#7dd3c0",
+    imagePosition: "object-top",
+  },
+  {
     name: "Chantal",
     img: "/assets/family/avatar/chantal.webp",
     role: "Éducatrice",
