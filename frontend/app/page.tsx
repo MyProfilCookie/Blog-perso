@@ -94,6 +94,13 @@ const testimonials = [
     rating: 5
   },
   {
+    name: "Benjamin Insigne",
+    role: "Papa de Michael, 14 ans",
+    content: "Avec AutiStudy, je me sens comme un membre de la famille même si nous n'avons pas le même nom. Cette plateforme comprend vraiment les besoins de Michael et nous accompagne au quotidien.",
+    avatar: "/assets/family/avatar/thomas.webp",
+    rating: 5
+  },
+  {
     name: "Marie",
     role: "Éducatrice spécialisée",
     content: "Une plateforme exceptionnelle qui respecte les besoins spécifiques de chaque enfant.",
@@ -245,7 +252,7 @@ export default function HomePage() {
                 </p>
               </motion.div>
 
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 grid-cls-optimized grid-cls-optimized grid-cls-optimized">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 grid-cls-optimized">
                 {testimonials.map((testimonial, index) => (
                   <motion.div
                     key={testimonial.name}
