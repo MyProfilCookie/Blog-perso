@@ -63,10 +63,20 @@ const familyMembers = [
     imagePosition: "object-top",
   },
   {
+    name: "Benjamin",
+    img: "/assets/family/avatar/thomas.webp",
+    role: "Membre de la famille",
+    status: "membre",
+    // on va ajouter une classe pour la couleur de fond
+    className: "bg-indigo-100 text-indigo-600",
+    borderColor: "#b8c5ff",
+    imagePosition: "object-top",
+  },
+  {
     name: "Chantal",
     img: "/assets/family/avatar/chantal.webp",
-    role: "Maman",
-    status: "maman",
+    role: "Éducatrice",
+    status: "membre",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-purple-100 text-purple-600",
     borderColor: "#cab7ff",
@@ -85,8 +95,8 @@ const familyMembers = [
   {
     name: "Paul",
     img: "/assets/family/avatar/paul.webp",
-    role: "Papa",
-    status: "papa",
+    role: "Co-fondateur",
+    status: "membre",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-orange-100 text-orange-600",
     borderColor: "#fcd0a1",
