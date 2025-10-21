@@ -257,7 +257,7 @@ export default function PostPage() {
                     } else if (block.type === 'image') {
                       return (
                         <figure key={blockIndex} className="my-6 sm:my-8 w-full">
-                          <div className="relative w-full aspect-video -mx-4 sm:mx-0 overflow-hidden">
+                          <div className="relative w-full h-64 sm:h-80 md:h-96 lg:h-[500px] -mx-4 sm:mx-0 overflow-hidden bg-gray-100 dark:bg-gray-800">
                             <Image
                               src={resolveImagePath(block.src)}
                               alt={block.alt || 'Image de l\'article'}
