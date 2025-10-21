@@ -97,7 +97,7 @@ const testimonials = [
     name: "Benjamin Insigne",
     role: "Papa de Michael, 14 ans",
     content: "Avec AutiStudy, je me sens comme un membre de la famille même si nous n'avons pas le même nom. Cette plateforme comprend vraiment les besoins de Michael et nous accompagne au quotidien.",
-    avatar: "/assets/family/avatar/thomas.webp",
+    avatar: "/assets/family/avatar/benjamin.webp",
     rating: 5
   },
   {

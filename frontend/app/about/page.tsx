@@ -64,7 +64,7 @@ const familyMembers = [
   },
   {
     name: "Benjamin",
-    img: "/assets/family/avatar/thomas.webp",
+    img: "/assets/family/avatar/benjamin.webp",
     role: "Co-fondateur",
     status: "membre",
     // on va ajouter une classe pour la couleur de fond
