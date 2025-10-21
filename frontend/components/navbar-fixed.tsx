@@ -6,21 +6,18 @@ import {
   NavbarContent,
   NavbarBrand,
   NavbarItem,
-  NavbarMenuToggle,
 } from "@nextui-org/navbar";
-import { Avatar } from '@nextui-org/react'
-import { Button } from '@nextui-org/react'
-import { Dropdown } from '@nextui-org/react'
-import { DropdownTrigger } from '@nextui-org/react'
-import { DropdownMenu } from '@nextui-org/react'
-import { DropdownItem } from '@nextui-org/react'
-import { Badge } from '@nextui-org/react'
+import { Avatar } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
+import { Dropdown } from "@nextui-org/react";
+import { DropdownTrigger } from "@nextui-org/react";
+import { DropdownMenu } from "@nextui-org/react";
+import { DropdownItem } from "@nextui-org/react";
+import { Badge } from "@nextui-org/react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faSignOutAlt,
-  faNewspaper,
   faCrown,
-  faTachometerAlt,
   faUser,
   faMoon,
   faHome,
@@ -38,10 +35,10 @@ import Swal from "sweetalert2";
 import { useRouter } from "next/navigation";
 import { useTheme } from "next-themes";
 
-import { 
-  SunFilledIcon, 
-  MoonFilledIcon, 
-  AutismLogo, 
+import {
+  SunFilledIcon,
+  MoonFilledIcon,
+  AutismLogo,
   VisibleBurgerIcon,
   PendingOrdersIcon,
   ShippedOrdersIcon,
@@ -122,9 +119,15 @@ export const Navbar = () => {
   useEffect(() => {
     function handleClickOutside(event: MouseEvent) {
       const target = event.target as HTMLElement;
-      const isMenuButton = target.closest('button[aria-label="Toggle navigation"]');
-      
-      if (menuRef.current && !menuRef.current.contains(target) && !isMenuButton) {
+      const isMenuButton = target.closest(
+        'button[aria-label="Toggle navigation"]',
+      );
+
+      if (
+        menuRef.current &&
+        !menuRef.current.contains(target) &&
+        !isMenuButton
+      ) {
         setIsMenuOpen(false);
       }
     }
@@ -144,10 +147,10 @@ export const Navbar = () => {
       setIsMenuOpen(false);
     };
 
-    window.addEventListener('popstate', handleRouteChange);
-    
+    window.addEventListener("popstate", handleRouteChange);
+
     return () => {
-      window.removeEventListener('popstate', handleRouteChange);
+      window.removeEventListener("popstate", handleRouteChange);
     };
   }, []);
 
@@ -215,7 +218,7 @@ export const Navbar = () => {
     }).then((result) => {
       if (result.isConfirmed) {
         const userId = user?.id;
-        
+
         localStorage.removeItem("user");
         localStorage.removeItem("userToken");
         localStorage.removeItem("accessToken");
@@ -224,18 +227,18 @@ export const Navbar = () => {
         localStorage.removeItem("userInfo");
         localStorage.removeItem("serInfo");
         localStorage.removeItem("token");
-        
+
         if (userId) {
           localStorage.removeItem(`cart_${userId}`);
         }
-        
+
         setUser(null);
         setCartItemsCount(0);
         setOrderCount({
           pending: 0,
           shipped: 0,
           delivered: 0,
-          total: 0
+          total: 0,
         });
 
         const event = new CustomEvent("userUpdate");
@@ -319,7 +322,10 @@ export const Navbar = () => {
 
       return userData;
     } catch (e) {
-      console.error("Erreur lors de la récupération des données utilisateur:", e);
+      console.error(
+        "Erreur lors de la récupération des données utilisateur:",
+        e,
+      );
       return null;
     }
   };
@@ -444,7 +450,11 @@ export const Navbar = () => {
       const handleVisibilityChange = () => {
         if (!document.hidden) {
           const currentUserData = getUserData();
-          if (!currentUserData || !currentUserData.id || !currentUserData.token) {
+          if (
+            !currentUserData ||
+            !currentUserData.id ||
+            !currentUserData.token
+          ) {
             return;
           }
           fetchOrderCount();
@@ -481,16 +491,20 @@ export const Navbar = () => {
       className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-sans relative border-b border-gray-200 dark:border-gray-700 performance-optimized"
       maxWidth="xl"
       position="sticky"
-      style={{ 
+      style={{
         boxShadow: "0 4px 20px rgba(0, 0, 0, 0.08)",
-        background: "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,248,255,0.95) 100%)",
-        contain: "layout style paint"
+        background:
+          "linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(240,248,255,0.95) 100%)",
+        contain: "layout style paint",
       }}
     >
       <NavbarContent className="basis-1/5 sm:basis-full" justify="start">
         {/* Logo AutiStudy */}
         <NavbarBrand as="li" className="gap-2 max-w-fit">
-          <NextLink className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized" href="/">
+          <NextLink
+            className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized"
+            href="/"
+          >
             <AutismLogo size={16} />
             <div className="flex flex-col">
               <p className="font-bold text-blue-600 dark:text-blue-400 text-base font-sans">
@@ -509,11 +523,10 @@ export const Navbar = () => {
           className="md:hidden p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-200 animation-optimized"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
-          <VisibleBurgerIcon 
-            size={24} 
-            className={`text-blue-600 dark:text-blue-400 hover:text-blue-500 transition-colors duration-200 ${
-              isMenuOpen ? 'rotate-90' : ''
-            }`}
+          <VisibleBurgerIcon
+            className={`text-blue-600 dark:text-blue-400 hover:text-blue-500 transition-colors duration-200 ${isMenuOpen ? "rotate-90" : ""
+              }`}
+            size={24}
           />
         </button>
 
@@ -526,11 +539,11 @@ export const Navbar = () => {
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
                   href="/"
                 >
-                  <FontAwesomeIcon icon={faHome} className="w-4 h-4" />
+                  <FontAwesomeIcon className="w-4 h-4" icon={faHome} />
                   Accueil
                 </NextLink>
               </NavbarItem>
-              
+
               <NavbarItem>
                 <Dropdown>
                   <DropdownTrigger>
@@ -539,7 +552,10 @@ export const Navbar = () => {
                       radius="sm"
                       variant="light"
                     >
-                      <FontAwesomeIcon icon={faInfoCircle} className="w-4 h-4" />
+                      <FontAwesomeIcon
+                        className="w-4 h-4"
+                        icon={faInfoCircle}
+                      />
                       À propos
                     </Button>
                   </DropdownTrigger>
@@ -549,50 +565,50 @@ export const Navbar = () => {
                   >
                     <DropdownItem
                       key="about"
-                      textValue="À propos de nous"
                       onClick={() => router.push("/about")}
+                      textValue="À propos de nous"
                     >
-                      <FontAwesomeIcon icon={faUsers} className="mr-2" />
-                      À propos de nous
+                      <FontAwesomeIcon className="mr-2" icon={faUsers} />À
+                      propos de nous
                     </DropdownItem>
                     <DropdownItem
                       key="contact"
-                      textValue="Contact"
                       onClick={() => router.push("/contact")}
+                      textValue="Contact"
                     >
-                      <FontAwesomeIcon icon={faHeart} className="mr-2" />
+                      <FontAwesomeIcon className="mr-2" icon={faHeart} />
                       Contact
                     </DropdownItem>
                   </DropdownMenu>
                 </Dropdown>
               </NavbarItem>
-              
+
               <NavbarItem>
                 <NextLink
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
                   href="/articles"
                 >
-                  <FontAwesomeIcon icon={faBook} className="w-4 h-4" />
+                  <FontAwesomeIcon className="w-4 h-4" icon={faBook} />
                   Articles
                 </NextLink>
               </NavbarItem>
-              
+
               <NavbarItem>
                 <NextLink
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 text-base font-medium tracking-wide transition-colors duration-200 flex items-center gap-2"
                   href="/controle"
                 >
-                  <FontAwesomeIcon icon={faGamepad} className="w-4 h-4" />
+                  <FontAwesomeIcon className="w-4 h-4" icon={faGamepad} />
                   Contrôle
                 </NextLink>
               </NavbarItem>
 
-              <NavbarItem key="shop" className="relative">
+              <NavbarItem className="relative" key="shop">
                 <NextLink
                   className="text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400 flex items-center gap-2 relative text-base font-medium tracking-wide transition-colors duration-200"
                   href="/shop"
                 >
-                  <FontAwesomeIcon icon={faShoppingCart} className="w-4 h-4" />
+                  <FontAwesomeIcon className="w-4 h-4" icon={faShoppingCart} />
                   Shop
                   {cartItemsCount > 0 && (
                     <Badge
@@ -609,7 +625,7 @@ export const Navbar = () => {
                   )}
                 </NextLink>
               </NavbarItem>
-              
+
               <NavbarItem className="hidden lg:flex">
                 <ThemeSwitch />
               </NavbarItem>
@@ -647,11 +663,12 @@ export const Navbar = () => {
         {/* Avatar utilisateur */}
         {!user ? (
           <Avatar
-            isBordered
-            showFallback
             aria-label="Connectez-vous pour accéder à votre profil"
             className="cursor-pointer text-tiny text-default-500 transition-all duration-300 hover:scale-110"
+            isBordered
             name="Invité"
+            onClick={handleLoginRedirect}
+            showFallback
             size="md"
             src="/assets/default-avatar.webp"
             style={{
@@ -659,16 +676,16 @@ export const Navbar = () => {
               borderWidth: "3px",
               boxShadow: `0 0 12px ${guestColors[avatarColorIndex]}`,
             }}
-            onClick={handleLoginRedirect}
           />
         ) : (
           <>
             {/* Avatar mobile */}
             <div className="md:hidden">
               <Avatar
-                isBordered
                 alt={`Avatar de ${user?.pseudo}`}
                 className="transition-all duration-300 cursor-pointer hover:scale-110"
+                isBordered
+                onClick={() => router.push("/profile")}
                 size="sm"
                 src={user?.avatar || "/assets/default-avatar.webp"}
                 style={{
@@ -677,13 +694,11 @@ export const Navbar = () => {
                       ? adminColors[avatarColorIndex]
                       : userColors[avatarColorIndex],
                   borderWidth: "3px",
-                  boxShadow: `0 0 12px ${
-                    user?.role === "admin"
+                  boxShadow: `0 0 12px ${user?.role === "admin"
                       ? adminColors[avatarColorIndex]
                       : userColors[avatarColorIndex]
-                  }`,
+                    }`,
                 }}
-                onClick={() => router.push("/profile")}
               />
             </div>
 
@@ -696,9 +711,9 @@ export const Navbar = () => {
                     className="bg-transparent relative button-cls-optimized hover:bg-blue-50 dark:hover:bg-gray-800 transition-colors duration-200"
                   >
                     <Avatar
-                      isBordered
                       alt={`Avatar de ${user?.pseudo}`}
                       className="transition-all duration-300"
+                      isBordered
                       size="sm"
                       src={user?.avatar || "/assets/default-avatar.webp"}
                       style={{
@@ -707,11 +722,10 @@ export const Navbar = () => {
                             ? adminColors[avatarColorIndex]
                             : userColors[avatarColorIndex],
                         borderWidth: "3px",
-                        boxShadow: `0 0 12px ${
-                          user?.role === "admin"
+                        boxShadow: `0 0 12px ${user?.role === "admin"
                             ? adminColors[avatarColorIndex]
                             : userColors[avatarColorIndex]
-                        }`,
+                          }`,
                       }}
                     />
                     <span className="ml-2 hidden xl:inline dark:text-white text-gray-700">
@@ -728,26 +742,26 @@ export const Navbar = () => {
                     Profil
                   </DropdownItem>
                   <DropdownItem
+                    className="font-medium"
                     key="orders-title"
                     showDivider
-                    className="font-medium"
                     textValue="Mes commandes"
                   >
                     Mes commandes
                   </DropdownItem>
 
                   <DropdownItem
-                    key="orders-pending"
                     className="relative"
+                    key="orders-pending"
                     onClick={() => {
                       router.push("/orders?status=pending");
                     }}
                   >
                     <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-3">
-                        <PendingOrdersIcon 
-                          size={28} 
+                        <PendingOrdersIcon
                           className="text-yellow-600 dark:text-yellow-400"
+                          size={28}
                         />
                         <div className="flex flex-col">
                           <div className="font-medium text-yellow-600 dark:text-yellow-400">
@@ -765,17 +779,17 @@ export const Navbar = () => {
                   </DropdownItem>
 
                   <DropdownItem
-                    key="orders-shipped"
                     className="relative"
+                    key="orders-shipped"
                     onClick={() => {
                       router.push("/orders?status=shipped");
                     }}
                   >
                     <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-3">
-                        <ShippedOrdersIcon 
-                          size={28} 
+                        <ShippedOrdersIcon
                           className="text-blue-600 dark:text-blue-400"
+                          size={28}
                         />
                         <div className="flex flex-col">
                           <div className="font-medium text-blue-600 dark:text-blue-400">
@@ -793,17 +807,17 @@ export const Navbar = () => {
                   </DropdownItem>
 
                   <DropdownItem
-                    key="orders-delivered"
                     className="relative"
+                    key="orders-delivered"
                     onClick={() => {
                       router.push("/orders?status=delivered");
                     }}
                   >
                     <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-3">
-                        <DeliveredOrdersIcon 
-                          size={28} 
+                        <DeliveredOrdersIcon
                           className="text-green-600 dark:text-green-400"
+                          size={28}
                         />
                         <div className="flex flex-col">
                           <div className="font-medium text-green-600 dark:text-green-400">
@@ -821,12 +835,12 @@ export const Navbar = () => {
                   </DropdownItem>
 
                   <DropdownItem
-                    key="orders-all"
-                    showDivider
                     className="relative"
+                    key="orders-all"
                     onClick={() => {
                       router.push("/orders");
                     }}
+                    showDivider
                   >
                     <div className="flex items-center justify-between w-full">
                       <span>Voir toutes mes commandes</span>
@@ -856,7 +870,6 @@ export const Navbar = () => {
                       <DropdownMenu aria-label="Options de thème">
                         <DropdownItem
                           key="light"
-                          textValue="Mode clair"
                           onClick={() => {
                             localStorage.removeItem("themeMode");
                             localStorage.removeItem("autoModeHours");
@@ -865,6 +878,7 @@ export const Navbar = () => {
                             setTheme("light");
                             setAvatarColorIndex((prev) => prev);
                           }}
+                          textValue="Mode clair"
                         >
                           <div className="flex items-center gap-2">
                             <SunFilledIcon
@@ -876,7 +890,6 @@ export const Navbar = () => {
                         </DropdownItem>
                         <DropdownItem
                           key="dark"
-                          textValue="Mode sombre"
                           onClick={() => {
                             localStorage.removeItem("themeMode");
                             localStorage.removeItem("autoModeHours");
@@ -885,6 +898,7 @@ export const Navbar = () => {
                             setTheme("dark");
                             setAvatarColorIndex((prev) => prev);
                           }}
+                          textValue="Mode sombre"
                         >
                           <div className="flex items-center gap-2">
                             <MoonFilledIcon
@@ -896,16 +910,23 @@ export const Navbar = () => {
                         </DropdownItem>
                         <DropdownItem
                           key="auto"
-                          textValue="Mode automatique"
                           onClick={() => {
-                            const savedHours = localStorage.getItem("autoModeHours");
-                            const autoModeHours = savedHours ? JSON.parse(savedHours) : { start: 20, end: 7 };
-                            
+                            const savedHours =
+                              localStorage.getItem("autoModeHours");
+                            const autoModeHours = savedHours
+                              ? JSON.parse(savedHours)
+                              : { start: 20, end: 7 };
+
                             localStorage.setItem("themeMode", "auto");
-                            localStorage.setItem("autoModeHours", JSON.stringify(autoModeHours));
-                            
+                            localStorage.setItem(
+                              "autoModeHours",
+                              JSON.stringify(autoModeHours),
+                            );
+
                             const currentHour = new Date().getHours();
-                            const shouldBeDark = currentHour >= autoModeHours.start || currentHour < autoModeHours.end;
+                            const shouldBeDark =
+                              currentHour >= autoModeHours.start ||
+                              currentHour < autoModeHours.end;
 
                             if (shouldBeDark) {
                               document.documentElement.classList.add("dark");
@@ -918,6 +939,7 @@ export const Navbar = () => {
                             }
                             setAvatarColorIndex((prev) => prev);
                           }}
+                          textValue="Mode automatique"
                         >
                           <div className="flex items-center gap-2">
                             <FontAwesomeIcon
@@ -945,18 +967,15 @@ export const Navbar = () => {
       <div className="animate-presence-optimized">
         {isMenuOpen && (
           <div
-            ref={menuRef}
             className="lg:hidden dark:bg-gray-900/95 bg-white/95 w-full shadow-xl absolute top-full left-0 z-50 max-h-[80vh] overflow-y-auto rounded-b-xl border-t border-gray-200 dark:border-gray-700 backdrop-blur-md slide-up-optimized visible"
+            ref={menuRef}
           >
             <div className="p-6 space-y-6 fade-optimized visible">
-
               {/* Section utilisateur */}
               {user && (
                 <div className="space-y-4 slide-up-optimized visible">
-                  <h3 
-                    className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2 slide-left-optimized visible"
-                  >
-                    <FontAwesomeIcon icon={faUser} className="text-blue-600" />
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2 slide-left-optimized visible">
+                    <FontAwesomeIcon className="text-blue-600" icon={faUser} />
                     Mon compte
                   </h3>
                   <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4 space-y-3 border border-blue-200 dark:border-gray-600">
@@ -968,9 +987,9 @@ export const Navbar = () => {
                       <div className="space-y-3">
                         <div className="flex items-center justify-between p-3 rounded-lg border-2 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                           <div className="flex items-center gap-3">
-                            <PendingOrdersIcon 
-                              size={28} 
+                            <PendingOrdersIcon
                               className="text-yellow-600 dark:text-yellow-400"
+                              size={28}
                             />
                             <div className="flex flex-col">
                               <div className="font-medium text-yellow-600 dark:text-yellow-400">
@@ -988,9 +1007,9 @@ export const Navbar = () => {
 
                         <div className="flex items-center justify-between p-3 rounded-lg border-2 border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                           <div className="flex items-center gap-3">
-                            <ShippedOrdersIcon 
-                              size={28} 
+                            <ShippedOrdersIcon
                               className="text-blue-600 dark:text-blue-400"
+                              size={28}
                             />
                             <div className="flex flex-col">
                               <div className="font-medium text-blue-600 dark:text-blue-400">
@@ -1008,9 +1027,9 @@ export const Navbar = () => {
 
                         <div className="flex items-center justify-between p-3 rounded-lg border-2 border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                           <div className="flex items-center gap-3">
-                            <DeliveredOrdersIcon 
-                              size={28} 
+                            <DeliveredOrdersIcon
                               className="text-green-600 dark:text-green-400"
+                              size={28}
                             />
                             <div className="flex flex-col">
                               <div className="font-medium text-green-600 dark:text-green-400">
@@ -1032,17 +1051,13 @@ export const Navbar = () => {
                     <NextLink
                       className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href={
-                        user.role === "admin"
-                          ? "/admin/dashboard"
-                          : "/profile"
+                        user.role === "admin" ? "/admin/dashboard" : "/profile"
                       }
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <FontAwesomeIcon
                         className="mr-3 text-blue-600 dark:text-blue-400 w-5"
-                        icon={
-                          user.role === "admin" ? faCrown : faGraduationCap
-                        }
+                        icon={user.role === "admin" ? faCrown : faGraduationCap}
                       />
                       <span className="font-medium">
                         {user.role === "admin"
@@ -1085,10 +1100,8 @@ export const Navbar = () => {
               {/* Navigation mobile pour les utilisateurs non connectés */}
               {!user && (
                 <div className="space-y-4 slide-up-optimized visible">
-                  <h3 
-                    className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2 slide-left-optimized visible"
-                  >
-                    <FontAwesomeIcon icon={faHome} className="text-blue-600" />
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2 slide-left-optimized visible">
+                    <FontAwesomeIcon className="text-blue-600" icon={faHome} />
                     Navigation
                   </h3>
                   <div className="bg-gradient-to-br from-blue-50 to-indigo-50 dark:from-gray-800 dark:to-gray-700 rounded-xl p-4 space-y-3 border border-blue-200 dark:border-gray-600">
@@ -1097,52 +1110,70 @@ export const Navbar = () => {
                       href="/"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faHome} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
+                      <FontAwesomeIcon
+                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        icon={faHome}
+                      />
                       <span className="font-medium">Accueil</span>
                     </NextLink>
-                    
+
                     <NextLink
                       className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/about"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faInfoCircle} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
+                      <FontAwesomeIcon
+                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        icon={faInfoCircle}
+                      />
                       <span className="font-medium">À propos</span>
                     </NextLink>
-                    
+
                     <NextLink
                       className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/articles"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faBook} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
+                      <FontAwesomeIcon
+                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        icon={faBook}
+                      />
                       <span className="font-medium">Articles</span>
                     </NextLink>
-                    
+
                     <NextLink
                       className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/controle"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faGamepad} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
+                      <FontAwesomeIcon
+                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        icon={faGamepad}
+                      />
                       <span className="font-medium">Contrôle</span>
                     </NextLink>
-                    
+
                     <NextLink
                       className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/shop"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faShoppingCart} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
+                      <FontAwesomeIcon
+                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        icon={faShoppingCart}
+                      />
                       <span className="font-medium">Shop</span>
                     </NextLink>
-                    
+
                     <NextLink
                       className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-100 dark:hover:bg-gray-600 rounded-lg transition-all duration-200"
                       href="/contact"
                       onClick={() => setIsMenuOpen(false)}
                     >
-                      <FontAwesomeIcon icon={faHeart} className="mr-3 text-blue-600 dark:text-blue-400 w-5" />
+                      <FontAwesomeIcon
+                        className="mr-3 text-blue-600 dark:text-blue-400 w-5"
+                        icon={faHeart}
+                      />
                       <span className="font-medium">Contact</span>
                     </NextLink>
                   </div>
