@@ -39,17 +39,20 @@ import {
 import AIAssistantPremium from "@/components/AIAssistantPremium";
 
 interface Article {
+  _id?: string;
   id: string;
   title: string;
   subtitle?: string;
   description?: string;
   image?: string;
   imageUrl?: string;
+  img?: string;
   category?: string;
-  author: string;
+  author?: string;
   date: string;
   readTimeMinutes?: number;
   tags?: string[];
+  content?: string | any[];
 }
 
 export default function JournalPostsPage() {
@@ -66,11 +69,12 @@ export default function JournalPostsPage() {
   useEffect(() => {
     const fetchArticles = async () => {
       try {
-        const response = await fetch("/dataarticless.json");
+        const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+        const response = await fetch(`${apiUrl}/articles`);
         const data = await response.json();
 
-        if (data.articles && Array.isArray(data.articles)) {
-          setArticles(data.articles);
+        if (Array.isArray(data)) {
+          setArticles(data);
         }
       } catch (error) {
         console.error("Erreur lors du chargement des articles:", error);
@@ -529,7 +533,7 @@ export default function JournalPostsPage() {
                   </div>
                   
                   <div className="mt-auto">
-                    <Link href={`/posts/${featuredArticle.id}`}>
+                    <Link href={`/publications/${featuredArticle.id}`}>
                       <Button size="lg" className="bg-violet-600 hover:bg-violet-700">
                         Lire l'article
                       </Button>
@@ -564,7 +568,7 @@ export default function JournalPostsPage() {
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ delay: index * 0.05 }}
                 >
-                  <Link href={`/posts/${article.id}`}>
+                  <Link href={`/publications/${article.id}`}>
                     <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group border-gray-200 dark:border-gray-700">
                       <div className="relative h-48 w-full overflow-hidden">
                         <Image

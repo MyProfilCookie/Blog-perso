@@ -46,23 +46,14 @@ export default function PostPage() {
       setLoading(true);
       setError(null);
 
-      const response = await fetch('/dataarticless.json');
+      const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
+      const response = await fetch(`${apiUrl}/articles/${articleId}`);
+
       if (response.ok) {
         const data = await response.json();
-
-        if (Array.isArray(data.articles)) {
-          const foundArticle = data.articles.find((art: Article) => art.id.toString() === articleId);
-
-          if (foundArticle) {
-            setArticle(foundArticle);
-          } else {
-            setError('Article non trouvé');
-          }
-        } else {
-          setError('Format de données invalide');
-        }
+        setArticle(data);
       } else {
-        setError('Impossible de charger les données');
+        setError('Article non trouvé');
       }
     } catch (err) {
       console.error('Erreur lors du chargement de l\'article:', err);
