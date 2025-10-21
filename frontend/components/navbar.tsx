@@ -7,9 +7,6 @@ import {
   NavbarContent,
   NavbarBrand,
   NavbarItem,
-  NavbarMenuToggle,
-  NavbarMenu,
-  NavbarMenuItem,
 } from "@nextui-org/navbar";
 import { Avatar } from "@nextui-org/react";
 import { Button } from "@nextui-org/react";
@@ -107,10 +104,10 @@ export const Navbar = () => {
     setMounted(true);
   }, []);
 
-  // Fermer automatiquement le menu sur desktop
+  // Fermer automatiquement le menu sur tablette et desktop
   useEffect(() => {
     const handleResize = () => {
-      if (window.innerWidth >= 1024 && isMenuOpen) {
+      if (window.innerWidth >= 768 && isMenuOpen) {
         setIsMenuOpen(false);
       }
     };
@@ -470,22 +467,44 @@ export const Navbar = () => {
     <NextUINavbar
       className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-['Inter',_'system-ui',_-apple-system,_'SF_Pro_Display',_sans-serif] relative performance-optimized no-border-navbar h-16 md:h-20"
       maxWidth="full"
-      onMenuOpenChange={(open) => {
-        // Empêcher l'ouverture du menu sur desktop
-        if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
-          setIsMenuOpen(false);
-        } else {
-          setIsMenuOpen(open);
-        }
-      }}
       isMenuOpen={isMenuOpen}
       position="sticky"
     >
       <NavbarContent className="flex-shrink-0 basis-1/5 sm:basis-full">
-        <NavbarMenuToggle
+        <button
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="lg:hidden text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 w-8 h-8 min-w-8"
-        />
+          className="md:hidden p-2 text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
+          onClick={() => {
+            if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+              setIsMenuOpen(false);
+            } else {
+              setIsMenuOpen(!isMenuOpen);
+            }
+          }}
+        >
+          <svg
+            className="w-6 h-6"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            {isMenuOpen ? (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M6 18L18 6M6 6l12 12"
+              />
+            ) : (
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M4 6h16M4 12h16M4 18h16"
+              />
+            )}
+          </svg>
+        </button>
         <NavbarBrand as="li" className="gap-2 flex-shrink-0">
           <NextLink
             className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200"
@@ -504,7 +523,7 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden lg:flex gap-4 xl:gap-8 flex-1" justify="center">
+      <NavbarContent className="hidden md:flex gap-4 xl:gap-8 flex-1" justify="center">
         <NavbarItem>
           <NextLink
             className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
@@ -917,115 +936,117 @@ export const Navbar = () => {
         {isMenuOpen && (
           <>
             {/* Overlay sombre pour fermer le menu */}
-            <motion.div 
+            <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+              className="md:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
               onClick={() => setIsMenuOpen(false)}
             />
             
             {/* Menu sidebar */}
-            <motion.div 
+            <motion.div
               initial={{ x: -300, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -300, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="lg:hidden fixed top-0 left-0 h-auto max-h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto rounded-r-2xl"
+              className="md:hidden fixed top-0 left-0 h-auto max-h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto rounded-r-2xl"
             >
               <div className="p-4 flex flex-col">
-              {/* Header avec logo et bouton fermer */}
-              <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                <div className="flex items-center gap-2">
-                  <AutismLogo size={12} />
-                  <span className="font-bold text-violet-600 dark:text-violet-400 text-lg">AutiStudy</span>
-                </div>
-                <button
-                  onClick={() => setIsMenuOpen(false)}
-                  className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                  aria-label="Fermer le menu"
-                >
-                  <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                  </svg>
-                </button>
-              </div>
-
-              {/* Bouton AI Assistant */}
-              <div className="mb-3">
-                <Button
-                  as={NextLink}
-                  href="/ai-assistant"
-                  className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
-                  size="md"
-                  startContent={<Sparkles className="w-4 h-4" />}
-                  onClick={() => setIsMenuOpen(false)}
-                >
-                  🤖 Assistant IA
-                </Button>
-              </div>
-              
-              {/* Séparateur */}
-              <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
-              
-              {/* Liens principaux */}
-              <div className="space-y-1 flex-1 overflow-y-auto">
-                {menuItems.map((item, index) => (
-                  <NextLink
-                    key={`${item.name}-${index}`}
-                    href={item.href}
-                    onClick={() => setIsMenuOpen(false)}
-                    className="block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"
-                  >
-                    {item.name}
-                  </NextLink>
-                ))}
-              </div>
-              
-              {/* Liens utilisateur si connecté */}
-              {userMenuItems.length > 0 && (
-                <>
-                  <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
-                  <div className="space-y-1 pb-4">
-                    {userMenuItems.map((item, index) => (
-                      item.href === "#" ? (
-                        <button
-                          key={`user-${item.name}-${index}`}
-                          className={`block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
-                            item.color === 'danger' 
-                              ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20' 
-                              : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
-                          }`}
-                          onClick={() => {
-                            if (item.action) {
-                              item.action();
-                            }
-                            setIsMenuOpen(false);
-                          }}
-                        >
-                          {item.name}
-                        </button>
-                      ) : (
-                        <NextLink
-                          key={`user-${item.name}-${index}`}
-                          href={item.href}
-                          onClick={() => setIsMenuOpen(false)}
-                          className={`block py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
-                            item.color === 'danger' 
-                              ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20' 
-                              : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
-                          }`}
-                        >
-                          {item.name}
-                        </NextLink>
-                      )
-                    ))}
+                {/* Header avec logo et bouton fermer */}
+                <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+                  <div className="flex items-center gap-2">
+                    <AutismLogo size={12} />
+                    <span className="font-bold text-violet-600 dark:text-violet-400 text-lg">
+                      AutiStudy
+                    </span>
                   </div>
-                </>
-              )}
-            </div>
-          </motion.div>
+                  <button
+                    onClick={() => setIsMenuOpen(false)}
+                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+                    aria-label="Fermer le menu"
+                  >
+                    <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </div>
+
+                {/* Bouton AI Assistant */}
+                <div className="mb-3">
+                  <Button
+                    as={NextLink}
+                    href="/ai-assistant"
+                    className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+                    size="md"
+                    startContent={<Sparkles className="w-4 h-4" />}
+                    onClick={() => setIsMenuOpen(false)}
+                  >
+                    🤖 Assistant IA
+                  </Button>
+                </div>
+
+                {/* Séparateur */}
+                <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
+
+                {/* Liens principaux */}
+                <div className="space-y-1 flex-1 overflow-y-auto">
+                  {menuItems.map((item, index) => (
+                    <NextLink
+                      key={`${item.name}-${index}`}
+                      href={item.href}
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"
+                    >
+                      {item.name}
+                    </NextLink>
+                  ))}
+                </div>
+
+                {/* Liens utilisateur si connecté */}
+                {userMenuItems.length > 0 && (
+                  <>
+                    <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
+                    <div className="space-y-1 pb-4">
+                      {userMenuItems.map((item, index) => (
+                        item.href === "#" ? (
+                          <button
+                            key={`user-${item.name}-${index}`}
+                            className={`block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
+                              item.color === 'danger'
+                                ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20'
+                                : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
+                            }`}
+                            onClick={() => {
+                              if (item.action) {
+                                item.action();
+                              }
+                              setIsMenuOpen(false);
+                            }}
+                          >
+                            {item.name}
+                          </button>
+                        ) : (
+                          <NextLink
+                            key={`user-${item.name}-${index}`}
+                            href={item.href}
+                            onClick={() => setIsMenuOpen(false)}
+                            className={`block py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
+                              item.color === 'danger'
+                                ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20'
+                                : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
+                            }`}
+                          >
+                            {item.name}
+                          </NextLink>
+                        )
+                      ))}
+                    </div>
+                  </>
+                )}
+              </div>
+            </motion.div>
         </>
       )}
       </AnimatePresence>

@@ -196,14 +196,14 @@ export default function AboutUsPage() {
             <div className="max-w-7xl mx-auto">
               <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center">
                 <motion.div
-                  initial={{ opacity: 0, x: -50 }}
                   animate={{ opacity: 1, x: 0 }}
+                  initial={{ opacity: 0, x: -50 }}
                   transition={{ duration: 0.8 }}
                 >
                   <motion.div
                     animate={{ opacity: [0.7, 1, 0.7], scale: [1, 1.05, 1] }}
-                    transition={{ duration: 3, repeat: Infinity }}
                     className="inline-flex items-center gap-2 bg-blue-100 dark:bg-blue-900/30 px-4 py-2 rounded-full mb-6"
+                    transition={{ duration: 3, repeat: Infinity }}
                   >
                     <Sparkles className="w-5 h-5 text-blue-600" />
                     <span className="text-blue-700 dark:text-blue-300 font-semibold">
@@ -219,24 +219,24 @@ export default function AboutUsPage() {
                   </h1>
 
                   <p className="text-xl md:text-2xl text-gray-700 dark:text-gray-300 mb-8 leading-relaxed">
-                    Une famille soudée, une mission : l&apos;éducation inclusive et
-                    bienveillante pour tous les enfants autistes.
+                    Une famille soudée, une mission : l&apos;éducation inclusive
+                    et bienveillante pour tous les enfants autistes.
                   </p>
 
                   <p className="text-lg text-gray-600 dark:text-gray-400 mb-8 leading-relaxed">
                     Chez AutiStudy, chaque membre de la famille apporte sa
-                    pierre à l&apos;édifice pour créer une plateforme unique, pensée
-                    pour l'épanouissement et la réussite de tous.
+                    pierre à l&apos;édifice pour créer une plateforme unique,
+                    pensée pour l'épanouissement et la réussite de tous.
                   </p>
 
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
                     {achievements.map((achievement, index) => (
                       <motion.div
-                        key={index}
-                        initial={{ opacity: 0, y: 20 }}
                         animate={{ opacity: 1, y: 0 }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
                         className="text-center"
+                        initial={{ opacity: 0, y: 20 }}
+                        key={index}
+                        transition={{ duration: 0.6, delay: index * 0.1 }}
                       >
                         <div className="text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400">
                           {achievement.number}
@@ -250,18 +250,18 @@ export default function AboutUsPage() {
                 </motion.div>
 
                 <motion.div
-                  initial={{ opacity: 0, x: 50 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ duration: 0.8, delay: 0.2 }}
                   className="relative"
+                  initial={{ opacity: 0, x: 50 }}
+                  transition={{ duration: 0.8, delay: 0.2 }}
                 >
                   <OptimizedImage
-                    src="/assets/family/family.webp"
                     alt="AutiStudy Family"
-                    width={600}
-                    height={400}
                     className="rounded-2xl shadow-2xl"
+                    height={400}
                     priority
+                    src="/assets/family/family1.webp"
+                    width={600}
                   />
                 </motion.div>
               </div>
@@ -274,18 +274,19 @@ export default function AboutUsPage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
+                className="text-center mb-16"
                 initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-center mb-16"
+                whileInView={{ opacity: 1, y: 0 }}
               >
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
                   Notre Mission
                 </h2>
                 <p className="text-xl text-gray-600 dark:text-gray-300 max-w-3xl mx-auto">
-                  AutiStudy est née de notre volonté de rendre l&apos;apprentissage
-                  accessible, ludique et adapté à chaque enfant autiste.
+                  AutiStudy est née de notre volonté de rendre
+                  l&apos;apprentissage accessible, ludique et adapté à chaque
+                  enfant autiste.
                 </p>
               </motion.div>
 
@@ -317,13 +318,13 @@ export default function AboutUsPage() {
                   },
                 ].map((info, idx) => (
                   <motion.div
-                    key={idx}
+                    className="group"
                     initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    key={idx}
                     transition={{ duration: 0.6, delay: idx * 0.1 }}
                     viewport={{ once: true }}
                     whileHover={{ scale: 1.05 }}
-                    className="group"
+                    whileInView={{ opacity: 1, y: 0 }}
                   >
                     <Card className="h-full bg-gradient-to-br from-white to-gray-50 dark:from-gray-700 dark:to-gray-800 border-2 border-gray-100 dark:border-gray-600 hover:border-blue-200 dark:hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-xl">
                       <CardBody className="p-6 md:p-8 text-center">
@@ -352,11 +353,11 @@ export default function AboutUsPage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
+                className="text-center mb-16"
                 initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6 }}
                 viewport={{ once: true }}
-                className="text-center mb-16"
+                whileInView={{ opacity: 1, y: 0 }}
               >
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
                   Nos Valeurs
@@ -391,12 +392,12 @@ export default function AboutUsPage() {
                   },
                 ].map((val, i) => (
                   <motion.div
-                    key={i}
                     initial={{ opacity: 0, y: 30 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    key={i}
                     transition={{ duration: 0.6, delay: i * 0.1 }}
                     viewport={{ once: true }}
                     whileHover={{ scale: 1.05 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                   >
                     <Card className="bg-white dark:bg-gray-700 border-2 border-gray-100 dark:border-gray-600 hover:border-blue-200 dark:hover:border-blue-400 transition-all duration-300 shadow-lg hover:shadow-xl">
                       <CardBody className="p-6 text-center">
@@ -423,11 +424,11 @@ export default function AboutUsPage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
+                className="text-center mb-16"
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 viewport={{ once: true, margin: "-50px" }}
-                className="text-center mb-16"
+                whileInView={{ opacity: 1, y: 0 }}
               >
                 <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-6">
                   Rencontrez l'Équipe AutiStudy
@@ -438,20 +439,20 @@ export default function AboutUsPage() {
               </motion.div>
 
               <motion.div
+                className="max-w-6xl mx-auto"
                 initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
                 viewport={{ once: true, margin: "-50px" }}
-                className="max-w-6xl mx-auto"
+                whileInView={{ opacity: 1, y: 0 }}
               >
                 <Card className="bg-gradient-to-br from-blue-50 to-purple-50 dark:from-blue-900/20 dark:to-purple-900/20 border-2 border-blue-200 dark:border-blue-400 shadow-2xl">
                   <CardBody className="p-8 md:p-12">
                     <div className="grid grid-cols-2 sm:grid-cols-4 gap-6 md:gap-8">
                       {familyMembers.map((member, i) => (
                         <motion.div
-                          key={i}
+                          className="flex flex-col items-center text-center"
                           initial={{ opacity: 0, scale: 0.95 }}
-                          whileInView={{ opacity: 1, scale: 1 }}
+                          key={i}
                           transition={{
                             duration: 0.4,
                             delay: i * 0.1,
@@ -459,7 +460,7 @@ export default function AboutUsPage() {
                           }}
                           viewport={{ once: true, margin: "-50px" }}
                           whileHover={{ scale: 1.02 }}
-                          className="flex flex-col items-center text-center"
+                          whileInView={{ opacity: 1, scale: 1 }}
                         >
                           <Avatar
                             alt={member.name}
@@ -474,7 +475,7 @@ export default function AboutUsPage() {
                             style={{
                               boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
                               transition: "all 0.3s ease-in-out",
-                              border: `4px solid ${member.borderColor}`
+                              border: `4px solid ${member.borderColor}`,
                             }}
                           />
                           <h3 className="text-lg md:text-xl font-bold text-gray-900 dark:text-white mb-1">
@@ -498,12 +499,12 @@ export default function AboutUsPage() {
           <div className="w-full px-4 md:px-8 lg:px-12 text-center">
             <motion.div
               initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
               viewport={{ once: true }}
+              whileInView={{ opacity: 1, y: 0 }}
             >
               <h2 className="text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-6">
-                Rejoignez l'Aventure AutiStudy
+                Rejoignez l&rsquo;Aventure AutiStudy
               </h2>
               <p className="text-xl md:text-2xl text-blue-100 mb-8 max-w-3xl mx-auto">
                 Ensemble, créons un monde plus inclusif et bienveillant pour

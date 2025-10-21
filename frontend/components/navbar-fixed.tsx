@@ -506,7 +506,7 @@ export const Navbar = () => {
         {/* Bouton menu mobile */}
         <button
           aria-label="Toggle navigation"
-          className="lg:hidden p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-200 animation-optimized"
+          className="md:hidden p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-200 animation-optimized"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <VisibleBurgerIcon 

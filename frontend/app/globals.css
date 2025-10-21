@@ -42,6 +42,13 @@
   transition: transform 0.2s ease !important;
 }
 
+/* Cacher le menu burger sur tablette et desktop */
+@media (min-width: 768px) {
+  button[aria-label*="menu" i] {
+    display: none !important;
+  }
+}
+
 /* ========================================
    ANIMATIONS OPTIMISÉES
    ======================================== */

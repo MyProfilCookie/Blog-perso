@@ -165,49 +165,50 @@ export default function PostPage() {
       {/* Header */}
       <div className="relative overflow-hidden bg-gradient-to-r from-blue-600 via-violet-600 to-purple-600">
         <div className="absolute inset-0 bg-black/10"></div>
-        <div className="relative w-full px-4 md:px-8 lg:px-12 py-12 md:py-20">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 md:px-8 lg:px-12 py-8 sm:py-12 md:py-16 lg:py-20">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             className="text-center"
           >
             {/* Breadcrumb */}
-            <div className="mb-6">
-              <Link href="/posts" className="inline-flex items-center text-blue-100 hover:text-white transition-colors">
-                <ArrowLeft className="w-4 h-4 mr-2" />
+            <div className="mb-4 sm:mb-6">
+              <Link href="/posts" className="inline-flex items-center text-blue-100 hover:text-white transition-colors text-sm sm:text-base">
+                <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
                 Retour aux articles
               </Link>
             </div>
 
             {/* Title */}
-            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-white mb-6 leading-tight w-full">
+            <h1 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold text-white mb-4 sm:mb-6 leading-tight px-2">
               {article.title || 'Titre non disponible'}
             </h1>
 
             {/* Subtitle */}
             {article.subtitle && (
-              <p className="text-xl text-blue-100 mb-8 w-full">
+              <p className="text-base sm:text-lg md:text-xl text-blue-100 mb-6 sm:mb-8 px-2 max-w-4xl mx-auto">
                 {article.subtitle}
               </p>
             )}
 
             {/* Meta Info */}
-            <div className="flex flex-wrap justify-center gap-6 text-blue-100">
+            <div className="flex flex-wrap justify-center gap-3 sm:gap-4 md:gap-6 text-blue-100 text-sm sm:text-base px-2">
               {article.author && (
                 <div className="flex items-center gap-2">
-                  <User className="w-5 h-5" />
+                  <User className="w-4 h-4 sm:w-5 sm:h-5" />
                   <span>{article.author}</span>
                 </div>
               )}
               {article.date && (
                 <div className="flex items-center gap-2">
-                  <Calendar className="w-5 h-5" />
-                  <span>{formatDate(article.date)}</span>
+                  <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <span className="hidden sm:inline">{formatDate(article.date)}</span>
+                  <span className="sm:hidden">{new Date(article.date).toLocaleDateString('fr-FR', { day: 'numeric', month: 'short', year: 'numeric' })}</span>
                 </div>
               )}
               <div className="flex items-center gap-2">
-                <Clock className="w-5 h-5" />
-                <span>{calculateReadingTime(article.content)} min de lecture</span>
+                <Clock className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>{calculateReadingTime(article.content)} min</span>
               </div>
             </div>
           </motion.div>
@@ -215,101 +216,103 @@ export default function PostPage() {
       </div>
 
       {/* Article Content */}
-      <div className="w-full px-4 md:px-8 lg:px-12 py-8 md:py-12">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 md:px-8 py-6 sm:py-8 md:py-12">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.2 }}
         >
-          <Card className="border-gray-200 dark:border-gray-700 overflow-hidden w-full">
+          <Card className="border-gray-200 dark:border-gray-700 overflow-hidden shadow-lg">
             {/* Featured Image */}
             {(article.image || article.img) && (
-              <div className="relative h-80 sm:h-96 lg:h-[500px] w-full">
+              <div className="relative h-48 sm:h-64 md:h-80 lg:h-96 xl:h-[500px] w-full">
                 <Image
                   src={resolveImagePath(article.image || article.img || '')}
                   alt={article.title}
                   fill
-                  sizes="100vw"
+                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px"
                   className="object-cover"
                   priority
                 />
               </div>
             )}
 
-            <CardContent className="p-6 md:p-10 lg:p-16">
+            <CardContent className="p-4 sm:p-6 md:p-8 lg:p-12 xl:p-16">
               {/* Article Content */}
-              <div className="prose prose-lg prose-gray dark:prose-invert max-w-none w-full">
+              <div className="prose prose-sm sm:prose-base lg:prose-lg prose-gray dark:prose-invert max-w-none">
                 {Array.isArray(article.content) ? (
                   article.content.map((block: any, blockIndex: number) => {
                     if (block.type === 'paragraph') {
                       return (
-                        <p key={blockIndex} className="text-gray-700 dark:text-gray-300 mb-6 leading-relaxed text-lg">
+                        <p key={blockIndex} className="text-gray-700 dark:text-gray-300 mb-4 sm:mb-6 leading-relaxed text-base sm:text-lg">
                           {block.text}
                         </p>
                       );
                     } else if (block.type === 'subtitle') {
                       return (
-                        <h2 key={blockIndex} className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-4 mt-8">
+                        <h2 key={blockIndex} className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 mt-6 sm:mt-8">
                           {block.text}
                         </h2>
                       );
                     } else if (block.type === 'image') {
                       return (
-                        <div key={blockIndex} className="my-8">
-                          <div className="relative w-full h-96">
+                        <figure key={blockIndex} className="my-6 sm:my-8 w-full">
+                          <div className="relative w-full aspect-video -mx-4 sm:mx-0 overflow-hidden">
                             <Image
                               src={resolveImagePath(block.src)}
                               alt={block.alt || 'Image de l\'article'}
                               fill
-                              sizes="(max-width: 1280px) 100vw, 1280px"
-                              className="rounded-lg object-cover"
+                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px"
+                              className="rounded-none sm:rounded-lg object-cover"
+                              priority={blockIndex === 0}
                             />
                           </div>
                           {block.alt && (
-                            <p className="text-sm text-gray-500 dark:text-gray-400 text-center mt-3 italic">
+                            <figcaption className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-400 text-center mt-3 sm:mt-4 italic px-2 leading-relaxed">
                               {block.alt}
-                            </p>
+                            </figcaption>
                           )}
-                        </div>
+                        </figure>
                       );
                     }
                     return null;
                   })
                 ) : (
-                  <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-lg whitespace-pre-wrap">
+                  <div className="text-gray-700 dark:text-gray-300 leading-relaxed text-base sm:text-lg whitespace-pre-wrap">
                     {article.content || 'Aucun contenu disponible'}
                   </div>
                 )}
               </div>
 
               {/* Article Footer */}
-              <div className="mt-12 pt-8 border-t border-gray-200 dark:border-gray-700">
-                <div className="flex flex-wrap items-center justify-between gap-4">
+              <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
+                <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex flex-wrap gap-2">
                     {article.category && (
-                      <Badge variant="secondary">
+                      <Badge variant="secondary" className="text-xs sm:text-sm">
                         <Tag className="w-3 h-3 mr-1" />
                         {article.category}
                       </Badge>
                     )}
-                    <Badge variant="outline">
+                    <Badge variant="outline" className="text-xs sm:text-sm">
                       <BookOpen className="w-3 h-3 mr-1" />
                       ID: {article.id}
                     </Badge>
                   </div>
-                  
-                  <div className="flex gap-2">
+
+                  <div className="flex gap-2 flex-wrap">
                     <Button
                       variant="outline"
                       size="sm"
                       onClick={handleShare}
+                      className="flex-1 sm:flex-none"
                     >
                       <Share2 className="w-4 h-4 mr-2" />
                       Partager
                     </Button>
-                    
-                    <Link href="/posts">
-                      <Button variant="outline" size="sm">
+
+                    <Link href="/posts" className="flex-1 sm:flex-none">
+                      <Button variant="outline" size="sm" className="w-full">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Retour
                       </Button>
