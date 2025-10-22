@@ -46,9 +46,16 @@ export default function PostPage() {
   useEffect(() => {
     // Récupérer l'ID utilisateur depuis le localStorage
     const storedUser = localStorage.getItem('user');
+    console.log('📦 StoredUser from localStorage:', storedUser);
+
     if (storedUser) {
       const user = JSON.parse(storedUser);
-      setUserId(user._id || user.id);
+      console.log('👤 User object parsed:', user);
+      const extractedUserId = user._id || user.id;
+      console.log('🆔 Extracted userId:', extractedUserId);
+      setUserId(extractedUserId);
+    } else {
+      console.log('❌ No user found in localStorage');
     }
   }, []);
 
