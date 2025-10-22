@@ -78,6 +78,8 @@ export default function LikeButton({
     setLoading(true);
 
     try {
+      console.log('🔄 Tentative de like:', { userId, contentType, contentId, type });
+
       const response = await fetch(`${apiUrl}/likes/toggle`, {
         method: 'POST',
         headers: {
@@ -91,7 +93,9 @@ export default function LikeButton({
         })
       });
 
+      console.log('📡 Réponse serveur:', response.status, response.statusText);
       const data = await response.json();
+      console.log('📦 Données reçues:', data);
 
       if (response.ok) {
         // Mettre à jour l'état local

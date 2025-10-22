@@ -56,18 +56,28 @@ export default function LikedContentPage() {
 
   useEffect(() => {
     const fetchLikedContent = async () => {
-      if (!userId) return;
+      if (!userId) {
+        console.log('❌ Pas d\'userId');
+        return;
+      }
 
+      console.log('🔍 Chargement des contenus likés pour userId:', userId);
       setLoading(true);
       try {
         // Récupérer les contenus likés
-        const likedResponse = await fetch(`${apiUrl}/likes/user/${userId}/liked`);
+        const likedUrl = `${apiUrl}/likes/user/${userId}/liked`;
+        console.log('📡 Fetching liked content from:', likedUrl);
+
+        const likedResponse = await fetch(likedUrl);
+        console.log('📡 Liked response status:', likedResponse.status);
+
         if (likedResponse.ok) {
           const likedData = await likedResponse.json();
+          console.log('✅ Liked data received:', likedData);
           // Vérifier que c'est bien un tableau
           setLikedContent(Array.isArray(likedData) ? likedData : []);
         } else {
-          console.log('Pas encore de contenus likés ou API non disponible');
+          console.log('⚠️ Pas encore de contenus likés ou API non disponible');
           setLikedContent([]);
         }
 
