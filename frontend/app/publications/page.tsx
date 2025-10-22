@@ -74,7 +74,12 @@ export default function JournalPostsPage() {
         const data = await response.json();
 
         if (Array.isArray(data)) {
-          setArticles(data);
+          // Mapper _id vers id pour compatibilité
+          const articlesWithId = data.map(article => ({
+            ...article,
+            id: article._id || article.id
+          }));
+          setArticles(articlesWithId);
         }
       } catch (error) {
         console.error("Erreur lors du chargement des articles:", error);
