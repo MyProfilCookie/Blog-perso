@@ -12,7 +12,7 @@ const likeSchema = new mongoose.Schema({
     required: true
   },
   contentId: {
-    type: mongoose.Schema.Types.ObjectId,
+    type: String,
     required: true
   },
   likeType: {
