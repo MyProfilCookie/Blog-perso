@@ -19,6 +19,7 @@ const orderRoutes = require("./api/routes/order.routes");
 const productRoutes = require("./api/routes/products.routes");
 const contactRoutes = require("./api/routes/contact.routes");
 const articleRoutes = require("./api/routes/article.routes");
+const publicationRoutes = require("./api/routes/publication.routes"); // Route pour les publications
 const lessonRoutes = require("./api/routes/lessons.routes");
 const messageRoutes = require("./api/routes/message.routes");
 const blogRoutes = require("./api/routes/blog.routes");
@@ -147,6 +148,7 @@ app.use("/api/orders", orderRoutes);
 app.use("/api/products", productRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/articles", articleRoutes);
+app.use("/api/publications", publicationRoutes); // Route pour les publications
 app.use("/api/lessons", lessonRoutes);
 app.use("/api/messages", messageRoutes);
 app.use("/api/blogs", blogRoutes);
