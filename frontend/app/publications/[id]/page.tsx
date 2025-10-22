@@ -47,7 +47,7 @@ export default function PostPage() {
       setError(null);
 
       const apiUrl = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001/api';
-      const response = await fetch(`${apiUrl}/articles/${articleId}`);
+      const response = await fetch(`${apiUrl}/publications/${articleId}`);
 
       if (response.ok) {
         const data = await response.json();
@@ -119,7 +119,7 @@ export default function PostPage() {
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800 flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-violet-600 mx-auto mb-4"></div>
-          <p className="text-gray-600 dark:text-gray-400">Chargement de l'article...</p>
+          <p className="text-gray-600 dark:text-gray-400">Chargement de la publication...</p>
         </div>
       </div>
     );
@@ -134,15 +134,15 @@ export default function PostPage() {
               <span className="text-3xl">⚠️</span>
             </div>
             <h1 className="text-2xl font-bold text-red-600 dark:text-red-400 mb-4">
-              Article non trouvé
+              Publication non trouvée
             </h1>
             <p className="text-gray-600 dark:text-gray-400 mb-6">
-              {error || 'L\'article demandé n\'existe pas.'}
+              {error || 'La publication demandée n\'existe pas.'}
             </p>
-            <Link href="/posts">
+            <Link href="/publications">
               <Button variant="outline">
                 <ArrowLeft className="w-4 h-4 mr-2" />
-                Retour aux articles
+                Retour aux publications
               </Button>
             </Link>
           </CardContent>
@@ -164,9 +164,9 @@ export default function PostPage() {
           >
             {/* Breadcrumb */}
             <div className="mb-4 sm:mb-6">
-              <Link href="/posts" className="inline-flex items-center text-blue-100 hover:text-white transition-colors text-sm sm:text-base">
+              <Link href="/publications" className="inline-flex items-center text-blue-100 hover:text-white transition-colors text-sm sm:text-base">
                 <ArrowLeft className="w-3 h-3 sm:w-4 sm:h-4 mr-2" />
-                Retour aux articles
+                Retour aux publications
               </Link>
             </div>
 
@@ -302,7 +302,7 @@ export default function PostPage() {
                       Partager
                     </Button>
 
-                    <Link href="/posts" className="flex-1 sm:flex-none">
+                    <Link href="/publications" className="flex-1 sm:flex-none">
                       <Button variant="outline" size="sm" className="w-full">
                         <ArrowLeft className="w-4 h-4 mr-2" />
                         Retour
