@@ -37,8 +37,10 @@ export default function LikeButton({
           const statusResponse = await fetch(
             `${apiUrl}/likes/status?userId=${userId}&contentType=${contentType}&contentId=${contentId}`
           );
-          const statusData = await statusResponse.json();
-          setLikeType(statusData.likeType);
+          if (statusResponse.ok) {
+            const statusData = await statusResponse.json();
+            setLikeType(statusData.likeType);
+          }
         }
 
         // Récupérer les statistiques
@@ -46,12 +48,17 @@ export default function LikeButton({
           const statsResponse = await fetch(
             `${apiUrl}/likes/stats?contentType=${contentType}&contentId=${contentId}`
           );
-          const statsData = await statsResponse.json();
-          setLikes(statsData.likes);
-          setDislikes(statsData.dislikes);
+          if (statsResponse.ok) {
+            const statsData = await statsResponse.json();
+            setLikes(statsData.likes || 0);
+            setDislikes(statsData.dislikes || 0);
+          }
         }
       } catch (error) {
         console.error('Erreur lors du chargement des likes:', error);
+        // En cas d'erreur, on garde les valeurs par défaut
+        setLikes(0);
+        setDislikes(0);
       }
     };
 

@@ -62,15 +62,29 @@ export default function LikedContentPage() {
       try {
         // Récupérer les contenus likés
         const likedResponse = await fetch(`${apiUrl}/likes/user/${userId}/liked`);
-        const likedData = await likedResponse.json();
-        setLikedContent(likedData);
+        if (likedResponse.ok) {
+          const likedData = await likedResponse.json();
+          // Vérifier que c'est bien un tableau
+          setLikedContent(Array.isArray(likedData) ? likedData : []);
+        } else {
+          console.log('Pas encore de contenus likés ou API non disponible');
+          setLikedContent([]);
+        }
 
         // Récupérer les contenus dislikés
         const dislikedResponse = await fetch(`${apiUrl}/likes/user/${userId}/disliked`);
-        const dislikedData = await dislikedResponse.json();
-        setDislikedContent(dislikedData);
+        if (dislikedResponse.ok) {
+          const dislikedData = await dislikedResponse.json();
+          // Vérifier que c'est bien un tableau
+          setDislikedContent(Array.isArray(dislikedData) ? dislikedData : []);
+        } else {
+          console.log('Pas encore de contenus dislikés ou API non disponible');
+          setDislikedContent([]);
+        }
       } catch (error) {
         console.error('Erreur lors du chargement des contenus:', error);
+        setLikedContent([]);
+        setDislikedContent([]);
       } finally {
         setLoading(false);
       }
