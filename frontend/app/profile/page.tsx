@@ -12,7 +12,7 @@ import {
 } from "recharts";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
-import { Sun, Moon, Star, BookOpen, Clock, TrendingUp, User, Award, Target, Edit3, Save, X } from "lucide-react";
+import { Sun, Moon, Star, BookOpen, Clock, TrendingUp, User, Award, Target, Edit3, Save, X, Heart } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -376,6 +376,24 @@ const ProfilePage = () => {
                       </p>
                     </div>
                     <Clock className="h-8 w-8 text-orange-600 dark:text-orange-400" />
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Contenus Aimés */}
+              <Card
+                className="bg-gradient-to-r from-pink-50 to-rose-100 dark:from-pink-900/20 dark:to-rose-800/20 border-pink-200 dark:border-pink-700 cursor-pointer hover:shadow-lg transition-all"
+                onClick={() => router.push('/profile/liked')}
+              >
+                <CardContent className="p-6">
+                  <div className="flex items-center justify-between">
+                    <div>
+                      <p className="text-sm font-medium text-pink-600 dark:text-pink-400">Contenus aimés</p>
+                      <p className="text-lg font-semibold text-pink-900 dark:text-pink-100">
+                        Voir ma collection
+                      </p>
+                    </div>
+                    <Heart className="h-8 w-8 text-pink-600 dark:text-pink-400 fill-current" />
                   </div>
                 </CardContent>
               </Card>

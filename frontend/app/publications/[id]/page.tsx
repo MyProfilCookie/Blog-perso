@@ -19,6 +19,7 @@ import { useParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import LikeButton from "@/components/LikeButton";
 
 interface Article {
   id: string;
@@ -40,6 +41,16 @@ export default function PostPage() {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | undefined>(undefined);
+
+  useEffect(() => {
+    // Récupérer l'ID utilisateur depuis le localStorage
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      const user = JSON.parse(storedUser);
+      setUserId(user._id || user.id);
+    }
+  }, []);
 
   const fetchArticle = async () => {
     try {
@@ -277,6 +288,17 @@ export default function PostPage() {
 
               {/* Article Footer */}
               <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
+                {/* Like/Dislike Section */}
+                <div className="mb-6 flex justify-center">
+                  <LikeButton
+                    contentType="publication"
+                    contentId={articleId}
+                    userId={userId}
+                    showCounts={true}
+                    size="lg"
+                  />
+                </div>
+
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex flex-wrap gap-2">
                     {article.category && (
