@@ -26,14 +26,23 @@ interface LikedContent {
   likedAt: string;
   content: {
     _id: string;
+    id?: string;
     title: string;
     subtitle?: string;
     description?: string;
     image?: string;
     img?: string;
+    imageUrl?: string;
+    imageURL?: string;
+    cover?: string;
+    thumbnail?: string;
     category?: string;
+    tags?: string[];
     author?: string;
-    date: string;
+    date?: string;
+    createdAt?: string;
+    updatedAt?: string;
+    publishedAt?: string;
   };
 }
 
@@ -115,6 +124,7 @@ const normalizeArticlePayload = (raw: any): LikedContent['content'] | null => {
     description: raw.description ?? raw.summary ?? '',
     image: normalizedImage,
     img: normalizedImage,
+    imageUrl: normalizedImage,
     category:
       raw.category ??
       raw.categorie ??
@@ -123,6 +133,58 @@ const normalizeArticlePayload = (raw: any): LikedContent['content'] | null => {
       (Array.isArray(raw.tags) ? raw.tags[0] : undefined),
     author: raw.author ?? raw.auteur ?? raw.writer ?? '',
     date: dateValue ? String(dateValue) : ''
+  };
+};
+
+const normalizeBlogPayload = (raw: any): LikedContent['content'] | null => {
+  if (!raw || typeof raw !== 'object') {
+    return null;
+  }
+
+  const identifier =
+    raw._id ??
+    raw.id ??
+    (typeof raw.slug === 'object' ? raw.slug?.current : raw.slug) ??
+    raw.blogId ??
+    raw.contentId;
+
+  if (!identifier) {
+    return null;
+  }
+
+  const imageCandidate =
+    raw.image ??
+    raw.img ??
+    raw.imageUrl ??
+    raw.imageURL ??
+    raw.cover ??
+    raw.thumbnail ??
+    raw.banner;
+
+  const normalizedImage = normalizeImagePath(imageCandidate);
+
+  return {
+    _id: String(identifier),
+    id: String(identifier),
+    title: raw.title ?? raw.name ?? 'Article de blog',
+    subtitle:
+      raw.subtitle ??
+      raw.description ??
+      raw.summary ??
+      '',
+    description: raw.description ?? '',
+    image: normalizedImage,
+    img: normalizedImage,
+    imageUrl: normalizedImage,
+    category: raw.category ?? (Array.isArray(raw.tags) ? raw.tags[0] : ''),
+    tags: Array.isArray(raw.tags) ? raw.tags : undefined,
+    author: raw.author ?? '',
+    date:
+      raw.date ??
+      raw.createdAt ??
+      raw.updatedAt ??
+      raw.publishedAt ??
+      ''
   };
 };
 
@@ -198,7 +260,7 @@ export default function LikedContentPage() {
       console.log('🔍 Chargement des contenus likés pour userId:', userId);
       setLoading(true);
       try {
-        const articleCache = new Map<string, LikedContent['content']>();
+        const contentCache = new Map<string, LikedContent['content']>();
         const localArticlesPromise = loadLocalArticles();
         const likedUrl = `${apiUrl}/likes/user/${userId}/liked`;
         const dislikedUrl = `${apiUrl}/likes/user/${userId}/disliked`;
@@ -226,55 +288,79 @@ export default function LikedContentPage() {
                   )
               )
               .map(async (entry) => {
-                if (entry.contentType !== 'article') {
-                  return entry;
-                }
-
                 const contentId = entry.contentId ? String(entry.contentId) : '';
                 if (!contentId) {
                   return entry;
                 }
 
-                const existingContent = entry.content?.title
-                  ? normalizeArticlePayload(entry.content)
-                  : null;
+                const cacheKey = `${entry.contentType}:${contentId}`;
+
+                if (contentCache.has(cacheKey)) {
+                  return {
+                    ...entry,
+                    content: contentCache.get(cacheKey)!
+                  };
+                }
+
+                const normalizeExistingContent = () => {
+                  if (!entry.content) {
+                    return null;
+                  }
+
+                  if (entry.contentType === 'article') {
+                    return normalizeArticlePayload(entry.content);
+                  }
+
+                  if (entry.contentType === 'blog') {
+                    return normalizeBlogPayload(entry.content) ?? entry.content;
+                  }
+
+                  return entry.content;
+                };
+
+                const existingContent = normalizeExistingContent();
 
                 if (existingContent) {
-                  articleCache.set(contentId, existingContent);
+                  contentCache.set(cacheKey, existingContent);
                   return {
                     ...entry,
                     content: existingContent
                   };
                 }
 
-                if (articleCache.has(contentId)) {
-                  return {
-                    ...entry,
-                    content: articleCache.get(contentId)!
-                  };
-                }
-
                 let articleDetails: LikedContent['content'] | null = null;
 
-                if (apiUrl && isLikelyObjectId(contentId)) {
+                if (
+                  apiUrl &&
+                  isLikelyObjectId(contentId) &&
+                  (entry.contentType === 'article' || entry.contentType === 'blog')
+                ) {
                   try {
-                    const articleResponse = await fetch(`${apiUrl}/articles/${contentId}`);
+                    const endpoint =
+                      entry.contentType === 'blog'
+                        ? `${apiUrl}/blogs/${contentId}`
+                        : `${apiUrl}/articles/${contentId}`;
+
+                    const articleResponse = await fetch(endpoint);
                     if (articleResponse.ok) {
                       const payload = await articleResponse.json();
-                      articleDetails = normalizeArticlePayload(
-                        payload?.article ?? payload?.data ?? payload
-                      );
+                      const rawPayload = payload?.article ?? payload?.blog ?? payload?.data ?? payload;
+
+                      articleDetails =
+                        entry.contentType === 'blog'
+                          ? normalizeBlogPayload(rawPayload)
+                          : normalizeArticlePayload(rawPayload);
                     }
                   } catch (error) {
-                    console.warn('❌ Erreur lors de la récupération de l\'article via API:', error);
+                    console.warn('❌ Erreur lors de la récupération du contenu via API:', error);
                   }
                 }
 
-                if (!articleDetails) {
+                if (!articleDetails && entry.contentType === 'article') {
                   articleDetails = localArticles.get(contentId) ?? null;
                 }
 
-                if (!articleDetails) {
+                if (!articleDetails && entry.contentType === 'article') {
                   const numericId = Number(contentId);
                   if (!Number.isNaN(numericId)) {
                     articleDetails = localArticles.get(String(numericId)) ?? null;
@@ -285,18 +371,19 @@ export default function LikedContentPage() {
                   articleDetails = {
                     _id: contentId,
                     id: contentId,
-                    title: 'Contenu indisponible',
+                    title: entry.contentType === 'blog' ? 'Article de blog indisponible' : 'Contenu indisponible',
                     subtitle: '',
                     description: '',
                     image: PLACEHOLDER_IMAGE,
                     img: PLACEHOLDER_IMAGE,
+                    imageUrl: PLACEHOLDER_IMAGE,
                     category: '',
                     author: '',
                     date: entry.likedAt
                   };
                 }
 
-                articleCache.set(contentId, articleDetails);
+                contentCache.set(cacheKey, articleDetails);
 
                 return {
                   ...entry,
@@ -335,6 +422,70 @@ export default function LikedContentPage() {
     fetchLikedContent();
   }, [userId, apiUrl]);
 
+  const resolveContentImage = (item: LikedContent): string => {
+    const content = item.content ?? {};
+    const imageCandidate =
+      content.image ??
+      content.img ??
+      content.imageUrl ??
+      content.imageURL ??
+      content.cover ??
+      content.thumbnail;
+
+    return normalizeImagePath(imageCandidate);
+  };
+
+  const resolveContentCategory = (item: LikedContent): string | undefined => {
+    const content = item.content ?? {};
+    if (content.category) {
+      return content.category;
+    }
+    if (Array.isArray(content.tags) && content.tags.length > 0) {
+      return content.tags[0];
+    }
+    return undefined;
+  };
+
+  const resolveContentSubtitle = (item: LikedContent): string | undefined => {
+    const content = item.content ?? {};
+    if (content.subtitle) {
+      return content.subtitle;
+    }
+    if (content.description) {
+      return content.description;
+    }
+    if (typeof (content as { summary?: string }).summary === 'string') {
+      return (content as { summary: string }).summary;
+    }
+    if (typeof (content as { excerpt?: string }).excerpt === 'string') {
+      return (content as { excerpt: string }).excerpt;
+    }
+    return undefined;
+  };
+
+  const resolveContentDate = (item: LikedContent): string | null => {
+    const content = item.content ?? {};
+    const candidates = [
+      content.date,
+      content.createdAt,
+      content.updatedAt,
+      content.publishedAt,
+      item.likedAt,
+    ];
+
+    for (const candidate of candidates) {
+      if (!candidate) {
+        continue;
+      }
+      const parsed = new Date(candidate);
+      if (!Number.isNaN(parsed.getTime())) {
+        return parsed.toLocaleDateString('fr-FR');
+      }
+    }
+
+    return null;
+  };
+
   const getContentLink = (item: LikedContent) => {
     switch (item.contentType) {
       case 'article':
@@ -371,23 +522,23 @@ export default function LikedContentPage() {
         <Card className="h-full overflow-hidden hover:shadow-xl transition-all duration-300 cursor-pointer group border-gray-200 dark:border-gray-700">
           <div className="relative h-48 w-full overflow-hidden">
             <Image
-              src={item.content.image || item.content.img || '/placeholder.webp'}
+              src={resolveContentImage(item)}
               alt={item.content.title}
               fill
               className="object-cover group-hover:scale-110 transition-transform duration-300"
             />
             <div className="absolute top-2 right-2">
-              <Badge variant="secondary" className="bg-white/90 dark:bg-gray-800/90">
+              <Badge variant="secondary" className="bg-white/90 dark:bg-gray-800/90 capitalize">
                 {getContentIcon(item.contentType)}
-                <span className="ml-1 capitalize">{item.contentType}</span>
+                <span className="ml-1">{item.contentType}</span>
               </Badge>
             </div>
           </div>
 
           <CardContent className="p-4">
-            {item.content.category && (
+            {resolveContentCategory(item) && (
               <Badge variant="outline" className="mb-2">
-                {item.content.category}
+                {resolveContentCategory(item)}
               </Badge>
             )}
 
@@ -395,9 +546,9 @@ export default function LikedContentPage() {
               {item.content.title}
             </h3>
 
-            {item.content.subtitle && (
+            {resolveContentSubtitle(item) && (
               <p className="text-sm text-gray-600 dark:text-gray-400 mb-3 line-clamp-2">
-                {item.content.subtitle}
+                {resolveContentSubtitle(item)}
               </p>
             )}
 
@@ -408,10 +559,10 @@ export default function LikedContentPage() {
                   <span>{item.content.author}</span>
                 </div>
               )}
-              {item.content.date && (
+              {resolveContentDate(item) && (
                 <div className="flex items-center gap-1">
                   <Calendar className="w-3 h-3" />
-                  <span>{new Date(item.content.date).toLocaleDateString('fr-FR')}</span>
+                  <span>{resolveContentDate(item)}</span>
                 </div>
               )}
             </div>
