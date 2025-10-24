@@ -43,6 +43,7 @@ interface LikedContent {
     createdAt?: string;
     updatedAt?: string;
     publishedAt?: string;
+    sourceType?: 'articles' | 'posts';
   };
 }
 
@@ -66,7 +67,10 @@ const normalizeImagePath = (value?: string | null): string => {
   return normalized.startsWith('/') ? normalized : `/${normalized}`;
 };
 
-const normalizeArticlePayload = (raw: any): LikedContent['content'] | null => {
+const normalizeArticlePayload = (
+  raw: any,
+  sourceType: 'articles' | 'posts',
+): LikedContent['content'] | null => {
   if (!raw || typeof raw !== 'object') {
     return null;
   }
@@ -132,7 +136,8 @@ const normalizeArticlePayload = (raw: any): LikedContent['content'] | null => {
       raw.tag ??
       (Array.isArray(raw.tags) ? raw.tags[0] : undefined),
     author: raw.author ?? raw.auteur ?? raw.writer ?? '',
-    date: dateValue ? String(dateValue) : ''
+    date: dateValue ? String(dateValue) : '',
+    sourceType,
   };
 };
 
@@ -188,41 +193,64 @@ const normalizeBlogPayload = (raw: any): LikedContent['content'] | null => {
   };
 };
 
-const loadLocalArticles = async (): Promise<Map<string, LikedContent['content']>> => {
-  const sources = ['/dataarticles.json', '/dataarticless.json'];
-  const articleMap = new Map<string, LikedContent['content']>();
+type LocalArticleMaps = {
+  articles: Map<string, LikedContent['content']>;
+  posts: Map<string, LikedContent['content']>;
+};
+
+const loadLocalArticles = async (): Promise<LocalArticleMaps> => {
+  const articlesMap = new Map<string, LikedContent['content']>();
+  const postsMap = new Map<string, LikedContent['content']>();
+  const sources: Array<{ path: string; type: 'articles' | 'posts' }> = [
+    { path: '/dataarticles.json', type: 'articles' },
+    { path: '/dataarticless.json', type: 'posts' },
+  ];
+
+  const loadSource = async (sourcePath: string, type: 'articles' | 'posts') => {
+    try {
+      const response = await fetch(sourcePath);
+      if (!response.ok) {
+        return;
+      }
+
+      const payload = await response.json();
+      const articles = Array.isArray(payload)
+        ? payload
+        : payload?.articles ?? payload?.data ?? [];
+
+      if (!Array.isArray(articles)) {
+        return;
+      }
+
+      const targetMap = type === 'posts' ? postsMap : articlesMap;
+
+      articles.forEach((entry: any) => {
+        const normalized = normalizeArticlePayload(entry, type);
+        if (!normalized) {
+          return;
+        }
+
+        const identifiers = new Set<string>([
+          normalized._id,
+          normalized.id ?? normalized._id,
+        ]);
+
+        identifiers.forEach((identifier) => {
+          targetMap.set(identifier, normalized);
+        });
+      });
+    } catch (error) {
+      console.warn(`❌ Erreur lors du chargement du fichier ${sourcePath}:`, error);
+    }
+  };
 
   await Promise.all(
-    sources.map(async (source) => {
-      try {
-        const response = await fetch(source);
-        if (!response.ok) {
-          return;
-        }
-
-        const payload = await response.json();
-        const articles = Array.isArray(payload)
-          ? payload
-          : payload?.articles ?? payload?.data ?? [];
-
-        if (!Array.isArray(articles)) {
-          return;
-        }
-
-        articles.forEach((entry: any) => {
-          const normalized = normalizeArticlePayload(entry);
-          if (normalized) {
-            articleMap.set(normalized._id, normalized);
-            articleMap.set(normalized.id, normalized);
-          }
-        });
-      } catch (error) {
-        console.warn(`❌ Erreur lors du chargement du fichier ${source}:`, error);
-      }
+    sources.map(async ({ path, type }) => {
+      await loadSource(path, type);
     })
   );
 
-  return articleMap;
+  return { articles: articlesMap, posts: postsMap };
 };
 
 const isLikelyObjectId = (value: string | undefined | null): boolean => {
@@ -265,11 +293,31 @@ export default function LikedContentPage() {
         const likedUrl = `${apiUrl}/likes/user/${userId}/liked`;
         const dislikedUrl = `${apiUrl}/likes/user/${userId}/disliked`;
 
-        const [localArticles, likedResponse, dislikedResponse] = await Promise.all([
+        const [localArticlesMaps, likedResponse, dislikedResponse] = await Promise.all([
           localArticlesPromise,
           fetch(likedUrl),
           fetch(dislikedUrl)
         ]);
+
+        const getLocalArticle = (identifier: string) => {
+          const directId = identifier.trim();
+          const numericId = Number(directId);
+          const normalizedNumericId = !Number.isNaN(numericId) ? String(numericId) : null;
+
+          const fromPosts =
+            localArticlesMaps.posts.get(directId) ??
+            (normalizedNumericId ? localArticlesMaps.posts.get(normalizedNumericId) : undefined);
+
+          if (fromPosts) {
+            return fromPosts;
+          }
+
+          const fromArticles =
+            localArticlesMaps.articles.get(directId) ??
+            (normalizedNumericId ? localArticlesMaps.articles.get(normalizedNumericId) : undefined);
+
+          return fromArticles ?? null;
+        };
 
         const enrichEntries = async (entries: unknown[]): Promise<LikedContent[]> => {
           if (!Array.isArray(entries)) {
@@ -308,7 +356,14 @@ export default function LikedContentPage() {
                   }
 
                   if (entry.contentType === 'article') {
-                    return normalizeArticlePayload(entry.content);
+                    const typedContent = entry.content as Partial<LikedContent['content']>;
+                    if (typeof typedContent.title === 'string' && typedContent.title.trim().length > 0) {
+                      return {
+                        ...typedContent,
+                        sourceType: typedContent.sourceType ?? 'articles',
+                      } as LikedContent['content'];
+                    }
+                    return null;
                   }
 
                   if (entry.contentType === 'blog') {
@@ -349,7 +404,10 @@ export default function LikedContentPage() {
                       articleDetails =
                         entry.contentType === 'blog'
                           ? normalizeBlogPayload(rawPayload)
-                          : normalizeArticlePayload(rawPayload);
+                          : normalizeArticlePayload(
+                              rawPayload,
+                              entry.contentType === 'article' ? 'articles' : 'posts'
+                            );
                     }
                   } catch (error) {
                     console.warn('❌ Erreur lors de la récupération du contenu via API:', error);
@@ -357,14 +415,7 @@ export default function LikedContentPage() {
                 }
 
                 if (!articleDetails && entry.contentType === 'article') {
-                  articleDetails = localArticles.get(contentId) ?? null;
-                }
-
-                if (!articleDetails && entry.contentType === 'article') {
-                  const numericId = Number(contentId);
-                  if (!Number.isNaN(numericId)) {
-                    articleDetails = localArticles.get(String(numericId)) ?? null;
-                  }
+                  articleDetails = getLocalArticle(contentId);
                 }
 
                 if (!articleDetails) {
@@ -379,7 +430,8 @@ export default function LikedContentPage() {
                     imageUrl: PLACEHOLDER_IMAGE,
                     category: '',
                     author: '',
-                    date: entry.likedAt
+                    date: entry.likedAt,
+                    sourceType: entry.contentType === 'article' ? 'articles' : undefined
                   };
                 }
 
@@ -489,6 +541,9 @@ export default function LikedContentPage() {
   const getContentLink = (item: LikedContent) => {
     switch (item.contentType) {
       case 'article':
+        if (item.content?.sourceType === 'posts') {
+          return `/posts/${item.contentId}`;
+        }
         return `/articles/${item.contentId}`;
       case 'publication':
         return `/publications/${item.contentId}`;
