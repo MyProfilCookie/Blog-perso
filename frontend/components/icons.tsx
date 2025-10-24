@@ -217,19 +217,52 @@ export const DeliveredOrdersIcon: React.FC<IconSvgProps> = ({
     >
       {/* Cercle de fond */}
       <circle cx="16" cy="16" r="14" fill="#4caf50" opacity="0.2" />
-      
+
       {/* Cercle principal */}
       <circle cx="16" cy="16" r="10" fill="none" stroke="#4caf50" strokeWidth="2" />
-      
+
       {/* Coches de validation */}
       <path d="M12 16 L14 18 L20 12" stroke="#4caf50" strokeWidth="2" fill="none" strokeLinecap="round" strokeLinejoin="round" />
-      
+
       {/* Étoiles décoratives */}
       <path d="M8 8 L9 10 L11 10 L9.5 11.5 L10 13.5 L8 12 L6 13.5 L6.5 11.5 L5 10 L7 10 Z" fill="#4caf50" opacity="0.6" />
       <path d="M24 8 L25 10 L27 10 L25.5 11.5 L26 13.5 L24 12 L22 13.5 L22.5 11.5 L21 10 L23 10 Z" fill="#4caf50" opacity="0.6" />
-      
+
       {/* Animation de pulsation */}
       <circle cx="16" cy="16" r="10" fill="none" stroke="#4caf50" strokeWidth="1" opacity="0.3">
+        <animate attributeName="r" values="10;12;10" dur="2s" repeatCount="indefinite" />
+        <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite" />
+      </circle>
+    </svg>
+  );
+};
+
+// Icône pour les commandes annulées
+export const CancelledOrdersIcon: React.FC<IconSvgProps> = ({
+  size = 24,
+  width,
+  height,
+  ...props
+}) => {
+  return (
+    <svg
+      height={size || height}
+      viewBox="0 0 32 32"
+      width={size || width}
+      {...props}
+    >
+      {/* Cercle de fond */}
+      <circle cx="16" cy="16" r="14" fill="#ef5350" opacity="0.2" />
+
+      {/* Cercle principal */}
+      <circle cx="16" cy="16" r="10" fill="none" stroke="#ef5350" strokeWidth="2" />
+
+      {/* Croix X pour annulation */}
+      <path d="M12 12 L20 20" stroke="#ef5350" strokeWidth="2" strokeLinecap="round" />
+      <path d="M20 12 L12 20" stroke="#ef5350" strokeWidth="2" strokeLinecap="round" />
+
+      {/* Animation de pulsation */}
+      <circle cx="16" cy="16" r="10" fill="none" stroke="#ef5350" strokeWidth="1" opacity="0.3">
         <animate attributeName="r" values="10;12;10" dur="2s" repeatCount="indefinite" />
         <animate attributeName="opacity" values="0.3;0.1;0.3" dur="2s" repeatCount="indefinite" />
       </circle>
