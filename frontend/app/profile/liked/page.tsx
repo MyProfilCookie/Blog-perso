@@ -64,6 +64,14 @@ export default function LikedContentPage() {
       console.log('🔍 Chargement des contenus likés pour userId:', userId);
       setLoading(true);
       try {
+        // Charger les articles depuis le JSON local
+        const articlesResponse = await fetch('/dataarticless.json');
+        let articlesData: any[] = [];
+        if (articlesResponse.ok) {
+          const jsonData = await articlesResponse.json();
+          articlesData = jsonData.articles || [];
+        }
+
         // Récupérer les contenus likés
         const likedUrl = `${apiUrl}/likes/user/${userId}/liked`;
         console.log('📡 Fetching liked content from:', likedUrl);
@@ -74,8 +82,33 @@ export default function LikedContentPage() {
         if (likedResponse.ok) {
           const likedData = await likedResponse.json();
           console.log('✅ Liked data received:', likedData);
-          // Vérifier que c'est bien un tableau
-          setLikedContent(Array.isArray(likedData) ? likedData : []);
+
+          // Enrichir les articles avec les données du JSON local
+          const enrichedLikedData = Array.isArray(likedData) ? likedData.map((item: any) => {
+            if (item.contentType === 'article' && (!item.content?.title)) {
+              // Chercher l'article dans le JSON local
+              const article = articlesData.find((a: any) => a.id?.toString() === item.contentId?.toString());
+              if (article) {
+                return {
+                  ...item,
+                  content: {
+                    _id: article.id,
+                    id: article.id,
+                    title: article.title,
+                    subtitle: article.subtitle,
+                    image: article.image || article.img,
+                    img: article.image || article.img,
+                    category: article.category,
+                    author: article.author,
+                    date: article.date
+                  }
+                };
+              }
+            }
+            return item;
+          }) : [];
+
+          setLikedContent(enrichedLikedData);
         } else {
           console.log('⚠️ Pas encore de contenus likés ou API non disponible');
           setLikedContent([]);
@@ -85,8 +118,32 @@ export default function LikedContentPage() {
         const dislikedResponse = await fetch(`${apiUrl}/likes/user/${userId}/disliked`);
         if (dislikedResponse.ok) {
           const dislikedData = await dislikedResponse.json();
-          // Vérifier que c'est bien un tableau
-          setDislikedContent(Array.isArray(dislikedData) ? dislikedData : []);
+
+          // Enrichir les articles avec les données du JSON local
+          const enrichedDislikedData = Array.isArray(dislikedData) ? dislikedData.map((item: any) => {
+            if (item.contentType === 'article' && (!item.content?.title)) {
+              const article = articlesData.find((a: any) => a.id?.toString() === item.contentId?.toString());
+              if (article) {
+                return {
+                  ...item,
+                  content: {
+                    _id: article.id,
+                    id: article.id,
+                    title: article.title,
+                    subtitle: article.subtitle,
+                    image: article.image || article.img,
+                    img: article.image || article.img,
+                    category: article.category,
+                    author: article.author,
+                    date: article.date
+                  }
+                };
+              }
+            }
+            return item;
+          }) : [];
+
+          setDislikedContent(enrichedDislikedData);
         } else {
           console.log('Pas encore de contenus dislikés ou API non disponible');
           setDislikedContent([]);
