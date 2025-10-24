@@ -1,5 +1,5 @@
 const Like = require('../models/Like');
-const Article = require('../models/Article');
+// const Article = require('../models/Article'); // Articles sont dans JSON, pas en DB
 const Publication = require('../models/Publication');
 const Blog = require('../models/Blog');
 
@@ -110,7 +110,8 @@ exports.getUserLikedContent = async (req, res) => {
 
         switch (like.contentType) {
           case 'article':
-            model = Article;
+            // Articles sont dans JSON, pas en DB - on retourne juste l'ID
+            content = { _id: like.contentId, id: like.contentId };
             break;
           case 'publication':
             model = Publication;
@@ -163,7 +164,8 @@ exports.getUserDislikedContent = async (req, res) => {
 
         switch (like.contentType) {
           case 'article':
-            model = Article;
+            // Articles sont dans JSON, pas en DB - on retourne juste l'ID
+            content = { _id: like.contentId, id: like.contentId };
             break;
           case 'publication':
             model = Publication;
