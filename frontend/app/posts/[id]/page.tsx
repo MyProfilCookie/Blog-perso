@@ -43,6 +43,8 @@ export default function PostPage() {
   const [error, setError] = useState<string | null>(null);
   const [userId, setUserId] = useState<string>('');
 
+  const DEFAULT_POST_IMAGE = '/assets/default.webp';
+
   const fetchArticle = async () => {
     try {
       setLoading(true);
@@ -105,6 +107,17 @@ export default function PostPage() {
     if (imagePath?.startsWith('http')) return imagePath;
     if (imagePath?.startsWith('/')) return imagePath;
     return `/assets/couvertures/${imagePath}`;
+  };
+
+  const handleImageError = (event: React.SyntheticEvent<HTMLImageElement>) => {
+    const target = event.currentTarget;
+    if (target.dataset.fallbackApplied === 'true') {
+      return;
+    }
+
+    target.src = DEFAULT_POST_IMAGE;
+    target.srcset = DEFAULT_POST_IMAGE;
+    target.dataset.fallbackApplied = 'true';
   };
 
   const calculateReadingTime = (content: any) => {
@@ -248,6 +261,8 @@ export default function PostPage() {
                   sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px"
                   className="object-cover"
                   priority
+                  onError={handleImageError}
+                  data-fallback-applied="false"
                 />
               </div>
             )}
@@ -280,6 +295,8 @@ export default function PostPage() {
                               sizes="(max-width: 640px) 100vw, (max-width: 1024px) 100vw, 1280px"
                               className="rounded-none sm:rounded-lg object-cover"
                               priority={blockIndex === 0}
+                              onError={handleImageError}
+                              data-fallback-applied="false"
                             />
                           </div>
                           {block.alt && (
