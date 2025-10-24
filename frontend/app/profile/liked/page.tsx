@@ -37,6 +37,132 @@ interface LikedContent {
   };
 }
 
+const PLACEHOLDER_IMAGE = '/placeholder.webp';
+
+const normalizeImagePath = (value?: string | null): string => {
+  if (!value || typeof value !== 'string') {
+    return PLACEHOLDER_IMAGE;
+  }
+
+  const trimmed = value.trim();
+  if (!trimmed) {
+    return PLACEHOLDER_IMAGE;
+  }
+
+  if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith('data:')) {
+    return trimmed;
+  }
+
+  const normalized = trimmed.replace(/^\.?\/+/, '');
+  return normalized.startsWith('/') ? normalized : `/${normalized}`;
+};
+
+const normalizeArticlePayload = (raw: any): LikedContent['content'] | null => {
+  if (!raw || typeof raw !== 'object') {
+    return null;
+  }
+
+  const identifier =
+    raw._id ??
+    raw.id ??
+    (typeof raw.slug === 'object' ? raw.slug?.current : raw.slug) ??
+    raw.articleId ??
+    raw.contentId;
+
+  if (!identifier) {
+    return null;
+  }
+
+  const imageCandidate =
+    raw.image ??
+    raw.img ??
+    raw.imageUrl ??
+    raw.imageURL ??
+    raw.cover ??
+    raw.thumbnail ??
+    raw.image_path ??
+    raw.imagePath ??
+    raw.image_name ??
+    raw.imageName;
+
+  const normalizedImage = normalizeImagePath(imageCandidate);
+  const dateValue =
+    raw.date ??
+    raw.createdAt ??
+    raw.updatedAt ??
+    raw.publishedAt ??
+    raw.likedAt ??
+    '';
+
+  return {
+    _id: String(identifier),
+    id: String(identifier),
+    title:
+      raw.title ??
+      raw.name ??
+      raw.headline ??
+      raw.heading ??
+      raw.nom ??
+      'Article indisponible',
+    subtitle:
+      raw.subtitle ??
+      raw.description ??
+      raw.excerpt ??
+      raw.summary ??
+      raw.subheading ??
+      raw['sous-titre'] ??
+      '',
+    description: raw.description ?? raw.summary ?? '',
+    image: normalizedImage,
+    img: normalizedImage,
+    category:
+      raw.category ??
+      raw.categorie ??
+      raw.genre ??
+      raw.tag ??
+      (Array.isArray(raw.tags) ? raw.tags[0] : undefined),
+    author: raw.author ?? raw.auteur ?? raw.writer ?? '',
+    date: dateValue ? String(dateValue) : ''
+  };
+};
+
+const loadLocalArticles = async (): Promise<Map<string, LikedContent['content']>> => {
+  const sources = ['/dataarticles.json', '/dataarticless.json'];
+  const articleMap = new Map<string, LikedContent['content']>();
+
+  await Promise.all(
+    sources.map(async (source) => {
+      try {
+        const response = await fetch(source);
+        if (!response.ok) {
+          return;
+        }
+
+        const payload = await response.json();
+        const articles = Array.isArray(payload)
+          ? payload
+          : payload?.articles ?? payload?.data ?? [];
+
+        if (!Array.isArray(articles)) {
+          return;
+        }
+
+        articles.forEach((entry: any) => {
+          const normalized = normalizeArticlePayload(entry);
+          if (normalized) {
+            articleMap.set(normalized._id, normalized);
+            articleMap.set(normalized.id, normalized);
+          }
+        });
+      } catch (error) {
+        console.warn(`❌ Erreur lors du chargement du fichier ${source}:`, error);
+      }
+    })
+  );
+
+  return articleMap;
+};
+
 export default function LikedContentPage() {
   const [likedContent, setLikedContent] = useState<LikedContent[]>([]);
   const [dislikedContent, setDislikedContent] = useState<LikedContent[]>([]);
@@ -64,106 +190,127 @@ export default function LikedContentPage() {
       console.log('🔍 Chargement des contenus likés pour userId:', userId);
       setLoading(true);
       try {
-        // Charger les articles depuis les deux fichiers JSON locaux
-        const articlesResponse1 = await fetch('/dataarticles.json');
-        const articlesResponse2 = await fetch('/dataarticless.json');
-        let articlesData: any[] = [];
-
-        if (articlesResponse1.ok) {
-          const jsonData = await articlesResponse1.json();
-          articlesData = [...articlesData, ...(jsonData.articles || [])];
-        }
-
-        if (articlesResponse2.ok) {
-          const jsonData = await articlesResponse2.json();
-          articlesData = [...articlesData, ...(jsonData.articles || [])];
-        }
-
-        console.log('📚 Total articles loaded:', articlesData.length);
-
-        // Récupérer les contenus likés
+        const articleCache = new Map<string, LikedContent['content']>();
+        const localArticlesPromise = loadLocalArticles();
         const likedUrl = `${apiUrl}/likes/user/${userId}/liked`;
-        console.log('📡 Fetching liked content from:', likedUrl);
+        const dislikedUrl = `${apiUrl}/likes/user/${userId}/disliked`;
 
-        const likedResponse = await fetch(likedUrl);
-        console.log('📡 Liked response status:', likedResponse.status);
+        const [localArticles, likedResponse, dislikedResponse] = await Promise.all([
+          localArticlesPromise,
+          fetch(likedUrl),
+          fetch(dislikedUrl)
+        ]);
+
+        const enrichEntries = async (entries: unknown[]): Promise<LikedContent[]> => {
+          if (!Array.isArray(entries)) {
+            return [];
+          }
+
+          return Promise.all(
+            entries
+              .filter(
+                (entry): entry is LikedContent =>
+                  Boolean(
+                    entry &&
+                    typeof entry === 'object' &&
+                    'contentType' in entry &&
+                    'contentId' in entry
+                  )
+              )
+              .map(async (entry) => {
+                if (entry.contentType !== 'article') {
+                  return entry;
+                }
+
+                const contentId = entry.contentId ? String(entry.contentId) : '';
+                if (!contentId) {
+                  return entry;
+                }
+
+                const existingContent = entry.content?.title
+                  ? normalizeArticlePayload(entry.content)
+                  : null;
+
+                if (existingContent) {
+                  articleCache.set(contentId, existingContent);
+                  return {
+                    ...entry,
+                    content: existingContent
+                  };
+                }
+
+                if (articleCache.has(contentId)) {
+                  return {
+                    ...entry,
+                    content: articleCache.get(contentId)!
+                  };
+                }
+
+                let articleDetails: LikedContent['content'] | null = null;
+
+                if (apiUrl) {
+                  try {
+                    const articleResponse = await fetch(`${apiUrl}/articles/${contentId}`);
+                    if (articleResponse.ok) {
+                      const payload = await articleResponse.json();
+                      articleDetails = normalizeArticlePayload(
+                        payload?.article ?? payload?.data ?? payload
+                      );
+                    }
+                  } catch (error) {
+                    console.warn('❌ Erreur lors de la récupération de l\'article via API:', error);
+                  }
+                }
+
+                if (!articleDetails) {
+                  articleDetails = localArticles.get(contentId) ?? null;
+                }
+
+                if (!articleDetails) {
+                  const numericId = Number(contentId);
+                  if (!Number.isNaN(numericId)) {
+                    articleDetails = localArticles.get(String(numericId)) ?? null;
+                  }
+                }
+
+                if (!articleDetails) {
+                  articleDetails = {
+                    _id: contentId,
+                    id: contentId,
+                    title: 'Contenu indisponible',
+                    subtitle: '',
+                    description: '',
+                    image: PLACEHOLDER_IMAGE,
+                    img: PLACEHOLDER_IMAGE,
+                    category: '',
+                    author: '',
+                    date: entry.likedAt
+                  };
+                }
+
+                articleCache.set(contentId, articleDetails);
+
+                return {
+                  ...entry,
+                  content: articleDetails
+                };
+              })
+          );
+        };
 
         if (likedResponse.ok) {
           const likedData = await likedResponse.json();
-          console.log('✅ Liked data received:', likedData);
-
-          // Enrichir les articles avec les données du JSON local
-          const enrichedLikedData = Array.isArray(likedData) ? likedData.map((item: any) => {
-            if (item.contentType === 'article' && (!item.content?.title)) {
-              // Chercher l'article dans le JSON local
-              console.log('🔍 Searching for article with ID:', item.contentId);
-              const article = articlesData.find((a: any) => a.id?.toString() === item.contentId?.toString());
-              if (article) {
-                console.log('✅ Article found:', article.title);
-                return {
-                  ...item,
-                  content: {
-                    _id: article.id,
-                    id: article.id,
-                    title: article.title,
-                    subtitle: article.subtitle,
-                    image: article.image || article.img,
-                    img: article.image || article.img,
-                    category: article.category,
-                    author: article.author,
-                    date: article.date
-                  }
-                };
-              } else {
-                console.log('❌ Article NOT found with ID:', item.contentId);
-                // Article non trouvé - on retourne null pour le filtrer après
-                return null;
-              }
-            }
-            return item;
-          }).filter(item => item !== null) : [];
-
-          setLikedContent(enrichedLikedData);
+          const enrichedLiked = await enrichEntries(likedData);
+          setLikedContent(enrichedLiked);
         } else {
           console.log('⚠️ Pas encore de contenus likés ou API non disponible');
           setLikedContent([]);
         }
 
-        // Récupérer les contenus dislikés
-        const dislikedResponse = await fetch(`${apiUrl}/likes/user/${userId}/disliked`);
         if (dislikedResponse.ok) {
           const dislikedData = await dislikedResponse.json();
-
-          // Enrichir les articles avec les données du JSON local
-          const enrichedDislikedData = Array.isArray(dislikedData) ? dislikedData.map((item: any) => {
-            if (item.contentType === 'article' && (!item.content?.title)) {
-              console.log('🔍 Searching for disliked article with ID:', item.contentId);
-              const article = articlesData.find((a: any) => a.id?.toString() === item.contentId?.toString());
-              if (article) {
-                console.log('✅ Disliked article found:', article.title);
-                return {
-                  ...item,
-                  content: {
-                    _id: article.id,
-                    id: article.id,
-                    title: article.title,
-                    subtitle: article.subtitle,
-                    image: article.image || article.img,
-                    img: article.image || article.img,
-                    category: article.category,
-                    author: article.author,
-                    date: article.date
-                  }
-                };
-              } else {
-                console.log('❌ Disliked article NOT found with ID:', item.contentId);
-                return null;
-              }
-            }
-            return item;
-          }).filter(item => item !== null) : [];
-
-          setDislikedContent(enrichedDislikedData);
+          const enrichedDisliked = await enrichEntries(dislikedData);
+          setDislikedContent(enrichedDisliked);
         } else {
           console.log('Pas encore de contenus dislikés ou API non disponible');
           setDislikedContent([]);
