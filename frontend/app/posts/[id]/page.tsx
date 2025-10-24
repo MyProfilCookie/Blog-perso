@@ -19,6 +19,7 @@ import { useParams } from "next/navigation";
 import { Card, CardContent } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
+import LikeButton from "@/components/LikeButton";
 
 interface Article {
   id: string;
@@ -36,10 +37,11 @@ interface Article {
 export default function PostPage() {
   const params = useParams();
   const articleId = params.id as string;
-  
+
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string>('');
 
   const fetchArticle = async () => {
     try {
@@ -77,6 +79,19 @@ export default function PostPage() {
       fetchArticle();
     }
   }, [articleId]);
+
+  // Récupérer le userId depuis localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setUserId(user._id || user.id || '');
+      } catch (error) {
+        console.error('Erreur lors de la récupération du userId:', error);
+      }
+    }
+  }, []);
 
   const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString('fr-FR', {
@@ -287,7 +302,7 @@ export default function PostPage() {
               {/* Article Footer */}
               <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                  <div className="flex flex-wrap gap-2">
+                  <div className="flex flex-wrap gap-2 items-center">
                     {article.category && (
                       <Badge variant="secondary" className="text-xs sm:text-sm">
                         <Tag className="w-3 h-3 mr-1" />
@@ -298,6 +313,13 @@ export default function PostPage() {
                       <BookOpen className="w-3 h-3 mr-1" />
                       ID: {article.id}
                     </Badge>
+                    <LikeButton
+                      contentType="article"
+                      contentId={articleId}
+                      userId={userId}
+                      showCounts={true}
+                      size="md"
+                    />
                   </div>
 
                   <div className="flex gap-2 flex-wrap">

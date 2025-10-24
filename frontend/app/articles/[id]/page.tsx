@@ -21,6 +21,7 @@ import {
   MessageCircle
 } from "lucide-react";
 import ArticleDataViewer from "@/components/articles/ArticleDataViewer";
+import LikeButton from "@/components/LikeButton";
 
 import articlesData from "@/public/dataarticles.json";
 
@@ -196,71 +197,22 @@ const ArticlePage = () => {
   const [article, setArticle] = useState<Article | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
-  const [isLiked, setIsLiked] = useState(false);
-  const [likeCount, setLikeCount] = useState(0);
+  const [userId, setUserId] = useState<string>('');
   const [relatedArticles, setRelatedArticles] = useState<Article[]>([]);
   const articleMetricsKey = article?.id ?? (articleId ? String(articleId) : "");
 
-  // Fonction pour gérer les likes
-  const handleLike = () => {
-    const storageKey = article?.id ?? (articleId ? String(articleId) : "");
-
-    if (!storageKey) {
-      return;
+  // Récupérer le userId depuis localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setUserId(user._id || user.id || '');
+      } catch (error) {
+        console.error('Erreur lors de la récupération du userId:', error);
+      }
     }
-
-    const likedArticlesRaw = JSON.parse(localStorage.getItem('likedArticles') || '[]');
-    const likedArticles: string[] = Array.isArray(likedArticlesRaw)
-      ? likedArticlesRaw.map((id: unknown) => String(id))
-      : [];
-
-    const likesDataRaw = JSON.parse(localStorage.getItem('articleLikes') || '{}');
-    const likesData: Record<string, number> =
-      likesDataRaw && typeof likesDataRaw === 'object' ? { ...likesDataRaw } : {};
-
-    if (isLiked) {
-      const updatedLikes = likedArticles.filter((id) => id !== storageKey);
-      localStorage.setItem('likedArticles', JSON.stringify(updatedLikes));
-      setIsLiked(false);
-      const newCount = Math.max(0, likeCount - 1);
-      setLikeCount(newCount);
-      likesData[storageKey] = newCount;
-    } else {
-      const updatedLikes = likedArticles.includes(storageKey)
-        ? likedArticles
-        : [...likedArticles, storageKey];
-      localStorage.setItem('likedArticles', JSON.stringify(updatedLikes));
-      setIsLiked(true);
-      const newCount = likeCount + 1;
-      setLikeCount(newCount);
-      likesData[storageKey] = newCount;
-    }
-
-    localStorage.setItem('articleLikes', JSON.stringify(likesData));
-  };
-
-  // Fonction pour charger les données de like
-  const loadLikeData = (storageKey: string) => {
-    const likedArticlesRaw = JSON.parse(localStorage.getItem('likedArticles') || '[]');
-    const likedArticles: string[] = Array.isArray(likedArticlesRaw)
-      ? likedArticlesRaw.map((id: unknown) => String(id))
-      : [];
-
-    setIsLiked(likedArticles.includes(storageKey));
-
-    const likesDataRaw = JSON.parse(localStorage.getItem('articleLikes') || '{}');
-    const likesData: Record<string, number> =
-      likesDataRaw && typeof likesDataRaw === 'object' ? { ...likesDataRaw } : {};
-
-    let storedCount = likesData[storageKey];
-    if (typeof storedCount !== 'number') {
-      storedCount = getDefaultLikes(storageKey);
-      likesData[storageKey] = storedCount;
-      localStorage.setItem('articleLikes', JSON.stringify(likesData));
-    }
-
-    setLikeCount(storedCount);
-  };
+  }, []);
 
   const getRelatedArticles = async (
     category?: string,
@@ -397,14 +349,6 @@ const ArticlePage = () => {
     };
   }, [articleId]);
 
-  // Charger les données de like quand l'article est chargé
-  useEffect(() => {
-    const storageKey = article?.id ?? (articleId ? String(articleId) : "");
-    if (storageKey) {
-      loadLikeData(storageKey);
-    }
-  }, [article, articleId]);
-
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -462,17 +406,13 @@ const ArticlePage = () => {
             </Button>
 
             <div className="flex items-center gap-2">
-              <Button
-                isIconOnly
-                variant="ghost"
-                className={`${isLiked ? 'text-red-500' : 'text-gray-600 dark:text-gray-300 hover:text-red-500'} transition-colors`}
-                onClick={handleLike}
-              >
-                <Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />
-              </Button>
-              <span className="text-sm text-gray-500 dark:text-gray-400">
-                {likeCount}
-              </span>
+              <LikeButton
+                contentType="article"
+                contentId={articleId}
+                userId={userId}
+                showCounts={true}
+                size="sm"
+              />
               <Button
                 isIconOnly
                 variant="ghost"
@@ -534,10 +474,6 @@ const ArticlePage = () => {
                 <div className="flex items-center gap-1">
                   <Eye className="w-4 h-4" />
                   <span>{getDefaultViews(articleMetricsKey)} vues</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <Heart className="w-4 h-4" />
-                  <span>{likeCount} j'aime</span>
                 </div>
               </div>
             </motion.div>
@@ -612,15 +548,13 @@ const ArticlePage = () => {
               className="mt-8 flex flex-wrap items-center justify-between gap-4"
             >
               <div className="flex items-center gap-4">
-                <Button
-                  color={isLiked ? "danger" : "default"}
-                  variant={isLiked ? "solid" : "bordered"}
-                  startContent={<Heart className={`w-4 h-4 ${isLiked ? 'fill-current' : ''}`} />}
-                  className={`${isLiked ? 'bg-red-500 hover:bg-red-600' : 'hover:bg-red-50 dark:hover:bg-red-900/20'} transition-all duration-200`}
-                  onClick={handleLike}
-                >
-                  {isLiked ? 'J\'aime' : 'J\'aime'} ({likeCount})
-                </Button>
+                <LikeButton
+                  contentType="article"
+                  contentId={articleId}
+                  userId={userId}
+                  showCounts={true}
+                  size="lg"
+                />
                 <Button
                   color="primary"
                   variant="bordered"
@@ -736,12 +670,6 @@ const ArticlePage = () => {
                     <span className="text-sm text-gray-600 dark:text-gray-300">Vues</span>
                     <span className="text-sm font-medium text-gray-900 dark:text-white">
                       {getDefaultViews(articleMetricsKey)}
-                    </span>
-                  </div>
-                  <div className="flex items-center justify-between">
-                    <span className="text-sm text-gray-600 dark:text-gray-300">J'aime</span>
-                    <span className="text-sm font-medium text-gray-900 dark:text-white">
-                      {likeCount}
                     </span>
                   </div>
                   <div className="flex items-center justify-between">

@@ -13,6 +13,7 @@ import { motion } from "framer-motion";
 import { Loader2, CheckCircle, Calendar, User, Tag } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import LikeButton from "@/components/LikeButton";
 
 export default function BlogPostPage() {
   const params = useParams();
@@ -34,6 +35,7 @@ export default function BlogPostPage() {
   const [blog, setBlog] = useState<Blog | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string>('');
 
   useEffect(() => {
     if (!id) {
@@ -70,6 +72,19 @@ export default function BlogPostPage() {
 
     fetchBlog();
   }, [id]);
+
+  // Récupérer le userId depuis localStorage
+  useEffect(() => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      try {
+        const user = JSON.parse(storedUser);
+        setUserId(user._id || user.id || '');
+      } catch (error) {
+        console.error('Erreur lors de la récupération du userId:', error);
+      }
+    }
+  }, []);
 
   if (loading) {
     return (
@@ -172,7 +187,7 @@ export default function BlogPostPage() {
             {blog.title}
           </h1>
 
-          <div className="flex flex-wrap gap-4 text-sm">
+          <div className="flex flex-wrap gap-4 text-sm items-center">
             <div className="flex items-center gap-2 text-gray-600 dark:text-gray-300">
               <User className="w-4 h-4" />
               <span>{blog.author}</span>
@@ -191,6 +206,14 @@ export default function BlogPostPage() {
                 {blog.category}
               </span>
             </div>
+
+            <LikeButton
+              contentType="blog"
+              contentId={id as string}
+              userId={userId}
+              showCounts={true}
+              size="md"
+            />
           </div>
 
           <div className="border-t border-gray-200 dark:border-gray-700 pt-6">
