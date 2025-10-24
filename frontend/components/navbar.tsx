@@ -629,28 +629,114 @@ export const Navbar = () => {
           />
         ) : (
           <>
-            {/* Avatar mobile */}
+            {/* Avatar mobile avec dropdown */}
             <div className="md:hidden">
-              <Avatar
-                alt={`Avatar de ${user?.pseudo}`}
-                className="transition-all duration-300 cursor-pointer hover:scale-110"
-                isBordered
-                onClick={() => router.push("/profile")}
-                size="sm"
-                src={user?.avatar || "/assets/default-avatar.webp"}
-                style={{
-                  borderColor:
-                    user?.role === "admin"
-                      ? adminColors[avatarColorIndex]
-                      : userColors[avatarColorIndex],
-                  borderWidth: "3px",
-                  boxShadow: `0 0 12px ${
-                    user?.role === "admin"
-                      ? adminColors[avatarColorIndex]
-                      : userColors[avatarColorIndex]
-                  }`,
-                }}
-              />
+              <Dropdown>
+                <DropdownTrigger>
+                  <Avatar
+                    alt={`Avatar de ${user?.pseudo}`}
+                    className="transition-all duration-300 cursor-pointer hover:scale-110"
+                    isBordered
+                    size="sm"
+                    src={user?.avatar || "/assets/default-avatar.webp"}
+                    style={{
+                      borderColor:
+                        user?.role === "admin"
+                          ? adminColors[avatarColorIndex]
+                          : userColors[avatarColorIndex],
+                      borderWidth: "3px",
+                      boxShadow: `0 0 12px ${
+                        user?.role === "admin"
+                          ? adminColors[avatarColorIndex]
+                          : userColors[avatarColorIndex]
+                      }`,
+                    }}
+                  />
+                </DropdownTrigger>
+                <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700">
+                  <DropdownItem
+                    className="dark:text-gray-200 dark:hover:bg-gray-700"
+                    key="profile-mobile"
+                    onClick={() => router.push("/profile")}
+                  >
+                    <FontAwesomeIcon className="mr-2" icon={faUser} />
+                    Profil
+                  </DropdownItem>
+                  <DropdownItem
+                    className="font-medium dark:text-gray-300"
+                    key="orders-title-mobile"
+                    showDivider
+                    textValue="Mes commandes"
+                  >
+                    Mes commandes
+                  </DropdownItem>
+                  <DropdownItem
+                    key="orders-pending-mobile"
+                    onClick={() => router.push("/orders?status=pending")}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <PendingOrdersIcon className="text-yellow-600" size={20} />
+                        <span className="text-sm">En cours</span>
+                      </div>
+                      <span className="font-semibold text-yellow-600">
+                        {orderCount.pending || 0}
+                      </span>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="orders-shipped-mobile"
+                    onClick={() => router.push("/orders?status=shipped")}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <ShippedOrdersIcon className="text-blue-600" size={20} />
+                        <span className="text-sm">Expédiées</span>
+                      </div>
+                      <span className="font-semibold text-blue-600">
+                        {orderCount.shipped || 0}
+                      </span>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="orders-delivered-mobile"
+                    onClick={() => router.push("/orders?status=delivered")}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <DeliveredOrdersIcon className="text-green-600" size={20} />
+                        <span className="text-sm">Livrées</span>
+                      </div>
+                      <span className="font-semibold text-green-600">
+                        {orderCount.delivered || 0}
+                      </span>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem
+                    key="orders-cancelled-mobile"
+                    onClick={() => router.push("/orders?status=cancelled")}
+                  >
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <CancelledOrdersIcon className="text-red-600" size={20} />
+                        <span className="text-sm">Annulées</span>
+                      </div>
+                      <span className="font-semibold text-red-600">
+                        {orderCount.cancelled || 0}
+                      </span>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem
+                    className="dark:text-red-400 text-red-600 dark:hover:bg-red-900/20"
+                    color="danger"
+                    key="logout-mobile"
+                    onClick={handleLogout}
+                  >
+                    <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
+                    Déconnexion
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
 
             {/* Avatar desktop avec dropdown */}
