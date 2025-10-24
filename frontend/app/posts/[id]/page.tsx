@@ -300,7 +300,19 @@ export default function PostPage() {
               </div>
 
               {/* Article Footer */}
-              <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700">
+              <div className="mt-8 sm:mt-12 pt-6 sm:pt-8 border-t border-gray-200 dark:border-gray-700 space-y-4">
+                {/* Like Section */}
+                <div className="flex justify-center">
+                  <LikeButton
+                    contentType="article"
+                    contentId={articleId}
+                    userId={userId}
+                    showCounts={true}
+                    size="lg"
+                  />
+                </div>
+
+                {/* Metadata and Actions */}
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
                   <div className="flex flex-wrap gap-2 items-center">
                     {article.category && (
@@ -313,13 +325,6 @@ export default function PostPage() {
                       <BookOpen className="w-3 h-3 mr-1" />
                       ID: {article.id}
                     </Badge>
-                    <LikeButton
-                      contentType="article"
-                      contentId={articleId}
-                      userId={userId}
-                      showCounts={true}
-                      size="md"
-                    />
                   </div>
 
                   <div className="flex gap-2 flex-wrap">
