@@ -64,13 +64,22 @@ export default function LikedContentPage() {
       console.log('🔍 Chargement des contenus likés pour userId:', userId);
       setLoading(true);
       try {
-        // Charger les articles depuis le JSON local
-        const articlesResponse = await fetch('/dataarticless.json');
+        // Charger les articles depuis les deux fichiers JSON locaux
+        const articlesResponse1 = await fetch('/dataarticles.json');
+        const articlesResponse2 = await fetch('/dataarticless.json');
         let articlesData: any[] = [];
-        if (articlesResponse.ok) {
-          const jsonData = await articlesResponse.json();
-          articlesData = jsonData.articles || [];
+
+        if (articlesResponse1.ok) {
+          const jsonData = await articlesResponse1.json();
+          articlesData = [...articlesData, ...(jsonData.articles || [])];
         }
+
+        if (articlesResponse2.ok) {
+          const jsonData = await articlesResponse2.json();
+          articlesData = [...articlesData, ...(jsonData.articles || [])];
+        }
+
+        console.log('📚 Total articles loaded:', articlesData.length);
 
         // Récupérer les contenus likés
         const likedUrl = `${apiUrl}/likes/user/${userId}/liked`;
@@ -87,8 +96,10 @@ export default function LikedContentPage() {
           const enrichedLikedData = Array.isArray(likedData) ? likedData.map((item: any) => {
             if (item.contentType === 'article' && (!item.content?.title)) {
               // Chercher l'article dans le JSON local
+              console.log('🔍 Searching for article with ID:', item.contentId);
               const article = articlesData.find((a: any) => a.id?.toString() === item.contentId?.toString());
               if (article) {
+                console.log('✅ Article found:', article.title);
                 return {
                   ...item,
                   content: {
@@ -103,10 +114,14 @@ export default function LikedContentPage() {
                     date: article.date
                   }
                 };
+              } else {
+                console.log('❌ Article NOT found with ID:', item.contentId);
+                // Article non trouvé - on retourne null pour le filtrer après
+                return null;
               }
             }
             return item;
-          }) : [];
+          }).filter(item => item !== null) : [];
 
           setLikedContent(enrichedLikedData);
         } else {
@@ -122,8 +137,10 @@ export default function LikedContentPage() {
           // Enrichir les articles avec les données du JSON local
           const enrichedDislikedData = Array.isArray(dislikedData) ? dislikedData.map((item: any) => {
             if (item.contentType === 'article' && (!item.content?.title)) {
+              console.log('🔍 Searching for disliked article with ID:', item.contentId);
               const article = articlesData.find((a: any) => a.id?.toString() === item.contentId?.toString());
               if (article) {
+                console.log('✅ Disliked article found:', article.title);
                 return {
                   ...item,
                   content: {
@@ -138,10 +155,13 @@ export default function LikedContentPage() {
                     date: article.date
                   }
                 };
+              } else {
+                console.log('❌ Disliked article NOT found with ID:', item.contentId);
+                return null;
               }
             }
             return item;
-          }) : [];
+          }).filter(item => item !== null) : [];
 
           setDislikedContent(enrichedDislikedData);
         } else {
@@ -163,7 +183,7 @@ export default function LikedContentPage() {
   const getContentLink = (item: LikedContent) => {
     switch (item.contentType) {
       case 'article':
-        return `/posts/${item.contentId}`;
+        return `/articles/${item.contentId}`;
       case 'publication':
         return `/publications/${item.contentId}`;
       case 'blog':
