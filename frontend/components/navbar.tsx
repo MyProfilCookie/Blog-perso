@@ -42,6 +42,7 @@ import {
   PendingOrdersIcon,
   ShippedOrdersIcon,
   DeliveredOrdersIcon,
+  CancelledOrdersIcon,
 } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
 
