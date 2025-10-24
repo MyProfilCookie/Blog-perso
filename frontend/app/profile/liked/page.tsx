@@ -163,6 +163,14 @@ const loadLocalArticles = async (): Promise<Map<string, LikedContent['content']>
   return articleMap;
 };
 
+const isLikelyObjectId = (value: string | undefined | null): boolean => {
+  if (!value) {
+    return false;
+  }
+
+  return /^[a-fA-F0-9]{24}$/.test(value);
+};
+
 export default function LikedContentPage() {
   const [likedContent, setLikedContent] = useState<LikedContent[]>([]);
   const [dislikedContent, setDislikedContent] = useState<LikedContent[]>([]);
@@ -248,7 +256,7 @@ export default function LikedContentPage() {
 
                 let articleDetails: LikedContent['content'] | null = null;
 
-                if (apiUrl) {
+                if (apiUrl && isLikelyObjectId(contentId)) {
                   try {
                     const articleResponse = await fetch(`${apiUrl}/articles/${contentId}`);
                     if (articleResponse.ok) {
