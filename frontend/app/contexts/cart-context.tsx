@@ -10,7 +10,9 @@ import {
   useMemo,
   useCallback,
 } from "react";
+import Link from "next/link";
 import { toast } from "sonner";
+import { Check, Info } from "lucide-react";
 
 // Define the Article type
 type Article = {
@@ -77,6 +79,59 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const isAuthenticated = useMemo(() => {
     return Boolean(user && user.pseudo && user._id);
   }, [user]);
+
+  const showCartToast = useCallback(
+    ({
+      variant,
+      title,
+      description,
+    }: {
+      variant: "success" | "info";
+      title: string;
+      description?: string;
+    }) => {
+      const styles =
+        variant === "success"
+          ? {
+              badge: "bg-green-500/90 text-white",
+              icon: <Check className="h-4 w-4" />,
+            }
+          : {
+              badge: "bg-violet-500/90 text-white",
+              icon: <Info className="h-4 w-4" />,
+            };
+
+      toast.custom(
+        () => (
+          <div className="pointer-events-auto flex w-full max-w-sm items-start gap-3 rounded-2xl border border-violet-100 bg-white/95 px-4 py-3 shadow-xl backdrop-blur dark:border-violet-900/40 dark:bg-gray-900/90">
+            <div
+              className={`mt-1 flex h-8 w-8 items-center justify-center rounded-full ${styles.badge}`}
+            >
+              {styles.icon}
+            </div>
+            <div className="flex-1">
+              <p className="text-sm font-semibold text-gray-900 dark:text-white">
+                {title}
+              </p>
+              {description && (
+                <p className="mt-1 text-xs text-gray-600 dark:text-gray-300">
+                  {description}
+                </p>
+              )}
+            </div>
+            <Link
+              href="/shop#cart"
+              className="rounded-full border border-violet-200 px-3 py-1 text-[11px] font-semibold uppercase tracking-wide text-violet-700 transition hover:border-violet-400 hover:text-violet-900 dark:border-violet-800 dark:text-violet-200 dark:hover:border-violet-600"
+            >
+              Voir le panier
+            </Link>
+          </div>
+        ),
+        { duration: 2600, position: "top-center" },
+      );
+    },
+    [],
+  );
 
   // Fonction pour fusionner le panier invité avec le panier utilisateur
   const mergeGuestCartWithUserCart = useCallback((userData: User) => {
@@ -276,11 +331,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
       return [...prevItems, { ...article, quantity: 1 }];
     });
 
-    // Notification avec Sonner
-    toast.success("Ajouté au panier ✓", {
+    showCartToast({
+      variant: "success",
+      title: "Article ajouté au panier",
       description: article.title,
-      position: "bottom-right",
-      duration: 2000,
     });
   };
 
@@ -293,10 +347,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     );
 
     if (itemToRemove) {
-      toast.info("Article retiré", {
-        description: `${itemToRemove.title} a été retiré de votre panier`,
-        position: "bottom-right",
-        duration: 3000,
+      showCartToast({
+        variant: "info",
+        title: "Article retiré",
+        description: itemToRemove.title,
       });
     }
   };

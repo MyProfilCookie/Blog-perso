@@ -11,6 +11,7 @@ import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 
 import { normalizeAvatarUrl } from "@/utils/normalizeAvatarUrl";
+import { useAuth } from "@/context/AuthContext";
 
 import { AutismLogo } from "@/components/icons"; // Assurez-vous que le chemin est correct pour votre logo
 export default function Inscription() {
@@ -24,6 +25,8 @@ export default function Inscription() {
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState("");
   const router = useRouter();
+  const authContext = useAuth();
+  const loginUser = authContext?.loginUser;
 
   // Validation du mot de passe
   const validatePassword = (value: string) => {
@@ -127,20 +130,30 @@ export default function Inscription() {
         return;
       }
 
-      // Stocker les informations de l'utilisateur dans le localStorage
-      localStorage.setItem(
-        "user",
-        JSON.stringify({
-          pseudo: data.user.pseudo,
-          email: data.user.email,
-          avatar: normalizeAvatarUrl(data.user.avatar),
-        }),
+      // Normaliser les données utilisateur
+      const normalizedUser = {
+        ...data.user,
+        avatar: normalizeAvatarUrl(data.user.avatar || data.user.image),
+      };
+
+      localStorage.setItem("user", JSON.stringify(normalizedUser));
+
+      if (data.accessToken) {
+        localStorage.setItem("userToken", data.accessToken);
+      }
+
+      if (data.refreshToken) {
+        localStorage.setItem("refreshToken", data.refreshToken);
+      }
+
+      if (typeof loginUser === "function") {
+        loginUser(normalizedUser);
+      }
+
+      window.dispatchEvent(new CustomEvent("userUpdate"));
+      window.dispatchEvent(
+        new CustomEvent("userLoggedIn", { detail: normalizedUser }),
       );
-
-      // Déclencher un événement personnalisé pour mettre à jour la navbar
-      const event = new CustomEvent("userUpdate");
-
-      window.dispatchEvent(event);
 
       // Afficher une alerte de succès et rediriger vers le tableau de bord
       Swal.fire({
