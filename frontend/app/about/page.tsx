@@ -426,9 +426,11 @@ export default function AboutPage() {
                 >
                   <CardBody className="flex flex-col items-center gap-4 p-6">
                     <div
-                      className={`flex h-16 w-16 items-center justify-center rounded-full text-sm font-semibold uppercase tracking-wide ${member.className}`}
+                      className={`flex h-20 w-20 items-center justify-center rounded-full ${member.className}`}
                     >
-                      {member.role}
+                      <span className="px-3 text-center text-[0.65rem] font-semibold uppercase leading-tight tracking-wide">
+                        {member.role}
+                      </span>
                     </div>
                     <div className="h-32 w-32 overflow-hidden rounded-2xl border-4 border-white shadow-lg dark:border-gray-800">
                       <OptimizedImage
