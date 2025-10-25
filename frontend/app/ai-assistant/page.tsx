@@ -379,16 +379,85 @@ export default function AIAssistantPage() {
             transition={{ duration: 0.5 }}
             className="rounded-3xl border border-violet-100 bg-white/95 p-6 shadow-lg backdrop-blur dark:border-violet-900/40 dark:bg-gray-900/70 sm:p-10"
           >
-            <div className="mb-6 flex items-center justify-between gap-4">
-              <h2 className="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-white">
-                Dialogue avec Alia
-              </h2>
-              <div className="hidden rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-700 dark:border-violet-900/40 dark:bg-violet-900/30 dark:text-violet-200 sm:flex sm:items-center sm:gap-2">
-                <Clock className="h-4 w-4" />
-                Réponses instantanées
+            <div className="grid gap-8 lg:grid-cols-[0.85fr_1.15fr] lg:items-start">
+              <div className="space-y-6">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-sm font-semibold uppercase tracking-[0.2em] text-violet-600 dark:text-violet-300">
+                      Session en direct
+                    </p>
+                    <h2 className="mt-2 text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-white">
+                      Dialogue avec Alia
+                    </h2>
+                  </div>
+                  <div className="hidden rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-700 dark:border-violet-900/40 dark:bg-violet-900/30 dark:text-violet-200 sm:flex sm:items-center sm:gap-2">
+                    <Clock className="h-4 w-4" />
+                    Réponses instantanées
+                  </div>
+                </div>
+
+                <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300">
+                  Cette fenêtre est un aperçu réel de la manière dont Alia vous
+                  accompagne. Posez-lui une question concrète et observez
+                  comment elle structure ses réponses avec bienveillance,
+                  exemples et ressources associées AutiStudy.
+                </p>
+
+                <ul className="space-y-3">
+                  {[
+                    "Conseils contextualisés à votre situation familiale.",
+                    "Suggestions d'activités adaptées aux profils AutiStudy.",
+                    "Explications rassurantes pour annoncer un changement ou gérer une émotion.",
+                  ].map((item) => (
+                    <li
+                      key={item}
+                      className="flex items-start gap-3 text-gray-700 dark:text-gray-200"
+                    >
+                      <span className="mt-1 flex h-6 w-6 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-900/30 dark:text-violet-200">
+                        <CheckCircle2 className="h-4 w-4" />
+                      </span>
+                      <span className="text-sm leading-relaxed">{item}</span>
+                    </li>
+                  ))}
+                </ul>
+
+                <div className="rounded-2xl border border-violet-100 bg-violet-50/70 px-4 py-4 text-sm text-violet-700 shadow-sm dark:border-violet-900/40 dark:bg-violet-900/40 dark:text-violet-200">
+                  <p className="flex items-start gap-2">
+                    <Sparkles className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                    <span>
+                      Pour tester Alia sur vos propres situations, connectez-vous à
+                      l&apos;espace Contrôle : l&apos;assistant est déjà intégré aux
+                      parcours et mémorise vos préférences.
+                    </span>
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    as="a"
+                    href="/controle"
+                    size="lg"
+                    className="bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 text-white shadow-lg hover:from-violet-700 hover:via-purple-700 hover:to-pink-700"
+                    endContent={<Sparkles className="h-4 w-4" />}
+                  >
+                    Ouvrir Alia dans l&apos;espace Contrôle
+                  </Button>
+                  <Button
+                    as="a"
+                    href="/contact"
+                    size="lg"
+                    variant="bordered"
+                    className="border-violet-200 text-violet-700 dark:border-violet-900/40 dark:text-violet-200"
+                  >
+                    Besoin d&apos;un guide humain ?
+                  </Button>
+                </div>
+              </div>
+
+              <div className="w-full">
+                <AIAssistantPremium />
               </div>
             </div>
-            <AIAssistantPremium />
           </motion.div>
         </section>
       </main>
