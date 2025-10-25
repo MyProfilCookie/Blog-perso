@@ -3,12 +3,9 @@
 import React from "react";
 import Link from "next/link";
 import { motion } from "framer-motion";
-import BackButton from "@/components/back";
-import OptimizedImage from "@/components/OptimizedImage";
 import { Card, CardBody } from "@nextui-org/react";
 import {
   BookOpen,
-  Sparkles,
   Puzzle,
   GraduationCap,
   HeartHandshake,
@@ -17,7 +14,10 @@ import {
   BrainCircuit,
   CalendarRange,
   ArrowRight,
+  CheckCircle,
 } from "lucide-react";
+import BackButton from "@/components/back";
+import OptimizedImage from "@/components/OptimizedImage";
 
 const resourceCollections = [
   {
@@ -125,13 +125,15 @@ export default function ResourcesPage() {
               Les essentiels AutiStudy pour accompagner votre quotidien
             </h1>
             <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
-              Retrouvez nos supports créés par la famille AutiStudy, nos éducateurs et la
-              communauté : fiches pratiques, ateliers sensoriels, masterclass et outils numériques.
+              Retrouvez nos supports créés par la famille AutiStudy, nos
+              éducateurs et la communauté : fiches pratiques, ateliers
+              sensoriels, masterclass et outils numériques.
             </p>
             <div className="mx-auto max-w-2xl rounded-2xl border border-blue-100 bg-white/90 px-6 py-4 text-sm text-blue-700 shadow-sm backdrop-blur dark:border-blue-900/40 dark:bg-gray-900/80 dark:text-blue-200">
-              <strong>Comment démarrer ?</strong> Choisissez une collection ci-dessous,
-              puis explorez les fiches et suggestions d&apos;activités. Tous les contenus sont
-              prêts à l&apos;emploi et mis à jour chaque mois.
+              <strong>Comment démarrer ?</strong> Choisissez une collection
+              ci-dessous, puis explorez les fiches et suggestions
+              d&apos;activités. Tous les contenus sont prêts à l&apos;emploi et
+              mis à jour chaque mois.
             </div>
           </motion.div>
         </div>
@@ -142,7 +144,7 @@ export default function ResourcesPage() {
           <motion.div {...motionConfig} className="space-y-8">
             <div className="grid gap-6 lg:grid-cols-2">
               {resourceCollections.map((item) => (
-                <Link key={item.title} href={item.link}>
+                <Link href={item.link} key={item.title}>
                   <Card className="group h-full overflow-hidden border-none shadow-lg transition hover:-translate-y-1 hover:shadow-2xl">
                     <CardBody className="flex flex-col gap-5 p-5 md:p-6">
                       <div className="flex flex-col gap-4 md:flex-row md:items-center">
@@ -162,11 +164,11 @@ export default function ResourcesPage() {
                       </div>
                       <div className="overflow-hidden rounded-2xl">
                         <OptimizedImage
-                          src={item.illustration}
                           alt={item.title}
-                          width={960}
-                          height={540}
                           className="h-48 w-full object-cover transition duration-500 group-hover:scale-105"
+                          height={540}
+                          src={item.illustration}
+                          width={960}
                         />
                       </div>
                       <div className="flex items-center justify-between text-sm font-semibold text-blue-600 dark:text-blue-300">
@@ -182,21 +184,24 @@ export default function ResourcesPage() {
         </section>
 
         <section className="max-w-6xl mx-auto">
-          <motion.div {...motionConfig} className="grid gap-8 lg:grid-cols-[1fr_1.2fr]">
+          <motion.div
+            {...motionConfig}
+            className="grid gap-8 lg:grid-cols-[1fr_1.2fr]"
+          >
             <div className="rounded-3xl bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 p-1">
               <div className="rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur dark:bg-gray-900/80">
                 <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
                   Boîte à outils des familles
                 </h2>
                 <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-                  Nos ressources favorites pour créer des moments rassurants et encourager
-                  l’autonomie en douceur.
+                  Nos ressources favorites pour créer des moments rassurants et
+                  encourager l’autonomie en douceur.
                 </p>
                 <ul className="mt-6 space-y-4">
                   {familyToolbox.map((tool) => (
                     <li
-                      key={tool.title}
                       className="flex items-start gap-3 rounded-2xl border border-purple-100 bg-white/90 px-4 py-3 text-sm leading-relaxed shadow-sm dark:border-purple-900/40 dark:bg-gray-900/70 dark:text-gray-200"
+                      key={tool.title}
                     >
                       <span className="mt-1 flex h-9 w-9 items-center justify-center rounded-full bg-purple-50">
                         {tool.icon}
@@ -220,16 +225,18 @@ export default function ResourcesPage() {
                   Recevez un nouveau pack ressources chaque mois
                 </h2>
                 <p className="text-sm text-white/80">
-                  Dossiers thématiques, vidéos explicatives, scripts sociaux et routines visuelles
-                  prêts à l&apos;emploi directement dans votre boîte mail.
+                  Dossiers thématiques, vidéos explicatives, scripts sociaux et
+                  routines visuelles prêts à l&apos;emploi directement dans
+                  votre boîte mail.
                 </p>
                 <div className="rounded-2xl bg-white/15 px-4 py-3 text-sm text-white/90">
-                  <strong>Prochain envoi :</strong> Pack “Préparer les vacances scolaires” —
-                  calendrier visuel, idées de transition et fiches sensorimotrices.
+                  <strong>Prochain envoi :</strong> Pack “Préparer les vacances
+                  scolaires” — calendrier visuel, idées de transition et fiches
+                  sensorimotrices.
                 </div>
                 <Link
-                  href="/contact"
                   className="inline-flex items-center gap-2 rounded-full bg-white px-5 py-2.5 text-sm font-semibold text-blue-700 transition hover:bg-slate-100"
+                  href="/contact"
                 >
                   Je souhaite le recevoir <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -239,7 +246,10 @@ export default function ResourcesPage() {
         </section>
 
         <section className="max-w-6xl mx-auto">
-          <motion.div {...motionConfig} className="rounded-3xl border border-teal-100 bg-white/95 p-6 shadow-xl dark:border-teal-900/40 dark:bg-gray-900/80">
+          <motion.div
+            {...motionConfig}
+            className="rounded-3xl border border-teal-100 bg-white/95 p-6 shadow-xl dark:border-teal-900/40 dark:bg-gray-900/80"
+          >
             <div className="grid gap-8 lg:grid-cols-[1.1fr_0.9fr]">
               <div className="space-y-4">
                 <span className="inline-flex items-center gap-2 rounded-full bg-teal-100 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:bg-teal-900/40 dark:text-teal-200">
@@ -249,14 +259,16 @@ export default function ResourcesPage() {
                   Des rendez-vous pour apprendre et souffler
                 </h2>
                 <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">
-                  Participez à nos ateliers en ligne et retrouvez des ressources pour prolonger l’expérience à la maison. Chaque mois,
-                  nous ajoutons des contenus pratiques, des fiches sensorimotrices et des vidéos explicatives.
+                  Participez à nos ateliers en ligne et retrouvez des ressources
+                  pour prolonger l’expérience à la maison. Chaque mois, nous
+                  ajoutons des contenus pratiques, des fiches sensorimotrices et
+                  des vidéos explicatives.
                 </p>
                 <div className="space-y-3">
                   {upcomingEvents.map((event) => (
                     <div
-                      key={event.title}
                       className="rounded-2xl border border-teal-100 bg-white/90 px-4 py-3 text-sm leading-relaxed shadow-sm dark:border-teal-900/40 dark:bg-gray-900/70 dark:text-gray-200"
+                      key={event.title}
                     >
                       <div className="flex items-center justify-between">
                         <h3 className="font-semibold text-gray-900 dark:text-white">
@@ -274,14 +286,14 @@ export default function ResourcesPage() {
                 </div>
                 <div className="flex flex-wrap gap-3">
                   <Link
-                    href="/blog"
                     className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:from-teal-600 hover:to-blue-600"
+                    href="/blog"
                   >
                     Voir le programme complet
                   </Link>
                   <Link
-                    href="/resources/trainings"
                     className="inline-flex items-center gap-2 rounded-full border border-teal-200 px-5 py-2.5 text-sm font-semibold text-teal-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-teal-900/40 dark:text-teal-200 dark:hover:border-teal-700"
+                    href="/resources/trainings"
                   >
                     <CalendarRange className="h-4 w-4" />
                     Réserver un atelier
@@ -296,20 +308,25 @@ export default function ResourcesPage() {
                   <ul className="mt-4 space-y-3 text-sm text-gray-600 dark:text-gray-300">
                     <li className="flex items-start gap-2">
                       <CheckCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
-                      Des fiches d&apos;activités sensorimotrices prêtes à l&apos;emploi pour rythmer vos semaines.
+                      Des fiches d&apos;activités sensorimotrices prêtes à
+                      l&apos;emploi pour rythmer vos semaines.
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
-                      Des vidéos explicatives courtes à regarder avec votre enfant pour lancer un nouveau rituel.
+                      Des vidéos explicatives courtes à regarder avec votre
+                      enfant pour lancer un nouveau rituel.
                     </li>
                     <li className="flex items-start gap-2">
                       <CheckCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
-                      Des supports de communication pour dialoguer sereinement avec l’école ou les thérapeutes.
+                      Des supports de communication pour dialoguer sereinement
+                      avec l’école ou les thérapeutes.
                     </li>
                   </ul>
                   <div className="mt-6 rounded-2xl border border-teal-100 bg-white/90 px-4 py-3 text-sm text-teal-700 shadow-sm dark:border-teal-900/40 dark:bg-gray-900/70 dark:text-teal-200">
                     <Headphones className="mr-2 inline h-4 w-4" />
-                    Abonnez-vous à notre lettre douce : chaque dimanche, une suggestion sensorielle, une activité à imprimer et un mot de soutien.
+                    Abonnez-vous à notre lettre douce : chaque dimanche, une
+                    suggestion sensorielle, une activité à imprimer et un mot de
+                    soutien.
                   </div>
                 </div>
               </div>
