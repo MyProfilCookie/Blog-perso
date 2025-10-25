@@ -29,14 +29,12 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import {
     AlertDialog,
-    AlertDialogAction,
-    AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogDescription,
     AlertDialogFooter,
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { CreditCard, LogIn } from "lucide-react";
 
 // Composant de contenu du layout qui utilise le contexte
 function ShopLayoutContent({ children }: { children: React.ReactNode }) {
@@ -349,36 +347,88 @@ function ShopLayoutContent({ children }: { children: React.ReactNode }) {
 
             {/* Alert pour connexion */}
             <AlertDialog open={isLoginAlertOpen} onOpenChange={setIsLoginAlertOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Connexion requise</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Vous devez être connecté pour accéder au paiement.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Annuler</AlertDialogCancel>
-                        <AlertDialogAction onClick={handleLoginConfirm} className="bg-violet-600 hover:bg-violet-700 text-white">
-                            Se connecter
-                        </AlertDialogAction>
+                <AlertDialogContent className="border-none bg-gradient-to-br from-blue-50 via-white to-purple-50 p-0 shadow-2xl dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+                    <div className="rounded-t-3xl bg-gradient-to-r from-blue-600 via-purple-600 to-pink-500 px-6 py-5 text-white shadow-inner">
+                        <div className="flex items-center gap-3">
+                            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                                <LogIn className="h-6 w-6" />
+                            </span>
+                            <div>
+                                <h3 className="text-xl font-semibold leading-tight">
+                                    Se connecter pour continuer
+                                </h3>
+                                <p className="text-sm text-white/80">
+                                    Accédez à votre panier sécurisé et suivez vos commandes.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="px-6 py-5">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                            Connectez-vous pour que nous puissions garder vos produits préférés
+                            et activer les facilités de paiement AutiStudy.
+                        </p>
+                    </div>
+                    <AlertDialogFooter className="flex flex-col gap-2 border-t border-violet-100/60 px-6 py-4 dark:border-violet-900/40">
+                        <Button
+                            variant="ghost"
+                            onClick={() => setIsLoginAlertOpen(false)}
+                            className="w-full border border-violet-200 text-violet-600 hover:border-violet-300 hover:text-violet-700 dark:border-violet-800 dark:text-violet-200 dark:hover:border-violet-600"
+                        >
+                            Je continue mes achats
+                        </Button>
+                        <Button
+                            onClick={handleLoginConfirm}
+                            className="w-full bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 text-white shadow-lg hover:from-blue-700 hover:via-purple-700 hover:to-pink-700"
+                        >
+                            Me connecter
+                        </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
 
             {/* Alert pour paiement */}
             <AlertDialog open={isPaymentAlertOpen} onOpenChange={setIsPaymentAlertOpen}>
-                <AlertDialogContent>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>Paiement</AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Redirection vers la page de paiement.
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <AlertDialogFooter>
-                        <AlertDialogCancel>Annuler</AlertDialogCancel>
-                        <AlertDialogAction onClick={handlePaymentConfirm} className="bg-green-600 hover:bg-green-700 text-white">
-                            Continuer
-                        </AlertDialogAction>
+                <AlertDialogContent className="border-none bg-gradient-to-br from-blue-50 via-white to-purple-50 p-0 shadow-2xl dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
+                    <div className="rounded-t-3xl bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-500 px-6 py-5 text-white shadow-inner">
+                        <div className="flex items-center gap-3">
+                            <span className="flex h-12 w-12 items-center justify-center rounded-full bg-white/20">
+                                <CreditCard className="h-6 w-6" />
+                            </span>
+                            <div>
+                                <h3 className="text-xl font-semibold leading-tight">
+                                    Direction le paiement sécurisé
+                                </h3>
+                                <p className="text-sm text-white/80">
+                                    Nous allons ouvrir la page de paiement protégée AutiStudy.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="px-6 py-5 space-y-4">
+                        <p className="text-sm text-gray-600 dark:text-gray-300">
+                            Vérifiez votre commande puis confirmez pour être redirigé. Vous
+                            pourrez toujours revenir à la boutique pour ajouter d&apos;autres
+                            produits.
+                        </p>
+                        <div className="rounded-2xl border border-emerald-100 bg-white/90 px-4 py-3 text-xs text-emerald-700 shadow-sm dark:border-emerald-900/40 dark:bg-emerald-900/30 dark:text-emerald-200">
+                            Paiement sécurisé • Carte bancaire & Stripe • Assistance AutiStudy
+                        </div>
+                    </div>
+                    <AlertDialogFooter className="flex flex-col gap-2 border-t border-emerald-100/70 px-6 py-4 dark:border-emerald-900/40">
+                        <Button
+                            variant="ghost"
+                            onClick={() => setIsPaymentAlertOpen(false)}
+                            className="w-full border border-emerald-200 text-emerald-600 hover:border-emerald-300 hover:text-emerald-700 dark:border-emerald-800 dark:text-emerald-200 dark:hover:border-emerald-600"
+                        >
+                            Ajouter d&apos;autres produits
+                        </Button>
+                        <Button
+                            onClick={handlePaymentConfirm}
+                            className="w-full bg-gradient-to-r from-emerald-500 via-teal-500 to-blue-500 text-white shadow-lg hover:from-emerald-600 hover:via-teal-600 hover:to-blue-600"
+                        >
+                            Continuer vers le paiement
+                        </Button>
                     </AlertDialogFooter>
                 </AlertDialogContent>
             </AlertDialog>
