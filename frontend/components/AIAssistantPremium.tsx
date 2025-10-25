@@ -35,21 +35,20 @@ const AIAssistantPremium: React.FC = () => {
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
-  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const messagesContainerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const prevMessagesLengthRef = useRef(messages.length);
   const formRef = useRef<HTMLFormElement>(null);
 
   const scrollToBottom = (smooth = true) => {
-    if (messagesEndRef.current) {
-      // Utiliser setTimeout pour s'assurer que le DOM est mis à jour
-      setTimeout(() => {
-        messagesEndRef.current?.scrollIntoView({ 
-          behavior: smooth ? "smooth" : "auto",
-          block: "end"
-        });
-      }, 100);
-    }
+    if (!messagesContainerRef.current) return;
+    const container = messagesContainerRef.current;
+    setTimeout(() => {
+      container.scrollTo({
+        top: container.scrollHeight,
+        behavior: smooth ? "smooth" : "auto",
+      });
+    }, 100);
   };
 
   useEffect(() => {
@@ -275,7 +274,10 @@ const AIAssistantPremium: React.FC = () => {
           </motion.div>
 
           {/* Zone de messages */}
-          <div className="h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] overflow-y-auto p-3 sm:p-4 md:p-5 space-y-3 sm:space-y-4 bg-gradient-to-b from-violet-50/30 to-purple-50/30 dark:from-gray-900/50 dark:to-purple-950/20 backdrop-blur-sm">
+          <div
+            ref={messagesContainerRef}
+            className="h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] overflow-y-auto p-3 sm:p-4 md:p-5 space-y-3 sm:space-y-4 bg-gradient-to-b from-violet-50/30 to-purple-50/30 dark:from-gray-900/50 dark:to-purple-950/20 backdrop-blur-sm"
+          >
             <AnimatePresence mode="popLayout">
               {messages.map((message, index) => (
                 <motion.div
@@ -345,7 +347,6 @@ const AIAssistantPremium: React.FC = () => {
               </motion.div>
             )}
 
-            <div ref={messagesEndRef} />
           </div>
 
           {/* Questions suggérées */}
