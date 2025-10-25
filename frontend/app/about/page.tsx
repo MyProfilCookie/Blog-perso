@@ -47,7 +47,7 @@ const familyMembers = [
     img: "/assets/family/avatar/joshua.webp",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-yellow-100 text-yellow-600",
-    role: "Super-membre",
+    role: "Co-fondateur",
     status: "Admin",
     borderColor: "#fdd68a",
     imagePosition: "object-top",
@@ -65,7 +65,7 @@ const familyMembers = [
   {
     name: "Benjamin",
     img: "/assets/family/avatar/benjamin.webp",
-    role: "Super-membre",
+    role: "Co-fondateur",
     status: "Admin",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-indigo-100 text-indigo-600",
