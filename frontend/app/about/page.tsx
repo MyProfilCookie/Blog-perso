@@ -284,18 +284,18 @@ export default function AboutPage() {
             transition={{ duration: 0.7, delay: 0.1 }}
             className="relative flex justify-center"
           >
-            <div className="relative w-full max-w-xl">
+            <div className="relative w-full max-w-3xl">
               <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-blue-500/20 to-purple-500/20 blur-2xl" />
               <Card className="relative overflow-hidden rounded-3xl border-none bg-white/90 shadow-xl backdrop-blur dark:bg-gray-900/70">
-                <CardBody className="p-6 sm:p-8">
-                  <div className="mb-6 rounded-2xl bg-gradient-to-br from-blue-100 via-purple-100 to-rose-100 p-1 dark:from-blue-900 dark:via-purple-900 dark:to-rose-900">
+                <CardBody className="p-6 sm:p-8 lg:p-10">
+                  <div className="mb-6 rounded-3xl bg-gradient-to-br from-blue-100 via-purple-100 to-rose-100 p-1 dark:from-blue-900 dark:via-purple-900 dark:to-rose-900">
                     <OptimizedImage
                       alt="Famille AutiStudy réunie"
-                      className="h-64 w-full rounded-2xl object-cover object-center"
-                      height={600}
+                      className="h-72 w-full rounded-3xl object-cover object-center sm:h-[360px] lg:h-[460px]"
+                      height={680}
                       priority
                       src="/assets/family/family1.webp"
-                      width={800}
+                      width={960}
                     />
                   </div>
                   <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">

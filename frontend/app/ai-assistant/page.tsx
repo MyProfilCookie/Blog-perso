@@ -1,312 +1,397 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import React, { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { Button, Card, CardBody, Chip } from "@nextui-org/react";
 import {
   ArrowLeft,
   Sparkles,
-  Zap,
-  Stars,
-  Brain,
+  HeartHandshake,
+  Shield,
   Lightbulb,
-  Rocket,
-  Heart,
-  TrendingUp,
-  Award,
+  Clock,
+  BookOpen,
+  Smile,
+  Compass,
+  CheckCircle2,
 } from "lucide-react";
 import { useRouter } from "next/navigation";
+import OptimizedImage from "@/components/OptimizedImage";
 import AIAssistantPremium from "@/components/AIAssistantPremium";
 import { AutismLogo } from "@/components/icons";
 
+const featureChips = [
+  { label: "Suivi pédagogique personnalisé", color: "primary" },
+  { label: "Guides pratiques pour la famille", color: "success" },
+  { label: "Disponibilité 24/7", color: "secondary" },
+  { label: "Langage bienveillant garanti", color: "warning" },
+];
+
+const pillars = [
+  {
+    icon: HeartHandshake,
+    title: "Pensé avec les familles",
+    description:
+      "Les scénarios de dialogue sont inspirés de nos échanges quotidiens avec les parents, éducateurs et thérapeutes qui accompagnent nos enfants autistes.",
+  },
+  {
+    icon: Shield,
+    title: "Sécurité & confidentialité",
+    description:
+      "Aucune donnée sensible n'est réutilisée. Les informations sont chiffrées et nous n'entraînons pas l'IA sur vos conversations.",
+  },
+  {
+    icon: Lightbulb,
+    title: "Soutien pédagogique concret",
+    description:
+      "Alia fournit des idées d'activités, des scripts sociaux et des adaptations en lien direct avec les parcours AutiStudy.",
+  },
+];
+
+const useCases = [
+  {
+    title: "Préparer une séance",
+    description:
+      "Générez un plan d'exercices adaptés aux centres d'intérêt de votre enfant et à son niveau actuel sur AutiStudy.",
+    icon: BookOpen,
+  },
+  {
+    title: "Faire face aux imprévus",
+    description:
+      "Besoin d'une idée rapide pour apaiser une crise ou expliquer un changement de routine ? Alia propose des réponses calmes et structurées.",
+    icon: Smile,
+  },
+  {
+    title: "Suivre les progrès",
+    description:
+      "Recevez des conseils pour noter les succès, ajuster le niveau de difficulté et valoriser chaque avancée.",
+    icon: Compass,
+  },
+];
+
+const commitments = [
+  {
+    title: "Transparence",
+    detail:
+      "Les sources utilisées sont affichées à chaque fois que possible afin que vous puissiez valider les recommandations.",
+  },
+  {
+    title: "Respect du rythme",
+    detail:
+      "Alia privilégie des réponses pas-à-pas et rappelle les bonnes pratiques pour respecter les besoins sensoriels.",
+  },
+  {
+    title: "Support humain",
+    detail:
+      "Vous n'êtes jamais seul·e : notre équipe reste disponible pour prendre le relais si une réponse mérite un suivi personnalisé.",
+  },
+];
+
+const rotatingTips = [
+  "Conseil : demandez à Alia d'adapter une activité AutiStudy selon les intérêts spécifiques de votre enfant.",
+  "Astuce : partagez le contexte sensoriel pour recevoir des stratégies d'apaisement plus pertinentes.",
+  "Inspiration : Alia peut vous aider à écrire un message aux enseignants pour préparer une inclusion sereine.",
+];
+
 export default function AIAssistantPage() {
   const router = useRouter();
-  const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
-  const [showStats, setShowStats] = useState(false);
+  const [tipIndex, setTipIndex] = useState(0);
 
-  // Suivre la position de la souris pour les effets interactifs
   useEffect(() => {
-    const handleMouseMove = (e: MouseEvent) => {
-      setMousePosition({ x: e.clientX, y: e.clientY });
-    };
-
-    window.addEventListener("mousemove", handleMouseMove);
-
-    // Afficher les stats après 1 seconde
-    setTimeout(() => setShowStats(true), 1000);
-
-    return () => window.removeEventListener("mousemove", handleMouseMove);
+    const interval = setInterval(
+      () => setTipIndex((previous) => (previous + 1) % rotatingTips.length),
+      6000,
+    );
+    return () => clearInterval(interval);
   }, []);
 
-  // Particules flottantes animées
-  const floatingParticles = Array.from({ length: 30 }, (_, i) => ({
-    id: i,
-    size: Math.random() * 8 + 4,
-    duration: Math.random() * 10 + 10,
-    delay: Math.random() * 5,
-    x: Math.random() * 100,
-    y: Math.random() * 100,
-  }));
-
-  // Stats IA
-  const stats = [
-    {
-      icon: Brain,
-      label: "Questions répondues",
-      value: "10K+",
-      color: "text-violet-600 dark:text-violet-400",
-    },
-    {
-      icon: Heart,
-      label: "Satisfaction",
-      value: "98%",
-      color: "text-pink-600 dark:text-pink-400",
-    },
-    {
-      icon: TrendingUp,
-      label: "Temps de réponse",
-      value: "<2s",
-      color: "text-purple-600 dark:text-purple-400",
-    },
-    {
-      icon: Award,
-      label: "Précision",
-      value: "95%",
-      color: "text-indigo-600 dark:text-indigo-400",
-    },
-  ];
-
-  // Messages d'encouragement rotatifs
-  const encouragements = [
-    "🎓 Pose-moi toutes tes questions !",
-    "✨ Je suis là pour t'aider à apprendre",
-    "🚀 Ensemble, rendons l'apprentissage fun !",
-    "💡 Pas de question bête, seulement des réponses !",
-    "🌟 Chaque question est une opportunité d'apprendre",
-  ];
-
-  const [currentEncouragement, setCurrentEncouragement] = useState(0);
-
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCurrentEncouragement((prev) => (prev + 1) % encouragements.length);
-    }, 4000);
-    return () => clearInterval(interval);
-  }, [encouragements.length]);
-
   return (
-    <div className="relative min-h-screen overflow-hidden bg-gradient-to-br from-violet-50 via-purple-50 to-pink-50 dark:from-gray-900 dark:via-purple-950/20 dark:to-gray-900">
-      {/* Effet de gradient qui suit la souris */}
-      <motion.div
-        animate={{
-          background: `radial-gradient(600px at ${mousePosition.x}px ${mousePosition.y}px, rgba(139, 92, 246, 0.15), transparent 80%)`,
-        }}
-        className="pointer-events-none fixed inset-0 opacity-40"
-        transition={{ duration: 0.3 }}
-      />
-
-      {/* Particules flottantes */}
-      <div className="pointer-events-none fixed inset-0 overflow-hidden">
-        {floatingParticles.map((particle) => (
+    <div className="min-h-screen bg-gradient-to-b from-violet-50 via-white to-blue-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950">
+      <main className="w-full px-4 py-12 sm:px-8 lg:px-16">
+        <section className="mx-auto grid max-w-6xl gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center">
           <motion.div
-            animate={{
-              y: [0, -100, 0],
-              x: [0, Math.random() * 50 - 25, 0],
-              scale: [1, 1.5, 1],
-              opacity: [0.2, 0.4, 0.2],
-            }}
-            className="absolute rounded-full bg-gradient-to-r from-violet-400 to-purple-400 opacity-20"
-            key={particle.id}
-            style={{
-              width: particle.size,
-              height: particle.size,
-              left: `${particle.x}%`,
-              top: `${particle.y}%`,
-            }}
-            transition={{
-              duration: particle.duration,
-              repeat: Infinity,
-              delay: particle.delay,
-              ease: "easeInOut",
-            }}
-          />
-        ))}
-      </div>
-
-      {/* Contenu principal */}
-      <div className="relative z-10 py-4 sm:py-6 md:py-8 px-3 sm:px-4">
-        <div className="max-w-5xl mx-auto">
-          {/* Header avec animations */}
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-4 sm:mb-6 md:mb-8"
-            initial={{ opacity: 0, y: -30 }}
-            transition={{ duration: 0.6, type: "spring" }}
+            initial={{ opacity: 0, x: -30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6 }}
+            className="space-y-8"
           >
-            <div className="flex items-center justify-between mb-3 sm:mb-4">
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
+            <div className="flex items-center justify-between">
+              <Button
+                className="flex items-center gap-2 rounded-full border border-violet-200 bg-white px-3 py-2 text-sm font-medium text-violet-600 shadow-sm transition hover:-translate-x-1 hover:bg-violet-50 dark:border-violet-900/40 dark:bg-gray-900 dark:text-violet-200 dark:hover:bg-violet-900/30"
+                onPress={() => router.back()}
+                size="sm"
+                startContent={<ArrowLeft className="h-4 w-4" />}
+                variant="flat"
               >
-                <Button
-                  className="bg-white dark:bg-gray-800 backdrop-blur-md hover:bg-violet-100 dark:hover:bg-violet-900/30 shadow-md hover:shadow-lg transition-all text-sm sm:text-base border border-violet-200 dark:border-violet-800"
-                  onPress={() => router.back()}
-                  size="sm"
-                  startContent={<ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 text-violet-600 dark:text-violet-400" />}
-                  variant="flat"
-                >
-                  <span className="hidden sm:inline text-gray-700 dark:text-gray-200">Retour</span>
-                  <span className="sm:hidden text-violet-600 dark:text-violet-400">←</span>
-                </Button>
-              </motion.div>
-
-              <motion.div
-                animate={{ rotate: 360 }}
-                transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-              >
-                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-violet-600" />
-              </motion.div>
+                Retour
+              </Button>
+              <Sparkles className="h-6 w-6 text-violet-500 dark:text-violet-300" />
             </div>
 
-            {/* Titre principal avec animation */}
-            <motion.div
-              animate={{ scale: 1, opacity: 1 }}
-              className="text-center mb-4 sm:mb-6"
-              initial={{ scale: 0.9, opacity: 0 }}
-              transition={{ delay: 0.2, duration: 0.5 }}
-            >
-              <div className="flex items-center justify-center gap-2 md:gap-3 mb-2 sm:mb-3">
-                <AutismLogo
-                  className="w-8 h-8 md:w-12 md:h-12 object-contain"
-                  size={40}
-                />
-                <h1 className="text-3xl sm:text-4xl md:text-5xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-violet-600 via-purple-600 to-pink-600 tracking-tight">
-                  Rencontre Alia
-                </h1>
+            <div className="flex flex-col gap-6">
+              <div className="flex items-center gap-3">
+                <AutismLogo className="h-10 w-10 md:h-12 md:w-12" size={40} />
+                <div>
+                  <p className="text-sm uppercase tracking-widest text-violet-600 dark:text-violet-300">
+                    AutiStudy AI
+                  </p>
+                  <h1 className="text-3xl font-bold leading-tight text-gray-900 sm:text-4xl lg:text-5xl dark:text-white">
+                    Alia, l&apos;accompagnante pédagogique qui connaît vos
+                    réalités
+                  </h1>
+                </div>
               </div>
 
-              {/* Logo Autistudy */}
-              <motion.div
-                animate={{ opacity: 1, scale: 1 }}
-                className="flex justify-center mb-3 sm:mb-4"
-                initial={{ opacity: 0, scale: 0 }}
-                transition={{ delay: 0.4, duration: 0.8, type: "spring" }}
+              <motion.p
+                key={tipIndex}
+                initial={{ opacity: 0, y: 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.4 }}
+                className="rounded-2xl border border-violet-100 bg-white/80 px-5 py-4 text-base font-medium text-gray-700 shadow-sm backdrop-blur dark:border-violet-900/40 dark:bg-gray-900/70 dark:text-gray-200"
               >
-                <motion.img
-                  alt="Autistudy Logo"
-                  className="w-24 h-24 sm:w-28 sm:h-28 md:w-32 md:h-32 object-contain drop-shadow-2xl"
-                  src="/uploads/logo.webp"
-                  transition={{ type: "spring", stiffness: 300 }}
-                  whileHover={{ scale: 1.1, rotate: 5 }}
-                />
-              </motion.div>
-              <AnimatePresence mode="wait">
-                <motion.p
-                  animate={{ opacity: 1, y: 0 }}
-                  className="text-base sm:text-lg text-gray-600 dark:text-gray-300 font-medium px-2"
-                  exit={{ opacity: 0, y: -20 }}
-                  initial={{ opacity: 0, y: 20 }}
-                  key={currentEncouragement}
-                  transition={{ duration: 0.5 }}
-                >
-                  {encouragements[currentEncouragement]}
-                </motion.p>
-              </AnimatePresence>
-            </motion.div>
+                {rotatingTips[tipIndex]}
+              </motion.p>
 
-            {/* Stats interactives */}
-            <AnimatePresence>
-              {showStats && (
-                <motion.div
-                  animate={{ opacity: 1, y: 0 }}
-                  className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 mb-4 sm:mb-6"
-                  exit={{ opacity: 0, y: -20 }}
-                  initial={{ opacity: 0, y: 20 }}
-                >
-                  {stats.map((stat, index) => {
-                    const Icon = stat.icon;
-                    return (
-                      <motion.div
-                        animate={{ opacity: 1, scale: 1 }}
-                        initial={{ opacity: 0, scale: 0.8 }}
-                        key={stat.label}
-                        transition={{ delay: index * 0.1, type: "spring" }}
-                        whileHover={{ scale: 1.05, y: -5 }}
-                        whileTap={{ scale: 0.95 }}
-                      >
-                        <Card className="bg-white/90 dark:bg-gray-800/90 backdrop-blur-md border border-violet-200/50 dark:border-violet-700/50 shadow-md hover:shadow-lg transition-all cursor-pointer">
-                          <CardBody className="text-center p-3 sm:p-4">
-                            <Icon
-                              className={`w-6 h-6 sm:w-8 sm:h-8 mx-auto mb-1 sm:mb-2 ${stat.color}`}
-                            />
-                            <p className="text-xl sm:text-2xl font-extrabold text-gray-900 dark:text-white">
-                              {stat.value}
-                            </p>
-                            <p className="text-[10px] sm:text-xs text-gray-600 dark:text-gray-400 font-medium">
-                              {stat.label}
-                            </p>
-                          </CardBody>
-                        </Card>
-                      </motion.div>
-                    );
-                  })}
-                </motion.div>
-              )}
-            </AnimatePresence>
+              <p className="text-lg leading-relaxed text-gray-700 dark:text-gray-300">
+                Alia complète les parcours AutiStudy en offrant des réponses
+                nuancées, des idées d&apos;activités et des ressources validées
+                par notre équipe familiale. L&apos;objectif : vous donner des
+                clés concrètes, documentées et bienveillantes au moment où vous
+                en avez le plus besoin.
+              </p>
 
-            {/* Badges interactifs */}
-            <motion.div
-              animate={{ opacity: 1 }}
-              className="flex flex-wrap justify-center gap-2 sm:gap-3 mb-6 px-2"
-              initial={{ opacity: 0 }}
-              transition={{ delay: 0.8 }}
-            >
-              {[
-                { icon: Brain, text: "IA Intelligente", color: "primary" },
-                { icon: Zap, text: "Réponses rapides", color: "warning" },
-                {
-                  icon: Stars,
-                  text: "Toujours disponible",
-                  color: "secondary",
-                },
-                { icon: Lightbulb, text: "Pédagogique", color: "success" },
-                { icon: Rocket, text: "Innovante", color: "danger" },
-              ].map((badge, index) => {
-                const Icon = badge.icon;
-                return (
-                  <motion.div
-                    animate={{ opacity: 1, scale: 1 }}
-                    initial={{ opacity: 0, scale: 0 }}
-                    key={badge.text}
-                    transition={{ delay: 0.8 + index * 0.1, type: "spring" }}
-                    whileHover={{ scale: 1.1, rotate: 5 }}
-                    whileTap={{ scale: 0.9 }}
+              <div className="flex flex-wrap gap-2">
+                {featureChips.map((chip) => (
+                  <Chip
+                    key={chip.label}
+                    color={chip.color as any}
+                    size="sm"
+                    variant="flat"
+                    className="rounded-full border border-transparent px-3 py-2 text-xs font-semibold shadow-sm backdrop-blur"
                   >
-                    <Chip
-                      className="font-semibold shadow-md cursor-pointer text-xs sm:text-sm"
-                      color={badge.color as any}
-                      size="sm"
-                      startContent={<Icon className="w-3 h-3 sm:w-4 sm:h-4" />}
-                      variant="flat"
-                    >
-                      {badge.text}
-                    </Chip>
-                  </motion.div>
+                    {chip.label}
+                  </Chip>
+                ))}
+              </div>
+            </div>
+
+            <div className="grid gap-4 sm:grid-cols-2">
+              {pillars.map((pillar) => {
+                const Icon = pillar.icon;
+                return (
+                  <Card
+                    key={pillar.title}
+                    className="border-none bg-white/90 shadow-lg backdrop-blur hover:shadow-xl dark:bg-gray-900/70"
+                  >
+                    <CardBody className="flex h-full flex-col gap-3 p-6">
+                      <div className="flex items-center gap-3">
+                        <div className="flex h-10 w-10 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-900/40 dark:text-violet-200">
+                          <Icon className="h-5 w-5" />
+                        </div>
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                          {pillar.title}
+                        </h3>
+                      </div>
+                      <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                        {pillar.description}
+                      </p>
+                    </CardBody>
+                  </Card>
                 );
               })}
-            </motion.div>
+            </div>
           </motion.div>
 
-          {/* Composant AI Assistant avec animation d'entrée */}
           <motion.div
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            initial={{ opacity: 0, scale: 0.95, y: 30 }}
-            transition={{ delay: 0.4, duration: 0.6, type: "spring" }}
+            initial={{ opacity: 0, x: 30 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.6, delay: 0.1 }}
+            className="relative flex justify-center"
           >
+            <div className="relative w-full max-w-2xl">
+              <div className="absolute -inset-4 rounded-3xl bg-gradient-to-br from-violet-500/15 to-blue-500/15 blur-3xl" />
+              <Card className="relative overflow-hidden rounded-3xl border-none bg-white/90 shadow-xl backdrop-blur dark:bg-gray-900/70">
+                <CardBody className="space-y-6 p-6 sm:p-8">
+                  <div className="rounded-3xl bg-gradient-to-br from-violet-100 via-blue-100 to-rose-100 p-1 dark:from-violet-900 dark:via-blue-900 dark:to-rose-900">
+                    <OptimizedImage
+                      alt="Parent utilisant Alia, l'assistante AutiStudy"
+                      className="h-72 w-full rounded-3xl object-cover object-center sm:h-[360px] lg:h-[420px]"
+                      height={640}
+                      src="/assets/progress-tracking.webp"
+                      width={960}
+                    />
+                  </div>
+                  <div className="space-y-4">
+                    <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+                      Un partenaire rassurant au quotidien
+                    </h2>
+                    <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                      Alia transforme vos questions en accompagnement clair :
+                      explications sociales, idées de rituels visuels,
+                      adaptation de devoirs ou préparation d&apos;un rendez-vous
+                      médical, toujours avec le ton apaisant et respectueux qui
+                      caractérise AutiStudy.
+                    </p>
+                  </div>
+                </CardBody>
+              </Card>
+            </div>
+          </motion.div>
+        </section>
+
+        <section className="mx-auto mt-20 max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="text-center"
+          >
+            <h2 className="text-3xl font-bold text-gray-900 sm:text-4xl dark:text-white">
+              Comment Alia vous accompagne ?
+            </h2>
+            <p className="mt-4 text-lg text-gray-600 dark:text-gray-300">
+              Chaque réponse est contextualisée selon les méthodes AutiStudy
+              pour vous faire gagner du temps et alléger la charge mentale.
+            </p>
+          </motion.div>
+
+          <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {useCases.map((item) => {
+              const Icon = item.icon;
+              return (
+                <Card
+                  key={item.title}
+                  className="border-none bg-white/90 shadow-lg backdrop-blur hover:shadow-xl dark:bg-gray-900/70"
+                >
+                  <CardBody className="space-y-3 p-6">
+                    <div className="flex h-12 w-12 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-900/40 dark:text-violet-200">
+                      <Icon className="h-6 w-6" />
+                    </div>
+                    <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
+                      {item.title}
+                    </h3>
+                    <p className="text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                      {item.description}
+                    </p>
+                  </CardBody>
+                </Card>
+              );
+            })}
+          </div>
+        </section>
+
+        <section className="mx-auto mt-20 max-w-6xl rounded-3xl bg-white/90 p-8 shadow-lg backdrop-blur dark:bg-gray-900/70 sm:p-12">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.3 }}
+            transition={{ duration: 0.6 }}
+            className="grid gap-10 lg:grid-cols-[1fr_1fr]"
+          >
+            <div className="space-y-6">
+              <h2 className="text-3xl font-semibold text-gray-900 sm:text-4xl dark:text-white">
+                Une IA au service de la confiance et du respect
+              </h2>
+              <p className="text-base leading-relaxed text-gray-600 dark:text-gray-300">
+                L&apos;intelligence artificielle ne remplace pas l&apos;humain,
+                elle l&apos;épaule. Alia a été entraînée sur nos contenus
+                validés, nos guides internes et les retours de la communauté
+                pour proposer des réponses alignées avec la philosophie
+                AutiStudy.
+              </p>
+              <div className="space-y-4">
+                {commitments.map((item) => (
+                  <div className="flex items-start gap-3" key={item.title}>
+                    <div className="mt-1 flex h-8 w-8 items-center justify-center rounded-full bg-violet-100 text-violet-600 dark:bg-violet-900/40 dark:text-violet-200">
+                      <CheckCircle2 className="h-4 w-4" />
+                    </div>
+                    <div>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                        {item.title}
+                      </h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">
+                        {item.detail}
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            <Card className="border-none bg-gradient-to-br from-violet-600 via-purple-600 to-blue-600 text-white shadow-xl">
+              <CardBody className="space-y-6 p-8">
+                <div className="space-y-3">
+                  <p className="rounded-full bg-white/20 px-4 py-1 text-sm font-semibold uppercase tracking-widest text-white">
+                    Disponible dans l&apos;espace Contrôle
+                  </p>
+                  <h3 className="text-2xl font-semibold leading-tight">
+                    Ouvrez Alia, posez votre question, et laissez-vous guider
+                    pas à pas.
+                  </h3>
+                </div>
+                <div className="space-y-3 text-sm text-white/80">
+                  <p className="flex items-center gap-2">
+                    <Clock className="h-4 w-4" />
+                    Réponses en quelques secondes, avec des liens vers les
+                    ressources AutiStudy associées.
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <Shield className="h-4 w-4" />
+                    Vos conversations restent privées et peuvent être effacées à
+                    tout moment.
+                  </p>
+                  <p className="flex items-center gap-2">
+                    <HeartHandshake className="h-4 w-4" />
+                    Une tonalité douce et rassurante, testée avec notre famille.
+                  </p>
+                </div>
+                <div className="flex flex-wrap gap-3">
+                  <Button
+                    as="a"
+                    href="/controle"
+                    size="lg"
+                    className="bg-white text-violet-700 hover:bg-slate-100"
+                    endContent={<Sparkles className="h-4 w-4" />}
+                  >
+                    Accéder à Alia
+                  </Button>
+                  <Button
+                    as="a"
+                    href="/contact"
+                    size="lg"
+                    variant="bordered"
+                    className="border-white text-white"
+                  >
+                    Planifier un accompagnement
+                  </Button>
+                </div>
+              </CardBody>
+            </Card>
+          </motion.div>
+        </section>
+
+        <section className="mx-auto mt-20 max-w-6xl">
+          <motion.div
+            initial={{ opacity: 0, y: 24 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true, amount: 0.2 }}
+            transition={{ duration: 0.5 }}
+            className="rounded-3xl border border-violet-100 bg-white/95 p-6 shadow-lg backdrop-blur dark:border-violet-900/40 dark:bg-gray-900/70 sm:p-10"
+          >
+            <div className="mb-6 flex items-center justify-between gap-4">
+              <h2 className="text-2xl font-semibold text-gray-900 sm:text-3xl dark:text-white">
+                Dialogue avec Alia
+              </h2>
+              <div className="hidden rounded-full border border-violet-200 bg-violet-50 px-4 py-2 text-sm font-semibold text-violet-700 dark:border-violet-900/40 dark:bg-violet-900/30 dark:text-violet-200 sm:flex sm:items-center sm:gap-2">
+                <Clock className="h-4 w-4" />
+                Réponses instantanées
+              </div>
+            </div>
             <AIAssistantPremium />
           </motion.div>
-        </div>
-      </div>
+        </section>
+      </main>
     </div>
   );
 }
