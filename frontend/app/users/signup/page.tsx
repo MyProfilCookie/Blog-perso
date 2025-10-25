@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { useRouter } from "next/navigation";
 import { Input } from '@nextui-org/react'
 import { Button } from '@nextui-org/react'
@@ -11,7 +11,7 @@ import Swal from "sweetalert2";
 import { motion } from "framer-motion";
 
 import { normalizeAvatarUrl } from "@/utils/normalizeAvatarUrl";
-import { useAuth } from "@/context/AuthContext";
+import { UserContext } from "@/context/UserContext";
 
 import { AutismLogo } from "@/components/icons"; // Assurez-vous que le chemin est correct pour votre logo
 export default function Inscription() {
@@ -25,8 +25,8 @@ export default function Inscription() {
   const [loading, setLoading] = useState(false);
   const [passwordStrength, setPasswordStrength] = useState("");
   const router = useRouter();
-  const authContext = useAuth();
-  const loginUser = authContext?.loginUser;
+  const userContext = useContext(UserContext);
+  const loginUser = userContext?.loginUser;
 
   // Validation du mot de passe
   const validatePassword = (value: string) => {
@@ -140,6 +140,7 @@ export default function Inscription() {
 
       if (data.accessToken) {
         localStorage.setItem("userToken", data.accessToken);
+        localStorage.setItem("accessToken", data.accessToken);
       }
 
       if (data.refreshToken) {

@@ -67,6 +67,33 @@ export const UserProvider = ({ children }) => {
     // Suppression du reload automatique pour éviter les problèmes
   };
 
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+
+    const handleUserLoggedIn = (event) => {
+      const detailUser = event?.detail;
+      if (detailUser) {
+        loginUser(detailUser);
+        return;
+      }
+
+      const storedUser = localStorage.getItem("user");
+      if (storedUser) {
+        try {
+          loginUser(JSON.parse(storedUser));
+        } catch (error) {
+          console.error("Erreur lors de la relecture du user après login:", error);
+        }
+      }
+    };
+
+    window.addEventListener("userLoggedIn", handleUserLoggedIn);
+
+    return () => {
+      window.removeEventListener("userLoggedIn", handleUserLoggedIn);
+    };
+  }, []);
+
   if (loading) {
     // eslint-disable-next-line react/jsx-no-undef
     return <LoadingAnimation />;
