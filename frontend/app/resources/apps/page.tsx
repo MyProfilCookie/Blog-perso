@@ -375,3 +375,11 @@ export default function AppsPage() {
                     </Link>
                   ))}
                 </div>
+              </CardBody>
+            </Card>
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+}
