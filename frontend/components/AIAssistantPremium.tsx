@@ -275,7 +275,7 @@ const AIAssistantPremium: React.FC = () => {
           </motion.div>
 
           {/* Zone de messages */}
-          <div className="h-[500px] sm:h-[600px] md:h-[600px] lg:h-[700px] overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 bg-gradient-to-b from-violet-50/30 to-purple-50/30 dark:from-gray-900/50 dark:to-purple-950/20 backdrop-blur-sm">
+          <div className="h-[360px] sm:h-[420px] md:h-[480px] lg:h-[520px] overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 bg-gradient-to-b from-violet-50/30 to-purple-50/30 dark:from-gray-900/50 dark:to-purple-950/20 backdrop-blur-sm">
             <AnimatePresence mode="popLayout">
               {messages.map((message, index) => (
                 <motion.div
@@ -417,4 +417,3 @@ const AIAssistantPremium: React.FC = () => {
 };
 
 export default AIAssistantPremium;
-
