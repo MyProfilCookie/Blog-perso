@@ -473,23 +473,23 @@ export default function ControleIndex() {
       <Head>
         <title>Espace d'apprentissage - AutiStudy</title>
         <meta name="description" content="Ton espace d'apprentissage personnalisé avec des quiz adaptés et des matières variées" />
-        
+
         {/* Preconnect vers l'API backend pour réduire le TTFB */}
         <link rel="preconnect" href={process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com'} />
         <link rel="dns-prefetch" href={process.env.NEXT_PUBLIC_API_URL || 'https://blog-perso.onrender.com'} />
-        
+
         {/* Preconnect vers les CDN utilisés */}
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        
+
         {/* Viewport optimisé pour mobile */}
         <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
       </Head>
-      
+
       <div className="w-full">
         {/* Hero Section - Style Posts */}
         <div className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
-          <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
+          <div className="mx-auto px-4 py-8 md:py-12">
             <motion.div
               initial={{ opacity: 0, y: -20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -562,367 +562,367 @@ export default function ControleIndex() {
         </div>
 
         <section className="relative py-8 sm:py-12 md:py-20 overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800"></div>
-        <div className="relative w-full px-3 sm:px-4 md:px-8 lg:px-12">
-          <div className="max-w-7xl mx-auto">
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
-              <Button
-                className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
-                onClick={() => router.push("/")}
-                variant="outline"
-              >
-                <ArrowLeft className="w-4 h-4 mr-2" />
-                Retour à l&apos;accueil
-              </Button>
-              <div className="flex items-center gap-3 w-full sm:w-auto">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800"></div>
+          <div className="relative w-full px-3 sm:px-4 md:px-8 lg:px-12">
+            <div className="max-w-7xl mx-auto">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6 sm:mb-8 gap-4">
                 <Button
-                  className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 backdrop-blur-sm"
-                  onClick={toggleTheme}
-                  size="sm"
+                  className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
+                  onClick={() => router.push("/")}
                   variant="outline"
                 >
-                  {isDarkMode ? (
-                    <Sun className="w-4 h-4" />
-                  ) : (
-                    <Moon className="w-4 h-4" />
-                  )}
+                  <ArrowLeft className="w-4 h-4 mr-2" />
+                  Retour à l&apos;accueil
                 </Button>
-                <LoginButton
-                  className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
-                  size="sm"
-                  variant="outline"
-                />
+                <div className="flex items-center gap-3 w-full sm:w-auto">
+                  <Button
+                    className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 backdrop-blur-sm"
+                    onClick={toggleTheme}
+                    size="sm"
+                    variant="outline"
+                  >
+                    {isDarkMode ? (
+                      <Sun className="w-4 h-4" />
+                    ) : (
+                      <Moon className="w-4 h-4" />
+                    )}
+                  </Button>
+                  <LoginButton
+                    className="bg-white/90 hover:bg-white border-gray-300 text-gray-900 hover:text-gray-700 dark:bg-gray-800/90 dark:hover:bg-gray-700 dark:border-gray-600 dark:text-white dark:hover:text-gray-200 w-full sm:w-auto backdrop-blur-sm"
+                    size="sm"
+                    variant="outline"
+                  />
+                </div>
               </div>
-            </div>
 
-            {typeof window !== "undefined" &&
-              !localStorage.getItem("user") && (
+              {typeof window !== "undefined" &&
+                !localStorage.getItem("user") && (
+                  <motion.div
+                    animate={{ opacity: 1, y: 0 }}
+                    className="mb-6 max-w-2xl mx-auto"
+                    initial={{ opacity: 0, y: 10 }}
+                    transition={{ duration: 0.6, delay: 0.2 }}
+                  >
+                    <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
+                      <p className="text-blue-800 dark:text-blue-200 text-sm text-center">
+                        💡 <strong>Mode aperçu :</strong> Connectez-vous pour accéder à vos statistiques personnalisées et sauvegarder votre progression.
+                      </p>
+                    </div>
+                  </motion.div>
+                )}
+            </div>
+          </div>
+        </section>
+
+        {/* Stats Cards */}
+        <section className="py-8 sm:py-12">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
+            {/* En-tête des statistiques façon AutiStudy */}
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.6, delay: 0.1 }}
+            >
+              <div className="relative overflow-hidden rounded-3xl border border-blue-200/60 dark:border-blue-900/50 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/40 dark:via-slate-900 dark:to-indigo-950/20 p-6 sm:p-8 shadow-xl">
+                <div className="absolute -top-24 -right-16 w-64 h-64 bg-blue-200/30 dark:bg-blue-500/10 rounded-full blur-3xl" />
+                <div className="absolute -bottom-20 -left-10 w-48 h-48 bg-purple-200/30 dark:bg-purple-500/10 rounded-full blur-3xl" />
+
+                <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                  <div>
+                    <div className="flex items-center gap-3 mb-3">
+                      <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/30">
+                        <BarChart3 className="w-6 h-6" />
+                      </div>
+                      <div>
+                        <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
+                          Ton tableau magique
+                        </h2>
+                        <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
+                          Garde un œil sur tes progrès, ton temps d&apos;apprentissage et tes missions hebdo ✨
+                        </p>
+                      </div>
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-300 min-h-[40px]">
+                      <AnimatePresence mode="wait">
+                        <motion.span
+                          key={lastUpdate ? (isRefreshing ? "refreshing" : "last-update") : "first-time"}
+                          animate={{ opacity: 1, y: 0 }}
+                          className={`${statusChipBase} ${lastUpdate ? "border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200" : "border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200"} min-w-[12rem]`}
+                          exit={{ opacity: 0, y: -6 }}
+                          initial={{ opacity: 0, y: 6 }}
+                        >
+                          {lastUpdate ? (
+                            <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-indigo-500" : "text-blue-600"}`} />
+                          ) : (
+                            <Sparkles className="w-4 h-4 text-blue-500" />
+                          )}
+                          {lastUpdate ? (
+                            <span className="flex items-center gap-1">
+                              Mise à jour :
+                              <strong>
+                                {lastUpdate.toLocaleTimeString([], {
+                                  hour: "2-digit",
+                                  minute: "2-digit",
+                                })}
+                              </strong>
+                            </span>
+                          ) : (
+                            <span>Première mise en lumière !</span>
+                          )}
+                        </motion.span>
+                      </AnimatePresence>
+                    </div>
+                  </div>
+
+                  <div className="flex flex-col sm:flex-row gap-3">
+                    <Button
+                      className="min-w-[160px] border border-purple-200 text-purple-600 dark:text-purple-300 dark:border-purple-700 bg-white/80 dark:bg-slate-900/60"
+                      onClick={forceRefresh}
+                      variant="outline"
+                    >
+                      <Sparkles className="w-4 h-4 mr-2" />
+                      Boost magique
+                    </Button>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, delay: 0.2 }}
+            >
+              {statsCards.map((stat, index) => (
                 <motion.div
                   animate={{ opacity: 1, y: 0 }}
-                  className="mb-6 max-w-2xl mx-auto"
-                  initial={{ opacity: 0, y: 10 }}
-                  transition={{ duration: 0.6, delay: 0.2 }}
+                  initial={{ opacity: 0, y: 20 }}
+                  key={index}
+                  transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
                 >
-                  <div className="p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-200 dark:border-blue-800">
-                    <p className="text-blue-800 dark:text-blue-200 text-sm text-center">
-                      💡 <strong>Mode aperçu :</strong> Connectez-vous pour accéder à vos statistiques personnalisées et sauvegarder votre progression.
-                    </p>
+                  <StatCard {...stat} />
+                </motion.div>
+              ))}
+            </motion.div>
+
+            {/* Synchronisation des statistiques */}
+            {(() => {
+              const userData = localStorage.getItem("user");
+              const userId = userData ? JSON.parse(userData)._id : null;
+              return userId;
+            })() && (
+                <motion.div
+                  animate={{ opacity: 1, y: 0 }}
+                  className="mt-6 sm:mt-8"
+                  initial={{ opacity: 0, y: 20 }}
+                  transition={{ duration: 0.7, delay: 0.6 }}
+                >
+                  <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-4 sm:p-6 border border-violet-200 dark:border-violet-700 backdrop-blur-sm">
+                    <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <h3 className="text-base sm:text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
+                          🔄 Synchronisation des statistiques
+                        </h3>
+                        <p className="text-xs sm:text-sm text-violet-600 dark:text-violet-400 break-words">
+                          Synchronisez vos exercices locaux avec le serveur pour
+                          mettre à jour vos statistiques
+                        </p>
+                      </div>
+                      <div className="flex-shrink-0 w-full sm:w-auto">
+                        <StatsSync
+                          onSyncComplete={(newStats) => {
+                            console.log(
+                              "📈 Nouvelles statistiques reçues:",
+                              newStats,
+                            );
+                            // Rafraîchir les stats depuis le serveur après la synchronisation
+                            handleFetchStats();
+                          }}
+                          userId={userId || ""}
+                        />
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               )}
           </div>
-        </div>
-      </section>
+        </section>
 
-      {/* Stats Cards */}
-      <section className="py-8 sm:py-12">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
-          {/* En-tête des statistiques façon AutiStudy */}
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.6, delay: 0.1 }}
-          >
-            <div className="relative overflow-hidden rounded-3xl border border-blue-200/60 dark:border-blue-900/50 bg-gradient-to-br from-blue-50 via-white to-indigo-50 dark:from-blue-950/40 dark:via-slate-900 dark:to-indigo-950/20 p-6 sm:p-8 shadow-xl">
-              <div className="absolute -top-24 -right-16 w-64 h-64 bg-blue-200/30 dark:bg-blue-500/10 rounded-full blur-3xl" />
-              <div className="absolute -bottom-20 -left-10 w-48 h-48 bg-purple-200/30 dark:bg-purple-500/10 rounded-full blur-3xl" />
-
-              <div className="relative z-10 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
-                <div>
-                  <div className="flex items-center gap-3 mb-3">
-                    <div className="flex items-center justify-center w-12 h-12 rounded-2xl bg-gradient-to-r from-blue-500 to-indigo-500 text-white shadow-lg shadow-blue-500/30">
-                      <BarChart3 className="w-6 h-6" />
-                    </div>
-                    <div>
-                      <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white">
-                        Ton tableau magique
-                      </h2>
-                      <p className="text-sm sm:text-base text-gray-600 dark:text-gray-300">
-                        Garde un œil sur tes progrès, ton temps d&apos;apprentissage et tes missions hebdo ✨
-                      </p>
-                    </div>
-                  </div>
-
-                  <div className="flex flex-wrap items-center gap-3 text-sm text-gray-600 dark:text-gray-300 min-h-[40px]">
-                    <AnimatePresence mode="wait">
-                      <motion.span
-                        key={lastUpdate ? (isRefreshing ? "refreshing" : "last-update") : "first-time"}
-                        animate={{ opacity: 1, y: 0 }}
-                        className={`${statusChipBase} ${lastUpdate ? "border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200" : "border-blue-200 dark:border-blue-700 text-blue-700 dark:text-blue-200"} min-w-[12rem]`}
-                        exit={{ opacity: 0, y: -6 }}
-                        initial={{ opacity: 0, y: 6 }}
-                      >
-                        {lastUpdate ? (
-                          <RefreshCw className={`w-4 h-4 ${isRefreshing ? "animate-spin text-indigo-500" : "text-blue-600"}`} />
-                        ) : (
-                          <Sparkles className="w-4 h-4 text-blue-500" />
-                        )}
-                        {lastUpdate ? (
-                          <span className="flex items-center gap-1">
-                            Mise à jour :
-                            <strong>
-                              {lastUpdate.toLocaleTimeString([], {
-                                hour: "2-digit",
-                                minute: "2-digit",
-                              })}
-                            </strong>
-                          </span>
-                        ) : (
-                          <span>Première mise en lumière !</span>
-                        )}
-                      </motion.span>
-                    </AnimatePresence>
-                  </div>
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <Button
-                    className="min-w-[160px] border border-purple-200 text-purple-600 dark:text-purple-300 dark:border-purple-700 bg-white/80 dark:bg-slate-900/60"
-                    onClick={forceRefresh}
-                    variant="outline"
-                  >
-                    <Sparkles className="w-4 h-4 mr-2" />
-                    Boost magique
-                  </Button>
-                </div>
+        {/* Quiz Hebdomadaires - Section Spéciale */}
+        <section className="py-8 sm:py-12 bg-gradient-to-r from-purple-50 via-pink-50 to-rose-50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-rose-900/20">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-8 sm:mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, delay: 0.3 }}
+            >
+              <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-3 sm:mb-4 shadow-lg">
+                <Target className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
               </div>
-            </div>
-          </motion.div>
+              <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4">
+                Quiz Hebdomadaires 🧩
+              </h2>
+              <p className="text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto px-4">
+                Des quiz adaptés spécialement pour les enfants autistes de 6 à 18
+                ans. Questions simples, feedback positif et progression douce !
+              </p>
+            </motion.div>
 
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8 sm:mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.7, delay: 0.2 }}
-          >
-            {statsCards.map((stat, index) => (
-              <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                initial={{ opacity: 0, y: 20 }}
-                key={index}
-                transition={{ duration: 0.5, delay: 0.3 + index * 0.1 }}
-              >
-                <StatCard {...stat} />
-              </motion.div>
-            ))}
-          </motion.div>
-
-          {/* Synchronisation des statistiques */}
-          {(() => {
-            const userData = localStorage.getItem("user");
-            const userId = userData ? JSON.parse(userData)._id : null;
-            return userId;
-          })() && (
-              <motion.div
-                animate={{ opacity: 1, y: 0 }}
-                className="mt-6 sm:mt-8"
-                initial={{ opacity: 0, y: 20 }}
-                transition={{ duration: 0.7, delay: 0.6 }}
-              >
-                <div className="bg-gradient-to-r from-violet-50 to-purple-50 dark:from-violet-900/20 dark:to-purple-900/20 rounded-xl p-4 sm:p-6 border border-violet-200 dark:border-violet-700 backdrop-blur-sm">
-                  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div className="flex-1 min-w-0">
-                      <h3 className="text-base sm:text-lg font-semibold text-violet-700 dark:text-violet-300 mb-2">
-                        🔄 Synchronisation des statistiques
-                      </h3>
-                      <p className="text-xs sm:text-sm text-violet-600 dark:text-violet-400 break-words">
-                        Synchronisez vos exercices locaux avec le serveur pour
-                        mettre à jour vos statistiques
-                      </p>
-                    </div>
-                    <div className="flex-shrink-0 w-full sm:w-auto">
-                      <StatsSync
-                        onSyncComplete={(newStats) => {
-                          console.log(
-                            "📈 Nouvelles statistiques reçues:",
-                            newStats,
-                          );
-                          // Rafraîchir les stats depuis le serveur après la synchronisation
-                          handleFetchStats();
-                        }}
-                        userId={userId || ""}
-                      />
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            )}
-        </div>
-      </section>
-
-      {/* Quiz Hebdomadaires - Section Spéciale */}
-      <section className="py-8 sm:py-12 bg-gradient-to-r from-purple-50 via-pink-50 to-rose-50 dark:from-purple-900/20 dark:via-pink-900/20 dark:to-rose-900/20">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8 sm:mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.7, delay: 0.3 }}
-          >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-purple-500 to-pink-500 rounded-full flex items-center justify-center mb-3 sm:mb-4 shadow-lg">
-              <Target className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4">
-              Quiz Hebdomadaires 🧩
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-700 dark:text-gray-300 max-w-3xl mx-auto px-4">
-              Des quiz adaptés spécialement pour les enfants autistes de 6 à 18
-              ans. Questions simples, feedback positif et progression douce !
-            </p>
-          </motion.div>
-
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.7, delay: 0.5 }}
-          >
-            {/* Adaptations spéciales */}
-            <Card className="bg-white/80 dark:bg-gray-800/80 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
-                  <span className="text-2xl">📝</span>
-                  Questions Claires
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Phrases courtes et simples, une difficulté à la fois pour
-                  éviter la surcharge cognitive.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/80 dark:bg-gray-800/80 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
-                  <span className="text-2xl">🎨</span>
-                  Repères Visuels
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Couleurs et icônes par matière, animations douces pour une
-                  expérience apaisante.
-                </p>
-              </CardContent>
-            </Card>
-
-            <Card className="bg-white/80 dark:bg-gray-800/80 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
-                  <span className="text-2xl">💪</span>
-                  Feedback Positif
-                </CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-gray-600 dark:text-gray-300">
-                  Encouragements constants, progression visible et célébration
-                  des réussites.
-                </p>
-              </CardContent>
-            </Card>
-          </motion.div>
-
-          {/* Carte principale du quiz */}
-          <motion.div
-            animate={{ opacity: 1, scale: 1 }}
-            className="max-w-4xl mx-auto px-3 sm:px-4"
-            initial={{ opacity: 0, scale: 0.95 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-          >
-            <Card className="bg-gradient-to-r from-purple-500 to-pink-500 border-0 shadow-2xl overflow-hidden backdrop-blur-sm">
-              <CardContent className="p-4 sm:p-6 md:p-8">
-                <div className="text-center text-white">
-                  <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-4 sm:mb-6 backdrop-blur-sm">
-                    <Target className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
-                  </div>
-                  <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 px-2">
-                    Commencer un Quiz
-                  </h3>
-                  <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 opacity-90 px-4">
-                    52 quiz disponibles, adaptés pour chaque semaine de l'année
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, delay: 0.5 }}
+            >
+              {/* Adaptations spéciales */}
+              <Card className="bg-white/80 dark:bg-gray-800/80 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+                    <span className="text-2xl">📝</span>
+                    Questions Claires
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Phrases courtes et simples, une difficulté à la fois pour
+                    éviter la surcharge cognitive.
                   </p>
-                  <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2">
-                    <Button
-                      className="border border-white/70 bg-white/15 hover:bg-white/25 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base shadow-lg shadow-purple-500/20 backdrop-blur-lg transition-all"
-                      onClick={() => router.push("/controle/quiz-hebdomadaire")}
-                      size="lg"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full bg-white/40 text-purple-600">
-                          <Target className="w-3 h-3" />
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white/80 dark:bg-gray-800/80 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+                    <span className="text-2xl">🎨</span>
+                    Repères Visuels
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Couleurs et icônes par matière, animations douces pour une
+                    expérience apaisante.
+                  </p>
+                </CardContent>
+              </Card>
+
+              <Card className="bg-white/80 dark:bg-gray-800/80 border-purple-200 dark:border-purple-700 shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 backdrop-blur-sm">
+                <CardHeader>
+                  <CardTitle className="flex items-center gap-2 text-purple-700 dark:text-purple-300">
+                    <span className="text-2xl">💪</span>
+                    Feedback Positif
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <p className="text-gray-600 dark:text-gray-300">
+                    Encouragements constants, progression visible et célébration
+                    des réussites.
+                  </p>
+                </CardContent>
+              </Card>
+            </motion.div>
+
+            {/* Carte principale du quiz */}
+            <motion.div
+              animate={{ opacity: 1, scale: 1 }}
+              className="max-w-4xl mx-auto px-3 sm:px-4"
+              initial={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
+            >
+              <Card className="bg-gradient-to-r from-purple-500 to-pink-500 border-0 shadow-2xl overflow-hidden backdrop-blur-sm">
+                <CardContent className="p-4 sm:p-6 md:p-8">
+                  <div className="text-center text-white">
+                    <div className="w-16 h-16 sm:w-20 sm:h-20 mx-auto bg-white/20 rounded-full flex items-center justify-center mb-4 sm:mb-6 backdrop-blur-sm">
+                      <Target className="w-8 h-8 sm:w-10 sm:h-10 text-white" />
+                    </div>
+                    <h3 className="text-xl sm:text-2xl md:text-3xl font-bold mb-3 sm:mb-4 px-2">
+                      Commencer un Quiz
+                    </h3>
+                    <p className="text-sm sm:text-base md:text-lg mb-4 sm:mb-6 opacity-90 px-4">
+                      52 quiz disponibles, adaptés pour chaque semaine de l'année
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-3 sm:gap-4 justify-center px-2">
+                      <Button
+                        className="border border-white/70 bg-white/15 hover:bg-white/25 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base shadow-lg shadow-purple-500/20 backdrop-blur-lg transition-all"
+                        onClick={() => router.push("/controle/quiz-hebdomadaire")}
+                        size="lg"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full bg-white/40 text-purple-600">
+                            <Target className="w-3 h-3" />
+                          </span>
+                          <span className="text-white">Choisir un Quiz</span>
                         </span>
-                        <span className="text-white">Choisir un Quiz</span>
-                      </span>
-                    </Button>
-                    <Button
-                      className="border border-white/70 bg-white/15 hover:bg-white/25 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base shadow-lg shadow-purple-500/20 backdrop-blur-lg transition-all"
-                      onClick={() => {
-                        const currentWeek = Math.ceil(
-                          (new Date().getTime() -
-                            new Date(
-                              new Date().getFullYear(),
-                              0,
-                              1,
-                            ).getTime()) /
-                          (86400000 * 7),
-                        );
-                        router.push(
-                          `/controle/quiz-hebdomadaire?week=${currentWeek}`,
-                        );
-                      }}
-                      size="lg"
-                      variant="outline"
-                    >
-                      <span className="flex items-center gap-2">
-                        <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full border border-white/40 bg-transparent text-white/90">
-                          <Sparkles className="w-3 h-3" />
+                      </Button>
+                      <Button
+                        className="border border-white/70 bg-white/15 hover:bg-white/25 text-white font-semibold px-6 sm:px-8 py-2 sm:py-3 text-sm sm:text-base shadow-lg shadow-purple-500/20 backdrop-blur-lg transition-all"
+                        onClick={() => {
+                          const currentWeek = Math.ceil(
+                            (new Date().getTime() -
+                              new Date(
+                                new Date().getFullYear(),
+                                0,
+                                1,
+                              ).getTime()) /
+                            (86400000 * 7),
+                          );
+                          router.push(
+                            `/controle/quiz-hebdomadaire?week=${currentWeek}`,
+                          );
+                        }}
+                        size="lg"
+                        variant="outline"
+                      >
+                        <span className="flex items-center gap-2">
+                          <span className="w-5 h-5 sm:w-6 sm:h-6 inline-flex items-center justify-center rounded-full border border-white/40 bg-transparent text-white/90">
+                            <Sparkles className="w-3 h-3" />
+                          </span>
+                          <span className="text-white">Quiz de cette Semaine</span>
                         </span>
-                        <span className="text-white">Quiz de cette Semaine</span>
-                      </span>
-                    </Button>
+                      </Button>
+                    </div>
                   </div>
-                </div>
-              </CardContent>
-            </Card>
-          </motion.div>
-        </div>
-      </section>
+                </CardContent>
+              </Card>
+            </motion.div>
+          </div>
+        </section>
 
-      {/* Matières */}
-      <section className="py-8 sm:py-12 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
-        <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center mb-8 sm:mb-12"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.7, delay: 0.4 }}
-          >
-            <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3 sm:mb-4 shadow-lg">
-              <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
-            </div>
-            <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4">
-              Choisis ta matière
-            </h2>
-            <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 px-4">
-              Explore les différentes matières et progresse à ton rythme
-            </p>
-          </motion.div>
+        {/* Matières */}
+        <section className="py-8 sm:py-12 bg-gradient-to-b from-gray-50 to-white dark:from-gray-900 dark:to-gray-800">
+          <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-8 lg:px-12">
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="text-center mb-8 sm:mb-12"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, delay: 0.4 }}
+            >
+              <div className="w-12 h-12 sm:w-16 sm:h-16 mx-auto bg-gradient-to-r from-blue-500 to-purple-600 rounded-full flex items-center justify-center mb-3 sm:mb-4 shadow-lg">
+                <Sparkles className="w-6 h-6 sm:w-8 sm:h-8 text-white" />
+              </div>
+              <h2 className="text-2xl sm:text-3xl font-bold text-gray-900 dark:text-white mb-3 sm:mb-4 px-4">
+                Choisis ta matière
+              </h2>
+              <p className="text-sm sm:text-base md:text-lg text-gray-600 dark:text-gray-300 px-4">
+                Explore les différentes matières et progresse à ton rythme
+              </p>
+            </motion.div>
 
-          <motion.div
-            animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
-            initial={{ opacity: 0, y: 20 }}
-            transition={{ duration: 0.7, delay: 0.6 }}
-          >
-            {courseThemes.map((theme, index) => (
-              <CourseCard index={index} key={theme.id} theme={theme} />
-            ))}
-          </motion.div>
-        </div>
-      </section>
+            <motion.div
+              animate={{ opacity: 1, y: 0 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6"
+              initial={{ opacity: 0, y: 20 }}
+              transition={{ duration: 0.7, delay: 0.6 }}
+            >
+              {courseThemes.map((theme, index) => (
+                <CourseCard index={index} key={theme.id} theme={theme} />
+              ))}
+            </motion.div>
+          </div>
+        </section>
       </div>
     </>
   );
