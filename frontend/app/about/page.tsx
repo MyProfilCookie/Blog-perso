@@ -35,38 +35,38 @@ const familyMembers = [
   {
     name: "Jessica",
     img: "/assets/family/avatar/jessica.webp",
-    role: "Sœur",
-    status: "soeur",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-pink-100 text-pink-600",
+    role: "Super-membre",
+    status: "Admin",
     borderColor: "#f8b0c5",
     imagePosition: "object-top",
   },
   {
     name: "Joshua",
     img: "/assets/family/avatar/joshua.webp",
-    role: "Frère",
-    status: "frère",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-yellow-100 text-yellow-600",
+    role: "Super-membre",
+    status: "Admin",
     borderColor: "#fdd68a",
     imagePosition: "object-top",
   },
   {
     name: "Maeva",
     img: "/assets/family/avatar/maeva.webp",
-    role: "Notre inspiration",
-    status: "soeur",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-green-100 text-green-600",
+    role: "Super-membre",
+    status: "membre",
     borderColor: "#aee9c5",
     imagePosition: "object-top",
   },
   {
     name: "Benjamin",
     img: "/assets/family/avatar/benjamin.webp",
-    role: "Co-fondateur",
-    status: "membre",
+    role: "Super-membre",
+    status: "Admin",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-indigo-100 text-indigo-600",
     borderColor: "#b8c5ff",
@@ -75,7 +75,7 @@ const familyMembers = [
   {
     name: "Mickael",
     img: "/assets/family/avatar/mickael.webp?v=2",
-    role: "Fils de Benjamin",
+    role: "membre",
     status: "membre",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-teal-100 text-teal-600",
@@ -85,7 +85,7 @@ const familyMembers = [
   {
     name: "Chantal",
     img: "/assets/family/avatar/chantal.webp",
-    role: "Éducatrice",
+    role: "membre",
     status: "membre",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-purple-100 text-purple-600",
@@ -95,8 +95,8 @@ const familyMembers = [
   {
     name: "Virginie",
     img: "/assets/family/avatar/virginie.webp",
-    role: "Sœur aînée",
-    status: "soeur",
+    role: "Fondatrice",
+    status: "Admin",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-blue-100 text-blue-600",
     borderColor: "#a8d5ff",
@@ -106,7 +106,7 @@ const familyMembers = [
     name: "Paul",
     img: "/assets/family/avatar/paul.webp",
     role: "Co-fondateur",
-    status: "membre",
+    status: "Admin",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-orange-100 text-orange-600",
     borderColor: "#fcd0a1",
@@ -115,8 +115,8 @@ const familyMembers = [
   {
     name: "Pauline",
     img: "/assets/family/avatar/pauline.webp",
-    role: "Sœur",
-    status: "soeur",
+    role: "Super-membre",
+    status: "Admin",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-orange-100 text-orange-600",
     borderColor: "#fcd0a1",
@@ -125,8 +125,8 @@ const familyMembers = [
   {
     name: "Vanessa",
     img: "/assets/family/avatar/vanessa.webp",
-    role: "Sœur",
-    status: "soeur",
+    role: "Super-membre",
+    status: "Admin",
     // on va ajouter une classe pour la couleur de fond
     className: "bg-red-100 text-red-600",
     borderColor: "#f8b4b4",
