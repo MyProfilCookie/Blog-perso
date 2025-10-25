@@ -195,7 +195,7 @@ const AIAssistantPremium: React.FC = () => {
       animate={{ opacity: 1, y: 0 }}
       className="w-full"
     >
-      <Card className="mx-auto w-full max-w-2xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-violet-200/50 dark:border-violet-800/50 shadow-xl overflow-hidden">
+      <Card className="mx-auto w-full max-w-xl bg-white/80 dark:bg-gray-900/80 backdrop-blur-xl border border-violet-200/50 dark:border-violet-800/50 shadow-xl overflow-hidden">
         <CardBody className="p-0 flex flex-col">
           {/* Header avec animation */}
           <motion.div
@@ -275,7 +275,7 @@ const AIAssistantPremium: React.FC = () => {
           </motion.div>
 
           {/* Zone de messages */}
-          <div className="h-[320px] sm:h-[360px] md:h-[420px] lg:h-[460px] overflow-y-auto p-3 sm:p-4 md:p-6 space-y-3 sm:space-y-4 bg-gradient-to-b from-violet-50/30 to-purple-50/30 dark:from-gray-900/50 dark:to-purple-950/20 backdrop-blur-sm">
+          <div className="h-[240px] sm:h-[280px] md:h-[320px] lg:h-[360px] overflow-y-auto p-3 sm:p-4 md:p-5 space-y-3 sm:space-y-4 bg-gradient-to-b from-violet-50/30 to-purple-50/30 dark:from-gray-900/50 dark:to-purple-950/20 backdrop-blur-sm">
             <AnimatePresence mode="popLayout">
               {messages.map((message, index) => (
                 <motion.div
