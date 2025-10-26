@@ -35,9 +35,9 @@ const milestones = [
   },
   {
     year: "2020",
-    title: "Le collège et les passions",
+    title: "L’école à la maison",
     description:
-      "En pleine adolescence, elle affirme son désir d’apprendre, explore les sciences et le numérique, tout en gardant ses repères sensoriels.",
+      "La famille choisit l’instruction à domicile. Les apprentissages s’organisent autour d’un planning sensoriel, loin de l’agitation des classes traditionnelles et adapté à sa déficience intellectuelle.",
   },
   {
     year: "Aujourd’hui",
@@ -65,6 +65,27 @@ const favorites = [
     title: "Repères sensoriels",
     description:
       "Loin des chiens et des oiseaux, Maeva choisit toujours des environnements apaisants qui respectent ses sensibilités.",
+  },
+];
+
+const mangaHighlights = [
+  {
+    title: "Univers Manga",
+    description:
+      "Maeva se passionne pour les héroïnes qui apprennent en dépassant leurs limites et collectionne des planches colorées qui lui donnent confiance.",
+    image: "/assets/maeva/Maeva1.webp",
+  },
+  {
+    title: "Carnets illustrés",
+    description:
+      "Ses carnets de travail mélangent pictogrammes PECS et dessins inspirés de ses mangas préférés, sans jamais faire place aux chiens ou aux oiseaux qu’elle redoute.",
+    image: "/assets/art/art.webp",
+  },
+  {
+    title: "Apprentissages guidés",
+    description:
+      "Chaque nouveau chapitre d’AutiStudy est testé à la maison avec Maeva : activités scénarisées, supports sensoriels et fiches visuelles personnalisées.",
+    image: "/assets/resources/tools.webp",
   },
 ];
 
@@ -122,9 +143,10 @@ export default function MaevaPage() {
                 Maeva, le cœur battant d’AutiStudy
               </h1>
               <p className="text-base text-gray-600 dark:text-gray-300 md:text-lg">
-                Née le 26 octobre 2010, Maeva est à l’origine de ce projet. Son
-                parcours nous rappelle chaque jour que l’apprentissage se tisse avec
-                patience, respect des sensibilités et confiance partagée.
+                Née le 26 octobre 2010, Maeva vit avec une déficience intellectuelle et
+                une sensibilité sensorielle marquée. Loin de freiner ses rêves, cela
+                nous rappelle chaque jour que l’apprentissage se tisse avec patience,
+                respect des émotions et créativité partagée.
               </p>
               <div className="flex flex-wrap gap-3">
                 <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm dark:bg-blue-900/30 dark:text-blue-200">
@@ -276,6 +298,70 @@ export default function MaevaPage() {
                 </p>
               </div>
             </div>
+          </div>
+        </motion.section>
+
+        <motion.section
+          initial={isMobile ? undefined : { opacity: 0, y: 24 }}
+          animate={isMobile ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          className="mt-12 grid gap-6 md:grid-cols-3"
+        >
+          {mangaHighlights.map((item) => (
+            <div
+              key={item.title}
+              className="group overflow-hidden rounded-3xl border border-purple-100 bg-white/90 shadow-lg transition hover:-translate-y-1 hover:border-purple-200 dark:border-purple-900/30 dark:bg-gray-900/75"
+            >
+              <div className="relative h-48 w-full overflow-hidden">
+                <Image
+                  src={item.image}
+                  alt={item.title}
+                  fill
+                  className="object-cover transition duration-500 group-hover:scale-105"
+                />
+              </div>
+              <div className="space-y-2 p-5 text-sm text-gray-600 dark:text-gray-300">
+                <h4 className="text-base font-semibold text-gray-900 dark:text-white">
+                  {item.title}
+                </h4>
+                <p>{item.description}</p>
+              </div>
+            </div>
+          ))}
+        </motion.section>
+
+        <motion.section
+          initial={isMobile ? undefined : { opacity: 0, y: 24 }}
+          animate={isMobile ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+          className="mt-12 rounded-3xl border border-gray-200 bg-white/90 p-8 shadow-xl dark:border-gray-800 dark:bg-gray-900/80"
+        >
+          <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+            Instants de vie
+          </h2>
+          <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 md:text-base">
+            Quelques clichés que nous aimons partager : les séances de travail à la maison,
+            les pauses manga et les moments de fierté après un apprentissage.
+          </p>
+          <div className="mt-6 grid gap-4 md:grid-cols-4">
+            {[
+              "/assets/maeva/IMG_1427.webp",
+              "/assets/maeva/IMG_2203.webp",
+              "/assets/maeva/IMG_2248.webp",
+              "/assets/maeva/Maevanini.webp",
+            ].map((src) => (
+              <div
+                key={src}
+                className="relative h-48 overflow-hidden rounded-3xl bg-gray-100 dark:bg-gray-800"
+              >
+                <Image
+                  src={src}
+                  alt="Souvenir de Maeva"
+                  fill
+                  className="object-cover transition duration-500 hover:scale-105"
+                />
+              </div>
+            ))}
           </div>
         </motion.section>
       </div>
