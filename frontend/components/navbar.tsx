@@ -34,6 +34,7 @@ import { useTheme } from "next-themes";
 import { UserContext } from "@/context/UserContext";
 import { Sparkles } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 
 import {
   SunFilledIcon,
@@ -92,6 +93,9 @@ export const Navbar = () => {
   const router = useRouter();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const { isMobile, shouldReduceAnimations } = useMobileOptimization({
+    enableReducedMotion: true,
+  });
 
   // Couleurs pour l'animation de l'avatar - couleurs de l'autisme
   const adminColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"];
@@ -99,37 +103,32 @@ export const Navbar = () => {
   const guestColors = ["#E8E8E8", "#D4D4D4", "#B8B8B8", "#9E9E9E"];
 
   const { theme, setTheme, resolvedTheme } = useTheme();
-  const [mounted, setMounted] = useState(false);
 
+  // Fermer automatiquement le menu lorsque l'on quitte le format mobile
   useEffect(() => {
-    setMounted(true);
-  }, []);
-
-  // Fermer automatiquement le menu sur tablette et desktop
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768 && isMenuOpen) {
-        setIsMenuOpen(false);
-      }
-    };
-
-    // Vérifier au montage
-    if (mounted) {
-      handleResize();
+    if (!isMobile && isMenuOpen) {
+      setIsMenuOpen(false);
     }
-
-    window.addEventListener('resize', handleResize);
-    return () => window.removeEventListener('resize', handleResize);
-  }, [mounted, isMenuOpen]);
+  }, [isMobile, isMenuOpen]);
 
   // Animation de couleur de l'avatar - optimisée pour les performances
   useEffect(() => {
+    if (shouldReduceAnimations || isMobile) {
+      return;
+    }
+
     const colorInterval = setInterval(() => {
       setAvatarColorIndex((prevIndex) => (prevIndex + 1) % 4);
-    }, 8000); // Réduit la fréquence pour alléger la charge
+    }, 8000);
 
     return () => clearInterval(colorInterval);
-  }, []);
+  }, [shouldReduceAnimations, isMobile]);
+
+  useEffect(() => {
+    if (shouldReduceAnimations || isMobile) {
+      setAvatarColorIndex(0);
+    }
+  }, [shouldReduceAnimations, isMobile]);
 
   /**
    * Synchroniser le panier avec l'utilisateur
@@ -463,6 +462,118 @@ export const Navbar = () => {
 
   // Menu items utilisateur - vide pour ne pas afficher ces liens dans le menu burger
   const userMenuItems: any[] = [];
+
+  const menuOverlayClassName =
+    "md:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm";
+  const menuPanelClassName =
+    "md:hidden fixed top-0 left-0 h-auto max-h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto rounded-r-2xl";
+  const disableMenuMotion = isMobile || shouldReduceAnimations;
+
+  const menuPanelContent = (
+    <div className="p-4 flex flex-col">
+      {/* Header avec logo et bouton fermer */}
+      <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
+        <div className="flex items-center gap-2">
+          <AutismLogo size={12} />
+          <span className="font-bold text-violet-600 dark:text-violet-400 text-lg">
+            AutiStudy
+          </span>
+        </div>
+        <button
+          onClick={() => setIsMenuOpen(false)}
+          className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
+          aria-label="Fermer le menu"
+        >
+          <svg
+            className="w-5 h-5 text-gray-600 dark:text-gray-300"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
+          </svg>
+        </button>
+      </div>
+
+      {/* Bouton AI Assistant */}
+      <div className="mb-3">
+        <Button
+          as={NextLink}
+          href="/ai-assistant"
+          className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+          size="md"
+          startContent={<Sparkles className="w-4 h-4" />}
+          onClick={() => setIsMenuOpen(false)}
+        >
+          🤖 Assistant IA
+        </Button>
+      </div>
+
+      {/* Séparateur */}
+      <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
+
+      {/* Liens principaux */}
+      <div className="space-y-1 flex-1 overflow-y-auto">
+        {menuItems.map((item, index) => (
+          <NextLink
+            key={`${item.name}-${index}`}
+            href={item.href}
+            onClick={() => setIsMenuOpen(false)}
+            className="block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"
+          >
+            {item.name}
+          </NextLink>
+        ))}
+      </div>
+
+      {/* Liens utilisateur si connecté */}
+      {userMenuItems.length > 0 && (
+        <>
+          <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
+          <div className="space-y-1 pb-4">
+            {userMenuItems.map((item, index) =>
+              item.href === "#" ? (
+                <button
+                  key={`user-${item.name}-${index}`}
+                  className={`block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
+                    item.color === "danger"
+                      ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
+                      : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
+                  }`}
+                  onClick={() => {
+                    if (item.action) {
+                      item.action();
+                    }
+                    setIsMenuOpen(false);
+                  }}
+                >
+                  {item.name}
+                </button>
+              ) : (
+                <NextLink
+                  key={`user-${item.name}-${index}`}
+                  href={item.href}
+                  onClick={() => setIsMenuOpen(false)}
+                  className={`block py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
+                    item.color === "danger"
+                      ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
+                      : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
+                  }`}
+                >
+                  {item.name}
+                </NextLink>
+              ),
+            )}
+          </div>
+        </>
+      )}
+    </div>
+  );
 
   return (
     <NextUINavbar
@@ -1018,125 +1129,40 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Menu mobile - sidebar compact avec animation */}
+      {/* Menu mobile */}
       <AnimatePresence>
-        {isMenuOpen && (
+        {isMenuOpen && !disableMenuMotion && (
           <>
-            {/* Overlay sombre pour fermer le menu */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
               transition={{ duration: 0.2 }}
-              className="md:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm"
+              className={menuOverlayClassName}
               onClick={() => setIsMenuOpen(false)}
             />
-            
-            {/* Menu sidebar */}
             <motion.div
               initial={{ x: -300, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -300, opacity: 0 }}
               transition={{ type: "spring", damping: 25, stiffness: 300 }}
-              className="md:hidden fixed top-0 left-0 h-auto max-h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto rounded-r-2xl"
+              className={menuPanelClassName}
             >
-              <div className="p-4 flex flex-col">
-                {/* Header avec logo et bouton fermer */}
-                <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
-                  <div className="flex items-center gap-2">
-                    <AutismLogo size={12} />
-                    <span className="font-bold text-violet-600 dark:text-violet-400 text-lg">
-                      AutiStudy
-                    </span>
-                  </div>
-                  <button
-                    onClick={() => setIsMenuOpen(false)}
-                    className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                    aria-label="Fermer le menu"
-                  >
-                    <svg className="w-5 h-5 text-gray-600 dark:text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-                    </svg>
-                  </button>
-                </div>
-
-                {/* Bouton AI Assistant */}
-                <div className="mb-3">
-                  <Button
-                    as={NextLink}
-                    href="/ai-assistant"
-                    className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
-                    size="md"
-                    startContent={<Sparkles className="w-4 h-4" />}
-                    onClick={() => setIsMenuOpen(false)}
-                  >
-                    🤖 Assistant IA
-                  </Button>
-                </div>
-
-                {/* Séparateur */}
-                <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
-
-                {/* Liens principaux */}
-                <div className="space-y-1 flex-1 overflow-y-auto">
-                  {menuItems.map((item, index) => (
-                    <NextLink
-                      key={`${item.name}-${index}`}
-                      href={item.href}
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"
-                    >
-                      {item.name}
-                    </NextLink>
-                  ))}
-                </div>
-
-                {/* Liens utilisateur si connecté */}
-                {userMenuItems.length > 0 && (
-                  <>
-                    <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
-                    <div className="space-y-1 pb-4">
-                      {userMenuItems.map((item, index) => (
-                        item.href === "#" ? (
-                          <button
-                            key={`user-${item.name}-${index}`}
-                            className={`block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
-                              item.color === 'danger'
-                                ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20'
-                                : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
-                            }`}
-                            onClick={() => {
-                              if (item.action) {
-                                item.action();
-                              }
-                              setIsMenuOpen(false);
-                            }}
-                          >
-                            {item.name}
-                          </button>
-                        ) : (
-                          <NextLink
-                            key={`user-${item.name}-${index}`}
-                            href={item.href}
-                            onClick={() => setIsMenuOpen(false)}
-                            className={`block py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
-                              item.color === 'danger'
-                                ? 'text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20'
-                                : 'text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400'
-                            }`}
-                          >
-                            {item.name}
-                          </NextLink>
-                        )
-                      ))}
-                    </div>
-                  </>
-                )}
-              </div>
+              {menuPanelContent}
             </motion.div>
+          </>
+        )}
+      </AnimatePresence>
+
+      {isMenuOpen && disableMenuMotion && (
+        <>
+          <div
+            className={menuOverlayClassName}
+            onClick={() => setIsMenuOpen(false)}
+          />
+          <div className={menuPanelClassName}>{menuPanelContent}</div>
         </>
       )}
-      </AnimatePresence>
     </NextUINavbar>
   );
 };
