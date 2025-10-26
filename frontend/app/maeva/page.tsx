@@ -89,6 +89,47 @@ const mangaHighlights = [
   },
 ];
 
+const dailyRituals = [
+  {
+    title: "Routine sensorielle du matin",
+    description:
+      "Respirations guidées, musique douce et check-list visuelle pour ouvrir la journée sans surcharge.",
+  },
+  {
+    title: "Temps d’étude modulaires",
+    description:
+      "Séquences de 25 minutes suivies d’une pause sensorielle, adaptées à son rythme de concentration.",
+  },
+  {
+    title: "Ateliers créatifs",
+    description:
+      "Carnets manga, expériences scientifiques simplifiées et jeux de logique partagés avec la famille.",
+  },
+  {
+    title: "Journal de gratitude",
+    description:
+      "Chaque soir, Maeva note trois réussites ou sensations agréables pour clôturer la journée positivement.",
+  },
+];
+
+const supportingLinks = [
+  {
+    label: "Classeur PECS favori",
+    href: "/resources/tools",
+    description: "Nos supports visuels à imprimer qui ont accompagné Maeva dès ses premiers mots.",
+  },
+  {
+    label: "Lettre douce du dimanche",
+    href: "/resources/trainings",
+    description: "Une routine familiale inspirée par Maeva pour partager idées sensorielles et encouragements.",
+  },
+  {
+    label: "Studio créatif AutiStudy",
+    href: "/shop",
+    description: "Sélection de matériels sensoriels et carnets illustrés testés avec elle.",
+  },
+];
+
 export default function MaevaPage() {
   const context = useContext(UserContext);
   const currentUser = context?.user ?? null;
@@ -362,6 +403,67 @@ export default function MaevaPage() {
                 />
               </div>
             ))}
+          </div>
+        </motion.section>
+
+        <motion.section
+          initial={isMobile ? undefined : { opacity: 0, y: 24 }}
+          animate={isMobile ? undefined : { opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+          className="mt-12 grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]"
+        >
+          <div className="rounded-3xl border border-blue-100 bg-white/90 p-8 shadow-xl dark:border-blue-900/40 dark:bg-gray-900/80">
+            <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
+              Sa journée à la maison
+            </h2>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300 md:text-base">
+              Les cours à domicile de Maeva sont rythmés par des repères sensoriels,
+              des temps de respiration et des séquences pédagogiques courtes.
+            </p>
+            <div className="mt-6 grid gap-4 sm:grid-cols-2">
+              {dailyRituals.map((ritual) => (
+                <div
+                  key={ritual.title}
+                  className="rounded-3xl border border-blue-100 bg-white/80 p-4 shadow-sm transition hover:border-blue-200 dark:border-blue-900/30 dark:bg-gray-900/70 dark:hover:border-blue-700"
+                >
+                  <h4 className="text-sm font-semibold text-blue-700 dark:text-blue-200">
+                    {ritual.title}
+                  </h4>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                    {ritual.description}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-3xl border border-purple-100 bg-white/90 p-8 shadow-xl dark:border-purple-900/40 dark:bg-gray-900/80">
+            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+              Ressources qu’elle inspire
+            </h3>
+            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+              Chaque lien ci-dessous existe parce que Maeva en a piloté les besoins ou
+              a testé la version pilote à la maison.
+            </p>
+            <div className="mt-6 space-y-4">
+              {supportingLinks.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="flex items-start justify-between gap-4 rounded-3xl border border-purple-100 bg-white/80 px-5 py-4 text-sm shadow-sm transition hover:border-purple-200 hover:text-purple-700 dark:border-purple-900/30 dark:bg-gray-900/70 dark:hover:border-purple-700 dark:hover:text-purple-200"
+                >
+                  <span>
+                    <strong className="block text-gray-900 dark:text-white">
+                      {item.label}
+                    </strong>
+                    <span className="text-gray-600 dark:text-gray-300">
+                      {item.description}
+                    </span>
+                  </span>
+                  <ArrowRight className="mt-1 h-4 w-4 flex-shrink-0" />
+                </Link>
+              ))}
+            </div>
           </div>
         </motion.section>
       </div>
