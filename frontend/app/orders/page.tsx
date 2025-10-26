@@ -670,6 +670,7 @@ export default function OrdersPage() {
             </div>
         </div>
     );
+    }
 
     const statCards = [
         {
@@ -730,13 +731,6 @@ export default function OrdersPage() {
                                 >
                                     Explorer la boutique
                                     <ArrowRightIcon className="h-4 w-4" />
-                                </Link>
-                                <Link
-                                    href="/contact"
-                                    className="inline-flex items-center gap-2 rounded-full border border-blue-200 px-5 py-2.5 text-sm font-semibold text-blue-700 transition hover:border-blue-300 hover:text-blue-800 dark:border-blue-900/40 dark:text-blue-200 dark:hover:border-blue-700"
-                                >
-                                    Besoin d’aide ?
-                                </Link>
                             </div>
                         </div>
                         <div className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/80 p-6 text-sm shadow-xl dark:border-white/10 dark:bg-gray-900/70">
