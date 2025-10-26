@@ -167,7 +167,7 @@ export default function MaevaPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950/95 dark:to-gray-900">
-      <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 md:px-8 lg:px-12">
+      <div className="mx-auto w-full px-4 pb-16 pt-10 md:px-8 lg:px-12">
         <motion.section
           initial={isMobile ? undefined : { opacity: 0, y: 24 }}
           animate={isMobile ? undefined : { opacity: 1, y: 0 }}
