@@ -4,9 +4,10 @@ const Produit = require('./api/models/products');
 
 const MONGODB_URI = process.env.DB;
 
-// Mapping des produits vers des images locales uniquement (/assets/shop/)
+// Mapping optimisé des produits vers les nouvelles images locales (/assets/shop/)
+// Utilise les 19 images webp disponibles pour correspondre au mieux à chaque produit
 const productImageMapping = {
-  // Images locales existantes - Produits de base
+  // Produits de base - images dédiées
   "Tapis sensoriel": "/assets/shop/tapis-sensoriel.webp",
   "Veste lestée": "/assets/shop/veste-lestee.webp",
   "Cube Sensoriel": "/assets/shop/cube-sensoriel.webp",
@@ -21,43 +22,43 @@ const productImageMapping = {
   "Casque Anti-bruit": "/assets/shop/casque-anti-bruit.webp",
   "Balle Sensorielle Lumineuse": "/assets/shop/balle-sensorielle-lumineuse.webp",
 
-  // Produits similaires - réutilisation d'images locales
+  // Produits sensoriels - réutilisation d'images cohérentes
   "Balles Sensorielles Texturées - Set de 6": "/assets/shop/balle-sensorielle-lumineuse.webp",
   "Casque Anti-Bruit pour Enfants": "/assets/shop/casque-anti-bruit.webp",
   "Coussin Lesté Apaisant 2kg": "/assets/shop/oreiller-leste.webp",
-  "Time Timer Visuel - Gestion du Temps": "/assets/shop/timer-visuel.webp",
   "Fidget Toys - Kit de 12 pièces": "/assets/shop/boule-anti-stress.webp",
-  "Séquenceur Visuel Magnétique": "/assets/shop/classeur-pecs.webp",
   "Tapis Sensoriel d'Activités": "/assets/shop/tapis-sensoriel.webp",
   "Couverture Lestée Enfant 4kg": "/assets/shop/veste-lestee.webp",
   "Coussin Adapté Posture": "/assets/shop/oreiller-leste.webp",
-
-  // Produits éducatifs - réutilisation d'images locales cohérentes
-  "Puzzle Encastrable en Bois - Alphabet": "/assets/shop/cube-sensoriel.webp",
-  "Cube Lumineux Interactif": "/assets/shop/cube-sensoriel.webp",
-  "Jeu de Cartes Émotions": "/assets/shop/classeur-pecs.webp",
-  "Jeu de Motricité Fine Adapté": "/assets/shop/boule-anti-stress.webp",
-
-  // Communication AAC - utilisation d'images locales appropriées
-  "Tablette de Communication AAC": "/assets/shop/classeur-pecs.webp",
-  "Système de Signalisation Visuelle": "/assets/shop/classeur-pecs.webp",
-  "Système d'Assistance Vocale": "/assets/shop/timer-visuel.webp",
-  "Tablette d'Apprentissage Tactile": "/assets/shop/cube-sensoriel.webp",
-
-  // Mobilité et autonomie - images locales appropriées
-  "Fauteuil Roulant Pédiatrique Léger": "/assets/shop/chaise-bascule.webp",
-  "Canne Blanche Electronique": "/assets/shop/timer-visuel.webp",
-  "Bracelet de Géolocalisation Sécurisé": "/assets/shop/timer-visuel.webp",
-
-  // Matériel sensoriel TSA - images locales sensorielles
   "Kit Sensoriel pour TSA": "/assets/shop/balle-sensorielle-lumineuse.webp",
   "Tunnel Sensoriel Pop-Up": "/assets/shop/tapis-sensoriel.webp",
 
-  // Éclairage et technologie - images locales appropriées
-  "Système d'Éclairage Adapté": "/assets/shop/lumiere-ambiance-sensorielle.webp",
+  // Organisation et gestion du temps
+  "Time Timer Visuel - Gestion du Temps": "/assets/shop/timer-visuel.webp",
+  "Séquenceur Visuel Magnétique": "/assets/shop/classeur-pecs.webp",
 
-  // Autonomie quotidienne - images appropriées
-  "Kit d'Autonomie Quotidienne": "/assets/shop/classeur-pecs.webp",
+  // Produits éducatifs
+  "Puzzle Encastrable en Bois - Alphabet": "/assets/shop/cube-sensoriel.webp",
+  "Cube Lumineux Interactif": "/assets/shop/cube-sensoriel.webp",
+  "Jeu de Cartes Émotions": "/assets/shop/classeur-pecs.webp",
+  "Jeu de Motricité Fine Adapté": "/assets/shop/jeu-de-motricite.webp", // ✨ NOUVELLE IMAGE
+
+  // Communication AAC - utilisation des nouvelles images dédiées
+  "Tablette de Communication AAC": "/assets/shop/tablette-apprentissage.webp", // ✨ NOUVELLE IMAGE
+  "Système de Signalisation Visuelle": "/assets/shop/systeme-de-signalisation-visuelle.webp", // ✨ NOUVELLE IMAGE
+  "Système d'Assistance Vocale": "/assets/shop/assistance-vocale.webp", // ✨ NOUVELLE IMAGE
+  "Tablette d'Apprentissage Tactile": "/assets/shop/tablette-apprentissage.webp", // ✨ NOUVELLE IMAGE
+
+  // Mobilité
+  "Fauteuil Roulant Pédiatrique Léger": "/assets/shop/chaise-bascule.webp",
+  "Canne Blanche Electronique": "/assets/shop/timer-visuel.webp",
+
+  // Sécurité et autonomie - utilisation des nouvelles images dédiées
+  "Bracelet de Géolocalisation Sécurisé": "/assets/shop/timer-visuel.webp",
+  "Kit d'Autonomie Quotidienne": "/assets/shop/kit-autonomie.webp", // ✨ NOUVELLE IMAGE
+
+  // Éclairage et technologie - utilisation de la nouvelle image dédiée
+  "Système d'Éclairage Adapté": "/assets/shop/systeme-eclairage.webp", // ✨ NOUVELLE IMAGE
 };
 
 async function updateProductImages() {
