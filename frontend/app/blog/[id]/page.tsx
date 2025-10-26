@@ -91,31 +91,6 @@ export default function BlogPostPage() {
     }
   }, []);
 
-  if (loading) {
-    return (
-      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-900">
-        <Loader2 className="h-10 w-10 animate-spin text-blue-600 dark:text-blue-300" />
-      </div>
-    );
-  }
-
-  if (error || !blog) {
-    return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6 text-center dark:from-gray-950 dark:via-gray-900 dark:to-gray-900">
-        <p className="mb-6 max-w-lg text-lg font-semibold text-red-600 dark:text-red-400">
-          {error ?? "Article introuvable."}
-        </p>
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
-        >
-          <ArrowLeft className="h-4 w-4" />
-          Retour aux articles
-        </Link>
-      </div>
-    );
-  }
-
   const contentArray = useMemo(() => {
     if (!blog?.content) {
       return [];
@@ -146,6 +121,31 @@ export default function BlogPostPage() {
     const totalWords = contentArray.join(" ").split(/\s+/).filter(Boolean).length;
     return Math.max(3, Math.round(totalWords / 180));
   }, [contentArray]);
+
+  if (loading) {
+    return (
+      <div className="flex min-h-screen items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-900 dark:to-gray-900">
+        <Loader2 className="h-10 w-10 animate-spin text-blue-600 dark:text-blue-300" />
+      </div>
+    );
+  }
+
+  if (error || !blog) {
+    return (
+      <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-blue-50 via-white to-purple-50 p-6 text-center dark:from-gray-950 dark:via-gray-900 dark:to-gray-900">
+        <p className="mb-6 max-w-lg text-lg font-semibold text-red-600 dark:text-red-400">
+          {error ?? "Article introuvable."}
+        </p>
+        <Link
+          href="/blog"
+          className="inline-flex items-center gap-2 rounded-full bg-blue-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:bg-blue-700 dark:bg-blue-700 dark:hover:bg-blue-600"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Retour aux articles
+        </Link>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950/95 dark:to-gray-900">
