@@ -47,6 +47,8 @@ import {
 } from "@/components/icons";
 import { ThemeSwitch } from "@/components/theme-switch";
 
+const VIRGINIE_EMAIL = "virginie.ayivor@yahoo.fr";
+
 // Type definition for user
 type User = {
   id: string;
@@ -96,6 +98,8 @@ export const Navbar = () => {
   const { isMobile, shouldReduceAnimations } = useMobileOptimization({
     enableReducedMotion: true,
   });
+  const isVirginie =
+    user?.email?.toLowerCase?.() === VIRGINIE_EMAIL;
 
   // Couleurs pour l'animation de l'avatar - couleurs de l'autisme
   const adminColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"];
@@ -457,6 +461,9 @@ export const Navbar = () => {
     { name: "📝 Posts", href: "/posts", color: "foreground" },
     { name: "🎮 Contrôle", href: "/controle", color: "foreground" },
     { name: "🛒 Shop", href: "/shop", color: "foreground" },
+    ...(isVirginie
+      ? [{ name: "🌟 Maeva", href: "/maeva", color: "foreground" }]
+      : []),
     { name: "❤️ Contact", href: "/contact", color: "foreground" },
   ];
 
@@ -699,6 +706,18 @@ export const Navbar = () => {
             )}
           </NextLink>
         </NavbarItem>
+
+        {isVirginie && (
+          <NavbarItem>
+            <NextLink
+              className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
+              href="/maeva"
+            >
+              <Sparkles className="w-5 h-5" />
+              Maeva
+            </NextLink>
+          </NavbarItem>
+        )}
       </NavbarContent>
 
       <NavbarContent className="flex-shrink-0 gap-3 md:gap-5" justify="end">
