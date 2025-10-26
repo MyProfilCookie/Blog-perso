@@ -357,7 +357,7 @@ export default function OrdersPage() {
         content = (
             <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
-                    <Skeleton key={i} className="h-28 w-full rounded-3xl bg-white/60 dark:bg-gray-800/60" />
+                    <Skeleton key={i} className="h-28 w-full rounded-2xl bg-white/60 dark:bg-gray-800/60" />
                 ))}
             </div>
         );
@@ -380,7 +380,7 @@ export default function OrdersPage() {
         );
     } else if (orders.length === 0) {
         content = (
-            <Card className="overflow-hidden border border-blue-100 bg-white/95 shadow-xl dark:border-blue-900/40 dark:bg-gray-900/70">
+            <Card className="overflow-hidden border border-blue-100/60 bg-white/95 shadow-xl dark:border-blue-900/40 dark:bg-gray-900/70">
                 <CardContent className="space-y-5 p-6 md:p-8">
                     <div className="flex items-start gap-4">
                         <div className="rounded-2xl bg-blue-600/10 p-3 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200">
@@ -411,7 +411,7 @@ export default function OrdersPage() {
         content = (
             <div className="space-y-6">
                 {isAdmin && (
-                    <div className="rounded-3xl border border-green-200 bg-green-50/80 p-4 text-sm font-semibold text-green-700 shadow-sm dark:border-green-900/40 dark:bg-green-900/20 dark:text-green-200">
+                    <div className="rounded-2xl border border-green-200 bg-green-50/80 p-4 text-sm font-semibold text-green-700 shadow-sm dark:border-green-900/40 dark:bg-green-900/20 dark:text-green-200">
                         <FontAwesomeIcon className="mr-2" icon={faTags} />
                         Mode administrateur : l’aperçu des commandes reste accessible même sans paiement.
                     </div>
@@ -423,7 +423,7 @@ export default function OrdersPage() {
                             <Card
                                 key={order._id}
                                 id={`order-${order._id}`}
-                                className="overflow-hidden rounded-3xl border border-gray-200 bg-white/95 shadow-sm transition hover:shadow-md dark:border-gray-800 dark:bg-gray-900/80"
+                                className="overflow-hidden rounded-2xl border border-gray-200/60 bg-white/95 shadow-sm transition hover:shadow-md dark:border-gray-800 dark:bg-gray-900/80"
                             >
                                 <CardHeader
                                     className="cursor-pointer rounded-t-3xl bg-white/80 pb-3 transition hover:bg-gray-50 dark:bg-gray-900/70 dark:hover:bg-gray-800/60"
@@ -471,7 +471,7 @@ export default function OrdersPage() {
                                         transition={{ duration: 0.3 }}
                                     >
                                         <CardContent className="pt-0">
-                                            <div className="border-t border-gray-200 dark:border-gray-700 pt-4 mt-2">
+                                            <div className="border-t border-gray-200/60 dark:border-gray-700 pt-4 mt-2">
                                                 {/* Order Details */}
                                                 <div className="grid md:grid-cols-2 gap-4 mb-4">
                                                     <div className="space-y-2">
@@ -514,7 +514,7 @@ export default function OrdersPage() {
                                                 {/* Order Items */}
                                                 <div className="mt-4">
                                                     <h3 className="font-medium text-gray-800 dark:text-gray-200 mb-2">Articles commandés</h3>
-                                                    <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg overflow-hidden border border-gray-200 dark:border-gray-700">
+                                                    <div className="bg-gray-50 dark:bg-gray-900/50 rounded-lg overflow-hidden border border-gray-200/60 dark:border-gray-700">
                                                         <table className="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
                                                             <thead className="bg-gray-100 dark:bg-gray-700">
                                                                 <tr>
@@ -603,7 +603,7 @@ export default function OrdersPage() {
                                                                 </tr>
 
                                                                 {/* Total Row */}
-                                                                <tr className="border-t border-gray-200 dark:border-gray-600">
+                                                                <tr className="border-t border-gray-200/60 dark:border-gray-600">
                                                                     <td className="px-4 py-3 text-sm font-bold text-right text-gray-700 dark:text-gray-300" colSpan={3}>
                                                                         Total
                                                                     </td>
@@ -703,12 +703,12 @@ export default function OrdersPage() {
 
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950/90 dark:to-gray-900">
-            <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 md:px-8 lg:px-12">
+            <div className="w-full px-4 pb-16 pt-10 md:px-8 lg:px-14 xl:px-20">
                 <motion.section
                     initial={isMobile ? undefined : { opacity: 0, y: 24 }}
                     animate={isMobile ? undefined : { opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, ease: "easeOut" }}
-                    className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur dark:border-white/5 dark:bg-gray-900/80 md:p-12"
+                    className="relative overflow-hidden rounded-2xl border border-white/40 bg-white/90 p-8 shadow-2xl backdrop-blur dark:border-white/5 dark:bg-gray-900/80 md:p-12"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-500/10 to-pink-500/10" />
                     <div className="relative grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-center">
@@ -740,7 +740,7 @@ export default function OrdersPage() {
                                 </Link>
                             </div>
                         </div>
-                        <div className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/80 p-6 text-sm shadow-xl dark:border-white/10 dark:bg-gray-900/70">
+                        <div className="relative overflow-hidden rounded-2xl border border-white/40 bg-white/80 p-6 text-sm shadow-xl dark:border-white/10 dark:bg-gray-900/70">
                             <p className="text-gray-700 dark:text-gray-200">
                                 « Notre famille suit chaque commande pour adapter le matériel à Maeva : packs sensoriels,
                                 classeurs visuels, routines. Cet espace a été conçu pour que tout reste clair et rassurant. »
@@ -753,7 +753,7 @@ export default function OrdersPage() {
                     {statCards.map((card) => (
                         <div
                             key={card.title}
-                            className="rounded-3xl border border-blue-100 bg-white/90 p-5 shadow-lg transition hover:border-blue-200 dark:border-blue-900/40 dark:bg-gray-900/75"
+                            className="rounded-2xl border border-blue-100/60 bg-white/90 p-5 shadow-lg transition hover:border-blue-200 dark:border-blue-900/40 dark:bg-gray-900/75"
                         >
                             <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600/10 dark:bg-blue-500/20">
                                 {card.icon}
