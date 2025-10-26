@@ -172,42 +172,87 @@ export default function MaevaPage() {
           initial={isMobile ? undefined : { opacity: 0, y: 24 }}
           animate={isMobile ? undefined : { opacity: 1, y: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/90 shadow-2xl backdrop-blur dark:border-white/5 dark:bg-gray-900/80"
+          className="relative overflow-hidden rounded-3xl border border-white/70 bg-white shadow-2xl backdrop-blur dark:border-white/5 dark:bg-gray-900"
         >
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/15 via-purple-500/10 to-pink-500/15" />
-          <div className="relative grid gap-8 p-8 md:grid-cols-[1.1fr_0.9fr] md:p-12">
+          <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/15 to-rose-400/20" />
+          <div className="absolute -left-24 top-20 h-48 w-48 rounded-full bg-blue-400/30 blur-3xl" />
+          <div className="absolute -right-20 -top-16 h-64 w-64 rounded-full bg-pink-400/30 blur-3xl" />
+          <div className="absolute bottom-0 right-10 h-40 w-40 rounded-full bg-purple-500/30 blur-3xl" />
+
+          <div className="relative grid gap-12 p-8 md:grid-cols-[1.15fr_0.85fr] md:p-14">
             <div className="space-y-6">
-              <span className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-blue-700 dark:bg-blue-900/40 dark:text-blue-200">
-                Portrait de Maeva
-              </span>
-              <h1 className="text-3xl font-bold text-gray-900 md:text-4xl lg:text-5xl dark:text-white">
+              <div className="flex flex-wrap items-center gap-3">
+                <span className="inline-flex items-center gap-2 rounded-full bg-blue-100/90 px-4 py-2 text-xs font-semibold uppercase tracking-[0.4em] text-blue-700 dark:bg-blue-900/50 dark:text-blue-200">
+                  Espace privé Maeva
+                </span>
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-xs font-semibold text-purple-700 shadow-sm dark:bg-purple-900/40 dark:text-purple-200">
+                  Depuis 2010
+                </span>
+              </div>
+              <h1 className="text-3xl font-bold leading-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">
                 Maeva, le cœur battant d’AutiStudy
               </h1>
               <p className="text-base text-gray-600 dark:text-gray-300 md:text-lg">
-                Née le 26 octobre 2010, Maeva vit avec une déficience intellectuelle et
-                une sensibilité sensorielle marquée. Loin de freiner ses rêves, cela
-                nous rappelle chaque jour que l’apprentissage se tisse avec patience,
-                respect des émotions et créativité partagée.
+                Née le 26 octobre 2010, Maeva vit avec une déficience intellectuelle et une grande
+                sensibilité sensorielle. Sa manière d’apprendre – douce, structurée, créative – inspire
+                chaque parcours que nous imaginons pour les familles AutiStudy.
               </p>
+
+              <div className="grid gap-4 sm:grid-cols-2">
+                <div className="rounded-3xl border border-blue-100/80 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-blue-900/40 dark:bg-blue-950/40">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-blue-700 dark:text-blue-200">
+                    Ce qu’elle aime
+                  </p>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                    Les cours à la maison, les carnets manga, les défis logiques qui respectent son rythme.
+                  </p>
+                </div>
+                <div className="rounded-3xl border border-purple-100/80 bg-white/80 p-4 shadow-sm backdrop-blur dark:border-purple-900/40 dark:bg-purple-950/40">
+                  <p className="text-xs font-semibold uppercase tracking-[0.3em] text-purple-700 dark:text-purple-200">
+                    Ce qui la protège
+                  </p>
+                  <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                    Un environnement apaisant, loin des chiens et des oiseaux, nourri de supports visuels rassurants.
+                  </p>
+                </div>
+              </div>
+
               <div className="flex flex-wrap gap-3">
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm dark:bg-blue-900/30 dark:text-blue-200">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-blue-700 shadow-sm dark:bg-blue-900/30 dark:text-blue-200">
                   <Sparkles className="h-4 w-4" /> 15 ans de rayonnement
                 </span>
-                <span className="inline-flex items-center gap-2 rounded-full bg-white/80 px-4 py-2 text-sm font-semibold text-purple-700 shadow-sm dark:bg-purple-900/30 dark:text-purple-200">
+                <span className="inline-flex items-center gap-2 rounded-full bg-white/90 px-4 py-2 text-sm font-semibold text-purple-700 shadow-sm dark:bg-purple-900/30 dark:text-purple-200">
                   <BookOpen className="h-4 w-4" /> PECS &amp; passion d’apprendre
                 </span>
               </div>
             </div>
 
-            <div className="relative h-72 overflow-hidden rounded-3xl bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 shadow-inner sm:h-80">
+            <div className="relative h-[22rem] overflow-visible">
+              <div className="absolute inset-0 -translate-x-6 rounded-3xl border border-white/70 bg-white/80 shadow-xl backdrop-blur dark:border-white/10 dark:bg-gray-900/70" />
               <Image
                 src="/assets/maeva/Maeva.webp"
                 alt="Maeva souriante"
                 fill
-                className="object-cover"
+                className="relative rounded-3xl object-cover shadow-2xl"
                 priority
               />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/50 to-transparent p-4 text-sm text-white">
+              <div className="absolute -bottom-12 left-6 h-32 w-32 overflow-hidden rounded-2xl border border-white/70 shadow-lg dark:border-white/10">
+                <Image
+                  src="/assets/maeva/IMG_2203.webp"
+                  alt="Maeva concentrée sur un atelier"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute -top-10 right-0 h-28 w-28 overflow-hidden rounded-full border-4 border-white shadow-lg dark:border-gray-900">
+                <Image
+                  src="/assets/maeva/IMG_1427.webp"
+                  alt="Maeva en train de dessiner"
+                  fill
+                  className="object-cover"
+                />
+              </div>
+              <div className="absolute bottom-6 right-4 max-w-xs rounded-2xl bg-gray-900/85 px-4 py-3 text-xs text-white shadow-2xl sm:text-sm">
                 « Je préfère les salles calmes, les carnets et les défis logiques. »
               </div>
             </div>

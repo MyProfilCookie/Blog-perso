@@ -2,7 +2,7 @@
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 import dayjs from "dayjs";
 import Link from "next/link";
@@ -19,10 +19,18 @@ import {
     faTags
 } from "@fortawesome/free-solid-svg-icons";
 import { motion, AnimatePresence } from "framer-motion";
+import {
+    ShoppingBag,
+    PackageCheck,
+    CalendarDays,
+    Sparkles,
+    ArrowRight as ArrowRightIcon,
+} from "lucide-react";
 
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 
 // Define types
 interface OrderItem {
@@ -81,6 +89,7 @@ export default function OrdersPage() {
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const router = useRouter();
     const searchParams = useSearchParams();
+    const { isMobile } = useMobileOptimization({ enableReducedMotion: true });
 
     // Toggle expanded state for an order
     const toggleOrder = (orderId: string) => {
@@ -311,119 +320,146 @@ export default function OrdersPage() {
         fetchOrders();
     }, [router]);
 
-    // Render loading state
+    const statusSummary = useMemo(() => {
+        const total = orders.length;
+        const delivered = orders.filter((order) =>
+            ["Delivered", "Livree"].includes(order.status),
+        ).length;
+        const inProgress = orders.filter(
+            (order) =>
+                !["Delivered", "Livree", "Cancelled", "Annulee"].includes(order.status),
+        ).length;
+        const amountSpent = orders.reduce((sum, order) => {
+            if (isAdmin) return sum;
+            return sum + (order.totalAmount || 0);
+        }, 0);
+        const latestDate = orders.length
+            ? dayjs(
+                  orders
+                      .map((order) => order.orderDate)
+                      .filter(Boolean)
+                      .sort((a, b) => dayjs(b).valueOf() - dayjs(a).valueOf())[0],
+              ).format("D MMMM YYYY")
+            : null;
+
+        return {
+            total,
+            delivered,
+            inProgress,
+            amountSpent,
+            latestDate,
+        };
+    }, [orders, isAdmin]);
+
+    let content: React.ReactNode;
+
     if (loading) {
-        return (
-            <div className="max-w-4xl mx-auto p-6 space-y-6">
-                <h1 className="text-2xl font-bold mb-6">Mes commandes</h1>
+        content = (
+            <div className="space-y-4">
                 {[1, 2, 3].map((i) => (
-                    <Skeleton key={i} className="h-24 w-full mb-4" />
+                    <Skeleton key={i} className="h-28 w-full rounded-3xl bg-white/60 dark:bg-gray-800/60" />
                 ))}
             </div>
         );
-    }
-
-    // Render error state with login button
-    if (error) {
-        return (
-            <div className="max-w-4xl mx-auto p-6">
-                <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Mes commandes</h1>
-                <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                    <CardContent className="pt-6">
-                        <div className="text-red-500 dark:text-red-400 font-medium mb-4">{error}</div>
-                        <div className="flex space-x-4">
-                            <Link
-                                className="px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700 rounded-md transition-colors"
-                                href="/users/login"
-                            >
-                                Se connecter
-                            </Link>
+    } else if (error) {
+        content = (
+            <Card className="overflow-hidden border border-red-100 bg-white/95 shadow-xl dark:border-red-900/40 dark:bg-gray-900/70">
+                <CardContent className="space-y-4 p-6">
+                    <div className="rounded-2xl border border-red-200 bg-red-50/70 p-4 text-red-700 dark:border-red-900/50 dark:bg-red-900/20 dark:text-red-200">
+                        {error}
+                    </div>
+                    <Link
+                        className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-blue-600 to-purple-600 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:from-blue-700 hover:to-purple-700"
+                        href="/users/login"
+                    >
+                        <Sparkles className="h-4 w-4" />
+                        Se connecter pour consulter vos commandes
+                    </Link>
+                </CardContent>
+            </Card>
+        );
+    } else if (orders.length === 0) {
+        content = (
+            <Card className="overflow-hidden border border-blue-100 bg-white/95 shadow-xl dark:border-blue-900/40 dark:bg-gray-900/70">
+                <CardContent className="space-y-5 p-6 md:p-8">
+                    <div className="flex items-start gap-4">
+                        <div className="rounded-2xl bg-blue-600/10 p-3 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200">
+                            <ShoppingBag className="h-6 w-6" />
                         </div>
-                    </CardContent>
-                </Card>
-            </div>
+                        <div>
+                            <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
+                                Aucune commande pour le moment
+                            </h3>
+                            <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
+                                Ce tableau suivra toutes vos commandes AutiStudy : produits sensoriels,
+                                outils pédagogiques et packs routines. Dès votre premier achat, vous
+                                retrouverez ici le récapitulatif complet.
+                            </p>
+                        </div>
+                    </div>
+                    <Link
+                        className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:from-teal-600 hover:to-blue-600"
+                        href="/shop"
+                    >
+                        Explorer la boutique
+                        <ArrowRightIcon className="h-4 w-4" />
+                    </Link>
+                </CardContent>
+            </Card>
         );
-    }
-
-    // Render empty state
-    if (orders.length === 0) {
-        return (
-            <div className="max-w-4xl mx-auto p-6">
-                <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Mes commandes</h1>
-                <Card className="bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700">
-                    <CardContent className="pt-6">
-                        <div className="text-gray-500 dark:text-gray-400 font-medium mb-4">Vous n'avez pas encore de commandes.</div>
-                        <Link
-                            className="px-4 py-2 bg-blue-500 dark:bg-blue-600 text-white hover:bg-blue-600 dark:hover:bg-blue-700 rounded-md transition-colors inline-block"
-                            href="/shop"
-                        >
-                            Découvrir nos produits
-                        </Link>
-                    </CardContent>
-                </Card>
-            </div>
-        );
-    }
-
-    // Render orders list with expandable details
-    return (
-        <div className="max-w-4xl mx-auto p-6">
-            <h1 className="text-2xl font-bold mb-6 text-gray-900 dark:text-gray-100">Mes commandes</h1>
-            {isAdmin && (
-                <div className="mb-4 p-3 bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-700 rounded-md">
-                    <p className="text-green-700 dark:text-green-400 font-medium flex items-center">
+    } else {
+        content = (
+            <div className="space-y-6">
+                {isAdmin && (
+                    <div className="rounded-3xl border border-green-200 bg-green-50/80 p-4 text-sm font-semibold text-green-700 shadow-sm dark:border-green-900/40 dark:bg-green-900/20 dark:text-green-200">
                         <FontAwesomeIcon className="mr-2" icon={faTags} />
-                        Mode administrateur : Tous les produits sont gratuits pour vous !
-                    </p>
-                </div>
-            )}
-            <div className="space-y-4">
-                {orders.map((order) => {
-                    const totals = calculateTotals(order);
-                    // eslint-disable-next-line padding-line-between-statements
-                    return (
-                        <Card
-                            key={order._id}
-                            id={`order-${order._id}`}
-                            className="overflow-hidden transition-all duration-300 hover:shadow-md bg-white dark:bg-gray-800 border-gray-200 dark:border-gray-700"
-                        >
-                            {/* Order Header - Always visible */}
-                            <CardHeader
-                                className="pb-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors"
-                                onClick={() => toggleOrder(order._id)}
+                        Mode administrateur : l’aperçu des commandes reste accessible même sans paiement.
+                    </div>
+                )}
+                <div className="space-y-4">
+                    {orders.map((order) => {
+                        const totals = calculateTotals(order);
+                        return (
+                            <Card
+                                key={order._id}
+                                id={`order-${order._id}`}
+                                className="overflow-hidden rounded-3xl border border-gray-200 bg-white/95 shadow-sm transition hover:shadow-md dark:border-gray-800 dark:bg-gray-900/80"
                             >
-                                <div className="flex justify-between items-center">
-                                    <div className="flex items-center gap-2">
-                                        <FontAwesomeIcon
-                                            className="text-blue-500 dark:text-blue-400 transition-transform duration-300"
-                                            icon={expandedOrders[order._id] ? faChevronDown : faChevronRight}
-                                        />
-                                        <CardTitle className="text-lg text-gray-900 dark:text-gray-100">
-                                            Commande #{order._id.substring(0, 8).toUpperCase()}
-                                        </CardTitle>
+                                <CardHeader
+                                    className="cursor-pointer rounded-t-3xl bg-white/80 pb-3 transition hover:bg-gray-50 dark:bg-gray-900/70 dark:hover:bg-gray-800/60"
+                                    onClick={() => toggleOrder(order._id)}
+                                >
+                                    <div className="flex items-center justify-between">
+                                        <div className="flex items-center gap-3">
+                                            <FontAwesomeIcon
+                                                className="text-blue-500 transition-transform duration-300 dark:text-blue-300"
+                                                icon={expandedOrders[order._id] ? faChevronDown : faChevronRight}
+                                            />
+                                            <CardTitle className="text-lg text-gray-900 dark:text-gray-100">
+                                                Commande #{order._id.substring(0, 8).toUpperCase()}
+                                            </CardTitle>
+                                        </div>
+                                        <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
                                     </div>
-                                    <Badge className={getStatusColor(order.status)}>{order.status}</Badge>
-                                </div>
 
-                                {/* Order Summary - Always visible */}
-                                <div className="flex justify-between items-center mt-2 text-sm text-gray-600 dark:text-gray-400">
-                                    <div className="flex items-center">
-                                        <FontAwesomeIcon className="mr-2" icon={faCalendarAlt} />
-                                        {dayjs(order.orderDate).format("DD/MM/YYYY")}
+                                    <div className="mt-2 flex items-center justify-between text-sm text-gray-600 dark:text-gray-400">
+                                        <div className="flex items-center">
+                                            <FontAwesomeIcon className="mr-2" icon={faCalendarAlt} />
+                                            {dayjs(order.orderDate).format("DD/MM/YYYY")}
+                                        </div>
+                                        <div className="font-medium text-gray-900 dark:text-gray-100">
+                                            <FontAwesomeIcon className="mr-1" icon={faEuroSign} />
+                                            {isAdmin ? (
+                                                <span>
+                                                    <span className="mr-2 line-through">{formatPrice(order.totalAmount)}</span>
+                                                    <span className="font-medium text-green-600 dark:text-green-400">Gratuit</span>
+                                                </span>
+                                            ) : (
+                                                formatPrice(order.totalAmount)
+                                            )}
+                                        </div>
                                     </div>
-                                    <div className="font-medium text-gray-900 dark:text-gray-100">
-                                        <FontAwesomeIcon className="mr-1" icon={faEuroSign} />
-                                        {isAdmin ? (
-                                            <span>
-                                                <span className="line-through mr-2">{formatPrice(order.totalAmount)}</span>
-                                                <span className="text-green-600 dark:text-green-400 font-medium">Gratuit</span>
-                                            </span>
-                                        ) : (
-                                            formatPrice(order.totalAmount)
-                                        )}
-                                    </div>
-                                </div>
-                            </CardHeader>
+                                </CardHeader>
 
                             {/* Expandable Details Section */}
                             <AnimatePresence>
@@ -631,6 +667,112 @@ export default function OrdersPage() {
                         </Card>
                     );
                 })}
+            </div>
+        </div>
+    );
+
+    const statCards = [
+        {
+            title: "Commandes totales",
+            value: loading ? "…" : statusSummary.total,
+            description: "Depuis votre inscription",
+            icon: <ShoppingBag className="h-5 w-5 text-blue-600 dark:text-blue-300" />,
+        },
+        {
+            title: "Commandes en cours",
+            value: loading ? "…" : statusSummary.inProgress,
+            description: "Préparées ou en expédition",
+            icon: <PackageCheck className="h-5 w-5 text-purple-600 dark:text-purple-300" />,
+        },
+        {
+            title: "Montant engagé",
+            value: loading ? "…" : formatPrice(statusSummary.amountSpent || 0),
+            description: isAdmin ? "Les administrateurs sont exemptés" : "Total estimé des achats",
+            icon: <Sparkles className="h-5 w-5 text-emerald-600 dark:text-emerald-300" />,
+        },
+        {
+            title: "Dernière commande",
+            value: loading
+                ? "…"
+                : statusSummary.latestDate || "Aucune commande",
+            description: statusSummary.latestDate ? "Dernier achat enregistré" : "Vous êtes prêt pour la première",
+            icon: <CalendarDays className="h-5 w-5 text-amber-600 dark:text-amber-300" />,
+        },
+    ];
+
+    return (
+        <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950/90 dark:to-gray-900">
+            <div className="mx-auto w-full max-w-6xl px-4 pb-16 pt-10 md:px-8 lg:px-12">
+                <motion.section
+                    initial={isMobile ? undefined : { opacity: 0, y: 24 }}
+                    animate={isMobile ? undefined : { opacity: 1, y: 0 }}
+                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    className="relative overflow-hidden rounded-3xl border border-white/60 bg-white/90 p-8 shadow-2xl backdrop-blur dark:border-white/5 dark:bg-gray-900/80 md:p-12"
+                >
+                    <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-500/10 to-pink-500/10" />
+                    <div className="relative grid gap-8 md:grid-cols-[1.1fr_0.9fr] md:items-center">
+                        <div className="space-y-5">
+                            <span className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold uppercase tracking-[0.3em] text-blue-700 dark:bg-blue-900/40 dark:text-blue-200">
+                                Mes commandes
+                            </span>
+                            <h1 className="text-3xl font-bold text-gray-900 md:text-4xl lg:text-5xl dark:text-white">
+                                Suivi doux de vos achats AutiStudy
+                            </h1>
+                            <p className="text-base text-gray-600 dark:text-gray-300 md:text-lg">
+                                Retrouvez ici vos commandes, leurs étapes d’expédition et les liens utiles pour
+                                retrouver vos supports sensoriels. Même sans achat, cet espace est prêt pour vos
+                                prochains pas.
+                            </p>
+                            <div className="flex flex-wrap gap-3">
+                                <Link
+                                    href="/shop"
+                                    className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:from-teal-600 hover:to-blue-600"
+                                >
+                                    Explorer la boutique
+                                    <ArrowRightIcon className="h-4 w-4" />
+                                </Link>
+                                <Link
+                                    href="/contact"
+                                    className="inline-flex items-center gap-2 rounded-full border border-blue-200 px-5 py-2.5 text-sm font-semibold text-blue-700 transition hover:border-blue-300 hover:text-blue-800 dark:border-blue-900/40 dark:text-blue-200 dark:hover:border-blue-700"
+                                >
+                                    Besoin d’aide ?
+                                </Link>
+                            </div>
+                        </div>
+                        <div className="relative overflow-hidden rounded-3xl border border-white/70 bg-white/80 p-6 text-sm shadow-xl dark:border-white/10 dark:bg-gray-900/70">
+                            <p className="text-gray-700 dark:text-gray-200">
+                                « Notre famille suit chaque commande pour adapter le matériel à Maeva : packs sensoriels,
+                                classeurs visuels, routines. Cet espace a été conçu pour que tout reste clair et rassurant. »
+                            </p>
+                        </div>
+                    </div>
+                </motion.section>
+
+                <section className="mt-10 grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+                    {statCards.map((card) => (
+                        <div
+                            key={card.title}
+                            className="rounded-3xl border border-blue-100 bg-white/90 p-5 shadow-lg transition hover:border-blue-200 dark:border-blue-900/40 dark:bg-gray-900/75"
+                        >
+                            <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-blue-600/10 dark:bg-blue-500/20">
+                                {card.icon}
+                            </div>
+                            <p className="text-xs font-semibold uppercase tracking-[0.3em] text-gray-500 dark:text-gray-400">
+                                {card.title}
+                            </p>
+                            <p className="mt-2 text-2xl font-bold text-gray-900 dark:text-white">
+                                {card.value}
+                            </p>
+                            <p className="mt-1 text-xs text-gray-500 dark:text-gray-400">
+                                {card.description}
+                            </p>
+                        </div>
+                    ))}
+                </section>
+
+                <section className="mt-10 space-y-6">
+                    {content}
+                </section>
             </div>
         </div>
     );
