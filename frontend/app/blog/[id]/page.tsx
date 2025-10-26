@@ -106,7 +106,7 @@ export default function BlogPostPage() {
       .filter((paragraph) => paragraph.length > 0);
   }, [blog]);
 
-  const formattedDate = blog.createdAt
+  const formattedDate = blog?.createdAt
     ? new Date(blog.createdAt).toLocaleDateString("fr-FR", {
         year: "numeric",
         month: "long",
