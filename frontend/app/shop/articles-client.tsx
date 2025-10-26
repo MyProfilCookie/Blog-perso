@@ -47,6 +47,28 @@ type ArticlesClientProps = {
   initialProducts?: Article[];
 };
 
+const normalizeImageUrl = (url?: string) => {
+  if (!url) {
+    return "/assets/shop/systeme-eclairage.webp";
+  }
+
+  if (url.startsWith("http://") || url.startsWith("https://")) {
+    return url;
+  }
+
+  if (url.startsWith("/")) {
+    return url;
+  }
+
+  if (url.startsWith("assets/") || url.startsWith("shop/") || url.startsWith("public/")) {
+    return `/${url}`;
+  }
+
+  const baseApi = process.env.NEXT_PUBLIC_API_URL || "https://blog-perso.onrender.com/api";
+  const base = baseApi.replace(/\/api\/?$/, "");
+  return `${base}/${url.replace(/^\/+/, "")}`;
+};
+
 export default function ArticlesClient({ initialProducts }: ArticlesClientProps = {}) {
   const [articles, setArticles] = useState<Article[]>(initialProducts || []);
   const [loading, setLoading] = useState(!initialProducts);
@@ -346,7 +368,11 @@ export default function ArticlesClient({ initialProducts }: ArticlesClientProps 
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {memoizedArticles.map((article, index) => (
+          {memoizedArticles.map((article, index) => {
+            const imageSrc = normalizeImageUrl(article.imageUrl);
+            const isLocalImage = imageSrc.startsWith("/");
+
+            return (
             <motion.div
               key={article.productId || article._id || index}
               initial={{ opacity: 0, y: 20 }}
@@ -373,7 +399,8 @@ export default function ArticlesClient({ initialProducts }: ArticlesClientProps 
                     fill
                     priority={index < 3}
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                    src={article.imageUrl}
+                    src={imageSrc}
+                    unoptimized={!isLocalImage}
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                 </div>
@@ -428,7 +455,8 @@ export default function ArticlesClient({ initialProducts }: ArticlesClientProps 
                 </div>
               </div>
             </motion.div>
-          ))}
+            );
+          })}
         </div>
       </section>
     </div>
