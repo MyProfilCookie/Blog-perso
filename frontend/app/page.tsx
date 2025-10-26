@@ -163,8 +163,8 @@ const services = [
 // Témoignages
 const testimonials = [
   {
-    name: "Parent d'élève",
-    role: "Parent de Maeva",
+    name: "Fondateur d'AutiStudy",
+    role: "Fondateur",
     content: "AutiStudy a transformé l'apprentissage de Maeva. Les exercices sont parfaitement adaptés à ses besoins.",
     avatar: "/assets/family/avatar/family.webp",
     rating: 5
@@ -475,7 +475,7 @@ export default function HomePage() {
                           alt={testimonial.name}
                           width={60}
                           height={60}
-                          className="w-12 h-12 md:w-15 md:h-15 rounded-full mr-3 md:mr-4 image-optimized"
+                          className="w-12 h-12 md:w-[3.75rem] md:h-[3.75rem] rounded-[20%] mr-3 md:mr-4 image-optimized border-2 border-blue-100 dark:border-blue-500/40 shadow-inner"
                           sizes="60px"
                         />
                           <div>
@@ -564,7 +564,7 @@ export default function HomePage() {
                   </div>
                 </div>
 
-                <div className="rounded-3xl bg-gradient-to-br from-teal-500/10 via-blue-500/10 to-purple-500/10 p-1">
+                <div className="flex flex-col gap-6 rounded-3xl bg-gradient-to-br from-teal-500/10 via-blue-500/10 to-purple-500/10 p-1">
                   <div className="rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur dark:bg-gray-800/90">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       Ce qui vous attend
@@ -596,6 +596,32 @@ export default function HomePage() {
                       Abonnez-vous à notre lettre douce : chaque dimanche, une suggestion
                       sensorielle, une activité à imprimer et un mot de soutien.
                     </div>
+                  </div>
+                  <div className="rounded-3xl bg-white/90 p-6 shadow-xl dark:bg-gray-800/85">
+                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">
+                      Concrètement pendant l&apos;atelier
+                    </h4>
+                    <div className="mt-4 grid gap-3 text-sm text-gray-600 dark:text-gray-300">
+                      <div className="flex items-start gap-3 rounded-2xl border border-teal-100 bg-white/90 px-3 py-2.5 dark:border-teal-700/30 dark:bg-gray-800/70">
+                        <PlayCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
+                        <span>15 min d&apos;immersion guidée pour comprendre le contexte de chaque famille.</span>
+                      </div>
+                      <div className="flex items-start gap-3 rounded-2xl border border-teal-100 bg-white/90 px-3 py-2.5 dark:border-teal-700/30 dark:bg-gray-800/70">
+                        <Sparkles className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
+                        <span>30 min d&apos;ateliers pratiques avec supports à télécharger instantanément.</span>
+                      </div>
+                      <div className="flex items-start gap-3 rounded-2xl border border-teal-100 bg-white/90 px-3 py-2.5 dark:border-teal-700/30 dark:bg-gray-800/70">
+                        <MessageCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
+                        <span>Questions-réponses en direct et suivi différé via notre lettre douce.</span>
+                      </div>
+                    </div>
+                    <Link
+                      href="/contact"
+                      className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:from-teal-600 hover:to-blue-600"
+                    >
+                      Besoin d&apos;un échange rapide ?
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
                   </div>
                 </div>
               </motion.div>
