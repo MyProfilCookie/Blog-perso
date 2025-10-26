@@ -11,7 +11,7 @@ import OptimizedImage from "@/components/OptimizedImage";
 import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import Link from "next/link";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   BookOpen,
   Users,
@@ -194,20 +194,23 @@ const testimonials = [
 
 export default function HomePage() {
   const { isMobile } = useMobileOptimization();
+  const prefersReducedMotion = useReducedMotion();
+  const disableMotion = isMobile || prefersReducedMotion;
+  const instantTransition = { duration: 0 };
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <main>
         {/* Hero Section */}
         <section className="relative overflow-hidden py-12 md:py-20 lg:py-32">
-          <div className="absolute inset-0 z-0 hidden sm:block bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
+          <div className="absolute inset-0 z-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-900" />
           <div className="relative z-10 w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <div className="grid gap-10 md:gap-12 md:grid-cols-2 items-center">
                 <motion.div
-                  initial={isMobile ? false : { opacity: 0, x: -30 }}
-                  animate={isMobile ? undefined : { opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, ease: "easeOut" }}
+                  initial={disableMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={disableMotion ? instantTransition : { duration: 0.6, ease: "easeOut" }}
                   className="flex flex-col items-center text-center md:items-start md:text-left gap-6"
                 >
                   <div className="space-y-4 md:space-y-6">
@@ -243,9 +246,9 @@ export default function HomePage() {
                 </motion.div>
 
                 <motion.div
-                  initial={isMobile ? false : { opacity: 0, x: 30 }}
-                  animate={isMobile ? undefined : { opacity: 1, x: 0 }}
-                  transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+                  initial={disableMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  transition={disableMotion ? instantTransition : { duration: 0.6, delay: 0.1, ease: "easeOut" }}
                   className="relative mx-auto max-w-md sm:max-w-lg md:mx-0"
                 >
                   <OptimizedImage
@@ -268,10 +271,11 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto">
               <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
                 <motion.div
-                  initial={isMobile ? false : { opacity: 0, y: 20 }}
-                  whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5 }}
-                  viewport={isMobile ? undefined : { once: true }}
+                  initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                  whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                  transition={disableMotion ? instantTransition : { duration: 0.5 }}
+                  viewport={disableMotion ? undefined : { once: true }}
                   className="space-y-4"
                 >
                   <span className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-blue-700 dark:bg-blue-900/30 dark:text-blue-200">
@@ -290,10 +294,11 @@ export default function HomePage() {
                 </motion.div>
 
                 <motion.div
-                  initial={isMobile ? false : { opacity: 0, y: 20 }}
-                  whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                  transition={{ duration: 0.5, delay: 0.1 }}
-                  viewport={isMobile ? undefined : { once: true }}
+                  initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                  whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                  transition={disableMotion ? instantTransition : { duration: 0.5, delay: 0.1 }}
+                  viewport={disableMotion ? undefined : { once: true }}
                   className="grid gap-4 sm:grid-cols-2"
                 >
                   {programmeSteps.map((step) => (
@@ -323,10 +328,11 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={isMobile ? false : { opacity: 0, y: 20 }}
-                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
+                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={disableMotion ? instantTransition : { duration: 0.5, ease: "easeOut" }}
+                viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
                 className="text-center mb-12 md:mb-16"
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -341,10 +347,11 @@ export default function HomePage() {
                 {services.map((service, index) => (
                   <motion.div
                     key={service.title}
-                    initial={isMobile ? false : { opacity: 0, y: 15 }}
-                    whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
+                    initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                    animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                    whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                    transition={disableMotion ? instantTransition : { duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+                    viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
                   >
                     <Link href={service.link}>
                       <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
@@ -372,10 +379,11 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={isMobile ? false : { opacity: 0, y: 20 }}
-                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={isMobile ? undefined : { once: true }}
+                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={disableMotion ? instantTransition : { duration: 0.5 }}
+                viewport={disableMotion ? undefined : { once: true }}
                 className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"
               >
                 <div className="space-y-4">
@@ -449,10 +457,11 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={isMobile ? false : { opacity: 0, y: 20 }}
-                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
+                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={disableMotion ? instantTransition : { duration: 0.5, ease: "easeOut" }}
+                viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
                 className="text-center mb-12 md:mb-16"
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -467,10 +476,11 @@ export default function HomePage() {
                 {testimonials.map((testimonial, index) => (
                   <motion.div
                     key={testimonial.name}
-                    initial={isMobile ? false : { opacity: 0, y: 15 }}
-                    whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
+                    initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                    animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                    whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                    transition={disableMotion ? instantTransition : { duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+                    viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
                   >
                     <Card className="h-full">
                       <CardBody className="p-4 md:p-6">
@@ -512,10 +522,11 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={isMobile ? false : { opacity: 0, y: 20 }}
-                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.5 }}
-                viewport={isMobile ? undefined : { once: true }}
+                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={disableMotion ? instantTransition : { duration: 0.5 }}
+                viewport={disableMotion ? undefined : { once: true }}
                 className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]"
               >
                 <div>
@@ -638,10 +649,11 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={isMobile ? false : { opacity: 0, y: 20 }}
-                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, ease: "easeOut" }}
-                viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
+                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                transition={disableMotion ? instantTransition : { duration: 0.5, ease: "easeOut" }}
+                viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
                 className="text-center mb-12"
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -656,10 +668,11 @@ export default function HomePage() {
                 {articles.map((article, index) => (
                   <motion.div
                     key={article.id}
-                    initial={isMobile ? false : { opacity: 0, y: 15 }}
-                    whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-                    transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
+                    initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                    animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+                    whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                    transition={disableMotion ? instantTransition : { duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
+                    viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
                   >
                     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                       <CardHeader className="p-0">
@@ -705,10 +718,11 @@ export default function HomePage() {
         <section className="py-12 md:py-16 bg-gradient-to-r from-blue-600 to-purple-600">
           <div className="w-full px-4 md:px-8 lg:px-12 text-center">
             <motion.div
-              initial={isMobile ? false : { opacity: 0, y: 20 }}
-              whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, ease: "easeOut" }}
-              viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
+              initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+              animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
+              whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+              transition={disableMotion ? instantTransition : { duration: 0.5, ease: "easeOut" }}
+              viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
             >
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
                 Prêt à commencer l'aventure ?
