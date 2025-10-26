@@ -196,12 +196,12 @@ export default function HomePage() {
   const { isMobile } = useMobileOptimization();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950/95 dark:to-gray-900">
+    <div className="min-h-screen bg-white dark:bg-gray-900">
       <main>
         {/* Hero Section */}
-        <section className="relative py-12 md:py-20 lg:py-32 overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
-          <div className="relative w-full px-4 md:px-8 lg:px-12">
+        <section className="relative overflow-hidden py-12 md:py-20 lg:py-32">
+          <div className="absolute inset-0 z-0 hidden sm:block bg-gradient-to-br from-blue-50 to-indigo-100 dark:from-gray-800 dark:to-gray-900"></div>
+          <div className="relative z-10 w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <div className="grid gap-10 md:gap-12 md:grid-cols-2 items-center">
                 <motion.div
