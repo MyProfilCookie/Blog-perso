@@ -134,28 +134,28 @@ const services = [
     icon: <BookOpen className="w-8 h-8" />,
     title: "Ressources Éducatives",
     description: "Matériels adaptés et spécialisés pour tous les niveaux",
-    color: "bg-blue-100 text-blue-600",
+    color: "bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200",
     link: "/resources"
   },
   {
     icon: <Brain className="w-8 h-8" />,
     title: "Exercices Interactifs",
     description: "Activités ludiques et progressives personnalisées",
-    color: "bg-green-100 text-green-600",
+    color: "bg-green-100 text-green-600 dark:bg-green-500/20 dark:text-green-200",
     link: "/controle"
   },
   {
     icon: <Users className="w-8 h-8" />,
     title: "Accompagnement",
     description: "Soutien personnalisé et suivi des progrès",
-    color: "bg-purple-100 text-purple-600",
+    color: "bg-purple-100 text-purple-600 dark:bg-purple-500/20 dark:text-purple-200",
     link: "/soutien"
   },
   {
     icon: <Heart className="w-8 h-8" />,
     title: "Support Parental",
     description: "Conseils et ressources pour les familles",
-    color: "bg-orange-100 text-orange-600",
+    color: "bg-orange-100 text-orange-600 dark:bg-orange-500/20 dark:text-orange-200",
     link: "/about"
   }
 ];
@@ -205,8 +205,8 @@ export default function HomePage() {
             <div className="max-w-7xl mx-auto">
               <div className="grid lg:grid-cols-2 gap-8 md:gap-12 items-center grid-cls-optimized grid-cls-optimized grid-cls-optimized">
                 <motion.div
-                  initial={{ opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={isMobile ? false : { opacity: 0, x: -30 }}
+                  animate={isMobile ? undefined : { opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, ease: "easeOut" }}
                 >
                   <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-white mb-4 md:mb-6">
@@ -239,8 +239,8 @@ export default function HomePage() {
                 </motion.div>
 
                 <motion.div
-                  initial={{ opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
+                  initial={isMobile ? false : { opacity: 0, x: 30 }}
+                  animate={isMobile ? undefined : { opacity: 1, x: 0 }}
                   transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
                   className="relative"
                 >
@@ -259,15 +259,15 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="py-12 md:py-20 bg-gradient-to-b from-white via-blue-50/40 to-white dark:via-gray-900/50">
+        <section className="py-12 md:py-20 bg-gradient-to-b from-white via-blue-50/40 to-white dark:from-gray-950 dark:via-gray-900/60 dark:to-gray-950">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={isMobile ? false : { opacity: 0, y: 20 }}
+                  whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.5 }}
-                  viewport={{ once: true }}
+                  viewport={isMobile ? undefined : { once: true }}
                   className="space-y-4"
                 >
                   <span className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-blue-700 dark:bg-blue-900/30 dark:text-blue-200">
@@ -280,22 +280,22 @@ export default function HomePage() {
                     Nous combinons observation familiale, IA bienveillante et coaching humain pour guider chaque enfant pas à pas.
                     Les étapes ci-dessous vous accompagnent depuis la découverte jusqu&apos;à la célébration des réussites.
                   </p>
-                  <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm text-blue-700 shadow-sm backdrop-blur dark:border-blue-900/40 dark:bg-gray-900/80 dark:text-blue-200">
+                  <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm text-blue-700 shadow-sm backdrop-blur dark:border-blue-700/40 dark:bg-gray-800/90 dark:text-blue-200">
                     <strong>Transparence :</strong> votre famille garde le contrôle. Vous choisissez les activités à activer, les notifications et les retours envoyés à l’équipe AutiStudy.
                   </div>
                 </motion.div>
 
                 <motion.div
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={isMobile ? false : { opacity: 0, y: 20 }}
+                  whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                   transition={{ duration: 0.5, delay: 0.1 }}
-                  viewport={{ once: true }}
+                  viewport={isMobile ? undefined : { once: true }}
                   className="grid gap-4 sm:grid-cols-2"
                 >
                   {programmeSteps.map((step) => (
                     <div
                       key={step.step}
-                      className="group rounded-3xl border border-blue-100 bg-white/90 p-6 shadow-lg transition hover:-translate-y-1 hover:shadow-xl dark:border-blue-900/40 dark:bg-gray-900/70"
+                      className="group rounded-3xl border border-blue-100 bg-white/90 p-6 shadow-lg transition hover:-translate-y-1 hover:shadow-xl dark:border-blue-700/40 dark:bg-gray-800/85"
                     >
                       <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700 dark:bg-blue-900/40 dark:text-blue-200">
                         {step.step}
@@ -319,10 +319,10 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={isMobile ? false : { opacity: 0, y: 20 }}
+                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
                 className="text-center mb-12 md:mb-16"
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -337,10 +337,10 @@ export default function HomePage() {
                 {services.map((service, index) => (
                   <motion.div
                     key={service.title}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={isMobile ? false : { opacity: 0, y: 15 }}
+                    whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={{ once: true, margin: "-50px" }}
+                    viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
                   >
                     <Link href={service.link}>
                       <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
@@ -368,10 +368,10 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={isMobile ? false : { opacity: 0, y: 20 }}
+                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
+                viewport={isMobile ? undefined : { once: true }}
                 className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"
               >
                 <div className="space-y-4">
@@ -389,7 +389,7 @@ export default function HomePage() {
                     {communityHighlights.map((item) => (
                       <div
                         key={item.title}
-                        className="rounded-2xl border border-purple-100 bg-white/90 p-4 text-sm leading-relaxed shadow-md dark:border-purple-900/40 dark:bg-gray-900/70 dark:text-gray-300"
+                        className="rounded-2xl border border-purple-100 bg-white/90 p-4 text-sm leading-relaxed shadow-md dark:border-purple-600/35 dark:bg-gray-800/85 dark:text-gray-200"
                       >
                         <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-200">
                           {item.icon}
@@ -406,7 +406,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="rounded-3xl bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 p-1">
-                  <div className="rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur dark:bg-gray-900/80">
+                  <div className="rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur dark:bg-gray-800/90">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       Témoignages en direct
                     </h3>
@@ -415,7 +415,7 @@ export default function HomePage() {
                       Nous nous sentons accompagnés en permanence.” — Paul & Virginie
                     </p>
                     <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                      <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm dark:border-blue-900/40 dark:bg-gray-900/60">
+                      <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm dark:border-blue-600/35 dark:bg-gray-800/80">
                         <Award className="mb-2 h-5 w-5 text-blue-600 dark:text-blue-300" />
                         <p className="font-semibold text-gray-900 dark:text-white">
                           +500 familles accompagnées
@@ -424,7 +424,7 @@ export default function HomePage() {
                           Des profils variés, des besoins sensoriels différents, une même recherche de sérénité.
                         </p>
                       </div>
-                      <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm dark:border-blue-900/40 dark:bg-gray-900/60">
+                      <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm dark:border-blue-600/35 dark:bg-gray-800/80">
                         <Headphones className="mb-2 h-5 w-5 text-blue-600 dark:text-blue-300" />
                         <p className="font-semibold text-gray-900 dark:text-white">
                           Coaching parental mensuel
@@ -445,10 +445,10 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={isMobile ? false : { opacity: 0, y: 20 }}
+                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
                 className="text-center mb-12 md:mb-16"
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -463,10 +463,10 @@ export default function HomePage() {
                 {testimonials.map((testimonial, index) => (
                   <motion.div
                     key={testimonial.name}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={isMobile ? false : { opacity: 0, y: 15 }}
+                    whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={{ once: true, margin: "-50px" }}
+                    viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
                   >
                     <Card className="h-full">
                       <CardBody className="p-4 md:p-6">
@@ -508,10 +508,10 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={isMobile ? false : { opacity: 0, y: 20 }}
+                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                viewport={{ once: true }}
+                viewport={isMobile ? undefined : { once: true }}
                 className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]"
               >
                 <div>
@@ -530,13 +530,13 @@ export default function HomePage() {
                     {eventShowcase.map((event) => (
                       <div
                         key={event.title}
-                        className="flex flex-col gap-3 rounded-2xl border border-teal-100 bg-white/90 p-4 shadow-sm dark:border-teal-900/40 dark:bg-gray-900/70"
+                        className="flex flex-col gap-3 rounded-2xl border border-teal-100 bg-white/90 p-4 shadow-sm dark:border-teal-700/40 dark:bg-gray-800/85"
                       >
                         <div className="flex items-center justify-between">
                           <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                             {event.title}
                           </h3>
-                          <span className="rounded-full border border-teal-200 px-3 py-1 text-xs font-semibold text-teal-600 dark:border-teal-900/40 dark:text-teal-200">
+                          <span className="rounded-full border border-teal-200 px-3 py-1 text-xs font-semibold text-teal-600 dark:border-teal-700/50 dark:text-teal-200">
                             {event.date}
                           </span>
                         </div>
@@ -556,7 +556,7 @@ export default function HomePage() {
                     </Link>
                     <Link
                       href="/resources"
-                      className="inline-flex items-center gap-2 rounded-full border border-teal-200 px-5 py-2.5 text-sm font-semibold text-teal-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-teal-900/40 dark:text-teal-200 dark:hover:border-teal-700"
+                      className="inline-flex items-center gap-2 rounded-full border border-teal-200 px-5 py-2.5 text-sm font-semibold text-teal-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-teal-700/50 dark:text-teal-200 dark:hover:border-teal-500"
                     >
                       <CalendarRange className="h-4 w-4" />
                       Ressources à télécharger
@@ -565,7 +565,7 @@ export default function HomePage() {
                 </div>
 
                 <div className="rounded-3xl bg-gradient-to-br from-teal-500/10 via-blue-500/10 to-purple-500/10 p-1">
-                  <div className="rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur dark:bg-gray-900/80">
+                  <div className="rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur dark:bg-gray-800/90">
                     <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
                       Ce qui vous attend
                     </h3>
@@ -592,7 +592,7 @@ export default function HomePage() {
                         </span>
                       </li>
                     </ul>
-                    <div className="mt-6 rounded-2xl border border-teal-100 bg-white/90 px-4 py-3 text-sm text-teal-700 shadow-sm dark:border-teal-900/40 dark:bg-gray-900/70 dark:text-teal-200">
+                    <div className="mt-6 rounded-2xl border border-teal-100 bg-white/90 px-4 py-3 text-sm text-teal-700 shadow-sm dark:border-teal-700/40 dark:bg-gray-800/80 dark:text-teal-200">
                       Abonnez-vous à notre lettre douce : chaque dimanche, une suggestion
                       sensorielle, une activité à imprimer et un mot de soutien.
                     </div>
@@ -608,10 +608,10 @@ export default function HomePage() {
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
               <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
+                initial={isMobile ? false : { opacity: 0, y: 20 }}
+                whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, ease: "easeOut" }}
-                viewport={{ once: true, margin: "-50px" }}
+                viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
                 className="text-center mb-12"
               >
                 <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
@@ -626,10 +626,10 @@ export default function HomePage() {
                 {articles.map((article, index) => (
                   <motion.div
                     key={article.id}
-                    initial={{ opacity: 0, y: 15 }}
-                    whileInView={{ opacity: 1, y: 0 }}
+                    initial={isMobile ? false : { opacity: 0, y: 15 }}
+                    whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
                     transition={{ duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={{ once: true, margin: "-50px" }}
+                    viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
                   >
                     <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
                       <CardHeader className="p-0">
@@ -675,10 +675,10 @@ export default function HomePage() {
         <section className="py-12 md:py-16 bg-gradient-to-r from-blue-600 to-purple-600">
           <div className="w-full px-4 md:px-8 lg:px-12 text-center">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
+              initial={isMobile ? false : { opacity: 0, y: 20 }}
+              whileInView={isMobile ? undefined : { opacity: 1, y: 0 }}
               transition={{ duration: 0.5, ease: "easeOut" }}
-              viewport={{ once: true, margin: "-50px" }}
+              viewport={isMobile ? undefined : { once: true, margin: "-50px" }}
             >
               <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
                 Prêt à commencer l'aventure ?
