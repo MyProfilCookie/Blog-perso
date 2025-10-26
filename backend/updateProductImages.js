@@ -4,9 +4,9 @@ const Produit = require('./api/models/products');
 
 const MONGODB_URI = process.env.DB;
 
-// Mapping des produits vers des images cohérentes avec le matériel pour autisme/TSA
+// Mapping des produits vers des images locales uniquement (/assets/shop/)
 const productImageMapping = {
-  // Images locales existantes
+  // Images locales existantes - Produits de base
   "Tapis sensoriel": "/assets/shop/tapis-sensoriel.webp",
   "Veste lestée": "/assets/shop/veste-lestee.webp",
   "Cube Sensoriel": "/assets/shop/cube-sensoriel.webp",
@@ -21,7 +21,7 @@ const productImageMapping = {
   "Casque Anti-bruit": "/assets/shop/casque-anti-bruit.webp",
   "Balle Sensorielle Lumineuse": "/assets/shop/balle-sensorielle-lumineuse.webp",
 
-  // Produits similaires utilisant les mêmes images
+  // Produits similaires - réutilisation d'images locales
   "Balles Sensorielles Texturées - Set de 6": "/assets/shop/balle-sensorielle-lumineuse.webp",
   "Casque Anti-Bruit pour Enfants": "/assets/shop/casque-anti-bruit.webp",
   "Coussin Lesté Apaisant 2kg": "/assets/shop/oreiller-leste.webp",
@@ -30,34 +30,34 @@ const productImageMapping = {
   "Séquenceur Visuel Magnétique": "/assets/shop/classeur-pecs.webp",
   "Tapis Sensoriel d'Activités": "/assets/shop/tapis-sensoriel.webp",
   "Couverture Lestée Enfant 4kg": "/assets/shop/veste-lestee.webp",
-
-  // Produits éducatifs - images spécifiques de matériel autisme
-  "Puzzle Encastrable en Bois - Alphabet": "https://m.media-amazon.com/images/I/81QF+xK0jZL._AC_SL1500_.jpg",
-  "Cube Lumineux Interactif": "/assets/shop/cube-sensoriel.webp",
-  "Jeu de Cartes Émotions": "https://m.media-amazon.com/images/I/91eFvpVLN3L._AC_SL1500_.jpg",
-
-  // Communication AAC
-  "Tablette de Communication AAC": "https://m.media-amazon.com/images/I/61wK4CHSZPL._AC_SL1000_.jpg",
-  "Système de Signalisation Visuelle": "https://m.media-amazon.com/images/I/81mKqJF3wLL._AC_SL1500_.jpg",
-  "Système d'Assistance Vocale": "https://m.media-amazon.com/images/I/61Zy5QM2cbL._AC_SL1280_.jpg",
-
-  // Mobilité et autonomie
-  "Fauteuil Roulant Pédiatrique Léger": "https://m.media-amazon.com/images/I/71KdP3TYBLL._AC_SL1500_.jpg",
-  "Canne Blanche Electronique": "https://m.media-amazon.com/images/I/61XU7sGMCYL._AC_SL1500_.jpg",
-  "Bracelet de Géolocalisation Sécurisé": "https://m.media-amazon.com/images/I/71rCpZJXBsL._AC_SL1500_.jpg",
   "Coussin Adapté Posture": "/assets/shop/oreiller-leste.webp",
 
-  // Matériel sensoriel TSA
-  "Kit Sensoriel pour TSA": "https://m.media-amazon.com/images/I/91pOY+CQn5L._AC_SL1500_.jpg",
-  "Tunnel Sensoriel Pop-Up": "https://m.media-amazon.com/images/I/81xD5Y0KJVL._AC_SL1500_.jpg",
-  "Jeu de Motricité Fine Adapté": "https://m.media-amazon.com/images/I/91z5QrLQN0L._AC_SL1500_.jpg",
+  // Produits éducatifs - réutilisation d'images locales cohérentes
+  "Puzzle Encastrable en Bois - Alphabet": "/assets/shop/cube-sensoriel.webp",
+  "Cube Lumineux Interactif": "/assets/shop/cube-sensoriel.webp",
+  "Jeu de Cartes Émotions": "/assets/shop/classeur-pecs.webp",
+  "Jeu de Motricité Fine Adapté": "/assets/shop/boule-anti-stress.webp",
 
-  // Éclairage et technologie
-  "Système d'Éclairage Adapté": "https://m.media-amazon.com/images/I/71FGK9oOybL._AC_SL1500_.jpg",
-  "Tablette d'Apprentissage Tactile": "https://m.media-amazon.com/images/I/71zNY0V0KWL._AC_SL1500_.jpg",
+  // Communication AAC - utilisation d'images locales appropriées
+  "Tablette de Communication AAC": "/assets/shop/classeur-pecs.webp",
+  "Système de Signalisation Visuelle": "/assets/shop/classeur-pecs.webp",
+  "Système d'Assistance Vocale": "/assets/shop/timer-visuel.webp",
+  "Tablette d'Apprentissage Tactile": "/assets/shop/cube-sensoriel.webp",
 
-  // Autonomie quotidienne
-  "Kit d'Autonomie Quotidienne": "https://m.media-amazon.com/images/I/81Vl0HNMKML._AC_SL1500_.jpg",
+  // Mobilité et autonomie - images locales appropriées
+  "Fauteuil Roulant Pédiatrique Léger": "/assets/shop/chaise-bascule.webp",
+  "Canne Blanche Electronique": "/assets/shop/timer-visuel.webp",
+  "Bracelet de Géolocalisation Sécurisé": "/assets/shop/timer-visuel.webp",
+
+  // Matériel sensoriel TSA - images locales sensorielles
+  "Kit Sensoriel pour TSA": "/assets/shop/balle-sensorielle-lumineuse.webp",
+  "Tunnel Sensoriel Pop-Up": "/assets/shop/tapis-sensoriel.webp",
+
+  // Éclairage et technologie - images locales appropriées
+  "Système d'Éclairage Adapté": "/assets/shop/lumiere-ambiance-sensorielle.webp",
+
+  // Autonomie quotidienne - images appropriées
+  "Kit d'Autonomie Quotidienne": "/assets/shop/classeur-pecs.webp",
 };
 
 async function updateProductImages() {
