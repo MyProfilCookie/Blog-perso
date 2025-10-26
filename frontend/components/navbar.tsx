@@ -762,7 +762,7 @@ export const Navbar = () => {
           <>
             {/* Avatar mobile avec dropdown */}
             <div className="md:hidden">
-              <Dropdown>
+              <Dropdown disableAnimation>
                 <DropdownTrigger>
                   <Avatar
                     alt={`Avatar de ${user?.pseudo}`}
@@ -872,7 +872,7 @@ export const Navbar = () => {
 
             {/* Avatar desktop avec dropdown */}
             <div className="hidden md:block">
-              <Dropdown>
+              <Dropdown disableAnimation>
                 <DropdownTrigger>
                   <Button
                     aria-label="Menu utilisateur"
@@ -1035,7 +1035,7 @@ export const Navbar = () => {
                     key="theme"
                     textValue="Thème"
                   >
-                    <Dropdown placement="left-start">
+                    <Dropdown placement="left-start" disableAnimation>
                       <DropdownTrigger>
                         <div className="flex items-center w-full cursor-pointer">
                           <FontAwesomeIcon className="mr-2" icon={faMoon} />

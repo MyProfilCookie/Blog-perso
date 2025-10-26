@@ -18,7 +18,7 @@ import {
     faBarcode,
     faTags
 } from "@fortawesome/free-solid-svg-icons";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import {
     ShoppingBag,
     PackageCheck,
@@ -89,7 +89,9 @@ export default function OrdersPage() {
     const [isAdmin, setIsAdmin] = useState<boolean>(false);
     const router = useRouter();
     const searchParams = useSearchParams();
-    const { isMobile } = useMobileOptimization({ enableReducedMotion: true });
+    const { isMobile, shouldReduceAnimations } = useMobileOptimization({ enableReducedMotion: true });
+    const prefersReducedMotion = useReducedMotion();
+    const disableMotion = isMobile || prefersReducedMotion || shouldReduceAnimations;
 
     // Toggle expanded state for an order
     const toggleOrder = (orderId: string) => {
@@ -705,9 +707,13 @@ export default function OrdersPage() {
         <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950/90 dark:to-gray-900">
             <div className="w-full px-4 pb-16 pt-10 md:px-8 lg:px-14 xl:px-20">
                 <motion.section
-                    initial={isMobile ? undefined : { opacity: 0, y: 24 }}
-                    animate={isMobile ? undefined : { opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, ease: "easeOut" }}
+                    initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={
+                        disableMotion
+                            ? { duration: 0 }
+                            : { duration: 0.6, ease: "easeOut" }
+                    }
                     className="relative overflow-hidden rounded-2xl border border-white/40 bg-white/90 p-8 shadow-2xl backdrop-blur dark:border-white/5 dark:bg-gray-900/80 md:p-12"
                 >
                     <div className="absolute inset-0 bg-gradient-to-br from-blue-600/10 via-purple-500/10 to-pink-500/10" />

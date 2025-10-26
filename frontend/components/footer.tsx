@@ -63,7 +63,7 @@ const Footer = () => {
               Paramètres
             </h4>
             <div className="flex justify-center sm:justify-start performance-optimized">
-              <Dropdown>
+              <Dropdown disableAnimation>
                 <DropdownTrigger>
                   <Button
                     className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-none button-cls-optimized performance-optimized button-cls-optimized button-cls-optimized button-cls-optimized focus-visible:outline-none"
