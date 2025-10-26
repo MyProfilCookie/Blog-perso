@@ -622,12 +622,12 @@ export const Navbar = () => {
             className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200"
             href="/"
           >
-            <AutismLogo size={14} />
+            <AutismLogo size={10} />
             <div className="flex flex-col">
-              <p className="font-bold text-violet-600 dark:text-violet-400 text-base md:text-xl lg:text-2xl tracking-tight">
+              <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-lg lg:text-xl tracking-tight">
                 AutiStudy
               </p>
-              <p className="text-xs md:text-sm lg:text-base text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
+              <p className="text-[0.65rem] md:text-xs lg:text-sm text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
                 Créé par une famille
               </p>
             </div>
