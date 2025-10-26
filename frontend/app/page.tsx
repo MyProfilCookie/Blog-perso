@@ -196,7 +196,7 @@ export default function HomePage() {
   const { isMobile } = useMobileOptimization();
 
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950/95 dark:to-gray-900">
       <main>
         {/* Hero Section */}
         <section className="relative py-12 md:py-20 lg:py-32 overflow-hidden">
