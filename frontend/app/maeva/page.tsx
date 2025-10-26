@@ -192,6 +192,9 @@ export default function MaevaPage() {
               <h1 className="text-3xl font-bold leading-tight text-gray-900 md:text-4xl lg:text-5xl dark:text-white">
                 Maeva, le cœur battant d’AutiStudy
               </h1>
+              <p className="text-sm font-semibold uppercase tracking-[0.35em] text-blue-600 dark:text-blue-300">
+                Bienvenue sur ma page
+              </p>
               <p className="text-base text-gray-600 dark:text-gray-300 md:text-lg">
                 Née le 26 octobre 2010, Maeva vit avec une déficience intellectuelle et une grande
                 sensibilité sensorielle. Sa manière d’apprendre – douce, structurée, créative – inspire
