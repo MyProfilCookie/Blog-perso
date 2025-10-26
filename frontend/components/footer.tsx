@@ -16,38 +16,14 @@ import { faMoon } from "@fortawesome/free-solid-svg-icons";
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
 
 const Footer = () => {
-  const { theme, setTheme } = useTheme();
+  const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const [avatarColorIndex, setAvatarColorIndex] = useState(0);
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
-  // Auto theme updater based on time of day
-  useEffect(() => {
-    if (!mounted) return;
-
-    const updateThemeByTime = () => {
-      if (localStorage.getItem("themeMode") === "auto") {
-        const currentHour = new Date().getHours();
-        const isDayTime = currentHour >= 6 && currentHour < 18;
-
-        if (isDayTime) {
-          document.documentElement.classList.remove("dark");
-          localStorage.setItem("theme", "light");
-        } else {
-          document.documentElement.classList.add("dark");
-          localStorage.setItem("theme", "dark");
-        }
-        setAvatarColorIndex(prev => prev);
-      }
-    };
-
-    updateThemeByTime();
-    const interval = setInterval(updateThemeByTime, 60000);
-    return () => clearInterval(interval);
-  }, [mounted]);
+  const currentTheme = theme === "system" ? "system" : resolvedTheme ?? "light";
 
   return (
     <footer className="border-t dark:bg-gray-900 border-violet-200 dark:border-violet-800 mt-16 performance-optimized">
@@ -90,17 +66,19 @@ const Footer = () => {
               <Dropdown>
                 <DropdownTrigger>
                   <Button
-                    className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-all duration-300 button-cls-optimized performance-optimized button-cls-optimized button-cls-optimized button-cls-optimized"
+                    className="bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 rounded-full px-4 py-2 text-sm flex items-center gap-2 hover:bg-gray-200 dark:hover:bg-gray-700 transition-none button-cls-optimized performance-optimized button-cls-optimized button-cls-optimized button-cls-optimized focus-visible:outline-none"
                   >
-                    {mounted && (
-                      <>
-                        <span className="text-xs font-medium performance-optimized">Thème</span>
-                        {document.documentElement.classList.contains("dark") ? (
-                          <MoonFilledIcon className="text-blue-300 performance-optimized" size={16} />
-                        ) : (
-                          <SunFilledIcon className="text-yellow-500 performance-optimized" size={16} />
-                        )}
-                      </>
+                    <span className="text-xs font-medium performance-optimized">Thème</span>
+                    {mounted ? (
+                      currentTheme === "dark" ? (
+                        <MoonFilledIcon className="text-blue-300 performance-optimized" size={16} />
+                      ) : currentTheme === "system" ? (
+                        <FontAwesomeIcon icon={faMoon} className="text-gray-500 performance-optimized" />
+                      ) : (
+                        <SunFilledIcon className="text-yellow-500 performance-optimized" size={16} />
+                      )
+                    ) : (
+                      <SunFilledIcon className="text-yellow-500 performance-optimized" size={16} />
                     )}
                   </Button>
                 </DropdownTrigger>
@@ -108,10 +86,9 @@ const Footer = () => {
                   <DropdownItem
                     key="light"
                     onClick={() => {
-                      document.documentElement.classList.remove("dark");
+                      setTheme("light");
                       localStorage.setItem("theme", "light");
                       localStorage.setItem("themeMode", "manual");
-                      setAvatarColorIndex(prev => prev);
                     }}
                   >
                     <div className="flex items-center gap-2 performance-optimized">
@@ -122,10 +99,9 @@ const Footer = () => {
                   <DropdownItem
                     key="dark"
                     onClick={() => {
-                      document.documentElement.classList.add("dark");
+                      setTheme("dark");
                       localStorage.setItem("theme", "dark");
                       localStorage.setItem("themeMode", "manual");
-                      setAvatarColorIndex(prev => prev);
                     }}
                   >
                     <div className="flex items-center gap-2 performance-optimized">
@@ -137,17 +113,8 @@ const Footer = () => {
                     key="auto"
                     onClick={() => {
                       localStorage.setItem("themeMode", "auto");
-                      const currentHour = new Date().getHours();
-                      const isDayTime = currentHour >= 6 && currentHour < 18;
-
-                      if (isDayTime) {
-                        document.documentElement.classList.remove("dark");
-                        localStorage.setItem("theme", "light");
-                      } else {
-                        document.documentElement.classList.add("dark");
-                        localStorage.setItem("theme", "dark");
-                      }
-                      setAvatarColorIndex(prev => prev);
+                      localStorage.setItem("theme", "system");
+                      setTheme("system");
                     }}
                   >
                     <div className="flex items-center gap-2 performance-optimized">

@@ -475,7 +475,6 @@ export const Navbar = () => {
   const menuPanelClassName =
     "md:hidden fixed top-0 left-0 h-auto max-h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto rounded-r-2xl";
   const disableMenuMotion = isMobile || shouldReduceAnimations;
-  const disableAvatarMotion = disableMenuMotion;
 
   const menuPanelContent = (
     <div className="p-4 flex flex-col">
@@ -746,11 +745,7 @@ export const Navbar = () => {
         {!user ? (
           <Avatar
             aria-label="Connectez-vous pour accéder à votre profil"
-            className={`${
-              disableAvatarMotion
-                ? "cursor-pointer flex-shrink-0 text-tiny text-default-500"
-                : "cursor-pointer flex-shrink-0 text-tiny text-default-500 transition-transform duration-300 hover:scale-105"
-            }`}
+            className="cursor-pointer flex-shrink-0 text-tiny text-default-500"
             isBordered
             name="Invité"
             onClick={handleLoginRedirect}
@@ -771,11 +766,7 @@ export const Navbar = () => {
                 <DropdownTrigger>
                   <Avatar
                     alt={`Avatar de ${user?.pseudo}`}
-                    className={
-                      disableAvatarMotion
-                        ? "cursor-pointer flex-shrink-0"
-                        : "cursor-pointer flex-shrink-0 transition-transform duration-300 hover:scale-105"
-                    }
+                    className="cursor-pointer flex-shrink-0"
                     isBordered
                     size="sm"
                     src={user?.avatar || "/assets/default-avatar.webp"}
@@ -885,15 +876,11 @@ export const Navbar = () => {
                 <DropdownTrigger>
                   <Button
                     aria-label="Menu utilisateur"
-                    className="bg-transparent relative button-cls-optimized hover:bg-violet-50 dark:hover:bg-gray-800 transition-colors duration-200 button-cls-optimized button-cls-optimized button-cls-optimized"
+                    className="bg-transparent relative button-cls-optimized button-cls-optimized button-cls-optimized button-cls-optimized focus-visible:outline-none transition-none"
                   >
                     <Avatar
                       alt={`Avatar de ${user?.pseudo}`}
-                      className={
-                        disableAvatarMotion
-                          ? "cursor-pointer flex-shrink-0"
-                          : "cursor-pointer flex-shrink-0 transition-transform duration-300 hover:scale-105"
-                      }
+                      className="cursor-pointer flex-shrink-0"
                       isBordered
                       size="sm"
                       src={user?.avatar || "/assets/default-avatar.webp"}
@@ -1065,7 +1052,6 @@ export const Navbar = () => {
                           onClick={() => {
                             localStorage.removeItem("themeMode");
                             localStorage.removeItem("autoModeHours");
-                            document.documentElement.classList.remove("dark");
                             localStorage.setItem("theme", "light");
                             setTheme("light");
                             setAvatarColorIndex((prev) => prev);
@@ -1086,7 +1072,6 @@ export const Navbar = () => {
                           onClick={() => {
                             localStorage.removeItem("themeMode");
                             localStorage.removeItem("autoModeHours");
-                            document.documentElement.classList.add("dark");
                             localStorage.setItem("theme", "dark");
                             setTheme("dark");
                             setAvatarColorIndex((prev) => prev);
@@ -1122,15 +1107,8 @@ export const Navbar = () => {
                               currentHour >= autoModeHours.start ||
                               currentHour < autoModeHours.end;
 
-                            if (shouldBeDark) {
-                              document.documentElement.classList.add("dark");
-                              localStorage.setItem("theme", "dark");
-                              setTheme("dark");
-                            } else {
-                              document.documentElement.classList.remove("dark");
-                              localStorage.setItem("theme", "light");
-                              setTheme("light");
-                            }
+                            localStorage.setItem("theme", shouldBeDark ? "dark" : "light");
+                            setTheme(shouldBeDark ? "dark" : "light");
                             setAvatarColorIndex((prev) => prev);
                           }}
                           textValue="Mode automatique"

@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Sun, Moon, Mail, Phone, MapPin, Clock, Send, MessageCircle, Heart, Users, Sparkles, CheckCircle } from "lucide-react";
 import Swal from "sweetalert2";
 import withReactContent from "sweetalert2-react-content";
+import { useTheme } from "next-themes";
 
 // Import shadcn components
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -30,20 +31,13 @@ const ContactPage = () => {
   const [message, setMessage] = useState("");
   const [messagesHistory, setMessagesHistory] = useState<ContactMessage[]>([]);
   const [loading, setLoading] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
+  const { resolvedTheme, setTheme } = useTheme();
+  const [mounted, setMounted] = useState(false);
 
-  // Détecter le mode sombre
   useEffect(() => {
-    const darkMode = localStorage.getItem("darkMode") === "true" || 
-                     (!localStorage.getItem("darkMode") && window.matchMedia("(prefers-color-scheme: dark)").matches);
-    setIsDarkMode(darkMode);
-    
-    if (darkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
+    setMounted(true);
   }, []);
+  const isDarkMode = resolvedTheme === "dark";
 
   // Charger l'historique des messages depuis le localStorage
   useEffect(() => {
@@ -90,18 +84,6 @@ const ContactPage = () => {
 
     fetchUser();
   }, []);
-
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    localStorage.setItem("darkMode", newDarkMode.toString());
-    
-    if (newDarkMode) {
-      document.documentElement.classList.add("dark");
-    } else {
-      document.documentElement.classList.remove("dark");
-    }
-  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -177,12 +159,17 @@ const ContactPage = () => {
           <div className="max-w-7xl mx-auto">
             <div className="flex justify-end mb-4">
               <Button
-                onClick={toggleDarkMode}
+                onClick={() => setTheme(isDarkMode ? "light" : "dark")}
+                disabled={!mounted}
                 variant="outline"
                 size="sm"
-                className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
+                className="bg-white/20 hover:bg-white/30 border-white/30 text-white dark:bg-gray-900/60 dark:hover:bg-gray-800/70 dark:border-white/20"
               >
-                {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+                {mounted ? (
+                  isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />
+                ) : (
+                  <Moon className="w-4 h-4" />
+                )}
               </Button>
             </div>
             

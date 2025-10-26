@@ -4,7 +4,7 @@ import { useContext, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import {
   Sparkles,
   Heart,
@@ -134,7 +134,13 @@ export default function MaevaPage() {
   const context = useContext(UserContext);
   const currentUser = context?.user ?? null;
   const router = useRouter();
-  const { isMobile } = useMobileOptimization({ enableReducedMotion: true });
+  const { isMobile, shouldReduceAnimations } = useMobileOptimization({
+    enableReducedMotion: true,
+  });
+  const prefersReducedMotion = useReducedMotion();
+  const disableMotion =
+    isMobile || prefersReducedMotion || shouldReduceAnimations;
+  const instantTransition = { duration: 0 };
 
   const isAuthorized =
     currentUser?.email?.toLowerCase?.() === AUTHORIZED_EMAIL;
@@ -169,9 +175,13 @@ export default function MaevaPage() {
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950/95 dark:to-gray-900">
       <div className="mx-auto w-full px-4 pb-16 pt-10 md:px-8 lg:px-12">
         <motion.section
-          initial={isMobile ? undefined : { opacity: 0, y: 24 }}
-          animate={isMobile ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, ease: "easeOut" }}
+          initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={
+            disableMotion
+              ? instantTransition
+              : { duration: 0.6, ease: "easeOut" }
+          }
           className="relative overflow-hidden rounded-3xl border border-white/70 bg-white shadow-2xl backdrop-blur dark:border-white/5 dark:bg-gray-900"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-blue-500/20 via-purple-500/15 to-rose-400/20" />
@@ -263,9 +273,13 @@ export default function MaevaPage() {
         </motion.section>
 
         <motion.section
-          initial={isMobile ? undefined : { opacity: 0, y: 24 }}
-          animate={isMobile ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.1, ease: "easeOut" }}
+          initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={
+            disableMotion
+              ? instantTransition
+              : { duration: 0.6, delay: 0.1, ease: "easeOut" }
+          }
           className="mt-12 grid gap-8 md:grid-cols-[1.2fr_0.8fr]"
         >
           <div className="rounded-3xl border border-blue-100 bg-white/90 p-8 shadow-xl dark:border-blue-900/40 dark:bg-gray-900/80">
@@ -355,9 +369,13 @@ export default function MaevaPage() {
         </motion.section>
 
         <motion.section
-          initial={isMobile ? undefined : { opacity: 0, y: 24 }}
-          animate={isMobile ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.2, ease: "easeOut" }}
+          initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={
+            disableMotion
+              ? instantTransition
+              : { duration: 0.6, delay: 0.2, ease: "easeOut" }
+          }
           className="mt-12 rounded-3xl border border-gray-200 bg-white/90 p-8 shadow-xl dark:border-gray-800 dark:bg-gray-900/80"
         >
           <div className="grid gap-8 md:grid-cols-[minmax(0,1.1fr)_minmax(0,0.9fr)] md:items-center">
@@ -391,9 +409,13 @@ export default function MaevaPage() {
         </motion.section>
 
         <motion.section
-          initial={isMobile ? undefined : { opacity: 0, y: 24 }}
-          animate={isMobile ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3, ease: "easeOut" }}
+          initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={
+            disableMotion
+              ? instantTransition
+              : { duration: 0.6, delay: 0.3, ease: "easeOut" }
+          }
           className="mt-12 grid gap-6 md:grid-cols-3"
         >
           {mangaHighlights.map((item) => (
@@ -420,9 +442,13 @@ export default function MaevaPage() {
         </motion.section>
 
         <motion.section
-          initial={isMobile ? undefined : { opacity: 0, y: 24 }}
-          animate={isMobile ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.4, ease: "easeOut" }}
+          initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={
+            disableMotion
+              ? instantTransition
+              : { duration: 0.6, delay: 0.4, ease: "easeOut" }
+          }
           className="mt-12 rounded-3xl border border-gray-200 bg-white/90 p-8 shadow-xl dark:border-gray-800 dark:bg-gray-900/80"
         >
           <h2 className="text-2xl font-semibold text-gray-900 dark:text-white">
@@ -455,9 +481,13 @@ export default function MaevaPage() {
         </motion.section>
 
         <motion.section
-          initial={isMobile ? undefined : { opacity: 0, y: 24 }}
-          animate={isMobile ? undefined : { opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.5, ease: "easeOut" }}
+          initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 24 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={
+            disableMotion
+              ? instantTransition
+              : { duration: 0.6, delay: 0.5, ease: "easeOut" }
+          }
           className="mt-12 grid gap-8 md:grid-cols-[minmax(0,1.2fr)_minmax(0,0.8fr)]"
         >
           <div className="rounded-3xl border border-blue-100 bg-white/90 p-8 shadow-xl dark:border-blue-900/40 dark:bg-gray-900/80">
