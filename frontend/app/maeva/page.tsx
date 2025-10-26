@@ -231,7 +231,7 @@ export default function MaevaPage() {
             </div>
 
             <div className="relative h-[22rem] overflow-visible">
-              <div className="absolute inset-0 -translate-x-6 rounded-3xl border backdrop-blur dark:border-white/10 dark:bg-gray-900/70" />
+              <div className="absolute inset-0 -translate-x-6 rounded-3xl backdrop-blur" />
               <Image
                 src="/assets/maeva/Maeva.webp"
                 alt="Maeva souriante"
