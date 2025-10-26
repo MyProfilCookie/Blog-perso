@@ -117,17 +117,19 @@ export default function BlogPostPage() {
   }
 
   const contentArray = useMemo(() => {
+    if (!blog?.content) {
+      return [];
+    }
+
     if (Array.isArray(blog.content)) {
       return blog.content.filter((paragraph) => paragraph.trim().length > 0);
     }
 
-    return (
-      blog.content
-        ?.split("\n")
-        .map((paragraph) => paragraph.trim())
-        .filter((paragraph) => paragraph.length > 0) ?? []
-    );
-  }, [blog.content]);
+    return blog.content
+      .split("\n")
+      .map((paragraph) => paragraph.trim())
+      .filter((paragraph) => paragraph.length > 0);
+  }, [blog]);
 
   const formattedDate = blog.createdAt
     ? new Date(blog.createdAt).toLocaleDateString("fr-FR", {
@@ -138,7 +140,10 @@ export default function BlogPostPage() {
     : "";
 
   const readingTime = useMemo(() => {
-    const totalWords = contentArray.join(" ").split(/\s+/).length;
+    if (!contentArray.length) {
+      return 3;
+    }
+    const totalWords = contentArray.join(" ").split(/\s+/).filter(Boolean).length;
     return Math.max(3, Math.round(totalWords / 180));
   }, [contentArray]);
 
