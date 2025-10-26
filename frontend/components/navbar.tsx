@@ -475,6 +475,7 @@ export const Navbar = () => {
   const menuPanelClassName =
     "md:hidden fixed top-0 left-0 h-auto max-h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto rounded-r-2xl";
   const disableMenuMotion = isMobile || shouldReduceAnimations;
+  const disableAvatarMotion = disableMenuMotion;
 
   const menuPanelContent = (
     <div className="p-4 flex flex-col">
@@ -745,7 +746,11 @@ export const Navbar = () => {
         {!user ? (
           <Avatar
             aria-label="Connectez-vous pour accéder à votre profil"
-            className="cursor-pointer text-tiny text-default-500 transition-all duration-300 hover:scale-110 flex-shrink-0"
+            className={`${
+              disableAvatarMotion
+                ? "cursor-pointer flex-shrink-0 text-tiny text-default-500"
+                : "cursor-pointer flex-shrink-0 text-tiny text-default-500 transition-transform duration-300 hover:scale-105"
+            }`}
             isBordered
             name="Invité"
             onClick={handleLoginRedirect}
@@ -766,7 +771,11 @@ export const Navbar = () => {
                 <DropdownTrigger>
                   <Avatar
                     alt={`Avatar de ${user?.pseudo}`}
-                    className="transition-all duration-300 cursor-pointer hover:scale-110"
+                    className={
+                      disableAvatarMotion
+                        ? "cursor-pointer flex-shrink-0"
+                        : "cursor-pointer flex-shrink-0 transition-transform duration-300 hover:scale-105"
+                    }
                     isBordered
                     size="sm"
                     src={user?.avatar || "/assets/default-avatar.webp"}
@@ -880,7 +889,11 @@ export const Navbar = () => {
                   >
                     <Avatar
                       alt={`Avatar de ${user?.pseudo}`}
-                      className="transition-all duration-300"
+                      className={
+                        disableAvatarMotion
+                          ? "cursor-pointer flex-shrink-0"
+                          : "cursor-pointer flex-shrink-0 transition-transform duration-300 hover:scale-105"
+                      }
                       isBordered
                       size="sm"
                       src={user?.avatar || "/assets/default-avatar.webp"}
