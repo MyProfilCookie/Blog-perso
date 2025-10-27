@@ -94,22 +94,40 @@ export default function LikeButton({
       });
 
       console.log('📡 Réponse serveur:', response.status, response.statusText);
-      const data = await response.json();
+      let data: any = null;
+      try {
+        data = await response.json();
+      } catch (parseError) {
+        console.warn('Réponse non JSON pour le toggle like:', parseError);
+      }
       console.log('📦 Données reçues:', data);
 
       if (response.ok) {
+        const previousType = likeType;
+        let action = data?.action as 'added' | 'removed' | 'updated' | undefined;
+
+        if (!action) {
+          if (previousType === type) {
+            action = 'removed';
+          } else if (!previousType) {
+            action = 'added';
+          } else {
+            action = 'updated';
+          }
+        }
+
         // Mettre à jour l'état local
-        if (data.action === 'removed') {
+        if (action === 'removed') {
           setLikeType(null);
-          if (type === 'like') setLikes(prev => Math.max(0, prev - 1));
-          if (type === 'dislike') setDislikes(prev => Math.max(0, prev - 1));
-        } else if (data.action === 'added') {
+          if (previousType === 'like') setLikes(prev => Math.max(0, prev - 1));
+          if (previousType === 'dislike') setDislikes(prev => Math.max(0, prev - 1));
+        } else if (action === 'added') {
           setLikeType(type);
           if (type === 'like') setLikes(prev => prev + 1);
           if (type === 'dislike') setDislikes(prev => prev + 1);
-        } else if (data.action === 'updated') {
+        } else if (action === 'updated') {
           // Passer de like à dislike ou vice-versa
-          const oldType = likeType;
+          const oldType = previousType;
           setLikeType(type);
           if (oldType === 'like' && type === 'dislike') {
             setLikes(prev => Math.max(0, prev - 1));
@@ -121,11 +139,11 @@ export default function LikeButton({
         }
 
         toast({
-          title: data.action === 'removed' ? 'Réaction retirée' : 'Réaction ajoutée',
-          description: data.message,
+          title: action === 'removed' ? 'Réaction retirée' : 'Réaction ajoutée',
+          description: data?.message ?? "Merci pour votre retour !",
         });
       } else {
-        throw new Error(data.message);
+        throw new Error(data?.message ?? "Impossible d'enregistrer votre réaction");
       }
     } catch (error) {
       console.error('Erreur lors du toggle like:', error);

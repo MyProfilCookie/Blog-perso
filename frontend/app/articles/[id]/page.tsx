@@ -548,13 +548,6 @@ const ArticlePage = () => {
               className="mt-8 flex flex-wrap items-center justify-between gap-4"
             >
               <div className="flex items-center gap-4">
-                <LikeButton
-                  contentType="article"
-                  contentId={articleId}
-                  userId={userId}
-                  showCounts={true}
-                  size="lg"
-                />
                 <Button
                   color="primary"
                   variant="bordered"
