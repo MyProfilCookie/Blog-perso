@@ -107,6 +107,21 @@ export const Navbar = () => {
   const guestColors = ["#E8E8E8", "#D4D4D4", "#B8B8B8", "#9E9E9E"];
 
   const { theme, setTheme, resolvedTheme } = useTheme();
+  const [isThemeReady, setIsThemeReady] = useState(false);
+  useEffect(() => setIsThemeReady(true), []);
+  const currentTheme = (resolvedTheme ?? theme) ?? "light";
+  const isDarkTheme = currentTheme === "dark";
+
+  const handleThemeToggle = (target?: "light" | "dark") => {
+    const nextTheme = target ?? (isDarkTheme ? "light" : "dark");
+    if (typeof window !== "undefined") {
+      localStorage.setItem("theme", nextTheme);
+      localStorage.removeItem("themeMode");
+      localStorage.removeItem("autoModeHours");
+    }
+    setTheme(nextTheme);
+    setAvatarColorIndex((prev) => prev);
+  };
 
   // Fermer automatiquement le menu lorsque l'on quitte le format mobile
   useEffect(() => {
@@ -579,6 +594,23 @@ export const Navbar = () => {
           </div>
         </>
       )}
+
+      <div className="border-t border-gray-200 dark:border-gray-700 my-3" />
+      <button
+        className="flex w-full items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+        disabled={!isThemeReady}
+        onClick={() => {
+          handleThemeToggle();
+          setIsMenuOpen(false);
+        }}
+      >
+        <span>Mode {isDarkTheme ? "clair" : "sombre"}</span>
+        {isDarkTheme ? (
+          <SunFilledIcon className="text-yellow-400" size={18} />
+        ) : (
+          <MoonFilledIcon className="text-blue-400" size={18} />
+        )}
+      </button>
     </div>
   );
 
@@ -858,6 +890,23 @@ export const Navbar = () => {
                     </div>
                   </DropdownItem>
                   <DropdownItem
+                    key="theme-toggle-mobile"
+                    className="dark:text-gray-200 dark:hover:bg-gray-700"
+                    isDisabled={!isThemeReady}
+                    onClick={() => handleThemeToggle()}
+                  >
+                    <div className="flex items-center gap-2">
+                      {isDarkTheme ? (
+                        <SunFilledIcon className="text-yellow-400" size={18} />
+                      ) : (
+                        <MoonFilledIcon className="text-blue-500" size={18} />
+                      )}
+                      <span className="text-sm">
+                        Mode {isDarkTheme ? "clair" : "sombre"}
+                      </span>
+                    </div>
+                  </DropdownItem>
+                  <DropdownItem
                     className="dark:text-red-400 text-red-600 dark:hover:bg-red-900/20"
                     color="danger"
                     key="logout-mobile"
@@ -1050,11 +1099,11 @@ export const Navbar = () => {
                           className="dark:text-gray-200 dark:hover:bg-gray-700"
                           key="light"
                           onClick={() => {
-                            localStorage.removeItem("themeMode");
-                            localStorage.removeItem("autoModeHours");
-                            localStorage.setItem("theme", "light");
-                            setTheme("light");
-                            setAvatarColorIndex((prev) => prev);
+                            if (typeof window !== "undefined") {
+                              localStorage.removeItem("themeMode");
+                              localStorage.removeItem("autoModeHours");
+                            }
+                            handleThemeToggle("light");
                           }}
                           textValue="Mode clair"
                         >
@@ -1070,11 +1119,11 @@ export const Navbar = () => {
                           className="dark:text-gray-200 dark:hover:bg-gray-700"
                           key="dark"
                           onClick={() => {
-                            localStorage.removeItem("themeMode");
-                            localStorage.removeItem("autoModeHours");
-                            localStorage.setItem("theme", "dark");
-                            setTheme("dark");
-                            setAvatarColorIndex((prev) => prev);
+                            if (typeof window !== "undefined") {
+                              localStorage.removeItem("themeMode");
+                              localStorage.removeItem("autoModeHours");
+                            }
+                            handleThemeToggle("dark");
                           }}
                           textValue="Mode sombre"
                         >
