@@ -15,7 +15,6 @@ import dayjs from "dayjs";
 import { Sun, Moon, Star, BookOpen, Clock, TrendingUp, User, Award, Target, Edit3, Save, X, Heart, Image as ImageIcon, Upload } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
-import Image from "next/image";
 
 // Import shadcn components
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -436,13 +435,12 @@ const ProfilePage = () => {
                 {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>
             </div>
-              <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-6 relative">
-                <Image
+              <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-6">
+                <img
                   src={avatarPreview || "/assets/default-avatar.webp"}
                   alt={user.pseudo ? `Avatar de ${user.pseudo}` : "Avatar utilisateur"}
-                  fill
-                  sizes="112px"
-                  className="rounded-full object-cover border-4 border-white shadow-xl dark:border-gray-800"
+                  className="w-full h-full rounded-full object-cover border-4 border-white shadow-xl dark:border-gray-800"
+                  loading="lazy"
                 />
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
@@ -956,13 +954,12 @@ const ProfilePage = () => {
                 <div className="space-y-4">
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Photo de profil</h3>
                   <div className="flex flex-col sm:flex-row items-center gap-4">
-                    <div className="relative w-24 h-24 sm:w-28 sm:h-28">
-                      <Image
+                    <div className="w-24 h-24 sm:w-28 sm:h-28">
+                      <img
                         src={avatarPreview || "/assets/default-avatar.webp"}
                         alt="Aperçu avatar"
-                        fill
-                        sizes="112px"
-                        className="rounded-full object-cover border-4 border-gray-100 dark:border-gray-700 shadow-lg"
+                        className="w-full h-full rounded-full object-cover border-4 border-gray-100 dark:border-gray-700 shadow-lg"
+                        loading="lazy"
                       />
                     </div>
                     <div className="flex flex-col gap-2">

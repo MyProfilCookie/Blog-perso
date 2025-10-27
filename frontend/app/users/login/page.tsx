@@ -36,6 +36,7 @@ export default function Connexion() {
   const googleButtonRef = React.useRef<HTMLDivElement | null>(null);
   const googleInitialized = React.useRef(false);
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const isGoogleAuthEnabled = Boolean(googleClientId);
 
   // Sauvegarder la page actuelle au chargement
   React.useEffect(() => {
@@ -148,7 +149,7 @@ export default function Connexion() {
   );
 
   React.useEffect(() => {
-    if (typeof window === "undefined" || !googleClientId) {
+    if (typeof window === "undefined" || !isGoogleAuthEnabled) {
       return;
     }
 
@@ -201,7 +202,7 @@ export default function Connexion() {
       script.onload = null;
       window.google?.accounts?.id?.cancel();
     };
-  }, [googleClientId, handleGoogleCredential]);
+  }, [isGoogleAuthEnabled, handleGoogleCredential]);
 
   if (user) {
     return (
@@ -483,7 +484,7 @@ export default function Connexion() {
           {loading ? "Connexion..." : "Se connecter"}
         </Button>
 
-        {googleClientId && (
+        {isGoogleAuthEnabled ? (
           <>
             <div className="relative my-4 flex items-center gap-2">
               <span className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
@@ -498,6 +499,10 @@ export default function Connexion() {
               style={{ minHeight: 48 }}
             />
           </>
+        ) : (
+          <div className="rounded-md bg-gray-100 dark:bg-gray-800 px-4 py-3 text-center text-xs text-gray-500 dark:text-gray-400">
+            Connexion Google désactivée. Ajoutez la variable <code>NEXT_PUBLIC_GOOGLE_CLIENT_ID</code> pour l'activer.
+          </div>
         )}
 
         <div className="mt-4 text-center text-sm md:text-base">
