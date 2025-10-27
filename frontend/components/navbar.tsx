@@ -777,7 +777,7 @@ export const Navbar = () => {
         {!user ? (
           <Avatar
             aria-label="Connectez-vous pour accéder à votre profil"
-            className="cursor-pointer flex-shrink-0 text-tiny text-default-500"
+            className="cursor-pointer flex-shrink-0 text-tiny text-default-500 transition-none motion-reduce:transform-none active:scale-100 focus:outline-none focus:ring-0"
             isBordered
             name="Invité"
             onClick={handleLoginRedirect}
@@ -798,7 +798,7 @@ export const Navbar = () => {
                 <DropdownTrigger>
                   <Avatar
                     alt={`Avatar de ${user?.pseudo}`}
-                    className="cursor-pointer flex-shrink-0"
+                    className="cursor-pointer flex-shrink-0 transition-none motion-reduce:transform-none active:scale-100 focus:outline-none focus:ring-0"
                     isBordered
                     size="sm"
                     src={user?.avatar || "/assets/default-avatar.webp"}
@@ -894,7 +894,7 @@ export const Navbar = () => {
                     key="theme-toggle-mobile"
                     className="dark:text-gray-200 dark:hover:bg-gray-700"
                     isDisabled={!isThemeReady}
-                    onClick={() => handleThemeToggle()}
+                    onPress={() => handleThemeToggle()}
                   >
                     <div className="flex items-center gap-2">
                       {isDarkTheme ? (
@@ -916,23 +916,6 @@ export const Navbar = () => {
                     <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
                     Déconnexion
                   </DropdownItem>
-                  <DropdownItem
-                    key="theme-toggle-mobile-user"
-                    className="dark:text-gray-200 dark:hover:bg-gray-700"
-                    isDisabled={!isThemeReady}
-                    onPress={() => handleThemeToggle()}
-                  >
-                    <div className="flex items-center gap-2">
-                      {isDarkTheme ? (
-                        <SunFilledIcon className="text-yellow-400" size={18} />
-                      ) : (
-                        <MoonFilledIcon className="text-blue-500" size={18} />
-                      )}
-                      <span className="text-sm">
-                        Mode {isDarkTheme ? "clair" : "sombre"}
-                      </span>
-                    </div>
-                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
@@ -947,7 +930,7 @@ export const Navbar = () => {
                   >
                     <Avatar
                       alt={`Avatar de ${user?.pseudo}`}
-                      className="cursor-pointer flex-shrink-0"
+                      className="cursor-pointer flex-shrink-0 transition-none motion-reduce:transform-none active:scale-100 focus:outline-none focus:ring-0"
                       isBordered
                       size="sm"
                       src={user?.avatar || "/assets/default-avatar.webp"}
