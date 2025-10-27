@@ -38,32 +38,63 @@ export default function Connexion() {
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
   const isGoogleAuthEnabled = Boolean(googleClientId);
 
+  const getSafeReturnUrl = React.useCallback(
+    (value?: string | null) => {
+      if (typeof window === "undefined" || !value) {
+        return null;
+      }
+
+      try {
+        const url = new URL(value, window.location.origin);
+
+        if (url.origin !== window.location.origin) {
+          return null;
+        }
+
+        const path = `${url.pathname}${url.search}${url.hash}`;
+        return path === "" ? "/" : path;
+      } catch {
+        return value.startsWith("/") ? value : null;
+      }
+    },
+    [],
+  );
+
   // Sauvegarder la page actuelle au chargement
   React.useEffect(() => {
-    if (typeof window !== "undefined") {
-      const currentPath = searchParams.get("returnUrl") || sessionStorage.getItem("returnUrl") || window.document.referrer || "/profile";
-      setReturnUrl(currentPath);
-      
-      // Si pas de returnUrl dans l'URL, sauvegarder le referrer
-      if (!searchParams.get("returnUrl") && window.document.referrer) {
-        try {
-          const referrerUrl = new URL(window.document.referrer);
-          if (referrerUrl.origin === window.location.origin) {
-            sessionStorage.setItem("returnUrl", referrerUrl.pathname);
-          }
-        } catch (e) {
-          // Ignore les erreurs de parsing d'URL
-        }
+    if (typeof window === "undefined") {
+      return;
+    }
+
+    const paramValue = searchParams.get("returnUrl");
+    const sessionValue = sessionStorage.getItem("returnUrl");
+    const referrerValue = window.document.referrer;
+
+    const safeReturnUrl =
+      getSafeReturnUrl(paramValue) ??
+      getSafeReturnUrl(sessionValue) ??
+      getSafeReturnUrl(referrerValue) ??
+      "/profile";
+
+    setReturnUrl(safeReturnUrl);
+
+    if (!paramValue && referrerValue) {
+      const sanitizedReferrer = getSafeReturnUrl(referrerValue);
+      if (sanitizedReferrer && sanitizedReferrer !== "/profile") {
+        sessionStorage.setItem("returnUrl", sanitizedReferrer);
+      } else {
+        sessionStorage.removeItem("returnUrl");
       }
     }
-  }, [searchParams]);
+  }, [searchParams, getSafeReturnUrl]);
 
   // Rediriger si l'utilisateur est déjà connecté
   React.useEffect(() => {
     if (user) {
-      router.push(returnUrl);
+      const destination = getSafeReturnUrl(returnUrl) ?? "/profile";
+      router.push(destination);
     }
-  }, [user, router, returnUrl]);
+  }, [user, router, returnUrl, getSafeReturnUrl]);
 
   // Fonction de validation du mot de passe
   const validatePassword = (value: string) => {
@@ -124,7 +155,8 @@ export default function Connexion() {
             }).then(() => {
               sessionStorage.removeItem("returnUrl");
               window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: userData }));
-              router.push(returnUrl);
+              const destination = getSafeReturnUrl(returnUrl) ?? "/profile";
+              router.push(destination);
             });
           }
         } else {
@@ -145,7 +177,7 @@ export default function Connexion() {
         setLoading(false);
       }
     },
-    [loginUser, returnUrl, router],
+    [loginUser, returnUrl, router, getSafeReturnUrl],
   );
 
   React.useEffect(() => {
@@ -325,7 +357,8 @@ export default function Connexion() {
             window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: userData }));
             
             // Rediriger vers la page d'origine ou dashboard
-            router.push(returnUrl);
+            const destination = getSafeReturnUrl(returnUrl) ?? "/profile";
+            router.push(destination);
           });
         } else {
           handleLoginError(
