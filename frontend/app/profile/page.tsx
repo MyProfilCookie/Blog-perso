@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect, useCallback, useRef } from "react";
+import React, { useState, useEffect, useCallback, useRef, useContext } from "react";
 import {
   BarChart,
   Bar,
@@ -26,6 +26,7 @@ import { Label } from "@/components/ui/label";
 import Loading from "@/components/loading";
 import StatsSync from "@/components/StatsSync";
 import { normalizeAvatarUrl } from "@/utils/normalizeAvatarUrl";
+import { UserContext } from "@/context/UserContext";
 
 // Configuration des matières avec icônes et couleurs
 const SUBJECTS_CONFIG = {
@@ -72,6 +73,8 @@ const ProfilePage = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const previousAvatarObjectUrl = useRef<string | null>(null);
   const router = useRouter();
+  const userContext = useContext(UserContext) as any;
+  const contextLoginUser = userContext?.loginUser;
 
   const updateLocalUser = useCallback((userData: any) => {
     if (!userData) {
@@ -97,9 +100,10 @@ const ProfilePage = () => {
       localStorage.setItem("user", JSON.stringify(normalizedUser));
       window.dispatchEvent(new CustomEvent("userUpdate", { detail: normalizedUser }));
     }
+    contextLoginUser?.(normalizedUser);
 
     return normalizedUser;
-  }, [setUser, setAvatarPreview, previousAvatarObjectUrl]);
+  }, [setUser, setAvatarPreview, previousAvatarObjectUrl, contextLoginUser]);
 
   useEffect(() => {
     return () => {

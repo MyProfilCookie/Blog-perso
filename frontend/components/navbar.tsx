@@ -794,8 +794,10 @@ export const Navbar = () => {
           <>
             {/* Avatar mobile avec dropdown */}
             <div className="md:hidden">
-              <Dropdown disableAnimation>
-                <DropdownTrigger>
+              <Dropdown>
+                <DropdownTrigger
+                  className="focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:opacity-100"
+                >
                   <Avatar
                     alt={`Avatar de ${user?.pseudo}`}
                     className="cursor-pointer flex-shrink-0 transition-none motion-reduce:transform-none active:scale-100 focus:outline-none focus:ring-0"
@@ -818,9 +820,11 @@ export const Navbar = () => {
                 </DropdownTrigger>
                 <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700">
                   <DropdownItem
+                    as={NextLink}
                     className="dark:text-gray-200 dark:hover:bg-gray-700"
+                    href="/profile"
                     key="profile-mobile"
-                    onClick={() => router.push("/profile")}
+                    onPress={() => setIsMenuOpen(false)}
                   >
                     <FontAwesomeIcon className="mr-2" icon={faUser} />
                     Profil
@@ -835,8 +839,10 @@ export const Navbar = () => {
                     Mes commandes
                   </DropdownItem>
                   <DropdownItem
+                    as={NextLink}
+                    href="/orders?status=pending"
                     key="orders-pending-mobile"
-                    onPress={() => router.push("/orders?status=pending")}
+                    onPress={() => setIsMenuOpen(false)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -849,8 +855,10 @@ export const Navbar = () => {
                     </div>
                   </DropdownItem>
                   <DropdownItem
+                    as={NextLink}
+                    href="/orders?status=shipped"
                     key="orders-shipped-mobile"
-                    onPress={() => router.push("/orders?status=shipped")}
+                    onPress={() => setIsMenuOpen(false)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -863,8 +871,10 @@ export const Navbar = () => {
                     </div>
                   </DropdownItem>
                   <DropdownItem
+                    as={NextLink}
+                    href="/orders?status=delivered"
                     key="orders-delivered-mobile"
-                    onPress={() => router.push("/orders?status=delivered")}
+                    onPress={() => setIsMenuOpen(false)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -877,8 +887,10 @@ export const Navbar = () => {
                     </div>
                   </DropdownItem>
                   <DropdownItem
+                    as={NextLink}
+                    href="/orders?status=cancelled"
                     key="orders-cancelled-mobile"
-                    onPress={() => router.push("/orders?status=cancelled")}
+                    onPress={() => setIsMenuOpen(false)}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
