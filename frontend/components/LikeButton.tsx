@@ -104,44 +104,33 @@ export default function LikeButton({
 
       if (response.ok) {
         const previousType = likeType;
-        let action = data?.action as 'added' | 'removed' | 'updated' | undefined;
 
-        if (!action) {
-          if (previousType === type) {
-            action = 'removed';
-          } else if (!previousType) {
-            action = 'added';
-          } else {
-            action = 'updated';
-          }
-        }
-
-        // Mettre à jour l'état local
-        if (action === 'removed') {
+        // Si on reclique sur la même réaction -> retrait
+        if (previousType === type) {
           setLikeType(null);
-          if (previousType === 'like') setLikes(prev => Math.max(0, prev - 1));
-          if (previousType === 'dislike') setDislikes(prev => Math.max(0, prev - 1));
-        } else if (action === 'added') {
+          if (type === 'like') setLikes(prev => Math.max(0, prev - 1));
+          if (type === 'dislike') setDislikes(prev => Math.max(0, prev - 1));
+          toast({
+            title: 'Réaction retirée',
+            description: data?.message ?? "Merci pour votre retour !",
+          });
+        } else {
+          // Basculer la réaction (ou l'ajouter si elle n'existait pas)
+          if (previousType === 'like') {
+            setLikes(prev => Math.max(0, prev - 1));
+          } else if (previousType === 'dislike') {
+            setDislikes(prev => Math.max(0, prev - 1));
+          }
+
           setLikeType(type);
           if (type === 'like') setLikes(prev => prev + 1);
           if (type === 'dislike') setDislikes(prev => prev + 1);
-        } else if (action === 'updated') {
-          // Passer de like à dislike ou vice-versa
-          const oldType = previousType;
-          setLikeType(type);
-          if (oldType === 'like' && type === 'dislike') {
-            setLikes(prev => Math.max(0, prev - 1));
-            setDislikes(prev => prev + 1);
-          } else if (oldType === 'dislike' && type === 'like') {
-            setDislikes(prev => Math.max(0, prev - 1));
-            setLikes(prev => prev + 1);
-          }
-        }
 
-        toast({
-          title: action === 'removed' ? 'Réaction retirée' : 'Réaction ajoutée',
-          description: data?.message ?? "Merci pour votre retour !",
-        });
+          toast({
+            title: 'Réaction ajoutée',
+            description: data?.message ?? "Merci pour votre retour !",
+          });
+        }
       } else {
         throw new Error(data?.message ?? "Impossible d'enregistrer votre réaction");
       }

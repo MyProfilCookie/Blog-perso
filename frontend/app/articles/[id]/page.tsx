@@ -405,22 +405,25 @@ const ArticlePage = () => {
               Retour aux articles
             </Button>
 
-            <div className="flex items-center gap-2">
-              <LikeButton
-                contentType="article"
-                contentId={articleId}
-                userId={userId}
-                showCounts={true}
-                size="sm"
-              />
-              <Button
-                isIconOnly
-                variant="ghost"
-                className="text-gray-600 dark:text-gray-300 hover:text-violet-600"
-              >
-                <Share2 className="w-4 h-4" />
-              </Button>
-            </div>
+            <Button
+              isIconOnly
+              variant="ghost"
+              className="text-gray-600 dark:text-gray-300 hover:text-violet-600"
+              onClick={() => {
+                if (typeof window === "undefined") return;
+                if (navigator?.share) {
+                  navigator
+                    .share({
+                      title: article.title,
+                      text: article.subtitle ?? "",
+                      url: window.location.href,
+                    })
+                    .catch(() => {});
+                }
+              }}
+            >
+              <Share2 className="w-4 h-4" />
+            </Button>
           </div>
         </div>
       </motion.div>
@@ -548,6 +551,13 @@ const ArticlePage = () => {
               className="mt-8 flex flex-wrap items-center justify-between gap-4"
             >
               <div className="flex items-center gap-4">
+                <LikeButton
+                  contentType="article"
+                  contentId={articleId}
+                  userId={userId}
+                  showCounts={true}
+                  size="lg"
+                />
                 <Button
                   color="primary"
                   variant="bordered"
