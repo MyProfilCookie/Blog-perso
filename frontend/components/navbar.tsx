@@ -828,6 +828,7 @@ export const Navbar = () => {
                   <DropdownItem
                     className="font-medium dark:text-gray-300"
                     key="orders-title-mobile"
+                    onPress={() => router.push("/orders")}
                     showDivider
                     textValue="Mes commandes"
                   >
@@ -835,7 +836,7 @@ export const Navbar = () => {
                   </DropdownItem>
                   <DropdownItem
                     key="orders-pending-mobile"
-                    onClick={() => router.push("/orders?status=pending")}
+                    onPress={() => router.push("/orders?status=pending")}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -849,7 +850,7 @@ export const Navbar = () => {
                   </DropdownItem>
                   <DropdownItem
                     key="orders-shipped-mobile"
-                    onClick={() => router.push("/orders?status=shipped")}
+                    onPress={() => router.push("/orders?status=shipped")}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -863,7 +864,7 @@ export const Navbar = () => {
                   </DropdownItem>
                   <DropdownItem
                     key="orders-delivered-mobile"
-                    onClick={() => router.push("/orders?status=delivered")}
+                    onPress={() => router.push("/orders?status=delivered")}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -877,7 +878,7 @@ export const Navbar = () => {
                   </DropdownItem>
                   <DropdownItem
                     key="orders-cancelled-mobile"
-                    onClick={() => router.push("/orders?status=cancelled")}
+                    onPress={() => router.push("/orders?status=cancelled")}
                   >
                     <div className="flex items-center justify-between">
                       <div className="flex items-center gap-2">
@@ -910,7 +911,7 @@ export const Navbar = () => {
                     className="dark:text-red-400 text-red-600 dark:hover:bg-red-900/20"
                     color="danger"
                     key="logout-mobile"
-                    onClick={handleLogout}
+                    onPress={handleLogout}
                   >
                     <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
                     Déconnexion
@@ -919,7 +920,7 @@ export const Navbar = () => {
                     key="theme-toggle-mobile-user"
                     className="dark:text-gray-200 dark:hover:bg-gray-700"
                     isDisabled={!isThemeReady}
-                    onClick={() => handleThemeToggle()}
+                    onPress={() => handleThemeToggle()}
                   >
                     <div className="flex items-center gap-2">
                       {isDarkTheme ? (
@@ -989,7 +990,7 @@ export const Navbar = () => {
                   <DropdownItem
                     className="relative"
                     key="orders-pending"
-                    onClick={() => {
+                    onPress={() => {
                       router.push("/orders?status=pending");
                     }}
                   >
@@ -1017,7 +1018,7 @@ export const Navbar = () => {
                   <DropdownItem
                     className="relative"
                     key="orders-shipped"
-                    onClick={() => {
+                    onPress={() => {
                       router.push("/orders?status=shipped");
                     }}
                   >
@@ -1045,7 +1046,7 @@ export const Navbar = () => {
                   <DropdownItem
                     className="relative"
                     key="orders-delivered"
-                    onClick={() => {
+                    onPress={() => {
                       router.push("/orders?status=delivered");
                     }}
                   >
@@ -1073,7 +1074,7 @@ export const Navbar = () => {
                   <DropdownItem
                     className="relative dark:text-gray-200 dark:hover:bg-gray-700"
                     key="orders-all"
-                    onClick={() => {
+                    onPress={() => {
                       router.push("/orders");
                     }}
                     showDivider
@@ -1089,7 +1090,7 @@ export const Navbar = () => {
                   <DropdownItem
                     className="dark:text-gray-200 dark:hover:bg-gray-700"
                     key="controle"
-                    onClick={() => router.push("/controle")}
+                    onPress={() => router.push("/controle")}
                   >
                     <FontAwesomeIcon className="mr-2" icon={faGamepad} />
                     Contrôle
@@ -1115,7 +1116,7 @@ export const Navbar = () => {
                         <DropdownItem
                           className="dark:text-gray-200 dark:hover:bg-gray-700"
                           key="light"
-                          onClick={() => {
+                          onPress={() => {
                             if (typeof window !== "undefined") {
                               localStorage.removeItem("themeMode");
                               localStorage.removeItem("autoModeHours");
@@ -1135,7 +1136,7 @@ export const Navbar = () => {
                         <DropdownItem
                           className="dark:text-gray-200 dark:hover:bg-gray-700"
                           key="dark"
-                          onClick={() => {
+                          onPress={() => {
                             if (typeof window !== "undefined") {
                               localStorage.removeItem("themeMode");
                               localStorage.removeItem("autoModeHours");

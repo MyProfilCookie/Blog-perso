@@ -13,8 +13,13 @@ import { motion } from "framer-motion";
 import { normalizeAvatarUrl } from "@/utils/normalizeAvatarUrl";
 import axios from "axios";
 
-import { useAuth } from "@/context/AuthContext"; // Assurez-vous d'avoir ce chemin correct
 import { AutismLogo } from "@/components/icons"; // Vérifie le bon chemin
+
+declare global {
+  interface Window {
+    google?: any;
+  }
+}
 
 export default function Connexion() {
   const userContext = useContext(UserContext) as any;
@@ -28,7 +33,9 @@ export default function Connexion() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const [returnUrl, setReturnUrl] = React.useState("/profile");
-  // const { login } = useAuth(); // Utilisation du contexte d'authentification
+  const googleButtonRef = React.useRef<HTMLDivElement | null>(null);
+  const googleInitialized = React.useRef(false);
+  const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
 
   // Sauvegarder la page actuelle au chargement
   React.useEffect(() => {
@@ -57,7 +64,145 @@ export default function Connexion() {
     }
   }, [user, router, returnUrl]);
 
-  // Afficher un message de chargement si l'utilisateur est connecté
+  // Fonction de validation du mot de passe
+  const validatePassword = (value: string) => {
+    const lengthValid = value.length >= 8;
+    const specialCharValid = /[!@#$%^&*]/.test(value);
+
+    if (!lengthValid || !specialCharValid) {
+      setPasswordStrength(
+        "Mot de passe faible (8 caractères minimum et un caractère spécial)",
+      );
+    } else {
+      setPasswordStrength("Mot de passe fort");
+    }
+  };
+
+  const handleGoogleCredential = React.useCallback(
+    async (credentialResponse: any) => {
+      const credential = credentialResponse?.credential;
+      if (!credential) {
+        return;
+      }
+
+      setLoading(true);
+
+      try {
+        const apiUrl = (
+          process.env.NEXT_PUBLIC_API_URL || "http://localhost:3000/api"
+        ).replace(/\/$/, "");
+
+        const response = await axios.post(`${apiUrl}/users/google-login`, {
+          credential,
+        });
+
+        if (response.data && response.data.accessToken) {
+          localStorage.setItem("userToken", response.data.accessToken);
+
+          if (response.data.user) {
+            const userData = {
+              ...response.data.user,
+              avatar: normalizeAvatarUrl(
+                response.data.user.image || response.data.user.avatar,
+              ),
+              image: normalizeAvatarUrl(
+                response.data.user.image || response.data.user.avatar,
+              ),
+            };
+
+            localStorage.setItem("user", JSON.stringify(userData));
+            loginUser?.(userData);
+
+            Swal.fire({
+              icon: "success",
+              title: "Connexion réussie",
+              text: `Bienvenue sur AutiStudy, ${
+                userData.pseudo || userData.prenom || userData.nom || userData.email
+              } !`,
+              confirmButtonText: "Ok",
+            }).then(() => {
+              sessionStorage.removeItem("returnUrl");
+              window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: userData }));
+              router.push(returnUrl);
+            });
+          }
+        } else {
+          throw new Error(response.data?.message || "Réponse inattendue du serveur");
+        }
+      } catch (error: any) {
+        console.error("❌ Connexion Google échouée:", error);
+        Swal.fire({
+          icon: "error",
+          title: "Connexion Google impossible",
+          text:
+            error?.response?.data?.message ||
+            error?.message ||
+            "Veuillez réessayer ou utiliser votre mot de passe.",
+          confirmButtonText: "Ok",
+        });
+      } finally {
+        setLoading(false);
+      }
+    },
+    [loginUser, returnUrl, router],
+  );
+
+  React.useEffect(() => {
+    if (typeof window === "undefined" || !googleClientId) {
+      return;
+    }
+
+    const initialize = () => {
+      if (!window.google || googleInitialized.current || !googleButtonRef.current) {
+        return;
+      }
+
+      window.google.accounts.id.initialize({
+        client_id: googleClientId,
+        callback: handleGoogleCredential,
+      });
+
+      window.google.accounts.id.renderButton(googleButtonRef.current, {
+        theme: "outline",
+        size: "large",
+        text: "signin_with",
+        width: googleButtonRef.current.offsetWidth || 280,
+      });
+
+      googleInitialized.current = true;
+    };
+
+    if (window.google && window.google.accounts && window.google.accounts.id) {
+      initialize();
+      return () => {
+        window.google?.accounts?.id?.cancel();
+      };
+    }
+
+    const existingScript = document.getElementById("google-identity-service");
+
+    if (existingScript) {
+      existingScript.addEventListener("load", initialize, { once: true });
+      return () => {
+        existingScript.removeEventListener("load", initialize);
+        window.google?.accounts?.id?.cancel();
+      };
+    }
+
+    const script = document.createElement("script");
+    script.src = "https://accounts.google.com/gsi/client";
+    script.async = true;
+    script.defer = true;
+    script.id = "google-identity-service";
+    script.onload = initialize;
+    document.head.appendChild(script);
+
+    return () => {
+      script.onload = null;
+      window.google?.accounts?.id?.cancel();
+    };
+  }, [googleClientId, handleGoogleCredential]);
+
   if (user) {
     return (
       <div className="min-h-screen bg-white dark:bg-gray-900 flex items-center justify-center">
@@ -73,20 +218,6 @@ export default function Connexion() {
       </div>
     );
   }
-
-  // Fonction de validation du mot de passe
-  const validatePassword = (value: string) => {
-    const lengthValid = value.length >= 8;
-    const specialCharValid = /[!@#$%^&*]/.test(value);
-
-    if (!lengthValid || !specialCharValid) {
-      setPasswordStrength(
-        "Mot de passe faible (8 caractères minimum et un caractère spécial)",
-      );
-    } else {
-      setPasswordStrength("Mot de passe fort");
-    }
-  };
 
   // Fonction de gestion de la connexion
   const handleLogin = async () => {
@@ -351,6 +482,23 @@ export default function Connexion() {
         >
           {loading ? "Connexion..." : "Se connecter"}
         </Button>
+
+        {googleClientId && (
+          <>
+            <div className="relative my-4 flex items-center gap-2">
+              <span className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
+              <span className="text-xs uppercase tracking-widest text-gray-400 dark:text-gray-500">
+                ou
+              </span>
+              <span className="h-px flex-1 bg-gray-200 dark:bg-gray-700" />
+            </div>
+            <div
+              ref={googleButtonRef}
+              className={`flex justify-center transition-opacity ${loading ? "pointer-events-none opacity-60" : "opacity-100"}`}
+              style={{ minHeight: 48 }}
+            />
+          </>
+        )}
 
         <div className="mt-4 text-center text-sm md:text-base">
           <p className="mb-2">Vous n&apos;avez pas de compte ?</p>

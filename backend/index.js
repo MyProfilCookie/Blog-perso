@@ -97,6 +97,7 @@ app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(compression());
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // 🔧 Configuration CORS
 const allowedOrigins = [

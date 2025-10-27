@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import {
   BarChart,
   Bar,
@@ -12,9 +12,10 @@ import {
 } from "recharts";
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
-import { Sun, Moon, Star, BookOpen, Clock, TrendingUp, User, Award, Target, Edit3, Save, X, Heart } from "lucide-react";
+import { Sun, Moon, Star, BookOpen, Clock, TrendingUp, User, Award, Target, Edit3, Save, X, Heart, Image as ImageIcon, Upload } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import Image from "next/image";
 
 // Import shadcn components
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -25,6 +26,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Loading from "@/components/loading";
 import StatsSync from "@/components/StatsSync";
+import { normalizeAvatarUrl } from "@/utils/normalizeAvatarUrl";
 
 // Configuration des matières avec icônes et couleurs
 const SUBJECTS_CONFIG = {
@@ -65,7 +67,49 @@ const ProfilePage = () => {
       country: ""
     }
   });
+  const [avatarPreview, setAvatarPreview] = useState<string>("/assets/default-avatar.webp");
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
+  const [uploadingAvatar, setUploadingAvatar] = useState<boolean>(false);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const previousAvatarObjectUrl = useRef<string | null>(null);
   const router = useRouter();
+
+  const updateLocalUser = useCallback((userData: any) => {
+    if (!userData) {
+      return null;
+    }
+
+    if (previousAvatarObjectUrl.current) {
+      URL.revokeObjectURL(previousAvatarObjectUrl.current);
+      previousAvatarObjectUrl.current = null;
+    }
+
+    const normalizedAvatar = normalizeAvatarUrl(userData.avatar || userData.image);
+    const normalizedUser = {
+      ...userData,
+      avatar: normalizedAvatar,
+      image: normalizedAvatar,
+    };
+
+    setUser(normalizedUser);
+    setAvatarPreview(normalizedAvatar || "/assets/default-avatar.webp");
+
+    if (typeof window !== "undefined") {
+      localStorage.setItem("user", JSON.stringify(normalizedUser));
+      window.dispatchEvent(new CustomEvent("userUpdate", { detail: normalizedUser }));
+    }
+
+    return normalizedUser;
+  }, [setUser, setAvatarPreview, previousAvatarObjectUrl]);
+
+  useEffect(() => {
+    return () => {
+      if (previousAvatarObjectUrl.current) {
+        URL.revokeObjectURL(previousAvatarObjectUrl.current);
+        previousAvatarObjectUrl.current = null;
+      }
+    };
+  }, []);
 
   // Fonction pour récupérer les statistiques
   const fetchStats = async (userId: string) => {
@@ -95,26 +139,26 @@ const ProfilePage = () => {
       const fetchedUser = fetchUserData();
 
       if (fetchedUser) {
-        setUser(fetchedUser);
-        const formattedCreatedAt = fetchedUser.createdAt
-          ? dayjs(fetchedUser.createdAt).format("DD/MM/YYYY")
+        const normalizedUser = updateLocalUser(fetchedUser);
+        const formattedCreatedAt = normalizedUser?.createdAt
+          ? dayjs(normalizedUser.createdAt).format("DD/MM/YYYY")
           : "Non disponible";
 
         setCreatedAt(formattedCreatedAt);
 
         // Initialize edit form with current user data
         setEditForm({
-          phone: fetchedUser.phone || "",
+          phone: normalizedUser?.phone || "",
           deliveryAddress: {
-            street: fetchedUser.deliveryAddress?.street || "",
-            city: fetchedUser.deliveryAddress?.city || "",
-            postalCode: fetchedUser.deliveryAddress?.postalCode || "",
-            country: fetchedUser.deliveryAddress?.country || ""
+            street: normalizedUser?.deliveryAddress?.street || "",
+            city: normalizedUser?.deliveryAddress?.city || "",
+            postalCode: normalizedUser?.deliveryAddress?.postalCode || "",
+            country: normalizedUser?.deliveryAddress?.country || ""
           }
         });
 
       // Récupérer les statistiques
-      fetchStats(fetchedUser._id);
+      fetchStats(normalizedUser?._id || normalizedUser?.id);
     } else {
       router.push("/users/login"); // Redirect to login page if user is not logged in
     }
@@ -141,7 +185,7 @@ const ProfilePage = () => {
 
     // Clean up interval to avoid memory leaks
     return () => clearInterval(interval);
-  }, [router]);
+  }, [router, updateLocalUser]);
 
   const toggleDarkMode = () => {
     const newDarkMode = !isDarkMode;
@@ -175,6 +219,10 @@ const ProfilePage = () => {
 
   const handleSaveProfile = async () => {
     try {
+      if (!user) {
+        return;
+      }
+
       const token = localStorage.getItem("userToken") || localStorage.getItem("token");
       
       if (!token) {
@@ -187,7 +235,18 @@ const ProfilePage = () => {
         return;
       }
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/users/${user._id}`, {
+      const apiBase = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
+      if (!apiBase) {
+        Swal.fire({
+          title: "Configuration manquante",
+          text: "L'URL de l'API n'est pas configurée.",
+          icon: "error",
+          confirmButtonText: "OK",
+        });
+        return;
+      }
+
+      const response = await fetch(`${apiBase}/users/${user._id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
@@ -200,16 +259,12 @@ const ProfilePage = () => {
       });
 
       if (!response.ok) {
-        throw new Error(`Erreur lors de la mise à jour du profil`);
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.message || "Erreur lors de la mise à jour du profil");
       }
 
       const updatedUser = await response.json();
-      
-      // Update local storage
-      localStorage.setItem("user", JSON.stringify(updatedUser.user));
-      
-      // Update state
-      setUser(updatedUser.user);
+      updateLocalUser(updatedUser.user);
 
       Swal.fire({
         title: "Succès",
@@ -218,11 +273,11 @@ const ProfilePage = () => {
         confirmButtonText: "OK",
       });
 
-    } catch (error) {
+    } catch (error: any) {
       console.error("❌ Erreur lors de la mise à jour du profil:", error);
       Swal.fire({
         title: "Erreur",
-        text: `Une erreur est survenue lors de la mise à jour de votre profil`,
+        text: error?.message || `Une erreur est survenue lors de la mise à jour de votre profil`,
         icon: "error",
         confirmButtonText: "OK",
       });
@@ -232,14 +287,132 @@ const ProfilePage = () => {
   const handleCancelEdit = () => {
     // Reset form to original user data
     setEditForm({
-      phone: user.phone || "",
+      phone: user?.phone || "",
       deliveryAddress: {
-        street: user.deliveryAddress?.street || "",
-        city: user.deliveryAddress?.city || "",
-        postalCode: user.deliveryAddress?.postalCode || "",
-        country: user.deliveryAddress?.country || ""
+        street: user?.deliveryAddress?.street || "",
+        city: user?.deliveryAddress?.city || "",
+        postalCode: user?.deliveryAddress?.postalCode || "",
+        country: user?.deliveryAddress?.country || ""
       }
     });
+  };
+
+  const handleAvatarFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      Swal.fire({
+        title: "Format invalide",
+        text: "Veuillez sélectionner une image (PNG, JPG, WEBP...).",
+        icon: "error",
+      });
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      Swal.fire({
+        title: "Fichier trop volumineux",
+        text: "La taille maximale autorisée est de 5 Mo.",
+        icon: "error",
+      });
+      return;
+    }
+
+    if (previousAvatarObjectUrl.current) {
+      URL.revokeObjectURL(previousAvatarObjectUrl.current);
+      previousAvatarObjectUrl.current = null;
+    }
+
+    const objectUrl = URL.createObjectURL(file);
+    previousAvatarObjectUrl.current = objectUrl;
+    setAvatarPreview(objectUrl);
+    setAvatarFile(file);
+  };
+
+  const resetAvatarSelection = () => {
+    if (previousAvatarObjectUrl.current) {
+      URL.revokeObjectURL(previousAvatarObjectUrl.current);
+      previousAvatarObjectUrl.current = null;
+    }
+    setAvatarFile(null);
+    if (fileInputRef.current) {
+      fileInputRef.current.value = "";
+    }
+    setAvatarPreview(normalizeAvatarUrl(user?.avatar || user?.image));
+  };
+
+  const handleAvatarUpload = async () => {
+    if (!avatarFile || !user) {
+      return;
+    }
+
+    const token = localStorage.getItem("userToken") || localStorage.getItem("token");
+    if (!token) {
+      Swal.fire({
+        title: "Authentification requise",
+        text: "Veuillez vous reconnecter pour modifier votre photo.",
+        icon: "warning",
+      });
+      return;
+    }
+
+    const apiBase = (process.env.NEXT_PUBLIC_API_URL || "").replace(/\/$/, "");
+    if (!apiBase) {
+      Swal.fire({
+        title: "Configuration manquante",
+        text: "L'URL de l'API n'est pas configurée.",
+        icon: "error",
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("avatar", avatarFile);
+
+    setUploadingAvatar(true);
+    try {
+      const response = await fetch(`${apiBase}/users/${user._id}/avatar`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData?.message || "Impossible de mettre à jour votre photo.");
+      }
+
+      const data = await response.json();
+      const normalized = updateLocalUser(data.user);
+      if (normalized) {
+        setAvatarFile(null);
+        if (fileInputRef.current) {
+          fileInputRef.current.value = "";
+        }
+        setAvatarPreview(normalizeAvatarUrl(normalized.avatar || normalized.image));
+      }
+
+      Swal.fire({
+        title: "Photo mise à jour",
+        text: "Votre photo de profil a bien été enregistrée.",
+        icon: "success",
+      });
+    } catch (error: any) {
+      console.error("❌ Erreur lors de l'upload avatar:", error);
+      Swal.fire({
+        title: "Erreur",
+        text: error?.message || "Impossible de mettre à jour votre photo.",
+        icon: "error",
+      });
+      resetAvatarSelection();
+    } finally {
+      setUploadingAvatar(false);
+    }
   };
 
   if (!user || loading) {
@@ -263,8 +436,14 @@ const ProfilePage = () => {
                 {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>
             </div>
-              <div className="w-24 h-24 mx-auto mb-6 bg-blue-600 rounded-full flex items-center justify-center">
-                <User className="w-12 h-12 text-white" />
+              <div className="w-24 h-24 sm:w-28 sm:h-28 mx-auto mb-6 relative">
+                <Image
+                  src={avatarPreview || "/assets/default-avatar.webp"}
+                  alt={user.pseudo ? `Avatar de ${user.pseudo}` : "Avatar utilisateur"}
+                  fill
+                  sizes="112px"
+                  className="rounded-full object-cover border-4 border-white shadow-xl dark:border-gray-800"
+                />
               </div>
               <h1 className="text-3xl md:text-4xl lg:text-5xl font-bold text-gray-900 dark:text-white mb-4">
               Bonjour {user.pseudo} ! 👋
@@ -773,6 +952,56 @@ const ProfilePage = () => {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4 sm:space-y-6 px-3 sm:px-4 md:px-6">
+                {/* Avatar */}
+                <div className="space-y-4">
+                  <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Photo de profil</h3>
+                  <div className="flex flex-col sm:flex-row items-center gap-4">
+                    <div className="relative w-24 h-24 sm:w-28 sm:h-28">
+                      <Image
+                        src={avatarPreview || "/assets/default-avatar.webp"}
+                        alt="Aperçu avatar"
+                        fill
+                        sizes="112px"
+                        className="rounded-full object-cover border-4 border-gray-100 dark:border-gray-700 shadow-lg"
+                      />
+                    </div>
+                    <div className="flex flex-col gap-2">
+                      <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        onChange={handleAvatarFileChange}
+                      />
+                      <Button
+                        variant="outline"
+                        className="flex items-center gap-2"
+                        onClick={() => fileInputRef.current?.click()}
+                      >
+                        <ImageIcon className="w-4 h-4" />
+                        Choisir une image
+                      </Button>
+                      {avatarFile && (
+                        <div className="flex flex-wrap items-center gap-2">
+                          <Button
+                            className="flex items-center gap-2"
+                            disabled={uploadingAvatar}
+                            onClick={handleAvatarUpload}
+                          >
+                            <Upload className="w-4 h-4" />
+                            {uploadingAvatar ? "Enregistrement..." : "Enregistrer"}
+                          </Button>
+                          <Button variant="ghost" onClick={resetAvatarSelection}>
+                            Annuler
+                          </Button>
+                        </div>
+                      )}
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
+                        Formats acceptés : JPG, PNG, WEBP. Taille maximale 5 Mo.
+                      </p>
+                    </div>
+                  </div>
+                </div>
                 {/* Informations de contact */}
                 <div className="space-y-4">
                   <h3 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-white">Informations de contact</h3>

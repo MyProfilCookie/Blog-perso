@@ -1,7 +1,15 @@
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const mongoose = require("mongoose");
+const fs = require("fs");
+const path = require("path");
+const crypto = require("crypto");
+const { OAuth2Client } = require("google-auth-library");
 const User = require("../models/User");
+
+const googleClient = process.env.GOOGLE_CLIENT_ID
+  ? new OAuth2Client(process.env.GOOGLE_CLIENT_ID)
+  : null;
 
 /**
  * Génère un access token (valide 15 minutes)
@@ -178,6 +186,106 @@ exports.login = async (req, res) => {
 };
 
 /**
+ * Connexion via Google OAuth
+ */
+exports.googleLogin = async (req, res) => {
+  try {
+    if (!googleClient) {
+      return res.status(500).json({ message: "Google OAuth n'est pas configuré côté serveur." });
+    }
+
+    const { credential } = req.body;
+    if (!credential) {
+      return res.status(400).json({ message: "Token Google manquant." });
+    }
+
+    const ticket = await googleClient
+      .verifyIdToken({ idToken: credential, audience: process.env.GOOGLE_CLIENT_ID })
+      .catch((error) => {
+        console.error("❌ Erreur de vérification Google:", error);
+        return null;
+      });
+
+    if (!ticket) {
+      return res.status(401).json({ message: "Token Google invalide." });
+    }
+
+    const payload = ticket.getPayload();
+    if (!payload || !payload.email) {
+      return res.status(400).json({ message: "Impossible de récupérer votre email Google." });
+    }
+
+    if (payload.email_verified === false) {
+      return res.status(400).json({ message: "Veuillez vérifier votre adresse email Google avant de continuer." });
+    }
+
+    const email = payload.email.toLowerCase();
+    let user = await User.findOne({ email });
+
+    if (!user) {
+      const baseName = (payload.given_name || payload.name || "autistudy")
+        .replace(/[^a-zA-Z0-9]/g, "")
+        .toLowerCase() || "autistudy";
+
+      let pseudo = baseName.length >= 8 ? baseName : `${baseName}${Math.random().toString(36).slice(2, 10)}`;
+      pseudo = pseudo.slice(0, 20);
+
+      let uniquePseudo = pseudo;
+      let attempt = 0;
+      // Garantir l'unicité du pseudo
+      while (await User.findOne({ pseudo: uniquePseudo })) {
+        attempt += 1;
+        uniquePseudo = `${pseudo}${Math.floor(Math.random() * 1000)}`;
+        if (attempt > 10) {
+          uniquePseudo = `${baseName}${Date.now()}`;
+        }
+      }
+
+      const randomPassword = crypto.randomBytes(16).toString("hex");
+      const hashedPassword = await bcrypt.hash(randomPassword, 10);
+
+      user = new User({
+        pseudo: uniquePseudo.slice(0, 30),
+        nom: payload.family_name || payload.name || "Utilisateur",
+        prenom: payload.given_name || payload.name || "Google",
+        age: 18,
+        email,
+        password: hashedPassword,
+        phone: "",
+        deliveryAddress: {},
+        image: payload.picture || "/assets/default-avatar.webp",
+      });
+
+      if (email === process.env.ADMIN_EMAIL) {
+        user.role = "admin";
+        user.isAdmin = true;
+      }
+
+      await user.save();
+    } else if (payload.picture && user.image !== payload.picture) {
+      user.image = payload.picture;
+      await user.save();
+    }
+
+    const accessToken = generateAccessToken(user._id);
+    const refreshToken = generateRefreshToken(user._id);
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.status(200).json({
+      message: "Connexion Google réussie",
+      user: userResponse,
+      accessToken,
+      refreshToken,
+    });
+  } catch (error) {
+    console.error("❌ Erreur lors de la connexion Google:", error);
+    res.status(500).json({ message: "Erreur serveur lors de la connexion Google" });
+  }
+};
+
+/**
  * Récupération de tous les utilisateurs
  */
 exports.getUsers = async (req, res) => {
@@ -304,6 +412,88 @@ exports.updateUser = async (req, res) => {
 };
 
 /**
+ * Upload / mise à jour de l'avatar utilisateur
+ */
+exports.uploadAvatar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const requestingUser = req.user;
+
+    if (!req.file) {
+      return res.status(400).json({ message: "Aucun fichier fourni." });
+    }
+
+    if (
+      requestingUser &&
+      requestingUser.id &&
+      requestingUser.id.toString() !== id.toString() &&
+      !requestingUser.isAdmin
+    ) {
+      return res
+        .status(403)
+        .json({ message: "Vous n'êtes pas autorisé à modifier cet avatar." });
+    }
+
+    const uploadRelativePath = path
+      .join("uploads", "avatars", req.file.filename)
+      .replace(/\\/g, "/");
+    const baseUrl = `${req.protocol}://${req.get("host")}`;
+    const publicPath = `${baseUrl}/${uploadRelativePath}`;
+
+    const user = await User.findById(id);
+    if (!user) {
+      fs.unlink(req.file.path, () => {});
+      return res.status(404).json({ message: "Utilisateur non trouvé." });
+    }
+
+    const previousImage = user.image;
+    user.image = publicPath;
+    await user.save();
+
+    if (
+      previousImage &&
+      !previousImage.startsWith("data:") &&
+      !previousImage.includes("/assets/")
+    ) {
+      let relativeOldPath = previousImage;
+      try {
+        if (previousImage.startsWith("http")) {
+          const previousUrl = new URL(previousImage);
+          relativeOldPath = previousUrl.pathname;
+        }
+      } catch (error) {
+        relativeOldPath = previousImage;
+      }
+
+      relativeOldPath = relativeOldPath.replace(/^\//, "");
+
+      if (relativeOldPath.startsWith("uploads/avatars")) {
+        const oldPath = path.join(__dirname, "..", "..", relativeOldPath);
+        fs.unlink(oldPath, () => {});
+      }
+    }
+
+    const userResponse = user.toObject();
+    delete userResponse.password;
+
+    res.status(200).json({
+      message: "Photo de profil mise à jour avec succès !",
+      image: publicPath,
+      relativePath: `/${uploadRelativePath}`,
+      user: userResponse,
+    });
+  } catch (error) {
+    console.error("❌ Erreur lors de l'upload avatar:", error);
+    if (req.file) {
+      fs.unlink(req.file.path, () => {});
+    }
+    res
+      .status(500)
+      .json({ message: "Erreur serveur lors de la mise à jour de l'avatar." });
+  }
+};
+
+/**
  * Récupération des informations de l'utilisateur actuel
  */
 exports.getCurrentUser = async (req, res) => {
@@ -418,10 +608,12 @@ module.exports = {
   generateRefreshToken,
   signup: exports.signup,
   login: exports.login, 
+  googleLogin: exports.googleLogin,
   getUsers: exports.getUsers,
   deleteUser: exports.deleteUser,
   makeAdmin: exports.makeAdmin,
   updateUser: exports.updateUser,
+  uploadAvatar: exports.uploadAvatar,
   getCurrentUser: exports.getCurrentUser,
   getUserById: exports.getUserById,
   refreshToken: exports.refreshToken
