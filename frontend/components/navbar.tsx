@@ -915,6 +915,23 @@ export const Navbar = () => {
                     <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
                     Déconnexion
                   </DropdownItem>
+                  <DropdownItem
+                    key="theme-toggle-mobile-user"
+                    className="dark:text-gray-200 dark:hover:bg-gray-700"
+                    isDisabled={!isThemeReady}
+                    onClick={() => handleThemeToggle()}
+                  >
+                    <div className="flex items-center gap-2">
+                      {isDarkTheme ? (
+                        <SunFilledIcon className="text-yellow-400" size={18} />
+                      ) : (
+                        <MoonFilledIcon className="text-blue-500" size={18} />
+                      )}
+                      <span className="text-sm">
+                        Mode {isDarkTheme ? "clair" : "sombre"}
+                      </span>
+                    </div>
+                  </DropdownItem>
                 </DropdownMenu>
               </Dropdown>
             </div>
