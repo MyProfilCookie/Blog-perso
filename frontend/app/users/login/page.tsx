@@ -104,10 +104,10 @@ export default function Connexion() {
             const userData = {
               ...response.data.user,
               avatar: normalizeAvatarUrl(
-                response.data.user.image || response.data.user.avatar,
+                response.data.user.avatar || response.data.user.image,
               ),
               image: normalizeAvatarUrl(
-                response.data.user.image || response.data.user.avatar,
+                response.data.user.avatar || response.data.user.image,
               ),
             };
 
@@ -288,7 +288,10 @@ export default function Connexion() {
           const userData = {
             ...response.data.user,
             avatar: normalizeAvatarUrl(
-              response.data.user.image || response.data.user.avatar,
+              response.data.user.avatar || response.data.user.image,
+            ),
+            image: normalizeAvatarUrl(
+              response.data.user.avatar || response.data.user.image,
             ),
             role: response.data.user.role || "user",
             deliveryAddress: response.data.user.deliveryAddress || {
