@@ -15,6 +15,7 @@ import dayjs from "dayjs";
 import { Sun, Moon, Star, BookOpen, Clock, TrendingUp, User, Award, Target, Edit3, Save, X, Heart, Image as ImageIcon, Upload } from "lucide-react";
 import axios from "axios";
 import Swal from "sweetalert2";
+import { useTheme } from "next-themes";
 
 // Import shadcn components
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
@@ -54,7 +55,6 @@ const ProfilePage = () => {
   const [user, setUser] = useState<any>(null);
   const [createdAt, setCreatedAt] = useState<string>("");
   const [currentTime, setCurrentTime] = useState<string>("");
-  const [isDarkMode, setIsDarkMode] = useState<boolean>(false);
   const [activeTab, setActiveTab] = useState<"dashboard" | "progress" | "achievements" | "edit">("dashboard");
   const [stats, setStats] = useState<any>(null);
   const [loading, setLoading] = useState<boolean>(true);
@@ -75,6 +75,14 @@ const ProfilePage = () => {
   const router = useRouter();
   const userContext = useContext(UserContext) as any;
   const contextLoginUser = userContext?.loginUser;
+  const { theme, resolvedTheme, setTheme } = useTheme();
+  const [isThemeReady, setIsThemeReady] = useState(false);
+  const currentTheme = (resolvedTheme ?? theme) ?? "light";
+  const isDarkMode = currentTheme === "dark";
+
+  useEffect(() => {
+    setIsThemeReady(true);
+  }, []);
 
   const updateLocalUser = useCallback((userData: any) => {
     if (!userData) {
@@ -166,18 +174,6 @@ const ProfilePage = () => {
       router.push("/users/login"); // Redirect to login page if user is not logged in
     }
 
-    // Check for dark mode preference
-    const darkMode = localStorage.getItem('darkMode') === 'true' || 
-                     (!localStorage.getItem('darkMode') && window.matchMedia('(prefers-color-scheme: dark)').matches);
-    setIsDarkMode(darkMode);
-    
-    // Apply dark mode to document
-    if (darkMode) {
-      document.documentElement.classList.add('dark');
-          } else {
-      document.documentElement.classList.remove('dark');
-    }
-
     // Update current time every minute instead of every second to reduce re-renders
     const updateTime = () => {
       setCurrentTime(dayjs().format("HH:mm"));
@@ -190,16 +186,9 @@ const ProfilePage = () => {
     return () => clearInterval(interval);
   }, [router, updateLocalUser]);
 
-  const toggleDarkMode = () => {
-    const newDarkMode = !isDarkMode;
-    setIsDarkMode(newDarkMode);
-    localStorage.setItem('darkMode', newDarkMode.toString());
-    
-    if (newDarkMode) {
-      document.documentElement.classList.add('dark');
-    } else {
-      document.documentElement.classList.remove('dark');
-    }
+  const handleThemeToggle = () => {
+    const nextTheme = isDarkMode ? "light" : "dark";
+    setTheme(nextTheme);
   };
 
   const handleEditFormChange = (field: string, value: string) => {
@@ -431,10 +420,11 @@ const ProfilePage = () => {
           <div className="max-w-7xl mx-auto text-center">
             <div className="flex justify-end mb-4">
               <Button
-                onClick={toggleDarkMode}
+                onClick={handleThemeToggle}
                 variant="outline"
                 size="sm"
                 className="bg-white/20 hover:bg-white/30 border-white/30 text-white"
+                disabled={!isThemeReady}
               >
                 {isDarkMode ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
               </Button>

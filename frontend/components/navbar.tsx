@@ -530,7 +530,10 @@ export const Navbar = () => {
           className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
           size="md"
           startContent={<Sparkles className="w-4 h-4" />}
-          onClick={() => setIsMenuOpen(false)}
+          onPress={() => {
+            router.push("/ai-assistant");
+            setIsMenuOpen(false);
+          }}
         >
           🤖 Assistant IA
         </Button>
@@ -763,6 +766,7 @@ export const Navbar = () => {
             size="md"
             className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all w-10 h-10 md:w-12 md:h-12"
             aria-label="Assistant IA"
+            onPress={() => router.push("/ai-assistant")}
           >
             <Sparkles className="w-5 h-5 md:w-6 md:h-6" />
           </Button>
