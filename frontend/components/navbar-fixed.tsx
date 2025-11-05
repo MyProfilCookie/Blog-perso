@@ -679,27 +679,245 @@ export const Navbar = () => {
           />
         ) : (
           <>
-            {/* Avatar mobile */}
+            {/* Avatar mobile avec dropdown */}
             <div className="md:hidden">
-              <Avatar
-                alt={`Avatar de ${user?.pseudo}`}
-                className="transition-all duration-300 cursor-pointer hover:scale-110"
-                isBordered
-                onClick={() => router.push("/profile")}
-                size="sm"
-                src={user?.avatar || "/assets/default-avatar.webp"}
-                style={{
-                  borderColor:
-                    user?.role === "admin"
-                      ? adminColors[avatarColorIndex]
-                      : userColors[avatarColorIndex],
-                  borderWidth: "3px",
-                  boxShadow: `0 0 12px ${user?.role === "admin"
-                      ? adminColors[avatarColorIndex]
-                      : userColors[avatarColorIndex]
-                    }`,
-                }}
-              />
+              <Dropdown>
+                <DropdownTrigger className="focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:opacity-100">
+                  <Avatar
+                    alt={`Avatar de ${user?.pseudo}`}
+                    className="transition-all duration-300 cursor-pointer hover:scale-110"
+                    isBordered
+                    size="sm"
+                    src={user?.avatar || "/assets/default-avatar.webp"}
+                    style={{
+                      borderColor:
+                        user?.role === "admin"
+                          ? adminColors[avatarColorIndex]
+                          : userColors[avatarColorIndex],
+                      borderWidth: "3px",
+                      boxShadow: `0 0 12px ${user?.role === "admin"
+                          ? adminColors[avatarColorIndex]
+                          : userColors[avatarColorIndex]
+                        }`,
+                    }}
+                  />
+                </DropdownTrigger>
+                <DropdownMenu
+                  aria-label="Menu utilisateur mobile"
+                  className="dark:bg-gray-900/95 bg-white/95 border border-gray-200 dark:border-gray-700"
+                >
+                  <DropdownItem
+                    key="profile-mobile"
+                    onPress={() => router.push("/profile")}
+                  >
+                    <FontAwesomeIcon className="mr-2" icon={faUser} />
+                    Profil
+                  </DropdownItem>
+
+                  <DropdownItem
+                    className="font-medium"
+                    key="orders-title-mobile"
+                    showDivider
+                    textValue="Mes commandes"
+                  >
+                    Mes commandes
+                  </DropdownItem>
+
+                  <DropdownItem
+                    className="relative"
+                    key="orders-pending-mobile"
+                    onPress={() => {
+                      router.push("/orders?status=pending");
+                    }}
+                  >
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                      <div className="flex items-center gap-3">
+                        <PendingOrdersIcon
+                          className="text-yellow-600 dark:text-yellow-400"
+                          size={24}
+                        />
+                        <div className="flex flex-col">
+                          <div className="font-medium text-yellow-600 dark:text-yellow-400 text-sm">
+                            En cours
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            Commandes en traitement
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-base font-semibold text-yellow-600 dark:text-yellow-400 min-w-[2rem] text-center">
+                        {orderCount.pending || 0}
+                      </span>
+                    </div>
+                  </DropdownItem>
+
+                  <DropdownItem
+                    className="relative"
+                    key="orders-shipped-mobile"
+                    onPress={() => {
+                      router.push("/orders?status=shipped");
+                    }}
+                  >
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                      <div className="flex items-center gap-3">
+                        <ShippedOrdersIcon
+                          className="text-blue-600 dark:text-blue-400"
+                          size={24}
+                        />
+                        <div className="flex flex-col">
+                          <div className="font-medium text-blue-600 dark:text-blue-400 text-sm">
+                            Envoyées
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            En cours de livraison
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-base font-semibold text-blue-600 dark:text-blue-400 min-w-[2rem] text-center">
+                        {orderCount.shipped || 0}
+                      </span>
+                    </div>
+                  </DropdownItem>
+
+                  <DropdownItem
+                    className="relative"
+                    key="orders-delivered-mobile"
+                    onPress={() => {
+                      router.push("/orders?status=delivered");
+                    }}
+                  >
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                      <div className="flex items-center gap-3">
+                        <DeliveredOrdersIcon
+                          className="text-green-600 dark:text-green-400"
+                          size={24}
+                        />
+                        <div className="flex flex-col">
+                          <div className="font-medium text-green-600 dark:text-green-400 text-sm">
+                            Livrées
+                          </div>
+                          <div className="text-xs text-gray-500 dark:text-gray-400">
+                            Commandes terminées
+                          </div>
+                        </div>
+                      </div>
+                      <span className="text-base font-semibold text-green-600 dark:text-green-400 min-w-[2rem] text-center">
+                        {orderCount.delivered || 0}
+                      </span>
+                    </div>
+                  </DropdownItem>
+
+                  <DropdownItem
+                    className="relative"
+                    key="orders-all-mobile"
+                    onPress={() => {
+                      router.push("/orders");
+                    }}
+                    showDivider
+                  >
+                    <div className="flex items-center justify-between w-full">
+                      <span>Voir toutes mes commandes</span>
+                      <span className="text-sm font-semibold text-gray-600 dark:text-gray-400">
+                        {orderCount.total || 0}
+                      </span>
+                    </div>
+                  </DropdownItem>
+
+                  <DropdownItem
+                    key="controle-mobile"
+                    onPress={() => router.push("/controle")}
+                  >
+                    <FontAwesomeIcon className="mr-2" icon={faGamepad} />
+                    Contrôle
+                  </DropdownItem>
+
+                  <DropdownItem key="theme-mobile" textValue="Thème">
+                    <Dropdown placement="left-start" disableAnimation>
+                      <DropdownTrigger>
+                        <div className="flex items-center w-full cursor-pointer">
+                          <FontAwesomeIcon className="mr-2" icon={faMoon} />
+                          Thème
+                        </div>
+                      </DropdownTrigger>
+                      <DropdownMenu aria-label="Options de thème">
+                        <DropdownItem
+                          key="light-mobile"
+                          onPress={() => {
+                            localStorage.removeItem("themeMode");
+                            localStorage.removeItem("autoModeHours");
+                            document.documentElement.classList.remove("dark");
+                            localStorage.setItem("theme", "light");
+                            setTheme("light");
+                            setAvatarColorIndex((prev) => prev);
+                          }}
+                          textValue="Mode clair"
+                        >
+                          <div className="flex items-center gap-2">
+                            <SunFilledIcon className="text-yellow-500" size={16} />
+                            <span>Mode clair</span>
+                          </div>
+                        </DropdownItem>
+                        <DropdownItem
+                          key="dark-mobile"
+                          onPress={() => {
+                            localStorage.removeItem("themeMode");
+                            localStorage.removeItem("autoModeHours");
+                            document.documentElement.classList.add("dark");
+                            localStorage.setItem("theme", "dark");
+                            setTheme("dark");
+                            setAvatarColorIndex((prev) => prev);
+                          }}
+                          textValue="Mode sombre"
+                        >
+                          <div className="flex items-center gap-2">
+                            <MoonFilledIcon className="text-blue-300" size={16} />
+                            <span>Mode sombre</span>
+                          </div>
+                        </DropdownItem>
+                        <DropdownItem
+                          key="auto-mobile"
+                          onPress={() => {
+                            const savedHours = localStorage.getItem("autoModeHours");
+                            const autoModeHours = savedHours
+                              ? JSON.parse(savedHours)
+                              : { start: 20, end: 7 };
+
+                            localStorage.setItem("themeMode", "auto");
+                            localStorage.setItem("autoModeHours", JSON.stringify(autoModeHours));
+                            setTheme("system");
+                            setAvatarColorIndex((prev) => prev);
+
+                            const currentHour = new Date().getHours();
+                            const isNight =
+                              autoModeHours.start > autoModeHours.end
+                                ? currentHour >= autoModeHours.start ||
+                                  currentHour < autoModeHours.end
+                                : currentHour >= autoModeHours.start &&
+                                  currentHour < autoModeHours.end;
+
+                            if (isNight) {
+                              document.documentElement.classList.add("dark");
+                            } else {
+                              document.documentElement.classList.remove("dark");
+                            }
+                          }}
+                          textValue="Mode automatique"
+                        >
+                          <div className="flex items-center gap-2">
+                            <FontAwesomeIcon className="text-gray-500" icon={faMoon} />
+                            <span>Mode automatique</span>
+                          </div>
+                        </DropdownItem>
+                      </DropdownMenu>
+                    </Dropdown>
+                  </DropdownItem>
+
+                  <DropdownItem key="logout-mobile" onPress={handleLogout}>
+                    <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
+                    Déconnexion
+                  </DropdownItem>
+                </DropdownMenu>
+              </Dropdown>
             </div>
 
             {/* Avatar desktop avec dropdown */}
