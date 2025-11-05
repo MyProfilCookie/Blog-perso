@@ -664,7 +664,7 @@ export const Navbar = () => {
         {!user ? (
           <Avatar
             aria-label="Connectez-vous pour accéder à votre profil"
-            className="cursor-pointer text-tiny text-default-500 transition-all duration-300 hover:scale-110"
+            className="cursor-pointer text-tiny text-default-500 md:transition-all md:duration-300 md:hover:scale-110"
             isBordered
             name="Invité"
             onClick={handleLoginRedirect}
@@ -685,7 +685,7 @@ export const Navbar = () => {
                 <DropdownTrigger className="focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:opacity-100">
                   <Avatar
                     alt={`Avatar de ${user?.pseudo}`}
-                    className="transition-all duration-300 cursor-pointer hover:scale-110"
+                    className="cursor-pointer transition-none"
                     isBordered
                     size="sm"
                     src={user?.avatar || "/assets/default-avatar.webp"}
