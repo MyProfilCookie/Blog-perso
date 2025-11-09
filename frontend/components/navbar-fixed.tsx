@@ -92,6 +92,12 @@ export const Navbar = () => {
   const menuRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
+  const [isMobileViewport, setIsMobileViewport] = useState<boolean>(() => {
+    if (typeof window === "undefined") {
+      return false;
+    }
+    return window.innerWidth < 768;
+  });
 
   // Couleurs pour l'animation de l'avatar - couleurs de l'autisme
   const adminColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"];
@@ -105,15 +111,33 @@ export const Navbar = () => {
     setMounted(true);
   }, []);
 
+  useEffect(() => {
+    const updateViewport = () => {
+      if (typeof window === "undefined") {
+        return;
+      }
+      setIsMobileViewport(window.innerWidth < 768);
+    };
+
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+
+    return () => window.removeEventListener("resize", updateViewport);
+  }, []);
+
   // Animation de couleur de l'avatar - optimisée pour les performances
   useEffect(() => {
-    // Réduire la fréquence d'animation pour améliorer les performances
+    if (isMobileViewport) {
+      setAvatarColorIndex(0);
+      return;
+    }
+
     const colorInterval = setInterval(() => {
       setAvatarColorIndex((prevIndex) => (prevIndex + 1) % 4);
     }, 4000); // Changé de 2000ms à 4000ms
 
     return () => clearInterval(colorInterval);
-  }, []);
+  }, [isMobileViewport]);
 
   // Fermer le menu en cliquant à l'extérieur
   useEffect(() => {
@@ -502,7 +526,7 @@ export const Navbar = () => {
         {/* Logo AutiStudy */}
         <NavbarBrand as="li" className="gap-2 max-w-fit">
           <NextLink
-            className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200 animation-optimized"
+            className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200"
             href="/"
           >
             <AutismLogo size={16} />
@@ -520,7 +544,7 @@ export const Navbar = () => {
         {/* Bouton menu mobile */}
         <button
           aria-label="Toggle navigation"
-          className="md:hidden p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-200 animation-optimized"
+          className="lg:hidden p-2 rounded-lg hover:bg-blue-50 dark:hover:bg-gray-800 transition-all duration-200"
           onClick={() => setIsMenuOpen(!isMenuOpen)}
         >
           <VisibleBurgerIcon
@@ -680,7 +704,7 @@ export const Navbar = () => {
         ) : (
           <>
             {/* Avatar mobile avec dropdown */}
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <Dropdown>
                 <DropdownTrigger className="focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:opacity-100">
                   <Avatar
@@ -730,7 +754,7 @@ export const Navbar = () => {
                       router.push("/orders?status=pending");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800">
                       <div className="flex items-center gap-3">
                         <PendingOrdersIcon
                           className="text-yellow-600 dark:text-yellow-400"
@@ -758,7 +782,7 @@ export const Navbar = () => {
                       router.push("/orders?status=shipped");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800">
                       <div className="flex items-center gap-3">
                         <ShippedOrdersIcon
                           className="text-blue-600 dark:text-blue-400"
@@ -786,7 +810,7 @@ export const Navbar = () => {
                       router.push("/orders?status=delivered");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800">
                       <div className="flex items-center gap-3">
                         <DeliveredOrdersIcon
                           className="text-green-600 dark:text-green-400"
@@ -921,7 +945,7 @@ export const Navbar = () => {
             </div>
 
             {/* Avatar desktop avec dropdown */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <Dropdown>
                 <DropdownTrigger>
                   <Button
@@ -975,7 +999,7 @@ export const Navbar = () => {
                       router.push("/orders?status=pending");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-yellow-200 dark:border-yellow-800">
                       <div className="flex items-center gap-3">
                         <PendingOrdersIcon
                           className="text-yellow-600 dark:text-yellow-400"
@@ -1003,7 +1027,7 @@ export const Navbar = () => {
                       router.push("/orders?status=shipped");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-blue-200 dark:border-blue-800">
                       <div className="flex items-center gap-3">
                         <ShippedOrdersIcon
                           className="text-blue-600 dark:text-blue-400"
@@ -1031,7 +1055,7 @@ export const Navbar = () => {
                       router.push("/orders?status=delivered");
                     }}
                   >
-                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                    <div className="flex items-center justify-between p-3 rounded-lg border border-green-200 dark:border-green-800">
                       <div className="flex items-center gap-3">
                         <DeliveredOrdersIcon
                           className="text-green-600 dark:text-green-400"
@@ -1182,17 +1206,17 @@ export const Navbar = () => {
       </NavbarContent>
 
       {/* Menu burger mobile avec animations améliorées */}
-      <div className="animate-presence-optimized">
+      <div>
         {isMenuOpen && (
           <div
-            className="lg:hidden dark:bg-gray-900/95 bg-white/95 w-full shadow-xl absolute top-full left-0 z-50 max-h-[80vh] overflow-y-auto rounded-b-xl border-t border-gray-200 dark:border-gray-700 backdrop-blur-md slide-up-optimized visible"
+            className="lg:hidden dark:bg-gray-900/95 bg-white/95 w-full shadow-xl absolute top-full left-0 z-50 max-h-[80vh] overflow-y-auto rounded-b-xl border-t border-gray-200 dark:border-gray-700 backdrop-blur-md"
             ref={menuRef}
           >
-            <div className="p-6 space-y-6 fade-optimized visible">
+            <div className="p-6 space-y-6">
               {/* Section utilisateur */}
               {user && (
-                <div className="space-y-4 slide-up-optimized visible">
-                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2 slide-left-optimized visible">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2">
                     <FontAwesomeIcon className="text-blue-600" icon={faUser} />
                     Mon compte
                   </h3>
@@ -1203,7 +1227,7 @@ export const Navbar = () => {
                       onClick={() => setIsMenuOpen(false)}
                     >
                       <div className="space-y-3">
-                        <div className="flex items-center justify-between p-3 rounded-lg border-2 border-yellow-200 dark:border-yellow-800 hover:bg-yellow-50/30 dark:hover:bg-yellow-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                        <div className="flex items-center justify-between p-3 rounded-lg border-2 border-yellow-200 dark:border-yellow-800">
                           <div className="flex items-center gap-3">
                             <PendingOrdersIcon
                               className="text-yellow-600 dark:text-yellow-400"
@@ -1223,7 +1247,7 @@ export const Navbar = () => {
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between p-3 rounded-lg border-2 border-blue-200 dark:border-blue-800 hover:bg-blue-50/30 dark:hover:bg-blue-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                        <div className="flex items-center justify-between p-3 rounded-lg border-2 border-blue-200 dark:border-blue-800">
                           <div className="flex items-center gap-3">
                             <ShippedOrdersIcon
                               className="text-blue-600 dark:text-blue-400"
@@ -1243,7 +1267,7 @@ export const Navbar = () => {
                           </span>
                         </div>
 
-                        <div className="flex items-center justify-between p-3 rounded-lg border-2 border-green-200 dark:border-green-800 hover:bg-green-50/30 dark:hover:bg-green-900/10 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                        <div className="flex items-center justify-between p-3 rounded-lg border-2 border-green-200 dark:border-green-800">
                           <div className="flex items-center gap-3">
                             <DeliveredOrdersIcon
                               className="text-green-600 dark:text-green-400"
@@ -1317,8 +1341,8 @@ export const Navbar = () => {
 
               {/* Navigation mobile pour les utilisateurs non connectés */}
               {!user && (
-                <div className="space-y-4 slide-up-optimized visible">
-                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2 slide-left-optimized visible">
+                <div className="space-y-4">
+                  <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 px-2 flex items-center gap-2">
                     <FontAwesomeIcon className="text-blue-600" icon={faHome} />
                     Navigation
                   </h3>
