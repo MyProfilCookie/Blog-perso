@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 256 256" width="256" height="256" role="img">
+  <defs>
+    <linearGradient id="t1" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#6EC1FF"/>
+      <stop offset="100%" stop-color="#3B9CFF"/>
+    </linearGradient>
+    <linearGradient id="t2" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%" stop-color="#CDE9FF"/>
+      <stop offset="100%" stop-color="#B5DBFF"/>
+    </linearGradient>
+    <clipPath id="circleClipT">
+      <circle cx="128" cy="128" r="118"/>
+    </clipPath>
+  </defs>
+  <rect width="256" height="256" fill="url(#t1)" rx="128"/>
+  <g clip-path="url(#circleClipT)">
+    <circle cx="128" cy="128" r="120" fill="url(#t2)" opacity="0.25"/>
+    <g opacity="0.15">
+      <rect x="24" y="32" width="36" height="36" rx="8" fill="#ffffff"/>
+      <rect x="196" y="180" width="28" height="28" rx="6" fill="#ffffff"/>
+      <rect x="164" y="48" width="18" height="18" rx="4" fill="#ffffff"/>
+    </g>
+  </g>
+  <g fill="#ffffff" transform="translate(0,8)">
+    <path d="M76 176c-2 0-3-1-3-3v-13c0-2 1-3 3-3h25v-71H84c-2 0-3-1-3-3v-14c0-2 1-3 3-3h88c2 0 3 1 3 3v14c0 2-1 3-3 3h-17v71h25c2 0 3 1 3 3v13c0 2-1 3-3 3H76z"/>
+  </g>
+</svg>
