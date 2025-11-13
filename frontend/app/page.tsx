@@ -180,14 +180,14 @@ const testimonials = [
     name: "Marie",
     role: "Éducatrice spécialisée",
     content: "Une plateforme exceptionnelle qui respecte les besoins spécifiques de chaque enfant.",
-    avatar: "/assets/family/avatar/marie.webp",
+    avatar: "/assets/family/avatar/marie.webp?v=20251113",
     rating: 5
   },
   {
     name: "Thomas",
     role: "Papa de Lucas",
     content: "Les progrès de notre fils sont remarquables grâce aux exercices personnalisés d'AutiStudy.",
-    avatar: "/assets/family/avatar/thomas.webp",
+    avatar: "/assets/family/avatar/thomas.webp?v=20251113",
     rating: 5
   }
 ];
