@@ -797,7 +797,7 @@ export const Navbar = () => {
         ) : (
           <>
             {/* Avatar mobile avec dropdown */}
-            <div className="md:hidden">
+            <div className="lg:hidden">
               <Dropdown>
                 <DropdownTrigger
                   className="focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:opacity-100"
@@ -937,7 +937,7 @@ export const Navbar = () => {
             </div>
 
             {/* Avatar desktop avec dropdown */}
-            <div className="hidden md:block">
+            <div className="hidden lg:block">
               <Dropdown disableAnimation>
                 <DropdownTrigger>
                   <Button
