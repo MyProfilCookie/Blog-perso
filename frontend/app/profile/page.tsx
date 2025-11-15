@@ -13,7 +13,7 @@ import {
 import { useRouter } from "next/navigation";
 import dayjs from "dayjs";
 import { Sun, Moon, Star, BookOpen, Clock, TrendingUp, User, Award, Target, Edit3, Save, X, Heart, Image as ImageIcon, Upload } from "lucide-react";
-import axios from "axios";
+import { apiGet, apiPut, apiPost } from "@/utils/axiosConfig";
 import Swal from "sweetalert2";
 import { useTheme } from "next-themes";
 
@@ -125,19 +125,8 @@ const ProfilePage = () => {
   // Fonction pour récupérer les statistiques
   const fetchStats = async (userId: string) => {
     try {
-      const token = localStorage.getItem("userToken") || localStorage.getItem("token");
-      if (!token) {
-        console.warn("Token d'authentification manquant");
-        return;
-      }
-
-      const response = await axios.get(
-        `${process.env.NEXT_PUBLIC_API_URL}/eleves/stats/${userId}`,
-        { headers: { Authorization: `Bearer ${token}` } }
-      );
-
+      const response = await apiGet(`/eleves/stats/${userId}`);
       setStats(response.data);
-      console.log("📊 Statistiques récupérées:", response.data);
     } catch (error) {
       console.error("❌ Erreur lors de la récupération des statistiques:", error);
     } finally {
@@ -238,25 +227,12 @@ const ProfilePage = () => {
         return;
       }
 
-      const response = await fetch(`${apiBase}/users/${user._id}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          phone: editForm.phone,
-          deliveryAddress: editForm.deliveryAddress
-        }),
+      const response = await apiPut(`/users/${user._id}`, {
+        phone: editForm.phone,
+        deliveryAddress: editForm.deliveryAddress,
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData?.message || "Erreur lors de la mise à jour du profil");
-      }
-
-      const updatedUser = await response.json();
-      updateLocalUser(updatedUser.user);
+      updateLocalUser(response.data.user);
 
       Swal.fire({
         title: "Succès",
@@ -366,21 +342,11 @@ const ProfilePage = () => {
 
     setUploadingAvatar(true);
     try {
-      const response = await fetch(`${apiBase}/users/${user._id}/avatar`, {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-        body: formData,
+      const response = await apiPost(`/users/${user._id}/avatar`, formData, {
+        headers: { "Content-Type": "multipart/form-data" },
       });
 
-      if (!response.ok) {
-        const errorData = await response.json().catch(() => ({}));
-        throw new Error(errorData?.message || "Impossible de mettre à jour votre photo.");
-      }
-
-      const data = await response.json();
-      const normalized = updateLocalUser(data.user);
+      const normalized = updateLocalUser(response.data.user);
       if (normalized) {
         setAvatarFile(null);
         if (fileInputRef.current) {
