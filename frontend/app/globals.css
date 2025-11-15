@@ -89,3 +89,16 @@
     transform: none;
   }
 }
+
+/* Réduction agressive des animations en mobile */
+@media (max-width: 768px) {
+  .reduce-mobile-motion,
+  .reduce-mobile-motion * {
+    transition: none !important;
+    animation: none !important;
+    transform: none !important;
+    scroll-behavior: auto !important;
+    will-change: auto !important;
+    backface-visibility: hidden !important;
+  }
+}

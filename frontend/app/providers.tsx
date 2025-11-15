@@ -6,6 +6,7 @@ import { ThemeProvider as NextThemesProvider } from "next-themes";
 import { ThemeProviderProps } from "next-themes/dist/types";
 
 import { UserProvider } from "@/context/UserContext";
+import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 
 export interface ProvidersProps {
   children: React.ReactNode;
@@ -15,6 +16,7 @@ export interface ProvidersProps {
 export function Providers({ children, themeProps }: ProvidersProps) {
   const router = useRouter();
   const [mounted, setMounted] = React.useState(false);
+  const { shouldReduceAnimations } = useMobileOptimization({ enableReducedMotion: true });
 
   // Éviter les problèmes d'hydratation liés au thème
   React.useEffect(() => {
@@ -32,7 +34,7 @@ export function Providers({ children, themeProps }: ProvidersProps) {
     >
       <UserProvider>
         {mounted ? (
-          children
+          <div className={shouldReduceAnimations ? "reduce-mobile-motion" : undefined}>{children}</div>
         ) : (
           <div style={{ visibility: "hidden" }}>{children}</div>
         )}
