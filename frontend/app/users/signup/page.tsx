@@ -27,6 +27,8 @@ export default function Inscription() {
   const router = useRouter();
   const userContext = useContext(UserContext);
   const loginUser = userContext?.loginUser;
+  const disableMotion = true;
+  const instantTransition = { duration: 0 };
 
   // Validation du mot de passe
   const validatePassword = (value: string) => {
@@ -186,14 +188,14 @@ export default function Inscription() {
     <motion.div
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center justify-center min-h-screen py-2"
-      initial={{ opacity: 0, y: -50 }}
-      transition={{ duration: 1 }}
+      initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -50 }}
+      transition={disableMotion ? instantTransition : { duration: 1 }}
     >
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="mb-6"
-        initial={{ opacity: 0, y: -50 }}
-        transition={{ duration: 1, delay: 0.2 }}
+        initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -50 }}
+        transition={disableMotion ? instantTransition : { duration: 1, delay: 0.2 }}
       >
         <AutismLogo className="mx-auto mb-2" size={60} />
         <h1 className="text-4xl font-bold text-center text-blue-600">
@@ -204,8 +206,8 @@ export default function Inscription() {
       <motion.p
         animate={{ opacity: 1, y: 0 }}
         className="mb-6 text-lg text-center text-gray-600"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 1, delay: 0.4 }}
+        initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+        transition={disableMotion ? instantTransition : { duration: 1, delay: 0.4 }}
       >
         Inscrivez-vous pour accéder à des ressources adaptées et un suivi
         personnalisé.
@@ -214,8 +216,8 @@ export default function Inscription() {
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col gap-4 w-[300px]"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 1, delay: 0.6 }}
+        initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
+        transition={disableMotion ? instantTransition : { duration: 1, delay: 0.6 }}
       >
         <Input
           required

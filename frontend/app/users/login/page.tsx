@@ -36,6 +36,8 @@ export default function Connexion() {
   const googleButtonRef = React.useRef<HTMLDivElement | null>(null);
   const googleInitialized = React.useRef(false);
   const googleClientId = process.env.NEXT_PUBLIC_GOOGLE_CLIENT_ID;
+  const disableMotion = true;
+  const instantTransition = { duration: 0 };
   const isGoogleAuthEnabled = Boolean(googleClientId);
 
   const getSafeReturnUrl = React.useCallback(
@@ -426,14 +428,14 @@ export default function Connexion() {
     <motion.div
       animate={{ opacity: 1, y: 0 }}
       className="flex flex-col items-center justify-center min-h-screen p-4 md:py-2"
-      initial={{ opacity: 0, y: -50 }}
-      transition={{ duration: 1 }}
+      initial={{ opacity: 1, y: 0 }}
+      transition={instantTransition}
     >
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="mb-4 md:mb-6 w-full max-w-[90%] md:max-w-[400px]"
-        initial={{ opacity: 0, y: -50 }}
-        transition={{ duration: 1, delay: 0.2 }}
+        initial={{ opacity: 1, y: 0 }}
+        transition={instantTransition}
       >
         <AutismLogo className="mx-auto mb-2" size={40} />
         <h1 className="text-2xl md:text-4xl font-bold text-center text-blue-600">
@@ -444,8 +446,8 @@ export default function Connexion() {
       <motion.p
         animate={{ opacity: 1, y: 0 }}
         className="mb-4 md:mb-6 text-base md:text-lg text-center text-gray-600 px-4"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 1, delay: 0.4 }}
+        initial={{ opacity: 1, y: 0 }}
+        transition={instantTransition}
       >
         Connectez-vous pour accéder à des ressources adaptées et un suivi personnalisé.
       </motion.p>
@@ -453,8 +455,8 @@ export default function Connexion() {
       <motion.div
         animate={{ opacity: 1, y: 0 }}
         className="flex flex-col gap-4 w-full max-w-[90%] md:max-w-[400px] px-4"
-        initial={{ opacity: 0, y: 50 }}
-        transition={{ duration: 1, delay: 0.6 }}
+        initial={{ opacity: 1, y: 0 }}
+        transition={instantTransition}
       >
         <Input
           required
