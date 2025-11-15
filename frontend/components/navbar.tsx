@@ -798,7 +798,7 @@ export const Navbar = () => {
           <>
             {/* Avatar mobile avec dropdown */}
             <div className="lg:hidden">
-              <Dropdown>
+              <Dropdown disableAnimation>
                 <DropdownTrigger
                   className="focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:opacity-100"
                 >
@@ -822,7 +822,7 @@ export const Navbar = () => {
                     }}
                   />
                 </DropdownTrigger>
-                <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700">
+                <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700 no-motion-dropdown">
                   <DropdownItem
                     as={NextLink}
                     className="dark:text-gray-200 dark:hover:bg-gray-700"
@@ -939,7 +939,7 @@ export const Navbar = () => {
             {/* Avatar desktop avec dropdown */}
             <div className="hidden lg:block">
               <Dropdown disableAnimation>
-                <DropdownTrigger>
+                <DropdownTrigger className="no-motion-dropdown">
                   <Button
                     aria-label="Menu utilisateur"
                     className="bg-transparent relative button-cls-optimized button-cls-optimized button-cls-optimized button-cls-optimized focus-visible:outline-none transition-none"
@@ -968,7 +968,7 @@ export const Navbar = () => {
                     </span>
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700">
+                <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700 no-motion-dropdown">
                   <DropdownItem
                     className="dark:text-gray-200 dark:hover:bg-gray-700"
                     key="profile"
