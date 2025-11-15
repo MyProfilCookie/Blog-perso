@@ -89,8 +89,39 @@ export const UserProvider = ({ children }) => {
 
     window.addEventListener("userLoggedIn", handleUserLoggedIn);
 
+    const syncFromStorage = () => {
+      try {
+        const token = localStorage.getItem("userToken") || localStorage.getItem("accessToken");
+        const storedUser = localStorage.getItem("user");
+        if (!token || !storedUser) {
+          setUser(null);
+          return;
+        }
+        const parsed = JSON.parse(storedUser);
+        setUser({ ...parsed, avatar: normalizeAvatarUrl(parsed?.avatar) });
+      } catch (e) {
+        console.error("Sync user depuis storage a échoué:", e);
+        setUser(null);
+      }
+    };
+
+    const handleStorage = (e) => {
+      if (["user", "userToken", "accessToken", "refreshToken"].includes(e.key)) {
+        syncFromStorage();
+      }
+    };
+
+    const handleUserUpdate = () => {
+      syncFromStorage();
+    };
+
+    window.addEventListener("storage", handleStorage);
+    window.addEventListener("userUpdate", handleUserUpdate);
+
     return () => {
       window.removeEventListener("userLoggedIn", handleUserLoggedIn);
+      window.removeEventListener("storage", handleStorage);
+      window.removeEventListener("userUpdate", handleUserUpdate);
     };
   }, []);
 
