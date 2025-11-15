@@ -54,6 +54,26 @@ or `??=` in the compiled JavaScript. The logic lives in
 `scripts/postbuild-transform.js` and depends on the Babel CLI listed in
 `devDependencies`.
 
+## Project Updates (AutiStudy)
+
+- Home CTA clarified: adds subtitle under `Commencer gratuitement` indicating a 7‑day full trial without commitment.
+- Alia explanation: concrete examples block added to show how the IA adapts activities (sensory sensitivities, interests like dinosaurs).
+- Shop header: explanatory header clarifies the shop offers complementary one‑off products vs. platform subscription.
+- Testimonials note: clarifies Benjamin is both founder and father to avoid confusion.
+- Avatars update: home page now uses updated images for Marie and Thomas with cache‑busting query strings.
+
+### Relevant source locations
+
+- `app/page.tsx:247` CTA subtitle text
+- `app/page.tsx:324` Alia examples block
+- `app/page.tsx:183` and `app/page.tsx:190` avatars with `?v=`
+- `app/shop/page.tsx:18` shop header
+- `app/page.tsx:483` testimonials clarification
+
+### Deployment
+
+- Production deployments performed with `npx vercel --prod --yes`.
+
 ### Setup pnpm (optional)
 
 If you are using `pnpm`, you need to add the following code to your `.npmrc` file:

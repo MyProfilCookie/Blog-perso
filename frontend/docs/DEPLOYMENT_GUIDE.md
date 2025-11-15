@@ -147,6 +147,17 @@ vercel login
 vercel --prod
 ```
 
+### Déploiement rapide (CLI)
+
+```bash
+npx vercel --prod --yes
+```
+
+### Notes de cache après déploiement
+
+- Les assets statiques peuvent rester en cache côté CDN/navigateur.
+- Pour forcer l’actualisation, utiliser des paramètres de version (`?v=`) dans les URLs des images ou effectuer un hard refresh (`Cmd + Shift + R`).
+
 ## Déploiement Backend (VPS/Cloud)
 
 ### 1. Configuration du serveur

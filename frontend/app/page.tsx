@@ -243,6 +243,9 @@ export default function HomePage() {
                       En savoir plus
                     </Link>
                   </div>
+                  <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-2">
+                    Essai complet de 7 jours, sans engagement
+                  </p>
                 </motion.div>
 
                 <motion.div
@@ -291,6 +294,9 @@ export default function HomePage() {
                   <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm text-blue-700 shadow-sm backdrop-blur dark:border-blue-700/40 dark:bg-gray-800/90 dark:text-blue-200">
                     <strong>Transparence :</strong> votre famille garde le contrôle. Vous choisissez les activités à activer, les notifications et les retours envoyés à l’équipe AutiStudy.
                   </div>
+                  <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm text-blue-700 shadow-sm backdrop-blur dark:border-blue-700/40 dark:bg-gray-800/90 dark:text-blue-200">
+                    <strong>IA bienveillante :</strong> respect strict de la vie privée (données minimisées), recommandations basées sur le renforcement positif et les préférences familiales.
+                  </div>
                 </motion.div>
 
                 <motion.div
@@ -317,6 +323,12 @@ export default function HomePage() {
                       </p>
                     </div>
                   ))}
+                  <div className="sm:col-span-2 rounded-3xl border border-blue-100 bg-white/90 p-6 shadow-lg dark:border-blue-700/40 dark:bg-gray-800/85">
+                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Concrètement, comment Alia adapte ?</h3>
+                    <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
+                      Si votre enfant est sensible aux bruits forts (quiz sensoriel), Alia évite les activités avec sons soudains. S’il adore les dinosaures, Alia utilise ce thème pour proposer des exercices de mathématiques et de langage.
+                    </p>
+                  </div>
                 </motion.div>
               </div>
             </div>
@@ -470,6 +482,9 @@ export default function HomePage() {
                 <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
                   Découvrez les témoignages de nos utilisateurs
                 </p>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  Le fondateur, Benjamin Insigne, est aussi papa de Michael (14 ans) — deux regards complémentaires sur AutiStudy.
+                </p>
               </motion.div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 grid-cls-optimized">
@@ -499,6 +514,11 @@ export default function HomePage() {
                             <p className="text-sm text-gray-600 dark:text-gray-400">
                               {testimonial.role}
                             </p>
+                            {"location" in testimonial && testimonial.location ? (
+                              <p className="text-xs text-gray-500 dark:text-gray-400">
+                                {testimonial.location}
+                              </p>
+                            ) : null}
                           </div>
                         </div>
                         <p className="text-gray-600 dark:text-gray-300 mb-4">

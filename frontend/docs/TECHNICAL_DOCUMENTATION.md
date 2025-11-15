@@ -233,6 +233,28 @@ const useEleveStats = (eleveId: string) => {
 };
 ```
 
+### Assets statiques et rafraîchissement CDN
+
+- Les images sous `public/` peuvent être fortement mises en cache par le CDN/navigateur.
+- Pour forcer le rafraîchissement après mise à jour d’un asset sans changer son nom, utiliser un paramètre de version:
+
+```
+app/page.tsx:183
+avatar: "/assets/family/avatar/marie.webp?v=20251113"
+
+app/page.tsx:190
+avatar: "/assets/family/avatar/thomas.webp?v=20251113"
+```
+
+- En cas de PWA installée, une actualisation forcée (`Cmd + Shift + R`) ou vidage du cache peut être nécessaire.
+
+### Contenu d’interface mis à jour
+
+- CTA d’inscription: sous‑titre précisant l’essai complet de 7 jours
+- Bloc explicatif Alia: exemples d’adaptation concrète des activités
+- En‑tête Shop: clarification produits complémentaires vs abonnement
+- Témoignages: note sur le double rôle du fondateur/papa
+
 ### Validation des données
 
 ```typescript
