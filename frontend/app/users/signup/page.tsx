@@ -187,7 +187,7 @@ export default function Inscription() {
   return (
     <motion.div
       animate={{ opacity: 1, y: 0 }}
-      className="flex flex-col items-center justify-center min-h-screen py-2"
+      className="flex flex-col items-center justify-center min-h-screen p-4 md:py-2 overflow-x-hidden"
       initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: -50 }}
       transition={disableMotion ? instantTransition : { duration: 1 }}
     >
@@ -215,7 +215,7 @@ export default function Inscription() {
 
       <motion.div
         animate={{ opacity: 1, y: 0 }}
-        className="flex flex-col gap-4 w-[300px]"
+        className="flex flex-col gap-4 w-full max-w-[90%] md:max-w-[400px] px-4"
         initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 50 }}
         transition={disableMotion ? instantTransition : { duration: 1, delay: 0.6 }}
       >
