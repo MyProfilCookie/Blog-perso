@@ -549,7 +549,7 @@ export const Navbar = () => {
             key={`${item.name}-${index}`}
             href={item.href}
             onClick={() => setIsMenuOpen(false)}
-            className="block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"
+            className={isMobile ? "block py-2.5 px-3 text-gray-700 dark:text-gray-200 font-medium rounded-lg text-sm" : "block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"}
           >
             {item.name}
           </NextLink>
@@ -565,7 +565,7 @@ export const Navbar = () => {
               item.href === "#" ? (
                 <button
                   key={`user-${item.name}-${index}`}
-                  className={`block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
+                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
                     item.color === "danger"
                       ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
                       : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
@@ -584,7 +584,7 @@ export const Navbar = () => {
                   key={`user-${item.name}-${index}`}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`block py-2.5 px-3 font-medium transition-all rounded-lg text-sm ${
+                  className={`${isMobile ? "block py-2.5 px-3 font-medium rounded-lg text-sm" : "block py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
                     item.color === "danger"
                       ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
                       : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
@@ -600,7 +600,7 @@ export const Navbar = () => {
 
       <div className="border-t border-gray-200 dark:border-gray-700 my-3" />
       <button
-        className="flex w-full items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
+        className={isMobile ? "flex w-full items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200" : "flex w-full items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"}
         disabled={!isThemeReady}
         onClick={() => {
           handleThemeToggle();
@@ -661,7 +661,7 @@ export const Navbar = () => {
         </button>
         <NavbarBrand as="li" className="gap-2 flex-shrink-0">
           <NextLink
-            className="flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200"
+            className={isMobile ? "flex items-center justify-start gap-2" : "flex items-center justify-start gap-2 hover:scale-105 transition-transform duration-200"}
             href="/"
           >
             <AutismLogo size={10} />
@@ -680,7 +680,7 @@ export const Navbar = () => {
       <NavbarContent className="hidden md:flex gap-4 xl:gap-8 flex-1" justify="center">
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
             href="/about"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faInfoCircle} />
@@ -690,7 +690,7 @@ export const Navbar = () => {
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
             href="/articles"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faBook} />
@@ -700,7 +700,7 @@ export const Navbar = () => {
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
             href="/posts"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faNewspaper} />
@@ -710,7 +710,7 @@ export const Navbar = () => {
 
         <NavbarItem>
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
             href="/controle"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faGamepad} />
@@ -720,7 +720,7 @@ export const Navbar = () => {
 
         <NavbarItem className="relative" key="shop">
           <NextLink
-            className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-base xl:text-lg font-semibold transition-colors duration-200 px-1"
+            className={isMobile ? "text-gray-700 dark:text-gray-200 flex items-center gap-2 relative text-base xl:text-lg font-semibold px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-base xl:text-lg font-semibold transition-colors duration-200 px-1"}
             href="/shop"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faShoppingCart} />
@@ -745,7 +745,7 @@ export const Navbar = () => {
         {isVirginie && (
           <NavbarItem>
             <NextLink
-              className="text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"
+              className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
               href="/maeva"
             >
               <Sparkles className="w-5 h-5" />
@@ -764,7 +764,7 @@ export const Navbar = () => {
             isIconOnly
             variant="flat"
             size="md"
-            className="bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all w-10 h-10 md:w-12 md:h-12"
+            className={isMobile ? "bg-gradient-to-r from-violet-600 to-purple-600 text-white w-10 h-10 md:w-12 md:h-12" : "bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all w-10 h-10 md:w-12 md:h-12"}
             aria-label="Assistant IA"
             onPress={() => router.push("/ai-assistant")}
           >
