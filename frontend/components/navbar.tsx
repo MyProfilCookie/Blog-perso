@@ -549,7 +549,7 @@ export const Navbar = () => {
             key={`${item.name}-${index}`}
             href={item.href}
             onClick={() => setIsMenuOpen(false)}
-            className={isMobile ? "block py-2.5 px-3 text-gray-700 dark:text-gray-200 font-medium rounded-lg text-sm" : "block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"}
+            className={isMobile ? "block py-2.5 px-3 text-gray-700 dark:text-gray-200 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"}
           >
             {item.name}
           </NextLink>
@@ -565,7 +565,7 @@ export const Navbar = () => {
               item.href === "#" ? (
                 <button
                   key={`user-${item.name}-${index}`}
-                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
+                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
                     item.color === "danger"
                       ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
                       : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
@@ -584,7 +584,7 @@ export const Navbar = () => {
                   key={`user-${item.name}-${index}`}
                   href={item.href}
                   onClick={() => setIsMenuOpen(false)}
-                  className={`${isMobile ? "block py-2.5 px-3 font-medium rounded-lg text-sm" : "block py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
+                  className={`${isMobile ? "block py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
                     item.color === "danger"
                       ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
                       : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
@@ -600,7 +600,7 @@ export const Navbar = () => {
 
       <div className="border-t border-gray-200 dark:border-gray-700 my-3" />
       <button
-        className={isMobile ? "flex w-full items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200" : "flex w-full items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"}
+        className={isMobile ? "flex w-full items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 dark:bg-gray-800 dark:text-gray-200 hover:bg-gray-200 dark:hover:bg-gray-700" : "flex w-full items-center justify-between rounded-lg bg-gray-100 px-3 py-2 text-sm font-medium text-gray-700 transition hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"}
         disabled={!isThemeReady}
         onClick={() => {
           handleThemeToggle();
