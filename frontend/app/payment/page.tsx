@@ -6,7 +6,7 @@
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 import React, { useState, useEffect } from "react";
 import { CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
 import { StripeProvider } from "@/components/StripeProvider";

@@ -93,6 +93,7 @@ export const Navbar = () => {
   const [isLoadingOrders, setIsLoadingOrders] = useState(false);
   const [orderLoadError, setOrderLoadError] = useState<string | null>(null);
   const router = useRouter();
+  const pathname = usePathname();
   const [avatarColorIndex, setAvatarColorIndex] = useState(0);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { isMobile, shouldReduceAnimations } = useMobileOptimization({
@@ -129,6 +130,11 @@ export const Navbar = () => {
       setIsMenuOpen(false);
     }
   }, [isMobile, isMenuOpen]);
+
+  // Ferme le menu mobile dès qu'une navigation se produit
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
 
   // Animation de couleur de l'avatar - optimisée pour les performances
   useEffect(() => {
@@ -1135,7 +1141,5 @@ export const Navbar = () => {
     </NextUINavbar>
   );
 };
-  const pathname = usePathname();
-  useEffect(() => {
-    setIsMenuOpen(false);
-  }, [pathname]);
+
+export default Navbar;

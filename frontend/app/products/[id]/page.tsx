@@ -1,5 +1,6 @@
 "use client";
-import dynamic from 'next/dynamic';
+export const dynamic = "force-dynamic";
+import nextDynamic from 'next/dynamic';
 /* eslint-disable jsx-a11y/label-has-associated-control */
 /* eslint-disable no-console */
 

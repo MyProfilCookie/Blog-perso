@@ -1,4 +1,4 @@
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 /* eslint-disable padding-line-between-statements */
 /* eslint-disable prettier/prettier */
 /* eslint-disable no-console */

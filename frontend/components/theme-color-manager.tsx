@@ -78,3 +78,5 @@ export function ThemeColorManager() {
 
   return null;
 }
+
+export default ThemeColorManager;

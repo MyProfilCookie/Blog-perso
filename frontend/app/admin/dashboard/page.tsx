@@ -1,5 +1,5 @@
 "use client";
-import dynamic from 'next/dynamic';
+import nextDynamic from 'next/dynamic';
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable no-console */
 import React, { useState, useEffect } from "react";
