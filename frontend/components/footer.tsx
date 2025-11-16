@@ -5,7 +5,7 @@
 "use client";
 import NextLink from "next/link";
 import { useTheme } from "next-themes";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Dropdown } from '@nextui-org/react'
 import { DropdownTrigger } from '@nextui-org/react'
 import { DropdownMenu } from '@nextui-org/react'
@@ -14,10 +14,13 @@ import { Button } from '@nextui-org/react';
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMoon } from "@fortawesome/free-solid-svg-icons";
 import { SunFilledIcon, MoonFilledIcon } from "@/components/icons";
+import { UserContext } from "@/context/UserContext";
 
 const Footer = () => {
   const { theme, resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const userCtx = useContext(UserContext);
+  const user = userCtx?.user;
 
   useEffect(() => {
     setMounted(true);
@@ -44,18 +47,23 @@ const Footer = () => {
             <h4 className="text-base sm:text-lg font-semibold text-gray-900 dark:text-gray-100 performance-optimized">
               Navigation
             </h4>
-            <nav className="flex flex-col space-y-2 performance-optimized">
-              <NextLink href="/blog" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors performance-optimized">
-                Blog
+          <nav className="flex flex-col space-y-2 performance-optimized">
+            <NextLink href="/blog" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors performance-optimized">
+              Blog
+            </NextLink>
+            <NextLink href="/about" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors performance-optimized">
+              À propos
+            </NextLink>
+            <NextLink href="/contact" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors performance-optimized">
+              Contact
+            </NextLink>
+            {user && (
+              <NextLink href="/users/logout" className="text-gray-600 dark:text-gray-400 hover:text-red-600 dark:hover:text-red-400 transition-colors performance-optimized">
+                Déconnexion
               </NextLink>
-              <NextLink href="/about" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors performance-optimized">
-                À propos
-              </NextLink>
-              <NextLink href="/contact" className="text-gray-600 dark:text-gray-400 hover:text-violet-500 dark:hover:text-violet-400 transition-colors performance-optimized">
-                Contact
-              </NextLink>
-            </nav>
-          </div>
+            )}
+          </nav>
+        </div>
 
           {/* Thème et Paramètres */}
           <div className="space-y-3 text-center sm:text-left performance-optimized">
