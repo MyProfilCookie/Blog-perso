@@ -5,6 +5,7 @@
 /* eslint-disable import/order */
 /* eslint-disable react/no-unescaped-entities */
 "use client";
+export const dynamic = "force-dynamic";
 
 import { Card, CardBody, CardHeader } from "@/components/OptimizedNextUI";
 import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";

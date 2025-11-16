@@ -1,4 +1,5 @@
 /* eslint-disable import/order */
+export const dynamic = "force-dynamic";
 // 📌 1. Imports de bibliothèques tierces
 import { Suspense } from "react";
 

@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 /* eslint-disable react/jsx-sort-props */
 
