@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 
 /* eslint-disable @next/next/no-img-element */
 /* eslint-disable padding-line-between-statements */
@@ -6,7 +7,7 @@
 /* eslint-disable react/no-unescaped-entities */
 /* eslint-disable prettier/prettier */
 
-import dynamic from 'next/dynamic';
+import NextDynamic from 'next/dynamic';
 
 import { useState, useEffect, useMemo } from "react";
 import React from "react";
@@ -681,7 +682,7 @@ const BlogPage = () => {
   );
 };
 
-export default BlogPage;
+export default NextDynamic(() => Promise.resolve(BlogPage), { ssr: false });
   const { isMobile } = useMobileOptimization();
   const [deferredSidebar, setDeferredSidebar] = useState(false);
   useEffect(() => {
