@@ -586,7 +586,7 @@ export const Navbar = () => {
                       : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
                   }`}
                   onClick={() => {
-                    if (item.action) {
+                    if (typeof item.action === "function") {
                       item.action();
                     }
                     setIsMenuOpen(false);
@@ -595,18 +595,27 @@ export const Navbar = () => {
                   {item.name}
                 </button>
               ) : (
-                <NextLink
+                <button
                   key={`user-${item.name}-${index}`}
-                  href={item.href}
-                  onClick={() => setIsMenuOpen(false)}
-                  className={`${isMobile ? "block py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
+                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
                     item.color === "danger"
                       ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
                       : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
                   }`}
+                  onClick={() => {
+                    router.push(item.href);
+                    setIsMenuOpen(false);
+                  }}
                 >
-                  {item.name}
-                </NextLink>
+                  <div className="flex items-center justify-between">
+                    <span>{item.name}</span>
+                    {item.badge !== undefined && (
+                      <span className="font-semibold text-gray-600 dark:text-gray-300">
+                        {item.badge}
+                      </span>
+                    )}
+                  </div>
+                </button>
               ),
             )}
           </div>
