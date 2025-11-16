@@ -37,6 +37,16 @@ const nextConfig = {
         hostname: '**.unsplash.com',
         pathname: '/**',
       },
+      {
+        protocol: 'https',
+        hostname: 'blog-perso.onrender.com',
+        pathname: '/**',
+      },
+      {
+        protocol: 'https',
+        hostname: '*.onrender.com',
+        pathname: '/**',
+      },
     ],
   },
   

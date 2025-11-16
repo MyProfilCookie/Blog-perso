@@ -335,3 +335,20 @@ export default function RootLayout({
     </html>
   );
 }
+        {/* JSON-LD WebSite schema */}
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'AutiStudy',
+              url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.com'),
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: (process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.com') + '/articles?search={query}',
+                'query-input': 'required name=query'
+              }
+            })
+          }}
+        />

@@ -13,6 +13,7 @@ import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import Link from "next/link";
 
 import { motion, useReducedMotion } from "framer-motion";
+import React, { useEffect, useState } from "react";
 import {
   BookOpen,
   Users,
@@ -199,6 +200,18 @@ export default function HomePage() {
   const prefersReducedMotion = useReducedMotion();
   const disableMotion = isMobile || prefersReducedMotion;
   const instantTransition = { duration: 0 };
+  const [deferredSections, setDeferredSections] = useState(false);
+
+  useEffect(() => {
+    const id = window.requestIdleCallback
+      ? window.requestIdleCallback(() => setDeferredSections(true), { timeout: 1200 })
+      : window.setTimeout(() => setDeferredSections(true), 600);
+    return () => {
+      if (typeof id === "number") {
+        clearTimeout(id);
+      }
+    };
+  }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
@@ -271,6 +284,7 @@ export default function HomePage() {
           </div>
         </section>
 
+        {deferredSections && (
         <section className="py-12 md:py-20 bg-gradient-to-b from-white via-blue-50/40 to-white dark:from-gray-950 dark:via-gray-900/60 dark:to-gray-950">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
@@ -358,8 +372,10 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* Services Section */}
+        {deferredSections && (
         <section className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
@@ -413,7 +429,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        )}
 
+        {deferredSections && (
         <section className="py-12 md:py-20 bg-white dark:bg-gray-900">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
@@ -491,7 +509,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        )}
         {/* Témoignages Section */}
+        {deferredSections && (
         <section className="py-12 md:py-20">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
@@ -564,7 +584,9 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        )}
 
+        {deferredSections && (
         <section className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
           <div className="w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto">
@@ -690,6 +712,7 @@ export default function HomePage() {
             </div>
           </div>
         </section>
+        )}
 
         {/* Articles Section */}
         <section className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">

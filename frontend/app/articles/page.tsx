@@ -109,13 +109,14 @@ const normalizeArticleData = (raw: any): Article | null => {
   return {
     id: String(identifier),
     title: raw.title ?? raw.titre ?? raw.name ?? "",
-    subtitle:
+    subtitle: cleanText(
       raw.subtitle ??
       raw["sous-titre"] ??
       raw.sousTitre ??
       raw.sous_titre ??
       raw.description ??
-      "",
+      ""
+    ) || cleanText(content).slice(0, 160),
     image,
     img: image,
     category:
@@ -162,7 +163,23 @@ const resolveImagePath = (value?: string | null): string => {
   }
 
   if (/^https?:\/\//i.test(trimmed) || trimmed.startsWith("data:")) {
-    return trimmed;
+    try {
+      const url = new URL(trimmed);
+      const host = url.hostname.toLowerCase();
+      const allowedHosts = new Set([
+        "images.unsplash.com",
+        "unsplash.com",
+        "blog-perso.onrender.com",
+        "autistudy.com",
+        "www.autistudy.com",
+      ]);
+      if (!allowedHosts.has(host)) {
+        return DEFAULT_ARTICLE_IMAGE;
+      }
+      return trimmed;
+    } catch {
+      return DEFAULT_ARTICLE_IMAGE;
+    }
   }
 
   const normalized = trimmed.replace(/^\.\/?/, "");
@@ -560,18 +577,11 @@ const ArticlesPage = () => {
       <div className="max-w-7xl mx-auto px-2 sm:px-3 md:px-4 lg:px-6 xl:px-8 py-2 sm:py-3 md:py-4 lg:py-6 xl:py-8">
         {/* Statistiques */}
         {loadingArticles ? (
-          <div className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12">
-            {Array.from({ length: 4 }).map((_, index) => (
-              <div
-                key={`stats-skeleton-${index}`}
-                className="h-24 sm:h-28 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 animate-pulse"
-              />
-            ))}
-          </div>
+          <div className="h-24 sm:h-28 rounded-xl border border-gray-200 dark:border-gray-700 bg-gray-100 dark:bg-gray-800 animate-pulse mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12" />
         ) : (
           <motion.div
             animate={{ opacity: 1, y: 0 }}
-            className="grid grid-cols-1 xs:grid-cols-2 sm:grid-cols-2 md:grid-cols-4 gap-2 sm:gap-3 md:gap-4 mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12"
+            className="mb-4 sm:mb-6 md:mb-8 lg:mb-10 xl:mb-12"
             initial={{ opacity: 0, y: 30 }}
             transition={{ duration: 0.8, delay: 0.3 }}
           >
@@ -580,24 +590,6 @@ const ArticlesPage = () => {
                 {stats.totalArticles}
               </div>
               <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">Articles</div>
-            </Card>
-            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-green-600 dark:text-green-400 mb-1 sm:mb-2">
-                {stats.totalViews.toLocaleString()}
-              </div>
-              <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">Vues</div>
-            </Card>
-            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-blue-600 dark:text-blue-400 mb-1 sm:mb-2">
-                {stats.totalLikes.toLocaleString()}
-              </div>
-              <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">J'aime</div>
-            </Card>
-            <Card className="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 text-center p-3 sm:p-4 md:p-6">
-              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-yellow-600 dark:text-yellow-400 mb-1 sm:mb-2">
-                {stats.averageRating}
-              </div>
-              <div className="text-xs sm:text-sm md:text-base text-gray-600 dark:text-gray-300">Note moyenne</div>
             </Card>
           </motion.div>
         )}
@@ -907,3 +899,12 @@ const ArticlesPage = () => {
 };
 
 export default ArticlesPage;
+const cleanText = (s: string): string => {
+  const trimmed = s.trim();
+  if (!trimmed) return "";
+  const suspicious = /tos-[\w-]+|https?:\/\/|\.(png|jpg|webp|jpeg)$/i;
+  if (suspicious.test(trimmed) || trimmed.includes("/") || trimmed.length > 200) {
+    return "";
+  }
+  return trimmed;
+};
