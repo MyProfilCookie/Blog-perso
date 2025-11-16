@@ -321,6 +321,11 @@ export default function HomePage() {
                       <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                         {step.description}
                       </p>
+                      {step.step === "02" ? (
+                        <p className="mt-2 text-xs leading-relaxed text-blue-700 dark:text-blue-200">
+                          IA bienveillante: respect strict de la vie privée, suggestions basées sur les intérêts et vos retours.
+                        </p>
+                      ) : null}
                     </div>
                   ))}
                   <div className="sm:col-span-2 rounded-3xl border border-blue-100 bg-white/90 p-6 shadow-lg dark:border-blue-700/40 dark:bg-gray-800/85">
@@ -352,6 +357,9 @@ export default function HomePage() {
                 </h2>
                 <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
                   Tout ce dont vous avez besoin pour accompagner l'apprentissage de votre enfant
+                </p>
+                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
+                  La boutique propose des produits complémentaires (sensoriel, outils, ressources numériques) à l’unité.
                 </p>
               </motion.div>
 

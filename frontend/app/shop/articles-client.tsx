@@ -173,27 +173,12 @@ export default function ArticlesClient({ initialProducts }: ArticlesClientProps 
   if (loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
-        {/* Header de la boutique */}
-        <div className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
-          <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-            <motion.div
-              initial={{ opacity: 0, y: -20 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-center"
-            >
-              <div className="flex items-center justify-center gap-3 mb-3">
-                <ShoppingBag className="w-10 h-10 md:w-12 md:h-12 text-white" />
-                <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
-                  Boutique AutiStudy
-                </h1>
-              </div>
-              <div className="flex items-center justify-center gap-2">
-                <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
-                <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">
-                  Chargement des produits...
-                </p>
-              </div>
-            </motion.div>
+        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12 text-center">
+          <div className="flex items-center justify-center gap-2">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
+            <p className="text-gray-600 dark:text-gray-300 text-sm md:text-base">
+              Chargement des produits...
+            </p>
           </div>
         </div>
         <section className="px-2 py-8 md:px-4 lg:px-6">
@@ -279,29 +264,9 @@ export default function ArticlesClient({ initialProducts }: ArticlesClientProps 
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-purple-50 dark:from-gray-900 dark:via-gray-900 dark:to-gray-800">
-      {/* Header de la boutique */}
-      <div className="bg-gradient-to-r from-blue-600 to-purple-600 shadow-lg">
-        <div className="max-w-7xl mx-auto px-4 py-8 md:py-12">
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <div className="flex items-center justify-center gap-3 mb-3">
-              <ShoppingBag className="w-10 h-10 md:w-12 md:h-12 text-white" />
-              <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">
-                Boutique AutiStudy
-              </h1>
-            </div>
-            <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base max-w-2xl mx-auto">
-              Des outils pédagogiques et sensoriels soigneusement sélectionnés pour accompagner l'apprentissage de votre enfant
-            </p>
-          </motion.div>
-        </div>
-      </div>
 
       {/* Info Cards */}
-      <div className="max-w-7xl mx-auto px-4 -mt-8 mb-12">
+      <div className="max-w-7xl mx-auto px-4 mb-12">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
           <motion.div
             initial={{ opacity: 0, y: 20 }}
