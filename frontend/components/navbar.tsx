@@ -496,7 +496,7 @@ export const Navbar = () => {
         { name: "⏳ En cours", href: "/orders?status=pending", color: "foreground", badge: orderCount.pending || 0 },
         { name: "📦 Expédiées", href: "/orders?status=shipped", color: "foreground", badge: orderCount.shipped || 0 },
         { name: "✅ Livrées", href: "/orders?status=delivered", color: "foreground", badge: orderCount.delivered || 0 },
-        { name: "🚪 Déconnexion", href: "#", color: "danger", action: "logout" },
+        { name: "🚪 Déconnexion", href: "#", color: "danger", action: () => handleLogout() },
       ]
     : [];
 
