@@ -30,14 +30,12 @@
 
 [data-slot="content"] {
   transition: none !important;
-  transform: none !important;
   animation: none !important;
 }
 
 .no-motion-dropdown [data-slot="trigger"] button,
 .no-motion-dropdown [data-slot="content"] {
   transition: none !important;
-  transform: none !important;
   animation: none !important;
 }
 
