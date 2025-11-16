@@ -9,13 +9,14 @@ import "@/styles/safari-compatibility.css";
 import "@/lib/polyfills";
 import { Toaster } from "sonner";
 import { Providers } from "./providers";
-import { Navbar } from "@/components/navbar";
-import Footer from "@/components/footer";
-import { ThemeColorManager } from "@/components/theme-color-manager";
-import LCPOptimizer from "@/components/LCPOptimizer";
-import ErrorBoundary from "@/components/ErrorBoundary";
-import IOSErrorHandler from "@/components/IOSErrorHandler";
-import PerformanceMonitor from "@/components/PerformanceMonitor";
+import dynamic from "next/dynamic";
+const Navbar = dynamic(() => import("@/components/navbar"), { ssr: false });
+const Footer = dynamic(() => import("@/components/footer"), { ssr: false });
+const ThemeColorManager = dynamic(() => import("@/components/theme-color-manager"), { ssr: false });
+const LCPOptimizer = dynamic(() => import("@/components/LCPOptimizer"), { ssr: false });
+const ErrorBoundary = dynamic(() => import("@/components/ErrorBoundary"), { ssr: false });
+const IOSErrorHandler = dynamic(() => import("@/components/IOSErrorHandler"), { ssr: false });
+const PerformanceMonitor = dynamic(() => import("@/components/PerformanceMonitor"), { ssr: false });
 
 const inter = Inter({
   subsets: ["latin"],

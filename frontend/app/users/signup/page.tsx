@@ -1,4 +1,5 @@
 "use client";
+export const dynamic = "force-dynamic";
 /* eslint-disable prettier/prettier */
 /* eslint-disable react/no-unescaped-entities */
 
