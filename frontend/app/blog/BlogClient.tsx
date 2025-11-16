@@ -2,10 +2,11 @@
 import React, { useEffect, useState, useMemo } from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
+import Image from "next/image";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { BookOpen, Search } from "lucide-react";
+import { BookOpen, Search, Calendar, User } from "lucide-react";
 
 interface Blog {
   _id: string;
@@ -13,6 +14,8 @@ interface Blog {
   description: string;
   imageUrl?: string;
   createdAt?: string;
+  author?: string;
+  category?: string;
 }
 
 export default function BlogClient() {
@@ -52,7 +55,7 @@ export default function BlogClient() {
             <BookOpen className="w-10 h-10 md:w-12 md:h-12 text-white" />
             <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">Blog et Témoignages</h1>
           </div>
-          <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">Découvrez nos articles, témoignages et conseils</p>
+          <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">Articles, témoignages et conseils pour accompagner votre famille</p>
         </div>
       </div>
 
@@ -75,11 +78,26 @@ export default function BlogClient() {
             ))}
           </div>
         ) : (
-          <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.6 }} className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
+          <motion.div animate={{ opacity: 1, y: 0 }} initial={{ opacity: 0, y: 20 }} transition={{ duration: 0.4 }} className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-3 sm:gap-4 md:gap-6">
             {filtered.map((b) => (
               <Card key={b._id} className="shadow-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl overflow-hidden">
+                <Link href={`/blog/${b._id}`} className="block relative overflow-hidden h-[180px]">
+                  <Image
+                    alt={b.title}
+                    src={(b.imageUrl && b.imageUrl.trim()) || "/assets/autism-daily.webp"}
+                    fill
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                    className="object-cover"
+                    priority={false}
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
+                </Link>
                 <CardHeader className="p-5 pb-3">
-                  <h4 className="text-xl font-bold text-gray-800 dark:text-white leading-tight">{b.title}</h4>
+                  <h4 className="text-lg sm:text-xl font-bold text-gray-800 dark:text-white leading-tight">{b.title}</h4>
+                  <div className="flex items-center gap-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400">
+                    {b.author && (<span className="inline-flex items-center gap-1"><User className="w-4 h-4" />{b.author}</span>)}
+                    {b.createdAt && (<span className="inline-flex items-center gap-1"><Calendar className="w-4 h-4" />{new Date(b.createdAt).toLocaleDateString('fr-FR')}</span>)}
+                  </div>
                 </CardHeader>
                 <CardContent className="p-5 pt-0">
                   <p className="text-gray-600 dark:text-gray-300 leading-relaxed mb-4 line-clamp-3">{b.description}</p>
