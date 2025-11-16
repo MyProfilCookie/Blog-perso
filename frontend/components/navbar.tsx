@@ -29,7 +29,7 @@ import {
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
 import Swal from "sweetalert2";
-import { useRouter } from "next/navigation";
+import { useRouter, usePathname } from "next/navigation";
 import { useTheme } from "next-themes";
 import { UserContext } from "@/context/UserContext";
 import { Sparkles } from "lucide-react";
@@ -482,8 +482,17 @@ export const Navbar = () => {
     { name: "❤️ Contact", href: "/contact", color: "foreground" },
   ];
 
-  // Menu items utilisateur - vide pour ne pas afficher ces liens dans le menu burger
-  const userMenuItems: any[] = [];
+  // Menu utilisateur pour le burger (mobile)
+  const userMenuItems: any[] = user
+    ? [
+        { name: "👤 Profil", href: "/profile", color: "foreground" },
+        { name: "🧾 Mes commandes", href: "/orders", color: "foreground", divider: true },
+        { name: "⏳ En cours", href: "/orders?status=pending", color: "foreground", badge: orderCount.pending || 0 },
+        { name: "📦 Expédiées", href: "/orders?status=shipped", color: "foreground", badge: orderCount.shipped || 0 },
+        { name: "✅ Livrées", href: "/orders?status=delivered", color: "foreground", badge: orderCount.delivered || 0 },
+        { name: "🚪 Déconnexion", href: "#", color: "danger", action: "logout" },
+      ]
+    : [];
 
   const menuOverlayClassName =
     "md:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm";
@@ -796,144 +805,28 @@ export const Navbar = () => {
           />
         ) : (
           <>
-            {/* Avatar mobile avec dropdown */}
+            {/* Avatar mobile sans sous-menu: ouvre directement le profil */}
             <div className="lg:hidden">
-              <Dropdown disableAnimation>
-                <DropdownTrigger
-                  className="focus:outline-none focus-visible:ring-0 focus-visible:ring-offset-0 active:opacity-100"
-                >
-                  <Avatar
-                    alt={`Avatar de ${user?.pseudo}`}
-                    className="cursor-pointer flex-shrink-0 transition-none motion-reduce:transform-none active:scale-100 focus:outline-none focus:ring-0"
-                    isBordered
-                    size="sm"
-                    src={user?.avatar || "/assets/default-avatar.webp"}
-                    style={{
-                      borderColor:
-                        user?.role === "admin"
-                          ? adminColors[avatarColorIndex]
-                          : userColors[avatarColorIndex],
-                      borderWidth: "3px",
-                      boxShadow: `0 0 12px ${
-                        user?.role === "admin"
-                          ? adminColors[avatarColorIndex]
-                          : userColors[avatarColorIndex]
-                      }`,
-                    }}
-                  />
-                </DropdownTrigger>
-                <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700 no-motion-dropdown">
-                  <DropdownItem
-                    as={NextLink}
-                    className="dark:text-gray-200 dark:hover:bg-gray-700"
-                    href="/profile"
-                    key="profile-mobile"
-                    onPress={() => setIsMenuOpen(false)}
-                  >
-                    <FontAwesomeIcon className="mr-2" icon={faUser} />
-                    Profil
-                  </DropdownItem>
-                  <DropdownItem
-                    className="font-medium dark:text-gray-300"
-                    key="orders-title-mobile"
-                    onPress={() => router.push("/orders")}
-                    showDivider
-                    textValue="Mes commandes"
-                  >
-                    Mes commandes
-                  </DropdownItem>
-                  <DropdownItem
-                    as={NextLink}
-                    href="/orders?status=pending"
-                    key="orders-pending-mobile"
-                    onPress={() => setIsMenuOpen(false)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <PendingOrdersIcon className="text-yellow-600" size={20} />
-                        <span className="text-sm">En cours</span>
-                      </div>
-                      <span className="font-semibold text-yellow-600">
-                        {orderCount.pending || 0}
-                      </span>
-                    </div>
-                  </DropdownItem>
-                  <DropdownItem
-                    as={NextLink}
-                    href="/orders?status=shipped"
-                    key="orders-shipped-mobile"
-                    onPress={() => setIsMenuOpen(false)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <ShippedOrdersIcon className="text-blue-600" size={20} />
-                        <span className="text-sm">Expédiées</span>
-                      </div>
-                      <span className="font-semibold text-blue-600">
-                        {orderCount.shipped || 0}
-                      </span>
-                    </div>
-                  </DropdownItem>
-                  <DropdownItem
-                    as={NextLink}
-                    href="/orders?status=delivered"
-                    key="orders-delivered-mobile"
-                    onPress={() => setIsMenuOpen(false)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <DeliveredOrdersIcon className="text-green-600" size={20} />
-                        <span className="text-sm">Livrées</span>
-                      </div>
-                      <span className="font-semibold text-green-600">
-                        {orderCount.delivered || 0}
-                      </span>
-                    </div>
-                  </DropdownItem>
-                  <DropdownItem
-                    as={NextLink}
-                    href="/orders?status=cancelled"
-                    key="orders-cancelled-mobile"
-                    onPress={() => setIsMenuOpen(false)}
-                  >
-                    <div className="flex items-center justify-between">
-                      <div className="flex items-center gap-2">
-                        <CancelledOrdersIcon className="text-red-600" size={20} />
-                        <span className="text-sm">Annulées</span>
-                      </div>
-                      <span className="font-semibold text-red-600">
-                        {orderCount.cancelled || 0}
-                      </span>
-                    </div>
-                  </DropdownItem>
-                  <DropdownItem
-                    key="theme-toggle-mobile"
-                    className="dark:text-gray-200 dark:hover:bg-gray-700"
-                    isDisabled={!isThemeReady}
-                    onPress={() => handleThemeToggle()}
-                  >
-                    <div className="flex items-center gap-2">
-                      {isDarkTheme ? (
-                        <SunFilledIcon className="text-yellow-400" size={18} />
-                      ) : (
-                        <MoonFilledIcon className="text-blue-500" size={18} />
-                      )}
-                      <span className="text-sm">
-                        Mode {isDarkTheme ? "clair" : "sombre"}
-                      </span>
-                    </div>
-                  </DropdownItem>
-                  <DropdownItem
-                    className="dark:text-red-400 text-red-600 dark:hover:bg-red-900/20"
-                    color="danger"
-                    key="logout-mobile"
-                    onPress={handleLogout}
-                  >
-                    <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
-                    Déconnexion
-                  </DropdownItem>
-                </DropdownMenu>
-              </Dropdown>
+              <Avatar
+                alt={`Avatar de ${user?.pseudo}`}
+                className="cursor-pointer flex-shrink-0 transition-none motion-reduce:transform-none active:scale-100 focus:outline-none focus:ring-0"
+                isBordered
+                size="sm"
+                src={user?.avatar || "/assets/default-avatar.webp"}
+                style={{
+                  borderColor:
+                    user?.role === "admin"
+                      ? adminColors[avatarColorIndex]
+                      : userColors[avatarColorIndex],
+                  borderWidth: "3px",
+                  boxShadow: `0 0 12px ${
+                    user?.role === "admin"
+                      ? adminColors[avatarColorIndex]
+                      : userColors[avatarColorIndex]
+                  }`,
+                }}
+                onClick={() => router.push("/profile")}
+              />
             </div>
 
             {/* Avatar desktop avec dropdown */}
@@ -1242,3 +1135,7 @@ export const Navbar = () => {
     </NextUINavbar>
   );
 };
+  const pathname = usePathname();
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [pathname]);
