@@ -109,8 +109,10 @@ export default function RootLayout({
               (function(){
                 try{
                   var stored=localStorage.getItem('theme');
+                  var hour=new Date().getHours();
+                  var timeDark=(hour>=19||hour<7);
                   var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  var theme=stored?stored:(prefersDark?'dark':'light');
+                  var theme=stored?stored:(timeDark?'dark':(prefersDark?'dark':'light'));
                   if(theme==='dark'){
                     document.documentElement.classList.add('dark');
                   }else{
