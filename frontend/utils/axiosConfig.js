@@ -118,6 +118,12 @@ apiClient.interceptors.response.use(
         localStorage.removeItem('userInfo');
         localStorage.removeItem('userRole');
 
+        // Synchroniser immédiatement l'état de l'UI (avatar/menu) dans le même onglet
+        try {
+          const evt = new CustomEvent('userUpdate', { detail: null });
+          window.dispatchEvent(evt);
+        } catch (_) {}
+
         // Afficher une notification d'expiration de session
         if (typeof window !== 'undefined') {
           // Importer dynamiquement SweetAlert2 pour éviter les problèmes SSR
