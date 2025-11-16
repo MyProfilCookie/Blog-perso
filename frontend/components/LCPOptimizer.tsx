@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 
 export default function LCPOptimizer() {
   useEffect(() => {
+    const isHome = typeof window !== 'undefined' && (window.location.pathname === '/' || window.location.pathname === '');
     // Optimisation LCP agressive - Préchargement des ressources critiques
     const preloadCriticalResources = () => {
       // Précharger les images critiques avec priorité maximale
@@ -105,10 +106,12 @@ export default function LCPOptimizer() {
       });
     };
 
-    // Exécuter les optimisations critiques immédiatement
-    preloadCriticalResources();
-    optimizeImages();
-    optimizeFonts();
+    // Exécuter les optimisations critiques uniquement sur l'accueil
+    if (isHome) {
+      preloadCriticalResources();
+      optimizeImages();
+      optimizeFonts();
+    }
 
     const scheduleNonCriticalWork = (callback: () => void) => {
       if (typeof window === 'undefined') return;
@@ -121,9 +124,11 @@ export default function LCPOptimizer() {
     };
 
     // Optimisation différée pour les ressources non critiques
-    scheduleNonCriticalWork(() => {
-      optimizeNonCritical();
-    });
+    if (isHome) {
+      scheduleNonCriticalWork(() => {
+        optimizeNonCritical();
+      });
+    }
 
     // Optimisation continue pendant le chargement
     const optimizeDuringLoad = () => {
@@ -144,12 +149,12 @@ export default function LCPOptimizer() {
     };
 
     // Vérifier périodiquement le chargement
-    const checkInterval = setInterval(optimizeDuringLoad, 100);
-    
-    // Nettoyer après 5 secondes
-    setTimeout(() => {
-      clearInterval(checkInterval);
-    }, 5000);
+    if (isHome) {
+      const checkInterval = setInterval(optimizeDuringLoad, 100);
+      setTimeout(() => {
+        clearInterval(checkInterval);
+      }, 5000);
+    }
 
   }, []);
 
