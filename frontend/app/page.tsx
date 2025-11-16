@@ -7,6 +7,7 @@
 "use client";
 
 import { Card, CardBody, CardHeader } from "@/components/OptimizedNextUI";
+import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import Link from "next/link";
@@ -30,6 +31,7 @@ import {
   CalendarRange,
   Headphones
 } from "lucide-react";
+import { Info } from "lucide-react";
 
 // Données des articles optimisées
 const articles = [
@@ -318,6 +320,23 @@ export default function HomePage() {
                       <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
                         {step.title}
                       </h3>
+                      {step.step === "02" ? (
+                        <div className="mt-1">
+                          <Popover placement="bottom-start" className="max-w-xs">
+                            <PopoverTrigger>
+                              <button aria-label="En savoir plus sur l'IA bienveillante" className="inline-flex items-center gap-1 text-blue-700 dark:text-blue-200 text-xs font-medium">
+                                <Info className="w-4 h-4" />
+                                En savoir plus
+                              </button>
+                            </PopoverTrigger>
+                            <PopoverContent>
+                              <div className="p-2 text-xs text-gray-700 dark:text-gray-200">
+                                Notre IA Alia respecte strictement la vie privée. Elle utilise uniquement vos observations et les intérêts de l'enfant pour proposer des activités adaptées, sans partage de données.
+                              </div>
+                            </PopoverContent>
+                          </Popover>
+                        </div>
+                      ) : null}
                       <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
                         {step.description}
                       </p>
