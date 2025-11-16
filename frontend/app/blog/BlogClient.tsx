@@ -55,7 +55,13 @@ export default function BlogClient() {
             <BookOpen className="w-10 h-10 md:w-12 md:h-12 text-white" />
             <h1 className="text-3xl md:text-5xl font-extrabold text-white tracking-tight">Blog et Témoignages</h1>
           </div>
-          <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">Articles, témoignages et conseils pour accompagner votre famille</p>
+          <div className="flex flex-col items-center gap-1">
+            <p className="text-blue-100 dark:text-blue-200 text-sm md:text-base">Articles, témoignages et conseils pour accompagner votre famille</p>
+            <span className="inline-flex items-center gap-2 bg-black/20 text-white px-3 py-1 rounded-full text-xs">
+              <span className="opacity-80">Total</span>
+              <strong>{blogs.length}</strong>
+            </span>
+          </div>
         </div>
       </div>
 
