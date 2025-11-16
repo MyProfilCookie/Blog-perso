@@ -7,6 +7,7 @@
 /* eslint-disable prettier/prettier */
 
 import { useState, useEffect, useMemo } from "react";
+import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import React from "react";
 import { motion } from "framer-motion";
 import Link from "next/link";
@@ -203,16 +204,16 @@ interface ArticleCardProps {
 const ArticleCard = ({ id, title, subtitle, img, image, category, author, date, readTime, views, rating }: ArticleCardProps) => {
   const imageSrc = resolveImagePath(img || image);
   const hash = computeStableHash(id);
-  const priority = hash % 7 === 0;
+  const priority = false;
+  const { isMobile } = useMobileOptimization();
   const ratingDisplay = typeof rating === "number" ? rating.toFixed(1) : rating;
 
   return (
   <motion.div
-    animate={{ opacity: 1, y: 0 }}
+    animate={isMobile ? undefined : { opacity: 1, y: 0 }}
     className="w-full mb-4 sm:mb-5 md:mb-6"
-    initial={{ opacity: 0, y: 20 }}
-    transition={{ duration: 0.6 }}
-    whileHover={{ scale: 1.02 }}
+    initial={isMobile ? undefined : { opacity: 0, y: 20 }}
+    transition={isMobile ? undefined : { duration: 0.6 }}
   >
     <Card className="shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800 rounded-xl overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-700 group">
       <Link className="block relative overflow-hidden h-[160px] sm:h-[180px] md:h-[200px]" href={`/articles/${id}`}>
@@ -312,6 +313,18 @@ const ArticlesPage = () => {
   const [loadingArticles, setLoadingArticles] = useState(true);
   const [loadError, setLoadError] = useState<string | null>(null);
   const articlesPerPage = 12;
+  const { isMobile } = useMobileOptimization();
+  const [deferredSidebar, setDeferredSidebar] = useState(false);
+
+  useEffect(() => {
+    const idle = (window as any).requestIdleCallback;
+    if (idle) {
+      idle(() => setDeferredSidebar(true), { timeout: 1000 });
+    } else {
+      const t = setTimeout(() => setDeferredSidebar(true), 500);
+      return () => clearTimeout(t);
+    }
+  }, []);
 
   useEffect(() => {
     let isMounted = true;
@@ -673,6 +686,7 @@ const ArticlesPage = () => {
           {/* Sidebar */}
           <div className="md:col-span-1 space-y-2 sm:space-y-3 md:space-y-4 lg:space-y-6">
             {/* Catégories populaires */}
+            {deferredSidebar && (
             <motion.div
               animate={{ opacity: 1, x: 0 }}
               className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 md:p-6 border border-gray-200 dark:border-gray-700"
@@ -698,8 +712,10 @@ const ArticlesPage = () => {
                 ))}
               </div>
             </motion.div>
+            )}
 
             {/* Articles recommandés */}
+            {deferredSidebar && (
             <motion.div
               animate={{ opacity: 1, x: 0 }}
               className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 md:p-6 border border-gray-200 dark:border-gray-700"
@@ -750,6 +766,7 @@ const ArticlesPage = () => {
                 ))}
               </div>
             </motion.div>
+            )}
 
             {/* Newsletter */}
             <motion.div

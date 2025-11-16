@@ -11,6 +11,7 @@ import dynamic from 'next/dynamic';
 import { useState, useEffect, useMemo } from "react";
 import React from "react";
 import { motion } from "framer-motion";
+import { useMobileOptimization } from "@/hooks/useMobileOptimization";
 import Link from "next/link";
 import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -57,13 +58,14 @@ interface BlogCardProps {
   rating?: number;
 }
 
-const BlogCard = ({ _id, title, description, imageUrl, category, author, createdAt, readTime, views, rating }: BlogCardProps) => (
+const BlogCard = ({ _id, title, description, imageUrl, category, author, createdAt, readTime, views, rating }: BlogCardProps) => {
+  const { isMobile } = useMobileOptimization();
+  return (
   <motion.div
-    animate={{ opacity: 1, y: 0 }}
+    animate={isMobile ? undefined : { opacity: 1, y: 0 }}
     className="w-full mb-6"
-    initial={{ opacity: 0, y: 20 }}
-    transition={{ duration: 0.6 }}
-    whileHover={{ scale: 1.02 }}
+    initial={isMobile ? undefined : { opacity: 0, y: 20 }}
+    transition={isMobile ? undefined : { duration: 0.6 }}
   >
     <Card className="shadow-lg hover:shadow-2xl transition-all duration-300 bg-white dark:bg-gray-800 rounded-xl overflow-hidden flex flex-col h-full border border-gray-200 dark:border-gray-700 group">
       <Link className="block relative overflow-hidden h-[200px]" href={`/blog/${_id}`}>
@@ -133,13 +135,14 @@ const BlogCard = ({ _id, title, description, imageUrl, category, author, created
             className="w-full bg-violet-600 hover:bg-violet-700 dark:bg-violet-700 dark:hover:bg-violet-800 text-white group-hover:bg-violet-700 transition-all duration-300"
           >
             Lire l'article
-            <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+            <ArrowRight className="w-4 h-4 ml-2" />
           </Button>
         </Link>
       </CardFooter>
     </Card>
   </motion.div>
 );
+}
 
 const BlogPage = () => {
   const [blogs, setBlogs] = useState<Blog[]>([]);
@@ -438,6 +441,7 @@ const BlogPage = () => {
           {/* Sidebar */}
           <div className="lg:col-span-1 space-y-3 sm:space-y-4 md:space-y-6">
             {/* Catégories populaires */}
+            {deferredSidebar && (
             <motion.div
               animate={{ opacity: 1, x: 0 }}
               className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 md:p-6 border border-gray-200 dark:border-gray-700"
@@ -463,8 +467,10 @@ const BlogPage = () => {
                 ))}
               </div>
             </motion.div>
+            )}
 
             {/* Articles recommandés */}
+            {deferredSidebar && (
             <motion.div
               animate={{ opacity: 1, x: 0 }}
               className="bg-white dark:bg-gray-800 rounded-xl p-3 sm:p-4 md:p-6 border border-gray-200 dark:border-gray-700"
@@ -509,8 +515,10 @@ const BlogPage = () => {
                 ))}
               </div>
             </motion.div>
+            )}
 
             {/* Newsletter */}
+            {deferredSidebar && (
             <motion.div
               animate={{ opacity: 1, x: 0 }}
               className="bg-gradient-to-br from-violet-600 to-purple-600 rounded-xl p-3 sm:p-4 md:p-6 text-white"
@@ -531,6 +539,7 @@ const BlogPage = () => {
                 </Button>
               </div>
             </motion.div>
+            )}
           </div>
 
           {/* Contenu principal */}
@@ -673,3 +682,14 @@ const BlogPage = () => {
 };
 
 export default BlogPage;
+  const { isMobile } = useMobileOptimization();
+  const [deferredSidebar, setDeferredSidebar] = useState(false);
+  useEffect(() => {
+    const idle = (window as any).requestIdleCallback;
+    if (idle) {
+      idle(() => setDeferredSidebar(true), { timeout: 1000 });
+    } else {
+      const t = setTimeout(() => setDeferredSidebar(true), 500);
+      return () => clearTimeout(t);
+    }
+  }, []);
