@@ -7,6 +7,7 @@ import { LightAnimation } from "@/components/DynamicMotion";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { loadFallbackExercises } from "@/utils/subjectFallback";
 import { toast } from "sonner";
 
 import BackButton from "@/components/back";
@@ -110,6 +111,13 @@ const FrancaisPage: React.FC = () => {
 
         setExercises(response.data.questions);
         setLoading(false);
+
+        const qList = response.data?.questions || [];
+        const unique = new Set(qList.map((q: any) => q.question || q.text || ""));
+        if (qList.length <= 3 || unique.size <= 3) {
+          const fb = await loadFallbackExercises("french");
+          if (fb.length) setExercises(fb);
+        }
 
         // Charger l'historique des réponses seulement si pas de données dans le localStorage
         const savedUserAnswers = localStorage.getItem("french_userAnswers");

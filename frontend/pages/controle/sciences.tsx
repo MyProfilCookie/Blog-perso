@@ -6,6 +6,7 @@ import dynamic from "next/dynamic";
 import Image from "next/image";
 import { useRouter } from "next/router";
 import axios from "axios";
+import { loadFallbackExercises } from "@/utils/subjectFallback";
 import { toast } from "sonner";
 import { useRevision } from "@/app/RevisionContext";
 
@@ -136,8 +137,15 @@ const SciencesPage: React.FC = () => {
         `${process.env.NEXT_PUBLIC_API_URL}/subjects/sciences`,
       );
 
-      setExercises(response.data.questions);
-      setLoading(false);
+        setExercises(response.data.questions);
+        setLoading(false);
+
+        const qList = response.data?.questions || [];
+        const unique = new Set(qList.map((q: any) => q.question || q.text || ""));
+        if (qList.length <= 3 || unique.size <= 3) {
+          const fb = await loadFallbackExercises("sciences");
+          if (fb.length) setExercises(fb);
+        }
 
       // Charger l'historique des réponses seulement si pas de données dans le localStorage
       const savedUserAnswers = localStorage.getItem('sciences_userAnswers');

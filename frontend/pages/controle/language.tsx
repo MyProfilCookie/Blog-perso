@@ -12,6 +12,7 @@ import Timer from "@/components/Timer";
 import { ProgressBar } from "@/components/progress/ProgressBar";
 import { useRouter } from "next/navigation";
 import axios from "axios";
+import { loadFallbackExercises } from "@/utils/subjectFallback";
 import { toast } from "sonner";
 import { useRevision } from "@/app/RevisionContext";
 
@@ -111,6 +112,13 @@ const LanguagePage: React.FC = () => {
 
         setExercises(response.data.questions);
         setLoading(false);
+
+        const qList = response.data?.questions || [];
+        const unique = new Set(qList.map((q: any) => q.question || q.text || ""));
+        if (qList.length <= 3 || unique.size <= 3) {
+          const fb = await loadFallbackExercises("language");
+          if (fb.length) setExercises(fb);
+        }
 
         // Charger l'historique des réponses seulement si pas de données dans le localStorage
         const savedUserAnswers = localStorage.getItem('language_userAnswers');

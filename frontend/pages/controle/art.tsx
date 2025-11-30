@@ -3,6 +3,7 @@
 /* eslint-disable react/no-unescaped-entities */
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import { loadFallbackExercises } from "@/utils/subjectFallback";
 import { Card } from '@nextui-org/react'
 import { CardBody } from '@nextui-org/react'
 import { Button } from '@nextui-org/react';
@@ -121,6 +122,13 @@ const ArtPage: React.FC = () => {
 
         setExercises(response.data.questions);
         setLoading(false);
+
+        const qList = response.data?.questions || [];
+        const unique = new Set(qList.map((q: any) => q.question || q.text || ""));
+        if (qList.length <= 3 || unique.size <= 3) {
+          const fb = await loadFallbackExercises("art");
+          if (fb.length) setExercises(fb);
+        }
 
         // Charger l'historique des réponses seulement si pas de données dans le localStorage
         const savedUserAnswers = localStorage.getItem('art_userAnswers');
