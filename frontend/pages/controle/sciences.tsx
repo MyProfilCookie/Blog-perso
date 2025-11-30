@@ -198,6 +198,14 @@ const SciencesPage: React.FC = () => {
         }
       }
     } catch (err) {
+      try {
+        const fb = await loadFallbackExercises("sciences");
+        if (fb.length) {
+          setExercises(fb);
+          setLoading(false);
+          return;
+        }
+      } catch {}
       setError("Erreur lors du chargement des exercices");
       setLoading(false);
     }
@@ -708,4 +716,3 @@ const SciencesPage: React.FC = () => {
 };
 
 export default SciencesPage;
-

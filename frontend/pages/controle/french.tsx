@@ -182,6 +182,14 @@ const FrancaisPage: React.FC = () => {
         }
       } catch (err) {
         console.error(err);
+        try {
+          const fb = await loadFallbackExercises("french");
+          if (fb.length) {
+            setExercises(fb);
+            setLoading(false);
+            return;
+          }
+        } catch {}
         setError("Erreur lors du chargement des exercices");
         setLoading(false);
       }

@@ -172,6 +172,14 @@ const MathPage: React.FC = React.memo(() => {
         }
       } catch (err) {
         console.error(err);
+        try {
+          const fb = await loadFallbackExercises("math");
+          if (fb.length) {
+            setExercises(fb);
+            setLoading(false);
+            return;
+          }
+        } catch {}
         setError("Erreur lors du chargement des exercices");
         setLoading(false);
       }

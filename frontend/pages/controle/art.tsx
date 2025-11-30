@@ -65,7 +65,13 @@ const ArtPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 20;
   const correctSound =
-    typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
+    typeof Audio !== "undefined"
+      ? (() => {
+          const a = new Audio("/sounds/correct.mp3");
+          a.preload = "none";
+          return a;
+        })()
+      : null;
   const [timeSpent, setTimeSpent] = useState(0);
   const [rating, setRating] = useState<number | null>(null);
 
@@ -182,6 +188,14 @@ const ArtPage: React.FC = () => {
         }
       } catch (err) {
         console.error(err);
+        try {
+          const fb = await loadFallbackExercises("art");
+          if (fb.length) {
+            setExercises(fb);
+            setLoading(false);
+            return;
+          }
+        } catch {}
         setError("Erreur lors du chargement des exercices");
         setLoading(false);
       }
