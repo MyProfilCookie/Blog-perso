@@ -56,7 +56,13 @@ const MathPage: React.FC = React.memo(() => {
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 20;
   const correctSound =
-    typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
+    typeof Audio !== "undefined"
+      ? (() => {
+        const a = new Audio("/sounds/correct.mp3");
+        a.preload = "none";
+        return a;
+      })()
+      : null;
   const [timeSpent, setTimeSpent] = useState(0);
   const [rating, setRating] = useState<number | null>(null);
 
@@ -124,11 +130,11 @@ const MathPage: React.FC = React.memo(() => {
         const savedUserAnswers = localStorage.getItem('math_userAnswers');
         const savedResults = localStorage.getItem('math_results');
         const savedValidatedExercises = localStorage.getItem('math_validatedExercises');
-        
+
         if (!savedUserAnswers || !savedResults || !savedValidatedExercises) {
           const userId = localStorage.getItem("userId");
           const token = localStorage.getItem("token");
-          
+
           if (userId && token) {
             const answersResponse = await axios.get(
               `${process.env.NEXT_PUBLIC_API_URL}/answers/${userId}/math`,
@@ -160,12 +166,12 @@ const MathPage: React.FC = React.memo(() => {
 
             setUserAnswers(userAnswersMap);
             setResults(resultsMap);
-            
+
             // Sauvegarder dans le localStorage
             localStorage.setItem('math_userAnswers', JSON.stringify(userAnswersMap));
             localStorage.setItem('math_results', JSON.stringify(resultsMap));
             localStorage.setItem('math_validatedExercises', JSON.stringify(validatedExercises));
-            
+
             // Mettre à jour le nombre d'exercices complétés
             setCompletedExercises(Object.values(validatedExercises).filter(Boolean).length);
           }
@@ -179,7 +185,7 @@ const MathPage: React.FC = React.memo(() => {
             setLoading(false);
             return;
           }
-        } catch {}
+        } catch { }
         setError("Erreur lors du chargement des exercices");
         setLoading(false);
       }
@@ -227,7 +233,7 @@ const MathPage: React.FC = React.memo(() => {
     const userAnswer = userAnswers[id];
     const isCorrect = userAnswer?.toLowerCase().trim() === correctAnswer.toLowerCase();
     const exerciseIndex = exercises.findIndex(ex => ex._id === id);
-    
+
     if (exerciseIndex !== -1) {
       const newResults = [...results];
       newResults[exerciseIndex] = { isCorrect, answer: userAnswer || '' };
@@ -238,7 +244,7 @@ const MathPage: React.FC = React.memo(() => {
       const updatedResults = [...newResults];
       localStorage.setItem('math_userAnswers', JSON.stringify(updatedUserAnswers));
       localStorage.setItem('math_results', JSON.stringify(updatedResults));
-      
+
       // Sauvegarder l'état de validation
       const validatedExercises = JSON.parse(localStorage.getItem('math_validatedExercises') || '{}');
       validatedExercises[id] = true;
@@ -249,7 +255,7 @@ const MathPage: React.FC = React.memo(() => {
       try {
         const user = localStorage.getItem("user");
         const token = localStorage.getItem("userToken");
-        
+
         if (user && token) {
           const userId = JSON.parse(user)._id;
           // On n'enregistre que si la réponse est incorrecte
@@ -419,197 +425,197 @@ const MathPage: React.FC = React.memo(() => {
   return (
     <div className="min-h-screen bg-cream p-4 dark:bg-background">
       <div className="max-w-7xl mx-auto">
-      <div className="flex justify-between items-center mb-4">
-        <BackButton />
-        <Timer timeLeft={timeLeft} />
-      </div>
+        <div className="flex justify-between items-center mb-4">
+          <BackButton />
+          <Timer timeLeft={timeLeft} />
+        </div>
 
-      <LightAnimation animation="slideUp" className="text-center mb-4">
-        <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
-          Mathématiques {getEmojiForCategory(selectedCategory)}
-        </h1>
-        <p className="text-gray-600 dark:text-gray-400 text-sm">
-          Exercices interactifs
-        </p>
-      </LightAnimation>
+        <LightAnimation animation="slideUp" className="text-center mb-4">
+          <h1 className="text-3xl font-bold text-violet-600 dark:text-violet-400">
+            Mathématiques {getEmojiForCategory(selectedCategory)}
+          </h1>
+          <p className="text-gray-600 dark:text-gray-400 text-sm">
+            Exercices interactifs
+          </p>
+        </LightAnimation>
 
-          {/* Timer et Progression */}
-          <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
-            <div className="w-full sm:w-auto">
-              <Timer timeLeft={timeLeft} />
-            </div>
-            <div className="w-full sm:w-auto flex-1">
-              <ProgressBar 
-                totalQuestions={exercises.length}
-                correctAnswers={completedExercises}
-                onProgressComplete={() => {
-                  if (completedExercises === exercises.length) {
-                    calculateFinalScore();
-                  }
-                }}
-              />
-            </div>
+        {/* Timer et Progression */}
+        <div className="flex flex-col sm:flex-row gap-4 items-center mb-4">
+          <div className="w-full sm:w-auto">
+            <Timer timeLeft={timeLeft} />
           </div>
-
-          {/* Message d'encouragement */}
-          {emoji && (
-            <LightAnimation animation="slideUp" className="text-center text-lg font-medium text-primary mb-4"
-            >
-              {emoji}
-            </LightAnimation>
-          )}
-
-          {/* Filtres et catégories */}
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <select
-              className="w-full sm:w-auto p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
-              value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-            >
-              <option value="Tout">Toutes les catégories</option>
-              {categories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
-          </div>
-
-          {/* Liste des exercices */}
-          {loading ? (
-            <div className="flex justify-center items-center min-h-[200px]">
-              <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
-            </div>
-          ) : error ? (
-            <div className="text-red-500 text-center p-4">{error}</div>
-          ) : (
-            <div className="grid grid-cols-1 gap-6">
-              {exercises
-                .filter(
-                  (exercise) =>
-                    selectedCategory === "Tout" ||
-                    exercise.category === selectedCategory
-                )
-                .slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
-                .map((exercise) => (
-                  <Card
-                    key={exercise._id}
-                    className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
-                  >
-                    <CardBody className="p-4 sm:p-6">
-                      <div className="flex flex-col gap-4">
-                        {/* Titre et catégorie */}
-                        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
-                          <h3 className="text-lg font-semibold">
-                            {getEmojiForCategory(exercise.category)} {exercise.title}
-                          </h3>
-                          <span className="text-sm text-gray-500 dark:text-gray-400">
-                            {exercise.category}
-                          </span>
-                        </div>
-
-                        {/* Image si présente */}
-                        {exercise.image && (
-                          <div className="relative w-full h-48 sm:h-64">
-                            <Image
-                              src={exercise.image}
-                              alt={exercise.title}
-                              fill
-                              sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                              style={{ objectFit: 'cover' }}
-                              className="rounded-lg"
-                              loading="lazy"
-                              placeholder="blur"
-                              blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxAAPwCdABmX/9k="
-                            />
-                          </div>
-                        )}
-
-                        {/* Contenu et question */}
-                        <div className="space-y-4">
-                          <p className="text-gray-700 dark:text-gray-300">{exercise.content}</p>
-                          <p className="font-medium">{exercise.question}</p>
-                        </div>
-
-                        {/* Options ou champ de réponse */}
-                        <div className="space-y-4">
-                          {exercise.options ? (
-                            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                              {exercise.options.map((option, index) => (
-                                <label
-                                  key={`${exercise._id}-option-${index}`}
-                                  className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
-                                >
-                                  <input
-                                    type="radio"
-                                    name={exercise._id}
-                                    value={option}
-                                    onChange={(e) => handleChange(e, exercise._id)}
-                                    disabled={isAnswerSubmitted(exercise._id)}
-                                    className="form-radio"
-                                  />
-                                  <span>{option}</span>
-                                </label>
-                              ))}
-                            </div>
-                          ) : (
-                            <input
-                              type="text"
-                              placeholder="Votre réponse"
-                              className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600"
-                              onChange={(e) => handleChange(e, exercise._id)}
-                              disabled={isAnswerSubmitted(exercise._id)}
-                            />
-                          )}
-                        </div>
-
-                        {/* Bouton de soumission et résultat */}
-                        <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
-                          <Button
-                            color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
-                            onClick={() => handleSubmit(exercise._id, exercise.answer)}
-                            disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
-                            className="w-full sm:w-auto"
-                          >
-                            {isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "Correct ✓" : "Incorrect ✗") : "Valider"}
-                          </Button>
-
-                          {isAnswerSubmitted(exercise._id) && (
-                            <RatingButtons 
-                              exerciseId={exercise._id} 
-                              onRating={handleRating} 
-                            />
-                          )}
-                        </div>
-                      </div>
-                    </CardBody>
-                  </Card>
-                ))}
-            </div>
-          )}
-
-          {/* Pagination */}
-          <div className="flex justify-center gap-2 mt-6">
-            <Button
-              onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
-              disabled={currentPage === 1}
-              className="w-auto"
-            >
-              Précédent
-            </Button>
-            <span className="flex items-center px-4">
-              Page {currentPage} sur {Math.ceil(exercises.length / questionsPerPage)}
-            </span>
-            <Button
-              onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
-              disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
-              className="w-auto"
-            >
-              Suivant
-            </Button>
+          <div className="w-full sm:w-auto flex-1">
+            <ProgressBar
+              totalQuestions={exercises.length}
+              correctAnswers={completedExercises}
+              onProgressComplete={() => {
+                if (completedExercises === exercises.length) {
+                  calculateFinalScore();
+                }
+              }}
+            />
           </div>
         </div>
+
+        {/* Message d'encouragement */}
+        {emoji && (
+          <LightAnimation animation="slideUp" className="text-center text-lg font-medium text-primary mb-4"
+          >
+            {emoji}
+          </LightAnimation>
+        )}
+
+        {/* Filtres et catégories */}
+        <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <select
+            className="w-full sm:w-auto p-2 rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800"
+            value={selectedCategory}
+            onChange={(e) => setSelectedCategory(e.target.value)}
+          >
+            <option value="Tout">Toutes les catégories</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Liste des exercices */}
+        {loading ? (
+          <div className="flex justify-center items-center min-h-[200px]">
+            <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-primary"></div>
+          </div>
+        ) : error ? (
+          <div className="text-red-500 text-center p-4">{error}</div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6">
+            {exercises
+              .filter(
+                (exercise) =>
+                  selectedCategory === "Tout" ||
+                  exercise.category === selectedCategory
+              )
+              .slice((currentPage - 1) * questionsPerPage, currentPage * questionsPerPage)
+              .map((exercise) => (
+                <Card
+                  key={exercise._id}
+                  className="w-full bg-white dark:bg-gray-800 shadow-lg hover:shadow-xl transition-shadow"
+                >
+                  <CardBody className="p-4 sm:p-6">
+                    <div className="flex flex-col gap-4">
+                      {/* Titre et catégorie */}
+                      <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2">
+                        <h3 className="text-lg font-semibold">
+                          {getEmojiForCategory(exercise.category)} {exercise.title}
+                        </h3>
+                        <span className="text-sm text-gray-500 dark:text-gray-400">
+                          {exercise.category}
+                        </span>
+                      </div>
+
+                      {/* Image si présente */}
+                      {exercise.image && (
+                        <div className="relative w-full h-48 sm:h-64">
+                          <Image
+                            src={exercise.image}
+                            alt={exercise.title}
+                            fill
+                            sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                            style={{ objectFit: 'cover' }}
+                            className="rounded-lg"
+                            loading="lazy"
+                            placeholder="blur"
+                            blurDataURL="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/2wBDAAYEBQYFBAYGBQYHBwYIChAKCgkJChQODwwQFxQYGBcUFhYaHSUfGhsjHBYWICwgIyYnKSopGR8tMC0oMCUoKSj/2wBDAQcHBwoIChMKChMoGhYaKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCj/wAARCAABAAEDASIAAhEBAxEB/8QAFQABAQAAAAAAAAAAAAAAAAAAAAv/xAAUEAEAAAAAAAAAAAAAAAAAAAAA/8QAFQEBAQAAAAAAAAAAAAAAAAAAAAX/xAAUEQEAAAAAAAAAAAAAAAAAAAAA/9oADAMBAAIRAxAAPwCdABmX/9k="
+                          />
+                        </div>
+                      )}
+
+                      {/* Contenu et question */}
+                      <div className="space-y-4">
+                        <p className="text-gray-700 dark:text-gray-300">{exercise.content}</p>
+                        <p className="font-medium">{exercise.question}</p>
+                      </div>
+
+                      {/* Options ou champ de réponse */}
+                      <div className="space-y-4">
+                        {exercise.options ? (
+                          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            {exercise.options.map((option, index) => (
+                              <label
+                                key={`${exercise._id}-option-${index}`}
+                                className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                              >
+                                <input
+                                  type="radio"
+                                  name={exercise._id}
+                                  value={option}
+                                  onChange={(e) => handleChange(e, exercise._id)}
+                                  disabled={isAnswerSubmitted(exercise._id)}
+                                  className="form-radio"
+                                />
+                                <span>{option}</span>
+                              </label>
+                            ))}
+                          </div>
+                        ) : (
+                          <input
+                            type="text"
+                            placeholder="Votre réponse"
+                            className="w-full p-2 rounded-lg border border-gray-300 dark:border-gray-600"
+                            onChange={(e) => handleChange(e, exercise._id)}
+                            disabled={isAnswerSubmitted(exercise._id)}
+                          />
+                        )}
+                      </div>
+
+                      {/* Bouton de soumission et résultat */}
+                      <div className="flex flex-col sm:flex-row gap-4 items-center justify-between">
+                        <Button
+                          color={isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "success" : "danger") : "primary"}
+                          onClick={() => handleSubmit(exercise._id, exercise.answer)}
+                          disabled={!userAnswers[exercise._id] || isAnswerSubmitted(exercise._id)}
+                          className="w-full sm:w-auto"
+                        >
+                          {isAnswerSubmitted(exercise._id) ? (isAnswerCorrect(exercise._id) ? "Correct ✓" : "Incorrect ✗") : "Valider"}
+                        </Button>
+
+                        {isAnswerSubmitted(exercise._id) && (
+                          <RatingButtons
+                            exerciseId={exercise._id}
+                            onRating={handleRating}
+                          />
+                        )}
+                      </div>
+                    </div>
+                  </CardBody>
+                </Card>
+              ))}
+          </div>
+        )}
+
+        {/* Pagination */}
+        <div className="flex justify-center gap-2 mt-6">
+          <Button
+            onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+            disabled={currentPage === 1}
+            className="w-auto"
+          >
+            Précédent
+          </Button>
+          <span className="flex items-center px-4">
+            Page {currentPage} sur {Math.ceil(exercises.length / questionsPerPage)}
+          </span>
+          <Button
+            onClick={() => setCurrentPage(prev => Math.min(Math.ceil(exercises.length / questionsPerPage), prev + 1))}
+            disabled={currentPage >= Math.ceil(exercises.length / questionsPerPage)}
+            className="w-auto"
+          >
+            Suivant
+          </Button>
+        </div>
       </div>
+    </div>
   );
 });
 

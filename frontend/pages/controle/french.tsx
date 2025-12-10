@@ -54,7 +54,13 @@ const FrancaisPage: React.FC = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const questionsPerPage = 20;
   const correctSound =
-    typeof Audio !== "undefined" ? new Audio("/sounds/correct.mp3") : null;
+    typeof Audio !== "undefined"
+      ? (() => {
+        const a = new Audio("/sounds/correct.mp3");
+        a.preload = "none";
+        return a;
+      })()
+      : null;
   const [timeSpent, setTimeSpent] = useState(0);
   const [rating, setRating] = useState<number | null>(null);
 
@@ -189,7 +195,7 @@ const FrancaisPage: React.FC = () => {
             setLoading(false);
             return;
           }
-        } catch {}
+        } catch { }
         setError("Erreur lors du chargement des exercices");
         setLoading(false);
       }
@@ -244,7 +250,7 @@ const FrancaisPage: React.FC = () => {
       encouragementTimer = setInterval(() => {
         const randomMessage =
           encouragementMessages[
-            Math.floor(Math.random() * encouragementMessages.length)
+          Math.floor(Math.random() * encouragementMessages.length)
           ];
 
         setEmoji(`Page ${currentPage} : ${randomMessage}`);
@@ -624,10 +630,10 @@ const FrancaisPage: React.FC = () => {
                       <div className="space-y-4">
                         {exercise.options ? (
                           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                                                          {exercise.options.map((option, index) => (
-                                <label
-                                  key={`${exercise._id}-option-${index}`}
-                                  className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
+                            {exercise.options.map((option, index) => (
+                              <label
+                                key={`${exercise._id}-option-${index}`}
+                                className="flex items-center space-x-2 p-2 rounded-lg border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer"
                               >
                                 <input
                                   className="form-radio"

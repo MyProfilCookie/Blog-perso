@@ -80,6 +80,34 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
     window.scrollTo({ top: 0, behavior: 'smooth' });
     
     const loadQuiz = async () => {
+      const isNumeric = (val: string) => {
+        if (!val) return false;
+        const num = Number(val);
+        return !Number.isNaN(num);
+      };
+      const shuffle = <T,>(arr: T[]): T[] => {
+        const a = [...arr];
+        for (let i = a.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [a[i], a[j]] = [a[j], a[i]];
+        }
+        return a;
+      };
+      const buildOptions = (answer: string): string[] => {
+        if (isNumeric(answer)) {
+          const base = Number(answer);
+          const opts = [String(base), String(base + 1), String(Math.max(base - 1, 0))];
+          return shuffle([...new Set(opts)]);
+        }
+        const candidates = [answer, "Je ne sais pas", "Autre"];
+        return shuffle([...new Set(candidates)]);
+      };
+      const ensureOptions = (opts: string[] | undefined, answer: string): string[] => {
+        const base = Array.isArray(opts) ? opts.filter(Boolean) : [];
+        const unique = [...new Set(base.length ? base : buildOptions(answer))];
+        if (!unique.includes(answer)) unique.unshift(answer);
+        return shuffle(unique);
+      };
       try {
         const targetWeek = weekNumber || getCurrentWeek();
         const response = await fetch(`/api/quiz/week/${targetWeek}`);
@@ -92,7 +120,11 @@ export default function QuizHebdomadaire({ weekNumber, onComplete }: QuizHebdoma
         
         if (result.success && result.data) {
           const quizData: Quiz = result.data;
-          setCurrentQuiz(quizData);
+          const fixedQuestions = quizData.questions.map((q) => ({
+            ...q,
+            options: ensureOptions(q.options, q.answer),
+          }));
+          setCurrentQuiz({ ...quizData, questions: fixedQuestions });
           setCompletedQuestions(new Array(quizData.questions.length).fill(false));
           setIsAnswerValidated(new Array(quizData.questions.length).fill(false));
           setValidatedAnswers({});
