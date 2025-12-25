@@ -127,6 +127,7 @@ const ContactPage = () => {
       const newHistory = [contactData, ...messagesHistory].slice(0, 10);
       setMessagesHistory(newHistory);
       localStorage.setItem("contactMessages", JSON.stringify(newHistory));
+      console.log("Message envoyé:", contactData);
 
       MySwal.fire({
         title: "Message envoyé !",
