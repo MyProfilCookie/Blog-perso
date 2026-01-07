@@ -491,13 +491,13 @@ export const Navbar = () => {
   // Menu utilisateur pour le burger (mobile)
   const userMenuItems: any[] = user
     ? [
-        { name: "👤 Profil", href: "/profile", color: "foreground" },
-        { name: "🧾 Mes commandes", href: "/orders", color: "foreground", divider: true },
-        { name: "⏳ En cours", href: "/orders?status=pending", color: "foreground", badge: orderCount.pending || 0 },
-        { name: "📦 Expédiées", href: "/orders?status=shipped", color: "foreground", badge: orderCount.shipped || 0 },
-        { name: "✅ Livrées", href: "/orders?status=delivered", color: "foreground", badge: orderCount.delivered || 0 },
-        { name: "🚪 Déconnexion", href: "#", color: "danger", action: () => handleLogout() },
-      ]
+      { name: "👤 Profil", href: "/profile", color: "foreground" },
+      { name: "🧾 Mes commandes", href: "/orders", color: "foreground", divider: true },
+      { name: "⏳ En cours", href: "/orders?status=pending", color: "foreground", badge: orderCount.pending || 0 },
+      { name: "📦 Expédiées", href: "/orders?status=shipped", color: "foreground", badge: orderCount.shipped || 0 },
+      { name: "✅ Livrées", href: "/orders?status=delivered", color: "foreground", badge: orderCount.delivered || 0 },
+      { name: "🚪 Déconnexion", href: "#", color: "danger", action: () => handleLogout() },
+    ]
     : [];
 
   const menuOverlayClassName =
@@ -580,11 +580,10 @@ export const Navbar = () => {
               item.href === "#" ? (
                 <button
                   key={`user-${item.name}-${index}`}
-                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
-                    item.color === "danger"
-                      ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
-                      : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
-                  }`}
+                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${item.color === "danger"
+                    ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
+                    }`}
                   onClick={() => {
                     if (typeof item.action === "function") {
                       item.action();
@@ -597,11 +596,10 @@ export const Navbar = () => {
               ) : (
                 <button
                   key={`user-${item.name}-${index}`}
-                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${
-                    item.color === "danger"
-                      ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
-                      : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
-                  }`}
+                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${item.color === "danger"
+                    ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
+                    }`}
                   onClick={() => {
                     router.push(item.href);
                     setIsMenuOpen(false);
@@ -834,11 +832,10 @@ export const Navbar = () => {
                       ? adminColors[avatarColorIndex]
                       : userColors[avatarColorIndex],
                   borderWidth: "3px",
-                  boxShadow: `0 0 12px ${
-                    user?.role === "admin"
-                      ? adminColors[avatarColorIndex]
-                      : userColors[avatarColorIndex]
-                  }`,
+                  boxShadow: `0 0 12px ${user?.role === "admin"
+                    ? adminColors[avatarColorIndex]
+                    : userColors[avatarColorIndex]
+                    }`,
                 }}
                 onClick={() => router.push("/profile")}
               />
@@ -846,11 +843,12 @@ export const Navbar = () => {
 
             {/* Avatar desktop avec dropdown */}
             <div className="hidden lg:block">
-              <Dropdown disableAnimation>
-                <DropdownTrigger className="no-motion-dropdown">
+              <Dropdown placement="bottom-end">
+                <DropdownTrigger>
                   <Button
                     aria-label="Menu utilisateur"
-                    className="bg-transparent relative button-cls-optimized button-cls-optimized button-cls-optimized button-cls-optimized focus-visible:outline-none transition-none"
+                    className="bg-transparent min-w-min data-[hover=true]:bg-transparent"
+                    disableRipple
                   >
                     <Avatar
                       alt={`Avatar de ${user?.pseudo}`}
@@ -864,11 +862,10 @@ export const Navbar = () => {
                             ? adminColors[avatarColorIndex]
                             : userColors[avatarColorIndex],
                         borderWidth: "3px",
-                        boxShadow: `0 0 12px ${
-                          user?.role === "admin"
-                            ? adminColors[avatarColorIndex]
-                            : userColors[avatarColorIndex]
-                        }`,
+                        boxShadow: `0 0 12px ${user?.role === "admin"
+                          ? adminColors[avatarColorIndex]
+                          : userColors[avatarColorIndex]
+                          }`,
                       }}
                     />
                     <span className="ml-2 hidden xl:inline dark:text-gray-200 text-gray-700 text-sm">
@@ -876,7 +873,10 @@ export const Navbar = () => {
                     </span>
                   </Button>
                 </DropdownTrigger>
-                <DropdownMenu className="dark:bg-gray-800 dark:border-gray-700 no-motion-dropdown">
+                <DropdownMenu
+                  aria-label="Actions utilisateur"
+                  className="dark:bg-gray-800 dark:border-gray-700"
+                >
                   <DropdownItem
                     className="dark:text-gray-200 dark:hover:bg-gray-700"
                     key="profile"
