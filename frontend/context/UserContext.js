@@ -39,7 +39,7 @@ export const UserProvider = ({ children }) => {
     setLoading(false);
   }, []);
 
-  const loginUser = (userData) => {
+  const loginUser = React.useCallback((userData) => {
     const normalizedUser = {
       ...userData,
       avatar: normalizeAvatarUrl(userData?.avatar),
@@ -53,9 +53,9 @@ export const UserProvider = ({ children }) => {
       const event = new CustomEvent("userUpdate", { detail: userData });
       window.dispatchEvent(event);
     }
-  };
+  }, []);
 
-  const logoutUser = () => {
+  const logoutUser = React.useCallback(() => {
     setUser(null);
     
     if (typeof window !== 'undefined') {
@@ -65,7 +65,7 @@ export const UserProvider = ({ children }) => {
     
     router.replace("/"); // Rediriger après déconnexion
     // Suppression du reload automatique pour éviter les problèmes
-  };
+  }, [router]);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -123,7 +123,9 @@ export const UserProvider = ({ children }) => {
       window.removeEventListener("storage", handleStorage);
       window.removeEventListener("userUpdate", handleUserUpdate);
     };
-  }, []);
+  }, [loginUser]);
+
+  const contextValue = React.useMemo(() => ({ user, loginUser, logoutUser }), [user, loginUser, logoutUser]);
 
   if (loading) {
     // eslint-disable-next-line react/jsx-no-undef
@@ -131,7 +133,7 @@ export const UserProvider = ({ children }) => {
   }
 
   return (
-    <UserContext.Provider value={{ user, loginUser, logoutUser }}>
+    <UserContext.Provider value={contextValue}>
       {children}
     </UserContext.Provider>
   );
