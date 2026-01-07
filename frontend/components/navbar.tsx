@@ -25,6 +25,7 @@ import {
   faGamepad,
   faShoppingCart,
   faNewspaper,
+  faRocket,
 } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "@nextui-org/link";
 import NextLink from "next/link";
@@ -483,7 +484,10 @@ export const Navbar = () => {
     { name: "🎮 Contrôle", href: "/controle", color: "foreground" },
     { name: "🛒 Shop", href: "/shop", color: "foreground" },
     ...(isVirginie
-      ? [{ name: "🌟 Maeva", href: "/maeva", color: "foreground" }]
+      ? [
+        { name: "🌟 Maeva", href: "/maeva", color: "foreground" },
+        { name: "🚀 Projet", href: "/projet", color: "foreground" }
+      ]
       : []),
     { name: "❤️ Contact", href: "/contact", color: "foreground" },
   ];
@@ -765,15 +769,26 @@ export const Navbar = () => {
         </NavbarItem>
 
         {isVirginie && (
-          <NavbarItem>
-            <NextLink
-              className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
-              href="/maeva"
-            >
-              <Sparkles className="w-5 h-5" />
-              Maeva
-            </NextLink>
-          </NavbarItem>
+          <>
+            <NavbarItem>
+              <NextLink
+                className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
+                href="/projet"
+              >
+                <FontAwesomeIcon className="w-5 h-5" icon={faRocket} />
+                Projet
+              </NextLink>
+            </NavbarItem>
+            <NavbarItem>
+              <NextLink
+                className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
+                href="/maeva"
+              >
+                <Sparkles className="w-5 h-5" />
+                Maeva
+              </NextLink>
+            </NavbarItem>
+          </>
         )}
       </NavbarContent>
 
