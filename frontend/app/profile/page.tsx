@@ -95,7 +95,15 @@ const ProfilePage = () => {
       previousAvatarObjectUrl.current = null;
     }
 
-    const normalizedAvatar = normalizeAvatarUrl(userData.avatar || userData.image);
+    const rawAvatar = userData.avatar || userData.image;
+    let normalizedAvatar = normalizeAvatarUrl(rawAvatar);
+    
+    // Add timestamp to force image refresh if it's an uploaded image (not default)
+    if (normalizedAvatar && !normalizedAvatar.includes('default-avatar') && !normalizedAvatar.startsWith('data:')) {
+      const separator = normalizedAvatar.includes('?') ? '&' : '?';
+      normalizedAvatar = `${normalizedAvatar}${separator}t=${new Date().getTime()}`;
+    }
+
     const normalizedUser = {
       ...userData,
       avatar: normalizedAvatar,
