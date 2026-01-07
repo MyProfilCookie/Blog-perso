@@ -101,8 +101,8 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // 🔧 Configuration CORS
 const allowedOrigins = [
-  'https://autistudy.com',
-  'https://www.autistudy.com',
+  'https://autistudy.org',
+  'https://www.autistudy.org',
   'https://autistudy.vercel.app',
   'https://autistudy-48mon62zt-myprofilcookies-projects.vercel.app',
   'http://localhost:3000'
