@@ -2,9 +2,7 @@
 
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sun, Moon, Mail, Phone, MapPin, Clock, Send, MessageCircle, Heart, Users, Sparkles, CheckCircle } from "lucide-react";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+import { Sun, Moon, Mail, Phone, Clock, Send, MessageCircle, Heart, Users, Sparkles, CheckCircle } from "lucide-react";
 import { useTheme } from "next-themes";
 
 // Import shadcn components
@@ -15,42 +13,31 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Badge } from "@/components/ui/badge";
 
-const MySwal = withReactContent(Swal);
-
-// Type pour les messages
-interface ContactMessage {
-  nom: string;
-  email: string;
-  message: string;
-  date: string;
-}
+// Import des nouveaux modules
+import { ContactMessage } from "@/types/contact";
+import { useContactForm } from "@/hooks/useContactForm";
+import { getContactHistory } from "@/lib/services/contactService";
 
 const ContactPage = () => {
   const [nom, setNom] = useState("");
   const [email, setEmail] = useState("");
   const [message, setMessage] = useState("");
   const [messagesHistory, setMessagesHistory] = useState<ContactMessage[]>([]);
-  const [loading, setLoading] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  
+  // Utilisation du hook personnalisé
+  const { loading, submitContactForm } = useContactForm();
 
   useEffect(() => {
     setMounted(true);
   }, []);
   const isDarkMode = resolvedTheme === "dark";
 
-  // Charger l'historique des messages depuis le localStorage
+  // Charger l'historique des messages depuis le service
   useEffect(() => {
-    const stored = localStorage.getItem("contactMessages");
-    if (stored) {
-      try {
-        const parsed = JSON.parse(stored);
-        setMessagesHistory(Array.isArray(parsed) ? parsed : []);
-      } catch (error) {
-        console.error("Erreur lors du parsing de l'historique:", error);
-        setMessagesHistory([]);
-      }
-    }
+    const history = getContactHistory();
+    setMessagesHistory(history);
   }, []);
 
   // Pré-remplir nom/email si utilisateur connecté
@@ -88,66 +75,16 @@ const ContactPage = () => {
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    // Validation des champs
-    if (!nom.trim() || !email.trim() || !message.trim()) {
-      MySwal.fire({
-        title: "Champs manquants",
-        text: "Veuillez remplir tous les champs obligatoires.",
-        icon: "warning",
-        confirmButtonColor: "#F59E0B",
-      });
-      return;
-    }
+    // Utilisation du hook pour soumettre le formulaire
+    const result = await submitContactForm({ nom, email, message });
 
-    // Validation email basique
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    if (!emailRegex.test(email)) {
-      MySwal.fire({
-        title: "Email invalide",
-        text: "Veuillez saisir une adresse email valide.",
-        icon: "warning",
-        confirmButtonColor: "#F59E0B",
-      });
-      return;
-    }
-
-    setLoading(true);
-    const contactData: ContactMessage = {
-      nom: nom.trim(),
-      email: email.trim(),
-      message: message.trim(),
-      date: new Date().toISOString(),
-    };
-
-    try {
-      // Simuler l'envoi
-      await new Promise((res) => setTimeout(res, 800));
-
-      // Ajout à l'historique local
-      const newHistory = [contactData, ...messagesHistory].slice(0, 10);
-      setMessagesHistory(newHistory);
-      localStorage.setItem("contactMessages", JSON.stringify(newHistory));
-      console.log("Message envoyé:", contactData);
-
-      MySwal.fire({
-        title: "Message envoyé !",
-        text: "Nous vous répondrons sous 24 à 48h.",
-        icon: "success",
-        confirmButtonColor: "#2563eb",
-      });
-
+    if (result.success) {
       // Réinitialiser le formulaire
       setMessage("");
-    } catch (error) {
-      console.error("Erreur lors de l'envoi:", error);
-      MySwal.fire({
-        title: "Erreur",
-        text: "Une erreur est survenue lors de l'envoi. Réessayez plus tard.",
-        icon: "error",
-        confirmButtonColor: "#DC2626",
-      });
-    } finally {
-      setLoading(false);
+      
+      // Recharger l'historique
+      const history = getContactHistory();
+      setMessagesHistory(history);
     }
   };
 
