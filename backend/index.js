@@ -104,7 +104,8 @@ const allowedOrigins = [
   'https://autistudy.org',
   'https://www.autistudy.org',
   'https://autistudy.vercel.app',
-  'https://autistudy-48mon62zt-myprofilcookies-projects.vercel.app',
+  'https://blog-perso-od8hvkk09-mynames-projects-d8069f26.vercel.app',
+  'https://blog-perso-od8hvkk09-mynames-projects-d8069f26.vercel.app',
   'http://localhost:3000'
 ];
 
