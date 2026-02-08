@@ -453,16 +453,32 @@ exports.uploadAvatar = async (req, res) => {
 
     if (isCloudinaryConfigured) {
       // Utiliser Cloudinary pour le stockage permanent
-      const { uploadToCloudinary, deleteFromCloudinary, extractPublicIdFromUrl } = require('../../config/cloudinary');
+      const { uploadToCloudinary, uploadBufferToCloudinary, deleteFromCloudinary, extractPublicIdFromUrl } = require('../../config/cloudinary');
       
       console.log("☁️ Upload vers Cloudinary...");
+      console.log("📁 Type de fichier:", req.file.buffer ? "buffer (memoryStorage)" : "path (diskStorage)");
       
       try {
-        // Upload vers Cloudinary
-        const result = await uploadToCloudinary(req.file.path, {
-          public_id: `avatar_${id}_${Date.now()}`,
-          folder: 'avatars'
-        });
+        let result;
+        
+        // Vérifier si le fichier est un buffer (memoryStorage) ou un path (diskStorage)
+        if (req.file.buffer) {
+          // Upload depuis le buffer (pour Render/production)
+          result = await uploadBufferToCloudinary(req.file.buffer, {
+            public_id: `avatar_${id}_${Date.now()}`,
+            folder: 'avatars'
+          });
+        } else if (req.file.path) {
+          // Upload depuis le fichier (pour développement local)
+          result = await uploadToCloudinary(req.file.path, {
+            public_id: `avatar_${id}_${Date.now()}`,
+            folder: 'avatars'
+          });
+          // Supprimer le fichier temporaire local
+          fs.unlink(req.file.path, () => {});
+        } else {
+          throw new Error("Fichier invalide: ni buffer ni path disponible");
+        }
         
         publicUrl = result.secure_url;
         cloudinaryPublicId = result.public_id;
@@ -480,12 +496,11 @@ exports.uploadAvatar = async (req, res) => {
           }
         }
         
-        // Supprimer le fichier temporaire local
-        fs.unlink(req.file.path, () => {});
-        
       } catch (cloudinaryError) {
         console.error("❌ Erreur Cloudinary:", cloudinaryError);
-        fs.unlink(req.file.path, () => {});
+        if (req.file.path) {
+          fs.unlink(req.file.path, () => {});
+        }
         return res.status(500).json({ 
           message: "Erreur lors de l'upload de l'image. Veuillez réessayer." 
         });

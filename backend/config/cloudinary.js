@@ -38,7 +38,7 @@ if (process.env.CLOUDINARY_URL) {
 }
 
 /**
- * Upload une image vers Cloudinary
+ * Upload une image vers Cloudinary depuis un chemin de fichier
  * @param {string} filePath - Chemin du fichier temporaire
  * @param {object} options - Options d'upload (folder, public_id, etc.)
  * @returns {Promise<object>} - Résultat de l'upload avec secure_url
@@ -55,6 +55,40 @@ const uploadToCloudinary = async (filePath, options = {}) => {
   };
 
   return cloudinary.uploader.upload(filePath, defaultOptions);
+};
+
+/**
+ * Upload une image vers Cloudinary depuis un buffer (pour memoryStorage)
+ * @param {Buffer} buffer - Le buffer de l'image
+ * @param {object} options - Options d'upload (folder, public_id, etc.)
+ * @returns {Promise<object>} - Résultat de l'upload avec secure_url
+ */
+const uploadBufferToCloudinary = async (buffer, options = {}) => {
+  const defaultOptions = {
+    folder: 'avatars',
+    resource_type: 'image',
+    transformation: [
+      { width: 400, height: 400, crop: 'fill', gravity: 'face' },
+      { quality: 'auto:good', fetch_format: 'auto' }
+    ],
+    ...options
+  };
+
+  return new Promise((resolve, reject) => {
+    const uploadStream = cloudinary.uploader.upload_stream(
+      defaultOptions,
+      (error, result) => {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      }
+    );
+    
+    // Écrire le buffer dans le stream
+    uploadStream.end(buffer);
+  });
 };
 
 /**
@@ -92,6 +126,7 @@ const extractPublicIdFromUrl = (url) => {
 module.exports = {
   cloudinary,
   uploadToCloudinary,
+  uploadBufferToCloudinary,
   deleteFromCloudinary,
   extractPublicIdFromUrl
 };
