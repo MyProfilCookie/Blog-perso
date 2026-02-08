@@ -353,6 +353,7 @@ const ProfilePage = () => {
     try {
       const response = await apiPost(`/users/${user._id}/avatar`, formData, {
         headers: { "Content-Type": "multipart/form-data" },
+        timeout: 60000, // 60 secondes pour l'upload (Render free tier est lent)
       });
 
       const normalized = updateLocalUser(response.data.user);
