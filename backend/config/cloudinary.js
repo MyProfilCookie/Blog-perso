@@ -6,8 +6,25 @@ const cloudinary = require('cloudinary').v2;
 // 2. Variables séparées: CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
 
 if (process.env.CLOUDINARY_URL) {
-  // Le SDK Cloudinary parse automatiquement CLOUDINARY_URL
-  console.log("☁️ Cloudinary configuré via CLOUDINARY_URL");
+  // Parser le CLOUDINARY_URL manuellement
+  // Format: cloudinary://api_key:api_secret@cloud_name
+  try {
+    const url = process.env.CLOUDINARY_URL;
+    const match = url.match(/cloudinary:\/\/(\d+):([^@]+)@(.+)/);
+    if (match) {
+      cloudinary.config({
+        cloud_name: match[3],
+        api_key: match[1],
+        api_secret: match[2],
+        secure: true
+      });
+      console.log("☁️ Cloudinary configuré via CLOUDINARY_URL - cloud_name:", match[3]);
+    } else {
+      console.error("❌ Format CLOUDINARY_URL invalide");
+    }
+  } catch (error) {
+    console.error("❌ Erreur parsing CLOUDINARY_URL:", error);
+  }
 } else if (process.env.CLOUDINARY_CLOUD_NAME) {
   cloudinary.config({
     cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -16,6 +33,8 @@ if (process.env.CLOUDINARY_URL) {
     secure: true
   });
   console.log("☁️ Cloudinary configuré via variables séparées");
+} else {
+  console.warn("⚠️ Cloudinary non configuré - aucune variable d'environnement trouvée");
 }
 
 /**
