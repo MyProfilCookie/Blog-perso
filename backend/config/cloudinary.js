@@ -1,38 +1,77 @@
-const cloudinary = require('cloudinary').v2;
+let cloudinary;
+
+try {
+  cloudinary = require('cloudinary').v2;
+} catch (error) {
+  console.error("❌ Erreur lors du chargement de Cloudinary:", error.message);
+  // Créer un mock pour éviter les crashs
+  cloudinary = {
+    config: () => {},
+    uploader: {
+      upload: () => Promise.reject(new Error("Cloudinary non disponible")),
+      upload_stream: () => ({ end: () => {} }),
+      destroy: () => Promise.resolve()
+    }
+  };
+}
 
 // Configuration Cloudinary
 // Supporte deux formats:
 // 1. Variable unique CLOUDINARY_URL (format: cloudinary://api_key:api_secret@cloud_name)
 // 2. Variables séparées: CLOUDINARY_CLOUD_NAME, CLOUDINARY_API_KEY, CLOUDINARY_API_SECRET
 
+let isConfigured = false;
+
 if (process.env.CLOUDINARY_URL) {
-  // Parser le CLOUDINARY_URL manuellement
-  // Format: cloudinary://api_key:api_secret@cloud_name
   try {
     const url = process.env.CLOUDINARY_URL;
-    const match = url.match(/cloudinary:\/\/(\d+):([^@]+)@(.+)/);
-    if (match) {
-      cloudinary.config({
-        cloud_name: match[3],
-        api_key: match[1],
-        api_secret: match[2],
-        secure: true
-      });
-      console.log("☁️ Cloudinary configuré via CLOUDINARY_URL - cloud_name:", match[3]);
+    console.log("☁️ Tentative de configuration via CLOUDINARY_URL...");
+    
+    // Parser l'URL format: cloudinary://API_KEY:API_SECRET@CLOUD_NAME
+    // Utiliser URL parsing pour être plus robuste
+    const withoutProtocol = url.replace('cloudinary://', '');
+    const atIndex = withoutProtocol.lastIndexOf('@');
+    
+    if (atIndex !== -1) {
+      const credentials = withoutProtocol.substring(0, atIndex);
+      const cloudName = withoutProtocol.substring(atIndex + 1);
+      const colonIndex = credentials.indexOf(':');
+      
+      if (colonIndex !== -1) {
+        const apiKey = credentials.substring(0, colonIndex);
+        const apiSecret = credentials.substring(colonIndex + 1);
+        
+        cloudinary.config({
+          cloud_name: cloudName,
+          api_key: apiKey,
+          api_secret: apiSecret,
+          secure: true
+        });
+        
+        console.log("☁️ Cloudinary configuré via CLOUDINARY_URL - cloud_name:", cloudName);
+        isConfigured = true;
+      } else {
+        console.error("❌ Format CLOUDINARY_URL invalide: pas de ':' trouvé dans les credentials");
+      }
     } else {
-      console.error("❌ Format CLOUDINARY_URL invalide");
+      console.error("❌ Format CLOUDINARY_URL invalide: pas de '@' trouvé");
     }
   } catch (error) {
-    console.error("❌ Erreur parsing CLOUDINARY_URL:", error);
+    console.error("❌ Erreur parsing CLOUDINARY_URL:", error.message);
   }
 } else if (process.env.CLOUDINARY_CLOUD_NAME) {
-  cloudinary.config({
-    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
-    api_key: process.env.CLOUDINARY_API_KEY,
-    api_secret: process.env.CLOUDINARY_API_SECRET,
-    secure: true
-  });
-  console.log("☁️ Cloudinary configuré via variables séparées");
+  try {
+    cloudinary.config({
+      cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+      api_key: process.env.CLOUDINARY_API_KEY,
+      api_secret: process.env.CLOUDINARY_API_SECRET,
+      secure: true
+    });
+    console.log("☁️ Cloudinary configuré via variables séparées");
+    isConfigured = true;
+  } catch (error) {
+    console.error("❌ Erreur configuration Cloudinary:", error.message);
+  }
 } else {
   console.warn("⚠️ Cloudinary non configuré - aucune variable d'environnement trouvée");
 }
