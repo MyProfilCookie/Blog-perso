@@ -505,9 +505,9 @@ export const Navbar = () => {
     : [];
 
   const menuOverlayClassName =
-    "md:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm";
+    "lg:hidden fixed inset-0 bg-black/50 z-40 backdrop-blur-sm";
   const menuPanelClassName =
-    "md:hidden fixed top-0 left-0 h-auto max-h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto rounded-r-2xl";
+    "lg:hidden fixed top-0 left-0 h-auto max-h-screen w-72 bg-white dark:bg-gray-900 shadow-2xl z-50 overflow-y-auto rounded-r-2xl";
   const disableMenuMotion = isMobile || shouldReduceAnimations;
 
   const menuPanelContent = (
@@ -653,9 +653,9 @@ export const Navbar = () => {
       <NavbarContent className="flex-shrink-0 basis-1/5 sm:basis-full">
         <button
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="md:hidden p-2 text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
+          className="lg:hidden p-2 text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
           onClick={() => {
-            if (typeof window !== 'undefined' && window.innerWidth >= 768) {
+            if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
               setIsMenuOpen(false);
             } else {
               setIsMenuOpen(!isMenuOpen);
@@ -703,7 +703,7 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden md:flex gap-4 xl:gap-8 flex-1" justify="center">
+      <NavbarContent className="hidden lg:flex gap-4 xl:gap-8 flex-1" justify="center">
         <NavbarItem>
           <NextLink
             className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
