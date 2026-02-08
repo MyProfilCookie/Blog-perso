@@ -414,7 +414,7 @@ exports.updateUser = async (req, res) => {
 };
 
 /**
- * Upload / mise à jour de l'avatar utilisateur
+ * Upload / mise à jour de l'avatar utilisateur via Cloudinary
  */
 exports.uploadAvatar = async (req, res) => {
   try {
@@ -436,52 +436,110 @@ exports.uploadAvatar = async (req, res) => {
         .json({ message: "Vous n'êtes pas autorisé à modifier cet avatar." });
     }
 
-    const uploadRelativePath = path
-      .join("uploads", "avatars", req.file.filename)
-      .replace(/\\/g, "/");
-    const baseUrl = `${req.protocol}://${req.get("host")}`;
-    const publicPath = `${baseUrl}/${uploadRelativePath}`;
-
     const user = await User.findById(id);
     if (!user) {
       fs.unlink(req.file.path, () => {});
       return res.status(404).json({ message: "Utilisateur non trouvé." });
     }
 
-    const previousImage = user.image;
-    user.image = publicPath;
-    await user.save();
+    let publicUrl;
+    let cloudinaryPublicId = null;
 
-    if (
-      previousImage &&
-      !previousImage.startsWith("data:") &&
-      !previousImage.includes("/assets/")
-    ) {
-      let relativeOldPath = previousImage;
+    // Vérifier si Cloudinary est configuré (via CLOUDINARY_URL ou variables séparées)
+    const isCloudinaryConfigured = process.env.CLOUDINARY_URL || 
+                                    (process.env.CLOUDINARY_CLOUD_NAME && 
+                                     process.env.CLOUDINARY_API_KEY && 
+                                     process.env.CLOUDINARY_API_SECRET);
+
+    if (isCloudinaryConfigured) {
+      // Utiliser Cloudinary pour le stockage permanent
+      const { uploadToCloudinary, deleteFromCloudinary, extractPublicIdFromUrl } = require('../../config/cloudinary');
+      
+      console.log("☁️ Upload vers Cloudinary...");
+      
       try {
-        if (previousImage.startsWith("http")) {
-          const previousUrl = new URL(previousImage);
-          relativeOldPath = previousUrl.pathname;
+        // Upload vers Cloudinary
+        const result = await uploadToCloudinary(req.file.path, {
+          public_id: `avatar_${id}_${Date.now()}`,
+          folder: 'avatars'
+        });
+        
+        publicUrl = result.secure_url;
+        cloudinaryPublicId = result.public_id;
+        
+        console.log("✅ Upload Cloudinary réussi:", publicUrl);
+        
+        // Supprimer l'ancienne image de Cloudinary si elle existe
+        if (user.image && user.image.includes('cloudinary.com')) {
+          const oldPublicId = extractPublicIdFromUrl(user.image);
+          if (oldPublicId) {
+            console.log("🗑️ Suppression ancienne image Cloudinary:", oldPublicId);
+            await deleteFromCloudinary(oldPublicId).catch(err => {
+              console.warn("⚠️ Erreur suppression ancienne image:", err.message);
+            });
+          }
         }
-      } catch (error) {
-        relativeOldPath = previousImage;
+        
+        // Supprimer le fichier temporaire local
+        fs.unlink(req.file.path, () => {});
+        
+      } catch (cloudinaryError) {
+        console.error("❌ Erreur Cloudinary:", cloudinaryError);
+        fs.unlink(req.file.path, () => {});
+        return res.status(500).json({ 
+          message: "Erreur lors de l'upload de l'image. Veuillez réessayer." 
+        });
       }
+    } else {
+      // Fallback: stockage local (pour développement local)
+      console.log("⚠️ Cloudinary non configuré, utilisation du stockage local");
+      
+      const uploadRelativePath = path
+        .join("uploads", "avatars", req.file.filename)
+        .replace(/\\/g, "/");
+      const baseUrl = `${req.protocol}://${req.get("host")}`;
+      publicUrl = `${baseUrl}/${uploadRelativePath}`;
+      
+      // Nettoyage de l'ancienne image locale
+      const previousImage = user.image;
+      if (
+        previousImage &&
+        !previousImage.startsWith("data:") &&
+        !previousImage.includes("/assets/") &&
+        !previousImage.includes("cloudinary.com")
+      ) {
+        let relativeOldPath = previousImage;
+        try {
+          if (previousImage.startsWith("http")) {
+            const previousUrl = new URL(previousImage);
+            relativeOldPath = previousUrl.pathname;
+          }
+        } catch (error) {
+          relativeOldPath = previousImage;
+        }
 
-      relativeOldPath = relativeOldPath.replace(/^\//, "");
+        relativeOldPath = relativeOldPath.replace(/^\//, "");
 
-      if (relativeOldPath.startsWith("uploads/avatars")) {
-        const oldPath = path.join(__dirname, "..", "..", relativeOldPath);
-        fs.unlink(oldPath, () => {});
+        if (relativeOldPath.startsWith("uploads/avatars")) {
+          const oldPath = path.join(__dirname, "..", "..", relativeOldPath);
+          fs.unlink(oldPath, () => {});
+        }
       }
     }
+
+    // Sauvegarder l'URL dans la base de données
+    user.image = publicUrl;
+    if (cloudinaryPublicId) {
+      user.cloudinaryPublicId = cloudinaryPublicId; // Optionnel: pour référence future
+    }
+    await user.save();
 
     const userResponse = user.toObject();
     delete userResponse.password;
 
     res.status(200).json({
       message: "Photo de profil mise à jour avec succès !",
-      image: publicPath,
-      relativePath: `/${uploadRelativePath}`,
+      image: publicUrl,
       user: userResponse,
     });
   } catch (error) {
