@@ -298,14 +298,19 @@ const ProfilePage = () => {
       return;
     }
 
-    if (previousAvatarObjectUrl.current) {
+    if (previousAvatarObjectUrl.current && previousAvatarObjectUrl.current.startsWith('blob:')) {
       URL.revokeObjectURL(previousAvatarObjectUrl.current);
       previousAvatarObjectUrl.current = null;
     }
 
-    const objectUrl = URL.createObjectURL(file);
-    previousAvatarObjectUrl.current = objectUrl;
-    setAvatarPreview(objectUrl);
+    // Utiliser FileReader pour créer une data: URL (compatible avec le CSP)
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      const dataUrl = e.target?.result as string;
+      previousAvatarObjectUrl.current = dataUrl;
+      setAvatarPreview(dataUrl);
+    };
+    reader.readAsDataURL(file);
     setAvatarFile(file);
   };
 
