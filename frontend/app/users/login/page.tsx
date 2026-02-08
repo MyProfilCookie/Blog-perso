@@ -10,6 +10,7 @@ import { Button } from '@nextui-org/react'
 import { Checkbox } from '@nextui-org/react';
 import Swal from "sweetalert2";
 import { motion } from "framer-motion";
+import Link from "next/link";
 
 import { normalizeAvatarUrl } from "@/utils/normalizeAvatarUrl";
 import axios from "axios";
@@ -31,6 +32,8 @@ export default function Connexion() {
   const [newsletter, setNewsletter] = useState(false); // Checkbox newsletter
   const [loading, setLoading] = useState(false); // État de chargement
   const [passwordStrength, setPasswordStrength] = useState(""); // Force du mot de passe
+  const [failedAttempts, setFailedAttempts] = useState(0); // Compteur de tentatives échouées
+  const [showResetOption, setShowResetOption] = useState(false); // Afficher option reset
   const router = useRouter();
   const searchParams = useSearchParams();
   const [returnUrl, setReturnUrl] = React.useState("/profile");
@@ -158,8 +161,15 @@ export default function Connexion() {
             }).then(() => {
               sessionStorage.removeItem("returnUrl");
               window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: userData }));
-              const destination = getSafeReturnUrl(returnUrl) ?? "/profile";
-              router.push(destination);
+              
+              // Redirection spéciale pour Maeva vers son espace personnel
+              const MAEVA_EMAIL = "maevaayivor78500@gmail.com";
+              if (userData.email?.toLowerCase() === MAEVA_EMAIL.toLowerCase()) {
+                router.push("/espace-maeva");
+              } else {
+                const destination = getSafeReturnUrl(returnUrl) ?? "/profile";
+                router.push(destination);
+              }
             });
           }
         } else {
@@ -359,9 +369,15 @@ export default function Connexion() {
             // Déclencher l'événement de mise à jour du panier pour fusionner
             window.dispatchEvent(new CustomEvent("userLoggedIn", { detail: userData }));
             
-            // Rediriger vers la page d'origine ou dashboard
-            const destination = getSafeReturnUrl(returnUrl) ?? "/profile";
-            router.push(destination);
+            // Redirection spéciale pour Maeva vers son espace personnel
+            const MAEVA_EMAIL = "maevaayivor78500@gmail.com";
+            if (userData.email?.toLowerCase() === MAEVA_EMAIL.toLowerCase()) {
+              router.push("/espace-maeva");
+            } else {
+              // Rediriger vers la page d'origine ou profil
+              const destination = getSafeReturnUrl(returnUrl) ?? "/profile";
+              router.push(destination);
+            }
           });
         } else {
           handleLoginError(
@@ -409,12 +425,35 @@ export default function Connexion() {
         }
       });
     } else if (status === 401) {
-      Swal.fire({
-        icon: "error",
-        title: "Erreur",
-        text: "Mot de passe incorrect.",
-        confirmButtonText: "Ok",
-      });
+      // Incrémenter le compteur de tentatives échouées
+      const newAttempts = failedAttempts + 1;
+      setFailedAttempts(newAttempts);
+      
+      if (newAttempts >= 3) {
+        // Après 3 tentatives, proposer le reset du mot de passe
+        setShowResetOption(true);
+        Swal.fire({
+          icon: "warning",
+          title: "Mot de passe incorrect",
+          html: `<p>Vous avez fait ${newAttempts} tentatives.</p><p class="mt-2">Souhaitez-vous réinitialiser votre mot de passe ?</p>`,
+          showCancelButton: true,
+          confirmButtonText: "Réinitialiser mon mot de passe",
+          cancelButtonText: "Réessayer",
+          confirmButtonColor: "#3b82f6",
+        }).then((result) => {
+          if (result.isConfirmed) {
+            router.push("/forgot-password?email=" + encodeURIComponent(email));
+          }
+        });
+      } else {
+        const remainingAttempts = 3 - newAttempts;
+        Swal.fire({
+          icon: "error",
+          title: "Mot de passe incorrect",
+          text: `Il vous reste ${remainingAttempts} tentative${remainingAttempts > 1 ? 's' : ''} avant de pouvoir réinitialiser votre mot de passe.`,
+          confirmButtonText: "Réessayer",
+        });
+      }
     } else {
       Swal.fire({
         icon: "error",
@@ -504,6 +543,20 @@ export default function Connexion() {
             {passwordStrength}
           </p>
         )}
+
+        {/* Lien mot de passe oublié - toujours visible ou après 3 tentatives */}
+        <div className="text-right">
+          <Link
+            href={`/forgot-password${email ? `?email=${encodeURIComponent(email)}` : ''}`}
+            className={`text-sm hover:underline ${
+              showResetOption 
+                ? 'text-orange-600 dark:text-orange-400 font-semibold animate-pulse' 
+                : 'text-blue-600 dark:text-blue-400'
+            }`}
+          >
+            {showResetOption ? '⚠️ Réinitialiser mon mot de passe' : 'Mot de passe oublié ?'}
+          </Link>
+        </div>
 
         <Checkbox 
           isSelected={newsletter} 

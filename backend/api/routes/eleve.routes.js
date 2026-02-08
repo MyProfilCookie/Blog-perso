@@ -434,6 +434,10 @@ router.get('/stats/:userId', isAuthenticated, async (req, res) => {
     const totalCorrect = scores.reduce((sum, s) => sum + (s.correctAnswers || 0), 0);
     const averageScore = overallAverage || 0;
     
+    // Calculer la progression (basée sur le nombre d'exercices complétés)
+    const maxExercises = 450; // Objectif total d'exercices
+    const progression = Math.min((totalExercises / maxExercises) * 100, 100);
+    
     // Regrouper par matière avec plus de détails
     const subjectsMap = {};
     scores.forEach(s => {
@@ -460,13 +464,25 @@ router.get('/stats/:userId', isAuthenticated, async (req, res) => {
       progress: data.totalQuestions > 0 ? (data.totalCorrect / data.totalQuestions) * 100 : 0
     }));
 
+    // Récupérer les infos de l'élève
+    const User = require('../models/User');
+    const userInfo = await User.findById(userId).select('prenom nom');
+
     res.json({
       userId,
       totalExercises,
+      totalEleves: totalExercises, // Alias pour compatibilité frontend
       totalCorrect,
-      averageScore,
+      averageScore: averageScore.toFixed(2),
+      progression: progression.toFixed(2),
       subjects,
-      scores
+      scores,
+      eleve: userInfo ? {
+        nom: userInfo.nom || '',
+        prenom: userInfo.prenom || '',
+        modificationsCount: totalExercises,
+        lastModificationDate: scores.length > 0 ? scores[scores.length - 1].createdAt : new Date()
+      } : null
     });
   } catch (error) {
     console.error("Erreur lors de la récupération des statistiques:", error);

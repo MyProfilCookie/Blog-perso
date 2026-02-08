@@ -2,8 +2,8 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 
-// ADMIN_EMAIL est l'email de l'administrateur
-const ADMIN_EMAIL = "virginie.ayivor@yahoo.fr";
+// ADMIN_EMAILS contient les emails des administrateurs
+const ADMIN_EMAILS = ["virginie.ayivor@yahoo.fr", "maevaayivor78500@gmail.com"];
 
 // Regex pour valider le pseudo sans caractères spéciaux
 const pseudoRegex = /^[a-zA-Z0-9]{8,}$/; // Seulement lettres et chiffres, minimum 8 caractères
@@ -106,6 +106,15 @@ const userSchema = new Schema(
       min: 1,
       required: false, // Ce champ est optionnel
     },
+    // Champs pour la réinitialisation du mot de passe
+    resetPasswordToken: {
+      type: String,
+      required: false,
+    },
+    resetPasswordExpires: {
+      type: Date,
+      required: false,
+    },
   },
   { timestamps: true }
 );
@@ -132,8 +141,9 @@ const userSchema = new Schema(
 userSchema.pre("findOneAndUpdate", async function (next) {
   const update = this.getUpdate();
 
-  // Assigne le rôle 'admin' si l'email correspond à l'administrateur
-  if (update.email === ADMIN_EMAIL || (update.$set && update.$set.email === ADMIN_EMAIL)) {
+  // Assigne le rôle 'admin' si l'email correspond à un administrateur
+  const emailToCheck = update.email || (update.$set && update.$set.email);
+  if (emailToCheck && ADMIN_EMAILS.includes(emailToCheck)) {
     if (update.$set) {
       update.$set.role = "admin";
       update.$set.isAdmin = true;

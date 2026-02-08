@@ -99,10 +99,15 @@ export function useStatsCache(userId: string | null) {
         }
       );
 
+      // Calculer la progression si non fournie par le backend
+      const totalExercises = response.data.totalEleves || response.data.totalExercises || 0;
+      const maxExercises = 450;
+      const calculatedProgression = totalExercises > 0 ? ((totalExercises / maxExercises) * 100).toFixed(2) : '0';
+
       const statsData: StatsData = {
-        totalEleves: response.data.totalEleves || 0,
+        totalEleves: totalExercises,
         averageScore: response.data.averageScore || '0',
-        progression: '0',
+        progression: response.data.progression || calculatedProgression,
         eleve: response.data.eleve || {
           nom: '',
           prenom: '',

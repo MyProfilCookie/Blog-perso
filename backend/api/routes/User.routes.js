@@ -50,6 +50,12 @@ router.post("/login", UserController.login);
 // Route pour la connexion via Google
 router.post("/google-login", UserController.googleLogin);
 
+// Route pour demander la réinitialisation du mot de passe
+router.post("/forgot-password", UserController.forgotPassword);
+
+// Route pour réinitialiser le mot de passe avec le token
+router.post("/reset-password", UserController.resetPassword);
+
 // Route pour récupérer tous les utilisateurs
 router.get("/", UserController.getUsers);
 

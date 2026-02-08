@@ -225,6 +225,13 @@ export default function ControleIndex() {
   const [userId, setUserId] = useState<string | null>(null);
   const [lastUpdate, setLastUpdate] = useState<Date | null>(null);
   const [hasPlayedIntro, setHasPlayedIntro] = useState(false);
+  const [lastQuizScore, setLastQuizScore] = useState<{
+    score: number;
+    totalQuestions: number;
+    percentage: number;
+    week: number;
+    completedAt: string;
+  } | null>(null);
 
   // Utiliser le hook de cache pour les stats
   const { stats: cachedStats, loading, fetchStats, refetch } = useStatsCache(userId);
@@ -243,11 +250,16 @@ export default function ControleIndex() {
   }, [stats.averageScore]);
 
   const progressionValue = useMemo(() => {
+    // Utiliser la progression du backend si disponible
+    if (stats.progression && parseFloat(stats.progression) > 0) {
+      return Math.round(Math.min(parseFloat(stats.progression), 100));
+    }
+    // Fallback: calculer à partir du nombre d'exercices complétés
     const totalExercises = stats.totalEleves || 0;
-    const maxExercises = 450;
-    const progression = totalExercises > 0 ? Math.min((totalExercises / maxExercises) * 100, 100) : 0;
-    return Math.round(progression);
-  }, [stats.totalEleves]);
+    const maxExercises = 450; // Objectif: 450 exercices = 100%
+    const progression = totalExercises > 0 ? (totalExercises / maxExercises) * 100 : 0;
+    return Math.round(Math.min(progression, 100));
+  }, [stats.progression, stats.totalEleves]);
 
   const statusChipBase =
     "inline-flex items-center gap-2 px-3 py-1 rounded-full bg-white/70 dark:bg-slate-900/60 border text-sm shadow-sm transition-colors duration-300";
@@ -332,6 +344,40 @@ export default function ControleIndex() {
     // Note: Le chargement des stats est maintenant géré automatiquement par useStatsCache
     // quand userId change, donc plus besoin d'appeler handleFetchStats ici
   }, [router, handleFetchStats, setTheme, userId]);
+
+  // Récupérer la dernière note du quiz hebdomadaire
+  useEffect(() => {
+    const fetchLastQuizScore = async () => {
+      if (!userId) return;
+      
+      try {
+        const apiUrl = (process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3000/api').replace(/\/$/, '');
+        const token = localStorage.getItem('token') || localStorage.getItem('userToken');
+        const headers = token ? { Authorization: `Bearer ${token}` } : {};
+        
+        const response = await axios.get(`${apiUrl}/quiz/results/user/${userId}`, { headers });
+        
+        if (response.data.success && response.data.data.length > 0) {
+          // Trier par date et prendre le plus récent
+          const sortedResults = response.data.data.sort((a: any, b: any) => 
+            new Date(b.completedAt).getTime() - new Date(a.completedAt).getTime()
+          );
+          const lastResult = sortedResults[0];
+          setLastQuizScore({
+            score: lastResult.score,
+            totalQuestions: lastResult.totalQuestions,
+            percentage: lastResult.percentage,
+            week: lastResult.week,
+            completedAt: lastResult.completedAt
+          });
+        }
+      } catch (error) {
+        console.error('Erreur lors de la récupération de la dernière note:', error);
+      }
+    };
+
+    fetchLastQuizScore();
+  }, [userId]);
 
   // Rafraîchissement automatique des statistiques toutes les 30 secondes
   const { forceRefresh } = useAutoRefresh({
@@ -824,6 +870,68 @@ export default function ControleIndex() {
                 </CardContent>
               </Card>
             </motion.div>
+
+            {/* Dernière note du quiz hebdomadaire */}
+            {lastQuizScore && (
+              <motion.div
+                animate={{ opacity: 1, y: 0 }}
+                className="max-w-2xl mx-auto mb-8 px-3 sm:px-4"
+                initial={{ opacity: 0, y: 20 }}
+                transition={{ duration: 0.5, delay: 0.4 }}
+              >
+                <Card className={`border-2 shadow-lg ${
+                  lastQuizScore.percentage >= 80 
+                    ? 'bg-gradient-to-r from-green-50 to-emerald-50 dark:from-green-900/20 dark:to-emerald-900/20 border-green-300 dark:border-green-700' 
+                    : lastQuizScore.percentage >= 60 
+                    ? 'bg-gradient-to-r from-yellow-50 to-amber-50 dark:from-yellow-900/20 dark:to-amber-900/20 border-yellow-300 dark:border-yellow-700'
+                    : 'bg-gradient-to-r from-orange-50 to-red-50 dark:from-orange-900/20 dark:to-red-900/20 border-orange-300 dark:border-orange-700'
+                }`}>
+                  <CardContent className="p-4 sm:p-6">
+                    <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
+                      <div className="flex items-center gap-4">
+                        <div className={`w-16 h-16 rounded-full flex items-center justify-center ${
+                          lastQuizScore.percentage >= 80 
+                            ? 'bg-green-500' 
+                            : lastQuizScore.percentage >= 60 
+                            ? 'bg-yellow-500'
+                            : 'bg-orange-500'
+                        }`}>
+                          <span className="text-2xl font-bold text-white">
+                            {lastQuizScore.percentage}%
+                          </span>
+                        </div>
+                        <div>
+                          <h3 className="text-lg font-bold text-gray-900 dark:text-white">
+                            🏆 Dernière note : {lastQuizScore.score}/{lastQuizScore.totalQuestions}
+                          </h3>
+                          <p className="text-sm text-gray-600 dark:text-gray-400">
+                            Quiz Semaine {lastQuizScore.week} • {new Date(lastQuizScore.completedAt).toLocaleDateString('fr-FR', {
+                              day: 'numeric',
+                              month: 'long'
+                            })}
+                          </p>
+                        </div>
+                      </div>
+                      <div className="text-center sm:text-right">
+                        {lastQuizScore.percentage >= 80 ? (
+                          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-green-100 dark:bg-green-900/50 text-green-700 dark:text-green-300 font-semibold">
+                            <Star className="w-4 h-4" /> Excellent !
+                          </span>
+                        ) : lastQuizScore.percentage >= 60 ? (
+                          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-yellow-100 dark:bg-yellow-900/50 text-yellow-700 dark:text-yellow-300 font-semibold">
+                            <Sparkles className="w-4 h-4" /> Bien joué !
+                          </span>
+                        ) : (
+                          <span className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-orange-100 dark:bg-orange-900/50 text-orange-700 dark:text-orange-300 font-semibold">
+                            <Target className="w-4 h-4" /> Continue !
+                          </span>
+                        )}
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            )}
 
             {/* Carte principale du quiz */}
             <motion.div

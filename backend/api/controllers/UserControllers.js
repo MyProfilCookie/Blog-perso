@@ -89,8 +89,9 @@ exports.signup = async (req, res) => {
       deliveryAddress
     });
 
-    // Définir isAdmin si c'est l'email administrateur
-    if (email === process.env.ADMIN_EMAIL) {
+    // Définir isAdmin si c'est un email administrateur
+    const ADMIN_EMAILS = ["virginie.ayivor@yahoo.fr", "maevaayivor78500@gmail.com"];
+    if (ADMIN_EMAILS.includes(email)) {
       newUser.role = "admin";
       newUser.isAdmin = true;
     }
@@ -256,7 +257,8 @@ exports.googleLogin = async (req, res) => {
         image: payload.picture || "/assets/default-avatar.webp",
       });
 
-      if (email === process.env.ADMIN_EMAIL) {
+      const ADMIN_EMAILS = ["virginie.ayivor@yahoo.fr", "maevaayivor78500@gmail.com"];
+      if (ADMIN_EMAILS.includes(email)) {
         user.role = "admin";
         user.isAdmin = true;
       }
@@ -602,6 +604,145 @@ exports.refreshToken = async (req, res) => {
   }
 };
 
+/**
+ * Demande de réinitialisation du mot de passe
+ * @route POST /users/forgot-password
+ */
+exports.forgotPassword = async (req, res) => {
+  try {
+    const { email } = req.body;
+    
+    if (!email) {
+      return res.status(400).json({ message: "Email requis" });
+    }
+
+    const user = await User.findOne({ email: email.toLowerCase() });
+    
+    // Pour des raisons de sécurité, on ne révèle pas si l'email existe ou non
+    if (!user) {
+      console.log("🔍 Tentative de reset pour email inexistant:", email);
+      return res.status(200).json({ 
+        message: "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation." 
+      });
+    }
+
+    // Générer un token de réinitialisation
+    const resetToken = crypto.randomBytes(32).toString('hex');
+    const resetTokenHash = crypto.createHash('sha256').update(resetToken).digest('hex');
+    
+    // Sauvegarder le token hashé et sa date d'expiration (1 heure)
+    user.resetPasswordToken = resetTokenHash;
+    user.resetPasswordExpires = Date.now() + 3600000; // 1 heure
+    await user.save();
+
+    // Construire l'URL de réinitialisation
+    const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+    const resetUrl = `${frontendUrl}/reset-password?token=${resetToken}&email=${encodeURIComponent(email)}`;
+
+    // Envoyer l'email (si nodemailer est configuré)
+    try {
+      const nodemailer = require('nodemailer');
+      
+      const transporter = nodemailer.createTransport({
+        service: process.env.EMAIL_SERVICE || 'gmail',
+        auth: {
+          user: process.env.EMAIL_USER,
+          pass: process.env.EMAIL_PASS
+        }
+      });
+
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER || 'noreply@autistudy.fr',
+        to: email,
+        subject: '🔐 Réinitialisation de votre mot de passe - AutiStudy',
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+            <h2 style="color: #3b82f6;">Réinitialisation de votre mot de passe</h2>
+            <p>Bonjour ${user.prenom || user.pseudo || 'cher utilisateur'},</p>
+            <p>Vous avez demandé la réinitialisation de votre mot de passe sur AutiStudy.</p>
+            <p>Cliquez sur le bouton ci-dessous pour créer un nouveau mot de passe :</p>
+            <a href="${resetUrl}" style="display: inline-block; background-color: #3b82f6; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; margin: 20px 0;">
+              Réinitialiser mon mot de passe
+            </a>
+            <p style="color: #666; font-size: 14px;">Ce lien expirera dans 1 heure.</p>
+            <p style="color: #666; font-size: 14px;">Si vous n'avez pas demandé cette réinitialisation, ignorez cet email.</p>
+            <hr style="border: none; border-top: 1px solid #eee; margin: 20px 0;">
+            <p style="color: #999; font-size: 12px;">AutiStudy - Apprentissage adapté pour enfants autistes</p>
+          </div>
+        `
+      });
+
+      console.log("📧 Email de réinitialisation envoyé à:", email);
+    } catch (emailError) {
+      console.error("⚠️ Erreur envoi email:", emailError.message);
+      // On continue quand même - l'email peut ne pas être configuré en dev
+    }
+
+    res.status(200).json({ 
+      message: "Si un compte existe avec cet email, vous recevrez un lien de réinitialisation." 
+    });
+
+  } catch (error) {
+    console.error("❌ Erreur forgot-password:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
+/**
+ * Réinitialisation du mot de passe avec le token
+ * @route POST /users/reset-password
+ */
+exports.resetPassword = async (req, res) => {
+  try {
+    const { token, email, newPassword } = req.body;
+
+    if (!token || !email || !newPassword) {
+      return res.status(400).json({ message: "Token, email et nouveau mot de passe requis" });
+    }
+
+    // Valider le nouveau mot de passe
+    if (newPassword.length < 8) {
+      return res.status(400).json({ message: "Le mot de passe doit contenir au moins 8 caractères" });
+    }
+
+    if (!/[!@#$%^&*]/.test(newPassword)) {
+      return res.status(400).json({ message: "Le mot de passe doit contenir au moins un caractère spécial (!@#$%^&*)" });
+    }
+
+    // Hasher le token reçu pour le comparer
+    const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+
+    // Chercher l'utilisateur avec ce token et vérifier l'expiration
+    const user = await User.findOne({
+      email: email.toLowerCase(),
+      resetPasswordToken: tokenHash,
+      resetPasswordExpires: { $gt: Date.now() }
+    });
+
+    if (!user) {
+      return res.status(400).json({ 
+        message: "Lien de réinitialisation invalide ou expiré. Veuillez refaire une demande." 
+      });
+    }
+
+    // Mettre à jour le mot de passe
+    user.password = await bcrypt.hash(newPassword, 10);
+    user.resetPasswordToken = undefined;
+    user.resetPasswordExpires = undefined;
+    await user.save();
+
+    console.log("✅ Mot de passe réinitialisé pour:", email);
+
+    res.status(200).json({ 
+      message: "Votre mot de passe a été réinitialisé avec succès. Vous pouvez maintenant vous connecter." 
+    });
+
+  } catch (error) {
+    console.error("❌ Erreur reset-password:", error);
+    res.status(500).json({ message: "Erreur serveur" });
+  }
+};
+
 // Exportation correcte des fonctions
 module.exports = {
   generateAccessToken,
@@ -616,5 +757,7 @@ module.exports = {
   uploadAvatar: exports.uploadAvatar,
   getCurrentUser: exports.getCurrentUser,
   getUserById: exports.getUserById,
-  refreshToken: exports.refreshToken
+  refreshToken: exports.refreshToken,
+  forgotPassword: exports.forgotPassword,
+  resetPassword: exports.resetPassword
 };
