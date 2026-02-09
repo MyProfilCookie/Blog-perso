@@ -49,6 +49,11 @@ if (process.env.CLOUDINARY_URL) {
         const apiKey = credentials.substring(0, colonIndex);
         const apiSecret = credentials.substring(colonIndex + 1);
         
+        // Debug: afficher les valeurs parsées (masquées partiellement)
+        console.log("🔍 Debug - api_key:", apiKey);
+        console.log("🔍 Debug - api_secret (longueur):", apiSecret.length, "premiers chars:", apiSecret.substring(0, 5) + "...");
+        console.log("🔍 Debug - cloud_name:", cloudName);
+        
         cloudinary.config({
           cloud_name: cloudName,
           api_key: apiKey,
