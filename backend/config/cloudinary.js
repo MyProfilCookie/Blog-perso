@@ -1,7 +1,12 @@
 let cloudinary;
 
+// Sauvegarder et supprimer temporairement CLOUDINARY_URL pour éviter l'erreur de parsing automatique du SDK
+const savedCloudinaryUrl = process.env.CLOUDINARY_URL;
+delete process.env.CLOUDINARY_URL;
+
 try {
   cloudinary = require('cloudinary').v2;
+  console.log("✅ SDK Cloudinary chargé avec succès");
 } catch (error) {
   console.error("❌ Erreur lors du chargement de Cloudinary:", error.message);
   // Créer un mock pour éviter les crashs
@@ -14,6 +19,9 @@ try {
     }
   };
 }
+
+// Restaurer CLOUDINARY_URL
+process.env.CLOUDINARY_URL = savedCloudinaryUrl;
 
 // Configuration Cloudinary
 // Supporte deux formats:
@@ -103,6 +111,8 @@ const uploadToCloudinary = async (filePath, options = {}) => {
  * @returns {Promise<object>} - Résultat de l'upload avec secure_url
  */
 const uploadBufferToCloudinary = async (buffer, options = {}) => {
+  console.log("📤 uploadBufferToCloudinary appelé, taille buffer:", buffer.length, "bytes");
+  
   const defaultOptions = {
     folder: 'avatars',
     resource_type: 'image',
@@ -110,23 +120,40 @@ const uploadBufferToCloudinary = async (buffer, options = {}) => {
       { width: 400, height: 400, crop: 'fill', gravity: 'face' },
       { quality: 'auto:good', fetch_format: 'auto' }
     ],
+    timeout: 60000, // 60 seconds timeout
     ...options
   };
 
+  console.log("📤 Options d'upload:", JSON.stringify({ ...defaultOptions, transformation: '...' }));
+
   return new Promise((resolve, reject) => {
+    // Timeout de 30 secondes
+    const timeoutId = setTimeout(() => {
+      console.error("❌ Timeout: Upload Cloudinary a dépassé 30 secondes");
+      reject(new Error("Upload timeout après 30 secondes"));
+    }, 30000);
+
+    console.log("📤 Création du stream d'upload...");
+    
     const uploadStream = cloudinary.uploader.upload_stream(
       defaultOptions,
       (error, result) => {
+        clearTimeout(timeoutId);
+        console.log("📤 Callback reçu de Cloudinary");
+        
         if (error) {
+          console.error("❌ Erreur Cloudinary dans callback:", error.message);
           reject(error);
         } else {
+          console.log("✅ Upload réussi, URL:", result.secure_url);
           resolve(result);
         }
       }
     );
     
-    // Écrire le buffer dans le stream
+    console.log("📤 Écriture du buffer dans le stream...");
     uploadStream.end(buffer);
+    console.log("📤 Buffer envoyé, en attente de réponse Cloudinary...");
   });
 };
 
