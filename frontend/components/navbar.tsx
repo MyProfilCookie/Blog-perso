@@ -645,12 +645,12 @@ export const Navbar = () => {
 
   return (
     <NextUINavbar
-      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-['Inter',_'system-ui',_-apple-system,_'SF_Pro_Display',_sans-serif] z-50 performance-optimized no-border-navbar h-16 md:h-20"
+      className="dark:bg-gray-900/95 bg-white/95 backdrop-blur-md font-['Inter',_'system-ui',_-apple-system,_'SF_Pro_Display',_sans-serif] z-50 performance-optimized no-border-navbar h-16 md:h-20 overflow-x-hidden"
       maxWidth="full"
       isMenuOpen={isMenuOpen}
       position="sticky"
     >
-      <NavbarContent className="flex-shrink-0 basis-1/5 sm:basis-full">
+      <NavbarContent className="flex-shrink-0 basis-auto">
         <button
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
           className="lg:hidden p-2 text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
@@ -703,10 +703,10 @@ export const Navbar = () => {
         </NavbarBrand>
       </NavbarContent>
 
-      <NavbarContent className="hidden lg:flex gap-4 xl:gap-8 flex-1" justify="center">
+      <NavbarContent className="hidden lg:flex gap-1 xl:gap-6 flex-1 min-w-0" justify="center">
         <NavbarItem>
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
             href="/about"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faInfoCircle} />
@@ -716,7 +716,7 @@ export const Navbar = () => {
 
         <NavbarItem>
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
             href="/articles"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faBook} />
@@ -726,7 +726,7 @@ export const Navbar = () => {
 
         <NavbarItem>
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
             href="/posts"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faNewspaper} />
@@ -736,7 +736,7 @@ export const Navbar = () => {
 
         <NavbarItem>
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
             href="/controle"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faGamepad} />
@@ -746,7 +746,7 @@ export const Navbar = () => {
 
         <NavbarItem className="relative" key="shop">
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 flex items-center gap-2 relative text-base xl:text-lg font-semibold px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-2 relative text-base xl:text-lg font-semibold transition-colors duration-200 px-1"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 flex items-center gap-1.5 xl:gap-2 relative text-sm xl:text-lg font-semibold px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-1.5 xl:gap-2 relative text-sm xl:text-lg font-semibold transition-colors duration-200 px-1 whitespace-nowrap"}
             href="/shop"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faShoppingCart} />
@@ -772,7 +772,7 @@ export const Navbar = () => {
           <>
             <NavbarItem>
               <NextLink
-                className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
+                className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
                 href="/projet"
               >
                 <FontAwesomeIcon className="w-5 h-5" icon={faRocket} />
@@ -781,7 +781,7 @@ export const Navbar = () => {
             </NavbarItem>
             <NavbarItem>
               <NextLink
-                className={isMobile ? "text-gray-700 dark:text-gray-200 text-base xl:text-lg font-semibold flex items-center gap-2 px-1" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-base xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-2 px-1"}
+                className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
                 href="/maeva"
               >
                 <Sparkles className="w-5 h-5" />
@@ -792,7 +792,7 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      <NavbarContent className="flex-shrink-0 gap-3 md:gap-5" justify="end">
+      <NavbarContent className="flex-shrink-0 gap-2 md:gap-4" justify="end">
         {/* Bouton AI Assistant */}
         <NavbarItem>
           <Button
