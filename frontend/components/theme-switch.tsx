@@ -149,7 +149,7 @@ export const ThemeSwitch: FC<ThemeSwitchProps> = ({
   }
 
   return (
-    <div className="flex items-center gap-2 performance-optimized">
+    <div className="flex items-center gap-2">
       <Component
         {...getBaseProps({
           className: clsx(
