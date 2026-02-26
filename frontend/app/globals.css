@@ -8,7 +8,6 @@
   backdrop-filter: blur(10px);
   border: 0 !important;
   outline: 0 !important;
-  contain: layout style paint;
 }
 
 .no-border-navbar * {

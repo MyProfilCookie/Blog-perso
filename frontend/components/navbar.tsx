@@ -897,7 +897,7 @@ export const Navbar = () => {
                     key="profile"
                     onClick={() => router.push("/profile")}
                   >
-                    <FontAwesomeIcon className="mr-2" icon={faUser} />
+                    <FontAwesomeIcon className="w-4 h-4 mr-2" icon={faUser} />
                     Profil
                   </DropdownItem>
                   <DropdownItem
@@ -1014,7 +1014,7 @@ export const Navbar = () => {
                     key="controle"
                     onPress={() => router.push("/controle")}
                   >
-                    <FontAwesomeIcon className="mr-2" icon={faGamepad} />
+                    <FontAwesomeIcon className="w-4 h-4 mr-2" icon={faGamepad} />
                     Contrôle
                   </DropdownItem>
 
@@ -1027,7 +1027,7 @@ export const Navbar = () => {
                     <Dropdown placement="left-start" disableAnimation>
                       <DropdownTrigger>
                         <div className="flex items-center w-full cursor-pointer">
-                          <FontAwesomeIcon className="mr-2" icon={faMoon} />
+                          <FontAwesomeIcon className="w-4 h-4 mr-2" icon={faMoon} />
                           Thème
                         </div>
                       </DropdownTrigger>
@@ -1104,7 +1104,7 @@ export const Navbar = () => {
                         >
                           <div className="flex items-center gap-2">
                             <FontAwesomeIcon
-                              className="text-gray-500"
+                              className="w-4 h-4 text-gray-500"
                               icon={faMoon}
                             />
                             <span>Mode automatique</span>
@@ -1118,7 +1118,7 @@ export const Navbar = () => {
                     key="logout"
                     onClick={handleLogout}
                   >
-                    <FontAwesomeIcon className="mr-2" icon={faSignOutAlt} />
+                    <FontAwesomeIcon className="w-4 h-4 mr-2" icon={faSignOutAlt} />
                     Déconnexion
                   </DropdownItem>
                 </DropdownMenu>
