@@ -5,7 +5,7 @@ export const dynamic = "force-dynamic";
 import { useContext, useEffect, useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { useRouter } from "next/navigation";
+import { useRouter, useParams } from "next/navigation";
 import { motion, useReducedMotion } from "framer-motion";
 import {
   Sparkles,
@@ -45,93 +45,146 @@ interface EleveStats {
   }[];
 }
 
-// ---------------------------------------------------------------------------
-// Accès restreint à Maeva (ou admin)
-// ---------------------------------------------------------------------------
-
-const AUTHORIZED_EMAIL = "maevaayivor78500@gmail.com";
-
-// ---------------------------------------------------------------------------
-// Badges dynamiques selon les stats
-// ---------------------------------------------------------------------------
-
-function getBadges(stats: EleveStats | null) {
-  const base = [
-    { icon: Star,    text: "Super élève",  colors: "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-200" },
-    { icon: Heart,   text: "Créative",     colors: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-200" },
-    { icon: Trophy,  text: "En progrès",   colors: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-200" },
-  ];
-
-  if (stats?.overallAverage >= 80) {
-    base[2] = { icon: Trophy, text: "Excellente 🏆", colors: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-200" };
-  } else if (stats?.globalStats.streak >= 7) {
-    base[2] = { icon: TrendingUp, text: `🔥 ${stats.globalStats.streak} jours`, colors: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-200" };
-  }
-
-  return base;
+interface ProfileUser {
+  _id: string;
+  prenom: string;
+  nom: string;
+  email: string;
+  image: string;
+  role: string;
+  isAdmin: boolean;
+  ageEnfantOuAdulteAutiste?: number;
 }
 
 // ---------------------------------------------------------------------------
-// Page
+// Couleurs par défaut pour les badges selon les scores
 // ---------------------------------------------------------------------------
 
-export default function EspaceMaevaPage() {
+function getBadges(stats: EleveStats | null): { icon: typeof Star; text: string; colors: string }[] {
+  const badges = [
+    {
+      icon: Star,
+      text: "Super élève",
+      colors: "bg-pink-100 text-pink-700 dark:bg-pink-900/30 dark:text-pink-200",
+    },
+    {
+      icon: Heart,
+      text: "Courageux·se",
+      colors: "bg-purple-100 text-purple-700 dark:bg-purple-900/30 dark:text-purple-200",
+    },
+    {
+      icon: Trophy,
+      text: "En progrès",
+      colors: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-200",
+    },
+  ];
+
+  // Badge dynamique selon la moyenne
+  if (stats && stats.overallAverage >= 80) {
+    badges[2] = {
+      icon: Trophy,
+      text: "Excellent·e",
+      colors: "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/30 dark:text-yellow-200",
+    };
+  } else if (stats && stats.globalStats.streak >= 7) {
+    badges[2] = {
+      icon: TrendingUp,
+      text: `🔥 ${stats.globalStats.streak} jours`,
+      colors: "bg-orange-100 text-orange-700 dark:bg-orange-900/30 dark:text-orange-200",
+    };
+  }
+
+  return badges;
+}
+
+// ---------------------------------------------------------------------------
+// Composant principal
+// ---------------------------------------------------------------------------
+
+export default function EspaceEleve() {
   const context = useContext(UserContext);
   const currentUser = context?.user ?? null;
   const router = useRouter();
+  const params = useParams();
+  const userId = params?.userId as string;
 
+  const [profileUser, setProfileUser] = useState<ProfileUser | null>(null);
   const [eleveStats, setEleveStats] = useState<EleveStats | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const { isMobile, shouldReduceAnimations } = useMobileOptimization({ enableReducedMotion: true });
+  const { isMobile, shouldReduceAnimations } = useMobileOptimization({
+    enableReducedMotion: true,
+  });
   const prefersReducedMotion = useReducedMotion();
   const disableMotion = isMobile || prefersReducedMotion || shouldReduceAnimations;
-  const instant = { duration: 0 };
+  const instantTransition = { duration: 0 };
+
+  // ---------------------------------------------------------------------------
+  // Autorisation : seul l'élève lui-même ou un admin peut accéder
+  // ---------------------------------------------------------------------------
 
   const isAuthorized =
-    currentUser?.email?.toLowerCase() === AUTHORIZED_EMAIL.toLowerCase() ||
-    currentUser?.isAdmin === true;
+    currentUser?.isAdmin || currentUser?._id === userId;
 
-  // Redirection si non autorisé
   useEffect(() => {
-    if (currentUser === null) { router.replace("/"); return; }
-    if (currentUser && !isAuthorized) router.replace("/");
+    if (currentUser === null) {
+      router.replace("/");
+      return;
+    }
+    if (currentUser && !isAuthorized) {
+      router.replace("/");
+    }
   }, [currentUser, isAuthorized, router]);
 
-  // Chargement des stats élève
+  // ---------------------------------------------------------------------------
+  // Chargement des données de l'élève
+  // ---------------------------------------------------------------------------
+
   useEffect(() => {
-    if (!currentUser?._id || !isAuthorized) return;
+    if (!userId || !isAuthorized) return;
 
     const apiBase = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:3001";
 
-    async function fetchStats() {
+    async function fetchData() {
       try {
-        const res = await fetch(`${apiBase}/api/eleve/${currentUser._id}`, {
+        setLoading(true);
+
+        // Profil utilisateur
+        const userRes = await fetch(`${apiBase}/api/users/${userId}`, {
           headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
         });
-        if (res.ok) {
-          const data = await res.json();
-          setEleveStats(data.eleve ?? data);
+        if (userRes.ok) {
+          const userData = await userRes.json();
+          setProfileUser(userData.user ?? userData);
+        }
+
+        // Statistiques élève
+        const eleveRes = await fetch(`${apiBase}/api/eleve/${userId}`, {
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        });
+        if (eleveRes.ok) {
+          const eleveData = await eleveRes.json();
+          setEleveStats(eleveData.eleve ?? eleveData);
         }
       } catch (err) {
-        console.error("Erreur chargement stats élève :", err);
+        console.error("Erreur chargement données élève :", err);
       } finally {
         setLoading(false);
       }
     }
 
-    fetchStats();
-  }, [currentUser, isAuthorized]);
+    fetchData();
+  }, [userId, isAuthorized]);
 
   // ---------------------------------------------------------------------------
-  // Accès refusé
+  // États de chargement / accès refusé
   // ---------------------------------------------------------------------------
 
   if (!currentUser || !isAuthorized) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-gradient-to-br from-pink-50 via-white to-purple-50 p-6 text-center dark:from-gray-950 dark:via-gray-900 dark:to-gray-900">
         <p className="mb-6 max-w-lg text-lg font-semibold text-gray-700 dark:text-gray-200">
-          Cet espace est réservé à Maeva. 💜
+          Cet espace est privé. 💜
         </p>
         <Link
           href="/"
@@ -143,10 +196,6 @@ export default function EspaceMaevaPage() {
       </div>
     );
   }
-
-  // ---------------------------------------------------------------------------
-  // Chargement
-  // ---------------------------------------------------------------------------
 
   if (loading) {
     return (
@@ -160,31 +209,37 @@ export default function EspaceMaevaPage() {
     );
   }
 
-  const prenom = currentUser.prenom ?? "Maeva";
-  const avatar = currentUser.image ?? "/assets/default-avatar.webp";
+  const prenom = profileUser?.prenom ?? currentUser?.prenom ?? "Élève";
+  const avatar = profileUser?.image ?? "/assets/default-avatar.webp";
   const badges = getBadges(eleveStats);
 
   // ---------------------------------------------------------------------------
-  // Rendu
+  // Rendu principal
   // ---------------------------------------------------------------------------
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 via-white to-purple-50 dark:from-gray-950 dark:via-gray-950/95 dark:to-gray-900">
       <div className="mx-auto w-full max-w-5xl px-4 pb-16 pt-10 md:px-8">
 
-        {/* ── Hero ── */}
+        {/* ------------------------------------------------------------------ */}
+        {/* Hero Section                                                         */}
+        {/* ------------------------------------------------------------------ */}
         <motion.section
           initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={disableMotion ? instant : { duration: 0.8, ease: "easeOut" }}
+          transition={disableMotion ? instantTransition : { duration: 0.8, ease: "easeOut" }}
           className="relative overflow-hidden rounded-3xl border border-white/70 bg-white shadow-2xl backdrop-blur dark:border-white/5 dark:bg-gray-900"
         >
           <div className="absolute inset-0 bg-gradient-to-br from-pink-500/20 via-purple-500/15 to-blue-400/20" />
-          <motion.div className="absolute -left-24 top-20 h-48 w-48 rounded-full bg-pink-400/30 blur-3xl"
+
+          {/* Cercles décoratifs */}
+          <motion.div
+            className="absolute -left-24 top-20 h-48 w-48 rounded-full bg-pink-400/30 blur-3xl"
             animate={disableMotion ? {} : { scale: [1, 1.2, 1], opacity: [0.3, 0.5, 0.3] }}
             transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
           />
-          <motion.div className="absolute -right-20 -top-16 h-64 w-64 rounded-full bg-purple-400/30 blur-3xl"
+          <motion.div
+            className="absolute -right-20 -top-16 h-64 w-64 rounded-full bg-purple-400/30 blur-3xl"
             animate={disableMotion ? {} : { scale: [1.2, 1, 1.2], opacity: [0.5, 0.3, 0.5] }}
             transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
           />
@@ -192,21 +247,28 @@ export default function EspaceMaevaPage() {
           <div className="relative p-8 md:p-14 text-center">
 
             {/* Avatar */}
-            <motion.div className="flex justify-center mb-4"
+            <motion.div
+              className="flex justify-center mb-4"
               initial={disableMotion ? {} : { scale: 0 }}
               animate={{ scale: 1 }}
-              transition={disableMotion ? instant : { type: "spring", stiffness: 200, damping: 15 }}
+              transition={disableMotion ? instantTransition : { type: "spring", stiffness: 200, damping: 15 }}
             >
               <div className="relative h-24 w-24 overflow-hidden rounded-full border-4 border-purple-300 shadow-xl">
-                <Image src={avatar} alt={`Photo de ${prenom}`} fill className="object-cover" />
+                <Image
+                  src={avatar}
+                  alt={`Photo de ${prenom}`}
+                  fill
+                  className="object-cover"
+                />
               </div>
             </motion.div>
 
             {/* Badge bienvenue */}
-            <motion.div className="flex justify-center mb-4"
+            <motion.div
+              className="flex justify-center mb-4"
               initial={disableMotion ? {} : { scale: 0, rotate: -10 }}
               animate={{ scale: 1, rotate: 0 }}
-              transition={disableMotion ? instant : { type: "spring", stiffness: 200, delay: 0.2 }}
+              transition={disableMotion ? instantTransition : { type: "spring", stiffness: 200, delay: 0.2 }}
             >
               <motion.span
                 className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-pink-500 to-purple-500 px-6 py-3 text-lg font-bold text-white shadow-lg"
@@ -219,51 +281,67 @@ export default function EspaceMaevaPage() {
               </motion.span>
             </motion.div>
 
-            {/* Date */}
-            <motion.p className="text-lg text-purple-600 dark:text-purple-300 font-medium mb-6"
+            {/* Date du jour */}
+            <motion.p
+              className="text-lg text-purple-600 dark:text-purple-300 font-medium mb-6"
               initial={disableMotion ? {} : { opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={disableMotion ? instant : { delay: 0.4 }}
+              transition={disableMotion ? instantTransition : { delay: 0.4 }}
             >
-              📅 {new Date().toLocaleDateString("fr-FR", { weekday: "long", year: "numeric", month: "long", day: "numeric" })}
+              📅{" "}
+              {new Date().toLocaleDateString("fr-FR", {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+              })}
             </motion.p>
 
             {/* Titre */}
-            <motion.h1 className="text-4xl font-bold leading-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mb-4"
+            <motion.h1
+              className="text-4xl font-bold leading-tight text-gray-900 md:text-5xl lg:text-6xl dark:text-white mb-4"
               initial={disableMotion ? {} : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={disableMotion ? instant : { delay: 0.5 }}
+              transition={disableMotion ? instantTransition : { delay: 0.5 }}
             >
               Mon Espace Personnel{" "}
               <motion.span
                 animate={disableMotion ? {} : { scale: [1, 1.2, 1] }}
                 transition={{ duration: 1.5, repeat: Infinity, repeatDelay: 2 }}
                 className="inline-block"
-              >💜</motion.span>
+              >
+                💜
+              </motion.span>
             </motion.h1>
 
-            <motion.p className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
+            <motion.p
+              className="text-lg text-gray-600 dark:text-gray-300 max-w-2xl mx-auto"
               initial={disableMotion ? {} : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={disableMotion ? instant : { delay: 0.7 }}
+              transition={disableMotion ? instantTransition : { delay: 0.7 }}
             >
-              Cet espace est rien qu'à toi, {prenom} ! Tu peux y retrouver tes activités préférées,
-              tes réussites et plein de surprises.
+              Cet espace est rien qu'à toi, {prenom} ! Tu peux y retrouver tes activités
+              préférées, tes réussites et ton avancement.
             </motion.p>
 
-            {/* Badges dynamiques */}
-            <motion.div className="mt-8 flex flex-wrap justify-center gap-4"
+            {/* Badges */}
+            <motion.div
+              className="mt-8 flex flex-wrap justify-center gap-4"
               initial={disableMotion ? {} : { opacity: 0 }}
               animate={{ opacity: 1 }}
-              transition={disableMotion ? instant : { delay: 0.9 }}
+              transition={disableMotion ? instantTransition : { delay: 0.9 }}
             >
-              {badges.map((badge, i) => (
+              {badges.map((badge, index) => (
                 <motion.span
                   key={badge.text}
                   className={`inline-flex items-center gap-2 rounded-full px-4 py-2 text-sm font-semibold ${badge.colors}`}
                   initial={disableMotion ? {} : { opacity: 0, y: 20, scale: 0.8 }}
                   animate={{ opacity: 1, y: 0, scale: 1 }}
-                  transition={disableMotion ? instant : { delay: 1 + i * 0.15, type: "spring", stiffness: 200 }}
+                  transition={
+                    disableMotion
+                      ? instantTransition
+                      : { delay: 1 + index * 0.15, type: "spring", stiffness: 200 }
+                  }
                   whileHover={disableMotion ? {} : { scale: 1.1, y: -2 }}
                 >
                   <badge.icon className="h-4 w-4" />
@@ -273,10 +351,11 @@ export default function EspaceMaevaPage() {
             </motion.div>
 
             {/* CTA */}
-            <motion.div className="mt-10"
+            <motion.div
+              className="mt-10"
               initial={disableMotion ? {} : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={disableMotion ? instant : { delay: 1.3 }}
+              transition={disableMotion ? instantTransition : { delay: 1.3 }}
             >
               <Link href="/controle">
                 <motion.button
@@ -293,21 +372,50 @@ export default function EspaceMaevaPage() {
           </div>
         </motion.section>
 
-        {/* ── Stats dynamiques ── */}
+        {/* ------------------------------------------------------------------ */}
+        {/* Statistiques dynamiques                                              */}
+        {/* ------------------------------------------------------------------ */}
         {eleveStats && (
           <motion.section
             initial={disableMotion ? { opacity: 1 } : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={disableMotion ? instant : { duration: 0.6, delay: 0.1 }}
+            transition={disableMotion ? instantTransition : { duration: 0.6, delay: 0.1 }}
             className="mt-10 grid gap-4 grid-cols-2 md:grid-cols-4"
           >
             {[
-              { icon: TrendingUp,   label: "Moyenne générale",   value: `${Math.round(eleveStats.overallAverage)}%`,     color: "text-purple-600 dark:text-purple-300", bg: "bg-purple-50 dark:bg-purple-900/20" },
-              { icon: CheckCircle,  label: "Exercices faits",    value: eleveStats.globalStats.totalExercises,            color: "text-green-600 dark:text-green-300",   bg: "bg-green-50 dark:bg-green-900/20" },
-              { icon: Clock,        label: "Série en cours",     value: `${eleveStats.globalStats.streak} 🔥`,            color: "text-orange-600 dark:text-orange-300", bg: "bg-orange-50 dark:bg-orange-900/20" },
-              { icon: BookOpen,     label: "Pages complétées",   value: eleveStats.totalPagesCompleted,                   color: "text-blue-600 dark:text-blue-300",     bg: "bg-blue-50 dark:bg-blue-900/20" },
+              {
+                icon: TrendingUp,
+                label: "Moyenne générale",
+                value: `${Math.round(eleveStats.overallAverage)}%`,
+                color: "text-purple-600 dark:text-purple-300",
+                bg: "bg-purple-50 dark:bg-purple-900/20",
+              },
+              {
+                icon: CheckCircle,
+                label: "Exercices faits",
+                value: eleveStats.globalStats.totalExercises,
+                color: "text-green-600 dark:text-green-300",
+                bg: "bg-green-50 dark:bg-green-900/20",
+              },
+              {
+                icon: Clock,
+                label: "Série en cours",
+                value: `${eleveStats.globalStats.streak} 🔥`,
+                color: "text-orange-600 dark:text-orange-300",
+                bg: "bg-orange-50 dark:bg-orange-900/20",
+              },
+              {
+                icon: BookOpen,
+                label: "Pages complétées",
+                value: eleveStats.totalPagesCompleted,
+                color: "text-blue-600 dark:text-blue-300",
+                bg: "bg-blue-50 dark:bg-blue-900/20",
+              },
             ].map((stat) => (
-              <div key={stat.label} className={`rounded-2xl p-4 shadow-md ${stat.bg} border border-white/50 dark:border-white/5`}>
+              <div
+                key={stat.label}
+                className={`rounded-2xl p-4 shadow-md ${stat.bg} border border-white/50 dark:border-white/5`}
+              >
                 <stat.icon className={`h-6 w-6 mb-2 ${stat.color}`} />
                 <p className="text-2xl font-bold text-gray-900 dark:text-white">{stat.value}</p>
                 <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{stat.label}</p>
@@ -316,11 +424,13 @@ export default function EspaceMaevaPage() {
           </motion.section>
         )}
 
-        {/* ── Activités + Réussites ── */}
+        {/* ------------------------------------------------------------------ */}
+        {/* Activités + Réussites                                               */}
+        {/* ------------------------------------------------------------------ */}
         <motion.section
           initial={disableMotion ? { opacity: 1 } : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={disableMotion ? instant : { duration: 0.6, delay: 0.15 }}
+          transition={disableMotion ? instantTransition : { duration: 0.6, delay: 0.15 }}
           className="mt-10 grid gap-6 md:grid-cols-2"
         >
           {/* Mes Activités */}
@@ -330,7 +440,10 @@ export default function EspaceMaevaPage() {
               Mes Activités
             </h2>
             <div className="space-y-3">
-              <Link href="/controle" className="flex items-center gap-3 rounded-2xl border border-pink-100 bg-pink-50/50 p-4 transition hover:bg-pink-100/50 dark:border-pink-900/30 dark:bg-pink-950/30">
+              <Link
+                href="/controle"
+                className="flex items-center gap-3 rounded-2xl border border-pink-100 bg-pink-50/50 p-4 transition hover:bg-pink-100/50 dark:border-pink-900/30 dark:bg-pink-950/30 dark:hover:bg-pink-900/40"
+              >
                 <BookOpen className="h-8 w-8 text-pink-600" />
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-white">Mes Contrôles</p>
@@ -338,7 +451,10 @@ export default function EspaceMaevaPage() {
                 </div>
                 <ArrowRight className="h-5 w-5 ml-auto text-pink-600" />
               </Link>
-              <Link href="/resources" className="flex items-center gap-3 rounded-2xl border border-purple-100 bg-purple-50/50 p-4 transition hover:bg-purple-100/50 dark:border-purple-900/30 dark:bg-purple-950/30">
+              <Link
+                href="/resources"
+                className="flex items-center gap-3 rounded-2xl border border-purple-100 bg-purple-50/50 p-4 transition hover:bg-purple-100/50 dark:border-purple-900/30 dark:bg-purple-950/30 dark:hover:bg-purple-900/40"
+              >
                 <Palette className="h-8 w-8 text-purple-600" />
                 <div>
                   <p className="font-semibold text-gray-900 dark:text-white">Mes Ressources</p>
@@ -356,29 +472,45 @@ export default function EspaceMaevaPage() {
               Mes Réussites
             </h2>
             <div className="space-y-4">
-              {[
-                { emoji: "🏆", title: "Super travail !", desc: "Tu fais de ton mieux chaque jour",           grad: "from-yellow-100 to-orange-100 dark:from-yellow-900/30 dark:to-orange-900/30" },
-                { emoji: "⭐", title: "Toujours curieuse", desc: "Tu aimes apprendre de nouvelles choses",   grad: "from-green-100 to-emerald-100 dark:from-green-900/30 dark:to-emerald-900/30" },
-                { emoji: "💖", title: "Pleine de talent", desc: "Tu es unique et merveilleuse",              grad: "from-pink-100 to-rose-100 dark:from-pink-900/30 dark:to-rose-900/30" },
-              ].map((r) => (
-                <div key={r.title} className={`flex items-center gap-3 rounded-2xl bg-gradient-to-r ${r.grad} p-4`}>
-                  <span className="text-3xl">{r.emoji}</span>
-                  <div>
-                    <p className="font-semibold text-gray-900 dark:text-white">{r.title}</p>
-                    <p className="text-sm text-gray-600 dark:text-gray-300">{r.desc}</p>
-                  </div>
+              <div className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-yellow-100 to-orange-100 p-4 dark:from-yellow-900/30 dark:to-orange-900/30">
+                <span className="text-3xl">🏆</span>
+                <div>
+                  <p className="font-semibold text-gray-900 dark:text-white">Super travail !</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Tu fais de ton mieux chaque jour
+                  </p>
                 </div>
-              ))}
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-green-100 to-emerald-100 p-4 dark:from-green-900/30 dark:to-emerald-900/30">
+                <span className="text-3xl">⭐</span>
+                <div>
+                  <p className="font-semibold text-gray-900 dark:text-white">Toujours curieux·se</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Tu aimes apprendre de nouvelles choses
+                  </p>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 rounded-2xl bg-gradient-to-r from-pink-100 to-rose-100 p-4 dark:from-pink-900/30 dark:to-rose-900/30">
+                <span className="text-3xl">💖</span>
+                <div>
+                  <p className="font-semibold text-gray-900 dark:text-white">Plein·e de talent</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-300">
+                    Tu es unique et merveilleux·se
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </motion.section>
 
-        {/* ── Progrès par matière ── */}
+        {/* ------------------------------------------------------------------ */}
+        {/* Progrès par matière                                                  */}
+        {/* ------------------------------------------------------------------ */}
         {eleveStats && eleveStats.subjects.length > 0 && (
           <motion.section
             initial={disableMotion ? { opacity: 1 } : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={disableMotion ? instant : { duration: 0.6, delay: 0.2 }}
+            transition={disableMotion ? instantTransition : { duration: 0.6, delay: 0.2 }}
             className="mt-10 rounded-3xl border border-gray-100 bg-white/90 p-6 shadow-xl dark:border-gray-800 dark:bg-gray-900/80"
           >
             <h2 className="flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white mb-6">
@@ -389,15 +521,19 @@ export default function EspaceMaevaPage() {
               {eleveStats.subjects.map((subject) => (
                 <div key={subject.subjectName}>
                   <div className="flex items-center justify-between mb-1">
-                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">{subject.subjectName}</span>
-                    <span className="text-sm font-bold text-gray-900 dark:text-white">{Math.round(subject.averageScore)}%</span>
+                    <span className="text-sm font-medium text-gray-700 dark:text-gray-300">
+                      {subject.subjectName}
+                    </span>
+                    <span className="text-sm font-bold text-gray-900 dark:text-white">
+                      {Math.round(subject.averageScore)}%
+                    </span>
                   </div>
                   <div className="h-3 w-full rounded-full bg-gray-100 dark:bg-gray-800">
                     <motion.div
                       className="h-3 rounded-full bg-gradient-to-r from-purple-500 to-pink-500"
                       initial={{ width: 0 }}
                       animate={{ width: `${subject.averageScore}%` }}
-                      transition={disableMotion ? instant : { duration: 1, ease: "easeOut" }}
+                      transition={disableMotion ? instantTransition : { duration: 1, ease: "easeOut" }}
                     />
                   </div>
                 </div>
@@ -406,64 +542,43 @@ export default function EspaceMaevaPage() {
           </motion.section>
         )}
 
-        {/* ── Galerie photos ── */}
+        {/* ------------------------------------------------------------------ */}
+        {/* Message motivant                                                     */}
+        {/* ------------------------------------------------------------------ */}
         <motion.section
           initial={disableMotion ? { opacity: 1 } : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={disableMotion ? instant : { duration: 0.6, delay: 0.25 }}
-          className="mt-10 rounded-3xl border border-pink-100 bg-white/90 p-6 shadow-xl dark:border-pink-900/40 dark:bg-gray-900/80"
-        >
-          <h2 className="flex items-center gap-2 text-xl font-bold text-gray-900 dark:text-white mb-6">
-            <Heart className="h-6 w-6 text-pink-500" />
-            Mes Photos 📸
-          </h2>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {[
-              { src: "/assets/maeva/Maeva.webp",      alt: "Maeva souriante" },
-              { src: "/assets/maeva/Maeva1.webp",     alt: "Maeva" },
-              { src: "/assets/maeva/IMG_1427.webp",   alt: "Maeva en train de dessiner" },
-              { src: "/assets/maeva/IMG_2203.webp",   alt: "Maeva concentrée" },
-              { src: "/assets/maeva/IMG_2248.webp",   alt: "Maeva" },
-              { src: "/assets/maeva/Maevanini.webp",  alt: "Maeva petite" },
-              { src: "/assets/maeva/IMG_1411.webp",   alt: "Maeva" },
-            ].map((photo) => (
-              <div key={photo.src} className="relative h-48 overflow-hidden rounded-2xl shadow-lg group">
-                <Image src={photo.src} alt={photo.alt} fill className="object-cover transition-transform duration-300 group-hover:scale-105" />
-              </div>
-            ))}
-            <div className="relative h-48 overflow-hidden rounded-2xl bg-gradient-to-br from-pink-400 to-purple-500 shadow-lg flex items-center justify-center">
-              <div className="text-center text-white p-4">
-                <span className="text-4xl">💜</span>
-                <p className="mt-2 font-semibold">Tu es magnifique !</p>
-              </div>
-            </div>
-          </div>
-        </motion.section>
-
-        {/* ── Message motivant ── */}
-        <motion.section
-          initial={disableMotion ? { opacity: 1 } : { opacity: 0, y: 24 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={disableMotion ? instant : { duration: 0.6, delay: 0.3 }}
+          transition={disableMotion ? instantTransition : { duration: 0.6, delay: 0.25 }}
           className="mt-10 rounded-3xl bg-gradient-to-r from-pink-500 via-purple-500 to-blue-500 p-8 shadow-xl text-center text-white"
         >
-          <h2 className="text-2xl font-bold mb-4">Tu es formidable, {prenom} ! 🌟</h2>
+          <h2 className="text-2xl font-bold mb-4">
+            Tu es formidable, {prenom} ! 🌟
+          </h2>
           <p className="text-lg opacity-90 max-w-2xl mx-auto">
             Continue d'apprendre, de créer et de t'amuser. On est tous très fiers de toi !
           </p>
           <div className="mt-6 flex justify-center gap-4 text-4xl">
-            <span>💜</span><span>🌈</span><span>✨</span><span>🎨</span><span>📚</span>
+            <span>💜</span>
+            <span>🌈</span>
+            <span>✨</span>
+            <span>🎨</span>
+            <span>📚</span>
           </div>
         </motion.section>
 
-        {/* ── Lien profil ── */}
+        {/* ------------------------------------------------------------------ */}
+        {/* Lien profil                                                          */}
+        {/* ------------------------------------------------------------------ */}
         <motion.div
           initial={disableMotion ? { opacity: 1 } : { opacity: 0, y: 24 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={disableMotion ? instant : { duration: 0.6, delay: 0.35 }}
+          transition={disableMotion ? instantTransition : { duration: 0.6, delay: 0.3 }}
           className="mt-10 text-center"
         >
-          <Link href="/profile" className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-purple-700 shadow-lg transition hover:bg-purple-50 dark:bg-gray-800 dark:text-purple-300 dark:hover:bg-gray-700">
+          <Link
+            href="/profile"
+            className="inline-flex items-center gap-2 rounded-full bg-white px-6 py-3 text-sm font-semibold text-purple-700 shadow-lg transition hover:bg-purple-50 dark:bg-gray-800 dark:text-purple-300 dark:hover:bg-gray-700"
+          >
             Voir mon profil
             <ArrowRight className="h-4 w-4" />
           </Link>
