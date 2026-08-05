@@ -184,8 +184,9 @@ app.use((err, req, res, next) => {
 });
 
 // 🚀 Lancement du serveur
+const HOST = process.env.HOST || "127.0.0.1";
 const PORT = process.env.PORT || 10000;
-app.listen(PORT, () => console.log(`✅ Serveur en écoute sur le port ${PORT}`));
+app.listen(PORT, HOST, () => console.log(`✅ Serveur en écoute sur http://${HOST}:${PORT}`));
 
 // Export de l'app pour les tests
 module.exports = app;

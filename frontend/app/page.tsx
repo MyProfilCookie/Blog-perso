@@ -1,199 +1,58 @@
-/* eslint-disable @typescript-eslint/no-unused-vars */
-/* eslint-disable react/jsx-no-undef */
-/* eslint-disable react/jsx-sort-props */
-/* eslint-disable prettier/prettier */
-/* eslint-disable import/order */
+/// <reference types="react" />
 /* eslint-disable react/no-unescaped-entities */
 "use client";
 export const dynamic = "force-dynamic";
 
-import { Card, CardBody, CardHeader } from "@/components/OptimizedNextUI";
-import { Popover, PopoverTrigger, PopoverContent } from "@nextui-org/react";
+import Link from "next/link";
+import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
 import OptimizedImage from "@/components/OptimizedImage";
 import { useMobileOptimization } from "@/hooks/useMobileOptimization";
-import Link from "next/link";
-
-import { motion, useReducedMotion } from "framer-motion";
-import React, { useEffect, useState } from "react";
 import {
-  BookOpen,
-  Users,
-  Heart,
-  Star,
-  ArrowRight,
-  CheckCircle,
-  Brain,
-  Lightbulb,
-  Shield,
   Sparkles,
-  Award,
-  MessageCircle,
-  PlayCircle,
-  Leaf,
-  CalendarRange,
-  Headphones
+  ArrowRight,
+  Download,
+  Users,
+  Baby,
+  Stethoscope,
 } from "lucide-react";
-import { Info } from "lucide-react";
 
-// Données des articles optimisées
-const articles = [
+const universCards = [
   {
-    id: 11,
-    title: "Stratégies d'apprentissage pour enfants autistes",
-    description: "Découvrez des méthodes adaptées pour faciliter l'apprentissage...",
-    img: "/assets/images/autism-awareness.webp",
-    link: "/articles/11",
-    category: "Éducation"
-  },
-  {
-    id: 12,
-    title: "Ressources éducatives spécialisées",
-    description: "Une collection d'outils et de matériels éducatifs...",
-    img: "/assets/aba_therapy.webp",
-    link: "/articles/12",
-    category: "Ressources"
-  },
-  {
-    id: 13,
-    title: "Accompagnement parental",
-    description: "Conseils et soutien pour les parents d'enfants autistes...",
+    title: "Parents",
+    text: "Des guides concrets, des routines visuelles et un espace pour souffler entre parents qui se comprennent.",
     img: "/assets/family/family.webp",
-    link: "/articles/13",
-    category: "Parentalité"
-  }
-];
-
-const communityHighlights = [
-  {
-    icon: <Sparkles className="h-5 w-5" />,
-    title: "Famille impliquée",
-    description:
-      "Chaque module est co-construit avec nos enfants, nos éducateurs et la communauté AutiStudy.",
+    link: "/resources",
+    icon: <Users className="h-5 w-5" />,
   },
   {
-    icon: <MessageCircle className="h-5 w-5" />,
-    title: "Support humain",
-    description:
-      "Une équipe à l’écoute pour répondre à vos questions et ajuster les parcours selon vos retours.",
+    title: "Enfants",
+    text: "Des jeux et défis colorés pensés pour apprendre en s'amusant, à son propre rythme, sans pression.",
+    img: "/assets/education_autisme.webp",
+    link: "/controle",
+    icon: <Baby className="h-5 w-5" />,
   },
   {
-    icon: <Leaf className="h-5 w-5" />,
-    title: "Respect sensoriel",
-    description:
-      "Des activités pensées pour apaiser les sens, valoriser les routines et éviter la surcharge.",
+    title: "Professionnels",
+    text: "Des supports prêts à imprimer, alignés sur les méthodes ABA, TEACCH et PECS, à intégrer à vos suivis.",
+    img: "/assets/aba_therapy.webp",
+    link: "/resources",
+    icon: <Stethoscope className="h-5 w-5" />,
   },
 ];
 
 const programmeSteps = [
-  {
-    step: "01",
-    title: "Découverte guidée",
-    description:
-      "Nous apprenons à connaître votre enfant grâce à un quiz sensoriel et des observations familiales.",
-  },
-  {
-    step: "02",
-    title: "Parcours personnalisé",
-    description:
-      "Alia génère des activités adaptées aux centres d’intérêt et au niveau d’énergie du moment.",
-  },
-  {
-    step: "03",
-    title: "Suivi bienveillant",
-    description:
-      "Les progrès sont visualisés sur un tableau de bord clair, avec des rappels doux et positifs.",
-  },
-  {
-    step: "04",
-    title: "Échanges continus",
-    description:
-      "Partagez vos retours, recevez des conseils et adaptez les parcours en quelques clics.",
-  },
+  { step: "1", title: "Communication", text: "Pictogrammes, PECS et premiers mots pour se faire comprendre." },
+  { step: "2", title: "Émotions", text: "Reconnaître, nommer et exprimer ce que l'on ressent." },
+  { step: "3", title: "Autonomie", text: "Routines du quotidien, repères visuels et petites victoires." },
+  { step: "4", title: "Sensoriel", text: "Apprivoiser les sons, textures et lumières à son rythme." },
 ];
 
-const eventShowcase = [
-  {
-    title: "Ateliers famille & sensoriel",
-    description:
-      "Sessions en direct pour apprendre à créer des routines sécurisantes à la maison.",
-    date: "Chaque mercredi",
-  },
-  {
-    title: "Masterclass neurodiversité",
-    description:
-      "Des experts partagent des stratégies concrètes pour l’école, la maison et les loisirs.",
-    date: "1er samedi du mois",
-  },
-  {
-    title: "Rencontres parents / pro",
-    description:
-      "Échanges libres autour des solutions AutiStudy et des aménagements à mettre en place.",
-    date: "Planning disponible dans l’espace Contrôle",
-  },
-];
-
-// Services principaux
-const services = [
-  {
-    icon: <BookOpen className="w-8 h-8" />,
-    title: "Ressources Éducatives",
-    description: "Matériels adaptés et spécialisés pour tous les niveaux",
-    color: "bg-blue-100 text-blue-600 dark:bg-blue-500/20 dark:text-blue-200",
-    link: "/resources"
-  },
-  {
-    icon: <Brain className="w-8 h-8" />,
-    title: "Exercices Interactifs",
-    description: "Activités ludiques et progressives personnalisées",
-    color: "bg-green-100 text-green-600 dark:bg-green-500/20 dark:text-green-200",
-    link: "/controle"
-  },
-  {
-    icon: <Users className="w-8 h-8" />,
-    title: "Accompagnement",
-    description: "Soutien personnalisé et suivi des progrès",
-    color: "bg-purple-100 text-purple-600 dark:bg-purple-500/20 dark:text-purple-200",
-    link: "/soutien"
-  },
-  {
-    icon: <Heart className="w-8 h-8" />,
-    title: "Support Parental",
-    description: "Conseils et ressources pour les familles",
-    color: "bg-orange-100 text-orange-600 dark:bg-orange-500/20 dark:text-orange-200",
-    link: "/about"
-  }
-];
-
-// Témoignages
-const testimonials = [
-  {
-    name: "Fondateur d'AutiStudy",
-    role: "Fondateur",
-    content: "AutiStudy a transformé l'apprentissage de Maeva. Les exercices sont parfaitement adaptés à ses besoins.",
-    avatar: "/assets/family/avatar/family.webp",
-    rating: 5
-  },
-  {
-    name: "Benjamin Insigne",
-    role: "Papa de Michael, 14 ans",
-    content: "Avec AutiStudy, je me sens comme un membre de la famille même si nous n'avons pas le même nom. Cette plateforme comprend vraiment les besoins de Michael et nous accompagne au quotidien.",
-    avatar: "/assets/family/avatar/benjamin.webp",
-    rating: 5
-  },
-  {
-    name: "Marie",
-    role: "Éducatrice spécialisée",
-    content: "Une plateforme exceptionnelle qui respecte les besoins spécifiques de chaque enfant.",
-    avatar: "/assets/family/avatar/marie.webp?v=20251113",
-    rating: 5
-  },
-  {
-    name: "Thomas",
-    role: "Papa de Lucas",
-    content: "Les progrès de notre fils sont remarquables grâce aux exercices personnalisés d'AutiStudy.",
-    avatar: "/assets/family/avatar/thomas.webp?v=20251113",
-    rating: 5
-  }
+const resourceCards = [
+  { tag: "Fiche PDF", tagColor: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200", title: "Planning visuel de la journée", text: "Un emploi du temps illustré pour structurer chaque matinée sans stress.", meta: "5 min de lecture" },
+  { tag: "Article", tagColor: "bg-teal-100 text-teal-800 dark:bg-teal-900/40 dark:text-teal-200", title: "Comprendre les crises sensorielles", text: "Les signaux à repérer et comment réagir avec calme, écrit avec des orthophonistes.", meta: "8 min de lecture" },
+  { tag: "Activité", tagColor: "bg-indigo-100 text-indigo-800 dark:bg-indigo-900/40 dark:text-indigo-200", title: "Jeu des émotions à imprimer", text: "Des cartes à découper pour nommer et mimer 12 émotions du quotidien.", meta: "Dès 4 ans" },
+  { tag: "Guide pro", tagColor: "bg-amber-100 text-amber-800 dark:bg-amber-900/40 dark:text-amber-200", title: "Adapter une séance TEACCH", text: "Trame prête à l'emploi pour structurer l'espace et le temps de travail.", meta: "12 min de lecture" },
 ];
 
 export default function HomePage() {
@@ -208,619 +67,309 @@ export default function HomePage() {
       ? window.requestIdleCallback(() => setDeferredSections(true), { timeout: 1200 })
       : window.setTimeout(() => setDeferredSections(true), 600);
     return () => {
-      if (typeof id === "number") {
-        clearTimeout(id);
-      }
+      if (typeof id === "number") clearTimeout(id);
     };
   }, []);
 
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900">
       <main>
-        {/* Hero Section */}
-        <section className="relative overflow-hidden py-12 md:py-20 lg:py-32">
-          <div className="absolute inset-0 z-0 bg-gradient-to-br from-blue-50 via-purple-50 to-pink-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-900" />
+        {/* Hero */}
+        <section className="relative overflow-hidden py-12 md:py-20 lg:py-28">
+          <div className="absolute inset-0 z-0 bg-gradient-to-br from-indigo-50 via-white to-teal-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-900" />
           <div className="relative z-10 w-full px-4 md:px-8 lg:px-12">
-            <div className="max-w-7xl mx-auto">
-              <div className="grid gap-10 md:gap-12 md:grid-cols-2 items-center">
-                <motion.div
-                  initial={disableMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={disableMotion ? instantTransition : { duration: 0.6, ease: "easeOut" }}
-                  className="flex flex-col items-center text-center md:items-start md:text-left gap-6"
-                >
-                  <div className="space-y-4 md:space-y-6">
-                    <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-white">
-                      Apprentissage{" "}
-                      <span className="text-blue-600 dark:text-blue-400">
-                        adapté
-                      </span>{" "}
-                      pour enfants autistes
-                    </h1>
-                    <p className="text-base md:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-xl">
-                      Une plateforme éducative spécialisée qui s&apos;adapte aux besoins
-                      uniques de chaque enfant pour un apprentissage efficace et
-                      bienveillant, à l&apos;école comme à la maison.
-                    </p>
+            <div className="max-w-7xl mx-auto grid gap-10 md:gap-12 md:grid-cols-2 items-center">
+              <motion.div
+                initial={disableMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: -30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={disableMotion ? instantTransition : { duration: 0.6, ease: "easeOut" }}
+                className="flex flex-col items-center text-center md:items-start md:text-left gap-6"
+              >
+                <span className="inline-flex items-center gap-2 rounded-full bg-indigo-100 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-indigo-700 dark:bg-indigo-900/30 dark:text-indigo-200">
+                  <Sparkles className="h-3.5 w-3.5" />
+                  Conçu avec des professionnels du TSA
+                </span>
+                <h1 className="text-3xl md:text-4xl lg:text-5xl xl:text-6xl font-bold text-gray-900 dark:text-white max-w-xl">
+                  Apprendre à son rythme, en toute confiance
+                </h1>
+                <p className="text-base md:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-xl">
+                  Des ressources ludiques, un parcours pas à pas et une communauté bienveillante pour accompagner chaque enfant autiste — et sa famille — vers l'autonomie.
+                </p>
+                <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
+                  <Link
+                    href="/resources"
+                    className="bg-indigo-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-indigo-700 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base shadow-md"
+                  >
+                    Explorer les ressources gratuites
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                  <Link
+                    href="#programme"
+                    className="border-2 border-gray-200 text-gray-700 dark:border-gray-700 dark:text-gray-200 px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
+                  >
+                    Voir comment ça marche
+                  </Link>
+                </div>
+                <div className="flex gap-8">
+                  <div>
+                    <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">1 200+</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">fiches &amp; activités</div>
                   </div>
-                  <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
-                    <Link
-                      href="/users/signup"
-                      className="bg-blue-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-blue-700 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base shadow-md"
-                    >
-                      <Star className="w-4 h-4 md:w-5 md:h-5" />
-                      Commencer gratuitement
-                    </Link>
-                    <Link
-                      href="/about"
-                      className="border-2 border-blue-600 text-blue-600 px-6 md:px-8 py-3 md:py-4 rounded-xl hover:bg-blue-50 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
-                    >
-                      <Shield className="w-4 h-4 md:w-5 md:h-5" />
-                      En savoir plus
-                    </Link>
+                  <div>
+                    <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">40k</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">familles accompagnées</div>
                   </div>
-                  <p className="text-xs md:text-sm text-gray-500 dark:text-gray-400 mt-2">
-                    Essai complet de 7 jours, sans engagement
-                  </p>
-                </motion.div>
+                  <div>
+                    <div className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">100%</div>
+                    <div className="text-xs text-gray-500 dark:text-gray-400">gratuit pour démarrer</div>
+                  </div>
+                </div>
+              </motion.div>
 
-                <motion.div
-                  initial={disableMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  transition={disableMotion ? instantTransition : { duration: 0.6, delay: 0.1, ease: "easeOut" }}
-                  className="relative mx-auto max-w-md sm:max-w-lg md:mx-0"
-                >
-                  <OptimizedImage
-                    src="/assets/home/home.webp"
-                    alt="Enfant apprenant avec AutiStudy"
-                    width={600}
-                    height={420}
-                    className="hero-image rounded-2xl shadow-2xl image-optimized cls-image-container w-full h-auto"
-                    priority
-                    sizes="(max-width: 768px) 90vw, (max-width: 1200px) 50vw, 600px"
-                  />
-                </motion.div>
-              </div>
+              <motion.div
+                initial={disableMotion ? { opacity: 1, x: 0 } : { opacity: 0, x: 30 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={disableMotion ? instantTransition : { duration: 0.6, delay: 0.1, ease: "easeOut" }}
+                className="relative mx-auto max-w-md sm:max-w-lg md:mx-0"
+              >
+                <OptimizedImage
+                  src="/assets/home/home.webp"
+                  alt="Enfant qui apprend en jouant avec AutiStudy"
+                  width={600}
+                  height={420}
+                  className="rounded-[2.5rem] shadow-2xl w-full h-auto object-cover aspect-square"
+                  priority
+                  sizes="(max-width: 768px) 90vw, (max-width: 1200px) 50vw, 600px"
+                />
+              </motion.div>
             </div>
           </div>
         </section>
 
+        {/* Trois univers */}
         {deferredSections && (
-        <section className="py-12 md:py-20 bg-gradient-to-b from-white via-blue-50/40 to-white dark:from-gray-950 dark:via-gray-900/60 dark:to-gray-950">
-          <div className="w-full px-4 md:px-8 lg:px-12">
-            <div className="max-w-7xl mx-auto">
-              <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-center">
+          <section id="univers" className="py-12 md:py-20 bg-white dark:bg-gray-900">
+            <div className="w-full px-4 md:px-8 lg:px-12">
+              <div className="max-w-7xl mx-auto">
                 <motion.div
                   initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                  animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
                   whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
                   transition={disableMotion ? instantTransition : { duration: 0.5 }}
                   viewport={disableMotion ? undefined : { once: true }}
-                  className="space-y-4"
+                  className="mb-10 md:mb-12"
                 >
-                  <span className="inline-flex items-center gap-2 rounded-full bg-blue-100 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-blue-700 dark:bg-blue-900/30 dark:text-blue-200">
-                    Notre méthode
-                  </span>
-                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
-                    Un parcours d&apos;apprentissage apaisant et structuré
+                  <span className="text-xs font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-300">Pour qui</span>
+                  <h2 className="mt-2 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white max-w-md">
+                    Trois univers, un seul accompagnement
                   </h2>
-                  <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
-                    Nous combinons observation familiale, IA bienveillante et coaching humain pour guider chaque enfant pas à pas.
-                    Les étapes ci-dessous vous accompagnent depuis la découverte jusqu&apos;à la célébration des réussites.
-                  </p>
-                  <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm text-blue-700 shadow-sm backdrop-blur dark:border-blue-700/40 dark:bg-gray-800/90 dark:text-blue-200">
-                    <strong>Transparence :</strong> votre famille garde le contrôle. Vous choisissez les activités à activer, les notifications et les retours envoyés à l’équipe AutiStudy.
-                  </div>
-                  <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm text-blue-700 shadow-sm backdrop-blur dark:border-blue-700/40 dark:bg-gray-800/90 dark:text-blue-200">
-                    <strong>IA bienveillante :</strong> respect strict de la vie privée (données minimisées), recommandations basées sur le renforcement positif et les préférences familiales.
-                  </div>
                 </motion.div>
 
+                <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 md:gap-8">
+                  {universCards.map((card, index) => (
+                    <motion.div
+                      key={card.title}
+                      initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                      whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                      transition={disableMotion ? instantTransition : { duration: 0.4, delay: index * 0.1 }}
+                      viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
+                      className="rounded-3xl border border-gray-100 bg-white p-6 shadow-sm dark:border-gray-700 dark:bg-gray-800 flex flex-col gap-4"
+                    >
+                      <OptimizedImage
+                        src={card.img}
+                        alt={card.title}
+                        width={400}
+                        height={220}
+                        className="w-full h-40 object-cover rounded-2xl"
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                      />
+                      <div className="flex items-center gap-2 text-indigo-600 dark:text-indigo-300">
+                        {card.icon}
+                        <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{card.title}</h3>
+                      </div>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 flex-1">{card.text}</p>
+                      <Link href={card.link} className="text-sm font-semibold text-indigo-600 dark:text-indigo-300 flex items-center gap-1 hover:underline">
+                        En savoir plus <ArrowRight className="h-3.5 w-3.5" />
+                      </Link>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Programme */}
+        {deferredSections && (
+          <section id="programme" className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
+            <div className="w-full px-4 md:px-8 lg:px-12">
+              <div className="max-w-7xl mx-auto">
                 <motion.div
                   initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                  animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
                   whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-                  transition={disableMotion ? instantTransition : { duration: 0.5, delay: 0.1 }}
+                  transition={disableMotion ? instantTransition : { duration: 0.5 }}
                   viewport={disableMotion ? undefined : { once: true }}
-                  className="grid gap-4 sm:grid-cols-2"
+                  className="mb-10 md:mb-12 max-w-2xl"
                 >
-                  {programmeSteps.map((step) => (
-                    <div
-                      key={step.step}
-                      className="group rounded-3xl border border-blue-100 bg-white/90 p-6 shadow-lg transition hover:-translate-y-1 hover:shadow-xl dark:border-blue-700/40 dark:bg-gray-800/85"
+                  <span className="text-xs font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-300">Le programme</span>
+                  <h2 className="mt-2 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
+                    Un parcours pas à pas, jamais imposé
+                  </h2>
+                  <p className="mt-3 text-gray-600 dark:text-gray-300">
+                    Chaque enfant avance à son allure : les modules se débloquent selon ses progrès, pas selon son âge.
+                  </p>
+                </motion.div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 relative">
+                  <div className="hidden lg:block absolute top-6 left-[10%] right-[10%] h-px bg-gray-200 dark:bg-gray-700" />
+                  {programmeSteps.map((s, index) => (
+                    <motion.div
+                      key={s.step}
+                      initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                      whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                      transition={disableMotion ? instantTransition : { duration: 0.4, delay: index * 0.1 }}
+                      viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
+                      className="relative z-10 flex flex-col gap-3"
                     >
-                      <span className="inline-flex h-10 w-10 items-center justify-center rounded-full bg-blue-100 text-sm font-semibold text-blue-700 dark:bg-blue-900/40 dark:text-blue-200">
-                        {step.step}
+                      <span
+                        className={`inline-flex h-12 w-12 items-center justify-center rounded-full text-white font-bold ${
+                          index % 2 === 0 ? "bg-indigo-600" : "bg-teal-500"
+                        }`}
+                      >
+                        {s.step}
                       </span>
-                      <h3 className="mt-4 text-lg font-semibold text-gray-900 dark:text-white">
-                        {step.title}
-                      </h3>
-                      {step.step === "02" ? (
-                        <div className="mt-1">
-                          <Popover placement="bottom-start" className="max-w-xs">
-                            <PopoverTrigger>
-                              <button aria-label="En savoir plus sur l'IA bienveillante" className="inline-flex items-center gap-1 text-blue-700 dark:text-blue-200 text-xs font-medium">
-                                <Info className="w-4 h-4" />
-                                En savoir plus
-                              </button>
-                            </PopoverTrigger>
-                            <PopoverContent>
-                              <div className="p-2 text-xs text-gray-700 dark:text-gray-200">
-                                Notre IA Alia respecte strictement la vie privée. Elle utilise uniquement vos observations et les intérêts de l'enfant pour proposer des activités adaptées, sans partage de données.
-                              </div>
-                            </PopoverContent>
-                          </Popover>
-                        </div>
-                      ) : null}
-                      <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                        {step.description}
-                      </p>
-                      {step.step === "02" ? (
-                        <p className="mt-2 text-xs leading-relaxed text-blue-700 dark:text-blue-200">
-                          IA bienveillante: respect strict de la vie privée, suggestions basées sur les intérêts et vos retours.
-                        </p>
-                      ) : null}
-                    </div>
+                      <h3 className="text-lg font-semibold text-gray-900 dark:text-white">{s.title}</h3>
+                      <p className="text-sm text-gray-600 dark:text-gray-300">{s.text}</p>
+                    </motion.div>
                   ))}
-                  <div className="sm:col-span-2 rounded-3xl border border-blue-100 bg-white/90 p-6 shadow-lg dark:border-blue-700/40 dark:bg-gray-800/85">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">Concrètement, comment Alia adapte ?</h3>
-                    <p className="mt-2 text-sm leading-relaxed text-gray-600 dark:text-gray-300">
-                      Si votre enfant est sensible aux bruits forts (quiz sensoriel), Alia évite les activités avec sons soudains. S’il adore les dinosaures, Alia utilise ce thème pour proposer des exercices de mathématiques et de langage.
-                    </p>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Ressources */}
+        {deferredSections && (
+          <section id="ressources" className="py-12 md:py-20 bg-white dark:bg-gray-900">
+            <div className="w-full px-4 md:px-8 lg:px-12">
+              <div className="max-w-7xl mx-auto">
+                <div className="mb-10 md:mb-12 flex items-end justify-between gap-4 flex-wrap">
+                  <div>
+                    <span className="text-xs font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-300">Ressources</span>
+                    <h2 className="mt-2 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
+                      À télécharger dès aujourd'hui
+                    </h2>
+                  </div>
+                  <Link
+                    href="/resources"
+                    className="rounded-full border border-gray-200 dark:border-gray-700 px-5 py-2.5 text-sm font-semibold text-gray-700 dark:text-gray-200 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+                  >
+                    Toutes les ressources
+                  </Link>
+                </div>
+
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                  {resourceCards.map((r, index) => (
+                    <motion.div
+                      key={r.title}
+                      initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
+                      whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                      transition={disableMotion ? instantTransition : { duration: 0.4, delay: index * 0.1 }}
+                      viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
+                      className="rounded-2xl bg-gray-50 dark:bg-gray-800 p-5 shadow-sm flex flex-col gap-2"
+                    >
+                      <span className={`w-fit rounded-full px-3 py-1 text-xs font-semibold ${r.tagColor}`}>{r.tag}</span>
+                      <h4 className="mt-1 font-semibold text-gray-900 dark:text-white">{r.title}</h4>
+                      <p className="text-sm text-gray-600 dark:text-gray-300 flex-1">{r.text}</p>
+                      <div className="mt-2 flex items-center justify-between">
+                        <span className="text-xs text-gray-500 dark:text-gray-400">{r.meta}</span>
+                        <Download className="h-4 w-4 text-indigo-600 dark:text-indigo-300" />
+                      </div>
+                    </motion.div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {/* Communauté */}
+        {deferredSections && (
+          <section id="communaute" className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
+            <div className="w-full px-4 md:px-8 lg:px-12">
+              <div className="max-w-7xl mx-auto grid gap-10 lg:grid-cols-2 items-center">
+                <motion.div
+                  initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
+                  whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
+                  transition={disableMotion ? instantTransition : { duration: 0.5 }}
+                  viewport={disableMotion ? undefined : { once: true }}
+                  className="rounded-3xl bg-teal-50 dark:bg-teal-900/20 p-6 md:p-8"
+                >
+                  <p className="text-lg font-medium text-teal-900 dark:text-teal-100 leading-snug">
+                    « Depuis qu'on utilise le planning visuel, les matins sont enfin sereins. On ne se sent plus seuls. »
+                  </p>
+                  <div className="mt-6 flex items-center gap-3">
+                    <OptimizedImage
+                      src="/assets/family/avatar/marie.webp"
+                      alt="Camille"
+                      width={44}
+                      height={44}
+                      className="h-11 w-11 rounded-full object-cover"
+                      sizes="44px"
+                    />
+                    <div>
+                      <div className="text-sm font-semibold text-gray-900 dark:text-white">Camille, maman de Léo</div>
+                      <div className="text-xs text-gray-500 dark:text-gray-400">Membre depuis 8 mois</div>
+                    </div>
                   </div>
                 </motion.div>
-              </div>
-            </div>
-          </div>
-        </section>
-        )}
 
-        {/* Services Section */}
-        {deferredSections && (
-        <section className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
-          <div className="w-full px-4 md:px-8 lg:px-12">
-            <div className="max-w-7xl mx-auto">
-              <motion.div
-                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
-                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={disableMotion ? instantTransition : { duration: 0.5, ease: "easeOut" }}
-                viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
-                className="text-center mb-12 md:mb-16"
-              >
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
-                  Nos services
-                </h2>
-                <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
-                  Tout ce dont vous avez besoin pour accompagner l'apprentissage de votre enfant
-                </p>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                  La boutique propose des produits complémentaires (sensoriel, outils, ressources numériques) à l’unité.
-                </p>
-              </motion.div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 grid-cls-optimized grid-cls-optimized grid-cls-optimized">
-                {services.map((service, index) => (
-                  <motion.div
-                    key={service.title}
-                    initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-                    animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
-                    whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-                    transition={disableMotion ? instantTransition : { duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
-                  >
-                    <Link href={service.link}>
-                      <Card className="h-full hover:shadow-lg transition-shadow cursor-pointer">
-                        <CardBody className="text-center p-4 md:p-6">
-                          <div className={`w-12 h-12 md:w-16 md:h-16 rounded-full ${service.color} flex items-center justify-center mx-auto mb-3 md:mb-4`}>
-                            {service.icon}
-                          </div>
-                          <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-                            {service.title}
-                          </h3>
-                          <p className="text-sm md:text-base text-gray-600 dark:text-gray-300">
-                            {service.description}
-                          </p>
-                        </CardBody>
-                      </Card>
-                    </Link>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-        )}
-
-        {deferredSections && (
-        <section className="py-12 md:py-20 bg-white dark:bg-gray-900">
-          <div className="w-full px-4 md:px-8 lg:px-12">
-            <div className="max-w-7xl mx-auto">
-              <motion.div
-                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
-                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={disableMotion ? instantTransition : { duration: 0.5 }}
-                viewport={disableMotion ? undefined : { once: true }}
-                className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr] lg:items-center"
-              >
-                <div className="space-y-4">
-                  <span className="inline-flex items-center gap-2 rounded-full bg-purple-100 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-purple-700 dark:bg-purple-900/30 dark:text-purple-200">
-                    Communauté AutiStudy
-                  </span>
-                  <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
-                    Nous avançons ensemble, parents, pros et enfants
-                  </h2>
-                  <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
-                    AutiStudy est né d&apos;une famille qui cherchait des réponses. Aujourd&apos;hui,
-                    nous co-créons la plateforme avec les retours des parents, éducateurs et thérapeutes qui vivent au quotidien la neurodiversité.
-                  </p>
-                  <div className="grid gap-4 sm:grid-cols-3">
-                    {communityHighlights.map((item) => (
-                      <div
-                        key={item.title}
-                        className="rounded-2xl border border-purple-100 bg-white/90 p-4 text-sm leading-relaxed shadow-md dark:border-purple-600/35 dark:bg-gray-800/85 dark:text-gray-200"
-                      >
-                        <div className="mb-3 inline-flex h-10 w-10 items-center justify-center rounded-full bg-purple-100 text-purple-600 dark:bg-purple-900/40 dark:text-purple-200">
-                          {item.icon}
-                        </div>
-                        <h3 className="text-base font-semibold text-gray-900 dark:text-white">
-                          {item.title}
-                        </h3>
-                        <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-                          {item.description}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="rounded-3xl bg-gradient-to-br from-purple-500/10 via-blue-500/10 to-pink-500/10 p-1">
-                  <div className="rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur dark:bg-gray-800/90">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                      Témoignages en direct
-                    </h3>
-                    <p className="mt-2 text-sm text-gray-600 dark:text-gray-300">
-                      “AutiStudy nous aide à structurer nos journées et à garder une trace des réussites de notre fils.
-                      Nous nous sentons accompagnés en permanence.” — Paul & Virginie
-                    </p>
-                    <div className="mt-6 grid gap-4 sm:grid-cols-2">
-                      <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm dark:border-blue-600/35 dark:bg-gray-800/80">
-                        <Award className="mb-2 h-5 w-5 text-blue-600 dark:text-blue-300" />
-                        <p className="font-semibold text-gray-900 dark:text-white">
-                          +500 familles accompagnées
-                        </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">
-                          Des profils variés, des besoins sensoriels différents, une même recherche de sérénité.
-                        </p>
-                      </div>
-                      <div className="rounded-2xl border border-blue-100 bg-white/90 p-4 text-sm dark:border-blue-600/35 dark:bg-gray-800/80">
-                        <Headphones className="mb-2 h-5 w-5 text-blue-600 dark:text-blue-300" />
-                        <p className="font-semibold text-gray-900 dark:text-white">
-                          Coaching parental mensuel
-                        </p>
-                        <p className="text-xs text-gray-600 dark:text-gray-300">
-                          Des rendez-vous pour répondre à vos questions et vous aider à adapter AutiStudy.
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </motion.div>
-            </div>
-          </div>
-        </section>
-        )}
-        {/* Témoignages Section */}
-        {deferredSections && (
-        <section className="py-12 md:py-20">
-          <div className="w-full px-4 md:px-8 lg:px-12">
-            <div className="max-w-7xl mx-auto">
-              <motion.div
-                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
-                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={disableMotion ? instantTransition : { duration: 0.5, ease: "easeOut" }}
-                viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
-                className="text-center mb-12 md:mb-16"
-              >
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
-                  Ils nous font confiance
-                </h2>
-                <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
-                  Découvrez les témoignages de nos utilisateurs
-                </p>
-                <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                  Le fondateur, Benjamin Insigne, est aussi papa de Michael (14 ans) — deux regards complémentaires sur AutiStudy.
-                </p>
-              </motion.div>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 md:gap-8 grid-cls-optimized">
-                {testimonials.map((testimonial, index) => (
-                  <motion.div
-                    key={testimonial.name}
-                    initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-                    animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
-                    whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-                    transition={disableMotion ? instantTransition : { duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
-                  >
-                    <Card className="h-full">
-                      <CardBody className="p-4 md:p-6">
-                        <div className="flex items-center mb-3 md:mb-4 cls-image-container"><OptimizedImage
-                          src={testimonial.avatar}
-                          alt={testimonial.name}
-                          width={60}
-                          height={60}
-                          className="w-12 h-12 md:w-[3.75rem] md:h-[3.75rem] rounded-[20%] mr-3 md:mr-4 image-optimized border-2 border-blue-100 dark:border-blue-500/40 shadow-inner"
-                          sizes="60px"
-                        />
-                          <div>
-                            <h4 className="font-semibold text-gray-900 dark:text-white">
-                              {testimonial.name}
-                            </h4>
-                            <p className="text-sm text-gray-600 dark:text-gray-400">
-                              {testimonial.role}
-                            </p>
-                            {"location" in testimonial && testimonial.location ? (
-                              <p className="text-xs text-gray-500 dark:text-gray-400">
-                                {testimonial.location}
-                              </p>
-                            ) : null}
-                          </div>
-                        </div>
-                        <p className="text-gray-600 dark:text-gray-300 mb-4">
-                          "{testimonial.content}"
-                        </p>
-                        <div className="flex">
-                          {[...Array(testimonial.rating)].map((_, i) => (
-                            <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
-                          ))}
-                        </div>
-                      </CardBody>
-                    </Card>
-                  </motion.div>
-                ))}
-              </div>
-            </div>
-          </div>
-        </section>
-        )}
-
-        {deferredSections && (
-        <section className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
-          <div className="w-full px-4 md:px-8 lg:px-12">
-            <div className="max-w-7xl mx-auto">
-              <motion.div
-                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
-                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={disableMotion ? instantTransition : { duration: 0.5 }}
-                viewport={disableMotion ? undefined : { once: true }}
-                className="grid gap-12 lg:grid-cols-[1.1fr_0.9fr]"
-              >
                 <div>
-                  <span className="inline-flex items-center gap-2 rounded-full bg-teal-100 px-4 py-2 text-sm font-semibold uppercase tracking-[0.2em] text-teal-700 dark:bg-teal-900/40 dark:text-teal-200">
-                    Agenda AutiStudy
-                  </span>
-                  <h2 className="mt-4 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
-                    Des rendez-vous pour apprendre et souffler
+                  <span className="text-xs font-semibold uppercase tracking-widest text-indigo-600 dark:text-indigo-300">Communauté</span>
+                  <h2 className="mt-2 text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white">
+                    Vous n'êtes pas seul·e sur ce chemin
                   </h2>
-                  <p className="mt-3 text-base text-gray-600 dark:text-gray-300">
-                    Participez à nos ateliers en ligne et trouvez des ressources pour
-                    prolonger l&apos;expérience à la maison. Chaque mois, nous ajoutons des
-                    contenus pratiques, des fiches sensorimotrices et des vidéos explicatives.
+                  <p className="mt-3 text-gray-600 dark:text-gray-300 max-w-md">
+                    Échangez avec d'autres parents, posez vos questions à des professionnels et partagez vos petites victoires dans un espace bienveillant, sans jugement.
                   </p>
-                  <div className="mt-8 space-y-4">
-                    {eventShowcase.map((event) => (
-                      <div
-                        key={event.title}
-                        className="flex flex-col gap-3 rounded-2xl border border-teal-100 bg-white/90 p-4 shadow-sm dark:border-teal-700/40 dark:bg-gray-800/85"
-                      >
-                        <div className="flex items-center justify-between">
-                          <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                            {event.title}
-                          </h3>
-                          <span className="rounded-full border border-teal-200 px-3 py-1 text-xs font-semibold text-teal-600 dark:border-teal-700/50 dark:text-teal-200">
-                            {event.date}
-                          </span>
-                        </div>
-                        <p className="text-sm text-gray-600 dark:text-gray-300">
-                          {event.description}
-                        </p>
-                      </div>
-                    ))}
-                  </div>
-                  <div className="mt-6 flex flex-wrap gap-3">
-                    <Link
-                      href="/blog"
-                      className="inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition hover:from-teal-600 hover:to-blue-600"
-                    >
-                      <PlayCircle className="h-4 w-4" />
-                      Voir le programme complet
-                    </Link>
-                    <Link
-                      href="/resources"
-                      className="inline-flex items-center gap-2 rounded-full border border-teal-200 px-5 py-2.5 text-sm font-semibold text-teal-700 transition hover:border-teal-300 hover:text-teal-800 dark:border-teal-700/50 dark:text-teal-200 dark:hover:border-teal-500"
-                    >
-                      <CalendarRange className="h-4 w-4" />
-                      Ressources à télécharger
-                    </Link>
-                  </div>
+                  <Link
+                    href="/contact"
+                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-teal-600 px-6 py-3 text-sm font-semibold text-white shadow-md hover:bg-teal-700 transition-colors"
+                  >
+                    Rejoindre la communauté
+                    <ArrowRight className="h-4 w-4" />
+                  </Link>
                 </div>
-
-                <div className="flex flex-col gap-6 rounded-3xl bg-gradient-to-br from-teal-500/10 via-blue-500/10 to-purple-500/10 p-1">
-                  <div className="rounded-3xl bg-white/95 p-6 shadow-2xl backdrop-blur dark:bg-gray-800/90">
-                    <h3 className="text-lg font-semibold text-gray-900 dark:text-white">
-                      Ce qui vous attend
-                    </h3>
-                    <ul className="mt-4 space-y-3 text-sm text-gray-600 dark:text-gray-300">
-                      <li className="flex items-start gap-2">
-                        <CheckCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
-                        <span>
-                          Des fiches d&apos;activités sensorimotrices prêtes à l&apos;emploi pour
-                          rythmer vos semaines.
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
-                        <span>
-                          Des vidéos explicatives courtes pour accompagner vos enfants devant
-                          l&apos;écran.
-                        </span>
-                      </li>
-                      <li className="flex items-start gap-2">
-                        <CheckCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
-                        <span>
-                          Des supports de communication pour échanger avec l&apos;équipe pédagogique
-                          ou thérapeutique.
-                        </span>
-                      </li>
-                    </ul>
-                    <div className="mt-6 rounded-2xl border border-teal-100 bg-white/90 px-4 py-3 text-sm text-teal-700 shadow-sm dark:border-teal-700/40 dark:bg-gray-800/80 dark:text-teal-200">
-                      Abonnez-vous à notre lettre douce : chaque dimanche, une suggestion
-                      sensorielle, une activité à imprimer et un mot de soutien.
-                    </div>
-                  </div>
-                  <div className="rounded-3xl bg-white/90 p-6 shadow-xl dark:bg-gray-800/85">
-                    <h4 className="text-base font-semibold text-gray-900 dark:text-white">
-                      Concrètement pendant l&apos;atelier
-                    </h4>
-                    <div className="mt-4 grid gap-3 text-sm text-gray-600 dark:text-gray-300">
-                      <div className="flex items-start gap-3 rounded-2xl border border-teal-100 bg-white/90 px-3 py-2.5 dark:border-teal-700/30 dark:bg-gray-800/70">
-                        <PlayCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
-                        <span>15 min d&apos;immersion guidée pour comprendre le contexte de chaque famille.</span>
-                      </div>
-                      <div className="flex items-start gap-3 rounded-2xl border border-teal-100 bg-white/90 px-3 py-2.5 dark:border-teal-700/30 dark:bg-gray-800/70">
-                        <Sparkles className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
-                        <span>30 min d&apos;ateliers pratiques avec supports à télécharger instantanément.</span>
-                      </div>
-                      <div className="flex items-start gap-3 rounded-2xl border border-teal-100 bg-white/90 px-3 py-2.5 dark:border-teal-700/30 dark:bg-gray-800/70">
-                        <MessageCircle className="mt-0.5 h-4 w-4 text-teal-600 dark:text-teal-300" />
-                        <span>Questions-réponses en direct et suivi différé via notre lettre douce.</span>
-                      </div>
-                    </div>
-                    <Link
-                      href="/contact"
-                      className="mt-5 inline-flex items-center gap-2 rounded-full bg-gradient-to-r from-teal-500 to-blue-500 px-4 py-2 text-sm font-semibold text-white shadow-lg transition hover:from-teal-600 hover:to-blue-600"
-                    >
-                      Besoin d&apos;un échange rapide ?
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                  </div>
-                </div>
-              </motion.div>
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
         )}
 
-        {/* Articles Section */}
-        <section className="py-12 md:py-20 bg-gray-50 dark:bg-gray-800">
-          <div className="w-full px-4 md:px-8 lg:px-12">
-            <div className="max-w-7xl mx-auto">
-              <motion.div
-                initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-                animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
-                whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-                transition={disableMotion ? instantTransition : { duration: 0.5, ease: "easeOut" }}
-                viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
-                className="text-center mb-12"
-              >
-                <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-3 md:mb-4">
-                  Articles récents
-                </h2>
-                <p className="text-base md:text-lg text-gray-600 dark:text-gray-300">
-                  Découvrez nos derniers articles et conseils
-                </p>
-              </motion.div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 grid-cls-optimized grid-cls-optimized grid-cls-optimized">
-                {articles.map((article, index) => (
-                  <motion.div
-                    key={article.id}
-                    initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 15 }}
-                    animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
-                    whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-                    transition={disableMotion ? instantTransition : { duration: 0.4, delay: index * 0.1, ease: "easeOut" }}
-                    viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
+        {/* Newsletter CTA */}
+        {deferredSections && (
+          <section className="py-12 md:py-16">
+            <div className="w-full px-4 md:px-8 lg:px-12">
+              <div className="max-w-7xl mx-auto rounded-3xl bg-gradient-to-r from-indigo-600 to-teal-500 p-8 md:p-12 flex flex-wrap items-center justify-between gap-6">
+                <div className="max-w-md">
+                  <h2 className="text-2xl md:text-3xl font-bold text-white">Restez informé·e des nouvelles ressources</h2>
+                  <p className="mt-2 text-indigo-100">Une fois par mois, une sélection de fiches, d'articles et de conseils. Pas de spam, promis.</p>
+                </div>
+                <form className="flex gap-2 flex-wrap" onSubmit={(e) => e.preventDefault()}>
+                  <input
+                    type="email"
+                    placeholder="votre@email.com"
+                    className="rounded-full px-5 py-3 text-sm w-64 max-w-full border-0 focus:outline-none focus:ring-2 focus:ring-white"
+                  />
+                  <button
+                    type="submit"
+                    className="rounded-full bg-white px-6 py-3 text-sm font-semibold text-indigo-700 hover:bg-indigo-50 transition-colors"
                   >
-                    <Card className="overflow-hidden hover:shadow-lg transition-shadow h-full">
-                      <CardHeader className="p-0">
-                        <OptimizedImage
-                          src={article.img}
-                          alt={article.title}
-                          width={400}
-                          height={200}
-                          className="w-full h-48 object-cover image-optimized cls-image-container"
-                          priority={article.id === 1}
-                          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 400px"
-                        />
-                      </CardHeader>
-                      <CardBody className="p-4 md:p-6">
-                        <div className="mb-2">
-                          <span className="inline-block bg-blue-100 text-blue-800 text-xs px-2 py-1 rounded-full">
-                            {article.category}
-                          </span>
-                        </div>
-                        <h3 className="text-lg md:text-xl font-semibold mb-2 text-gray-900 dark:text-white">
-                          {article.title}
-                        </h3>
-                        <p className="text-sm md:text-base text-gray-600 dark:text-gray-300 mb-4">
-                          {article.description}
-                        </p>
-                        <Link
-                          href={article.link}
-                          className="text-blue-600 hover:underline font-semibold flex items-center gap-2"
-                        >
-                          Lire la suite
-                          <ArrowRight className="w-4 h-4" />
-                        </Link>
-                      </CardBody>
-                    </Card>
-                  </motion.div>
-                ))}
+                    S'inscrire
+                  </button>
+                </form>
               </div>
             </div>
-          </div>
-        </section>
-
-        {/* Section Call-to-Action */}
-        <section className="py-12 md:py-16 bg-gradient-to-r from-blue-600 to-purple-600">
-          <div className="w-full px-4 md:px-8 lg:px-12 text-center">
-            <motion.div
-              initial={disableMotion ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
-              animate={disableMotion ? { opacity: 1, y: 0 } : undefined}
-              whileInView={disableMotion ? undefined : { opacity: 1, y: 0 }}
-              transition={disableMotion ? instantTransition : { duration: 0.5, ease: "easeOut" }}
-              viewport={disableMotion ? undefined : { once: true, margin: "-50px" }}
-            >
-              <h2 className="text-2xl md:text-3xl lg:text-4xl font-bold text-white mb-3 md:mb-4">
-                Prêt à commencer l'aventure ?
-              </h2>
-              <p className="text-lg md:text-xl text-blue-100 mb-6 md:mb-8">
-                Rejoignez des centaines de familles qui font confiance à AutiStudy
-              </p>
-              <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                <Link
-                  href="/users/signup"
-                  className="bg-white text-blue-600 px-8 py-4 rounded-lg hover:bg-gray-100 transition-colors font-semibold flex items-center justify-center gap-2"
-                >
-                  <CheckCircle className="w-5 h-5" />
-                  Créer un compte gratuit
-                </Link>
-                <Link
-                  href="/contact"
-                  className="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-blue-600 transition-colors font-semibold flex items-center justify-center gap-2"
-                >
-                  <Lightbulb className="w-5 h-5" />
-                  Nous contacter
-                </Link>
-              </div>
-            </motion.div>
-          </div>
-        </section>
-
+          </section>
+        )}
       </main>
     </div>
   );
