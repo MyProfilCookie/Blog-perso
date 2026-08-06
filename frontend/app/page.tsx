@@ -75,7 +75,7 @@ export default function HomePage() {
       <main>
         {/* Hero */}
         <section className="relative overflow-hidden py-12 md:py-20 lg:py-28">
-          <div className="absolute inset-0 z-0 bg-gradient-to-br from-indigo-50 via-white to-teal-50" />
+          <div className="absolute inset-0 z-0 bg-gradient-to-br from-indigo-50 via-white to-teal-50 dark:from-gray-800 dark:via-gray-900 dark:to-gray-900" />
           <div className="relative z-10 w-full px-4 md:px-8 lg:px-12">
             <div className="max-w-7xl mx-auto grid gap-10 md:gap-12 md:grid-cols-2 items-center">
               <motion.div
@@ -94,17 +94,17 @@ export default function HomePage() {
                 <p className="text-base md:text-lg lg:text-xl text-gray-600 dark:text-gray-300 max-w-xl">
                   Des ressources ludiques, un parcours pas à pas et une communauté bienveillante pour accompagner chaque enfant autiste — et sa famille — vers l'autonomie.
                 </p>
-                <div className="flex w-full flex-wrap gap-3 justify-center md:justify-start">
+                <div className="flex w-full flex-col gap-3 sm:flex-row sm:justify-center md:justify-start">
                   <Link
                     href="/resources"
-                    className="bg-indigo-600 text-white px-6 md:px-7 py-3.5 rounded-full hover:bg-indigo-700 transition-colors font-semibold inline-flex items-center justify-center gap-2 text-sm md:text-base shadow-md"
+                    className="bg-indigo-600 text-white px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-indigo-700 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base shadow-md"
                   >
                     Explorer les ressources gratuites
                     <ArrowRight className="w-4 h-4" />
                   </Link>
                   <Link
                     href="#programme"
-                    className="border-2 border-gray-200 text-gray-700 dark:border-gray-700 dark:text-gray-200 px-6 md:px-7 py-3.5 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold inline-flex items-center justify-center gap-2 text-sm md:text-base"
+                    className="border-2 border-gray-200 text-gray-700 dark:border-gray-700 dark:text-gray-200 px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
                   >
                     Voir comment ça marche
                   </Link>
@@ -135,8 +135,8 @@ export default function HomePage() {
                   src="/assets/home/home.webp"
                   alt="Enfant qui apprend en jouant avec AutiStudy"
                   width={600}
-                  height={600}
-                  className="rounded-full shadow-2xl w-full h-auto object-cover aspect-square"
+                  height={420}
+                  className="rounded-[2.5rem] shadow-2xl w-full h-auto object-cover aspect-square"
                   priority
                   sizes="(max-width: 768px) 90vw, (max-width: 1200px) 50vw, 600px"
                 />
