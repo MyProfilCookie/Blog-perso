@@ -50,7 +50,6 @@ import { ThemeSwitch } from "@/components/theme-switch";
 
 const VIRGINIE_EMAIL = "virginie.ayivor@yahoo.fr";
 
-// Type definition for user
 type User = {
   id: string;
   pseudo: string;
@@ -60,7 +59,6 @@ type User = {
   token?: string;
 };
 
-// Type pour les compteurs de commandes
 type OrderCountType = {
   pending: number;
   shipped: number;
@@ -68,7 +66,6 @@ type OrderCountType = {
   total: number;
 };
 
-// Interface pour le type Order
 interface Order {
   status: string;
   _id: string;
@@ -103,7 +100,6 @@ export const Navbar = () => {
   const isVirginie =
     user?.email?.toLowerCase?.() === VIRGINIE_EMAIL;
 
-  // Couleurs pour l'animation de l'avatar - couleurs de l'autisme
   const adminColors = ["#FF6B6B", "#4ECDC4", "#45B7D1", "#96CEB4"];
   const userColors = ["#FFEAA7", "#DDA0DD", "#98D8C8", "#F7DC6F"];
   const guestColors = ["#E8E8E8", "#D4D4D4", "#B8B8B8", "#9E9E9E"];
@@ -125,19 +121,16 @@ export const Navbar = () => {
     setAvatarColorIndex((prev) => prev);
   };
 
-  // Fermer automatiquement le menu lorsque l'on quitte le format mobile
   useEffect(() => {
     if (!isMobile && isMenuOpen) {
       setIsMenuOpen(false);
     }
   }, [isMobile, isMenuOpen]);
 
-  // Ferme le menu mobile dès qu'une navigation se produit
   useEffect(() => {
     setIsMenuOpen(false);
   }, [pathname]);
 
-  // Animation de couleur de l'avatar - optimisée pour les performances
   useEffect(() => {
     if (shouldReduceAnimations || isMobile) {
       return;
@@ -156,14 +149,10 @@ export const Navbar = () => {
     }
   }, [shouldReduceAnimations, isMobile]);
 
-  /**
-   * Synchroniser le panier avec l'utilisateur
-   */
   useEffect(() => {
     if (user && typeof window !== "undefined") {
       const userCart = localStorage.getItem(`cart_${user.id}`);
       setCartItemsCount(userCart ? JSON.parse(userCart).length : 0);
-      // Chargement différé des commandes (uniquement si nécessaire)
       const timer = setTimeout(() => fetchOrderCount(), 500);
       return () => clearTimeout(timer);
     } else {
@@ -171,9 +160,6 @@ export const Navbar = () => {
     }
   }, [user]);
 
-  /**
-   * Mettre à jour le panier lors d'un événement "userUpdate"
-   */
   useEffect(() => {
     if (typeof window === "undefined") return;
 
@@ -192,16 +178,13 @@ export const Navbar = () => {
     };
   }, [user]);
 
-  /**
-   * Déconnexion de l'utilisateur
-   */
   const handleLogout = () => {
     Swal.fire({
       title: "Êtes-vous sûr ?",
       text: "Vous allez être déconnecté(e) et votre panier sera vidé.",
       icon: "warning",
       showCancelButton: true,
-      confirmButtonColor: "#4ECDC4",
+      confirmButtonColor: "#4F46E5",
       cancelButtonColor: "#FF6B6B",
       confirmButtonText: "Oui, déconnectez-moi !",
       cancelButtonText: "Annuler",
@@ -238,9 +221,6 @@ export const Navbar = () => {
     });
   };
 
-  /**
-   * Rediriger vers la page de connexion ou d'inscription
-   */
   const handleLoginRedirect = () => {
     Swal.fire({
       title: "Connectez-vous ou inscrivez-vous",
@@ -258,9 +238,6 @@ export const Navbar = () => {
     });
   };
 
-  /**
-   * Fonction robuste pour récupérer les données utilisateur et l'ID
-   */
   const getUserData = () => {
     if (typeof window === "undefined") return null;
 
@@ -319,9 +296,6 @@ export const Navbar = () => {
     }
   };
 
-  /**
-   * Récupérer le compteur de commandes depuis l'API
-   */
   const fetchOrderCount = async () => {
     setIsLoadingOrders(true);
     setOrderLoadError(null);
@@ -408,7 +382,6 @@ export const Navbar = () => {
     }
   };
 
-  // Récupérer le compteur de commandes au chargement
   useEffect(() => {
     let intervalId: NodeJS.Timeout | null = null;
 
@@ -475,7 +448,6 @@ export const Navbar = () => {
     };
   }, []);
 
-  // Menu items pour le menu mobile
   const menuItems = [
     { name: "🏠 Accueil", href: "/", color: "foreground" },
     { name: "ℹ️ À propos", href: "/about", color: "foreground" },
@@ -492,7 +464,6 @@ export const Navbar = () => {
     { name: "❤️ Contact", href: "/contact", color: "foreground" },
   ];
 
-  // Menu utilisateur pour le burger (mobile)
   const userMenuItems: any[] = user
     ? [
       { name: "👤 Profil", href: "/profile", color: "foreground" },
@@ -512,11 +483,10 @@ export const Navbar = () => {
 
   const menuPanelContent = (
     <div className="p-4 flex flex-col">
-      {/* Header avec logo et bouton fermer */}
       <div className="flex items-center justify-between mb-4 pb-3 border-b border-gray-200 dark:border-gray-700">
         <div className="flex items-center gap-2">
           <AutismLogo size={12} />
-          <span className="font-bold text-violet-600 dark:text-violet-400 text-lg">
+          <span className="font-bold text-indigo-600 dark:text-indigo-400 text-lg">
             AutiStudy
           </span>
         </div>
@@ -541,12 +511,11 @@ export const Navbar = () => {
         </button>
       </div>
 
-      {/* Bouton AI Assistant */}
       <div className="mb-3">
         <Button
           as={NextLink}
           href="/ai-assistant"
-          className="w-full bg-gradient-to-r from-violet-600 to-purple-600 text-white font-semibold shadow-md hover:shadow-lg transition-all"
+          className="w-full bg-gradient-to-r from-indigo-600 to-teal-500 text-white font-semibold shadow-md hover:shadow-lg transition-all"
           size="md"
           startContent={<Sparkles className="w-4 h-4" />}
           onPress={() => {
@@ -558,24 +527,21 @@ export const Navbar = () => {
         </Button>
       </div>
 
-      {/* Séparateur */}
       <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
 
-      {/* Liens principaux */}
       <div className="space-y-1 flex-1 overflow-y-auto">
         {menuItems.map((item, index) => (
           <NextLink
             key={`${item.name}-${index}`}
             href={item.href}
             onClick={() => setIsMenuOpen(false)}
-            className={isMobile ? "block py-2.5 px-3 text-gray-700 dark:text-gray-200 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400 font-medium transition-all rounded-lg text-sm"}
+            className={isMobile ? "block py-2.5 px-3 text-gray-700 dark:text-gray-200 font-medium rounded-lg text-sm hover:bg-indigo-50 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400" : "block py-2.5 px-3 text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400 font-medium transition-all rounded-lg text-sm"}
           >
             {item.name}
           </NextLink>
         ))}
       </div>
 
-      {/* Liens utilisateur si connecté */}
       {userMenuItems.length > 0 && (
         <>
           <div className="border-t border-gray-200 dark:border-gray-700 my-3"></div>
@@ -584,9 +550,9 @@ export const Navbar = () => {
               item.href === "#" ? (
                 <button
                   key={`user-${item.name}-${index}`}
-                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${item.color === "danger"
+                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-indigo-50 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${item.color === "danger"
                     ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
-                    : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400"
                     }`}
                   onClick={() => {
                     if (typeof item.action === "function") {
@@ -600,9 +566,9 @@ export const Navbar = () => {
               ) : (
                 <button
                   key={`user-${item.name}-${index}`}
-                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${item.color === "danger"
+                  className={`${isMobile ? "block w-full text-left py-2.5 px-3 font-medium rounded-lg text-sm hover:bg-indigo-50 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400" : "block w-full text-left py-2.5 px-3 font-medium transition-all rounded-lg text-sm"} ${item.color === "danger"
                     ? "text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/20"
-                    : "text-gray-700 dark:text-gray-200 hover:bg-violet-50 dark:hover:bg-gray-800 hover:text-violet-600 dark:hover:text-violet-400"
+                    : "text-gray-700 dark:text-gray-200 hover:bg-indigo-50 dark:hover:bg-gray-800 hover:text-indigo-600 dark:hover:text-indigo-400"
                     }`}
                   onClick={() => {
                     router.push(item.href);
@@ -637,7 +603,7 @@ export const Navbar = () => {
         {isDarkTheme ? (
           <SunFilledIcon className="text-yellow-400" size={18} />
         ) : (
-          <MoonFilledIcon className="text-blue-400" size={18} />
+          <MoonFilledIcon className="text-teal-500" size={18} />
         )}
       </button>
     </div>
@@ -653,7 +619,7 @@ export const Navbar = () => {
       <NavbarContent className="flex-shrink-0 basis-auto">
         <button
           aria-label={isMenuOpen ? "Fermer le menu" : "Ouvrir le menu"}
-          className="lg:hidden p-2 text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400"
+          className="lg:hidden p-2 text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400"
           onClick={() => {
             if (typeof window !== 'undefined' && window.innerWidth >= 1024) {
               setIsMenuOpen(false);
@@ -692,7 +658,7 @@ export const Navbar = () => {
           >
             <AutismLogo size={10} />
             <div className="flex flex-col">
-              <p className="font-bold text-violet-600 dark:text-violet-400 text-sm md:text-lg lg:text-xl tracking-tight">
+              <p className="font-bold text-indigo-600 dark:text-indigo-400 text-sm md:text-lg lg:text-xl tracking-tight">
                 AutiStudy
               </p>
               <p className="text-[0.65rem] md:text-xs lg:text-sm text-gray-500 dark:text-gray-400 font-medium hidden sm:block">
@@ -706,7 +672,7 @@ export const Navbar = () => {
       <NavbarContent className="hidden lg:flex gap-1 xl:gap-6 flex-1 min-w-0" justify="center">
         <NavbarItem>
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
             href="/about"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faInfoCircle} />
@@ -716,7 +682,7 @@ export const Navbar = () => {
 
         <NavbarItem>
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
             href="/articles"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faBook} />
@@ -726,7 +692,7 @@ export const Navbar = () => {
 
         <NavbarItem>
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
             href="/posts"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faNewspaper} />
@@ -736,7 +702,7 @@ export const Navbar = () => {
 
         <NavbarItem>
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
             href="/controle"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faGamepad} />
@@ -746,7 +712,7 @@ export const Navbar = () => {
 
         <NavbarItem className="relative" key="shop">
           <NextLink
-            className={isMobile ? "text-gray-700 dark:text-gray-200 flex items-center gap-1.5 xl:gap-2 relative text-sm xl:text-lg font-semibold px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 flex items-center gap-1.5 xl:gap-2 relative text-sm xl:text-lg font-semibold transition-colors duration-200 px-1 whitespace-nowrap"}
+            className={isMobile ? "text-gray-700 dark:text-gray-200 flex items-center gap-1.5 xl:gap-2 relative text-sm xl:text-lg font-semibold px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 flex items-center gap-1.5 xl:gap-2 relative text-sm xl:text-lg font-semibold transition-colors duration-200 px-1 whitespace-nowrap"}
             href="/shop"
           >
             <FontAwesomeIcon className="w-5 h-5" icon={faShoppingCart} />
@@ -772,7 +738,7 @@ export const Navbar = () => {
           <>
             <NavbarItem>
               <NextLink
-                className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
+                className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
                 href="/projet"
               >
                 <FontAwesomeIcon className="w-5 h-5" icon={faRocket} />
@@ -781,7 +747,7 @@ export const Navbar = () => {
             </NavbarItem>
             <NavbarItem>
               <NextLink
-                className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-violet-600 dark:hover:text-violet-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
+                className={isMobile ? "text-gray-700 dark:text-gray-200 text-sm xl:text-lg font-semibold flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap" : "text-gray-700 dark:text-gray-200 hover:text-indigo-600 dark:hover:text-indigo-400 text-sm xl:text-lg font-semibold transition-colors duration-200 flex items-center gap-1.5 xl:gap-2 px-1 whitespace-nowrap"}
                 href="/maeva"
               >
                 <Sparkles className="w-5 h-5" />
@@ -793,7 +759,6 @@ export const Navbar = () => {
       </NavbarContent>
 
       <NavbarContent className="flex-shrink-0 gap-2 md:gap-4" justify="end">
-        {/* Bouton AI Assistant */}
         <NavbarItem>
           <Button
             as={NextLink}
@@ -801,7 +766,7 @@ export const Navbar = () => {
             isIconOnly
             variant="flat"
             size="md"
-            className={isMobile ? "bg-gradient-to-r from-violet-600 to-purple-600 text-white w-10 h-10 md:w-12 md:h-12" : "bg-gradient-to-r from-violet-600 to-purple-600 text-white hover:from-violet-700 hover:to-purple-700 transition-all w-10 h-10 md:w-12 md:h-12"}
+            className={isMobile ? "bg-gradient-to-r from-indigo-600 to-teal-500 text-white w-10 h-10 md:w-12 md:h-12" : "bg-gradient-to-r from-indigo-600 to-teal-500 text-white hover:from-indigo-700 hover:to-teal-600 transition-all w-10 h-10 md:w-12 md:h-12"}
             aria-label="Assistant IA"
             onPress={() => router.push("/ai-assistant")}
           >
@@ -809,12 +774,10 @@ export const Navbar = () => {
           </Button>
         </NavbarItem>
 
-        {/* Bouton de thème */}
         <NavbarItem className="hidden sm:flex">
           <ThemeSwitch />
         </NavbarItem>
 
-        {/* Avatar utilisateur */}
         {!user ? (
           <Avatar
             aria-label="Connectez-vous pour accéder à votre profil"
@@ -833,7 +796,6 @@ export const Navbar = () => {
           />
         ) : (
           <>
-            {/* Avatar mobile sans sous-menu: ouvre directement le profil */}
             <div className="lg:hidden">
               <Avatar
                 alt={`Avatar de ${user?.pseudo}`}
@@ -856,7 +818,6 @@ export const Navbar = () => {
               />
             </div>
 
-            {/* Avatar desktop avec dropdown */}
             <div className="hidden lg:block">
               <Dropdown placement="bottom-end">
                 <DropdownTrigger>
@@ -944,14 +905,14 @@ export const Navbar = () => {
                       router.push("/orders?status=shipped");
                     }}
                   >
-                    <div className="flex items-center justify-between p-2 md:p-3 rounded-lg border border-violet-200 dark:border-violet-800 hover:bg-violet-50/30 dark:hover:bg-violet-900/20 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
+                    <div className="flex items-center justify-between p-2 md:p-3 rounded-lg border border-indigo-200 dark:border-indigo-800 hover:bg-indigo-50/30 dark:hover:bg-indigo-900/20 hover:shadow-md transition-all duration-200 transform hover:-translate-y-0.5">
                       <div className="flex items-center gap-2 md:gap-3">
                         <ShippedOrdersIcon
-                          className="text-violet-600 dark:text-violet-400"
+                          className="text-indigo-600 dark:text-indigo-400"
                           size={24}
                         />
                         <div className="flex flex-col">
-                          <div className="font-medium text-violet-600 dark:text-violet-400 text-sm">
+                          <div className="font-medium text-indigo-600 dark:text-indigo-400 text-sm">
                             Envoyées
                           </div>
                           <div className="text-xs text-gray-500 dark:text-gray-400">
@@ -959,7 +920,7 @@ export const Navbar = () => {
                           </div>
                         </div>
                       </div>
-                      <span className="text-base md:text-lg font-semibold text-violet-600 dark:text-violet-400 min-w-[2rem] text-center">
+                      <span className="text-base md:text-lg font-semibold text-indigo-600 dark:text-indigo-400 min-w-[2rem] text-center">
                         {orderCount.shipped || 0}
                       </span>
                     </div>
@@ -1018,7 +979,6 @@ export const Navbar = () => {
                     Contrôle
                   </DropdownItem>
 
-                  {/* Thème */}
                   <DropdownItem
                     className="dark:text-gray-200 dark:hover:bg-gray-700"
                     key="theme"
@@ -1069,7 +1029,7 @@ export const Navbar = () => {
                         >
                           <div className="flex items-center gap-2">
                             <MoonFilledIcon
-                              className="text-violet-300"
+                              className="text-indigo-300"
                               size={16}
                             />
                             <span>Mode sombre</span>
@@ -1128,7 +1088,6 @@ export const Navbar = () => {
         )}
       </NavbarContent>
 
-      {/* Menu mobile */}
       <AnimatePresence>
         {isMenuOpen && !disableMenuMotion && (
           <>
