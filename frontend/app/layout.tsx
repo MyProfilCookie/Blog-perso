@@ -104,17 +104,14 @@ export default function RootLayout({
   return (
     <html className="scroll-smooth" lang="fr" suppressHydrationWarning>
       <head>
+        {/* Thème : lecture de la préférence utilisateur uniquement (pas d'auto par heure/système) */}
         <script
           dangerouslySetInnerHTML={{
             __html: `
               (function(){
                 try{
                   var stored=localStorage.getItem('theme');
-                  var hour=new Date().getHours();
-                  var timeDark=(hour>=19||hour<7);
-                  var prefersDark=window.matchMedia('(prefers-color-scheme: dark)').matches;
-                  var theme=stored?stored:(timeDark?'dark':(prefersDark?'dark':'light'));
-                  if(theme==='dark'){
+                  if(stored==='dark'){
                     document.documentElement.classList.add('dark');
                   }else{
                     document.documentElement.classList.remove('dark');
@@ -128,7 +125,6 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // Précharger seulement si on est sur la page d'accueil
               if (window.location.pathname === '/' || window.location.pathname === '') {
                 const link = document.createElement('link');
                 link.rel = 'preload';
@@ -145,7 +141,6 @@ export default function RootLayout({
         <script
           dangerouslySetInnerHTML={{
             __html: `
-              // Précharger les images de famille seulement sur les pages qui les utilisent
               if (window.location.pathname === '/' || 
                   window.location.pathname === '/about' || 
                   window.location.pathname === '/about/') {
@@ -156,7 +151,7 @@ export default function RootLayout({
                 chantalLink.type = 'image/webp';
                 chantalLink.fetchPriority = 'high';
                 document.head.appendChild(chantalLink);
-                
+
                 const familyLink = document.createElement('link');
                 familyLink.rel = 'preload';
                 familyLink.as = 'image';
@@ -167,11 +162,7 @@ export default function RootLayout({
             `,
           }}
         />
-        {/* Preload supprimé - géré dynamiquement ci-dessus */}
 
-        {/* Resource hints avancés pour LCP - DNS prefetch seulement */}
-
-        {/* Préconnexions DNS pour les domaines externes */}
         <link href="//fonts.googleapis.com" rel="dns-prefetch" />
         <link href="//fonts.gstatic.com" rel="dns-prefetch" />
         <link
@@ -185,7 +176,6 @@ export default function RootLayout({
           rel="preconnect"
         />
 
-        {/* Préchargement des polices critiques avec Next.js Font */}
         <style dangerouslySetInnerHTML={{
           __html: `
             :root {
@@ -194,7 +184,6 @@ export default function RootLayout({
           `
         }} />
 
-        {/* Meta tags pour les performances et iPhone avec encoche */}
         <meta
           content="width=device-width, initial-scale=1, maximum-scale=5, viewport-fit=cover"
           name="viewport"
@@ -202,31 +191,17 @@ export default function RootLayout({
         <meta content="on" httpEquiv="x-dns-prefetch-control" />
         <meta content="telephone=no" name="format-detection" />
 
-        {/* Meta tags pour le mode sombre iOS */}
-        <meta content="light dark" name="color-scheme" />
-        <meta
-          content="#f8faff"
-          media="(prefers-color-scheme: light)"
-          name="theme-color"
-        />
-        <meta
-          content="#111827"
-          media="(prefers-color-scheme: dark)"
-          name="theme-color"
-        />
+        <meta content="light" name="color-scheme" />
+        <meta content="#f8faff" name="theme-color" />
         <meta content="yes" name="mobile-web-app-capable" />
         <meta content="yes" name="apple-mobile-web-app-capable" />
         <meta content="default" name="apple-mobile-web-app-status-bar-style" />
         <meta content="AutiStudy" name="apple-mobile-web-app-title" />
+        <meta content="light" name="supported-color-schemes" />
 
-        {/* Support du mode sombre pour Safari */}
-        <meta content="light dark" name="supported-color-schemes" />
-
-        {/* CSS critique inline pour LCP optimisé */}
         <style
           dangerouslySetInnerHTML={{
             __html: `
-            /* CSS critique pour LCP */
             body { 
               font-family: Inter, system-ui, -apple-system, sans-serif;
               margin: 0;
@@ -237,8 +212,7 @@ export default function RootLayout({
             .dark body { background-color: #111827; }
             html { background-color: #f8faff; }
             .dark html { background-color: #111827; }
-            
-            /* Layout critique */
+
             .min-h-screen { min-height: 100vh; }
             .flex { display: flex; }
             .flex-col { flex-direction: column; }
@@ -246,8 +220,7 @@ export default function RootLayout({
             .h-full { height: 100%; }
             .relative { position: relative; }
             .absolute { position: absolute; }
-            
-            /* Hero section critique */
+
             .hero-section {
               background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
               min-height: 100vh;
@@ -255,8 +228,7 @@ export default function RootLayout({
               align-items: center;
               justify-content: center;
             }
-            
-            /* Images critiques */
+
             .hero-image {
               width: 100%;
               height: auto;
@@ -264,18 +236,12 @@ export default function RootLayout({
               border-radius: 16px;
               box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
             }
-            
-            /* Force la couleur de l'encoche iPhone */
-            @media (prefers-color-scheme: light) {
-              body { background-color: #f8faff !important; }
-              html { background-color: #f8faff !important; }
-            }
-            
-            /* Force la couleur cream pour l'encoche */
-            :not(.dark) body { background-color: #f8faff !important; }
-            :not(.dark) html { background-color: #f8faff !important; }
-            
-            /* Suppression forcée des bordures navbar */
+
+            body { background-color: #f8faff !important; }
+            html { background-color: #f8faff !important; }
+            .dark body { background-color: #111827 !important; }
+            .dark html { background-color: #111827 !important; }
+
             .nextui-navbar,
             .nextui-navbar-container,
             [data-nextui-navbar],
@@ -291,8 +257,7 @@ export default function RootLayout({
               outline: none !important;
               box-shadow: none !important;
             }
-            
-            /* Suppression sur tous les enfants de la navbar */
+
             .nextui-navbar *,
             nav *,
             header * {
@@ -300,8 +265,7 @@ export default function RootLayout({
               border-bottom: none !important;
               outline: none !important;
             }
-            
-            /* Suppression ultra-agressive de toutes les bordures */
+
             .nextui-navbar,
             .nextui-navbar *,
             .nextui-navbar::before,
@@ -318,14 +282,30 @@ export default function RootLayout({
               border-width: 0 !important;
               border-style: none !important;
             }
-            
-            /* Suppression des pseudo-éléments */
+
             .nextui-navbar::after,
             .nextui-navbar::before {
               display: none !important;
               content: none !important;
             }
           `,
+          }}
+        />
+
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{
+            __html: JSON.stringify({
+              '@context': 'https://schema.org',
+              '@type': 'WebSite',
+              name: 'AutiStudy',
+              url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.com'),
+              potentialAction: {
+                '@type': 'SearchAction',
+                target: (process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.com') + '/articles?search={query}',
+                'query-input': 'required name=query'
+              }
+            })
           }}
         />
       </head>
@@ -356,20 +336,3 @@ export default function RootLayout({
     </html>
   );
 }
-        {/* JSON-LD WebSite schema */}
-        <script
-          type="application/ld+json"
-          dangerouslySetInnerHTML={{
-            __html: JSON.stringify({
-              '@context': 'https://schema.org',
-              '@type': 'WebSite',
-              name: 'AutiStudy',
-              url: (process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.com'),
-              potentialAction: {
-                '@type': 'SearchAction',
-                target: (process.env.NEXT_PUBLIC_SITE_URL || 'https://autistudy.com') + '/articles?search={query}',
-                'query-input': 'required name=query'
-              }
-            })
-          }}
-        />
