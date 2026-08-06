@@ -108,18 +108,6 @@ export default function HomePage() {
                   >
                     Voir comment ça marche
                   </Link>
-                  <Link
-                    href="/contact"
-                    className="border-2 border-teal-600 text-teal-700 dark:border-teal-500 dark:text-teal-300 px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-teal-50 dark:hover:bg-teal-900/20 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
-                  >
-                    Poser une question
-                  </Link>
-                  <Link
-                    href="/donate"
-                    className="border-2 border-amber-600 text-amber-700 dark:border-amber-500 dark:text-amber-300 px-6 md:px-8 py-3 md:py-4 rounded-full hover:bg-amber-50 dark:hover:bg-amber-900/20 transition-colors font-semibold flex items-center justify-center gap-2 text-sm md:text-base"
-                  >
-                    Soutenir le projet
-                  </Link>
                 </div>
                 <div className="flex gap-8">
                   <div>
